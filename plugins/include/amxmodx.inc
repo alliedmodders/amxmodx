@@ -1351,10 +1351,10 @@ native client_cmd(index, const command[], any:...);
  * @note Commands emulated using this function will not trigger plugin command
  *       hooks. For an alternative that does, see amxclient_cmd().
  *
- * @param index			Client index, use 0 to execute from all clients.
- * @param command		The client command to execute on
- * @param arg1			Optional command arguments
- * @param arg2			Optional command arguments
+ * @param index         Client index, use 0 to execute from all clients.
+ * @param command       Client command to execute on
+ * @param arg1          Optional command arguments
+ * @param arg2          Optional command arguments
  *
  * @noreturn
  * @error           If a single client is specified and the index is not
@@ -3391,9 +3391,9 @@ native admins_flush();
 /**
  * Returns if a map contains at least one entity with the provided class name.
  *
- * @param classname		Entity classname to match
+ * @param classname     Entity classname to match
  *
- * @return				True if an entity is found, false otherwise
+ * @return              True if an entity is found, false otherwise
  */
 native bool:has_map_ent_class(const classname[]);
 

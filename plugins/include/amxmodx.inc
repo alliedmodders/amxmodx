@@ -210,7 +210,7 @@ native register_plugin(const plugin_name[], const version[], const author[]);
  *
  * @param name  Path to the model file
  *
- * @return      Cache id of the model, even if the file was already precached
+ * @return      Unique ache id of the model
  * @error       If called outside of the plugin_precache() forward, an error is
  *              thrown.
  */
@@ -229,7 +229,7 @@ native precache_model(const name[]);
  *
  * @param name  Path to the sound file
  *
- * @return      Cache id of the sound, even if the file was already precached
+ * @return      Unique cache id of the sound
  * @error       If called outside of the plugin_precache() forward, an error is
  *              thrown.
  */
@@ -243,7 +243,7 @@ native precache_sound(const name[]);
  *
  * @param szFile    Path to the file
  *
- * @return          Cache id of the file, even if the file was already precached
+ * @return          Unique cache id of the file
  * @error           If called outside of the plugin_precache() forward, an error
  *                  is thrown.
  */

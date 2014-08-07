@@ -350,8 +350,8 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 		g_fakecmd.argv[1] = arg1;
 		g_fakecmd.argv[2] = arg2;
 		// build argument line
-		snprintf(g_fakecmd.args, 255, "%s %s", arg1, arg2);
-		// if snprintf reached 255 chars limit, this will make sure there will be no access violation
+		UTIL_Format(g_fakecmd.args, 255, "%s %s", arg1, arg2);
+		// if UTIL_Format reached 255 chars limit, this will make sure there will be no access violation
 		g_fakecmd.args[255] = 0;
 	}
 	else if (arg1)
@@ -360,8 +360,8 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 		// store argument
 		g_fakecmd.argv[1] = arg1;
 		// build argument line
-		snprintf(g_fakecmd.args, 255, "%s", arg1);
-		// if snprintf reached 255 chars limit, this will make sure there will be no access violation
+		UTIL_Format(g_fakecmd.args, 255, "%s", arg1);
+		// if UTIL_Format reached 255 chars limit, this will make sure there will be no access violation
 		g_fakecmd.args[255] = 0;
 	}
 	else

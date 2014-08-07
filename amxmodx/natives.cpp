@@ -180,7 +180,7 @@ static cell AMX_NATIVE_CALL log_error(AMX *amx, cell *params)
 	int len;
 	char *err = format_amxstring(amx, params, 2, len);
 
-	_snprintf(g_errorStr, sizeof(g_errorStr), "%s", err);
+	UTIL_Format(g_errorStr, sizeof(g_errorStr), "%s", err);
 	g_CurError = params[1];
 
 	return 1;

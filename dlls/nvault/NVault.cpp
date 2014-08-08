@@ -362,7 +362,7 @@ bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)
 
 	sVal = m_Hash.Retrieve(sKey, st);
 	stamp = st;
-	_snprintf(buffer, len, "%s", sVal.c_str());
+	UTIL_Format(buffer, len, "%s", sVal.c_str());
 
 	return true;
 }

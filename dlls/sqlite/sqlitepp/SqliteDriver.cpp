@@ -11,15 +11,12 @@
 // SQLite Module
 //
 
-#include <string.h>
-#include <stdio.h>
+#include "amxxmodule.h"
 #include "SqliteHeaders.h"
 #include "SqliteDriver.h"
 #include "SqliteDatabase.h"
 
 #if defined WIN32
-#define snprintf _snprintf
-#define strncasecmp strnicmp
 #define WINDOWS_LEAN_AND_MEAN
 #include <windows.h>
 #else
@@ -65,7 +62,7 @@ IDatabase *SqliteDriver::Connect(DatabaseInfo *info, int *errcode, char *error, 
 		}
 		if (error)
 		{
-			snprintf(error, maxlength, "%s", sqlite3_errmsg(pSql));
+			UTIL_Format(error, maxlength, "%s", sqlite3_errmsg(pSql));
 		}
 		sqlite3_close(pSql);
 		return NULL;

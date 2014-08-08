@@ -17,10 +17,6 @@
 #include "Binary.h"
 #include "CString.h"
 
-#if defined(__linux__) || defined(__APPLE__)
-#define _snprintf snprintf
-#endif
-
 /** 
  * :TODO: This beast calls strcpy()/new() way too much by creating new strings on the stack.
  *		  That's easily remedied and it should be fixed?
@@ -366,7 +362,7 @@ bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)
 
 	sVal = m_Hash.Retrieve(sKey, st);
 	stamp = st;
-	_snprintf(buffer, len, "%s", sVal.c_str());
+	UTIL_Format(buffer, len, "%s", sVal.c_str());
 
 	return true;
 }

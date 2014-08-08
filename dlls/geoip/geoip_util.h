@@ -16,10 +16,6 @@
 
 #include "geoip_main.h"
 
-#if defined(WIN32)
-	#define snprintf _snprintf
-#endif
-
 char *stripPort(char *ip);
 
 bool lookupByIp(const char *ip, const char **path, MMDB_entry_data_s *result);

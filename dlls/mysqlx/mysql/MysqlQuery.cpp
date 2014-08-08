@@ -11,15 +11,10 @@
 // MySQL Module
 //
 
-#include <stdio.h>
-#include <string.h>
+#include "amxxmodule.h"
 #include "MysqlQuery.h"
 #include "MysqlDatabase.h"
 #include "MysqlResultSet.h"
-
-#if defined WIN32
-#define snprintf _snprintf
-#endif
 
 using namespace SourceMod;
 
@@ -95,7 +90,7 @@ bool MysqlQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 		info->rs = NULL;
 		if (error && maxlength)
 		{
-			snprintf(error, maxlength, "%s", mysql_error(m_pDatabase->m_pMysql));
+			UTIL_Format(error, maxlength, "%s", mysql_error(m_pDatabase->m_pMysql));
 		}
 	}
 	else

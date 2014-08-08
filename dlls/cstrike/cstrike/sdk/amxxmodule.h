@@ -2495,4 +2495,6 @@ void	Mem_Deallocator(const char *sourceFile, const unsigned int sourceLine, cons
 
 #endif //MEMORY_TEST
 
+size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...);
+
 #endif // #ifndef __AMXXMODULE_H__

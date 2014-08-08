@@ -4092,10 +4092,6 @@ int AMXAPI amx_GetLibraries(AMX *amx)
 	return numLibraries;
 }
 
-#if defined(__linux__) || defined(__APPLE__)
-#define _snprintf snprintf
-#endif
-
 const char *AMXAPI amx_GetLibrary(AMX *amx, int index, char *buffer, int len)
 {
 	AMX_HEADER *hdr = (AMX_HEADER *)amx->base;

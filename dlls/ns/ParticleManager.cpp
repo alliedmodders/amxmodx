@@ -31,7 +31,7 @@ void ParticleManager::ReadFile(void)
 
 	char FileName[256];
 
-	snprintf(FileName,sizeof(FileName)-1,"%s/ns.ps",MF_GetModname());
+	UTIL_Format(FileName, sizeof(FileName)-1, "%s/ns.ps", MF_GetModname());
 	FILE *fp=fopen(FileName,"r");
 
 	if (!fp)

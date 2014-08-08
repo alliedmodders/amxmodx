@@ -192,7 +192,7 @@ bool loadDatabase()
 		// MF_BuildPathname not used because backslash
 		// makes CreateFileMapping failing under windows.
 
-		snprintf(file, sizeof(file)-1, "%s/%s/GeoLite2-%s.mmdb", modName, dataDir, databases[i]); 
+		UTIL_Format(file, sizeof(file)-1, "%s/%s/GeoLite2-%s.mmdb", modName, dataDir, databases[i]);
                                              
 		status = MMDB_open(file, MMDB_MODE_MMAP, &HandleDB);
 

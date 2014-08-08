@@ -21,8 +21,7 @@ int g_CameraCount;
 
 TraceResult g_tr;
 
-#define	BUFFERSIZE	1023
-char g_buffer[BUFFERSIZE + 1];
+char g_buffer[1024];
 
 void UTIL_SetSize(edict_t *pev, const Vector &vecMin, const Vector &vecMax)
 {
@@ -870,7 +869,7 @@ static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)
 // (jghg)
 static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params) // (string, returnstring[], length)
 {
-	snprintf(g_buffer, BUFFERSIZE, "%s", STRING(params[1]));
+	UTIL_Format(g_buffer, sizeof(g_buffer)-1, "%s", STRING(params[1]));
 	return MF_SetAmxString(amx, params[2], g_buffer, params[3]);
 }
 

@@ -17,10 +17,6 @@
 #include "GeoIP2/maxminddb.h"
 #include "amxxmodule.h"
 
-#if defined(WIN32)
-	#define snprintf _snprintf
-#endif
-
 extern AMX_NATIVE_INFO geoip_natives[];
 
 #endif //_INCLUDE_GEOIPAMXX_H

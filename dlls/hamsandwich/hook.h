@@ -61,7 +61,7 @@ public:
 			size_t len=strlen(name);
 			ent=new char[len+1];
 
-			snprintf(ent,len+1,"%s",name);
+			UTIL_Format(ent, len + 1, "%s", name);
 		};
 
 	~Hook()

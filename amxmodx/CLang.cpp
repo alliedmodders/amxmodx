@@ -12,10 +12,6 @@
 #include "CLang.h"
 #include "format.h"
 
-#if defined(__linux__) || defined(__APPLE__)
-#define _snprintf snprintf
-#endif
-
 #define LITIDX_NONE			0
 #define LITIDX_BRACKET		1
 #define LITIDX_DEFINITION	2

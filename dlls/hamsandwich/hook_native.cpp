@@ -712,7 +712,7 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 	// It may very well be wrong (such as lots of TS weapons have the same classname)
 	// but it's the best we can do, and better than nothing.
 	// (only used for display)
-	snprintf(classname, sizeof(classname) - 1, "%s", STRING(Entity->v.classname));
+	UTIL_Format(classname, sizeof(classname) - 1, "%s", STRING(Entity->v.classname));
 
 	// If we got here, the function is not hooked
 	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);

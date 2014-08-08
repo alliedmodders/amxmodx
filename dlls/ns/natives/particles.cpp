@@ -49,7 +49,7 @@ cell PSKeyValueI(const char *name, AMX *amx, cell *params)
 
 	char StrData[1024];
 
-	snprintf(StrData,sizeof(StrData)-1,"%d",params[2]);
+	UTIL_Format(StrData, sizeof(StrData)-1, "%d", params[2]);
 
 	kvd.szClassName=const_cast<char *>(STRING(reinterpret_cast<edict_t *>(params[1])->v.classname));
 	kvd.szKeyName=name;
@@ -72,7 +72,7 @@ cell PSKeyValueF(const char *name, AMX *amx, cell *params)
 
 	char StrData[1024];
 
-	snprintf(StrData,sizeof(StrData)-1,"%f",amx_ctof2(params[2]));
+	UTIL_Format(StrData, sizeof(StrData)-1, "%f", amx_ctof2(params[2]));
 
 	kvd.szClassName=const_cast<char *>(STRING(reinterpret_cast<edict_t *>(params[1])->v.classname));
 	kvd.szKeyName=name;

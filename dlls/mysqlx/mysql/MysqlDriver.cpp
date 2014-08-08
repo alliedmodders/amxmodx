@@ -11,15 +11,9 @@
 // MySQL Module
 //
 
-#include <stdio.h>
-#include <string.h>
+#include "amxxmodule.h"
 #include "MysqlDriver.h"
 #include "MysqlDatabase.h"
-
-#if defined WIN32
-#define snprintf _snprintf
-#define strncasecmp strnicmp
-#endif
 
 using namespace SourceMod;
 
@@ -53,7 +47,7 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 			*errcode = -1;
 		if (error && maxlength)
 		{
-			snprintf(error, maxlength, "Initialization failed");
+			UTIL_Format(error, maxlength, "Initialization failed");
 		}
 		return NULL;
 	}
@@ -78,7 +72,7 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 		}
 		if (error && maxlength)
 		{
-			snprintf(error, maxlength, "%s", mysql_error(mysql));
+			UTIL_Format(error, maxlength, "%s", mysql_error(mysql));
 		}
 		return NULL;
 	}

@@ -28,8 +28,7 @@
  */
 
 #include "MemoryUtils.h"
-#include <string.h>
-#include <stdio.h>
+#include "amxxmodule.h"
 
 #if defined(__linux__)
 	#include <fcntl.h>
@@ -638,7 +637,7 @@ bool MemoryUtils::GetLibraryOfAddress(const void *libPtr, char *buffer, size_t m
 		return false;
 	}
 	const char *dllpath = info.dli_fname;
-	snprintf(buffer, maxlength, "%s", dllpath);
+	UTIL_Format(buffer, maxlength, "%s", dllpath);
 	if (base)
 	{
 		*base = (uintptr_t)info.dli_fbase;

@@ -11,15 +11,10 @@
 // SQLite Module
 //
 
-#include <stdio.h>
-#include <string.h>
+#include "amxxmodule.h"
 #include "SqliteQuery.h"
 #include "SqliteDatabase.h"
 #include "SqliteResultSet.h"
-
-#if defined WIN32
-#define snprintf _snprintf
-#endif
 
 using namespace SourceMod;
 
@@ -97,7 +92,7 @@ bool SqliteQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 	{
 		if (error && maxlength && errmsg)
 		{
-			snprintf(error, maxlength, "%s", errmsg);
+			UTIL_Format(error, maxlength, "%s", errmsg);
 		}
 		info->affected_rows = 0;
 		info->errorcode = err;

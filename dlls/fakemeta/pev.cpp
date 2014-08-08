@@ -299,23 +299,23 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 			return num;
 		} else if (ValType & Ret_Int) {
 			char temp[32];
-			snprintf(temp, 31, "%d", rets.i);
+			UTIL_Format(temp, sizeof(temp)-1, "%d", rets.i);
 			return MF_SetAmxString(amx, params[3], temp, size);
 		} else if (ValType == Ret_Float) {
 			char temp[32];
-			snprintf(temp, 31, "%f", rets.f);
+			UTIL_Format(temp, sizeof(temp)-1, "%f", rets.f);
 			return MF_SetAmxString(amx, params[3], temp, size);
 		} else if (ValType == Ret_Vec) {
 			char temp[32];
-			snprintf(temp, 31, "%f %f %f", vr.x, vr.y, vr.z);
+			UTIL_Format(temp, sizeof(temp)-1, "%f %f %f", vr.x, vr.y, vr.z);
 			return MF_SetAmxString(amx, params[3], temp, size);
 		} else if (ValType == Ret_Bytes2) {
 			char temp[32];
-			snprintf(temp, 31, "%d %d", rets.ba[0], rets.ba[1]);
+			UTIL_Format(temp, sizeof(temp)-1, "%d %d", rets.ba[0], rets.ba[1]);
 			return MF_SetAmxString(amx, params[3], temp, size);
 		} else if (ValType == Ret_Bytes4) {
 			char temp[32];
-			snprintf(temp, 31, "%d %d %d %d", rets.ba[0], rets.ba[1], rets.ba[2], rets.ba[3]);
+			UTIL_Format(temp, sizeof(temp)-1, "%d %d %d %d", rets.ba[0], rets.ba[1], rets.ba[2], rets.ba[3]);
 			return MF_SetAmxString(amx, params[3], temp, size);
 		}
 

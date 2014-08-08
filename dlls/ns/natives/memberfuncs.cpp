@@ -86,9 +86,9 @@ void MFuncs_Initialize(void)
 	char FileName[256];
 	DLHANDLE DLLBase;
 #ifdef __linux__
-	snprintf(FileName,sizeof(FileName)-1,"%s/dlls/ns_i386.so",MF_GetModname());
+	UTIL_Format(FileName,sizeof(FileName)-1,"%s/dlls/ns_i386.so",MF_GetModname());
 #else
-	snprintf(FileName,sizeof(FileName)-1,"%s\\dlls\\ns.dll",MF_GetModname());
+	UTIL_Format(FileName, sizeof(FileName)-1, "%s\\dlls\\ns.dll", MF_GetModname());
 #endif
 
 	DLLBase=DLOPEN(FileName);

@@ -2712,6 +2712,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...)
 // Makes sure compiler reports errors when macros are invalid
 void ValidateMacros_DontCallThis_Smiley()
 {
+	const cell str[] = { 's', 't', 'r', '\0' };
 	MF_BuildPathname("str", "str", 0);
 	MF_BuildPathnameR(NULL, 0, "%d", 0);
 	MF_FormatAmxString(NULL, 0, 0, NULL);
@@ -2724,7 +2725,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_FindScriptByName("str");
 	MF_SetAmxString(NULL, 0, "str", 0);
 	MF_SetAmxStringUTF8Char(NULL, 0, "str", 0, 0);
-	MF_SetAmxStringUTF8Cell(NULL, 0, "str", 0, 0);
+	MF_SetAmxStringUTF8Cell(NULL, 0, str, 0, 0);
 	MF_GetAmxString(NULL, 0, 0, 0);
 	MF_GetAmxStringLen(NULL);
 	MF_CopyAmxMemory(NULL, NULL, 0);

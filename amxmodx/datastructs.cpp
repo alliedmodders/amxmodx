@@ -155,9 +155,12 @@ static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 	cell *blk = vec->at(idx);
 	size_t indexes = vec->blocksize();
 
-	if (params[4] != -1 && (size_t)params[4] <= vec->blocksize())
+	if (*params / sizeof(cell) == 4)
 	{
-		indexes = params[4];
+		if (params[4] != -1 && (size_t)params[4] <= vec->blocksize())
+		{
+			indexes = params[4];
+		}
 	}
 
 	cell *addr = get_amxaddr(amx, params[3]);
@@ -186,6 +189,12 @@ static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 	}
 
 	cell *blk = vec->at(idx);
+
+	if (*params / sizeof(cell) <= 2)
+	{
+		return *blk;
+	}
+
 	idx = (size_t)params[3];
 
 	if (!params[4])
@@ -255,9 +264,12 @@ static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
 	cell *blk = vec->at(idx);
 	size_t indexes = vec->blocksize();
 
-	if (params[4] != -1 && (size_t)params[4] <= vec->blocksize())
+	if (*params / sizeof(cell) == 4)
 	{
-		indexes = params[4];
+		if (params[4] != -1 && (size_t)params[4] <= vec->blocksize())
+		{
+			indexes = params[4];
+		}
 	}
 
 	cell *addr = get_amxaddr(amx, params[3]);
@@ -287,6 +299,12 @@ static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
 
 	cell *blk = vec->at(idx);
 	idx = (size_t)params[4];
+
+	if (*params / sizeof(cell) <= 3)
+	{
+		*blk = params[3];
+		return 1;
+	}
 
 	if (params[5] == 0)
 	{
@@ -357,9 +375,12 @@ static cell AMX_NATIVE_CALL ArrayPushArray(AMX* amx, cell* params)
 	cell *addr = get_amxaddr(amx, params[2]);
 	size_t indexes = vec->blocksize();
 
-	if (params[3] != -1 && (size_t)params[3] <= vec->blocksize())
+	if (*params / sizeof(cell) == 3)
 	{
-		indexes = params[3];
+		if (params[3] != -1 && (size_t)params[3] <= vec->blocksize())
+		{
+			indexes = params[3];
+		}
 	}
 
 	memcpy(blk, addr, sizeof(cell) * indexes);

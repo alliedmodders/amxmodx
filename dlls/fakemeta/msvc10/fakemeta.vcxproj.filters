@@ -65,7 +65,7 @@
     <ClCompile Include="..\glb.cpp">
       <Filter>Globals</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
+    <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -94,16 +94,16 @@
     <ClInclude Include="..\glb.h">
       <Filter>Globals</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
-      <Filter>Module SDK</Filter>
-    </ClInclude>
     <ClInclude Include="..\sdk\CString.h">
       <Filter>Module SDK\AMXX STL</Filter>
     </ClInclude>
     <ClInclude Include="..\sdk\CVector.h">
       <Filter>Module SDK\AMXX STL</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
     </ClInclude>
   </ItemGroup>

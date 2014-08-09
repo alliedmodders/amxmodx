@@ -14,16 +14,17 @@
 #ifndef _FAKEMETA_INCLUDE_H
 #define _FAKEMETA_INCLUDE_H
 
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 #include <entity_state.h>
 #include <usercmd.h>
-#include "CVector.h"
 #include "engfunc.h"
 #include "dllfunc.h"
 #include "pev.h"
 #include "forward.h"
 #include "fm_tr.h"
 #include "glb.h"
+#include <am-string.h>
+#include <am-vector.h>
 
 extern edict_t *g_player_edicts[33];
 

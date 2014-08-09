@@ -3,8 +3,12 @@ import os.path
 
 binary = AMXX.MetaModule(builder, 'fakemeta')
 
+binary.compiler.defines += [
+  'HAVE_STDINT_H',
+]
+
 binary.sources = [
-  'sdk/amxxmodule.cpp',
+  '../../public/sdk/amxxmodule.cpp',
   'dllfunc.cpp',
   'engfunc.cpp',
   'fakemeta_amxx.cpp',

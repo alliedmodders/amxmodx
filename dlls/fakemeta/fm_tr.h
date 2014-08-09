@@ -14,7 +14,7 @@
 #ifndef _INCLUDE_TR_H
 #define _INCLUDE_TR_H
 
-#include "CString.h"
+#include <am-string.h>
 
 extern TraceResult *gfm_tr;
 
@@ -31,9 +31,9 @@ extern usercmd_t *g_uc_hook;
 struct KVD_Wrapper
 {
 	KeyValueData *kvd;
-	String cls;
-	String key;
-	String val;
+	ke::AString cls;
+	ke::AString key;
+	ke::AString val;
 };
 
 extern KVD_Wrapper g_kvd_glb;

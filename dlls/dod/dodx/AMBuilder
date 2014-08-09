@@ -4,7 +4,7 @@ import os.path
 binary = AMXX.MetaModule(builder, 'dodx')
 
 binary.sources = [
-  'sdk/amxxmodule.cpp',
+  '../../../public/sdk/amxxmodule.cpp',
   'CRank.cpp',
   'CMisc.cpp',
   'NBase.cpp',

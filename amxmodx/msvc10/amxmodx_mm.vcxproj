@@ -92,7 +92,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -143,7 +143,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <StringPooling>true</StringPooling>
@@ -192,8 +192,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\multiplayer\common;$(HLSDK)\multiplayer\engine;$(HLSDK)\multiplayer\dlls;$(HLSDK)\multiplayer\pm_shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;BINLOG_ENABLED;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;BINLOG_ENABLED;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StructMemberAlignment>4Bytes</StructMemberAlignment>
@@ -243,8 +243,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\multiplayer\common;$(HLSDK)\multiplayer\engine;$(HLSDK)\multiplayer\dlls;$(HLSDK)\multiplayer\pm_shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;BINLOG_ENABLED;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;HAVE_STDINT_H;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;BINLOG_ENABLED;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -342,7 +342,7 @@
     <ClCompile Include="..\vault.cpp" />
     <ClCompile Include="..\vector.cpp" />
     <ClCompile Include="..\datastructs.cpp" />
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
+    <ClCompile Include="..\..\public\sdk\amxxmodule.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='JITDebugBinLog|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='JITReleaseBinLog|Win32'">true</ExcludedFromBuild>
@@ -396,8 +396,8 @@
     <ClInclude Include="..\trie_natives.h" />
     <ClInclude Include="..\zlib\zconf.h" />
     <ClInclude Include="..\zlib\zlib.h" />
-    <ClInclude Include="..\sdk\amxxmodule.h" />
-    <ClInclude Include="..\sdk\moduleconfig.h" />
+    <ClInclude Include="..\..\public\sdk\amxxmodule.h" />
+    <ClInclude Include="..\..\public\sdk\moduleconfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\version.rc" />

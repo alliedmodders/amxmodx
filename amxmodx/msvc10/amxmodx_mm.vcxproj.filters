@@ -162,9 +162,6 @@
     <ClCompile Include="..\vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
-      <Filter>SDK</Filter>
-    </ClCompile>
     <ClCompile Include="..\datastructs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -182,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="..\textparse.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\sdk\amxxmodule.cpp">
+      <Filter>SDK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -314,12 +314,6 @@
     <ClInclude Include="..\zlib\zlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
-      <Filter>SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
-      <Filter>SDK</Filter>
-    </ClInclude>
     <ClInclude Include="..\CDataPack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -328,6 +322,12 @@
     </ClInclude>
     <ClInclude Include="..\textparse.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\sdk\amxxmodule.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\sdk\moduleconfig.h">
+      <Filter>SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

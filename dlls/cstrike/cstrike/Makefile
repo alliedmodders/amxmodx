@@ -6,7 +6,7 @@
 ###########################################
 
 HLSDK = ../../../../hlsdk
-MM_ROOT = ../../../../metamod-am/metamod
+MM_ROOT = ../../../../metamod/metamod
 PUBLIC_ROOT = ../../../public
 
 #####################################

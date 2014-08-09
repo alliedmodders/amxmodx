@@ -94,7 +94,7 @@ native geoip_code3(const ip[], result[4]);
  *
  * @return          The result length on successful lookup, 0 otherwise.
  */
-native geoip_country(const ip[], result[], len, id = -1);
+native geoip_country(const ip[], result[], len = 45, id = -1);
 
 
 /**

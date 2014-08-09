@@ -8,7 +8,7 @@ binary.compiler.defines += [
 ]
 
 binary.sources = [
-  'sdk/amxxmodule.cpp',
+  '../../../public/sdk/amxxmodule.cpp',
   'amxx_api.cpp',
   'CstrikePlayer.cpp',
   'CstrikeNatives.cpp',

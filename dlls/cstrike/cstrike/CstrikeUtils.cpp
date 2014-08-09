@@ -73,7 +73,6 @@ void *UTIL_FindAddressFromEntry(const char *entry, bool isHidden, const char *li
 #elif defined(__linux__) || defined(__APPLE__)
 
 		Dl_info info;
-		void *handle = NULL;
 
 		if (dladdr(addressInBase, &info) != 0)
 		{

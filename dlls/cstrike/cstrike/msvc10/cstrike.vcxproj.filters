@@ -35,9 +35,6 @@
     <ClCompile Include="..\CstrikePlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
-      <Filter>Module SDK\SDK Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\amxx_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,16 +53,13 @@
     <ClCompile Include="..\CstrikeUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp">
+      <Filter>Module SDK\SDK Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CstrikePlayer.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
-      <Filter>Module SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
-      <Filter>Module SDK\SDK Base</Filter>
     </ClInclude>
     <ClInclude Include="..\CstrikeDatas.h">
       <Filter>Header Files</Filter>
@@ -84,6 +78,12 @@
     </ClInclude>
     <ClInclude Include="..\CstrikeUtils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h">
+      <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

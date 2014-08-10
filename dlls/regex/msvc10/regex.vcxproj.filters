@@ -40,9 +40,6 @@
     <ClInclude Include="..\pcre.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>

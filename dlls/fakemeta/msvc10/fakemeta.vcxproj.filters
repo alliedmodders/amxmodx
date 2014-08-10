@@ -76,9 +76,6 @@
     <ClInclude Include="..\fm_tr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\dllfunc.h">
       <Filter>Engine Funcs</Filter>
     </ClInclude>

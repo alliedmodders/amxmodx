@@ -98,7 +98,6 @@
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\moduleconfig.h" />
     <ClInclude Include="..\..\..\public\sdk\amxxmodule.h" />
   </ItemGroup>

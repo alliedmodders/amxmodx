@@ -146,7 +146,6 @@
     <ClInclude Include="..\CMisc.h" />
     <ClInclude Include="..\CRank.h" />
     <ClInclude Include="..\dodx.h" />
-    <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\moduleconfig.h" />
     <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h" />
   </ItemGroup>

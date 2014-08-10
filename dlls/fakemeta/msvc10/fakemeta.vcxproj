@@ -107,7 +107,6 @@
   <ItemGroup>
     <ClInclude Include="..\fakemeta_amxx.h" />
     <ClInclude Include="..\fm_tr.h" />
-    <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\dllfunc.h" />
     <ClInclude Include="..\engfunc.h" />
     <CustomBuildStep Include="pev.h" />

@@ -49,9 +49,6 @@
     <ClInclude Include="..\rank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\moduleconfig.h">
       <Filter>SDK</Filter>
     </ClInclude>

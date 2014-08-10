@@ -104,7 +104,6 @@
   <ItemGroup>
     <ClInclude Include="..\CRegEx.h" />
     <ClInclude Include="..\pcre.h" />
-    <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\moduleconfig.h" />
     <ClInclude Include="..\..\..\public\sdk\amxxmodule.h" />
     <ClInclude Include="..\utils.h" />

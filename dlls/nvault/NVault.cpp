@@ -102,14 +102,14 @@ VaultError NVault::_ReadFromFile()
 			if (!br.ReadUInt8(keylen)) goto fail;
 			if (!br.ReadUInt16(vallen)) goto fail;
 
-			if (keylen > oldkeylen)
+			if (!keylen || keylen > oldkeylen)
 			{
 				if (key)
 					delete [] key;
 				key = new char[keylen + 1];
 				oldkeylen = keylen;
 			}
-			if (vallen > oldvallen)
+			if (!vallen || vallen > oldvallen)
 			{
 				if (val)
 					delete [] val;
@@ -209,13 +209,13 @@ success:
 
 const char *NVault::GetValue(const char *key)
 {
-	ArrayInfo result;
-	if (!m_Hash.retrieve(key, &result))
+	StringHashMap<ArrayInfo>::Result r = m_Hash.find(key);
+	if (!r.found())
 	{
-		result.value.setVoid();
+		return "";
 	}
 
-	return result.value.chars();
+	return r->value.value.chars();
 }
 
 bool NVault::Open()
@@ -350,10 +350,7 @@ void NVault::Touch(const char *key, time_t stamp)
 			return;
 		}
 
-		ArrayInfo info; info.value = ""; info.stamp = time(NULL);
-
-		i->key = key;
-		i->value = info;
+		SetValue(key, "", time(NULL));
 	}
 
 	i->value.stamp = stamp;

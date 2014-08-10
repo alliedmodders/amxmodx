@@ -43,7 +43,7 @@ ThreadWorker::~ThreadWorker()
 	if (m_state != Worker_Stopped || m_state != Worker_Invalid)
 		Stop(true);
 
-	if (m_ThreadQueue.size())
+	if (m_ThreadQueue.length())
 		Flush(true);
 }
 
@@ -69,7 +69,7 @@ void ThreadWorker::RunThread(IThreadHandle *pHandle)
 		if (this_state != Worker_Stopped)
 		{
 			m_QueueLock->Lock();
-			num = m_ThreadQueue.size();
+			num = m_ThreadQueue.length();
 			if (!num)
 			{
 				/** 
@@ -106,7 +106,7 @@ void ThreadWorker::RunThread(IThreadHandle *pHandle)
 					// run all of the remaining frames first.
 					if (!m_FlushType)
 					{
-						while (m_ThreadQueue.size())
+						while (m_ThreadQueue.length())
 							RunFrame();
 					}
 					break;

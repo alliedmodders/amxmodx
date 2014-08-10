@@ -10,7 +10,7 @@
 #ifndef _INCLUDE_SOURCEMOD_BASEWORKER_H
 #define _INCLUDE_SOURCEMOD_BASEWORKER_H
 
-#include "sh_list.h"
+#include <am-linkedlist.h>
 #include "ThreadSupport.h"
 
 #define SM_DEFAULT_THREADS_PER_FRAME	1
@@ -73,7 +73,7 @@ public:	//BaseWorker
 	virtual void SetMaxThreadsPerFrame(unsigned int threads);
 	virtual unsigned int GetMaxThreadsPerFrame();
 protected:
-	SourceHook::List<SWThreadHandle *> m_ThreadQueue;
+	ke::LinkedList<SWThreadHandle *> m_ThreadQueue;
 	unsigned int m_perFrame;
 	volatile WorkerState m_state;
 };

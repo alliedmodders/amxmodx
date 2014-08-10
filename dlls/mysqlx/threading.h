@@ -16,9 +16,8 @@
 
 #include "IThreader.h"
 #include "ISQLDriver.h"
-#include "sh_string.h"
-#include "CVector.h"
-#include "sh_stack.h"
+#include <am-string.h>
+#include <sh_stack.h>
 
 struct QueuedResultInfo
 {
@@ -64,7 +63,7 @@ private:
 	unsigned int m_RowCount;
 	unsigned int m_FieldCount;
 	size_t m_AllocSize;
-	SourceHook::String **m_Table;
+	ke::AString **m_Table;
 	unsigned int m_CurRow;
 	bool m_IsFree;
 };
@@ -86,13 +85,13 @@ public:
 	void RunThread(IThreadHandle *pHandle);
 	void OnTerminate(IThreadHandle *pHandle, bool cancel);
 private:
-	SourceHook::String m_query;
-	SourceHook::String m_host;
-	SourceHook::String m_user;
-	SourceHook::String m_pass;
-	SourceHook::String m_db;
+	ke::AString m_query;
+	ke::AString m_host;
+	ke::AString m_user;
+	ke::AString m_pass;
+	ke::AString m_db;
 	unsigned int m_max_timeout;
-	SourceHook::String m_charset;
+	ke::AString m_charset;
 	int m_port;
 	cell *m_data;
 	ucell m_datalen;

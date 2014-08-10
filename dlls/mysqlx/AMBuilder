@@ -34,7 +34,7 @@ if AMXX.mysql_path:
     'handles.cpp',
     'module.cpp',
     'threading.cpp',
-    'sdk/amxxmodule.cpp',
+    '../../public/sdk/amxxmodule.cpp',
     'oldcompat_sql.cpp',
     'thread/BaseWorker.cpp',
     'thread/ThreadWorker.cpp',

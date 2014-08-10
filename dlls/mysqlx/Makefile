@@ -8,6 +8,7 @@
 HLSDK = ../../../hlsdk
 MM_ROOT = ../../../metamod/metamod
 MYSQL_DIR = ../../../mysql-5.0
+PUBLIC_ROOT = ../../public
 
 #####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###
@@ -15,7 +16,7 @@ MYSQL_DIR = ../../../mysql-5.0
 
 PROJECT = mysql
 
-OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp sdk/amxxmodule.cpp oldcompat_sql.cpp \
+OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp amxxmodule.cpp oldcompat_sql.cpp \
           thread/BaseWorker.cpp thread/ThreadWorker.cpp thread/PosixThreads.cpp \
 	  mysql/MysqlQuery.cpp mysql/MysqlResultSet.cpp mysql/MysqlDatabase.cpp mysql/MysqlDriver.cpp
 
@@ -32,8 +33,10 @@ CPP_OSX = clang
 
 LINK = $(MYSQL_DIR)/lib/libmysqlclient_r.a -lz -lpthread -L$(MYSQL_DIR)/lib
 
-INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
-          -I$(HLSDK)/public -I$(MM_ROOT) -I$(MYSQL_DIR)/include -Ithread -Imysql -Isdk
+INCLUDE = -I. -I$(PUBLIC_ROOT) -I$(PUBLIC_ROOT)/sdk -I$(PUBLIC_ROOT)/amtl \
+			  -I$(HLSDK) -I$(HLSDK)/public -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/pm_shared\
+			  -I$(MYSQL_DIR)/include -Ithread -Imysql \
+			  -I$(MM_ROOT)
 
 ################################################
 ### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###
@@ -111,7 +114,7 @@ all:
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(BIN_DIR)/mysql
 	mkdir -p $(BIN_DIR)/thread
-	mkdir -p $(BIN_DIR)/sdk
+	ln -sf $(PUBLIC_ROOT)/sdk/amxxmodule.cpp
 	$(MAKE) -f $(MAKEFILE_NAME) $(PROJECT)
 
 $(PROJECT): $(OBJ_BIN)
@@ -126,6 +129,5 @@ clean:
 	rm -rf $(BIN_DIR)/*.o
 	rm -rf $(BIN_DIR)/mysql/*.o
 	rm -rf $(BIN_DIR)/thread/*.o
-	rm -rf $(BIN_DIR)/sdk/*.o
 	rm -f $(BIN_DIR)/$(BINARY)
 

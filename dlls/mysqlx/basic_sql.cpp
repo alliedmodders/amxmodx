@@ -12,12 +12,10 @@
 //
 
 #include <stdio.h>
-#include "sh_list.h"
 #include "mysql2_header.h"
 #include "sqlheaders.h"
 
 using namespace SourceMod;
-using namespace SourceHook;
 
 MysqlDriver g_Mysql;
 

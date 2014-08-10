@@ -19,8 +19,6 @@
 #include <sm_stringhashmap.h>
 #include <am-string.h>
 
-using namespace SourceMod;
-
 enum JOp
 {
 	Journal_Nop=0,		//no operation

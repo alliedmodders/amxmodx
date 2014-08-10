@@ -50,8 +50,8 @@
 #include <am-moveable.h>
 #include <string.h>
 
-namespace SourceMod
-{
+//namespace SourceMod
+//{
 
 namespace detail
 {
@@ -236,6 +236,6 @@ private:
 	size_t memory_used_;
 };
 
-}
+//}
 
 #endif // _include_sourcemod_hashtable_h_

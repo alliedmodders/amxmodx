@@ -19,8 +19,6 @@
 #include "IVault.h"
 #include "Journal.h"
 
-using namespace SourceMod;
-
 #define VAULT_MAGIC		0x6E564C54			//nVLT
 #define	VAULT_VERSION	0x0200				//second version
 

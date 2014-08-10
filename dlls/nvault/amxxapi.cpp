@@ -16,8 +16,6 @@
 #include "NVault.h"
 #include <sm_queue.h>
 
-using namespace SourceMod;
-
 #ifdef WIN32
 #define MKDIR(p) mkdir(p)
 #else

@@ -36,8 +36,8 @@
  * @file ITextParsers.h
  * @brief Defines various text/file parsing functions, as well as UTF-8 support code.
  */
-namespace SourceMod
-{
+//namespace SourceMod
+//{
 
 	#define SMINTERFACE_TEXTPARSERS_NAME		"ITextParsers"
 	#define SMINTERFACE_TEXTPARSERS_VERSION		4
@@ -450,9 +450,9 @@ namespace SourceMod
 		}
 		return 1;
 	}
-}
+//}
 
-extern SourceMod::ITextParsers *textparsers;
+extern ITextParsers *textparsers;
 
 #endif //_INCLUDE_SOURCEMOD_TEXTPARSERS_INTERFACE_H_
 

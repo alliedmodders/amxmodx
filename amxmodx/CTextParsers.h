@@ -35,8 +35,6 @@
 #include <ITextParsers.h>
 #include <am-vector.h>
 
-using namespace SourceMod;
-
 /**
 * @param void *			IN: Stream pointer
 * @param char *			IN/OUT: Stream buffer

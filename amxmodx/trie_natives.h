@@ -15,8 +15,6 @@
 #include <sm_memtable.h>
 #include "CVector.h"
 
-using namespace SourceMod;
-
 enum EntryType
 {
 	EntryType_Cell,

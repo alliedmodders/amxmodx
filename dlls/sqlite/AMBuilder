@@ -9,6 +9,7 @@ binary.compiler.cxxincludes += [
 ]
 binary.compiler.defines += [
   'SM_DEFAULT_THREADER',
+  'stricmp=strcasecmp',
   'HAVE_STDINT_H',
 ]
 

@@ -7,6 +7,7 @@
 
 HLSDK = ../../../../hlsdk
 MM_ROOT = ../../../../metamod/metamod
+PUBLIC_ROOT = ../../../public
 
 #####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###
@@ -14,7 +15,7 @@ MM_ROOT = ../../../../metamod/metamod
 
 PROJECT = tsx
 
-OBJECTS = sdk/amxxmodule.cpp CMisc.cpp CRank.cpp NBase.cpp  NRank.cpp Utils.cpp moduleconfig.cpp \
+OBJECTS = amxxmodule.cpp CMisc.cpp CRank.cpp NBase.cpp  NRank.cpp Utils.cpp moduleconfig.cpp \
 	  usermsg.cpp
 
 ##############################################
@@ -30,8 +31,9 @@ CPP_OSX = clang
 
 LINK =
 
-INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
-	  -I$(HLSDK)/public -I$(MM_ROOT) -Isdk
+INCLUDE = -I. -I$(PUBLIC_ROOT) -I$(PUBLIC_ROOT)/sdk -I$(PUBLIC_ROOT)/memtools -I$(PUBLIC_ROOT)/memtools/CDetour -I$(PUBLIC_ROOT)/memtools/CDetour/asm -I$(PUBLIC_ROOT)/amtl \
+			  -I$(HLSDK) -I$(HLSDK)/public -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
+			  -I$(MM_ROOT)
 
 ################################################
 ### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###
@@ -106,7 +108,7 @@ $(BIN_DIR)/%.o: %.cpp
 
 all:
 	mkdir -p $(BIN_DIR)
-	mkdir -p $(BIN_DIR)/sdk
+	ln -sf $(PUBLIC_ROOT)/sdk/amxxmodule.cpp
 	$(MAKE) -f $(MAKEFILE_NAME) $(PROJECT)
 
 $(PROJECT): $(OBJ_BIN)
@@ -119,6 +121,5 @@ default: all
 
 clean:
 	rm -rf $(BIN_DIR)/*.o
-	rm -rf $(BIN_DIR)/sdk/*.o
 	rm -f $(BIN_DIR)/$(BINARY)
 

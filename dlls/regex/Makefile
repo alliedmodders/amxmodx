@@ -32,7 +32,6 @@ LINK = -lpcre
 
 INCLUDE = -I. -I$(PUBLIC_ROOT) -I$(PUBLIC_ROOT)/sdk -I$(PUBLIC_ROOT)/amtl \
 			  -I$(HLSDK) -I$(HLSDK)/public -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/pm_shared\
-			  -I$(MYSQL_DIR)/include -Ithread -Imysql \
 			  -I$(MM_ROOT)
 
 ################################################

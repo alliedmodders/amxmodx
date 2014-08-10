@@ -4,7 +4,7 @@ import os.path
 binary = AMXX.Module(builder, 'sockets')
 
 binary.sources = [
-  'sdk/amxxmodule.cpp',
+  '../../public/sdk/amxxmodule.cpp',
   'sockets.cpp',
 ]
 

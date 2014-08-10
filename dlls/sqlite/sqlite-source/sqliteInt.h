@@ -16,7 +16,7 @@
 #ifndef _SQLITEINT_H_
 #define _SQLITEINT_H_
 
-#if defined _MSC_VER && _MSC_VER >= 1400
+#if defined _MSC_VER && _MSC_VER >= 1400 && !defined _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
 

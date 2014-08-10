@@ -15,7 +15,7 @@
 #include "amxxmodule.h"
 #include "NVault.h"
 #include "Binary.h"
-#include "CString.h"
+#include <am-string.h>
 
 /** 
  * :TODO: This beast calls strcpy()/new() way too much by creating new strings on the stack.
@@ -23,35 +23,16 @@
  *         ---bail
  */
 
-template <>
-int HashFunction<String>(const String & k)
-{
-	unsigned long hash = 5381;
-	const char *str = k.c_str();
-	char c;
-	while ((c = *str++))
-	{
-		hash = ((hash << 5) + hash) + c; // hash*33 + c
-	}
-	return hash;
-}
-
-template <>
-int Compare<String>(const String & k1, const String & k2)
-{
-	return strcmp(k1.c_str(),k2.c_str());
-}
-
 NVault::NVault(const char *file)
 {
-	m_File.assign(file);
+	m_File = file;
 	m_Journal = NULL;
 	m_Open = false;
 
-	FILE *fp = fopen(m_File.c_str(), "rb");
+	FILE *fp = fopen(m_File.chars(), "rb");
 	if (!fp)
 	{
-		fp = fopen(m_File.c_str(), "wb");
+		fp = fopen(m_File.chars(), "wb");
 		if (!fp)
 		{
 			this->m_Valid = false;
@@ -70,7 +51,7 @@ NVault::~NVault()
 
 VaultError NVault::_ReadFromFile()
 {
-	FILE *fp = fopen(m_File.c_str(), "rb");
+	FILE *fp = fopen(m_File.chars(), "rb");
 
 	if (!fp)
 	{
@@ -90,8 +71,6 @@ VaultError NVault::_ReadFromFile()
 	time_t stamp;
 	char *key = NULL;
 	char *val = NULL;
-	String sKey;
-	String sVal;
 
 //	try
 //	{
@@ -143,9 +122,9 @@ VaultError NVault::_ReadFromFile()
 			
 			key[keylen] = '\0';
 			val[vallen] = '\0';
-			sKey.assign(key);
-			sVal.assign(val);
-			m_Hash.Insert(sKey, sVal, stamp);
+
+			ArrayInfo info; info.value = val; info.stamp = stamp;
+			m_Hash.replace(key, info);
 		}
 
 //	} catch (...) {
@@ -174,7 +153,7 @@ success:
 
 bool NVault::_SaveToFile()
 {
-	FILE *fp = fopen(m_File.c_str(), "wb");
+	FILE *fp = fopen(m_File.chars(), "wb");
 
 	if (!fp)
 	{
@@ -189,28 +168,29 @@ bool NVault::_SaveToFile()
 	uint16_t version = VAULT_VERSION;
 
 	time_t stamp;
-	String key;
-	String val;
+	ke::AString key;
+	ke::AString val;
 
-	THash<String,String>::iterator iter = m_Hash.begin();
+	StringHashMap<ArrayInfo>::iterator iter = m_Hash.iter();
 
 	if (!bw.WriteUInt32(magic)) goto fail;
 	if (!bw.WriteUInt16(version)) goto fail;
 
-	if (!bw.WriteUInt32( m_Hash.Size() )) goto fail;
+	if (!bw.WriteUInt32( m_Hash.elements() )) goto fail;
 	
-	while (iter != m_Hash.end())
+	while (!iter.empty())
 	{
 		key = (*iter).key;
-		val = (*iter).val;
-		stamp = (*iter).stamp;
+		val = (*iter).value.value;
+		stamp = (*iter).value.stamp;
 		
 		if (!bw.WriteInt32(static_cast<int32_t>(stamp))) goto fail;;
-		if (!bw.WriteUInt8( key.size() )) goto fail;
-		if (!bw.WriteUInt16( val.size() )) goto fail;
-		if (!bw.WriteChars( key.c_str(), key.size() )) goto fail;
-		if (!bw.WriteChars( val.c_str(), val.size() )) goto fail;
-		iter++;
+		if (!bw.WriteUInt8( key.length() )) goto fail;
+		if (!bw.WriteUInt16( val.length() )) goto fail;
+		if (!bw.WriteChars( key.chars(), key.length() )) goto fail;
+		if (!bw.WriteChars( val.chars(), val.length() )) goto fail;
+
+		iter.next();
 	}
 		
 	goto success;
@@ -229,21 +209,21 @@ success:
 
 const char *NVault::GetValue(const char *key)
 {
-	String sKey(key);
-	if (!m_Hash.Exists(sKey))
+	ArrayInfo result;
+	if (!m_Hash.retrieve(key, &result))
 	{
-		return "";
-	} else {
-		return m_Hash.Retrieve(sKey).c_str();
+		result.value.setVoid();
 	}
+
+	return result.value.chars();
 }
 
 bool NVault::Open()
 {
 	_ReadFromFile();
 
-	char *journal_name = new char[m_File.size() + 10];
-	strcpy(journal_name, m_File.c_str());
+	char *journal_name = new char[m_File.length() + 10];
+	strcpy(journal_name, m_File.chars());
 
 	char *pos = strstr(journal_name, ".vault");
 	if (pos)
@@ -291,78 +271,106 @@ void NVault::SetValue(const char *key, const char *val)
 {
 	if (m_Journal)
 		m_Journal->Write_Insert(key, val, time(NULL));
-	String sKey;
-	String sVal;
-	sKey.assign(key);
-	sVal.assign(val);
-	m_Hash.Insert(sKey, sVal);
+
+	ArrayInfo info; info.value = val; info.stamp = time(NULL);
+	m_Hash.replace(key, info);
 }
 
 void NVault::SetValue(const char *key, const char *val, time_t stamp)
 {
 	if (m_Journal)
 		m_Journal->Write_Insert(key, val, stamp);
-	String sKey;
-	String sVal;
-	sKey.assign(key);
-	sVal.assign(val);
-	m_Hash.Insert(sKey, sVal, stamp);
+
+	ArrayInfo info; info.value = val; info.stamp = stamp;
+	m_Hash.replace(key, info);
 }
 
 void NVault::Remove(const char *key)
 {
 	if (m_Journal)
 		m_Journal->Write_Remove(key);
-	String sKey(key);
-	m_Hash.Remove(sKey);
+
+	m_Hash.remove(ke::AString(key).chars());
 }
 
 void NVault::Clear()
 {
 	if (m_Journal)
 		m_Journal->Write_Clear();
-	m_Hash.Clear();
+
+	m_Hash.clear();
 }
 
 size_t NVault::Items()
 {
-	return m_Hash.Size();
+	return m_Hash.elements();
 }
 
 size_t NVault::Prune(time_t start, time_t end)
 {
 	if (m_Journal)
 		m_Journal->Write_Prune(start, end);
-	return m_Hash.Prune(start, end);
+
+	size_t removed = 0;
+
+	for (StringHashMap<ArrayInfo>::iterator iter = m_Hash.iter(); !iter.empty(); iter.next())
+	{
+		time_t stamp = iter->value.stamp;
+		bool remove = false;
+
+		if (stamp != 0)
+		{
+			if (start == 0 && end == 0)
+				remove = true;
+			else if (start == 0 && stamp < end)
+				remove = true;
+			else if (end == 0 && stamp > start)
+				remove = true;
+			else if (stamp > start && stamp < end)
+				remove = true;
+
+			if (remove)
+			{
+				iter.erase();
+				removed++;
+			}
+		}
+	}
+
+	return removed;
 }
 
 void NVault::Touch(const char *key, time_t stamp)
 {
-	String sKey(key);
-
-	if (!m_Hash.Exists(sKey))
+	StringHashMap<ArrayInfo>::Insert i = m_Hash.findForAdd(key);
+	if (!i.found())
 	{
-		SetValue(key, "", time(NULL));
+		if (!m_Hash.add(i, key))
+		{
+			return;
+		}
+
+		ArrayInfo info; info.value = ""; info.stamp = time(NULL);
+
+		i->key = key;
+		i->value = info;
 	}
 
-	m_Hash.Touch(key, stamp);
+	i->value.stamp = stamp;
 }
 
 bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)
 {
-	String sKey(key);
-	if (!m_Hash.Exists(sKey))
+	ArrayInfo result;
+
+	if (!m_Hash.retrieve(key, &result))
 	{
 		buffer[0] = '\0';
 		return false;
 	}
 
-	time_t st;
-	String sVal;
-
-	sVal = m_Hash.Retrieve(sKey, st);
-	stamp = st;
-	UTIL_Format(buffer, len, "%s", sVal.c_str());
+	stamp = result.stamp;
+	UTIL_Format(buffer, len, "%s", result.value.chars());
 
 	return true;
 }

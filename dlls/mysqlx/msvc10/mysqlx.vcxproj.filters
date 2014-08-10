@@ -85,9 +85,6 @@
     <ClInclude Include="..\sqlheaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\threading.h">
       <Filter>Header Files</Filter>
     </ClInclude>

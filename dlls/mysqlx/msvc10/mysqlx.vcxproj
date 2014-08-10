@@ -113,7 +113,6 @@
   <ItemGroup>
     <ClInclude Include="..\mysql2_header.h" />
     <ClInclude Include="..\sqlheaders.h" />
-    <ClInclude Include="..\svn_version.h" />
     <ClInclude Include="..\threading.h" />
     <ClInclude Include="..\thread\IThreader.h" />
     <ClInclude Include="..\thread\BaseWorker.h" />

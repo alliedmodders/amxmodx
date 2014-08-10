@@ -15,9 +15,11 @@
 #define _INCLUDE_JOURNAL_H
 
 #include "Binary.h"
-#include "sh_list.h"
-#include "sh_tinyhash.h"
-#include "CString.h"
+#include <am-linkedlist.h>
+#include <sm_stringhashmap.h>
+#include <am-string.h>
+
+using namespace SourceMod;
 
 enum JOp
 {
@@ -35,7 +37,13 @@ enum Encode
 	Encode_Medium,
 };
 
-typedef THash<String,String> VaultMap;
+struct ArrayInfo
+{
+	ke::AString value;
+	time_t stamp;
+};
+
+typedef StringHashMap<ArrayInfo> VaultMap;
 
 class Journal
 {
@@ -56,7 +64,7 @@ private:
 	bool WriteInt32(int num);
 	bool WriteString(const char *str, Encode enc);
 private:
-	String m_File;
+	ke::AString m_File;
 	FILE *m_fp;
 	BinaryWriter m_Bw;
 };

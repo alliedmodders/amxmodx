@@ -19,8 +19,8 @@
 #include <string.h>
 #include <stdio.h>
 
-namespace SourceHook
-{
+//namespace SourceHook
+//{
 class String
 {
 public:
@@ -362,6 +362,6 @@ public:
 	static const int npos = -1;
 };
 
-};	//NAMESPACE
+//};	//NAMESPACE
 
 #endif //_INCLUDE_CSTRING_H

@@ -14,7 +14,9 @@
 #include <stdlib.h>
 #include "amxxapi.h"
 #include "NVault.h"
-#include "CQueue.h"
+#include <sm_queue.h>
+
+using namespace SourceMod;
 
 #ifdef WIN32
 #define MKDIR(p) mkdir(p)
@@ -30,8 +32,8 @@
 #include <direct.h>
 #endif
 
-CVector<NVault *> g_Vaults;
-CQueue<int> g_OldVaults;
+ke::Vector<NVault *> g_Vaults;
+Queue<int> g_OldVaults;
 
 VaultMngr g_VaultMngr;
 
@@ -48,7 +50,7 @@ static cell nvault_open(AMX *amx, cell *params)
 	char path[255], file[255];
 	MF_BuildPathnameR(path, sizeof(path)-1, "%s/vault", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
 	sprintf(file, "%s/%s.vault", path, name);
-	for (size_t i=0; i<g_Vaults.size(); i++)
+	for (size_t i=0; i<g_Vaults.length(); i++)
 	{
 		if (!g_Vaults[i])
 			continue;
@@ -63,15 +65,15 @@ static cell nvault_open(AMX *amx, cell *params)
 	}
 	if (!g_OldVaults.empty())
 	{
-		id = g_OldVaults.front();
+		id = g_OldVaults.first();
 		g_OldVaults.pop();
 	}
 	if (id != -1)
 	{
 		g_Vaults[id] = v;
 	} else {
-		g_Vaults.push_back(v);
-		id = (int)g_Vaults.size()-1;
+		g_Vaults.append(v);
+		id = (int)g_Vaults.length()-1;
 	}
 
 	return id;
@@ -80,7 +82,7 @@ static cell nvault_open(AMX *amx, cell *params)
 static cell nvault_touch(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
-	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	if (id >= g_Vaults.length() || !g_Vaults.at(id))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
 		return 0;
@@ -102,7 +104,7 @@ static cell nvault_touch(AMX *amx, cell *params)
 static cell nvault_get(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
-	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	if (id >= g_Vaults.length() || !g_Vaults.at(id))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
 		return 0;
@@ -140,7 +142,7 @@ static cell nvault_get(AMX *amx, cell *params)
 static cell nvault_lookup(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
-	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	if (id >= g_Vaults.length() || !g_Vaults.at(id))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
 		return 0;
@@ -165,7 +167,7 @@ static cell nvault_lookup(AMX *amx, cell *params)
 static cell nvault_set(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
-	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	if (id >= g_Vaults.length() || !g_Vaults.at(id))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
 		return 0;
@@ -183,7 +185,7 @@ static cell nvault_set(AMX *amx, cell *params)
 static cell nvault_pset(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
-	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	if (id >= g_Vaults.length() || !g_Vaults.at(id))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
 		return 0;
@@ -201,7 +203,7 @@ static cell nvault_pset(AMX *amx, cell *params)
 static cell nvault_close(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
-	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	if (id >= g_Vaults.length() || !g_Vaults.at(id))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
 		return 0;
@@ -218,7 +220,7 @@ static cell nvault_close(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL nvault_prune(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
-	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	if (id >= g_Vaults.length() || !g_Vaults.at(id))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
 		return 0;
@@ -233,7 +235,7 @@ static cell AMX_NATIVE_CALL nvault_prune(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL nvault_remove(AMX *amx, cell *params)
 {
 	unsigned int id = params[1];
-	if (id >= g_Vaults.size() || !g_Vaults.at(id))
+	if (id >= g_Vaults.length() || !g_Vaults.at(id))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid vault id: %d\n", id);
 		return 0;
@@ -261,7 +263,7 @@ void OnAmxxAttach()
 
 void OnPluginsUnloaded()
 {
-	for (size_t i=0; i<g_Vaults.size(); i++)
+	for (size_t i=0; i<g_Vaults.length(); i++)
 	{
 		if (g_Vaults[i])
 			delete g_Vaults[i];

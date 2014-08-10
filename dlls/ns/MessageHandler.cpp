@@ -17,11 +17,9 @@
  * is sending a message we care about.
  */
 
-#include "sdk/amxxmodule.h"
-
+#include "amxxmodule.h"
 #include "ns.h"
 #include "utilfunctions.h"
-
 #include "GameManager.h"
 #include "MessageHandler.h"
 

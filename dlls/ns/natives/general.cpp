@@ -13,21 +13,21 @@
 
 #include <string.h>
 
-#include "../sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
 #include "cbase.h" // TakeDamage
 
-#include "../ns.h" 
+#include "ns.h" 
 
-#include "../utilfunctions.h"
-#include "../NEW_Util.h"
+#include "utilfunctions.h"
+#include "NEW_Util.h"
 
-#include "../GameManager.h"
-#include "../SpawnManager.h"
-#include "../LocationManager.h"
-#include "../TitleManager.h"
+#include "GameManager.h"
+#include "SpawnManager.h"
+#include "LocationManager.h"
+#include "TitleManager.h"
 
-#include "../CPlayer.h"
+#include "CPlayer.h"
 
 
 edict_t* avhgameplay=NULL;
@@ -229,9 +229,7 @@ static cell AMX_NATIVE_CALL ns_get_locationname(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL ns_lookup_title(AMX *amx, cell *params)
 {
 	// FIX: some keys have upper case characters; to fix i store all keys as lower case
-	String Input(MF_GetAmxString(amx,params[1],0,NULL));
-
-	Input.toLower();
+	ke::AString Input(UTIL_ToLowerCase(MF_GetAmxString(amx,params[1],0,NULL)));
 
 	const char *Output=TitleMan.Lookup(Input);
 

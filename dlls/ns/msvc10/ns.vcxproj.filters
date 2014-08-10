@@ -12,8 +12,11 @@
       <UniqueIdentifier>{e619584d-fe78-4fa8-9b61-715f075c990c}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
-    <Filter Include="sdk">
+    <Filter Include="Module SDK">
       <UniqueIdentifier>{d6f08195-ccd3-49f9-be66-8064cf182a41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module SDK\SDK Base">
+      <UniqueIdentifier>{28f804b5-b177-4048-b0c6-36ba103593b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -62,8 +65,8 @@
     <ClCompile Include="..\natives\weapons.cpp">
       <Filter>Source Files\Natives</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
-      <Filter>sdk</Filter>
+    <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
+      <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,12 +74,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CPlayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\FastDelegate.h">
@@ -106,9 +103,6 @@
     <ClInclude Include="..\ParticleManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\sh_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\SpawnManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -118,11 +112,11 @@
     <ClInclude Include="..\utilfunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
-      <Filter>sdk</Filter>
+    <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
+      <Filter>Module SDK\SDK Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
-      <Filter>sdk</Filter>
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

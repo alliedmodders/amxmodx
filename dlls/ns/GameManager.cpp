@@ -13,12 +13,9 @@
 
 /* This holds the functions which determine which hooks I need forwareded */
 
-#include "sdk/amxxmodule.h"
-
+#include "amxxmodule.h"
 #include "ns.h"
-
 #include "utilfunctions.h"
-
 #include "GameManager.h"
 #include "CPlayer.h"
 

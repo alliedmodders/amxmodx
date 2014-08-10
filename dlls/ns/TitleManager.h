@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "CString.h"
+#include <am-string.h>
 #include "Hash.h"
 
 
@@ -29,7 +29,7 @@ private:
 
 	// Use a string pointer for the data type because the location manager
 	// stores a direct pointer to the c_str() of the title
-	Hash<String, String*>	m_Hash;
+	Hash<ke::AString, ke::AString*>	m_Hash;
 
 public:
 
@@ -38,9 +38,9 @@ public:
 		m_Loaded=0;
 	};
 
-	inline const char *Lookup(String &input)
+	inline const char *Lookup(ke::AString &input)
 	{
-		String** ret = m_Hash.find(input);
+		ke::AString** ret = m_Hash.find(input);
 
 		if (ret == NULL || *ret == NULL)
 		{
@@ -48,8 +48,7 @@ public:
 			return NULL;
 		}
 
-
-		return (*ret)->c_str();
+		return (*ret)->chars();
 	};
 	void LoadTitles(void);
 };

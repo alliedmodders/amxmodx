@@ -11,12 +11,9 @@
 // Natural Selection Module
 //
 
-#include "sdk/amxxmodule.h"
-
-
+#include "amxxmodule.h"
 #include "ns.h"
 #include "utilfunctions.h"
-
 #include "CPlayer.h"
 
 
@@ -170,3 +167,17 @@ int UTIL_LogToIndex(const char *LogLine)
 	return 0;
 }
 
+char *UTIL_ToLowerCase(const char *str)
+{
+	size_t len = strlen(str);
+	char *buffer = new char[len + 1];
+	for (size_t i = 0; i < len; i++)
+	{
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			buffer[i] = tolower(str[i]);
+		else
+			buffer[i] = str[i];
+	}
+	buffer[len] = '\0';
+	return buffer;
+}

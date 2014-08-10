@@ -14,13 +14,14 @@
 #ifndef _HASH_H_
 #define _HASH_H_
 
-#include "CVector.h"
+#include <am-vector.h>
+#include <am-string.h>
 
 
 // Just a very simple hash map, no iteration or anything of the like (not needed)
 
 
-inline int HashFunction(const String& name)
+inline int HashFunction(const ke::AString& name)
 {
 	static const int kHashNumTable[128] = 
 	{
@@ -41,21 +42,21 @@ inline int HashFunction(const String& name)
 		0x245152A2, 0x49A38093, 0x36727833, 0x5E0FA501, 0x10E5FEC6, 0x52F42C4D, 0x1B54D3E3, 0x18C7F6AC,
 		0x45BC2D01, 0x064757EF, 0x2DA79EBC, 0x0309BED4, 0x5A56A608, 0x215AF6DE, 0x3B09613A, 0x35EDF071
 	};
-	size_t size = name.size();
+	size_t size = name.length();
 	
 	if (size == 0)
 	{
 		return 0;
 	}
 	
-	int hasha = kHashNumTable[(*(name.c_str() + (size - 1))) & 0x7F];
+	int hasha = kHashNumTable[(*(name.chars() + (size - 1))) & 0x7F];
 	int hashb = kHashNumTable[size % 128];
 
 	
 	unsigned char c = 0;
 	for (size_t i = 0; i < size; i++)
 	{
-		c = (*(name.c_str() + (size - 1))) & 0x7F;
+		c = (*(name.chars() + (size - 1))) & 0x7F;
 		
 		hasha = (hasha + hashb) ^ kHashNumTable[c];
 		hashb = hasha + hashb + c + (hasha << 8) + (hashb & 0xFF);
@@ -74,13 +75,13 @@ inline int HashFunction(const String& name)
 
 
 
-template <typename K = String, typename D = String, int (*F)(const K&) = HashFunction, int B = 1024>
+template <typename K = ke::AString, typename D = ke::AString, int (*F)(const K&) = HashFunction, int B = 1024>
 class Hash
 {
 protected:
-	CVector<int> m_HashBuckets[B];
-	CVector<K> m_KeyBuckets[B];
-	CVector<D> m_DataBuckets[B];
+	ke::Vector<int> m_HashBuckets[B];
+	ke::Vector<K> m_KeyBuckets[B];
+	ke::Vector<D> m_DataBuckets[B];
 
 	inline int GetBucket(int hash)
 	{
@@ -116,9 +117,9 @@ public:
 
 		int bucketnum = GetBucket(hash);
 
-		m_HashBuckets[bucketnum].push_back(hash);
-		m_KeyBuckets[bucketnum].push_back(key);
-		m_DataBuckets[bucketnum].push_back(value);
+		m_HashBuckets[bucketnum].append(hash);
+		m_KeyBuckets[bucketnum].append(key);
+		m_DataBuckets[bucketnum].append(value);
 
 		return;
 
@@ -135,9 +136,9 @@ public:
 
 		int bucketnum = GetBucket(hash);
 
-		m_HashBuckets[bucketnum].push_back(hash);
-		m_KeyBuckets[bucketnum].push_back(key);
-		m_DataBuckets[bucketnum].push_back(D());
+		m_HashBuckets[bucketnum].append(hash);
+		m_KeyBuckets[bucketnum].append(key);
+		m_DataBuckets[bucketnum].append(D());
 
 		return m_DataBuckets[bucketnum].at(m_DataBuckets[bucketnum].size() - 1);
 
@@ -154,16 +155,16 @@ public:
 
 		// TODO: Possibly make this binary search?
 		//       insertion would be annoying, don't think it is worth it
-		CVector<int>* hashbucket = &m_HashBuckets[bucketnum];
-		CVector<K>* keybucket = &m_KeyBuckets[bucketnum];
+		ke::Vector<int>* hashbucket = &m_HashBuckets[bucketnum];
+		ke::Vector<K>* keybucket = &m_KeyBuckets[bucketnum];
 
-		size_t bucketsize = hashbucket->size();
+		size_t bucketsize = hashbucket->length();
 
 		for (size_t i = 0; i < bucketsize; i++)
 		{
 			if (hashbucket->at(i) == hash)
 			{
-				if (key.compare(keybucket->at(i).c_str()) == 0)
+				if (key.compare(keybucket->at(i).chars()) == 0)
 				{
 					return &(m_DataBuckets[bucketnum].at(i));
 				}

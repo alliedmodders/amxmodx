@@ -17,10 +17,6 @@
 
 #include "ns.h"
 #include "utilfunctions.h"
-
-#include "CVector.h"
-#include "CString.h"
-
 #include "GameManager.h"
 #include "TitleManager.h"
 #include "MessageHandler.h"

@@ -11,15 +11,15 @@
 // Natural Selection Module
 //
 
-#include "../sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
-#include "../ns.h" 
+#include "ns.h" 
 
-#include "../utilfunctions.h"
-#include "../NEW_Util.h"
+#include "utilfunctions.h"
+#include "NEW_Util.h"
 
-#include "../GameManager.h"
-#include "../CPlayer.h"
+#include "GameManager.h"
+#include "CPlayer.h"
 
 // ns_has_weapon(idPlayer,NsWeapon,set=0)
 static cell AMX_NATIVE_CALL ns_has_weapon(AMX *amx,cell *params)

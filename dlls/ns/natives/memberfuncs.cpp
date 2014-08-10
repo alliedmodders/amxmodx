@@ -13,15 +13,15 @@
 
 #include <string.h>
 
-#include "../sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
-#include "../ns.h"
-#include "../ns_const.h"
+#include "ns.h"
+#include "ns_const.h"
 
-#include "../utilfunctions.h"
+#include "utilfunctions.h"
 
-#include "../FastDelegate.h"
-#include "../GameManager.h"
+#include "FastDelegate.h"
+#include "GameManager.h"
 
 extern int IsValidBuilding[AVH_USER3_MAX + 1];
 

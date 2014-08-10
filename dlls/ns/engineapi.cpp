@@ -13,14 +13,9 @@
 
 /* Calls going from the game dll to the engine are handled here */
 
-#include "sdk/amxxmodule.h"
-
+#include "amxxmodule.h"
 #include "ns.h"
-
 #include "utilfunctions.h"
-#include "CVector.h"
-#include "CString.h"
-
 #include "GameManager.h"
 #include "ParticleManager.h"
 #include "CPlayer.h"

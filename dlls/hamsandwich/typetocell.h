@@ -17,8 +17,6 @@
 #include <extdll.h>
 #include "amxxmodule.h"
 
-#include "CVector.h"
-
 #include "hook.h"
 #include "forward.h"
 

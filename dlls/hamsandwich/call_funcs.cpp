@@ -16,13 +16,12 @@
 #include "offsets.h"
 #include "ham_utils.h"
 #include "hooklist.h"
-
-#include "CVector.h"
 #include "forward.h"
 #include "hook.h"
-#include "CString.h"
+#include <am-vector.h>
+#include <am-string.h>
 
-extern CVector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
+extern ke::Vector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 
 void FailPlugin(AMX *amx, int id, int err, const char *reason);
 
@@ -34,13 +33,9 @@ inline void *GetFunction(void *pthis, int id, bool &istramp)
 	void *func=GetVTableEntry(pthis, hooklist[id].vtid, Offsets.GetBase());
 
 	// Check to see if it's a trampoline
-	CVector<Hook *>::iterator end=hooks[id].end();
-
-	for (CVector<Hook *>::iterator i=hooks[id].begin();
-		 i!=end;
-		 ++i)
+	for (size_t i = 0; i < hooks[id].length(); ++i)
 	{
-		if (func==(*i)->tramp)
+		if (func == hooks[id].at(i)->tramp)
 		{
 			istramp=true;
 			return func;
@@ -57,17 +52,13 @@ inline void *_GetFunction(void *pthis, int id)
 	void *func=ivtbl[hooklist[id].vtid];
 
 	// Iterate through the hooks for the id, see if the function is found
-	CVector<Hook *>::iterator end=hooks[id].end();
-
-	for (CVector<Hook *>::iterator i=hooks[id].begin();
-		 i!=end;
-		 ++i)
+	for (size_t i = 0; i < hooks[id].length(); ++i)
 	{
 		// If the function points to a trampoline, then return the original
 		// function.
-		if (func==(*i)->tramp)
+		if (func == hooks[id].at(i)->tramp)
 		{
-			return (*i)->func;
+			return hooks[id].at(i)->func;
 		}
 	}
 

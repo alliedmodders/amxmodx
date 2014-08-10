@@ -19,9 +19,6 @@
 #include <extdll.h>
 #include "amxxmodule.h"
 
-
-#include "CVector.h"
-
 #include "hook.h"
 #include "forward.h"
 #include "hook_callbacks.h"
@@ -31,12 +28,13 @@
 #include "hooklist.h"
 #include "ham_utils.h"
 #include "hook_specialbot.h"
+#include <am-vector.h>
 
 OffsetManager Offsets;
 
 bool gDoForwards=true;
 
-CVector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
+ke::Vector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 CHamSpecialBotHandler SpecialbotHandler;
 
 #define V(__KEYNAME, __STUFF__) 0, 0, __KEYNAME, RT_##__STUFF__, RB_##__STUFF__, PC_##__STUFF__, reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
@@ -596,22 +594,19 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	// Check the list of this function's hooks, see if the function we have is a hook
 
-	CVector<Hook *>::iterator end=hooks[func].end();
-	for (CVector<Hook *>::iterator i=hooks[func].begin();
-		 i!=end;
-		 ++i)
+	for (size_t i = 0; i < hooks[func].length(); ++i)
 	{
-		if ((*i)->tramp == vfunction)
+		if (hooks[func].at(i)->tramp == vfunction)
 		{
 			// Yes, this function is hooked
 			Forward *pfwd=new Forward(fwd);
 			if (post)
 			{
-				(*i)->post.push_back(pfwd);
+				hooks[func].at(i)->post.append(pfwd);
 			}
 			else
 			{
-				(*i)->pre.push_back(pfwd);
+				hooks[func].at(i)->pre.append(pfwd);
 			}
 			return reinterpret_cast<cell>(pfwd);
 		}
@@ -619,16 +614,16 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	// If we got here, the function is not hooked
 	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
-	hooks[func].push_back(hook);
+	hooks[func].append(hook);
 
 	Forward *pfwd=new Forward(fwd);
 	if (post)
 	{
-		hook->post.push_back(pfwd);
+		hook->post.append(pfwd);
 	}
 	else
 	{
-		hook->pre.push_back(pfwd);
+		hook->pre.append(pfwd);
 	}
 
 	return reinterpret_cast<cell>(pfwd);
@@ -687,22 +682,19 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 
 	// Check the list of this function's hooks, see if the function we have is a hook
 
-	CVector<Hook *>::iterator end=hooks[func].end();
-	for (CVector<Hook *>::iterator i=hooks[func].begin();
-		 i!=end;
-		 ++i)
+	for (size_t i = 0; i < hooks[func].length(); ++i)
 	{
-		if ((*i)->tramp == vfunction)
+		if (hooks[func].at(i)->tramp == vfunction)
 		{
 			// Yes, this function is hooked
 			Forward *pfwd=new Forward(fwd);
 			if (post)
 			{
-				(*i)->post.push_back(pfwd);
+				hooks[func].at(i)->post.append(pfwd);
 			}
 			else
 			{
-				(*i)->pre.push_back(pfwd);
+				hooks[func].at(i)->pre.append(pfwd);
 			}
 			return reinterpret_cast<cell>(pfwd);
 		}
@@ -716,16 +708,16 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 
 	// If we got here, the function is not hooked
 	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
-	hooks[func].push_back(hook);
+	hooks[func].append(hook);
 
 	Forward *pfwd=new Forward(fwd);
 	if (post)
 	{
-		hook->post.push_back(pfwd);
+		hook->post.append(pfwd);
 	}
 	else
 	{
-		hook->pre.push_back(pfwd);
+		hook->pre.append(pfwd);
 	}
 
 	return reinterpret_cast<cell>(pfwd);

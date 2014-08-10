@@ -12,11 +12,8 @@
 //
 
 #include "amxxmodule.h"
-
 #include <stdarg.h>
-
-#include "CVector.h"
-
+#include <am-vector.h>
 #include "ham_const.h"
 #include "hooklist.h"
 #include "offsets.h"
@@ -25,7 +22,7 @@
 
 
 extern hook_t hooklist[];
-extern CVector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
+extern ke::Vector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 
 void print_srvconsole(const char *fmt, ...)
 {
@@ -95,16 +92,12 @@ void HamCommand(void)
 		int count = 0;
 		for (int i=0; i<HAM_LAST_ENTRY_DONT_USE_ME_LOL; i++)
 		{
-			CVector<Hook *>::iterator end=hooks[i].end();
-
-			for (CVector<Hook *>::iterator j=hooks[i].begin();
-				 j!=end;
-				 ++j)
+			for (size_t j = 0; j < hooks[i].length(); ++i)
 			{
 				HookCount++;
-				ForwardCount+=(*j)->pre.size() + (*j)->post.size();
+				ForwardCount += hooks[i].at(j)->pre.length() + hooks[i].at(j)->post.length();
 
-				print_srvconsole("%-24s | %-27s | %10d | %10d\n",hooklist[i].name, (*j)->ent, (*j)->pre.size(), (*j)->post.size());
+				print_srvconsole("%-24s | %-27s | %10d | %10d\n", hooklist[i].name, hooks[i].at(j)->ent, hooks[i].at(j)->pre.length(), hooks[i].at(j)->post.length());
 				if (count >= 5)
 				{
 					print_srvconsole("--------------------------------------------------------------------------------\n");

@@ -15,7 +15,7 @@
 #include "hooklist.h"
 #include "hook.h"
 
-extern CVector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
+extern ke::Vector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 extern hook_t hooklist[];
 
 
@@ -60,13 +60,12 @@ void CHamSpecialBotHandler::CheckClientKeyValue(int &clientIndex, char *infobuff
 
 	if(m_RHP_list.empty())
 		return;
-	
-	CVector<CRegisterHamParams*>::iterator i = m_RHP_list.begin();
-	CVector<CRegisterHamParams*>::iterator end = m_RHP_list.end();
-	for(; i!=end; i++)
+
+	for (size_t i = 0; i < m_RHP_list.length(); ++i)
 	{
-		RegisterChecked((*i)->amx, (*i)->func, (*i)->function, (*i)->post, (*i)->fwd);
-		delete *i;
+		CRegisterHamParams *item = m_RHP_list.at(i);
+		RegisterChecked(item->amx, item->func, item->function, item->post, item->fwd);
+		delete item;
 	}
 
 	m_RHP_list.clear();
@@ -76,7 +75,7 @@ void CHamSpecialBotHandler::RegisterHamSpecialBot(AMX *amx, int &func, const cha
 {	
 	if(m_specialbot_vtable == NULL)
 	{
-		m_RHP_list.push_back( new CRegisterHamParams(amx, func, function, post, fwd) );
+		m_RHP_list.append( new CRegisterHamParams(amx, func, function, post, fwd) );
 		return;
 	}
 
@@ -90,22 +89,19 @@ void CHamSpecialBotHandler::RegisterChecked(AMX *amx, int &func, const char *fun
 
 	void *vfunction=(void *)ivtable[hooklist[func].vtid];
 
-	CVector<Hook *>::iterator end=hooks[func].end();
-	for (CVector<Hook *>::iterator i=hooks[func].begin();
-		 i!=end;
-		 ++i)
+	for (size_t i = 0; i < hooks[func].length(); ++i)
 	{
-		if ((*i)->tramp == vfunction)
+		if (hooks[func].at(i)->tramp == vfunction)
 		{
 			// Yes, this function is hooked
-			Forward *pfwd=new Forward(fwd);
+			Forward *pfwd = new Forward(fwd);
 			if (post)
 			{
-				(*i)->post.push_back(pfwd);
+				hooks[func].at(i)->post.append(pfwd);
 			}
 			else
 			{
-				(*i)->pre.push_back(pfwd);
+				hooks[func].at(i)->pre.append(pfwd);
 			}
 			return;
 		}
@@ -115,15 +111,15 @@ void CHamSpecialBotHandler::RegisterChecked(AMX *amx, int &func, const char *fun
 
 	// If we got here, the function is not hooked
 	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
-	hooks[func].push_back(hook);
+	hooks[func].append(hook);
 
 	Forward *pfwd=new Forward(fwd);
 	if (post)
 	{
-		hook->post.push_back(pfwd);
+		hook->post.append(pfwd);
 	}
 	else
 	{
-		hook->pre.push_back(pfwd);
+		hook->pre.append(pfwd);
 	}
 }

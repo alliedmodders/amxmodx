@@ -15,9 +15,9 @@
 #define RETURNHANDLER_H
 
 #include "ham_utils.h" 
-#include "CVector.h"
-#include "CString.h"
-#include "sh_stack.h"
+#include <am-vector.h>
+#include <am-string.h>
+#include <sh_stack.h>
 
 enum
 {
@@ -184,7 +184,7 @@ public:
 			return -1;
 		}
 
-		String *str=reinterpret_cast<String *>(m_data);
+		ke::AString *str=reinterpret_cast<ke::AString *>(m_data);
 
 		cell *i=data;
 		size_t len=0;
@@ -203,7 +203,7 @@ public:
 			/* nothing */
 		}
 
-		str->assign(temp);
+		*str = temp;
 
 		delete[] temp;
 
@@ -330,7 +330,7 @@ public:
 		{
 			return -1;
 		}
-		const char *i=(reinterpret_cast<String *>(m_data)->c_str());
+		const char *i=(reinterpret_cast<ke::AString *>(m_data)->chars());
 
 		while (len-- && 
 			  (*data++=*i++)!='\0')
@@ -369,6 +369,6 @@ public:
 
 extern CStack< Data * > ReturnStack;
 extern CStack< Data * > OrigReturnStack;
-extern CStack< CVector< Data * > * > ParamStack;
+extern CStack< ke::Vector< Data * > * > ParamStack;
 extern CStack< int * > ReturnStatus;
 #endif

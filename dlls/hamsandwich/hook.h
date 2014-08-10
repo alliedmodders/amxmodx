@@ -16,6 +16,7 @@
 
 #include "forward.h"
 #include "Trampolines.h"
+#include <am-vector.h>
 
 #define ALIGN(ar) ((intptr_t)ar & ~(sysconf(_SC_PAGESIZE)-1))
 
@@ -25,9 +26,9 @@
 class Hook
 {
 public:
-	CVector<Forward *> pre;     // pre forwards
-	CVector<Forward *> post;    // post forwards
-	void            *func;    // original function
+	ke::Vector<Forward *> pre;     // pre forwards
+	ke::Vector<Forward *> post;    // post forwards
+	void			*func;    // original function
 	void           **vtable;  // vtable of the original location
 	int              entry;   // vtable entry of the function
 	void            *target;  // target function being called (the hook)
@@ -86,21 +87,16 @@ public:
 
 		delete[] ent;
 
-		CVector<Forward *>::iterator end=pre.end();
+		for (size_t i = 0; i < pre.length(); ++i)
+		{
+			delete pre.at(i);
+		}
 
-		for (CVector<Forward *>::iterator i=pre.begin();
-			 i!=end;
-			 ++i)
+		for (size_t i = 0; i < post.length(); ++i)
 		{
-			delete (*i);
+			delete post.at(i);
 		}
-		end=post.end();
-		for (CVector<Forward *>::iterator i=post.begin();
-			 i!=end;
-			 ++i)
-		{
-			delete (*i);
-		}
+
 		pre.clear();
 		post.clear();
 	}

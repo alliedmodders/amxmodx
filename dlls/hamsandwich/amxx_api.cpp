@@ -15,7 +15,7 @@
 #include <extdll.h>
 
 #include "NEW_Util.h"
-#include "CVector.h"
+#include <am-vector.h>
 #include "forward.h"
 #include "hook.h"
 #include "ham_const.h"
@@ -28,7 +28,7 @@
 edict_t *NEW_FirstEdict;
 bool NEW_Initialized;
 
-extern CVector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
+extern ke::Vector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 extern CHamSpecialBotHandler SpecialbotHandler;
 
 extern AMX_NATIVE_INFO RegisterNatives[];
@@ -106,17 +106,11 @@ void HamCommand(void);
 
 void OnPluginsUnloaded(void)
 {
-
-	CVector <Hook *>::iterator end;
-	for (int i = 0; i < HAM_LAST_ENTRY_DONT_USE_ME_LOL; i++)
+	for (size_t i = 0; i < HAM_LAST_ENTRY_DONT_USE_ME_LOL; i++)
 	{
-		end=hooks[i].end();
-
-		for (CVector<Hook*>::iterator j=hooks[i].begin();
-			 j!=end;
-			 ++j)
+		for (size_t j = 0; j < hooks[i].length(); ++j)
 		{
-			delete (*j);
+			delete hooks[i].at(j);
 		}
 		hooks[i].clear();
 	}

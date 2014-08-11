@@ -66,7 +66,7 @@ new allow_spectators, mp_limitteams
 new p_amx_tempban_maxtime;
 new Trie:g_tempBans;
 
-new g_silent = false
+new g_silent[33]
 
 public plugin_natives()
 {
@@ -665,6 +665,7 @@ public cmdKickMenu(id, level, cid)
 public client_putinserver(id)
 {
 	g_CSPlayerCanSwitchFromSpec[id] = false
+	g_silent[id] = false
 }
 
 public Event_TeamInfo()
@@ -692,7 +693,7 @@ public actionTeamMenu(id, key)
 	{
 		case 6: 
 		{
-			g_silent = !g_silent
+			g_silent[id] = !g_silent[id]
 			displayTeamMenu(id, g_menuPosition[id])
 		}
 		case 7:
@@ -884,7 +885,7 @@ displayTeamMenu(id, pos)
 		}
 	}
 	
-	len += format(menuBody[len], charsmax(menuBody) - len, "^n7. %L: %L", id, "TRANSF_SILENT", id, g_silent ? "YES" : "NO")
+	len += format(menuBody[len], charsmax(menuBody) - len, "^n7. %L: %L", id, "TRANSF_SILENT", id, g_silent[id] ? "YES" : "NO")
 	len += format(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "TRANSF_TO", g_CSTeamNames[g_menuOption[id] % 3])
 
 	if (end != g_menuPlayersNum[id])

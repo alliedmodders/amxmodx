@@ -66,6 +66,8 @@ new allow_spectators, mp_limitteams
 new p_amx_tempban_maxtime;
 new Trie:g_tempBans;
 
+new g_silent = false
+
 public plugin_natives()
 {
 	set_module_filter("module_filter")
@@ -688,6 +690,11 @@ public actionTeamMenu(id, key)
 {
 	switch (key)
 	{
+		case 6: 
+		{
+			g_silent = !g_silent
+			displayTeamMenu(id, g_menuPosition[id])
+		}
 		case 7:
 		{
 			g_menuOption[id] = (g_menuOption[id] + 1) % 3;
@@ -697,7 +704,7 @@ public actionTeamMenu(id, key)
 		case 9: displayTeamMenu(id, --g_menuPosition[id])
 		default:
 		{
-			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
+			new player = g_menuPlayers[id][g_menuPosition[id] * 6 + key]
 			if( !is_user_connected(player) ) // dunno why this check hasn't be implemented in the past
 			{
 				displayTeamMenu(id, g_menuPosition[id])
@@ -738,7 +745,7 @@ public actionTeamMenu(id, key)
 
 			if ( g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
 			{
-				if (is_user_alive(player))
+				if (is_user_alive(player) && !g_silent)
 				{
 					new deaths = cs_get_user_deaths(player)
 					user_kill(player, 1)
@@ -748,7 +755,7 @@ public actionTeamMenu(id, key)
 				cs_set_user_team(player, destTeamSlot + 1)
 
 			} else {
-				if (is_user_alive(player))
+				if (is_user_alive(player) && !g_silent)
 				{
 					user_kill(player, 1)
 				}
@@ -815,14 +822,14 @@ displayTeamMenu(id, pos)
 	new b = 0
 	new i, iteam
 	new name[MAX_NAME_LENGTH], team[4]
-	new start = pos * 7
+	new start = pos * 6
 
 	if (start >= g_menuPlayersNum[id])
 		start = pos = g_menuPosition[id] = 0
 
-	new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TEAM_MENU", pos + 1, (g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0)))
-	new end = start + 7
-	new keys = MENU_KEY_0|MENU_KEY_8
+	new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TEAM_MENU", pos + 1, (g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0)))
+	new end = start + 6
+	new keys = MENU_KEY_0|MENU_KEY_7|MENU_KEY_8
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -876,7 +883,8 @@ displayTeamMenu(id, pos)
 				len += format(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s   %s^n", ++b, name, team)
 		}
 	}
-
+	
+	len += format(menuBody[len], charsmax(menuBody) - len, "^n7. %L: %L", id, "TRANSF_SILENT", id, g_silent ? "YES" : "NO")
 	len += format(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "TRANSF_TO", g_CSTeamNames[g_menuOption[id] % 3])
 
 	if (end != g_menuPlayersNum[id])

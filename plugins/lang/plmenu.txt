@@ -1,4 +1,4 @@
-[en]
+﻿[en]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s
 BAN_MENU = Ban Menu
@@ -12,6 +12,7 @@ ADMIN_TRANSF_1 = ADMIN: transfer %s to %s
 ADMIN_TRANSF_2 = ADMIN %s: transfer %s to %s
 TEAM_MENU = Team Menu
 TRANSF_TO = Transfer to %s
+TRANSF_SILENT = Silent Transfer
 CL_CMD_MENU = Client Cmds Menu
 NO_CMDS = No cmds available
 CANT_PERF_PLAYER = That action can't be performed on player "%s"
@@ -30,6 +31,7 @@ ADMIN_TRANSF_1 = ADMIN: verschiebt %s zu den %s
 ADMIN_TRANSF_2 = ADMIN %s: verschiebt %s zu den %s
 TEAM_MENU = Menu > Team
 TRANSF_TO = zu den %s geschoben
+TRANSF_TO = Leise verschrieben
 CL_CMD_MENU = Menu > Spielerbefehle
 NO_CMDS = keine Befehle verfuegbar
 CANT_PERF_PLAYER = Diese Aktion kann nicht am spieler "%s" ausgefuehrt werden.

@@ -4178,7 +4178,7 @@ static void reduce_referrers(symbol *root)
 }
 
 #if !defined SC_LIGHT
-static long max_stacksize_recurse(symbol *sym,long basesize,int *pubfuncparams)
+static long max_stacksize_recurse(symbol *sourcesym, symbol *sym, long basesize, int *pubfuncparams)
 {
   long size,maxsize;
   int i;
@@ -4186,17 +4186,15 @@ static long max_stacksize_recurse(symbol *sym,long basesize,int *pubfuncparams)
   assert(sym!=NULL);
   assert(sym->ident==iFUNCTN);
   assert((sym->usage & uNATIVE)==0);
-  /* recursion detection */
-  if (sym->compound==0)
-    return -1;          /* this function was processed already -> recursion */
-  sym->compound=0;
 
   maxsize=sym->x.stacksize;
   for (i=0; i<sym->numrefers; i++) {
     if (sym->refer[i]!=NULL) {
       assert(sym->refer[i]->ident==iFUNCTN);
       assert((sym->refer[i]->usage & uNATIVE)==0); /* a native function cannot refer to a user-function */
-      size=max_stacksize_recurse(sym->refer[i],sym->x.stacksize,pubfuncparams);
+	  if (sym->refer[i] == sourcesym)
+		  return -1;      /* recursion detection */
+	  size = max_stacksize_recurse(sourcesym, sym->refer[i], sym->x.stacksize, pubfuncparams);
       if (size<0)
         return size;    /* recursion was detected, quit */
       if (maxsize<size)
@@ -4248,26 +4246,16 @@ static long max_stacksize(symbol *root)
   maxsize=0;
   maxparams=0;
   for (sym=root->next; sym!=NULL; sym=sym->next) {
-    symbol *tmpsym;
     /* drop out if this is not a user-implemented function */
     if (sym->ident!=iFUNCTN || (sym->usage & uNATIVE)!=0)
       continue;
-    /* set a "mark" on all functions */
-    for (tmpsym=root->next; tmpsym!=NULL; tmpsym=tmpsym->next)
-      if (tmpsym->ident==iFUNCTN)
-        tmpsym->compound=1;
     /* accumulate stack size for this symbol */
-    size=max_stacksize_recurse(sym,0L,&maxparams);
+    size=max_stacksize_recurse(sym,sym,0L,&maxparams);
     if (size<0)
       return size;      /* recursion was detected */
     if (maxsize<size)
       maxsize=size;
   } /* for */
-
-  /* clear all marks */
-  for (sym=root->next; sym!=NULL; sym=sym->next)
-    if (sym->ident==iFUNCTN)
-      sym->compound=0;
 
   maxsize++;                  /* +1 because a zero cell is always pushed on top
                                * of the stack to catch stack overwrites */

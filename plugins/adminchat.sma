@@ -92,6 +92,7 @@ public cmdSayChat(id, level)
 	new message[192], a = 0
 	read_args(message, charsmax(message))
 	remove_quotes(message)
+	filter_chat_input(message, strlen(message))
 	
 	switch (said[i])
 	{
@@ -209,6 +210,7 @@ public cmdSayAdmin(id)
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
+	filter_chat_input(message, strlen(message))
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
 	userid = get_user_userid(id)
@@ -242,6 +244,7 @@ public cmdChat(id, level, cid)
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
+	filter_chat_input(message, strlen(message))
 	
 	if (!message[0])
 		return PLUGIN_HANDLED
@@ -278,6 +281,7 @@ public cmdSay(id, level, cid)
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
+	filter_chat_input(message, strlen(message))
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
 	userid = get_user_userid(id)
@@ -319,6 +323,7 @@ public cmdPsay(id, level, cid)
 	}
 	
 	remove_quotes(message[length])
+	filter_chat_input(message[length], strlen(message))
 	get_user_name(priv, name, charsmax(name))
 	
 	if (id && id != priv)
@@ -347,6 +352,7 @@ public cmdTsay(id, level, cid)
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
+	filter_chat_input(message, strlen(message))
 	parse(message, color, charsmax(color))
 	
 	new found = 0, a = 0

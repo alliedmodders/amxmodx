@@ -4412,7 +4412,7 @@ static constvalue *insert_constval(constvalue *prev,constvalue *next,const char 
     error(103);       /* insufficient memory (fatal error) */
   memset(cur,0,sizeof(constvalue));
   if (name!=NULL) {
-    assert(strlen(name)<sNAMEMAX);
+    assert(strlen(name)<=sNAMEMAX);
     strcpy(cur->name,name);
   } /* if */
   cur->value=val;

@@ -2535,6 +2535,7 @@ native plugin_flags(hdr=0, plid=-1);
  *
  * @noreturn
  */
+#pragma deprecated Module dependency is now automatically handled by the compiler. This forward is no longer called.
 forward plugin_modules();
 
 /**
@@ -2545,6 +2546,7 @@ forward plugin_modules();
  *
  * @noreturn
  */
+#pragma deprecated Module dependency is now automatically handled by the compiler. This native has no effect.
 native require_module(const module[]);
 
 /**
@@ -2556,6 +2558,7 @@ native require_module(const module[]);
  *
  * @return  1 if the server is 64 bit, 0 otherwise
  */
+#pragma deprecated AMXX is not shipping 64bits builds anymore. This native is basically guaranteed to return 0.
 native is_amd64_server();
 
 /**

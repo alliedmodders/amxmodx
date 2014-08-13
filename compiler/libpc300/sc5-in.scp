@@ -290,6 +290,7 @@ static char *warnmsg[] = {
 /*230*/  "no implementation for state \"%s\" / function \"%s\", no fall-back\n",
 /*231*/  "state specification on forward declaration is ignored\n",
 /*232*/  "output file is written, but with compact encoding disabled\n"
+/*233*/  "symbol \"%s\" is marked as deprecated: %s\n",
 #else
   "\345 \274tr\240\226\233\277 %\206\273\337c\367\305",
   "\222\323i\231\300\344\224t/\314cr\375\364",

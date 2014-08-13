@@ -850,6 +850,7 @@ static int command(void)
   char *str;
   int index;
   cell code_index;
+  size_t len;
 
   while (*lptr<=' ' && *lptr!='\0')
     lptr+=1;
@@ -1003,6 +1004,19 @@ static int command(void)
               error(27);          /* invalid character constant */
             sc_ctrlchar=(char)val;
           } /* if */
+		}
+		else if (strcmp(str, "deprecated") == 0) {
+			while (*lptr <= ' ' && *lptr != '\0')
+				lptr++;
+			len = strlen((char*)lptr);
+			pc_deprecate = (char*)malloc(len + 1);
+			if (pc_deprecate != NULL)
+			{
+				strcpy(pc_deprecate, (char*)lptr);
+				if (pc_deprecate[len - 1] == '\n')	/* remove extra \n as already appended in .scp file */
+					pc_deprecate[len-1] = '\0';
+			}
+			lptr = (unsigned char*)strchr((char*)lptr, '\0'); /* skip to end (ignore "extra characters on line") */
         } else if (strcmp(str,"dynamic")==0) {
           preproc_expr(&sc_stksize,NULL);
 		} else if ( !strcmp(str,"library") ||
@@ -2658,6 +2672,7 @@ SC_FUNC symbol *addsym(const char *name,cell addr,int ident,int vclass,int tag,i
   entry.ident=(char)ident;
   entry.tag=tag;
   entry.usage=(char)usage;
+  entry.flags=0;
   entry.compound=0;     /* may be overridden later */
   entry.states=NULL;
   entry.fnumber=-1;     /* assume global visibility (ignored for local symbols) */

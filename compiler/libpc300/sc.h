@@ -128,6 +128,7 @@ typedef struct s_symbol {
   char vclass;          /* sLOCAL if "addr" refers to a local symbol */
   char ident;           /* see below for possible values */
   char usage;           /* see below for possible values */
+  char flags;          /* see below for possible values */
   int compound;         /* compound level (braces nesting level) */
   int tag;              /* tagname id */
   int fieldtag;         /* enumeration fields, where a size is attached to the field */
@@ -221,6 +222,8 @@ typedef struct s_symbol {
  */
 #define uRETNONE  0x10
 
+#define flgDEPRECATED 0x01  /* symbol is deprecated (avoid use) */
+
 #define uTAGOF    0x40  /* set in the "hasdefault" field of the arginfo struct */
 #define uSIZEOF   0x80  /* set in the "hasdefault" field of the arginfo struct */
 
@@ -270,6 +273,8 @@ typedef struct s_stringpair {
   char *first;
   char *second;
   int matchlength;
+  char flags;
+  char *documentation;
 } stringpair;
 
 /* macros for code generation */
@@ -783,6 +788,7 @@ SC_VDECL int sc_rationaltag;  /* tag for rational numbers */
 SC_VDECL int rational_digits; /* number of fractional digits */
 SC_VDECL int sc_allowproccall;/* allow/detect tagnames in lex() */
 SC_VDECL short sc_is_utf8;    /* is this source file in UTF-8 encoding */
+SC_VDECL char *pc_deprecate;  /* if non-NULL, mark next declaration as deprecated */
 
 SC_VDECL constvalue sc_automaton_tab; /* automaton table */
 SC_VDECL constvalue sc_state_tab;     /* state table */

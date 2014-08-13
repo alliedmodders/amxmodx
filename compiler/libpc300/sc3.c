@@ -1862,6 +1862,11 @@ static int nesting=0;
       assert(nest_stkusage==0);
   #endif
 
+  if ((sym->flags & flgDEPRECATED)!=0) {
+    char *ptr= (sym->documentation!=NULL) ? sym->documentation : "";
+    error(233,sym->name,ptr);   /* deprecated (probably a native function) */
+  } /* if */
+
   /* run through the arguments */
   arg=sym->dim.arglist;
   assert(arg!=NULL);

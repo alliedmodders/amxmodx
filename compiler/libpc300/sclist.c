@@ -276,6 +276,26 @@ SC_FUNC stringpair *insert_subst(char *pattern,char *substitution,int prefixlen)
   if ((cur=insert_stringpair(&substpair,pattern,substitution,prefixlen))==NULL)
     error(103);       /* insufficient memory (fatal error) */
   adjustindex(*pattern);
+
+  if (pc_deprecate != NULL) {
+	  assert(cur != NULL);
+	  cur->flags |= flgDEPRECATED;
+	  if (sc_status == statWRITE) {
+		  if (cur->documentation != NULL) {
+			  free(cur->documentation);
+			  cur->documentation = NULL;
+		  } /* if */
+		  cur->documentation = pc_deprecate;
+	  }
+	  else {
+		  free(pc_deprecate);
+	  } /* if */
+	  pc_deprecate = NULL;
+  }
+  else {
+	  cur->flags = 0;
+	  cur->documentation = NULL;
+  } /* if */
   return cur;
 }
 
@@ -288,6 +308,24 @@ SC_FUNC stringpair *find_subst(char *name,int length)
   item=substindex[(int)*name-'A'];
   if (item!=NULL)
     item=find_stringpair(item,name,length);
+
+  if (item && (item->flags & flgDEPRECATED) != 0)
+  {
+	  static char macro[128];
+	  char *rem, *msg = (item->documentation != NULL) ? item->documentation : "";
+	  strncpy(macro, item->first, sizeof(macro));
+	  macro[sizeof(macro) - 1] = '\0';
+
+	  /* If macro contains an opening parentheses and a percent sign, then assume that
+	  * it takes arguments and remove them from the warning message.
+	  */
+	  if ((rem = strchr(macro, '(')) != NULL && strchr(macro, '%') > rem)
+	  {
+		  *rem = '\0';
+	  }
+
+	  error(233, macro, msg);  /* deprecated (macro/constant) */
+  }
   return item;
 }
 

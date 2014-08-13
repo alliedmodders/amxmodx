@@ -828,6 +828,7 @@ static void resetglobals(void)
   pc_addlibtable=TRUE;  /* by default, add a "library table" to the output file */
   sc_alignnext=FALSE;
   pc_docexpr=FALSE;
+  pc_deprecate = FALSE;
 }
 
 static void initglobals(void)
@@ -2740,7 +2741,20 @@ SC_FUNC symbol *fetchfunc(char *name,int tag)
     /* set the required stack size to zero (only for non-native functions) */
     sym->x.stacksize=1;         /* 1 for PROC opcode */
   } /* if */
-
+  if (pc_deprecate!=NULL) {
+    assert(sym!=NULL);
+	sym->flags |= flgDEPRECATED;
+    if (sc_status==statWRITE) {
+      if (sym->documentation!=NULL) {
+        free(sym->documentation);
+        sym->documentation=NULL;
+      } /* if */
+      sym->documentation=pc_deprecate;
+    } else {
+      free(pc_deprecate);
+    } /* if */
+    pc_deprecate=NULL;
+  }/* if */
   return sym;
 }
 
@@ -3243,6 +3257,10 @@ static int newfunc(char *firstname,int firsttag,int fpublic,int fstatic,int stoc
     sc_status=statSKIP;
     cidx=code_idx;
     glbdecl=glb_declared;
+  } /* if */
+  if ((sym->flags & flgDEPRECATED) != 0 && (sym->usage & uSTOCK) == 0) {
+	  char *ptr = (sym->documentation != NULL) ? sym->documentation : "";
+	  error(233, symbolname, ptr);  /* deprecated (probably a public function) */
   } /* if */
   begcseg();
   sym->usage|=uDEFINE;  /* set the definition flag */
@@ -5230,18 +5248,6 @@ static symbol *fetchlab(char *name)
   return sym;
 }
 
-static int is_variadic(symbol *sym)
-{
-  arginfo *arg;
-
-  assert(sym->ident==iFUNCTN);
-  for (arg = sym->dim.arglist; arg->ident; arg++) {
-    if (arg->ident == iVARARGS)
-      return TRUE;
-  }
-  return FALSE;
-}
-
 /*  doreturn
  *
  *  Global references: rettype  (altered)
@@ -5341,11 +5347,7 @@ static void doreturn(void)
        * it stays on the heap for the moment, and it is removed -usually- at
        * the end of the expression/statement, see expression() in SC3.C)
        */
-      if (is_variadic(curfunc)) {
-        load_hidden_arg();
-      } else {
-        address(sub,sALT);           /* ALT = destination */
-      }
+      address(sub,sALT);                /* ALT = destination */
       arraysize=calc_arraysize(dim,numdim,0);
       memcopy(arraysize*sizeof(cell));  /* source already in PRI */
       /* moveto1(); is not necessary, callfunction() does a popreg() */
@@ -5460,6 +5462,7 @@ static void dostate(void)
     pc_docexpr=TRUE;            /* attach expression as a documentation string */
     test(flabel,FALSE,FALSE);   /* get expression, branch to flabel if false */
     pc_docexpr=FALSE;
+	pc_deprecate=NULL;
     needtoken(')');
   } else {
     flabel=-1;
@@ -5607,4 +5610,3 @@ static int *readwhile(void)
     return (wqptr-wqSIZE);
   } /* if */
 }
-

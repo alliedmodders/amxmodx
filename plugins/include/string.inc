@@ -711,7 +711,7 @@ native strncmp(const string1[], const string2[], num, bool:ignorecase=false);
  * Backwards compatibility stock - use argbreak or argparse.
  * @deprecated			this function does not work properly.
  */
-//#pragma deprecated Use argbreak() instead
+#pragma deprecated Use argbreak() instead
 stock strbreak(const text[], Left[], leftLen, Right[], rightLen)
 {
 	return argbreak(text, Left, leftLen, Right, rightLen);

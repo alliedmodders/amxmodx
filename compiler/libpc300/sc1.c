@@ -4282,7 +4282,7 @@ static int testsymbols(symbol *root,int level,int testlabs,int testconst)
   int entry=FALSE;
 
   symbol *sym=root->next;
-  while (sym!=NULL && sym->compound>=level) {
+  while (sym != NULL && get_actual_compound(sym) >= level) {
     switch (sym->ident) {
     case iLABEL:
       if (testlabs) {

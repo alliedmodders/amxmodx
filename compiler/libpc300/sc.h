@@ -370,6 +370,7 @@ typedef struct s_stringpair {
 #define tLABEL   331
 #define tSTRING  332
 #define tEXPR    333    /* for assigment to "lastst" only */
+#define tEMPTYBLOCK 334 /* empty blocks for AM bug 4825 */
 
 /* (reversed) evaluation of staging buffer */
 #define sSTARTREORDER 0x01

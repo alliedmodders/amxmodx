@@ -113,7 +113,7 @@ static int doexpr(int comma,int chkeffect,int allowarray,int mark_endexpr,
 static void doassert(void);
 static void doexit(void);
 static void test(int label,int parens,int invert);
-static void doif(void);
+static int doif(void);
 static void dowhile(void);
 static void dodo(void);
 static void dofor(void);
@@ -4572,16 +4572,19 @@ static void statement(int *lastindent,int allow_decl)
     break;
   case '{':
     tok=fline;
-    if (!matchtoken('}'))       /* {} is the empty statement */
+	if (!matchtoken('}')) {       /* {} is the empty statement */
       compound(tok==fline);
-    /* lastst (for "last statement") does not change */
+    } else {
+	  lastst = tEMPTYBLOCK;
+	  }
+	/* lastst (for "last statement") does not change 
+	   you're not my father, don't tell me what to do */
     break;
   case ';':
     error(36);                  /* empty statement */
     break;
   case tIF:
-    doif();
-    lastst=tIF;
+    lastst=doif();
     break;
   case tWHILE:
     dowhile();
@@ -4851,10 +4854,11 @@ static void test(int label,int parens,int invert)
   } /* if */
 }
 
-static void doif(void)
+static int doif(void)
 {
   int flab1,flab2;
   int ifindent;
+  int lastst_true;
 
   ifindent=stmtindent;          /* save the indent of the "if" instruction */
   flab1=getlabel();             /* get label number for false branch */
@@ -4863,6 +4867,7 @@ static void doif(void)
   if (matchtoken(tELSE)==0){    /* if...else ? */
     setlabel(flab1);            /* no, simple if..., print false label */
   } else {
+	lastst_true=lastst;
     /* to avoid the "dangling else" error, we want a warning if the "else"
      * has a lower indent than the matching "if" */
     if (stmtindent<ifindent && sc_tabsize>0)
@@ -4873,7 +4878,14 @@ static void doif(void)
     setlabel(flab1);            /* print false label */
     statement(NULL,FALSE);      /* do "else" clause */
     setlabel(flab2);            /* print true label */
+	/* if both the "true" branch and the "false" branch ended with the same
+	 * kind of statement, set the last statement id to that kind, rather than
+	 * to the generic tIF; this allows for better "unreachable code" checking
+	 */
+	if (lastst == lastst_true)
+	  return lastst;
   } /* endif */
+  return tIF;
 }
 
 static void dowhile(void)

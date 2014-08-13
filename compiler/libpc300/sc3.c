@@ -488,6 +488,7 @@ static int plnge_rel(int *opstr,int opoff,int (*hier)(value *lval),value *lval)
   int lvalue,opidx;
   value lval2 = {0};            /* intialize, to avoid a compiler warning */
   int count;
+  char boolresult;
 
   /* this function should only be called for relational operators */
   assert(op1[opoff]==os_le);
@@ -504,7 +505,9 @@ static int plnge_rel(int *opstr,int opoff,int (*hier)(value *lval),value *lval)
       error(212);
     if (count>0) {
       relop_prefix();
+	  boolresult = lval->boolresult;
       *lval=lval2;      /* copy right hand expression of the previous iteration */
+	  lval->boolresult = boolresult;
     } /* if */
     opidx+=opoff;
     plnge2(op1[opidx],hier,lval,&lval2);

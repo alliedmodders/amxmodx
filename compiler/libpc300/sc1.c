@@ -32,6 +32,7 @@
 #if defined	__WIN32__ || defined _WIN32 || defined __MSDOS__
   #include <conio.h>
   #include <io.h>
+  #define snprintf _snprintf
 #endif
 
 #if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
@@ -130,6 +131,7 @@ static void addwhile(int *ptr);
 static void delwhile(void);
 static int *readwhile(void);
 static void inst_datetime_defines(void);
+static void inst_binary_name(char *binfname);
 
 static int lastst     = 0;      /* last executed statement type */
 static int nestlevel  = 0;      /* number of active (open) compound statements */
@@ -404,6 +406,38 @@ void inst_datetime_defines()
   insert_subst("__TIME__", ltime, 8);
 }
 
+static void inst_binary_name(char *binfname)
+{
+  size_t i, len;
+  char *binptr;
+  char newpath[512], newname[512];
+
+  binptr = NULL;
+  len = strlen(binfname);
+  for (i = len - 1; i < len; i--)
+  {
+    if (binfname[i] == '/'
+#if defined WIN32 || defined _WIN32
+      || binfname[i] == '\\'
+#endif
+      )
+    {
+      binptr = &binfname[i + 1];
+      break;
+    }
+  }
+
+  if (binptr == NULL)
+  {
+    binptr = binfname;
+  }
+
+  snprintf(newpath, sizeof(newpath), "\"%s\"", binfname);
+  snprintf(newname, sizeof(newname), "\"%s\"", binptr);
+
+  insert_subst("__BINARY_PATH__", newpath, 15);
+  insert_subst("__BINARY_NAME__", newname, 15);
+}
 
 /*  "main" of the compiler
  */
@@ -556,6 +590,7 @@ int pc_compile(int argc, char *argv[])
     #if !defined NO_DEFINE
       delete_substtable();
       inst_datetime_defines();
+	  inst_binary_name(binfname);
     #endif
     resetglobals();
     sc_ctrlchar=sc_ctrlchar_org;
@@ -620,6 +655,7 @@ int pc_compile(int argc, char *argv[])
   #if !defined NO_DEFINE
     delete_substtable();
     inst_datetime_defines();
+	inst_binary_name(binfname);
   #endif
   resetglobals();
   sc_ctrlchar=sc_ctrlchar_org;

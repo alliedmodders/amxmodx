@@ -1351,6 +1351,14 @@ static int command(void)
 	if (!SKIPPING)
       error(111,lptr);    /* user error */
     break;
+  case tpWARNING:
+    while (*lptr<=' ' && *lptr!='\0')
+      lptr++;
+	if (!SKIPPING) {
+      str=strtok((char*)lptr, "\n");
+	  error(234, str != NULL ? str : lptr);  /* user warning, and remove unnecessary newline */
+	}
+    break;
   default:
     error(31);          /* unknown compiler directive */
     ret=SKIPPING ? CMD_CONDFALSE : CMD_NONE;  /* process as normal line */
@@ -1831,7 +1839,7 @@ char *sc_tokens[] = {
          "sleep", "state", "static", "stock", "switch", "tagof", "while",
          "#assert", "#define", "#else", "#elseif", "#emit", "#endif", "#endinput",
          "#endscript", "#error", "#file", "#if", "#include", "#line", "#pragma",
-         "#tryinclude", "#undef",
+		 "#tryinclude", "#undef", "#warning",
          ";", ";", "-integer value-", "-rational value-", "-identifier-",
          "-label-", "-string-"
        };

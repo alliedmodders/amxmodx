@@ -1108,7 +1108,11 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
         skipinput=atoi(option_value(ptr));
         break;
       case 't':
-        sc_tabsize=atoi(option_value(ptr));
+        i=atoi(option_value(ptr));
+		if (i>0)
+		  sc_tabsize=i;
+		else
+		  about();
         break;
       case 'v':
         verbosity= isdigit(*option_value(ptr)) ? atoi(option_value(ptr)) : 2;

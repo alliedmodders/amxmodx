@@ -1131,7 +1131,8 @@ static int command(void)
         } else if (strcmp(str,"tabsize")==0) {
           cell val;
           preproc_expr(&val,NULL);
-          sc_tabsize=(int)val;
+		  if (val>0)
+		    sc_tabsize=(int)val;
         } else if (strcmp(str,"align")==0) {
           sc_alignnext=TRUE;
         } else if (strcmp(str,"unused")==0) {

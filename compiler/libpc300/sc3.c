@@ -1129,6 +1129,7 @@ static int hier2(value *lval)
   symbol *sym=NULL;
   int saveresult;
 
+  sym = NULL;
   tok=lex(&val,&st);
   switch (tok) {
   case tINC:                    /* ++lval */
@@ -1293,7 +1294,7 @@ static int hier2(value *lval)
         return error(17,st);      /* undefined symbol (symbol is in the table, but it is "used" only) */
       tag=sym->tag;
     } /* if */
-    if (sym->ident==iARRAY || sym->ident==iREFARRAY) {
+    if (sym!=NULL && (sym->ident==iARRAY || sym->ident==iREFARRAY)) {
       int level;
       symbol *idxsym=NULL;
       for (level=0; matchtoken('['); level++) {

@@ -921,7 +921,7 @@ static int command(void)
             if (skiplevel==iflevel)
               preproc_expr(&val,NULL);  /* get, but ignore the expression */
             else
-              lptr=strchr(lptr,'\0');
+              lptr=(unsigned char*)strchr((char*)lptr,'\0');
           } /* if */
         } else {
           /* previous conditions were all FALSE */
@@ -932,7 +932,7 @@ static int command(void)
             if (skiplevel==iflevel) {
               preproc_expr(&val,NULL);  /* get value (or 0 on error) */
             } else {
-              lptr=strchr(lptr,'\0');
+              lptr=(unsigned char*)strchr((char*)lptr,'\0');
               val=0;
             } /* if */
             ifstack[iflevel-1]=(char)(val ? PARSEMODE : SKIPMODE);
@@ -1379,7 +1379,7 @@ static int command(void)
       lptr++;
 	if (!SKIPPING) {
       str=strtok((char*)lptr, "\n");
-	  error(234, str != NULL ? str : lptr);  /* user warning, and remove unnecessary newline */
+	  error(234, str != NULL ? str : (char*)lptr);  /* user warning, and remove unnecessary newline */
 	}
     break;
   default:

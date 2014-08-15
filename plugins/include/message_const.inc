@@ -163,6 +163,7 @@ enum
  * write_byte(brightness)
  * write_byte(scroll speed in 0.1's)
  */
+ #define TE_BEAMENTPOINT            1
 
 /**
  * Particle effect plus ricochet sound

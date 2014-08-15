@@ -911,11 +911,27 @@ static int command(void)
         if ((ifstack[iflevel-1] & PARSEMODE)==PARSEMODE) {
           /* there has been a parse mode already on this level, so skip the rest */
           ifstack[iflevel-1] |= (char)SKIPMODE;
+		  /* if we were already skipping this section, allow expressions with
+           * undefined symbols; otherwise check the expression to catch errors
+           */
+          if (tok==tpELSEIF) {
+            if (skiplevel==iflevel)
+              preproc_expr(&val,NULL);  /* get, but ignore the expression */
+            else
+              lptr=strchr(lptr,'\0');
+          } /* if */
         } else {
           /* previous conditions were all FALSE */
           if (tok==tpELSEIF) {
-            /* get new expression */
-            preproc_expr(&val,NULL);  /* get value (or 0 on error) */
+            /* if we were already skipping this section, allow expressions with
+             * undefined symbols; otherwise check the expression to catch errors
+             */
+            if (skiplevel==iflevel) {
+              preproc_expr(&val,NULL);  /* get value (or 0 on error) */
+            } else {
+              lptr=strchr(lptr,'\0');
+              val=0;
+            } /* if */
             ifstack[iflevel-1]=(char)(val ? PARSEMODE : SKIPMODE);
           } else {
             /* a simple #else, clear skip mode */

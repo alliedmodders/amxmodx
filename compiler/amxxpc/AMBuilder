@@ -13,14 +13,10 @@ if builder.compiler.like('gcc'):
 if builder.target_platform == 'linux':
   binary.compiler.postlink += [
     '-ldl',
-    binary.Dep('libz.a'),
     binary.Dep(AMXX.stdcxx_path),
   ]
-elif builder.target_platform == 'mac':
-  binary.compiler.postlink += [binary.Dep('libz-darwin.a')]
 elif builder.target_platform == 'windows':
   binary.compiler.defines += ['_MBCS']
-  binary.compiler.linkflags += [binary.Dep('zlib.lib')]
   binary.compiler.linkflags.remove('/SUBSYSTEM:WINDOWS')
   binary.compiler.linkflags.append('/SUBSYSTEM:CONSOLE')
 
@@ -28,6 +24,18 @@ binary.sources = [
   'amx.cpp',
   'amxxpc.cpp',
   'Binary.cpp',
+  'zlib/adler32.c',
+  'zlib/compress.c',
+  'zlib/crc32.c',
+  'zlib/deflate.c',
+  'zlib/gzio.c',
+  'zlib/infback.c',
+  'zlib/inffast.c',
+  'zlib/inflate.c',
+  'zlib/inftrees.c',
+  'zlib/trees.c',
+  'zlib/uncompr.c',
+  'zlib/zutil.c',
 ]
 
 if builder.target_platform == 'windows':

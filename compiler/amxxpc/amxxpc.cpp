@@ -15,7 +15,7 @@
 #include <io.h>
 #endif
 #include <stdlib.h>
-#include "zlib.h"
+#include "zlib/zlib.h"
 #include "amx.h"
 #include "amxdbg.h"
 #include "amxxpc.h"

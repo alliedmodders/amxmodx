@@ -2248,6 +2248,24 @@ static void initials(int ident,int tag,cell *size,int dim[],int numdim,
           err++;
         } /* if */
       } /* for */
+	  if (numdim>1 && dim[numdim-1]==0) {
+        /* also look whether, by any chance, all "counted" final dimensions are
+         * the same value; if so, we can store this
+         */
+        constvalue *ld=lastdim.next;
+        int d,match;
+        for (d=0; d<dim[numdim-2]; d++) {
+          assert(ld!=NULL);
+          assert(strtol(ld->name,NULL,16)==d);
+          if (d==0)
+            match=ld->value;
+          else if (match!=ld->value)
+            break;
+          ld=ld->next;
+        } /* for */
+        if (d==dim[numdim-2])
+          dim[numdim-1]=match;
+      } /* if */
       /* after all arrays have been initalized, we know the (major) dimensions
        * of the array and we can properly adjust the indirection vectors
        */

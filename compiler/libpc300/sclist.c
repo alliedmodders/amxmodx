@@ -356,7 +356,7 @@ SC_FUNC void delete_substtable(void)
 #endif /* !defined NO_SUBST */
 
 
-/* ----- input file list ----------------------------------------- */
+/* ----- input file list (explicit files)------------------------- */
 static stringlist sourcefiles = {NULL, NULL};
 
 SC_FUNC stringlist *insert_sourcefile(char *string)
@@ -373,6 +373,28 @@ SC_FUNC void delete_sourcefiletable(void)
 {
   delete_stringtable(&sourcefiles);
   assert(sourcefiles.next==NULL);
+}
+
+
+/* ----- parsed file list (explicit + included files) ------------ */
+static stringlist inputfiles = {NULL, NULL};
+
+SC_FUNC stringlist *insert_inputfile(char *string)
+{
+  if (sc_status!=statFIRST)
+    return insert_string(&inputfiles,string);
+  return NULL;
+}
+
+SC_FUNC char *get_inputfile(int index)
+{
+  return get_string(&inputfiles,index);
+}
+
+SC_FUNC void delete_inputfiletable(void)
+{
+  delete_stringtable(&inputfiles);
+  assert(inputfiles.next==NULL);
 }
 
 

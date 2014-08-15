@@ -148,6 +148,7 @@ typedef struct s_symbol {
   } dim;                /* for 'dimension', both functions and arrays */
   constvalue *states;   /* list of state function addresses */
   int fnumber;          /* static global variables: file number in which the declaration is visible */
+  int lnumber;          /* line number (in the current source file) for the declaration */
   struct s_symbol **refer;  /* referrer list, functions that "use" this symbol */
   int numrefers;        /* number of entries in the referrer list */
   char *documentation;  /* optional documentation string */
@@ -407,6 +408,8 @@ typedef struct s_stringpair {
 #define sFORCESET       1       /* force error flag on */
 #define sEXPRMARK       2       /* mark start of expression */
 #define sEXPRRELEASE    3       /* mark end of expression */
+#define sSETLINE        4       /* set line number for the error */
+#define sSETFILE        5       /* set file number for the error */
 
 typedef enum s_regid {
   sPRI,                         /* indicates the primary register */
@@ -651,7 +654,7 @@ SC_FUNC void outval(cell val,int newline);
 
 /* function prototypes in SC5.C */
 SC_FUNC int error(int number,...) INVISIBLE;
-SC_FUNC void errorset(int code);
+SC_FUNC void errorset(int code, int line);
 
 /* function prototypes in SC6.C */
 SC_FUNC int assemble(FILE *fout,FILE *fin);
@@ -684,6 +687,9 @@ SC_FUNC void delete_substtable(void);
 SC_FUNC stringlist *insert_sourcefile(char *string);
 SC_FUNC char *get_sourcefile(int index);
 SC_FUNC void delete_sourcefiletable(void);
+SC_FUNC stringlist *insert_inputfile(char *string);
+SC_FUNC char *get_inputfile(int index);
+SC_FUNC void delete_inputfiletable(void);
 SC_FUNC stringlist *insert_docstring(char *string);
 SC_FUNC char *get_docstring(int index);
 SC_FUNC void delete_docstring(int index);
@@ -780,8 +786,8 @@ SC_VDECL cell sc_stksize;     /* stack size */
 SC_VDECL cell sc_amxlimit;    /* abstract machine size limit */
 SC_VDECL int freading;        /* is there an input file ready for reading? */
 SC_VDECL int fline;           /* the line number in the current file */
-SC_VDECL short fnumber;       /* number of files in the file table (debugging) */
-SC_VDECL short fcurrent;      /* current file being processed (debugging) */
+SC_VDECL short fnumber;       /* number of files in the input file table */
+SC_VDECL short fcurrent;      /* current file being processed */
 SC_VDECL short sc_intest;     /* true if inside a test */
 SC_VDECL int sideeffect;      /* true if an expression causes a side-effect */
 SC_VDECL int stmtindent;      /* current indent of the statement */

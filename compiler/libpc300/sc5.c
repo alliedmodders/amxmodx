@@ -51,7 +51,9 @@
 static unsigned char warndisable[(NUM_WARNINGS + 7) / 8]; /* 8 flags in a char */
 
 static int errflag;
+static int errfile;
 static int errstart;    /* line number at which the instruction started */
+static int errline;     /* forced line number for the error message */
 
 /*  error
  *
@@ -70,7 +72,7 @@ SC_FUNC int error(int number,...)
 static char *prefix[3]={ "error", "fatal error", "warning" };
 static int lastline,errorcount;
 static short lastfile;
-  char *msg,*pre;
+  char *msg,*pre,*filename;
   va_list argptr;
   char string[128];
 
@@ -107,11 +109,22 @@ static short lastfile;
 
   strexpand(string,(unsigned char *)msg,sizeof string,SCPACK_TABLE);
 
-  assert(errstart<=fline);
+ if (errline>0)
+    errstart=errline;           /* forced error position, set single line destination */
+  else
+    errline=fline;              /* normal error, errstart may (or may not) have been marked, endpoint is current line */
+  if (errstart>errline)
+    errstart=errline;           /* special case: error found at end of included file */
+  if (errfile>=0)
+    filename=get_inputfile(errfile);/* forced filename */
+  else
+    filename=inpfname;          /* current file */
+  assert(filename!=NULL);
+
   va_start(argptr,number);
   if (strlen(errfname)==0) {
-    int start= (errstart==fline) ? -1 : errstart;
-    if (pc_error(number,string,inpfname,start,fline,argptr)) {
+    int start= (errstart==errline) ? -1 : errstart;
+    if (pc_error((int)number,string,filename,start,errline,argptr)) {
       if (outf!=NULL) {
         pc_closeasm(outf,TRUE);
         outf=NULL;
@@ -121,10 +134,10 @@ static short lastfile;
   } else {
     FILE *fp=fopen(errfname,"a");
     if (fp!=NULL) {
-      if (errstart>=0 && errstart!=fline)
-        fprintf(fp,"%s(%d -- %d) : %s %03d: ",inpfname,errstart,fline,pre,number);
+      if (errstart>=0 && errstart!=errline)
+        fprintf(fp,"%s(%d -- %d) : %s %03d: ",filename,errstart,errline,pre,number);
       else
-        fprintf(fp,"%s(%d) : %s %03d: ",inpfname,fline,pre,number);
+        fprintf(fp,"%s(%d) : %s %03d: ",filename,errline,pre,number);
       vfprintf(fp,string,argptr);
       fclose(fp);
     } /* if */
@@ -144,6 +157,8 @@ static short lastfile;
     longjmp(errbuf,2);          /* fatal error, quit */
   } /* if */
 
+  errline=-1;
+  errfile=-1;
   /* check whether we are seeing many errors on the same line */
   if ((errstart<0 && lastline!=fline) || lastline<errstart || lastline>fline || fcurrent!=lastfile)
     errorcount=0;
@@ -157,7 +172,7 @@ static short lastfile;
   return 0;
 }
 
-SC_FUNC void errorset(int code)
+SC_FUNC void errorset(int code,int line)
 {
   switch (code) {
   case sRESET:
@@ -171,6 +186,15 @@ SC_FUNC void errorset(int code)
     break;
   case sEXPRRELEASE:
     errstart=-1;        /* forget start line number */
+    errline=-1;
+	errfile=-1;
+    break;
+  case sSETLINE:
+    errstart=-1;        /* force error line number, forget start line */
+    errline=line;
+    break;
+  case sSETFILE:
+    errfile=line;
     break;
   } /* switch */
 }

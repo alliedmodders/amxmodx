@@ -461,8 +461,8 @@ int pc_compile(int argc, char *argv[])
   /* set global variables to their initial value */
   binf=NULL;
   initglobals();
-  errorset(sRESET);
-  errorset(sEXPRRELEASE);
+  errorset(sRESET,0);
+  errorset(sEXPRRELEASE,0);
   lexinit();
 
   /* make sure that we clean up on a fatal error; do this before the first
@@ -597,7 +597,7 @@ int pc_compile(int argc, char *argv[])
     sc_packstr=lcl_packstr;
     sc_needsemicolon=lcl_needsemicolon;
     sc_tabsize=lcl_tabsize;
-    errorset(sRESET);
+    errorset(sRESET,0);
     /* reset the source file */
     inpf=inpf_org;
     freading=TRUE;
@@ -662,7 +662,7 @@ int pc_compile(int argc, char *argv[])
   sc_packstr=lcl_packstr;
   sc_needsemicolon=lcl_needsemicolon;
   sc_tabsize=lcl_tabsize;
-  errorset(sRESET);
+  errorset(sRESET,0);
   /* reset the source file */
   inpf=inpf_org;
   freading=TRUE;
@@ -671,7 +671,8 @@ int pc_compile(int argc, char *argv[])
   lexinit();                    /* clear internal flags of lex() */
   sc_status=statWRITE;          /* allow to write --this variable was reset by resetglobals() */
   writeleader(&glbtab);
-  insert_dbgfile(inpfname);
+  insert_dbgfile(inpfname);     /* attach to debug information */
+  insert_inputfile(inpfname);   /* save for the error system */
   if (strlen(incfname)>0) {
     if (strcmp(incfname,sDEF_PREFIX)==0)
       plungefile(incfname,FALSE,TRUE);  /* parse "default.inc" (again) */
@@ -752,6 +753,7 @@ cleanup:
   delete_aliastable();
   delete_pathtable();
   delete_sourcefiletable();
+  delete_inputfiletable();
   delete_dbgstringtable();
   #if !defined NO_DEFINE
     delete_substtable();
@@ -790,7 +792,7 @@ cleanup:
 #endif
 int pc_addconstant(char *name,cell value,int tag)
 {
-  errorset(sFORCESET);  /* make sure error engine is silenced */
+  errorset(sFORCESET,0);  /* make sure error engine is silenced */
   sc_status=statIDLE;
   add_constant(name,value,sGLOBAL,tag);
   return 1;
@@ -3635,7 +3637,7 @@ static int declargs(symbol *sym)
   } /* for */
 
   sym->usage|=uPROTOTYPED;
-  errorset(sRESET);             /* reset error flag (clear the "panic mode")*/
+  errorset(sRESET,0);             /* reset error flag (clear the "panic mode")*/
   return argcnt;
 }
 
@@ -4344,17 +4346,23 @@ static int testsymbols(symbol *root,int level,int testlabs,int testconst)
     switch (sym->ident) {
     case iLABEL:
       if (testlabs) {
-        if ((sym->usage & uDEFINE)==0)
+        if ((sym->usage & uDEFINE)==0) {
           error(19,sym->name);            /* not a label: ... */
-        else if ((sym->usage & uREAD)==0)
+        } else if ((sym->usage & uREAD)==0) {
+		  errorset(sSETFILE,sym->fnumber);
+		  errorset(sSETLINE,sym->lnumber);
           error(203,sym->name);           /* symbol isn't used: ... */
+		} /* if */
       } /* if */
       break;
     case iFUNCTN:
       if ((sym->usage & (uDEFINE | uREAD | uNATIVE | uSTOCK))==uDEFINE) {
         funcdisplayname(symname,sym->name);
-        if (strlen(symname)>0)
+        if (strlen(symname)>0) {
+		  errorset(sSETFILE,sym->fnumber);
+		  errorset(sSETLINE,sym->lnumber);
           error(203,symname);       /* symbol isn't used ... (and not native/stock) */
+		} /* if */
       } /* if */
       if ((sym->usage & uPUBLIC)!=0 || strcmp(sym->name,uMAINFUNC)==0)
         entry=TRUE;                 /* there is an entry point */
@@ -4363,21 +4371,31 @@ static int testsymbols(symbol *root,int level,int testlabs,int testconst)
         insert_dbgsymbol(sym);
       break;
     case iCONSTEXPR:
-      if (testconst && (sym->usage & uREAD)==0)
+      if (testconst && (sym->usage & uREAD)==0) {
+		errorset(sSETFILE,sym->fnumber);
+		errorset(sSETLINE,sym->lnumber);
         error(203,sym->name);       /* symbol isn't used: ... */
+	  } /* if */
       break;
     default:
       /* a variable */
       if (sym->parent!=NULL)
         break;                      /* hierarchical data type */
-      if ((sym->usage & (uWRITTEN | uREAD | uSTOCK))==0)
-        error(203,sym->name);       /* symbol isn't used (and not stock) */
-      else if ((sym->usage & (uREAD | uSTOCK | uPUBLIC))==0)
+      if ((sym->usage & (uWRITTEN | uREAD | uSTOCK))==0) {
+		errorset(sSETFILE,sym->fnumber);
+		errorset(sSETLINE,sym->lnumber);
+        error(203,sym->name,sym->lnumber);       /* symbol isn't used (and not stock) */
+      } else if ((sym->usage & (uREAD | uSTOCK | uPUBLIC))==0) {
+		errorset(sSETFILE,sym->fnumber);
+		errorset(sSETLINE,sym->lnumber);
         error(204,sym->name);       /* value assigned to symbol is never used */
 #if 0 // ??? not sure whether it is a good idea to force people use "const"
-      else if ((sym->usage & (uWRITTEN | uPUBLIC | uCONST))==0 && sym->ident==iREFARRAY)
+	  } else if ((sym->usage & (uWRITTEN | uPUBLIC | uCONST))==0 && sym->ident==iREFARRAY) {
+		errorset(sSETFILE,sym->fnumber);
+		errorset(sSETLINE,sym->lnumber);
         error(214,sym->name);       /* make array argument "const" */
 #endif
+	  } /* if */
       /* also mark the variable (local or global) to the debug information */
       if ((sym->usage & (uWRITTEN | uREAD))!=0 && (sym->usage & uNATIVE)==0)
         insert_dbgsymbol(sym);
@@ -4385,6 +4403,8 @@ static int testsymbols(symbol *root,int level,int testlabs,int testconst)
     sym=sym->next;
   } /* while */
 
+  errorset(sEXPRRELEASE, 0); /* clear error data */
+  errorset(sRESET, 0);
   return entry;
 }
 
@@ -4595,7 +4615,7 @@ static void statement(int *lastindent,int allow_decl)
     error(36);                  /* empty statement */
     return;
   } /* if */
-  errorset(sRESET);
+  errorset(sRESET,0);
 
   tok=lex(&val,&st);
   if (tok!='{') {
@@ -4722,6 +4742,7 @@ static void compound(int stmt_sameline)
   int indent=-1;
   cell save_decl=declared;
   int count_stmt=0;
+  int block_start=fline;  /* save line where the compound block started */
 
   /* if there is more text on this line, we should adjust the statement indent */
   if (stmt_sameline) {
@@ -4749,7 +4770,7 @@ static void compound(int stmt_sameline)
   nestlevel+=1;                 /* increase compound statement level */
   while (matchtoken('}')==0){   /* repeat until compound statement is closed */
     if (!freading){
-      needtoken('}');           /* gives error: "expected token }" */
+      error(30,block_start);    /* compound block not closed at end of file */
       break;
     } else {
       if (count_stmt>0 && (lastst==tRETURN || lastst==tBREAK || lastst==tCONTINUE))
@@ -4787,7 +4808,7 @@ static int doexpr(int comma,int chkeffect,int allowarray,int mark_endexpr,
     assert(stgidx==0);
   } /* if */
   index=stgidx;
-  errorset(sEXPRMARK);
+  errorset(sEXPRMARK,0);
   do {
     /* on second round through, mark the end of the previous expression */
     if (index!=stgidx)
@@ -4802,7 +4823,7 @@ static int doexpr(int comma,int chkeffect,int allowarray,int mark_endexpr,
   } while (comma && matchtoken(',')); /* more? */
   if (mark_endexpr)
     markexpr(sEXPR,NULL,0);     /* optionally, mark the end of the expression */
-  errorset(sEXPRRELEASE);
+  errorset(sEXPRRELEASE,0);
   if (localstaging) {
     stgout(index);
     stgset(FALSE);              /* stop staging */
@@ -4819,7 +4840,7 @@ SC_FUNC int constexpr(cell *val,int *tag,symbol **symptr)
 
   stgset(TRUE);         /* start stage-buffering */
   stgget(&index,&cidx); /* mark position in code generator */
-  errorset(sEXPRMARK);
+  errorset(sEXPRMARK,0);
   ident=expression(val,tag,symptr,FALSE);
   stgdel(index,cidx);   /* scratch generated code */
   stgset(FALSE);        /* stop stage-buffering */
@@ -4832,7 +4853,7 @@ SC_FUNC int constexpr(cell *val,int *tag,symbol **symptr)
     if (symptr!=NULL)
       *symptr=NULL;
   } /* if */
-  errorset(sEXPRRELEASE);
+  errorset(sEXPRRELEASE,0);
   return (ident==iCONSTEXPR);
 }
 

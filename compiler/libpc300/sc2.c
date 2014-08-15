@@ -156,15 +156,17 @@ static char *extensions[] = { ".inc", ".p", ".pawn" };
   PUSHSTK_I(fline);
   inpfname=duplicatestring(name);/* set name of include file */
   if (inpfname==NULL)
-    error(103);             /* insufficient memory */
-  inpf=fp;                  /* set input file pointer to include file */
+    error(103);					/* insufficient memory */
+  inpf=fp;						/* set input file pointer to include file */
   fnumber++;
-  fline=0;                  /* set current line number to 0 */
+  fline=0;						/* set current line number to 0 */
   fcurrent=fnumber;
-  icomment=0;               /* not in a comment */
-  insert_dbgfile(inpfname);
-  setfiledirect(inpfname);
-  listline=-1;              /* force a #line directive when changing the file */
+  icomment=0;					/* not in a comment */
+  insert_dbgfile(inpfname);		/* attach to debug information */
+  insert_inputfile(inpfname);   /* save for the error system */
+  assert(sc_status == statFIRST || strcmp(get_inputfile(fcurrent), inpfname) == 0);
+  setfiledirect(inpfname);      /* (optionally) set in the list file */
+  listline=-1;					/* force a #line directive when changing the file */
   sc_is_utf8=(short)scan_utf8(inpf,name);
   return TRUE;
 }
@@ -320,6 +322,7 @@ static void readline(unsigned char *line)
       inpf=(FILE *)POPSTK_P();
       insert_dbgfile(inpfname);
       setfiledirect(inpfname);
+	  assert(sc_status==statFIRST || strcmp(get_inputfile(fcurrent),inpfname)==0);
       listline=-1;              /* force a #line directive when changing the file */
     } /* if */
 
@@ -894,7 +897,7 @@ static int command(void)
     assert(iflevel>=0);
     if (iflevel==0) {
       error(26);                /* no matching #if */
-      errorset(sRESET);
+      errorset(sRESET,0);
     } else {
       /* check for earlier #else */
       if ((ifstack[iflevel-1] & HANDLED_ELSE)==HANDLED_ELSE) {
@@ -902,7 +905,7 @@ static int command(void)
           error(61);            /* #elseif directive may not follow an #else */
         else
           error(60);            /* multiple #else directives between #if ... #endif */
-        errorset(sRESET);
+        errorset(sRESET,0);
       } else {
         assert(iflevel>0);
         /* if there has been a "parse mode" on this level, set "skip mode",
@@ -946,7 +949,7 @@ static int command(void)
     ret=CMD_IF;
     if (iflevel==0){
       error(26);        /* no matching "#if" */
-      errorset(sRESET);
+      errorset(sRESET,0);
     } else {
       iflevel--;
       if (iflevel<skiplevel)
@@ -1731,7 +1734,7 @@ SC_FUNC void preprocess(void)
     lptr=pline;         /* set "line pointer" to start of the parsing buffer */
     iscommand=command();
     if (iscommand!=CMD_NONE)
-      errorset(sRESET); /* reset error flag ("panic mode") on empty line or directive */
+      errorset(sRESET,0); /* reset error flag ("panic mode") on empty line or directive */
     #if !defined NO_DEFINE
       if (iscommand==CMD_NONE) {
         assert(lptr!=term_expr);
@@ -1925,7 +1928,7 @@ SC_FUNC int lex(cell *lexvalue,char **lexsym)
   while (i<=tLAST) {    /* match reserved words and compiler directives */
     if (*lptr==**tokptr && match(*tokptr,TRUE)) {
       _lextok=i;
-      errorset(sRESET); /* reset error flag (clear the "panic mode")*/
+      errorset(sRESET,0); /* reset error flag (clear the "panic mode")*/
       if (pc_docexpr)   /* optionally concatenate to documentation string */
         insert_autolist(*tokptr);
       return _lextok;
@@ -2017,7 +2020,7 @@ SC_FUNC int lex(cell *lexvalue,char **lexsym)
   } else if (*lptr==';') {      /* semicolumn resets "error" flag */
     _lextok=';';
     lptr+=1;
-    errorset(sRESET);   /* reset error flag (clear the "panic mode")*/
+    errorset(sRESET,0);   /* reset error flag (clear the "panic mode")*/
   } else {
     _lextok=*lptr;      /* if every match fails, return the character */
     lptr+=1;            /* increase the "lptr" pointer */
@@ -2622,7 +2625,10 @@ SC_FUNC int refer_symbol(symbol *entry,symbol *bywhom)
 
 SC_FUNC void markusage(symbol *sym,int usage)
 {
+  assert(sym!=NULL);
   sym->usage |= (char)usage;
+  if ((usage & uWRITTEN) != 0)
+	sym->lnumber=fline;
   /* check if (global) reference must be added to the symbol */
   if ((usage & (uREAD | uWRITTEN))!=0) {
     /* only do this for global symbols */
@@ -2715,6 +2721,7 @@ SC_FUNC symbol *addsym(const char *name,cell addr,int ident,int vclass,int tag,i
   entry.compound=0;     /* may be overridden later */
   entry.states=NULL;
   entry.fnumber=-1;     /* assume global visibility (ignored for local symbols) */
+  entry.lnumber=fline;
   entry.numrefers=1;
   entry.refer=refer;
   entry.parent=NULL;

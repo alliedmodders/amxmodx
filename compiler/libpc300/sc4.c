@@ -849,9 +849,8 @@ SC_FUNC void getfrm(void)
   code_idx+=opcodes(1)+opargs(1);
 }
 
-/*
 
-/*
+/**
  *  Inclrement/decrement stack pointer. Note that this routine does
  *  nothing if the delta is zero.
  */

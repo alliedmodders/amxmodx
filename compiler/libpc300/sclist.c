@@ -255,16 +255,16 @@ SC_FUNC void delete_pathtable(void)
 
 static stringpair substpair = { NULL, NULL, NULL};  /* list of substitution pairs */
 
-static stringpair *substindex['z'-'A'+1]; /* quick index to first character */
+static stringpair *substindex['z'-PUBLIC_CHAR+1]; /* quick index to first character */
 static void adjustindex(char c)
 {
   stringpair *cur;
-  assert(c>='A' && c<='Z' || c>='a' && c<='z' || c=='_');
-  assert('A'<'_' && '_'<'z');
+  assert(c>='A' && c<='Z' || c>='a' && c<='z' || c=='_' || c==PUBLIC_CHAR);
+  assert(PUBLIC_CHAR<'A' && 'A'<'_' && '_'<'z');
 
   for (cur=substpair.next; cur!=NULL && cur->first[0]!=c; cur=cur->next)
     /* nothing */;
-  substindex[(int)c-'A']=cur;
+  substindex[(int)c-PUBLIC_CHAR]=cur;
 }
 
 SC_FUNC stringpair *insert_subst(char *pattern,char *substitution,int prefixlen)
@@ -304,8 +304,8 @@ SC_FUNC stringpair *find_subst(char *name,int length)
   stringpair *item;
   assert(name!=NULL);
   assert(length>0);
-  assert(*name>='A' && *name<='Z' || *name>='a' && *name<='z' || *name=='_');
-  item=substindex[(int)*name-'A'];
+  assert(*name>='A' && *name<='Z' || *name>='a' && *name<='z' || *name=='_' || *name==PUBLIC_CHAR);
+  item=substindex[(int)*name-PUBLIC_CHAR];
   if (item!=NULL)
     item=find_stringpair(item,name,length);
 
@@ -334,8 +334,8 @@ SC_FUNC int delete_subst(char *name,int length)
   stringpair *item;
   assert(name!=NULL);
   assert(length>0);
-  assert(*name>='A' && *name<='Z' || *name>='a' && *name<='z' || *name=='_');
-  item=substindex[(int)*name-'A'];
+  assert(*name>='A' && *name<='Z' || *name>='a' && *name<='z' || *name=='_' || *name==PUBLIC_CHAR);
+  item=substindex[(int)*name-PUBLIC_CHAR];
   if (item!=NULL)
     item=find_stringpair(item,name,length);
   if (item==NULL)

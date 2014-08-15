@@ -1270,7 +1270,7 @@ static int command(void)
       } /* while */
       end=lptr;
       /* check pattern to match */
-      if (!isalpha(*start) && *start!='_') {
+	  if (!alpha(*start)) {
         error(74);      /* pattern must start with an alphabetic character */
         break;
       } /* if */
@@ -1321,7 +1321,7 @@ static int command(void)
       } /* while */
       substitution[count]='\0';
       /* check whether the definition already exists */
-      for (prefixlen=0,start=(unsigned char*)pattern; isalpha(*start) || isdigit(*start) || *start=='_'; prefixlen++,start++)
+      for (prefixlen=0,start=(unsigned char*)pattern; alphanum(*start); prefixlen++,start++)
         /* nothing */;
       assert(prefixlen>0);
       if ((def=find_subst(pattern,prefixlen))!=NULL) {
@@ -1485,7 +1485,7 @@ static int substpattern(unsigned char *line,size_t buffersize,char *pattern,char
   memset(args,0,sizeof args);
 
   /* check the length of the prefix */
-  for (prefixlen=0,s=(unsigned char*)pattern; isalpha(*s) || isdigit(*s) || *s=='_'; prefixlen++,s++)
+  for (prefixlen=0,s=(unsigned char*)pattern; alphanum(*s); prefixlen++,s++)
     /* nothing */;
   assert(prefixlen>0);
   assert(strncmp((char*)line,pattern,prefixlen)==0);
@@ -1645,7 +1645,7 @@ static void substallpatterns(unsigned char *line,int buffersize)
     /* find the start of a prefix (skip all non-alphabetic characters),
      * also skip strings
      */
-    while (!isalpha(*start) && *start!='_' && *start!='\0') {
+    while (!alpha(*start) && *start!='\0') {
       /* skip strings */
       if (is_startstring(start)) {
         start=(unsigned char *)skipstring(start);
@@ -1663,7 +1663,7 @@ static void substallpatterns(unsigned char *line,int buffersize)
       while ((*start<=' ' && *start!='\0') || *start=='(')
         start++;
       /* skip the symbol behind it */
-      while (isalpha(*start) || isdigit(*start) || *start=='_')
+	  while (alphanum(*start))
         start++;
       /* drop back into the main loop */
       continue;
@@ -1671,7 +1671,7 @@ static void substallpatterns(unsigned char *line,int buffersize)
     /* get the prefix (length), look for a matching definition */
     prefixlen=0;
     end=start;
-    while (isalpha(*end) || isdigit(*end) || *end=='_') {
+	while (alphanum(*end)) {
       prefixlen++;
       end++;
     } /* while */
@@ -2512,7 +2512,7 @@ SC_FUNC void delete_symbols(symbol *root,int level,int delete_labels,int delete_
       /* for user defined operators, also remove the "prototyped" flag, as
        * user-defined operators *must* be declared before use
        */
-      if (sym->ident==iFUNCTN && !isalpha(*sym->name) && *sym->name!='_' && *sym->name!=PUBLIC_CHAR)
+      if (sym->ident==iFUNCTN && !alpha(*sym->name))
         sym->usage &= ~uPROTOTYPED;
       root=sym;                 /* skip the symbol */
     } /* if */

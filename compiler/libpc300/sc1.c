@@ -683,11 +683,13 @@ cleanup:
         pc_printf("Header size:       %8ld bytes\n", (long)hdrsize);
         pc_printf("Code size:         %8ld bytes\n", (long)code_idx);
         pc_printf("Data size:         %8ld bytes\n", (long)glb_declared*sizeof(cell));
-        pc_printf("Stack/heap size:   %8ld bytes; ", (long)sc_stksize*sizeof(cell));
+        pc_printf("Stack/heap size:   %8ld bytes\n", (long)sc_stksize*sizeof(cell));
+#if 0
         if (stacksize<0)
           pc_printf("max. usage is unknown, due to recursion\n");
         else if (stacksize>0)
           pc_printf("estimated max. usage=%ld cells (%ld bytes)\n",stacksize,stacksize*sizeof(cell));
+#endif
         pc_printf("Total requirements:%8ld bytes\n", (long)hdrsize+(long)code_idx+(long)glb_declared*sizeof(cell)+(long)sc_stksize*sizeof(cell));
       } /* if */
       if (flag_exceed)
@@ -1253,7 +1255,7 @@ static void setconfig(char *root)
     /* add the default "include" directory */
     #if defined __WIN32__ || defined _WIN32
       GetModuleFileName(NULL,path,_MAX_PATH);
-    #elif defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
+    #elif defined ENABLE_BINRELOC && (defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__)
       /* see www.autopackage.org for the BinReloc module */
       ptr = (char *)SELFPATH;
       if (!ptr)

@@ -586,7 +586,7 @@ static int htoi(cell *val,const unsigned char *curptr)
     return (int)(ptr-curptr);
 }
 
-#if defined __GNUC__
+#if defined __APPLE__
 static double pow10(double d)
 {
 	return pow(10, d);

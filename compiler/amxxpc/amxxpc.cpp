@@ -28,40 +28,49 @@
 	#endif
 #endif
 
-static PRINTF pc_printf = NULL;
-
 void ReadFileIntoPl(abl *pl, FILE *fp);
 bool CompressPl(abl *pl);
 void Pl2Bh(abl *pl, BinPlugin *bh);
 void WriteBh(BinaryWriter *bw, BinPlugin *bh);
 
+#if defined(EMSCRIPTEN)
+extern "C" void Compile32(int argc, char **argv);
+extern "C" int pc_printf(const char *message,...);
+#else
+static PRINTF pc_printf = NULL;
+#endif
+
 int main(int argc, char **argv)
 {
 	struct abl pl32;
 
-#if defined(__linux__)
+#if defined(EMSCRIPTEN)
+        COMPILER sc32 = (COMPILER)Compile32;
+#else
+# if defined(__linux__)
 	HINSTANCE lib = NULL;
 	if (FileExists("./amxxpc32.so"))
 		lib = dlmount("./amxxpc32.so");
 	else
 		lib = dlmount("amxxpc32.so");
-#elif defined(__APPLE__)
+# elif defined(__APPLE__)
 	HINSTANCE lib = dlmount("amxxpc32.dylib");
-#else
+# else
 	HINSTANCE lib = dlmount("amxxpc32.dll");
-#endif
+# endif
 	if (!lib)
 	{
-#if defined(__linux__) || defined(__APPLE__)
+# if defined(__linux__) || defined(__APPLE__)
 		printf("compiler failed to instantiate: %s\n", dlerror());
-#else
+# else
 		printf("compiler failed to instantiate: %d\n", GetLastError());
-#endif
+# endif
 		exit(0);
 	}
 
 	COMPILER sc32 = (COMPILER)dlsym(lib, "Compile32");
 	pc_printf = (PRINTF)dlsym(lib, "pc_printf");
+#endif //EMSCRIPTEN
 
 	if (!sc32 || !pc_printf)
 	{
@@ -73,8 +82,9 @@ int main(int argc, char **argv)
 		exit(0);
 	}
 
-	pc_printf("Welcome to the AMX Mod X %s Compiler.\n", SVN_VERSION);
-	pc_printf("Copyright (c) 1997-2013 ITB CompuPhase, AMX Mod X Team\n\n");
+	pc_printf("AMX Mod X Compiler %s\n", SVN_VERSION);
+	pc_printf("Copyright (c) 1997-2006 ITB CompuPhase\n");
+        pc_printf("Copyright (c) 2004-2013 AMX Mod X Team\n\n");
 	
 	if (argc < 2)
 	{
@@ -166,7 +176,9 @@ int main(int argc, char **argv)
 		fclose(fp);
 		unlink(file);
 		pc_printf("Error, failed to write binary\n");
+#if !defined EMSCRIPTEN
 		dlclose(lib);
+#endif
 		exit(0);
 	}
 
@@ -176,7 +188,9 @@ int main(int argc, char **argv)
 
 	pc_printf("Done.\n");
 
+#if !defined EMSCRIPTEN
 	dlclose(lib);
+#endif
 
 	exit(0);
 }

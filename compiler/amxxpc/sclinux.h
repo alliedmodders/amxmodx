@@ -31,7 +31,11 @@
  * For Linux, we must overrule these settings with those defined in glibc.
  */
 #if !defined __BYTE_ORDER
-# include <stdlib.h>
+# if defined EMSCRIPTEN
+#  include <endian.h>
+# else
+#  include <stdlib.h>
+# endif
 # if defined __APPLE__
 #  include <sys/types.h>
 #  define __BYTE_ORDER BYTE_ORDER

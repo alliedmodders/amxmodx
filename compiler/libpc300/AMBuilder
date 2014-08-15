@@ -13,6 +13,7 @@ binary.compiler.defines += [
   'NO_MAIN',
   'PAWNC_DLL',
   'HAVE_STDINT_H',
+  '_GNU_SOURCE',
 ]
 
 binary.sources = [

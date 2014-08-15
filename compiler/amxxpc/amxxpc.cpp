@@ -46,7 +46,6 @@ int main(int argc, char **argv)
 
 #if defined(EMSCRIPTEN)
         COMPILER sc32 = (COMPILER)Compile32;
-        //pc_printf = (PRINTF)pc_printf;
 #else
 # if defined(__linux__)
 	HINSTANCE lib = NULL;

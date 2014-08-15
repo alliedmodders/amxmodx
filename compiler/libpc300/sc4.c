@@ -410,6 +410,16 @@ SC_FUNC void rvalue(value *lval)
   } /* if */
 }
 
+/* dereference
+ *
+ * Get a cell from a memory address stored in the primary register
+ */
+SC_FUNC void dereference(void)
+{
+  stgwrite("\tload.i\n");
+  code_idx+=opcodes(1);
+}
+
 /* Get the address of a symbol into the primary or alternate register (used
  * for arrays, and for passing arguments by reference).
  */
@@ -828,6 +838,18 @@ SC_FUNC void defstorage(void)
 {
   stgwrite("dump ");
 }
+
+/*
+ *  Copies frame address to primary register
+ */
+
+SC_FUNC void getfrm(void)
+{
+  stgwrite("\tlctrl 5\n");
+  code_idx+=opcodes(1)+opargs(1);
+}
+
+/*
 
 /*
  *  Inclrement/decrement stack pointer. Note that this routine does

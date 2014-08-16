@@ -154,6 +154,8 @@ class AMXXConfig(object):
       cfg.cxxflags += [
         '-fno-exceptions',
         '-fno-rtti',
+        '-std=c++11',
+        '-Wno-implicit-exception-spec-mismatch', # amxxmodule.cpp redeclares new/delete without an exception spec
       ]
     elif cxx.name == 'msvc':
       if builder.options.debug == '1':

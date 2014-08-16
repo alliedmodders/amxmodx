@@ -28,9 +28,9 @@ char *stripPort(char *ip)
 
 const char* stristr(const char* str, const char* substr)
 {
-	register char *needle = (char *)substr;
-	register char *prevloc = (char *)str;
-	register char *haystack = (char *)str;
+	char *needle = (char *)substr;
+	char *prevloc = (char *)str;
+	char *haystack = (char *)str;
 
 	while (*haystack)
 	{

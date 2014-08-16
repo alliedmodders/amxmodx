@@ -921,7 +921,7 @@
 
 
 #define FM_ENG_HANDLE(pfnCall, pfnArgs) \
-	register unsigned int i = 0; \
+	unsigned int i = 0; \
 	clfm(); \
 	int fmres = FMRES_IGNORED; \
 	for (i=0; i<Engine[pfnCall].size(); i++) \
@@ -938,7 +938,7 @@
 		} \
 	}
 #define FM_ENG_HANDLE_POST(pfnCall, pfnArgs) \
-	register unsigned int i = 0; \
+	unsigned int i = 0; \
 	clfm(); \
 	int fmres = FMRES_IGNORED; \
 	for (i=0; i<EnginePost[pfnCall].size(); i++) \

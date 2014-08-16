@@ -186,8 +186,6 @@ int main(int argc, char **argv)
 
 	unlink(file);
 
-	pc_printf("Done.\n");
-
 #if !defined EMSCRIPTEN
 	dlclose(lib);
 #endif

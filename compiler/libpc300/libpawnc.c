@@ -56,6 +56,10 @@
   }
 #endif /* PAWNC_DLL */
 
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__
+  #include <sys/types.h>
+  #include <sys/stat.h>
+#endif
 
 /* pc_printf()
  * Called for general purpose "console" output. This function prints general
@@ -175,6 +179,7 @@ void *pc_opensrc(char *filename)
 
   src->pos = src->buffer;
   src->end = src->buffer + length;
+  fclose(fp);
   return src;
 
 err:

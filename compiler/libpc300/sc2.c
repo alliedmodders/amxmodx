@@ -120,18 +120,18 @@ SC_FUNC void clearstk(void)
 SC_FUNC int plungequalifiedfile(char *name)
 {
 static char *extensions[] = { ".inc", ".p", ".pawn" };
-  FILE *fp;
+  void *fp;
   char *ext;
   int ext_idx;
 
   ext_idx=0;
   do {
-    fp=(FILE*)pc_opensrc(name);
+    fp=(void*)pc_opensrc(name);
     ext=strchr(name,'\0');      /* save position */
     if (fp==NULL) {
       /* try to append an extension */
       strcpy(ext,extensions[ext_idx]);
-      fp=(FILE*)pc_opensrc(name);
+      fp=(void*)pc_opensrc(name);
       if (fp==NULL)
         *ext='\0';              /* on failure, restore filename */
     } /* if */

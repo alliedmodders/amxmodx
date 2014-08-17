@@ -508,7 +508,7 @@ int pc_compile(int argc, char *argv[])
   if (get_sourcefile(1)!=NULL) {
     /* there are at least two or more source files */
     char *tname,*sname;
-    FILE *ftmp,*fsrc;
+    void *ftmp,*fsrc;
     int fidx;
     #if defined __WIN32__ || defined _WIN32
       tname=_tempnam(NULL,"pawn");
@@ -524,10 +524,10 @@ int pc_compile(int argc, char *argv[])
       close(mkstemp(buffer));
       tname=buffer;
     #endif
-    ftmp=(FILE*)pc_createsrc(tname);
+    ftmp=(void*)pc_createsrc(tname);
     for (fidx=0; (sname=get_sourcefile(fidx))!=NULL; fidx++) {
       unsigned char tstring[128];
-      fsrc=(FILE*)pc_opensrc(sname);
+      fsrc=(void*)pc_opensrc(sname);
       if (fsrc==NULL)
         error(100,sname);
       pc_writesrc(ftmp,(unsigned char*)"#file ");
@@ -545,7 +545,7 @@ int pc_compile(int argc, char *argv[])
   } else {
     strcpy(inpfname,get_sourcefile(0));
   } /* if */
-  inpf_org=(FILE*)pc_opensrc(inpfname);
+  inpf_org=(void*)pc_opensrc(inpfname);
   if (inpf_org==NULL)
     error(100,inpfname);
   freading=TRUE;

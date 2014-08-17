@@ -132,6 +132,7 @@ static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params) /* 3 param *
 {
 	int len = 0;
 	char *msg;
+	PRINT_TYPE type = (PRINT_TYPE)params[2];
 	
 	if (params[1] == 0)
 	{
@@ -139,13 +140,13 @@ static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params) /* 3 param *
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 			
-			if (pPlayer->ingame)
+			if ((type == print_console  && pPlayer->initialized) || pPlayer->ingame)
 			{
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
 				msg[len++] = '\n';
 				msg[len] = 0;
-				CLIENT_PRINT(pPlayer->pEdict, (PRINT_TYPE)(int)params[2], msg);
+				CLIENT_PRINT(pPlayer->pEdict, type, msg);
 			}
 		}
 	} else {
@@ -159,13 +160,13 @@ static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params) /* 3 param *
 		
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
-		if (pPlayer->ingame)
+		if ((type == print_console  && pPlayer->initialized) || pPlayer->ingame)
 		{
 			g_langMngr.SetDefLang(index);
 			msg = format_amxstring(amx, params, 3, len);
 			msg[len++] = '\n';
 			msg[len] = 0;
-			CLIENT_PRINT(pPlayer->pEdict, (PRINT_TYPE)(int)params[2], msg);
+			CLIENT_PRINT(pPlayer->pEdict, type, msg);
 		}
 	}
 	
@@ -2316,7 +2317,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 		
-		if (pPlayer->ingame)
+		if (pPlayer->initialized)
 		{
 			if (pPlayer->IsAlive() ? (flags & 64) : (flags & 32))
 				continue;

@@ -5327,22 +5327,6 @@ static symbol *fetchlab(char *name)
   return sym;
 }
 
-/* isvariadic
- * 
- * Checks if the function is variadic.
- */
-static int isvariadic(symbol *sym)
-{
-  int i;
-  for (i=0; curfunc->dim.arglist[i].ident!=0; i++) {
-    /* check whether this is a variadic function */
-    if (curfunc->dim.arglist[i].ident==iVARARGS) {
-      return TRUE;
-    } /* if */
-  } /* for */
-  return FALSE;
-}
-
 /*  doreturn
  *
  *  Global references: rettype  (altered)
@@ -5447,19 +5431,7 @@ static void doreturn(void)
        * it stays on the heap for the moment, and it is removed -usually- at
        * the end of the expression/statement, see expression() in SC3.C)
        */
-        if (isvariadic(sub)) {
-          pushreg(sPRI);                  /* save source address stored in PRI */
-          sub->addr=2*sizeof(cell);
-          address(sub,sALT);              /* get the number of arguments */
-          getfrm();
-          addconst(3*sizeof(cell));
-          ob_add();
-          dereference();
-          swap1();
-          popreg(sALT);                   /* ALT = destination */
-        } else {
-          address(sub,sALT);              /* ALT = destination */
-        } /* if */
+      address(sub,sALT);                /* ALT = destination */
       arraysize=calc_arraysize(dim,numdim,0);
       memcopy(arraysize*sizeof(cell));  /* source already in PRI */
       /* moveto1(); is not necessary, callfunction() does a popreg() */

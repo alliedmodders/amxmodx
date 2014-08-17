@@ -2734,7 +2734,7 @@ SC_FUNC symbol *addvariable(const char *name,cell addr,int ident,int vclass,int 
    * this special case.
    */
   assert(vclass!=sGLOBAL || (sym=findglb(name))==NULL || (sym->usage & uDEFINE)==0
-         || sym->ident==iFUNCTN && sym==curfunc);
+         || (sym->ident==iFUNCTN && sym==curfunc));
 
   if (ident==iARRAY || ident==iREFARRAY) {
     symbol *parent=NULL,*top;

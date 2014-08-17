@@ -2047,7 +2047,7 @@ static int nesting=0;
                   error(47);      /* array sizes must match */
               } /* if */
             } /* if */
-            if (lval.ident!=iARRAYCELL) {
+            if (lval.ident!=iARRAYCELL|| lval.constval>0) {
               /* save array size, for default values with uSIZEOF flag */
               cell array_sz=lval.constval;
               assert(array_sz!=0);/* literal array must have a size */

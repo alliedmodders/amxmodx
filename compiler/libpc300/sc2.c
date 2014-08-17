@@ -362,7 +362,7 @@ static void readline(unsigned char *line)
       line+=strlen((char*)line);
     } /* if */
     fline+=1;
-    sym=findconst("__line");
+    sym=findconst("__LINE__");
     assert(sym!=NULL);
     sym->addr=fline;
   } while (num>=0 && cont);

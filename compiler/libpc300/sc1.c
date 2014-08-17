@@ -2250,7 +2250,7 @@ static void initials(int ident,int tag,cell *size,int dim[],int numdim,
           err++;
         } /* if */
       } /* for */
-	  if (numdim>1 && dim[numdim-1]==0) {
+	  if (numdim>1 && dim[numdim-1]==0 && !errorfound && err==0) {
         /* also look whether, by any chance, all "counted" final dimensions are
          * the same value; if so, we can store this
          */

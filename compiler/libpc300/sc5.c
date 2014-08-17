@@ -21,7 +21,7 @@
  */
 
 #include <assert.h>
-#if defined	__WIN32__ || defined _WIN32 || defined __MSDOS__
+#if defined __WIN32__ || defined _WIN32 || defined __MSDOS__
   #include <io.h>
 #endif
 #if defined LINUX || defined __APPLE__ || defined __GNUC__
@@ -187,7 +187,7 @@ SC_FUNC void errorset(int code,int line)
   case sEXPRRELEASE:
     errstart=-1;        /* forget start line number */
     errline=-1;
-	errfile=-1;
+    errfile=-1;
     break;
   case sSETLINE:
     errstart=-1;        /* force error line number, forget start line */

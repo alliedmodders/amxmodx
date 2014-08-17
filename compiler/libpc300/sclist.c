@@ -278,23 +278,23 @@ SC_FUNC stringpair *insert_subst(char *pattern,char *substitution,int prefixlen)
   adjustindex(*pattern);
 
   if (pc_deprecate != NULL) {
-	  assert(cur != NULL);
-	  cur->flags |= flgDEPRECATED;
-	  if (sc_status == statWRITE) {
-		  if (cur->documentation != NULL) {
-			  free(cur->documentation);
-			  cur->documentation = NULL;
-		  } /* if */
-		  cur->documentation = pc_deprecate;
-	  }
-	  else {
-		  free(pc_deprecate);
-	  } /* if */
-	  pc_deprecate = NULL;
+    assert(cur != NULL);
+    cur->flags |= flgDEPRECATED;
+    if (sc_status == statWRITE) {
+      if (cur->documentation != NULL) {
+        free(cur->documentation);
+        cur->documentation = NULL;
+      } /* if */
+      cur->documentation = pc_deprecate;
+    }
+    else {
+      free(pc_deprecate);
+    } /* if */
+    pc_deprecate = NULL;
   }
   else {
-	  cur->flags = 0;
-	  cur->documentation = NULL;
+    cur->flags = 0;
+    cur->documentation = NULL;
   } /* if */
   return cur;
 }
@@ -309,22 +309,20 @@ SC_FUNC stringpair *find_subst(char *name,int length)
   if (item!=NULL)
     item=find_stringpair(item,name,length);
 
-  if (item && (item->flags & flgDEPRECATED) != 0)
-  {
-	  static char macro[128];
-	  char *rem, *msg = (item->documentation != NULL) ? item->documentation : "";
-	  strncpy(macro, item->first, sizeof(macro));
-	  macro[sizeof(macro) - 1] = '\0';
+  if (item && (item->flags & flgDEPRECATED) != 0) {
+    static char macro[128];
+    char *rem, *msg = (item->documentation != NULL) ? item->documentation : "";
+    strncpy(macro, item->first, sizeof(macro));
+    macro[sizeof(macro) - 1] = '\0';
 
-	  /* If macro contains an opening parentheses and a percent sign, then assume that
-	  * it takes arguments and remove them from the warning message.
-	  */
-	  if ((rem = strchr(macro, '(')) != NULL && strchr(macro, '%') > rem)
-	  {
-		  *rem = '\0';
-	  }
+    /* If macro contains an opening parentheses and a percent sign, then assume that
+    * it takes arguments and remove them from the warning message.
+    */
+    if ((rem = strchr(macro, '(')) != NULL && strchr(macro, '%') > rem) {
+      *rem = '\0';
+    }
 
-	  error(233, macro, msg);  /* deprecated (macro/constant) */
+    error(233, macro, msg);  /* deprecated (macro/constant) */
   }
   return item;
 }
@@ -475,9 +473,9 @@ SC_FUNC stringlist *insert_dbgline(int linenr)
 }
 
 #ifdef WIN32
-#define	LONGCAST	long
+#define LONGCAST    long
 #else
-#define	LONGCAST	cell
+#define LONGCAST    cell
 #endif
 
 SC_FUNC stringlist *insert_dbgsymbol(symbol *sym)
@@ -510,7 +508,7 @@ SC_FUNC stringlist *insert_dbgsymbol(symbol *sym)
     if (sym->ident==iARRAY || sym->ident==iREFARRAY) {
       symbol *sub;
 #if !defined NDEBUG
-	  count = sym->dim.array.level;
+      count = sym->dim.array.level;
 #endif
       strcat(string," [ ");
       for (sub=sym; sub!=NULL; sub=finddepend(sub)) {

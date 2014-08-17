@@ -288,8 +288,7 @@ SC_FUNC int matchtag(int formaltag,int actualtag,int allowcoerce)
      * tag is "coerced" to zero
      */
     if (!allowcoerce || formaltag!=0 || (actualtag & FIXEDTAG)!=0)
-        return FALSE;
-		
+      return FALSE;
   } /* if */
   return TRUE;
 }
@@ -505,9 +504,9 @@ static int plnge_rel(int *opstr,int opoff,int (*hier)(value *lval),value *lval)
       error(212);
     if (count>0) {
       relop_prefix();
-	  boolresult = lval->boolresult;
+      boolresult = lval->boolresult;
       *lval=lval2;      /* copy right hand expression of the previous iteration */
-	  lval->boolresult = boolresult;
+      lval->boolresult = boolresult;
     } /* if */
     opidx+=opoff;
     plnge2(op1[opidx],hier,lval,&lval2);
@@ -1040,13 +1039,13 @@ static int hier13(value *lval)
       lval->ident=iREFARRAY;    /* iARRAY becomes iREFARRAY */
     else if (lval->ident!=iREFARRAY)
       lval->ident=iEXPRESSION;  /* iREFARRAY stays iREFARRAY, rest becomes iEXPRESSION */
-	if (orig_heap!=decl_heap) {
-		diff2=abs(decl_heap-orig_heap);
-		decl_heap=orig_heap;
-	}
+    if (orig_heap!=decl_heap) {
+      diff2=abs(decl_heap-orig_heap);
+      decl_heap=orig_heap;
+    }
     if (diff1==diff2) {
       decl_heap+=(diff1/2);
-	} else {
+    } else {
       decl_heap+=(diff1+diff2);
     }
     return FALSE;               /* conditional expression is no lvalue */

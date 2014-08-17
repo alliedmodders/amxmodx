@@ -156,17 +156,17 @@ static char *extensions[] = { ".inc", ".p", ".pawn" };
   PUSHSTK_I(fline);
   inpfname=duplicatestring(name);/* set name of include file */
   if (inpfname==NULL)
-    error(103);					/* insufficient memory */
-  inpf=fp;						/* set input file pointer to include file */
+    error(103);                 /* insufficient memory */
+  inpf=fp;                      /* set input file pointer to include file */
   fnumber++;
-  fline=0;						/* set current line number to 0 */
+  fline=0;                      /* set current line number to 0 */
   fcurrent=fnumber;
-  icomment=0;					/* not in a comment */
-  insert_dbgfile(inpfname);		/* attach to debug information */
+  icomment=0;                   /* not in a comment */
+  insert_dbgfile(inpfname);     /* attach to debug information */
   insert_inputfile(inpfname);   /* save for the error system */
   assert(sc_status == statFIRST || strcmp(get_inputfile(fcurrent), inpfname) == 0);
   setfiledirect(inpfname);      /* (optionally) set in the list file */
-  listline=-1;					/* force a #line directive when changing the file */
+  listline=-1;                  /* force a #line directive when changing the file */
   sc_is_utf8=(short)scan_utf8(inpf,name);
   return TRUE;
 }
@@ -322,7 +322,7 @@ static void readline(unsigned char *line)
       inpf=(FILE *)POPSTK_P();
       insert_dbgfile(inpfname);
       setfiledirect(inpfname);
-	  assert(sc_status==statFIRST || strcmp(get_inputfile(fcurrent),inpfname)==0);
+      assert(sc_status==statFIRST || strcmp(get_inputfile(fcurrent),inpfname)==0);
       listline=-1;              /* force a #line directive when changing the file */
     } /* if */
 
@@ -596,7 +596,7 @@ static int htoi(cell *val,const unsigned char *curptr)
 #if defined __APPLE__
 static double pow10(double d)
 {
-	return pow(10, d);
+  return pow(10, d);
 }
 #endif
 
@@ -914,7 +914,7 @@ static int command(void)
         if ((ifstack[iflevel-1] & PARSEMODE)==PARSEMODE) {
           /* there has been a parse mode already on this level, so skip the rest */
           ifstack[iflevel-1] |= (char)SKIPMODE;
-		  /* if we were already skipping this section, allow expressions with
+          /* if we were already skipping this section, allow expressions with
            * undefined symbols; otherwise check the expression to catch errors
            */
           if (tok==tpELSEIF) {
@@ -1027,27 +1027,27 @@ static int command(void)
               error(27);          /* invalid character constant */
             sc_ctrlchar=(char)val;
           } /* if */
-		}
-		else if (strcmp(str, "deprecated") == 0) {
-			while (*lptr <= ' ' && *lptr != '\0')
-				lptr++;
-			len = strlen((char*)lptr);
-			pc_deprecate = (char*)malloc(len + 1);
-			if (pc_deprecate != NULL)
-			{
-				strcpy(pc_deprecate, (char*)lptr);
-				if (pc_deprecate[len - 1] == '\n')	/* remove extra \n as already appended in .scp file */
-					pc_deprecate[len-1] = '\0';
-			}
-			lptr = (unsigned char*)strchr((char*)lptr, '\0'); /* skip to end (ignore "extra characters on line") */
+        }
+        else if (strcmp(str, "deprecated") == 0) {
+          while (*lptr <= ' ' && *lptr != '\0')
+            lptr++;
+          len = strlen((char*)lptr);
+          pc_deprecate = (char*)malloc(len + 1);
+          if (pc_deprecate != NULL)
+          {
+            strcpy(pc_deprecate, (char*)lptr);
+            if (pc_deprecate[len - 1] == '\n')  /* remove extra \n as already appended in .scp file */
+              pc_deprecate[len-1] = '\0';
+          }
+          lptr = (unsigned char*)strchr((char*)lptr, '\0'); /* skip to end (ignore "extra characters on line") */
         } else if (strcmp(str,"dynamic")==0) {
           preproc_expr(&sc_stksize,NULL);
-		} else if ( !strcmp(str,"library") ||
+        } else if ( !strcmp(str,"library") ||
                     !strcmp(str, "reqlib") ||
                     !strcmp(str, "reqclass") ||
                     !strcmp(str, "loadlib") ||
-                    !strcmp(str, "explib") || 
-                    !strcmp(str, "expclass") || 
+                    !strcmp(str, "explib") ||
+                    !strcmp(str, "expclass") ||
                     !strcmp(str, "defclasslib") ) {
           char name[sNAMEMAX+1],sname[sNAMEMAX+1];
           const char *prefix = "";
@@ -1087,7 +1087,7 @@ static int command(void)
               } else {
                 sname[0] = '_';
               }
-			}
+            }
           } /* if */
           if (strlen(name)==0) {
             curlibrary=NULL;
@@ -1097,20 +1097,20 @@ static int command(void)
             /* add the name if it does not yet exist in the table */
             char newname[sNAMEMAX+1];
             if (strlen(name) + strlen(prefix) + strlen(sname) <= sNAMEMAX)
-			{
+            {
               strcpy(newname, prefix);
               strcat(newname, name);
               strcat(newname, sname);
               if (newname[0] != '?')
-			  {
+              {
                 if (find_constval(&libname_tab,newname,0)==NULL)
-			    {
+                {
                   curlibrary=append_constval(&libname_tab,newname,0,0);
-			    }
-			  } else {
+                }
+              } else {
                 exporttag(pc_addtag(newname));
-			  }
-			}
+              }
+            }
           } /* if */
         } else if (strcmp(str,"pack")==0) {
           cell val;
@@ -1154,8 +1154,8 @@ static int command(void)
         } else if (strcmp(str,"tabsize")==0) {
           cell val;
           preproc_expr(&val,NULL);
-		  if (val>0)
-		    sc_tabsize=(int)val;
+          if (val>0)
+            sc_tabsize=(int)val;
         } else if (strcmp(str,"align")==0) {
           sc_alignnext=TRUE;
         } else if (strcmp(str,"unused")==0) {
@@ -1289,7 +1289,7 @@ static int command(void)
       } /* while */
       end=lptr;
       /* check pattern to match */
-	  if (!alpha(*start)) {
+      if (!alpha(*start)) {
         error(74);      /* pattern must start with an alphabetic character */
         break;
       } /* if */
@@ -1371,7 +1371,7 @@ static int command(void)
   case tpERROR:
     while (*lptr<=' ' && *lptr!='\0')
       lptr++;
-	if (!SKIPPING)
+    if (!SKIPPING)
       error(111,lptr);    /* user error */
     break;
   default:
@@ -1450,7 +1450,7 @@ static const unsigned char *skippgroup(const unsigned char *string)
     break;
   default:
     assert(0);
-	close='\0';         /* only to avoid a compiler warning */
+    close='\0';         /* only to avoid a compiler warning */
   }/* switch */
 
   string++;
@@ -1531,7 +1531,7 @@ static int substpattern(unsigned char *line,size_t buffersize,char *pattern,char
         /* store the parameter (overrule any earlier) */
         if (args[arg]!=NULL)
           free(args[arg]);
-		else
+        else
           argsnum++;
         len=(int)(e-s);
         args[arg]=(unsigned char*)malloc(len+1);
@@ -1674,7 +1674,7 @@ static void substallpatterns(unsigned char *line,int buffersize)
       while ((*start<=' ' && *start!='\0') || *start=='(')
         start++;
       /* skip the symbol behind it */
-	  while (alphanum(*start))
+      while (alphanum(*start))
         start++;
       /* drop back into the main loop */
       continue;
@@ -1682,7 +1682,7 @@ static void substallpatterns(unsigned char *line,int buffersize)
     /* get the prefix (length), look for a matching definition */
     prefixlen=0;
     end=start;
-	while (alphanum(*end)) {
+    while (alphanum(*end)) {
       prefixlen++;
       end++;
     } /* while */
@@ -2447,7 +2447,7 @@ SC_FUNC int get_actual_compound(symbol *sym)
     while (sym->parent)
       sym = sym->parent;
   }
- 
+
   return sym->compound;
 }
 
@@ -2461,7 +2461,7 @@ SC_FUNC void delete_symbols(symbol *root,int level,int delete_labels,int delete_
    * specified nesting level */
   while (root->next!=NULL) {
     sym=root->next;
-	if (get_actual_compound(sym)<level)
+    if (get_actual_compound(sym)<level)
       break;
     switch (sym->ident) {
     case iLABEL:
@@ -2551,7 +2551,7 @@ static symbol *find_symbol(const symbol *root,const char *name,int fnumber,int i
   while (ptr!=NULL) {
     if (hash==ptr->hash && strcmp(name,ptr->name)==0
         && (ptr->parent==NULL || includechildren)
-		&& (fnumber<0 || (ptr->fnumber<0 || ptr->fnumber==fnumber)))
+        && (fnumber<0 || (ptr->fnumber<0 || ptr->fnumber==fnumber)))
       return ptr;
     ptr=ptr->next;
   } /* while */
@@ -2620,7 +2620,7 @@ SC_FUNC void markusage(symbol *sym,int usage)
   assert(sym!=NULL);
   sym->usage |= (char)usage;
   if ((usage & uWRITTEN) != 0)
-	sym->lnumber=fline;
+    sym->lnumber=fline;
   /* check if (global) reference must be added to the symbol */
   if ((usage & (uREAD | uWRITTEN))!=0) {
     /* only do this for global symbols */

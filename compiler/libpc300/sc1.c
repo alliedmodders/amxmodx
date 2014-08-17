@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if defined	__WIN32__ || defined _WIN32 || defined __MSDOS__
+#if defined __WIN32__ || defined _WIN32 || defined __MSDOS__
   #include <conio.h>
   #include <io.h>
   #define snprintf _snprintf
@@ -146,7 +146,7 @@ static int *wqptr;              /* pointer to next entry */
 #if !defined SC_LIGHT
   static char *sc_documentation=NULL;/* main documentation */
 #endif
-#if defined	__WIN32__ || defined _WIN32 || defined _Windows
+#if defined __WIN32__ || defined _WIN32 || defined _Windows
   static HWND hwndFinish = 0;
 #endif
 
@@ -510,7 +510,7 @@ int pc_compile(int argc, char *argv[])
     char *tname,*sname;
     FILE *ftmp,*fsrc;
     int fidx;
-    #if defined	__WIN32__ || defined _WIN32
+    #if defined __WIN32__ || defined _WIN32
       tname=_tempnam(NULL,"pawn");
     #elif defined __MSDOS__ || defined _Windows
       tname=tempnam(NULL,"pawn");
@@ -590,7 +590,7 @@ int pc_compile(int argc, char *argv[])
     #if !defined NO_DEFINE
       delete_substtable();
       inst_datetime_defines();
-	  inst_binary_name(binfname);
+      inst_binary_name(binfname);
     #endif
     resetglobals();
     sc_ctrlchar=sc_ctrlchar_org;
@@ -655,7 +655,7 @@ int pc_compile(int argc, char *argv[])
   #if !defined NO_DEFINE
     delete_substtable();
     inst_datetime_defines();
-	inst_binary_name(binfname);
+    inst_binary_name(binfname);
   #endif
   resetglobals();
   sc_ctrlchar=sc_ctrlchar_org;
@@ -777,7 +777,7 @@ cleanup:
     if (retcode==0 && verbosity>=2)
       pc_printf("\nDone.\n");
   } /* if */
-  #if defined	__WIN32__ || defined _WIN32 || defined _Windows
+  #if defined   __WIN32__ || defined _WIN32 || defined _Windows
     if (IsWindow(hwndFinish))
       PostMessage(hwndFinish,RegisterWindowMessage("PawnNotify"),retcode,0L);
   #endif
@@ -1044,7 +1044,7 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
         strncpy(ename,option_value(ptr),_MAX_PATH); /* set name of error file */
         ename[_MAX_PATH-1]='\0';
         break;
-#if defined	__WIN32__ || defined _WIN32 || defined _Windows
+#if defined __WIN32__ || defined _WIN32 || defined _Windows
       case 'H':
         hwndFinish=(HWND)atoi(option_value(ptr));
         if (!IsWindow(hwndFinish))
@@ -1111,10 +1111,10 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
         break;
       case 't':
         i=atoi(option_value(ptr));
-		if (i>0)
-		  sc_tabsize=i;
-		else
-		  about();
+        if (i>0)
+          sc_tabsize=i;
+        else
+          about();
         break;
       case 'v':
         verbosity= isdigit(*option_value(ptr)) ? atoi(option_value(ptr)) : 2;
@@ -1376,7 +1376,7 @@ static void about(void)
     pc_printf("         -d2      full debug information and dynamic checking\n");
     pc_printf("         -d3      full debug information, dynamic checking, no optimization\n");
     pc_printf("         -e<name> set name of error file (quiet compile)\n");
-#if defined	__WIN32__ || defined _WIN32 || defined _Windows
+#if defined __WIN32__ || defined _WIN32 || defined _Windows
     pc_printf("         -H<hwnd> window handle to send a notification message on finish\n");
 #endif
     pc_printf("         -i<name> path for include files\n");
@@ -1398,7 +1398,7 @@ static void about(void)
     pc_printf("         -([+/-]  require parantheses for function invocation (default=%c)\n", optproccall ? '-' : '+');
     pc_printf("         sym=val  define constant \"sym\" with value \"val\"\n");
     pc_printf("         sym=     define constant \"sym\" with value 0\n");
-#if defined	__WIN32__ || defined _WIN32 || defined _Windows || defined __MSDOS__
+#if defined __WIN32__ || defined _WIN32 || defined _Windows || defined __MSDOS__
     pc_printf("\nOptions may start with a dash or a slash; the options \"-d0\" and \"/d0\" are\n");
     pc_printf("equivalent.\n");
 #endif
@@ -1994,10 +1994,10 @@ static int declloc(int fstatic)
     /* Although valid, a local variable whose name is equal to that
      * of a global variable or to that of a local variable at a lower
      * level might indicate a bug.
-	 * NOTE - don't bother with the error if there's no valid function!
+     * NOTE - don't bother with the error if there's no valid function!
      */
     if (((sym=findloc(name))!=NULL && sym->compound!=nestlevel) || findglb(name)!=NULL)
-	  if (curfunc!=NULL && (curfunc->usage & uNATIVE))
+      if (curfunc!=NULL && (curfunc->usage & uNATIVE))
         error(219,name);                  /* variable shadows another symbol */
     while (matchtoken('[')){
       ident=iARRAY;
@@ -2250,7 +2250,7 @@ static void initials(int ident,int tag,cell *size,int dim[],int numdim,
           err++;
         } /* if */
       } /* for */
-	  if (numdim>1 && dim[numdim-1]==0 && !errorfound && err==0) {
+      if (numdim>1 && dim[numdim-1]==0 && !errorfound && err==0) {
         /* also look whether, by any chance, all "counted" final dimensions are
          * the same value; if so, we can store this
          */
@@ -2803,7 +2803,7 @@ SC_FUNC symbol *fetchfunc(char *name,int tag)
   } /* if */
   if (pc_deprecate!=NULL) {
     assert(sym!=NULL);
-	sym->flags |= flgDEPRECATED;
+    sym->flags |= flgDEPRECATED;
     if (sc_status==statWRITE) {
       if (sym->documentation!=NULL) {
         free(sym->documentation);
@@ -3101,7 +3101,7 @@ static void funcstub(int native)
   litidx=0;                     /* clear the literal pool */
   assert(loctab.next==NULL);    /* local symbol table should be empty */
 
-  tag=pc_addtag(NULL);			/* get the tag of the return value */
+  tag=pc_addtag(NULL);          /* get the tag of the return value */
   numdim=0;
   while (matchtoken('[')) {
     /* the function returns an array, get this tag for the index and the array
@@ -3286,7 +3286,7 @@ static int newfunc(char *firstname,int firsttag,int fpublic,int fstatic,int stoc
   if ((sym->usage & (uPROTOTYPED | uREAD))==uREAD && sym->tag!=0) {
     int curstatus=sc_status;
     sc_status=statWRITE;  /* temporarily set status to WRITE, so the warning isn't blocked */
-    //error(208);		  //this is silly, it should be caught the first pass
+    //error(208);         //this is silly, it should be caught the first pass
     sc_status=curstatus;
     sc_reparse=TRUE;      /* must add another pass to "initial scan" phase */
   } /* if */
@@ -3319,8 +3319,8 @@ static int newfunc(char *firstname,int firsttag,int fpublic,int fstatic,int stoc
     glbdecl=glb_declared;
   } /* if */
   if ((sym->flags & flgDEPRECATED) != 0 && (sym->usage & uSTOCK) == 0) {
-	  char *ptr = (sym->documentation != NULL) ? sym->documentation : "";
-	  error(233, symbolname, ptr);  /* deprecated (probably a public function) */
+    char *ptr = (sym->documentation != NULL) ? sym->documentation : "";
+    error(233, symbolname, ptr);  /* deprecated (probably a public function) */
   } /* if */
   begcseg();
   sym->usage|=uDEFINE;  /* set the definition flag */
@@ -4252,9 +4252,9 @@ static long max_stacksize_recurse(symbol *sourcesym, symbol *sym, long basesize,
     if (sym->refer[i]!=NULL) {
       assert(sym->refer[i]->ident==iFUNCTN);
       assert((sym->refer[i]->usage & uNATIVE)==0); /* a native function cannot refer to a user-function */
-	  if (sym->refer[i] == sourcesym)
-		  return -1;      /* recursion detection */
-	  size = max_stacksize_recurse(sourcesym, sym->refer[i], sym->x.stacksize, pubfuncparams);
+      if (sym->refer[i] == sourcesym)
+        return -1;      /* recursion detection */
+      size = max_stacksize_recurse(sourcesym, sym->refer[i], sym->x.stacksize, pubfuncparams);
       if (size<0)
         return size;    /* recursion was detected, quit */
       if (maxsize<size)
@@ -4349,20 +4349,20 @@ static int testsymbols(symbol *root,int level,int testlabs,int testconst)
         if ((sym->usage & uDEFINE)==0) {
           error(19,sym->name);            /* not a label: ... */
         } else if ((sym->usage & uREAD)==0) {
-		  errorset(sSETFILE,sym->fnumber);
-		  errorset(sSETLINE,sym->lnumber);
+          errorset(sSETFILE,sym->fnumber);
+          errorset(sSETLINE,sym->lnumber);
           error(203,sym->name);           /* symbol isn't used: ... */
-		} /* if */
+        } /* if */
       } /* if */
       break;
     case iFUNCTN:
       if ((sym->usage & (uDEFINE | uREAD | uNATIVE | uSTOCK))==uDEFINE) {
         funcdisplayname(symname,sym->name);
         if (strlen(symname)>0) {
-		  errorset(sSETFILE,sym->fnumber);
-		  errorset(sSETLINE,sym->lnumber);
+          errorset(sSETFILE,sym->fnumber);
+          errorset(sSETLINE,sym->lnumber);
           error(203,symname);       /* symbol isn't used ... (and not native/stock) */
-		} /* if */
+        } /* if */
       } /* if */
       if ((sym->usage & uPUBLIC)!=0 || strcmp(sym->name,uMAINFUNC)==0)
         entry=TRUE;                 /* there is an entry point */
@@ -4372,30 +4372,30 @@ static int testsymbols(symbol *root,int level,int testlabs,int testconst)
       break;
     case iCONSTEXPR:
       if (testconst && (sym->usage & uREAD)==0) {
-		errorset(sSETFILE,sym->fnumber);
-		errorset(sSETLINE,sym->lnumber);
+        errorset(sSETFILE,sym->fnumber);
+        errorset(sSETLINE,sym->lnumber);
         error(203,sym->name);       /* symbol isn't used: ... */
-	  } /* if */
+      } /* if */
       break;
     default:
       /* a variable */
       if (sym->parent!=NULL)
         break;                      /* hierarchical data type */
       if ((sym->usage & (uWRITTEN | uREAD | uSTOCK))==0) {
-		errorset(sSETFILE,sym->fnumber);
-		errorset(sSETLINE,sym->lnumber);
+        errorset(sSETFILE,sym->fnumber);
+        errorset(sSETLINE,sym->lnumber);
         error(203,sym->name,sym->lnumber);       /* symbol isn't used (and not stock) */
       } else if ((sym->usage & (uREAD | uSTOCK | uPUBLIC))==0) {
-		errorset(sSETFILE,sym->fnumber);
-		errorset(sSETLINE,sym->lnumber);
+        errorset(sSETFILE,sym->fnumber);
+        errorset(sSETLINE,sym->lnumber);
         error(204,sym->name);       /* value assigned to symbol is never used */
 #if 0 // ??? not sure whether it is a good idea to force people use "const"
-	  } else if ((sym->usage & (uWRITTEN | uPUBLIC | uCONST))==0 && sym->ident==iREFARRAY) {
-		errorset(sSETFILE,sym->fnumber);
-		errorset(sSETLINE,sym->lnumber);
+      } else if ((sym->usage & (uWRITTEN | uPUBLIC | uCONST))==0 && sym->ident==iREFARRAY) {
+        errorset(sSETFILE,sym->fnumber);
+        errorset(sSETLINE,sym->lnumber);
         error(214,sym->name);       /* make array argument "const" */
 #endif
-	  } /* if */
+      } /* if */
       /* also mark the variable (local or global) to the debug information */
       if ((sym->usage & (uWRITTEN | uREAD))!=0 && (sym->usage & uNATIVE)==0)
         insert_dbgsymbol(sym);
@@ -4651,13 +4651,13 @@ static void statement(int *lastindent,int allow_decl)
     break;
   case '{':
     tok=fline;
-	if (!matchtoken('}')) {       /* {} is the empty statement */
+    if (!matchtoken('}')) {       /* {} is the empty statement */
       compound(tok==fline);
     } else {
-	  lastst = tEMPTYBLOCK;
-	  }
-	/* lastst (for "last statement") does not change 
-	   you're not my father, don't tell me what to do */
+      lastst = tEMPTYBLOCK;
+      }
+    /* lastst (for "last statement") does not change 
+       you're not my father, don't tell me what to do */
     break;
   case ';':
     error(36);                  /* empty statement */
@@ -4947,7 +4947,7 @@ static int doif(void)
   if (matchtoken(tELSE)==0){    /* if...else ? */
     setlabel(flab1);            /* no, simple if..., print false label */
   } else {
-	lastst_true=lastst;
+    lastst_true=lastst;
     /* to avoid the "dangling else" error, we want a warning if the "else"
      * has a lower indent than the matching "if" */
     if (stmtindent<ifindent && sc_tabsize>0)
@@ -4958,12 +4958,12 @@ static int doif(void)
     setlabel(flab1);            /* print false label */
     statement(NULL,FALSE);      /* do "else" clause */
     setlabel(flab2);            /* print true label */
-	/* if both the "true" branch and the "false" branch ended with the same
-	 * kind of statement, set the last statement id to that kind, rather than
-	 * to the generic tIF; this allows for better "unreachable code" checking
-	 */
-	if (lastst == lastst_true)
-	  return lastst;
+    /* if both the "true" branch and the "false" branch ended with the same
+     * kind of statement, set the last statement id to that kind, rather than
+     * to the generic tIF; this allows for better "unreachable code" checking
+     */
+    if (lastst == lastst_true)
+      return lastst;
   } /* endif */
   return tIF;
 }
@@ -5343,11 +5343,11 @@ static void doreturn(void)
       error(78);                        /* mix "return;" and "return value;" */
     ident=doexpr(TRUE,FALSE,TRUE,TRUE,&tag,&sym,TRUE);
     needtoken(tTERM);
-	if (ident == iARRAY && sym == NULL) {
-		/* returning a literal string is not supported (it must be a variable) */
-		error(39);
-		ident = iCONSTEXPR;                 /* avoid handling an "array" case */
-	} /* if */
+    if (ident == iARRAY && sym == NULL) {
+      /* returning a literal string is not supported (it must be a variable) */
+      error(39);
+      ident = iCONSTEXPR;                 /* avoid handling an "array" case */
+    } /* if */
     /* see if this function already has a sub type (an array attached) */
     sub=finddepend(curfunc);
     assert(sub==NULL || sub->ident==iREFARRAY);
@@ -5546,7 +5546,7 @@ static void dostate(void)
     pc_docexpr=TRUE;            /* attach expression as a documentation string */
     test(flabel,FALSE,FALSE);   /* get expression, branch to flabel if false */
     pc_docexpr=FALSE;
-	pc_deprecate=NULL;
+    pc_deprecate=NULL;
     needtoken(')');
   } else {
     flabel=-1;

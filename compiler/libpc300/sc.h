@@ -287,7 +287,7 @@ typedef struct s_stringpair {
  */
 #define tFIRST   256    /* value of first multi-character operator */
 #define tMIDDLE  280    /* value of last multi-character operator */
-#define tLAST    326    /* value of last multi-character match-able token */
+#define tLAST    325    /* value of last multi-character match-able token */
 /* multi-character operators */
 #define taMULT   256    /* *= */
 #define taDIV    257    /* /= */
@@ -361,18 +361,17 @@ typedef struct s_stringpair {
 #define tpPRAGMA 323
 #define tpTRYINCLUDE 324
 #define tpUNDEF  325
-#define tpWARNING 326
 /* semicolon is a special case, because it can be optional */
-#define tTERM    327    /* semicolon or newline */
-#define tENDEXPR 328    /* forced end of expression */
+#define tTERM    326    /* semicolon or newline */
+#define tENDEXPR 327    /* forced end of expression */
 /* other recognized tokens */
-#define tNUMBER  329    /* integer number */
-#define tRATIONAL 330   /* rational number */
-#define tSYMBOL  331
-#define tLABEL   332
-#define tSTRING  333
-#define tEXPR    334    /* for assigment to "lastst" only */
-#define tEMPTYBLOCK 335 /* empty blocks for AM bug 4825 */
+#define tNUMBER  328    /* integer number */
+#define tRATIONAL 329   /* rational number */
+#define tSYMBOL  330
+#define tLABEL   331
+#define tSTRING  332
+#define tEXPR    333    /* for assigment to "lastst" only */
+#define tEMPTYBLOCK 334 /* empty blocks for AM bug 4825 */
 
 /* (reversed) evaluation of staging buffer */
 #define sSTARTREORDER 0x01

@@ -65,6 +65,8 @@
 #include <time.h>
 
 #include "sc.h"
+#include "sp_symhash.h"
+
 #define VERSION_STR "3.0.3367-amxx"
 #define VERSION_INT 0x30A
 
@@ -470,6 +472,10 @@ int pc_compile(int argc, char *argv[])
   if ((jmpcode=setjmp(errbuf))!=0)
     goto cleanup;
 
+  sp_Globals = NewHashTable();
+  if (!sp_Globals)
+    error(123);
+
   /* allocate memory for fixed tables */
   inpfname=(char*)malloc(_MAX_PATH);
   if (inpfname==NULL)
@@ -745,6 +751,7 @@ cleanup:
   delete_symbols(&loctab,0,TRUE,TRUE);    /* delete local variables if not yet
                                            * done (i.e. on a fatal error) */
   delete_symbols(&glbtab,0,TRUE,TRUE);
+  DestroyHashTable(sp_Globals);
   delete_consttable(&tagname_tab);
   delete_consttable(&libname_tab);
   delete_consttable(&sc_automaton_tab);
@@ -2960,8 +2967,10 @@ static int operatoradjust(int opertok,symbol *sym,char *opername,int resulttag)
         refer_symbol(sym,oldsym->refer[i]);
     delete_symbol(&glbtab,oldsym);
   } /* if */
+  RemoveFromHashTable(sp_Globals, sym);
   strcpy(sym->name,tmpname);
-  sym->hash=namehash(sym->name);/* calculate new hash */
+  sym->hash=NameHash(sym->name);/* calculate new hash */  
+  AddToHashTable(sp_Globals, sym);
 
   /* operators should return a value, except the '~' operator */
   if (opertok!='~')

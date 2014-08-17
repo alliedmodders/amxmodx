@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>     /* for _MAX_PATH */
 #include "sc.h"
+#include "sp_symhash.h"
 
 /*  global variables
  *
@@ -95,6 +96,8 @@ SC_VDEFINE FILE *inpf_org= NULL;   /* main source file */
 SC_VDEFINE FILE *outf    = NULL;   /* (intermediate) text file written to */
 
 SC_VDEFINE jmp_buf errbuf;
+
+SC_VDEFINE HashTable *sp_Globals = NULL;
 
 #if !defined SC_LIGHT
   SC_VDEFINE int sc_makereport=FALSE; /* generate a cross-reference report */

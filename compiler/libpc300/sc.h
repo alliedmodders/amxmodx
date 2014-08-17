@@ -545,7 +545,6 @@ SC_FUNC void delete_symbol(symbol *root,symbol *sym);
 SC_FUNC void delete_symbols(symbol *root,int level,int del_labels,int delete_functions);
 SC_FUNC int refer_symbol(symbol *entry,symbol *bywhom);
 SC_FUNC void markusage(symbol *sym,int usage);
-SC_FUNC uint32_t namehash(const char *name);
 SC_FUNC symbol *findglb(const char *name);
 SC_FUNC symbol *findloc(const char *name);
 SC_FUNC symbol *findconst(const char *name);
@@ -741,6 +740,8 @@ SC_FUNC void state_conflict(symbol *root);
 
 /* external variables (defined in scvars.c) */
 #if !defined SC_SKIP_VDECL
+typedef struct HashTable HashTable;
+SC_VDECL struct HashTable *sp_Globals;
 SC_VDECL symbol loctab;       /* local symbol table */
 SC_VDECL symbol glbtab;       /* global symbol table */
 SC_VDECL cell *litq;          /* the literal queue */

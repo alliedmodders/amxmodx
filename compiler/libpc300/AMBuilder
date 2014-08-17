@@ -75,6 +75,7 @@ binary.sources = [
   'libpawnc.c',
   'prefix.c',
   'memfile.c',
+  'sp_symhash.c',
 ]
 
 if builder.target_platform == 'windows':

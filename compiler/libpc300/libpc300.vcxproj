@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBPC300_EXPORTS;PAWNC_DLL;PAWN_CELL_SIZE=32;NO_MAIN;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBPC300_EXPORTS;PAWNC_DLL;PAWN_CELL_SIZE=32;NO_MAIN;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader>
@@ -71,7 +71,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBPC300_EXPORTS;PAWNC_DLL;PAWN_CELL_SIZE=32;NO_MAIN;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBPC300_EXPORTS;PAWNC_DLL;PAWN_CELL_SIZE=32;NO_MAIN;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>StackFrameRuntimeCheck</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -105,11 +105,13 @@
     <ClCompile Include="scmemfil.c" />
     <ClCompile Include="scstate.c" />
     <ClCompile Include="scvars.c" />
+    <ClCompile Include="sp_symhash.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="amx.h" />
     <ClInclude Include="memfile.h" />
     <ClInclude Include="sc.h" />
+    <ClInclude Include="sp_symhash.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="libpawnc.rc" />

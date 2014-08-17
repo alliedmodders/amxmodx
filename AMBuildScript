@@ -50,6 +50,7 @@ class AMXXConfig(object):
       try_paths = [
         os.path.join(builder.sourcePath, '..', 'metamod'),
         os.path.join(builder.sourcePath, '..', 'metamod-am'),
+        os.path.join(builder.sourcePath, '..', 'metamod-hl1'),
       ]
       for try_path in try_paths:
         if os.path.exists(os.path.join(try_path, 'metamod')):

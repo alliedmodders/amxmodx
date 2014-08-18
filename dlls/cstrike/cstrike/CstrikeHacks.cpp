@@ -36,6 +36,8 @@ CDetour *AddAccountDetour    = NULL;
 int CurrentItemId = 0;
 StringHashMap<int> ItemAliasList;
 
+extern enginefuncs_t *g_pengfuncsTable;
+
 void InitializeHacks()
 {
 #if defined AMD64
@@ -67,6 +69,21 @@ const char *CMD_ARGV(int i)
 	}
 
 	return g_engfuncs.pfnCmd_Argv(i);
+}
+
+void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch)
+{
+	// If shield is blocked with CS_OnBuy, we need to block the pickup sound as well played right after.
+	// Why this sound is not contained in GiveShield()?
+
+	g_pengfuncsTable->pfnEmitSound = NULL;
+
+	if (CurrentItemId == 0 && strcmp(sample, "items/gunpickup2.wav") == 0) // Safety checks.
+	{
+		RETURN_META(MRES_SUPERCEDE);
+	}
+
+	RETURN_META(MRES_IGNORED);
 }
 
 DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientCommand(edict_t *pEntity)
@@ -212,6 +229,12 @@ DETOUR_DECL_MEMBER2(AddAccount, void, int, amount, bool, bTrackChange) // void C
 	if (!CurrentItemId)
 	{
 		DETOUR_MEMBER_CALL(AddAccount)(amount, bTrackChange);
+	}
+	// Shield is blocked.
+	// We need to hook EmitSound to block pickup sound played right after.
+	else if (CurrentItemId == CSI_SHIELDGUN)
+	{
+		g_pengfuncsTable->pfnEmitSound = OnEmitSound;
 	}
 
 	// Let's reset this right away to avoid issues.

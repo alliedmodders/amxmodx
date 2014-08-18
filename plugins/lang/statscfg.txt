@@ -77,6 +77,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -159,6 +160,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bombe entschaerfen erf. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bombe entschaerfen fehl. Sound
 ST_BOMB_CD_HUD = Bomben Countdown Hud
 ST_LAST_MAN_SOUND = Letzter Mann Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Granaten Kill Sound
 ST_HE_SUICIDE_SOUND = Granaten Selbstmord Sound
 
@@ -241,6 +243,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -323,6 +326,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -405,6 +409,7 @@ ST_BOMB_DEF_SUCC_SOUND = Son Bombe Desamorcee
 ST_BOMB_DEF_FAIL_SOUND = Son Bombe Non Desamorcee
 ST_BOMB_CD_HUD = Compte a Rebours Bombe Visuel
 ST_LAST_MAN_SOUND = Son Dernier en Vie
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Son Frag a la Grenade
 ST_HE_SUICIDE_SOUND = Son Suicide a la Grenade
 
@@ -487,6 +492,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -569,6 +575,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -651,6 +658,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomba rozbrojona - dzwiek
 ST_BOMB_DEF_FAIL_SOUND = Bomba - nieudane rozbrajanie - dzwiek
 ST_BOMB_CD_HUD = Bomba - odliczanie - Hud
 ST_LAST_MAN_SOUND = Ostatni gracz - dzwiek
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Zabicie granatem - dzwiek
 ST_HE_SUICIDE_SOUND = Samobojstwo granatem - dzwiek
 
@@ -733,6 +741,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -815,6 +824,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -897,6 +907,7 @@ ST_BOMB_DEF_SUCC_SOUND = Som de Bomba Defusada
 ST_BOMB_DEF_FAIL_SOUND = Som de Falha ao Defusar a Bomba
 ST_BOMB_CD_HUD = Contagem da Bomba (Hud)
 ST_LAST_MAN_SOUND = Som de Ultimo Homem
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Som de Frag de Granada
 ST_HE_SUICIDE_SOUND = Som de Suicidio de Granada
 
@@ -979,6 +990,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -988,6 +1000,7 @@ STATS_CONF_SAVED = Tilastojen saadot tallenettiin onnistuneesti
 STATS_CONF_FAILED = Tilastojen saatojen tallentaminen epaonnistui
 STATS_CONF_LOADED = Tilastojen saadot ladattiin onnistuneesti
 STATS_CONF_FAIL_LOAD = Tilastojen lataaminen epaonnistui
+STATS_CONF = Stats Configuration
 STATS_ENTRIES_OF = Kohdat %i - %i. Kaikkiaan %i
 STATS_USE_MORE = Kirjoita 'amx_statscfg list %i' saadaksesi lisatietoa
 STATS_USE_BEGIN = Kirjoita 'amx_statscfg list 1' aloittaaksesi
@@ -1060,6 +1073,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1142,6 +1156,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1224,6 +1239,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1306,6 +1322,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1388,6 +1405,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1470,6 +1488,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1552,6 +1571,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1634,6 +1654,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1716,6 +1737,7 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound
 
@@ -1798,5 +1820,6 @@ ST_BOMB_DEF_SUCC_SOUND = Bomb Defuse Succ. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bomb Def. Failure Sound
 ST_BOMB_CD_HUD = Bomb Countdown Hud
 ST_LAST_MAN_SOUND = Last Man Sound
+ST_LAST_MAN_HEALTH = Last Man Health
 ST_HE_KILL_SOUND = Grenade Kill Sound
 ST_HE_SUICIDE_SOUND = Grenade Suicide Sound

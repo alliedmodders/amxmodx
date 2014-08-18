@@ -1044,7 +1044,7 @@ enum
  * write_byte(TE_KILLPLAYERATTACHMENTS)
  * write_byte(entity index of player)
  */
-#define TE_KILLPLAYERATTACHMENTS    125       * Will expire all TENTS attached to a player.
+#define TE_KILLPLAYERATTACHMENTS    125       // Will expire all TENTS attached to a player.
 
 /**
  * Much more compact shotgun message

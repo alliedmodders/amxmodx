@@ -533,14 +533,18 @@ void Debugger::DisplayTrace(const char *message)
 		AMXXLOG_Error("%s", message);
 
 	char buffer[512];
-	FormatError(buffer, sizeof(buffer)-1);
+	int length = FormatError(buffer, sizeof(buffer)-1);
 
 	const char *filename = _GetFilename();
 	const char *version = _GetVersion();
 
 	AMXXLOG_Error("[AMXX] Displaying debug trace (plugin \"%s\", version \"%s\")", filename, version);
-	AMXXLOG_Error("[AMXX] %s", buffer);
 	
+	if (length != -1) // Don't show blank line if AMX_ERR_NONE is set since there is no error message.
+	{
+		AMXXLOG_Error("[AMXX] %s", buffer);
+	}
+
 	int count = 0;
 	long lLine;
 	const char *file, *function;

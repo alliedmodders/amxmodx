@@ -2261,7 +2261,7 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-		if (pPlayer->ingame)
+		if (pPlayer->initialized)
 		{
 			if (pPlayer->IsAlive() ? (flags & 2) : (flags & 1))
 				continue;

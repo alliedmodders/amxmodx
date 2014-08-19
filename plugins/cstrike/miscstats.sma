@@ -30,6 +30,7 @@ public BombReached
 public ItalyBonusKill
 public EnemyRemaining
 public LastMan
+public LastManHealth
 public KnifeKill
 public KnifeKillSound
 public GrenadeKill
@@ -425,6 +426,7 @@ public plugin_cfg()
 	server_cmd(g_addStast, "ST_BOMB_SITE", "BombReached")
 	server_cmd(g_addStast, "ST_ITALY_BONUS", "ItalyBonusKill")
 	server_cmd(g_addStast, "ST_LAST_MAN", "LastMan")
+	server_cmd(g_addStast, "ST_LAST_MAN_HEALTH", "LastManHealth")
 	server_cmd(g_addStast, "ST_LAST_MAN_SOUND", "LastManSound")
 	server_cmd(g_addStast, "ST_KNIFE_KILL", "KnifeKill")
 	server_cmd(g_addStast, "ST_KNIFE_KILL_SOUND", "KnifeKillSound")
@@ -633,11 +635,21 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 				get_user_name(ts[0], tname, charsmax(tname))
 				
 				set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				ShowSyncHudMsg(0, g_center1_sync, "%s vs. %s", ctname, tname)
+				
+				if( LastManHealth )
+				{
+					ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %s (%d HP)", ctname, get_user_health(cts[0]), tname, get_user_health(ts[0]))
+				}
+				else
+				{
+					ShowSyncHudMsg(0, g_center1_sync, "%s vs. %s", ctname, tname)
+				}
 			}
 			
 			if( LastManSound )
+			{
 				play_sound(0, g_lastmansound_duel)
+			}
 		}
 		else if (!g_LastAnnounce)
 		{
@@ -665,8 +677,17 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 					get_user_name(g_LastAnnounce, name, charsmax(name))
 				
 					set_hudmessage(0, 255, 255, -1.0, 0.38, 0, 6.0, 6.0, 0.5, 0.15, -1)
-					ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+					
+					if( LastManHealth )
+					{
+						ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+					}
+					else
+					{
+						ShowSyncHudMsg(0, g_center1_sync, "%s vs. %d %s%s: %L", name, oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+					}
 				}
+				
 				if ( LastManSound && g_connected[g_LastAnnounce] )
 				{
 					play_sound(g_LastAnnounce, g_lastmansound_1vsothers)

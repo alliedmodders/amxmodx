@@ -73,17 +73,12 @@ const char *CMD_ARGV(int i)
 
 void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch)
 {
-	// If shield is blocked with CS_OnBuy, we need to block the pickup sound as well played right after.
-	// Why this sound is not contained in GiveShield()?
+	// If shield is blocked with CS_OnBuy, we need to block the pickup sound ("items/gunpickup2.wav") 
+	// as well played right after. Why this sound is not contained in GiveShield()?
 
 	g_pengfuncsTable->pfnEmitSound = NULL;
 
-	if (CurrentItemId == 0 && strcmp(sample, "items/gunpickup2.wav") == 0) // Safety checks.
-	{
-		RETURN_META(MRES_SUPERCEDE);
-	}
-
-	RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_SUPERCEDE);
 }
 
 DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientCommand(edict_t *pEntity)

@@ -598,6 +598,8 @@ SC_FUNC void addr2cell(void);
 SC_FUNC void char2addr(void);
 SC_FUNC void charalign(void);
 SC_FUNC void addconst(cell value);
+SC_FUNC void move_alt(void);
+SC_FUNC void load_hidden_arg();
 
 /*  Code generation functions for arithmetic operators.
  *

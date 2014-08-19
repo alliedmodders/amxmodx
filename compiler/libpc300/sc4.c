@@ -363,6 +363,12 @@ SC_FUNC void alignframe(int numbytes)
   code_idx+=opcodes(5)+opargs(4);
 }
 
+SC_FUNC void load_i()
+{
+  stgwrite("\tload.i\n");
+  code_idx+=opcodes(1);
+}
+
 /*  rvalue
  *
  *  Generate code to get the value of a symbol into "primary".
@@ -374,8 +380,7 @@ SC_FUNC void rvalue(value *lval)
   sym=lval->sym;
   if (lval->ident==iARRAYCELL) {
     /* indirect fetch, address already in PRI */
-    stgwrite("\tload.i\n");
-    code_idx+=opcodes(1);
+    load_i();
   } else if (lval->ident==iARRAYCHAR) {
     /* indirect fetch of a character from a pack, address already in PRI */
     stgwrite("\tlodb.i ");
@@ -446,6 +451,52 @@ SC_FUNC void address(symbol *sym,regid reg)
   outval(sym->addr,TRUE);
   markusage(sym,uREAD);
   code_idx+=opcodes(1)+opargs(1);
+}
+
+static void addr_reg(int val, regid reg)
+{
+  if (reg == sPRI)
+    stgwrite("\taddr.pri ");
+  else
+    stgwrite("\taddr.alt ");
+  outval(val, TRUE);
+  code_idx += opcodes(1) + opargs(1);
+}
+
+// Load the number of arguments into PRI. Frame layout:
+//   base + 0*sizeof(cell) == previous "base"
+//   base + 1*sizeof(cell) == function return address
+//   base + 2*sizeof(cell) == number of arguments
+//   base + 3*sizeof(cell) == first argument of the function
+static void load_argcount(regid reg)
+{
+  if (reg == sPRI)
+    stgwrite("\tload.s.pri ");
+  else
+    stgwrite("\tload.s.alt ");
+  outval(2 * sizeof(cell), TRUE);
+  code_idx += opcodes(1) + opargs(1);
+}
+
+// Load the hidden array argument into ALT.
+SC_FUNC void load_hidden_arg()
+{
+  pushreg(sPRI);
+
+  // Compute an address to the first argument, then add the argument count
+  // to find the address after the final argument:
+  //    addr.alt   0xc   ; Compute &first_arg
+  //    load.s.alt 0x8   ; Load arg count in bytes
+  //    add              ; Compute (&first_arg) + argcount
+  //    load.i           ; Load *(&first_arg + argcount)
+  //    move.alt         ; Move result into ALT.
+  addr_reg(0xc, sALT);
+  load_argcount(sPRI);
+  ob_add();
+  load_i();
+  move_alt();
+
+  popreg(sPRI);
 }
 
 /*  store
@@ -599,6 +650,12 @@ SC_FUNC void ldconst(cell val,regid reg)
 SC_FUNC void moveto1(void)
 {
   stgwrite("\tmove.pri\n");
+  code_idx+=opcodes(1)+opargs(0);
+}
+
+SC_FUNC void move_alt(void)
+{
+  stgwrite("\tmove.alt\n");
   code_idx+=opcodes(1)+opargs(0);
 }
 

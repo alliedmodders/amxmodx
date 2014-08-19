@@ -1215,6 +1215,7 @@ native get_playersnum(flag=0);
  *                    "f" - match with part of name
  *                    "g" - match case insensitive
  *                    "h" - do not include HLTV proxies
+ *                    "i" - include connecting clients
  * @param team      String to match against if the "e" or "f" flag is specified
  *
  * @noreturn
@@ -1301,8 +1302,10 @@ native get_flags(flags, output[], len);
  *                    "j" - return last matched client instead of the first
  *                    "k" - match with userid
  *                    "l" - match case insensitively
+ *                    "m" - include connecting clients
  * @param ...       String to match against (integer if "k" flag is specified)
  *
+ * @return          Client index, or 0 if no client was found
  */
 native find_player(const flags[], ...);
 

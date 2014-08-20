@@ -5232,9 +5232,10 @@ static symbol *fetchlab(char *name)
 
 static int is_variadic(symbol *sym)
 {
+  arginfo *arg;
+
   assert(sym->ident==iFUNCTN);
-  arginfo *arg = sym->dim.arglist;
-  while (arg->ident) {
+  for (arg = sym->dim.arglist; arg->ident; arg++) {
     if (arg->ident == iVARARGS)
       return TRUE;
     arg++;

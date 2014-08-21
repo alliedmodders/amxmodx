@@ -5238,7 +5238,6 @@ static int is_variadic(symbol *sym)
   for (arg = sym->dim.arglist; arg->ident; arg++) {
     if (arg->ident == iVARARGS)
       return TRUE;
-    arg++;
   }
   return FALSE;
 }

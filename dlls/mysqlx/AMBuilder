@@ -12,6 +12,7 @@ if AMXX.mysql_path:
 
   binary.compiler.defines += [
     'SM_DEFAULT_THREADER',
+    'HAVE_STDINT_H',
     'stricmp=strcasecmp',
   ]
 

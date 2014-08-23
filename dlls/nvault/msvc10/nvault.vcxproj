@@ -52,8 +52,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NVAULT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NVAULT_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -75,8 +75,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\;..\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NVAULT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NVAULT_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StructMemberAlignment>4Bytes</StructMemberAlignment>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -99,7 +99,7 @@
     <ClCompile Include="..\Binary.cpp" />
     <ClCompile Include="..\Journal.cpp" />
     <ClCompile Include="..\NVault.cpp" />
-    <ClCompile Include="..\sdk\amxxmodule.cpp" />
+    <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\amxxapi.h" />
@@ -108,14 +108,8 @@
     <ClInclude Include="..\IVault.h" />
     <ClInclude Include="..\Journal.h" />
     <ClInclude Include="..\NVault.h" />
-    <ClInclude Include="..\svn_version.h" />
-    <ClInclude Include="..\sdk\moduleconfig.h" />
-    <ClInclude Include="..\sdk\CQueue.h" />
-    <ClInclude Include="..\sdk\CString.h" />
-    <ClInclude Include="..\sdk\CVector.h" />
-    <ClInclude Include="..\sdk\sh_list.h" />
-    <ClInclude Include="..\sdk\sh_tinyhash.h" />
-    <ClInclude Include="..\sdk\amxxmodule.h" />
+    <ClInclude Include="..\moduleconfig.h" />
+    <ClInclude Include="..\..\..\public\sdk\amxxmodule.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\nvault.inc" />

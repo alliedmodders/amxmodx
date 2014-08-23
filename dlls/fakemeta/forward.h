@@ -14,6 +14,8 @@
 #ifndef _INCLUDE_FORWARD_H
 #define _INCLUDE_FORWARD_H
 
+#include <am-vector.h>
+
 #define ENGFUNC_NUM		FM_LAST_DONT_USE_ME // 131
 
 #define	FMV_STRING		1
@@ -181,8 +183,8 @@ enum {
 	FM_LAST_DONT_USE_ME
 };
 
-extern CVector<int> Engine[];
-extern CVector<int> EnginePost[];
+extern ke::Vector<int> Engine[];
+extern ke::Vector<int> EnginePost[];
 extern void *EngineAddrs[ENGFUNC_NUM+10];
 extern void *EngineAddrsPost[ENGFUNC_NUM+10];
 extern cell mCellResult;

@@ -19,12 +19,12 @@
 #include <string.h> 
 #include <meta_api.h>
 #include <sdk_util.h>
-#include "CVector.h"
-#include "CString.h"
 #include <usercmd.h>
 #include "entity.h"
 #include "gpglobals.h"
 #include "entity_state.h"
+#include <am-vector.h>
+#include <am-string.h>
 
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;
@@ -140,8 +140,8 @@ class Touch
 {
 public:
 	int Forward;
-	String Toucher;
-	String Touched;
+	ke::AString Toucher;
+	ke::AString Touched;
 	~Touch()
 	{
 		if (Forward != -1)
@@ -153,7 +153,7 @@ class EntClass
 {
 public:
 	int Forward;
-	String Class;
+	ke::AString Class;
 	~EntClass()
 	{
 		if (Forward != -1)
@@ -226,9 +226,9 @@ extern struct PlayerInfo plinfo[33];
 extern struct GlobalInfo glinfo;
 extern AMX_NATIVE_INFO engine_Natives[];
 extern AMX_NATIVE_INFO engine_NewNatives[];
-extern CVector<Impulse *> Impulses;
-extern CVector<EntClass *> Thinks;
-extern CVector<Touch *> Touches;
+extern ke::Vector<Impulse *> Impulses;
+extern ke::Vector<EntClass *> Thinks;
+extern ke::Vector<Touch *> Touches;
 
 #endif //_ENGINE_INCLUDE_H
 

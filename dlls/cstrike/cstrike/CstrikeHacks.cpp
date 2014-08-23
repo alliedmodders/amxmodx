@@ -16,8 +16,6 @@
 #include "CDetour/detours.h"
 #include <sm_stringhashmap.h>
 
-using namespace SourceMod; // hashmap 
-
 void CtrlDetours_ClientCommand(bool set);
 void CtrlDetours_BuyCommands(bool set);
 

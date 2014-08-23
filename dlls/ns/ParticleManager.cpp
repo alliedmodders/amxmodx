@@ -11,14 +11,9 @@
 // Natural Selection Module
 //
 
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 #include "ns.h"
-
-#include "CVector.h"
-#include "CString.h"
-
 #include "ParticleManager.h"
-
 
 void ParticleManager::ReadFile(void)
 {

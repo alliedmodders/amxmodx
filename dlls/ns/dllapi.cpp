@@ -13,14 +13,14 @@
 
 /* Calls going from the engine to the game dll are handled here */
 
-#include "sdk/amxxmodule.h"
+#ifndef HAVE_STDINT_H
+#define HAVE_STDINT_H
+#endif
 
-
+#include "amxxmodule.h"
 #include "ns.h"
 #include "utilfunctions.h"
-
 #include "SpawnManager.h"
-
 #include "GameManager.h"
 #include "CPlayer.h"
 #include "MessageHandler.h"

@@ -14,8 +14,6 @@
 #include "amxmodx.h"
 #include "trie_natives.h"
 
-using namespace SourceMod;
-
 TrieHandles<CellTrie> g_TrieHandles;
 TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;
 

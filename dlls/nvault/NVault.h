@@ -14,10 +14,9 @@
 #ifndef _INCLUDE_NVAULT_H
 #define _INCLUDE_NVAULT_H
 
-#include "sh_list.h"
-#include "sh_tinyhash.h"
+#include <am-linkedlist.h>
+#include <sm_stringhashmap.h>
 #include "IVault.h"
-#include "CString.h"
 #include "Journal.h"
 
 #define VAULT_MAGIC		0x6E564C54			//nVLT
@@ -61,13 +60,13 @@ public:
 	bool Open();
 	bool Close();
 	size_t Items();
-	const char *GetFilename() { return m_File.c_str(); }
+	const char *GetFilename() { return m_File.chars(); }
 private:
 	VaultError _ReadFromFile();
 	bool _SaveToFile();
 private:
-	String m_File;
-	THash<String, String> m_Hash;
+	ke::AString m_File;
+	StringHashMap<ArrayInfo> m_Hash;
 	Journal *m_Journal;
 	bool m_Open;
 	

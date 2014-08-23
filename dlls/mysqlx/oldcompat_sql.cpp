@@ -12,7 +12,6 @@
 //
 
 #include <stdio.h>
-#include "sh_list.h"
 #include "mysql2_header.h"
 
 using namespace SourceMod;

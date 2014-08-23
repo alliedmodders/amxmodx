@@ -43,11 +43,11 @@ static cell AMX_NATIVE_CALL register_think(AMX *amx, cell *params)
 
 	EntClass *p = new EntClass;
 	const char *clsname = MF_GetAmxString(amx, params[1], 0, &len);
-	p->Class.assign(clsname);
+	p->Class = clsname;
 
 	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_DONE);
 
-	Thinks.push_back(p);
+	Thinks.append(p);
 
 	if (!g_pFunctionTable->pfnThink)
 		g_pFunctionTable->pfnThink=Think;
@@ -64,7 +64,7 @@ static cell AMX_NATIVE_CALL register_impulse(AMX *amx, cell *params)
 
 	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[2], 0, &len), FP_CELL, FP_CELL, FP_DONE);
 
-	Impulses.push_back(p);
+	Impulses.append(p);
 
 	if (!g_pFunctionTable->pfnCmdStart)
 		g_pFunctionTable->pfnCmdStart=CmdStart;
@@ -82,19 +82,19 @@ static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
 	Touch *p = new Touch;
 
 	if (!strlen(Toucher) || strcmp(Toucher, "*")==0) {
-		p->Toucher.assign("");
+		p->Toucher.setVoid();
 	} else {
-		p->Toucher.assign(Toucher);
+		p->Toucher = Toucher;
 	}
 	if (!strlen(Touched) || strcmp(Touched, "*")==0) {
-		p->Touched.assign("");
+		p->Touched.setVoid();
 	} else {
-		p->Touched.assign(Touched);
+		p->Touched = Touched;
 	}
 
 	p->Forward = MF_RegisterSPForwardByName(amx, MF_GetAmxString(amx, params[3], 2, &len), FP_CELL, FP_CELL, FP_DONE);
 
-	Touches.push_back(p);
+	Touches.append(p);
 
 	if (!g_pFunctionTable->pfnTouch)
 		g_pFunctionTable->pfnTouch=pfnTouch;

@@ -38,7 +38,7 @@
     <ClCompile Include="..\Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
+    <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\Base SDK</Filter>
     </ClCompile>
   </ItemGroup>
@@ -49,20 +49,17 @@
     <ClInclude Include="..\CRank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\tsx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\UserMsg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
-      <Filter>Module SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
+    <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK\Base SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

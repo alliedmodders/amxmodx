@@ -7,6 +7,7 @@
 
 HLSDK = ../../../hlsdk
 MM_ROOT = ../../../metamod/metamod
+PUBLIC_ROOT = ../../public
 SQL = sqlite-source
 
 #####################################
@@ -15,7 +16,7 @@ SQL = sqlite-source
 
 PROJECT = sqlite
 
-OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp sdk/amxxmodule.cpp oldcompat_sql.cpp \
+OBJECTS = basic_sql.cpp handles.cpp module.cpp threading.cpp amxxmodule.cpp oldcompat_sql.cpp \
           thread/BaseWorker.cpp thread/ThreadWorker.cpp thread/PosixThreads.cpp \
 	  sqlitepp/SqliteQuery.cpp sqlitepp/SqliteResultSet.cpp sqlitepp/SqliteDatabase.cpp \
 	  sqlitepp/SqliteDriver.cpp
@@ -41,8 +42,10 @@ CPP_OSX = clang
 
 LINK =
 
-INCLUDE = -I. -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
-          -I$(HLSDK)/public -I$(MM_ROOT) -I$(SQL) -Isqlitepp -Ithread -Isdk
+INCLUDE = -I. -I$(PUBLIC_ROOT) -I$(PUBLIC_ROOT)/sdk -I$(PUBLIC_ROOT)/amtl \
+			  -I$(HLSDK) -I$(HLSDK)/public -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/pm_shared\
+			  -I$(SQL) -Isqlitepp -Ithread \
+			  -I$(MM_ROOT)
 
 ################################################
 ### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###
@@ -127,10 +130,10 @@ $(BIN_DIR)/%.o: %.c
 
 all:
 	mkdir -p $(BIN_DIR)
-	mkdir -p $(BIN_DIR)/sdk
 	mkdir -p $(BIN_DIR)/thread
 	mkdir -p $(BIN_DIR)/sqlitepp
 	mkdir -p $(BIN_DIR)/$(SQL)
+	ln -sf $(PUBLIC_ROOT)/sdk/amxxmodule.cpp
 	$(MAKE) -f $(MAKEFILE_NAME) $(PROJECT)
 
 $(PROJECT): $(OBJ_BIN)
@@ -143,7 +146,6 @@ default: all
 
 clean:
 	rm -rf $(BIN_DIR)/*.o
-	rm -rf $(BIN_DIR)/sdk/*.o
 	rm -rf $(BIN_DIR)/thread/*.o
 	rm -rf $(BIN_DIR)/sqlitepp/*.o
 	rm -rf $(BIN_DIR)/$(SQL)/*.o

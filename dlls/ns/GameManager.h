@@ -17,7 +17,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
-#include "CString.h"
+#include <am-string.h>
 
 class GameManager
 {
@@ -62,23 +62,21 @@ public:
 	};
 	inline void CheckMap(void)
 	{
-		String MapName;
+		ke::AString MapName;
 
-		MapName.assign(STRING(gpGlobals->mapname));
-
-		MapName.ToLower();
+		MapName = UTIL_ToLowerCase(STRING(gpGlobals->mapname));
 
 		m_iTitlesMap=0;
 
-		if (strcmp(MapName.c_str(),"ns_bast")==0 ||
-			strcmp(MapName.c_str(),"ns_bast_classic")==0 ||
-			strcmp(MapName.c_str(),"ns_hera")==0 ||
-			strcmp(MapName.c_str(),"ns_nothing")==0 ||
-			strcmp(MapName.c_str(),"ns_caged")==0 ||
-			strcmp(MapName.c_str(),"ns_tanith")==0 ||
-			strcmp(MapName.c_str(),"ns_eclipse")==0 ||
-			strcmp(MapName.c_str(),"ns_veil")==0 ||
-			strcmp(MapName.c_str(),"ns_nancy")==0)
+		if (MapName.compare("ns_bast")==0 ||
+			MapName.compare("ns_bast_classic") == 0 ||
+			MapName.compare("ns_hera") == 0 ||
+			MapName.compare("ns_nothing") == 0 ||
+			MapName.compare("ns_caged") == 0 ||
+			MapName.compare("ns_tanith") == 0 ||
+			MapName.compare("ns_eclipse") == 0 ||
+			MapName.compare("ns_veil") == 0 ||
+			MapName.compare("ns_nancy") == 0)
 		{
 			m_iTitlesMap=1;
 		}

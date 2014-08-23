@@ -12,9 +12,6 @@
     <Filter Include="Module SDK">
       <UniqueIdentifier>{3ba100b1-c511-4a2b-bd4f-d4793e871082}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Module SDK\AMXX STL">
-      <UniqueIdentifier>{aa2aa172-b8f1-4e12-a51b-c3892e2d1f9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Module SDK\SDK Base">
       <UniqueIdentifier>{300ce24d-2a06-4b65-8c00-8b0f757656ec}</UniqueIdentifier>
     </Filter>
@@ -35,7 +32,7 @@
     <ClCompile Include="..\NVault.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
+    <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -58,29 +55,11 @@
     <ClInclude Include="..\NVault.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
-      <Filter>Module SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\CQueue.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\CString.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\CVector.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\sh_list.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\sh_tinyhash.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
+    <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

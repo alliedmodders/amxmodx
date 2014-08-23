@@ -28,9 +28,9 @@ int CmdStartForward = 0;
 int StartFrameForward = 0;
 int VexdTouchForward = 0;
 int VexdServerForward = 0;
-CVector<Impulse *> Impulses;
-CVector<EntClass *> Thinks;
-CVector<Touch *> Touches;
+ke::Vector<Impulse *> Impulses;
+ke::Vector<EntClass *> Thinks;
+ke::Vector<Touch *> Touches;
 KeyValueData *g_pkvd;
 bool g_inKeyValue=false;
 bool g_precachedStuff = false;
@@ -139,7 +139,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	edict_t *pEntity = (edict_t *)player;
 	g_cmd = (struct usercmd_s *)_cmd;
 	int origImpulse = g_cmd->impulse; // incase a plugin alters it
-	for (i=0; i<Impulses.size(); i++)
+	for (i=0; i<Impulses.length(); i++)
 	{
 		if (Impulses[i]->Check == g_cmd->impulse)
 		{
@@ -251,11 +251,11 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	int ptrIndex = ENTINDEX(pToucher);
 	int ptdIndex = ENTINDEX(pTouched);
 	META_RES res=MRES_IGNORED;
-	for (i=0; i<Touches.size(); i++)
+	for (i=0; i<Touches.length(); i++)
 	{
-		if (Touches[i]->Toucher.size() == 0)
+		if (Touches[i]->Toucher.length() == 0)
 		{
-			if (Touches[i]->Touched.size() == 0)
+			if (Touches[i]->Touched.length() == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, (cell)ptrIndex, (cell)ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
@@ -270,7 +270,7 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 					res=MRES_SUPERCEDE;
 			}
 		} else if (Touches[i]->Toucher.compare(ptrClass)==0) {
-			if (Touches[i]->Touched.size() == 0)
+			if (Touches[i]->Touched.length() == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, (cell)ptrIndex, (cell)ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
@@ -307,7 +307,7 @@ void Think(edict_t *pent)
 	const char *cls = STRING(pent->v.classname);
 	META_RES res=MRES_IGNORED;
 	int retVal=0;
-	for (i=0; i<Thinks.size(); i++)
+	for (i=0; i<Thinks.length(); i++)
 	{
 		if (Thinks[i]->Class.compare(cls)==0)
 		{

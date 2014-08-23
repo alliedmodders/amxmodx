@@ -3,8 +3,12 @@ import os.path
 
 binary = AMXX.MetaModule(builder, 'engine')
 
+binary.compiler.defines += [
+  'HAVE_STDINT_H',
+]
+
 binary.sources = [
-  'sdk/amxxmodule.cpp',
+  '../../public/sdk/amxxmodule.cpp',
   'amxxapi.cpp',
   'engine.cpp',
   'entity.cpp',

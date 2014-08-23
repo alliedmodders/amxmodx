@@ -12,9 +12,6 @@
     <Filter Include="Module SDK">
       <UniqueIdentifier>{105aae8e-12cf-4550-8a4e-38ae0f0bc98b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Module SDK\AMXX STL">
-      <UniqueIdentifier>{48ab1482-e0f3-41f0-bb0a-0aca5800115a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Module SDK\SDK Base">
       <UniqueIdentifier>{fece8d7d-8799-45fa-b9d8-7a1e51a65103}</UniqueIdentifier>
     </Filter>
@@ -29,11 +26,11 @@
     <ClCompile Include="..\module.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
-      <Filter>Module SDK\SDK Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\utils.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
+      <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,20 +40,14 @@
     <ClInclude Include="..\pcre.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
-      <Filter>Module SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\CVector.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
-      <Filter>Module SDK\SDK Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\utils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
+      <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

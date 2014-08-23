@@ -15,7 +15,7 @@
 #define HOOK_SPECIALBOT_H
 
 #include "ham_utils.h"
-#include "CVector.h"
+#include <am-vector.h>
 
 class CRegisterHamParams
 {
@@ -42,7 +42,7 @@ public:
 private:
 	void RegisterChecked(AMX *amx, int &func, const char *function, int &post, int &fwd);
 
-	CVector<CRegisterHamParams*> m_RHP_list;
+	ke::Vector<CRegisterHamParams*> m_RHP_list;
 	void **m_specialbot_vtable;
 };
 

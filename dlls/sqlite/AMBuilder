@@ -10,6 +10,7 @@ binary.compiler.cxxincludes += [
 binary.compiler.defines += [
   'SM_DEFAULT_THREADER',
   'stricmp=strcasecmp',
+  'HAVE_STDINT_H',
 ]
 
 if builder.target_platform == 'linux':
@@ -20,7 +21,7 @@ binary.sources += [
   'handles.cpp',
   'module.cpp',
   'threading.cpp',
-  'sdk/amxxmodule.cpp',
+  '../../public/sdk/amxxmodule.cpp',
   'oldcompat_sql.cpp',
   'thread/BaseWorker.cpp',
   'thread/ThreadWorker.cpp',

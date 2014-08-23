@@ -3,8 +3,12 @@ import os.path
 
 binary = AMXX.Module(builder, 'nvault')
 
+binary.compiler.defines += [
+  'HAVE_STDINT_H',
+]
+
 binary.sources = [
-  'sdk/amxxmodule.cpp',
+  '../../public/sdk/amxxmodule.cpp',
   'amxxapi.cpp',
   'Binary.cpp',
   'Journal.cpp',

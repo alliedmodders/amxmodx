@@ -1,11 +1,17 @@
-// vim: set ts=4 sw=4 tw=99 noet:
-//
-// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
-// Copyright (C) The AMX Mod X Development Team.
-//
-// This software is licensed under the GNU General Public License, version 3 or higher.
-// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
-//     https://alliedmods.net/amxmodx-license
+/* ======== SourceMM ========
+* Copyright (C) 2004-2005 Metamod:Source Development Team
+* No warranties of any kind
+*
+* License: zlib/libpng
+*
+* Author(s): David "BAILOPAN" Anderson
+* ============================
+*/
+
+/* AMX Mod X
+ *
+ * by the AMX Mod X Development Team
+ */
 
 #ifndef _INCLUDE_CSTRING_H
 #define _INCLUDE_CSTRING_H
@@ -13,7 +19,8 @@
 #include <string.h>
 #include <stdio.h>
 
-//by David "BAILOPAN" Anderson
+//namespace SourceHook
+//{
 class String
 {
 public:
@@ -35,13 +42,6 @@ public:
 		v = NULL; 
 		a_size = 0;
 		assign(src); 
-	}
-
-	const char * _fread(FILE *fp) 	 
-	{ 	 
-		Grow(512, false); 	 
-		char *ret = fgets(v, 511, fp); 	 
-		return ret; 	 
 	}
 
 	String(const String &src) 
@@ -85,10 +85,8 @@ public:
 		{
 			clear();
 		} else {
-			size_t len = strlen(d);
-			Grow(len + 1, false);
-			memcpy(v, d, len);
-			v[len] = '\0';
+			Grow(strlen(d) + 1, false);
+			strcpy(v, d);
 		}
 	}
 
@@ -98,7 +96,7 @@ public:
 			v[0] = '\0';
 	}
 
-	int compare (const char *d) const
+	int compare (const char *d)
 	{
 		if (!v)
 			return strcmp("", d);
@@ -155,30 +153,6 @@ public:
 		}
 
 		return false;
-	}
-
-	void reparse_newlines()
-	{
-		size_t len = size();
-		int offs = 0;
-		char c;
-		if (!len)
-			return;
-		for (size_t i=0; i<len; i++)
-		{
-			c = v[i];
-			if (c == '^' && (i != len-1))
-			{
-				c = v[++i];
-				if (c == 'n')
-					c = '\n';
-				else if (c == 't')
-					c = '\t';
-				offs++;
-			}
-			v[i-offs] = c;
-		}
-		v[len-offs] = '\0';
 	}
 	
 	void trim()
@@ -387,5 +361,7 @@ private:
 public:
 	static const int npos = -1;
 };
+
+//};	//NAMESPACE
 
 #endif //_INCLUDE_CSTRING_H

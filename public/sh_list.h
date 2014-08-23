@@ -21,8 +21,8 @@
 #include <new>
 #include <stdlib.h>
 
-namespace SourceHook
-{
+//namespace SourceHook
+//{
 
 	//This class is from CSDM for AMX Mod X
 	/*
@@ -293,6 +293,6 @@ namespace SourceHook
 			return *this;
 		}
 	};
-};	//NAMESPACE
+//};	//NAMESPACE
 
 #endif //_INCLUDE_CSDM_LIST_H

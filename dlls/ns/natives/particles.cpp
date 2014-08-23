@@ -11,15 +11,14 @@
 // Natural Selection Module
 //
 
-#include "../sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
-#include "../ns.h"
-#include "../utilfunctions.h"
-#include "../NEW_Util.h"
-
-#include "../CVector.h"
-#include "../CString.h"
-#include "../ParticleManager.h"
+#include "ns.h"
+#include "utilfunctions.h"
+#include "NEW_Util.h"
+#include "ParticleManager.h"
+#include <am-vector.h>
+#include <am-string.h>
 
 #define KVI(__KEY) PSKeyValueI(__KEY,amx,params)
 #define KVF(__KEY) PSKeyValueF(__KEY,amx,params)

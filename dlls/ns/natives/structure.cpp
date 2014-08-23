@@ -11,12 +11,12 @@
 // Natural Selection Module
 //
 
-#include "../sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
-#include "../ns.h"
+#include "ns.h"
 
-#include "../utilfunctions.h"
-#include "../NEW_Util.h"
+#include "utilfunctions.h"
+#include "NEW_Util.h"
 
 int IsValidBuilding[AVH_USER3_MAX + 1] = {
 	0, // AVH_USER3_NONE = 0,

@@ -2,7 +2,8 @@
 * STEP 1
   Download the AMXX Sdk, and place all files into your module source dir.
   Don't edit amxxmodule.h or amxxmodule.cpp
-
+  Rename moduleconfig.in.h to moduleconfig.h
+  
   Go through the moduleconfig.h file and do what it says
   If you want to have natives in your module, uncomment line 30
    ( // #define FN_AMXX_ATTACH OnAmxxAttach )

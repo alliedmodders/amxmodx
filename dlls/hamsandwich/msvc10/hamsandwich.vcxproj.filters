@@ -13,9 +13,6 @@
     <Filter Include="Module SDK\SDK Base">
       <UniqueIdentifier>{4fb419c2-3177-4389-9713-a7b032b57c1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Module SDK\AMXX STL">
-      <UniqueIdentifier>{a97b8a80-4ea7-4972-ab41-235e19831dff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Config File">
       <UniqueIdentifier>{f626de6a-9bea-468b-97e9-4f5d62307d78}</UniqueIdentifier>
     </Filter>
@@ -47,9 +44,6 @@
     <ClCompile Include="..\hook_native.cpp">
       <Filter>Hooks</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
-      <Filter>Module SDK\SDK Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\config_parser.cpp">
       <Filter>Config File</Filter>
     </ClCompile>
@@ -67,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="..\hook_specialbot.cpp">
       <Filter>Hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
+      <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,21 +91,6 @@
     <ClInclude Include="..\Trampolines.h">
       <Filter>Hooks\Trampolines</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
-      <Filter>Module SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
-      <Filter>Module SDK\SDK Base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\CString.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\CVector.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\sh_stack.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
     <ClInclude Include="..\DataHandler.h">
       <Filter>Data Handler</Filter>
     </ClInclude>
@@ -126,6 +108,12 @@
     </ClInclude>
     <ClInclude Include="..\hook_specialbot.h">
       <Filter>Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
+      <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

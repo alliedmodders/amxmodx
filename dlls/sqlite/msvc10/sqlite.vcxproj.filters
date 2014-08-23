@@ -33,9 +33,6 @@
     <Filter Include="Module SDK">
       <UniqueIdentifier>{b24e595e-f6a9-4358-bbe3-094ef6383e53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Module SDK\AMXX STL">
-      <UniqueIdentifier>{a5586883-461e-4f33-a5df-d7a9226a4cb2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Module SDK\SDK Base">
       <UniqueIdentifier>{c60d3c45-e23b-4c5a-aae2-2c3c5441bac6}</UniqueIdentifier>
     </Filter>
@@ -203,7 +200,7 @@
     <ClCompile Include="..\sqlite-source\where.c">
       <Filter>SQLite Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\amxxmodule.cpp">
+    <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -212,9 +209,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\sqlite_header.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\svn_version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\threading.h">
@@ -295,14 +289,11 @@
     <ClInclude Include="..\sqlite-source\vdbeInt.h">
       <Filter>SQLite Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdk\moduleconfig.h">
-      <Filter>Module SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\sh_list.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\amxxmodule.h">
+    <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

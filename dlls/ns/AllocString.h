@@ -23,13 +23,13 @@
 #ifndef ALLOCSTRING_H
 #define ALLOCSTRING_H
 
-#include "CString.h"
-#include "sh_list.h"
+#include <am-string.h>
+#include <am-linkedlist.h>
 
 class StringManager
 {
 private:
-	List<String *>		m_StringList;
+	ke::LinkedList<ke::AString *>		m_StringList;
 
 public:
 	/**
@@ -38,8 +38,8 @@ public:
 	 */
 	inline void Clear(void)
 	{
-		List<String *>::iterator		 end;
-		List<String *>::iterator		 iter;
+		ke::LinkedList<ke::AString *>::iterator		 end;
+		ke::LinkedList<ke::AString *>::iterator		 iter;
 
 		iter=m_StringList.begin();
 		end=m_StringList.end();
@@ -59,30 +59,28 @@ public:
 	 */
 	inline int Allocate(const char *str)
 	{
-		List<String *>::iterator		 end;
-		List<String *>::iterator		 iter;
+		ke::LinkedList<ke::AString *>::iterator		 end;
+		ke::LinkedList<ke::AString *>::iterator		 iter;
 
 		iter=m_StringList.begin();
 		end=m_StringList.end();
 
 		while (iter!=end)
 		{
-			if (strcmp(str, (*iter)->c_str()) == 0)
+			if (strcmp(str, (*iter)->chars()) == 0)
 			{
 				// String is already in the list, do not allocate it again
-				return MAKE_STRING((*iter)->c_str());
+				return MAKE_STRING((*iter)->chars());
 			}
 			++iter;
 		}
 
 		// Was not found in the linked list, allocate it and add it to the list
-		String *AllocStr = new String;
+		ke::AString *AllocStr = new ke::AString(str);
 
-		AllocStr->assign(str);
+		m_StringList.append(AllocStr);
 
-		m_StringList.push_back(AllocStr);
-
-		return MAKE_STRING(AllocStr->c_str());
+		return MAKE_STRING(AllocStr->chars());
 
 	};
 

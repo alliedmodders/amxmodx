@@ -16,9 +16,6 @@
 #include "sqlite_header.h"
 #include "sqlheaders.h"
 
-using namespace SourceMod;
-using namespace SourceHook;
-
 SqliteDriver g_Sqlite;
 
 void FreeConnection(void *p, unsigned int num)

@@ -14,9 +14,12 @@
 #ifndef PARTICLEMANAGER_H
 #define PARTICLEMANAGER_H
 
+#include <am-vector.h>
+#include <am-string.h>
+
 typedef struct psystem_s
 {
-	String			 Name;
+	ke::AString		 Name;
 	int				 id;
 	int				 IsStatic; // Set to 1 if the particle system is loaded from ns.ps
 
@@ -25,43 +28,36 @@ typedef struct psystem_s
 class ParticleManager
 {
 private:
-	CVector<ParticleSystem *>		 Systems;
-	int								 m_iFileLoaded;
-	unsigned short					 m_iEventID;
+	ke::Vector<ParticleSystem *>	Systems;
+	int								m_iFileLoaded;
+	unsigned short					m_iEventID;
 
 public:
 	ParticleManager()
 	{
 		m_iFileLoaded=0;
 		m_iEventID=0;
-		Systems.reserve(64);
+		Systems.ensure(64);
 	};
 
 	// Remove all non-static particle systems
 	inline void Prune()
 	{
-		if (Systems.size()==0)
+		for (size_t i = 0; i < Systems.length(); ++i)
 		{
-			return;
+			if (Systems[i]->IsStatic)
+			{
+				break;
+			}
+
+			Systems.remove(i);
+			delete Systems.at(i);
+
+			if (!Systems.length())
+			{
+				break;
+			}
 		}
-		CVector<ParticleSystem *>::iterator		iter;
-		while (1)
-		{
-			if (Systems.size()==0)
-			{
-				break;
-			}
-			iter=Systems.end();
-			iter--;
-
-			if ((*iter)->IsStatic)
-			{
-				break;
-			}
-
-			delete (*iter);
-			Systems.pop_back();
-		};
 	};
 
 	void ReadFile(void);
@@ -70,13 +66,13 @@ public:
 	{
 		ParticleSystem *ps=new ParticleSystem;
 
-		ps->id=Systems.size();
+		ps->id=Systems.length();
 		ps->IsStatic=Static;
-		ps->Name.assign(Start);
+		ps->Name = Start;
 
-		Systems.push_back(ps);
+		Systems.append(ps);
 
-		return Systems.size()-1;
+		return Systems.length()-1;
 	};
 	inline void FireSystem(int id, float *Origin, float *Angles, int flags)
 	{
@@ -110,16 +106,12 @@ public:
 	};
 	inline int Find(const char *Needle)
 	{
-		CVector<ParticleSystem *>::iterator iter=Systems.begin();
-		CVector<ParticleSystem *>::iterator end=Systems.end();
-
-		while (iter!=end)
+		for (size_t i = 0; i < Systems.length(); ++i)
 		{
-			if (strcmp(Needle,(*iter)->Name.c_str())==0)
+			if (strcmp(Needle, Systems[i]->Name.chars()) == 0)
 			{
-				return (*iter)->id;
+				return Systems[i]->id;
 			}
-			++iter;
 		}
 
 		return -1;

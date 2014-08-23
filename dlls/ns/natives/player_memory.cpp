@@ -11,15 +11,15 @@
 // Natural Selection Module
 //
 
-#include "../sdk/amxxmodule.h"
+#include "amxxmodule.h"
 
-#include "../ns.h" 
+#include "ns.h" 
 
-#include "../utilfunctions.h"
-#include "../NEW_Util.h"
+#include "utilfunctions.h"
+#include "NEW_Util.h"
 
-#include "../GameManager.h"
-#include "../CPlayer.h"
+#include "GameManager.h"
+#include "CPlayer.h"
 
 // Float:ns_get_res(Player)
 static cell AMX_NATIVE_CALL ns_get_res(AMX *amx, cell *params)

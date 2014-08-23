@@ -19,9 +19,9 @@
 #include <extdll.h>
 #include "amxxmodule.h"
 
-#include "CVector.h"
-#include "CString.h"
-#include "sh_stack.h"
+#include <am-vector.h>
+#include <am-string.h>
+#include <sh_stack.h>
 
 #include "hook.h"
 #include "forward.h"
@@ -48,29 +48,28 @@ extern bool gDoForwards;
 // Parameter value pushes
 #define MAKE_VECTOR()															\
 	int iThis=PrivateToIndex(pthis);											\
-	CVector<Data *> *__vec=new CVector<Data *>;									\
+	ke::Vector<Data *> *__vec=new ke::Vector<Data *>;							\
 	ParamStack.push(__vec);														\
 	P_CBASE(pthis, iThis)
 
-#define P_BOOL(___PARAM)			__vec->push_back(new Data(RET_BOOL, (void *) & (___PARAM)));
-#define P_INT(___PARAM)				__vec->push_back(new Data(RET_INTEGER, (void *) & (___PARAM)));
-#define P_SHORT(___PARAM)			__vec->push_back(new Data(RET_SHORT, (void *) & (___PARAM)));
-#define P_FLOAT(___PARAM)			__vec->push_back(new Data(RET_FLOAT, (void *) & (___PARAM)));			
-#define P_VECTOR(___PARAM)			__vec->push_back(new Data(RET_VECTOR, (void *) & (___PARAM)));
-#define P_STR(___PARAM)				__vec->push_back(new Data(RET_STRING, (void *) & (___PARAM)));
-#define P_CBASE(__PARAM, __INDEX)	__vec->push_back(new Data(RET_CBASE, (void *) & (__PARAM), reinterpret_cast<int *>(& (__INDEX))));
-#define P_ENTVAR(__PARAM, __INDEX)	__vec->push_back(new Data(RET_ENTVAR, (void *) & (__PARAM), reinterpret_cast<int *>(& (__INDEX))));
-#define P_EDICT(__PARAM, __INDEX)	__vec->push_back(new Data(RET_EDICT, (void *) & (__PARAM), reinterpret_cast<int *>(& (__INDEX))));
-#define P_TRACE(__PARAM)			__vec->push_back(new Data(RET_TRACE, (void *) (__PARAM)));
-#define P_PTRVECTOR(__PARAM)		__vec->push_back(new Data(RET_VECTOR, (void *) (__PARAM)));
-#define P_PTRFLOAT(__PARAM)			__vec->push_back(new Data(RET_FLOAT, (void *) (__PARAM)));
-#define P_ITEMINFO(__PARAM)			__vec->push_back(new Data(RET_ITEMINFO, (void *) & (__PARAM)));
+#define P_BOOL(___PARAM)			__vec->append(new Data(RET_BOOL, (void *) & (___PARAM)));
+#define P_INT(___PARAM)				__vec->append(new Data(RET_INTEGER, (void *) & (___PARAM)));
+#define P_SHORT(___PARAM)			__vec->append(new Data(RET_SHORT, (void *) & (___PARAM)));
+#define P_FLOAT(___PARAM)			__vec->append(new Data(RET_FLOAT, (void *) & (___PARAM)));			
+#define P_VECTOR(___PARAM)			__vec->append(new Data(RET_VECTOR, (void *) & (___PARAM)));
+#define P_STR(___PARAM)				__vec->append(new Data(RET_STRING, (void *) & (___PARAM)));
+#define P_CBASE(__PARAM, __INDEX)	__vec->append(new Data(RET_CBASE, (void *) & (__PARAM), reinterpret_cast<int *>(& (__INDEX))));
+#define P_ENTVAR(__PARAM, __INDEX)	__vec->append(new Data(RET_ENTVAR, (void *) & (__PARAM), reinterpret_cast<int *>(& (__INDEX))));
+#define P_EDICT(__PARAM, __INDEX)	__vec->append(new Data(RET_EDICT, (void *) & (__PARAM), reinterpret_cast<int *>(& (__INDEX))));
+#define P_TRACE(__PARAM)			__vec->append(new Data(RET_TRACE, (void *) (__PARAM)));
+#define P_PTRVECTOR(__PARAM)		__vec->append(new Data(RET_VECTOR, (void *) (__PARAM)));
+#define P_PTRFLOAT(__PARAM)			__vec->append(new Data(RET_FLOAT, (void *) (__PARAM)));
+#define P_ITEMINFO(__PARAM)			__vec->append(new Data(RET_ITEMINFO, (void *) & (__PARAM)));
 
 #define KILL_VECTOR()															\
-	CVector<Data *>::iterator end=__vec->end();									\
-	for (CVector<Data *>::iterator i=__vec->begin(); i!=end; ++i)				\
+	for (size_t i = 0; i < __vec->length(); ++i)									\
 	{																			\
-		delete (*i);															\
+		delete __vec->at(i);														\
 	}																			\
 	delete __vec;																\
 	ParamStack.pop();
@@ -83,12 +82,11 @@ extern bool gDoForwards;
 	int thisresult=HAM_UNSET;													\
 	if (DoForwards)																\
 	{																			\
-		CVector<Forward*>::iterator end=hook->pre.end();						\
-		for (CVector<Forward*>::iterator i=hook->pre.begin(); i!=end; i++)		\
+		for (size_t i = 0; i < hook->pre.length(); ++i)							\
 		{																		\
-			if ((*i)->state == FSTATE_OK)										\
+			if (hook->pre.at(i)->state == FSTATE_OK)							\
 			{																	\
-				thisresult=MF_ExecuteForward((*i)->id,iThis
+				thisresult = MF_ExecuteForward(hook->pre.at(i)->id, iThis
 
 #define PRE_END()												\
 				);												\
@@ -106,12 +104,11 @@ extern bool gDoForwards;
 	}																		\
 	if (DoForwards)															\
 	{																		\
-		CVector<Forward*>::iterator end=hook->post.end();					\
-		for (CVector<Forward*>::iterator i=hook->post.begin(); i!=end; i++)	\
+		for (size_t i = 0; i < hook->post.length(); ++i)					\
 		{																	\
-			if ((*i)->state == FSTATE_OK)									\
+			if (hook->post.at(i)->state == FSTATE_OK)						\
 			{																\
-				MF_ExecuteForward((*i)->id,iThis
+					MF_ExecuteForward(hook->post.at(i)->id, iThis
 
 #define POST_END()														\
 				);														\
@@ -130,7 +127,7 @@ extern bool gDoForwards;
 #define CHECK_RETURN_STR()												\
 		if (thisresult < HAM_OVERRIDE)									\
 		{																\
-			return origret.c_str();										\
+			return origret.chars();										\
 		}
 #define CHECK_RETURN_VEC()												\
 		if (thisresult < HAM_OVERRIDE)									\
@@ -434,7 +431,7 @@ int Hook_Int_Int_Str_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i
 	int origret=0;
 	PUSH_INT()
 
-	String a=sz1;
+	ke::AString a(sz1);
 
 	MAKE_VECTOR()
 	
@@ -443,16 +440,16 @@ int Hook_Int_Int_Str_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i
 	P_INT(i2)
 
 	PRE_START()
-		,i1, a.c_str(), i2
+		,i1, a.chars(), i2
 	PRE_END()
 #if defined(_WIN32)
-	origret=reinterpret_cast<int (__fastcall*)(void*, int, int, const char *, int)>(hook->func)(pthis, 0, i1, a.c_str(), i2);
+	origret=reinterpret_cast<int (__fastcall*)(void*, int, int, const char *, int)>(hook->func)(pthis, 0, i1, a.chars(), i2);
 #elif defined(__linux__) || defined(__APPLE__)
-	origret=reinterpret_cast<int (*)(void*, int, const char *, int)>(hook->func)(pthis, i1, a.c_str(), i2);
+	origret=reinterpret_cast<int (*)(void*, int, const char *, int)>(hook->func)(pthis, i1, a.chars(), i2);
 #endif
 
 	POST_START()
-		,i1, a.c_str(), i2
+		,i1, a.chars(), i2
 	POST_END()
 
 	KILL_VECTOR()
@@ -467,7 +464,7 @@ int Hook_Int_Int_Str_Int_Int(Hook *hook, void *pthis, int i1, const char *sz1, i
 	int origret = 0;
 	PUSH_INT()
 
-	String a = sz1;
+	ke::AString a(sz1);
 
 	MAKE_VECTOR()
 
@@ -477,16 +474,16 @@ int Hook_Int_Int_Str_Int_Int(Hook *hook, void *pthis, int i1, const char *sz1, i
 	P_INT(i3)
 
 	PRE_START()
-		, i1, a.c_str(), i2, i3
+		, i1, a.chars(), i2, i3
 	PRE_END()
 #if defined(_WIN32)
-	origret = reinterpret_cast<int(__fastcall*)(void*, int, int, const char *, int, int)>(hook->func)(pthis, 0, i1, a.c_str(), i2, i3);
+	origret = reinterpret_cast<int(__fastcall*)(void*, int, int, const char *, int, int)>(hook->func)(pthis, 0, i1, a.chars(), i2, i3);
 #elif defined(__linux__) || defined(__APPLE__)
-	origret = reinterpret_cast<int(*)(void*, int, const char *, int, int)>(hook->func)(pthis, i1, a.c_str(), i2, i3);
+	origret = reinterpret_cast<int(*)(void*, int, const char *, int, int)>(hook->func)(pthis, i1, a.chars(), i2, i3);
 #endif
 
 	POST_START()
-		, i1, a.c_str(), i2, i3
+		, i1, a.chars(), i2, i3
 	POST_END()
 
 	KILL_VECTOR()
@@ -815,8 +812,8 @@ void Hook_Void_Float_Vector_Trace_Int(Hook *hook, void *pthis, float f1, Vector 
 
 const char *Hook_Str_Void(Hook *hook, void *pthis)
 {
-	String ret;
-	String origret;
+	ke::AString ret;
+	ke::AString origret;
 
 	MAKE_VECTOR()
 
@@ -825,9 +822,9 @@ const char *Hook_Str_Void(Hook *hook, void *pthis)
 	PRE_END()
 
 #if defined(_WIN32)
-	origret.assign(reinterpret_cast<const char *(__fastcall*)(void*, int)>(hook->func)(pthis, 0));
+	origret = reinterpret_cast<const char *(__fastcall*)(void*, int)>(hook->func)(pthis, 0);
 #elif defined(__linux__) || defined(__APPLE__)
-	origret.assign(reinterpret_cast<const char *(*)(void*)>(hook->func)(pthis));
+	origret = reinterpret_cast<const char *(*)(void*)>(hook->func)(pthis);
 #endif
 
 	POST_START()
@@ -837,7 +834,7 @@ const char *Hook_Str_Void(Hook *hook, void *pthis)
 	POP()
 	CHECK_RETURN_STR();
 
-	return ret.c_str();
+	return ret.chars();
 }
 
 void *Hook_Cbase_Void(Hook *hook, void *pthis)
@@ -1402,7 +1399,7 @@ int Hook_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2)
 void Hook_Void_Str_Float_Float_Float(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3)
 {
 	PUSH_VOID()
-	String a=sz1;
+	ke::AString a(sz1);
 
 	MAKE_VECTOR()
 
@@ -1412,17 +1409,17 @@ void Hook_Void_Str_Float_Float_Float(Hook *hook, void *pthis, const char *sz1, f
 	P_FLOAT(f3)
 
 	PRE_START()
-		,a.c_str(), f1, f2, f3
+		,a.chars(), f1, f2, f3
 	PRE_END()
 
 #if defined(_WIN32)
-		reinterpret_cast<int (__fastcall*)(void*, int, const char *, float, float, float)>(hook->func)(pthis, 0, a.c_str(), f1, f2, f3);
+		reinterpret_cast<int (__fastcall*)(void*, int, const char *, float, float, float)>(hook->func)(pthis, 0, a.chars(), f1, f2, f3);
 #elif defined(__linux__) || defined(__APPLE__)
-		reinterpret_cast<int (*)(void*, const char *, float, float, float)>(hook->func)(pthis, a.c_str(), f1, f2, f3);
+		reinterpret_cast<int (*)(void*, const char *, float, float, float)>(hook->func)(pthis, a.chars(), f1, f2, f3);
 #endif
 
 	POST_START()
-		,a.c_str(), f1, f2, f3
+		,a.chars(), f1, f2, f3
 	POST_END()
 
 	KILL_VECTOR()
@@ -1433,7 +1430,7 @@ void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const ch
 {
 	PUSH_VOID()
 
-	String a=sz1;
+	ke::AString a(sz1);
 	int iEnt=PrivateToIndex(cb);
 
 	MAKE_VECTOR()
@@ -1446,17 +1443,17 @@ void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const ch
 		P_CBASE(cb, iEnt)
 
 	PRE_START()
-		,a.c_str(), f1, f2, f3, i1, iEnt
+		,a.chars(), f1, f2, f3, i1, iEnt
 	PRE_END()
 
 #if defined(_WIN32)
-		reinterpret_cast<int (__fastcall*)(void*, int, const char *, float, float, float, int, void *)>(hook->func)(pthis, 0, a.c_str(), f1, f2, f3, i1, cb);
+		reinterpret_cast<int (__fastcall*)(void*, int, const char *, float, float, float, int, void *)>(hook->func)(pthis, 0, a.chars(), f1, f2, f3, i1, cb);
 #elif defined(__linux__) || defined(__APPLE__)
-		reinterpret_cast<int (*)(void*, const char *, float, float, float, int, void *)>(hook->func)(pthis, a.c_str(), f1, f2, f3, i1, cb);
+		reinterpret_cast<int (*)(void*, const char *, float, float, float, int, void *)>(hook->func)(pthis, a.chars(), f1, f2, f3, i1, cb);
 #endif
 
 	POST_START()
-		,a.c_str(), f1, f2, f3, i1, iEnt
+		,a.chars(), f1, f2, f3, i1, iEnt
 	POST_END()
 
 	KILL_VECTOR()
@@ -1644,23 +1641,23 @@ int Hook_Int_Str(Hook *hook, void *pthis, const char *sz1)
 	int origret=0;
 
 	PUSH_INT()
-	String a=sz1;
+	ke::AString a(sz1);
 
 	MAKE_VECTOR()
 	P_STR(a)
 
 	PRE_START()
-		, a.c_str()
+		, a.chars()
 	PRE_END()
 
 #if defined(_WIN32)
-		origret=reinterpret_cast<int (__fastcall*)(void*, int, const char *)>(hook->func)(pthis, 0, a.c_str());
+		origret=reinterpret_cast<int (__fastcall*)(void*, int, const char *)>(hook->func)(pthis, 0, a.chars());
 #elif defined(__linux__) || defined(__APPLE__)
-		origret=reinterpret_cast<int (*)(void*, const char *)>(hook->func)(pthis, a.c_str());
+		origret=reinterpret_cast<int (*)(void*, const char *)>(hook->func)(pthis, a.chars());
 #endif
 
 	POST_START()
-		, a.c_str()
+		, a.chars()
 	POST_END()
 
 	KILL_VECTOR()
@@ -1758,7 +1755,7 @@ void Hook_Void_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
 void Hook_Void_Str_Bool(Hook *hook, void *pthis, const char *sz1, bool b2)
 {
 	PUSH_VOID()
-	String a=sz1;
+	ke::AString a(sz1);
 
 	MAKE_VECTOR()
 
@@ -1766,17 +1763,17 @@ void Hook_Void_Str_Bool(Hook *hook, void *pthis, const char *sz1, bool b2)
 	P_BOOL(b2)
 
 	PRE_START()
-	, a.c_str(), b2
+	, a.chars(), b2
 	PRE_END()
 
 #if defined(_WIN32)
-		reinterpret_cast<void (__fastcall*)(void*, int, const char *, bool)>(hook->func)(pthis, 0, a.c_str(), b2);
+		reinterpret_cast<void (__fastcall*)(void*, int, const char *, bool)>(hook->func)(pthis, 0, a.chars(), b2);
 #elif defined(__linux__) || defined(__APPLE__)
-		reinterpret_cast<void (*)(void*, const char *, bool)>(hook->func)(pthis, a.c_str(), b2);
+		reinterpret_cast<void (*)(void*, const char *, bool)>(hook->func)(pthis, a.chars(), b2);
 #endif
 
 	POST_START()
-		, a.c_str(), b2
+		, a.chars(), b2
 	POST_END()
 
 	KILL_VECTOR()
@@ -1858,7 +1855,8 @@ int Hook_Int_Int_Int_Float_Int(Hook *hook, void *pthis, int i1, int i2, float f1
 void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2)
 {
 	PUSH_VOID()
-		String a=sz1;
+	
+	ke::AString a(sz1);
 
 	MAKE_VECTOR()
 
@@ -1866,17 +1864,17 @@ void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2)
 	P_INT(i2)
 
 	PRE_START()
-		, a.c_str(), i2
+		, a.chars(), i2
 	PRE_END()
 
 #if defined(_WIN32)
-		reinterpret_cast<void (__fastcall*)(void*, int, const char *, int)>(hook->func)(pthis, 0, a.c_str(), i2);
+		reinterpret_cast<void (__fastcall*)(void*, int, const char *, int)>(hook->func)(pthis, 0, a.chars(), i2);
 #elif defined(__linux__) || defined(__APPLE__)
-		reinterpret_cast<void (*)(void*, const char *, int)>(hook->func)(pthis, a.c_str(), i2);
+		reinterpret_cast<void (*)(void*, const char *, int)>(hook->func)(pthis, a.chars(), i2);
 #endif
 
 	POST_START()
-		, a.c_str(), i2
+		, a.chars(), i2
 	POST_END()
 
 	KILL_VECTOR()
@@ -1914,24 +1912,24 @@ void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
 void Hook_Void_Str(Hook *hook, void *pthis, const char *sz1)
 {
 	PUSH_VOID()
-	String a=sz1;
+	ke::AString a(sz1);
 
 	MAKE_VECTOR()
 
 	P_STR(a)
 
 	PRE_START()
-	, a.c_str()
+	, a.chars()
 	PRE_END()
 
 #if defined(_WIN32)
-		reinterpret_cast<void (__fastcall*)(void*, int, const char *)>(hook->func)(pthis, 0, a.c_str());
+		reinterpret_cast<void (__fastcall*)(void*, int, const char *)>(hook->func)(pthis, 0, a.chars());
 #elif defined(__linux__) || defined(__APPLE__)
-		reinterpret_cast<void (*)(void*, const char *)>(hook->func)(pthis, a.c_str());
+		reinterpret_cast<void (*)(void*, const char *)>(hook->func)(pthis, a.chars());
 #endif
 
 	POST_START()
-		, a.c_str()
+		, a.chars()
 	POST_END()
 
 	KILL_VECTOR()
@@ -1970,8 +1968,8 @@ int Hook_Int_Str_Vector_Str(Hook *hook, void *pthis, const char *sz1, Vector v2,
 
 	PUSH_INT()
 
-	String a=sz1;
-	String b=sz2;
+	ke::AString a(sz1);
+	ke::AString b(sz2);
 
 	MAKE_VECTOR()
 
@@ -1980,17 +1978,17 @@ int Hook_Int_Str_Vector_Str(Hook *hook, void *pthis, const char *sz1, Vector v2,
 	P_STR(b)
 
 	PRE_START()
-		, a.c_str(), MF_PrepareCellArrayA(reinterpret_cast<cell *>(&v2), 3, false), b.c_str()
+		, a.chars(), MF_PrepareCellArrayA(reinterpret_cast<cell *>(&v2), 3, false), b.chars()
 	PRE_END()
 
 #if defined(_WIN32)
-		origret=reinterpret_cast<int (__fastcall*)(void*, int, const char *, Vector, const char *)>(hook->func)(pthis, 0, a.c_str(), v2, b.c_str());
+		origret=reinterpret_cast<int (__fastcall*)(void*, int, const char *, Vector, const char *)>(hook->func)(pthis, 0, a.chars(), v2, b.chars());
 #elif defined(__linux__) || defined(__APPLE__)
-		origret=reinterpret_cast<int (*)(void*, const char *, Vector, const char *)>(hook->func)(pthis, a.c_str(), v2, b.c_str());
+		origret=reinterpret_cast<int (*)(void*, const char *, Vector, const char *)>(hook->func)(pthis, a.chars(), v2, b.chars());
 #endif
 
 	POST_START()
-		, a.c_str(), MF_PrepareCellArrayA(reinterpret_cast<cell *>(&v2), 3, false), b.c_str()
+		, a.chars(), MF_PrepareCellArrayA(reinterpret_cast<cell *>(&v2), 3, false), b.chars()
 	POST_END()
 
 	KILL_VECTOR()
@@ -2007,8 +2005,8 @@ int Hook_Int_Str_Str(Hook *hook, void *pthis, const char *sz1, const char *sz2)
 
 	PUSH_INT()
 
-	String a=sz1;
-	String b=sz2;
+	ke::AString a(sz1);
+	ke::AString b(sz2);
 
 	MAKE_VECTOR()
 
@@ -2016,17 +2014,17 @@ int Hook_Int_Str_Str(Hook *hook, void *pthis, const char *sz1, const char *sz2)
 	P_STR(b)
 
 	PRE_START()
-		, a.c_str(), b.c_str()
+		, a.chars(), b.chars()
 	PRE_END()
 
 #if defined(_WIN32)
-		origret=reinterpret_cast<int (__fastcall*)(void*, int, const char *, const char *)>(hook->func)(pthis, 0, a.c_str(), b.c_str());
+		origret=reinterpret_cast<int (__fastcall*)(void*, int, const char *, const char *)>(hook->func)(pthis, 0, a.chars(), b.chars());
 #elif defined(__linux__) || defined(__APPLE__)
-		origret=reinterpret_cast<int (*)(void*, const char *, const char *)>(hook->func)(pthis, a.c_str(), b.c_str());
+		origret=reinterpret_cast<int (*)(void*, const char *, const char *)>(hook->func)(pthis, a.chars(), b.chars());
 #endif
 
 	POST_START()
-		, a.c_str(), b.c_str()
+		, a.chars(), b.chars()
 	POST_END()
 
 	KILL_VECTOR()
@@ -2066,8 +2064,8 @@ void Hook_Void_Str_Str_Int(Hook *hook, void *pthis, const char *sz1, const char 
 {
 	PUSH_VOID()
 
-	String a=sz1;
-	String b=sz2;
+	ke::AString a(sz1);
+	ke::AString b(sz2);
 
 	MAKE_VECTOR()
 
@@ -2076,17 +2074,17 @@ void Hook_Void_Str_Str_Int(Hook *hook, void *pthis, const char *sz1, const char 
 	P_INT(i3)
 
 	PRE_START()
-		, a.c_str(), b.c_str(), i3
+		, a.chars(), b.chars(), i3
 	PRE_END()
 
 #if defined(_WIN32)
-		reinterpret_cast<int (__fastcall*)(void*, int, const char *, const char *, int)>(hook->func)(pthis, 0, a.c_str(), b.c_str(), i3);
+		reinterpret_cast<int (__fastcall*)(void*, int, const char *, const char *, int)>(hook->func)(pthis, 0, a.chars(), b.chars(), i3);
 #elif defined(__linux__) || defined(__APPLE__)
-		reinterpret_cast<int (*)(void*, const char *, const char *, int)>(hook->func)(pthis, a.c_str(), b.c_str(), i3);
+		reinterpret_cast<int (*)(void*, const char *, const char *, int)>(hook->func)(pthis, a.chars(), b.chars(), i3);
 #endif
 
 	POST_START()
-		, a.c_str(), b.c_str(), i3
+		, a.chars(), b.chars(), i3
 	POST_END()
 
 	KILL_VECTOR()
@@ -2746,9 +2744,9 @@ void Hook_Vector_Vector_Vector_Vector(Hook *hook, Vector *out, void *pthis, Vect
 
 const char *Hook_Str_Str(Hook *hook, void *pthis, const char* str)
 {
-	String ret;
-	String origret;
-	String a = str;
+	ke::AString ret;
+	ke::AString origret;
+	ke::AString a(str);
 
 	MAKE_VECTOR()
 
@@ -2757,24 +2755,24 @@ const char *Hook_Str_Str(Hook *hook, void *pthis, const char* str)
 	P_STR(a)
 
 	PRE_START()
-		, a.c_str()
+		, a.chars()
 	PRE_END()
 
 #if defined(_WIN32)
-	origret.assign(reinterpret_cast<const char *(__fastcall*)(void*, int, const char*)>(hook->func)(pthis, 0, a.c_str() ));
+	origret = reinterpret_cast<const char *(__fastcall*)(void*, int, const char*)>(hook->func)(pthis, 0, a.chars());
 #elif defined(__linux__) || defined(__APPLE__)
-	origret.assign(reinterpret_cast<const char *(*)(void*, const char*)>(hook->func)(pthis, a.c_str()));
+	origret = reinterpret_cast<const char *(*)(void*, const char*)>(hook->func)(pthis, a.chars());
 #endif
 
 	POST_START()
-		, a.c_str()
+		, a.chars()
 	POST_END()
 
 	KILL_VECTOR()
 	POP()
 	CHECK_RETURN_STR();
 
-	return ret.c_str();
+	return ret.chars();
 }
 
 void Hook_Void_Short(Hook *hook, void *pthis, short i1)

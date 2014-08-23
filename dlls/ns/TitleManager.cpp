@@ -11,11 +11,10 @@
 // Natural Selection Module
 //
 
-#include "sdk/amxxmodule.h"
+#include "amxxmodule.h"
 #include "ns.h"
 #include "TitleManager.h"
-
-
+#include "utilfunctions.h"
 
 void TitleManager::LoadTitles(void)
 {
@@ -136,10 +135,9 @@ scan_for_data:
 		if (*TempPointer=='}')			// end of data
 		{
 			// insert KeyName & Data into the hash
-			String key(KeyName);
+			ke::AString key(UTIL_ToLowerCase(KeyName));
 
-			key.toLower();
-			this->m_Hash.insert(key, new String(Data));
+			this->m_Hash.insert(key, new ke::AString(Data));
 
 			goto scan_for_key;
 		}

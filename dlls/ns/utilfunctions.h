@@ -99,6 +99,8 @@ int UTIL_FindBuildingHive(void);
 BOOL UTIL_CheckForPublic(const char *publicname);
 BOOL UTIL_CheckForNative(const char *NativeName);
 
+char *UTIL_ToLowerCase(const char *str);
+
 class CPlayer;
 
 CPlayer *UTIL_PlayerByCID(int CID);

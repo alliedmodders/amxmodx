@@ -829,7 +829,7 @@ SC_FUNC void defstorage(void)
   stgwrite("dump ");
 }
 
-/*
+/**
  *  Inclrement/decrement stack pointer. Note that this routine does
  *  nothing if the delta is zero.
  */

@@ -543,6 +543,7 @@ forward client_spawn(id);
  * @param Damage		The amount of damage being done.
  * @param DamageType	The damage type being done (bitmask).
  */
+#pragma deprecated It is suggested to use hamsandwich for this action instead.
 native ns_takedamage(IDVictim, IDInflictor, IDAttacker, Float:Damage, DamageType);
 
 /**

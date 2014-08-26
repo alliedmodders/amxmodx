@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>     /* for _MAX_PATH */
 #include "sc.h"
+#include "sp_symhash.h"
 
 /*  global variables
  *
@@ -84,6 +85,7 @@ SC_VDEFINE int sc_rationaltag=0;   /* tag for rational numbers */
 SC_VDEFINE int rational_digits=0;  /* number of fractional digits */
 SC_VDEFINE int sc_allowproccall=0; /* allow/detect tagnames in lex() */
 SC_VDEFINE short sc_is_utf8=FALSE; /* is this source file in UTF-8 encoding */
+SC_VDEFINE char *pc_deprecate = NULL;/* if non-null, mark next declaration as deprecated */
 SC_VDEFINE int sc_showincludes=0;  /* show include files */
 
 SC_VDEFINE constvalue sc_automaton_tab = { NULL, "", 0, 0}; /* automaton table */
@@ -94,6 +96,8 @@ SC_VDEFINE FILE *inpf_org= NULL;   /* main source file */
 SC_VDEFINE FILE *outf    = NULL;   /* (intermediate) text file written to */
 
 SC_VDEFINE jmp_buf errbuf;
+
+SC_VDEFINE HashTable *sp_Globals = NULL;
 
 #if !defined SC_LIGHT
   SC_VDEFINE int sc_makereport=FALSE; /* generate a cross-reference report */

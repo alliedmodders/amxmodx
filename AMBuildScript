@@ -130,6 +130,8 @@ class AMXXConfig(object):
         '-Wno-uninitialized',
         '-Wno-unused',
         '-Wno-switch',
+        '-Wno-format',
+        '-Wno-format-security',
         '-m32',
       ]
       cfg.cxxflags += [

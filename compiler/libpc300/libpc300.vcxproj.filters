@@ -60,6 +60,9 @@
     <ClCompile Include="scvars.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sp_symhash.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="amx.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sp_symhash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

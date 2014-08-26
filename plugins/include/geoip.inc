@@ -62,7 +62,7 @@ native bool:geoip_code3_ex(const ip[], result[4]);
  *
  * @return          1 on a successful lookup, 0 otherwise.
  */
-//#pragma deprecated Use geoip_code2_ex() instead.
+#pragma deprecated Use geoip_code2_ex() instead.
 native geoip_code2(const ip[], ccode[3]);
 
 /**
@@ -76,7 +76,7 @@ native geoip_code2(const ip[], ccode[3]);
  *
  * @return          1 on a successful lookup, 0 otherwise.
  */
-//#pragma deprecated Use geoip_code3() instead.
+#pragma deprecated Use geoip_code3() instead.
 native geoip_code3(const ip[], result[4]);
 
 /**

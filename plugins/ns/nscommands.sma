@@ -14,7 +14,7 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#pragma tabsize 0
+#pragma tabsize 4
 
 new g_TeamOneAck[12];
 new g_TeamTwoAck[12];

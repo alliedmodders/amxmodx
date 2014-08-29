@@ -2582,7 +2582,7 @@ forward plugin_natives();
 /**
  * Registers a native.
  *
- * @note Stlye 0 natives call the handler in the following manner:
+ * @note Style 0 natives call the handler in the following manner:
  *
  * public native_handler(plugin_id, argc)
  *

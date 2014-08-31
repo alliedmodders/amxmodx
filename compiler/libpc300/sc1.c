@@ -4271,7 +4271,7 @@ static long max_stacksize_recurse(symbol **sourcesym,symbol *sym,long basesize,i
             funcdisplayname(symname,sym->name);
             errorset(sSETFILE,sym->fnumber);
             errorset(sSETLINE,sym->lnumber);
-            error(237,symname);         /* recursive function */
+            error(234,symname);         /* recursive function */
           } /* if */
           *recursion=1;
           goto break_recursion;         /* recursion was detected, quit loop */

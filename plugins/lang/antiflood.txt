@@ -63,3 +63,6 @@ STOP_FLOOD = Prestani da opterecujes server porukama!
 
 [ru]
 STOP_FLOOD = Прекратите флуд на сервере!
+
+[cn]
+STOP_FLOOD = 请停止愚弄服务器!

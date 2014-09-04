@@ -85,3 +85,7 @@ LANG_NAME_NATIVE = Bosanski
 [ru]
 LANG_NAME = Russian
 LANG_NAME_NATIVE = Русский
+
+[cn]
+LANG_NAME = Simplified Chinese
+LANG_NAME_NATIVE = 简体中文

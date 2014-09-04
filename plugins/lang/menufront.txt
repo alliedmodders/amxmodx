@@ -393,3 +393,21 @@ STATS_SET = Настройки статистики ^n
 PAUSE_PLUG = Управление плагинами
 RES_WEAP = Запрет оружия
 TELE_PLAYER = Телепортировать игрока
+
+[cn]
+KICK_PLAYER = 踢除玩家
+BAN_PLAYER = 封禁玩家
+SLAP_SLAY = 处死/伤害 玩家
+TEAM_PLAYER = 团队玩家 ^n
+CHANGEL = 更改地图
+VOTE_MAPS = 投票更改地图 ^n
+SPECH_STUFF = 语音素材
+CLIENT_COM = 客户端命令
+SERVER_COM = 服务端命令
+CVARS_SET = 参数设置
+CONFIG = 配置
+LANG_SET = 语言设置
+STATS_SET = 统计设置 ^n
+PAUSE_PLUG = 暂停插件
+RES_WEAP = 限制武器
+TELE_PLAYER = 传送玩家

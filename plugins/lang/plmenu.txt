@@ -410,3 +410,21 @@ TRANSF_SILENT = Смена команды без смерти
 CL_CMD_MENU = Клиентское меню
 NO_CMDS = Нет доступных переменных
 CANT_PERF_PLAYER = Неприменимо к игроку "%s"
+
+[cn]
+ADMIN_BAN_1 = 管理员: 封禁 %s
+ADMIN_BAN_2 = 管理员 %s: 封禁 %s
+BAN_MENU = 封禁玩家菜单
+BAN_FOR_MIN = 封禁 %d 分钟
+BAN_PERM = 封禁永久
+SLAP_SLAY_MENU = 处死/伤害玩家菜单
+SLAP_WITH_DMG = 造成 %d 点伤害
+SLAY = 处死
+KICK_MENU = 踢除玩家菜单
+ADMIN_TRANSF_1 = 管理员: 传送 %s 到 %s 队伍
+ADMIN_TRANSF_2 = 管理员 %s: 传送 %s 到 %s 队伍
+TEAM_MENU = 团队控件菜单
+TRANSF_TO = 传送到 %s 队伍
+CL_CMD_MENU = 客户端命令菜单
+NO_CMDS = 无可用命令
+CANT_PERF_PLAYER = 该操作不能对玩家 "%s" 执行

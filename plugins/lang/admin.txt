@@ -283,3 +283,16 @@ INV_PAS = Неверный пароль!
 PAS_ACC = Пароль принят!
 PRIV_SET = Права доступа предоставлены
 NO_ENTRY = Вы не имеете права входа на этот сервер...
+
+[cn]
+LOADED_ADMIN = 从文件中读取到 1 位管理员
+LOADED_ADMINS = 从文件中读取到 %d 位管理员
+SQL_CANT_CON = SQL 错误: 无法连接到: '%s'
+SQL_CANT_LOAD_ADMINS = SQL 错误: 无法读取管理员: '%s'
+NO_ADMINS = 当前服务器没有管理员列表.
+SQL_LOADED_ADMIN = 从数据库中读取到 1 位管理员
+SQL_LOADED_ADMINS = 从数据库中读取到 %d 位管理员
+INV_PAS = 无效的密码!
+PAS_ACC = 密码已经被接受
+PRIV_SET = 权限设置
+NO_ENTRY = 您没有进入到服务器...

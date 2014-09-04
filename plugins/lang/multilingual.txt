@@ -239,3 +239,14 @@ SET_LANG_SERVER = Язык по-умолчанию изменен на "%s"
 SET_LANG_USER = Ваш язык изменен на "%s"
 TYPE_LANGMENU = Напишите 'amx_langmenu' в консоле для выбора языка
 LANG_MENU_DISABLED = Меню выбора языка заблокировано.
+
+[cn]
+LANG_NOT_EXISTS = 该语言不存在
+PERSO_LANG = 个人语言
+LANG_MENU = 语言菜单
+SERVER_LANG = 服务器语言
+SAVE_LANG = 保存语言设置
+SET_LANG_SERVER = 服务器语言被设置为 "%s"
+SET_LANG_USER = 你的语言被设置为 "%s"
+TYPE_LANGMENU = 在控制台输入'amx_langmenu'打开一个菜单来选择你的语言
+LANG_MENU_DISABLED = 语言菜单已禁用.

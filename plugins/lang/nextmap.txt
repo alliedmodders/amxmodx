@@ -112,3 +112,8 @@ FRIEND_FIRE = Friendly fire
 NEXT_MAP = Следующая карта:
 PLAYED_MAP = Текущая карта
 FRIEND_FIRE = Огонь по своим
+
+[cn]
+NEXT_MAP = 下张地图:
+PLAYED_MAP = 已经玩过地图
+FRIEND_FIRE = 友军开火伤害

@@ -427,12 +427,12 @@ static cell _message_begin(AMX *amx, cell *params, bool useFloat) /* 4 param */
 		if(iPlayer_id < 1 || iPlayer_id > gpGlobals->maxClients)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Not a valid player! (%d)", iPlayer_id);
-            return 0;
+			return 0;
 		}
 
 		CPlayer *pPlayer = GET_PLAYER_POINTER_I(iPlayer_id);
 
-        if(!pPlayer->ingame)
+		if(!pPlayer->ingame)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Player not connected! (%d)", iPlayer_id);
 			return 0;
@@ -791,12 +791,12 @@ static cell _emessage_begin(AMX *amx, cell *params, bool useFloat)
 		if(iPlayer_id < 1 || iPlayer_id > gpGlobals->maxClients)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Not a valid player! (%d)", iPlayer_id);
-            return 0;
+			return 0;
 		}
 
 		CPlayer *pPlayer = GET_PLAYER_POINTER_I(iPlayer_id);
 
-        if(!pPlayer->ingame)
+		if(!pPlayer->ingame)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Player not connected! (%d)", iPlayer_id);
 			return 0;

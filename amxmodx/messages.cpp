@@ -434,11 +434,11 @@ static cell _message_begin(AMX *amx, cell *params, bool useFloat) /* 4 param */
 
 		if(!pPlayer->ingame)
 		{
-			LogError(amx, AMX_ERR_NATIVE, "Player not connected! (%d)", iPlayer_id);
+			LogError(amx, AMX_ERR_NATIVE, "Player not connected! (%d)", pPlayer->index);
 			return 0;
 		}
-
-		MESSAGE_BEGIN(params[1], params[2], NULL, INDEXENT(iPlayer_id));
+                
+		MESSAGE_BEGIN(params[1], params[2], NULL, pPlayer->pEdict);
 		break;
 	}
 
@@ -798,11 +798,11 @@ static cell _emessage_begin(AMX *amx, cell *params, bool useFloat)
 
 		if(!pPlayer->ingame)
 		{
-			LogError(amx, AMX_ERR_NATIVE, "Player not connected! (%d)", iPlayer_id);
+			LogError(amx, AMX_ERR_NATIVE, "Player not connected! (%d)", pPlayer->index);
 			return 0;
 		}
 
-		g_pEngTable->pfnMessageBegin(params[1], params[2], NULL, INDEXENT(iPlayer_id));
+		g_pEngTable->pfnMessageBegin(params[1], params[2], NULL, pPlayer->pEdict);
 		break;
 	}
 

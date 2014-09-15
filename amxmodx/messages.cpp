@@ -420,10 +420,25 @@ static cell _message_begin(AMX *amx, cell *params, bool useFloat) /* 4 param */
 		if (numparam < 4)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed");
+			return 0; 
+		}
+		int iPlayer_id = params[4];
+
+		if(iPlayer_id < 1 || iPlayer_id > gpGlobals->maxClients)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Not a valid player! (%d)", iPlayer_id);
 			return 0;
 		}
 
-		MESSAGE_BEGIN(params[1], params[2], NULL, INDEXENT(params[4]));
+		CPlayer *pPlayer = GET_PLAYER_POINTER_I(iPlayer_id);
+
+		if(!pPlayer->ingame)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not connected! (%d)", pPlayer->index);
+			return 0;
+		}
+                
+		MESSAGE_BEGIN(params[1], params[2], NULL, pPlayer->pEdict);
 		break;
 	}
 
@@ -771,7 +786,23 @@ static cell _emessage_begin(AMX *amx, cell *params, bool useFloat)
 			return 0;
 		}
 
-		g_pEngTable->pfnMessageBegin(params[1], params[2], NULL, INDEXENT(params[4]));
+		int iPlayer_id = params[4];
+
+		if(iPlayer_id < 1 || iPlayer_id > gpGlobals->maxClients)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Not a valid player! (%d)", iPlayer_id);
+			return 0;
+		}
+
+		CPlayer *pPlayer = GET_PLAYER_POINTER_I(iPlayer_id);
+
+		if(!pPlayer->ingame)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not connected! (%d)", pPlayer->index);
+			return 0;
+		}
+
+		g_pEngTable->pfnMessageBegin(params[1], params[2], NULL, pPlayer->pEdict);
 		break;
 	}
 

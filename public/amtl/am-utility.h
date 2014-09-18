@@ -37,6 +37,7 @@
 #if defined(_MSC_VER)
 # include <intrin.h>
 #endif
+#include <am-moveable.h>
 
 #define KE_32BIT
 
@@ -62,6 +63,18 @@ ReturnAndVoid(T &t)
     return saved;
 }
 
+#if __cplusplus >= 201103L
+# define KE_CXX11
+#endif
+
+#if defined(KE_CXX11)
+# define KE_DELETE = delete
+# define KE_OVERRIDE override
+#else
+# define KE_DELETE
+# define KE_OVERRIDE
+#endif
+
 // Wrapper that automatically deletes its contents. The pointer can be taken
 // to avoid destruction.
 template <typename T>
@@ -78,6 +91,11 @@ class AutoPtr
       : t_(t)
     {
     }
+    AutoPtr(Moveable<AutoPtr<T> > other)
+    {
+        t_ = other->t_;
+        other->t_ = NULL;
+    }
     ~AutoPtr() {
         delete t_;
     }
@@ -93,13 +111,24 @@ class AutoPtr
     operator T *() const {
         return t_;
     }
-    void operator =(T *t) {
+    T *operator =(T *t) {
         delete t_;
         t_ = t;
+        return t_;
+    }
+    T *operator =(Moveable<AutoPtr<T> > other) {
+        delete t_;
+        t_ = other->t_;
+        other->t_ = NULL;
+        return t_;
     }
     bool operator !() const {
         return !t_;
     }
+
+  private:
+    AutoPtr(const AutoPtr &other) KE_DELETE;
+    AutoPtr &operator =(const AutoPtr &other) KE_DELETE;
 };
 
 // Wrapper that automatically deletes its contents. The pointer can be taken
@@ -317,6 +346,26 @@ class SaveAndSet
   T old_;
 };
 
+template <typename T>
+class StackLinked
+{
+ public:
+  StackLinked<T>(T **prevp)
+   : prevp_(prevp),
+     prev_(*prevp)
+  {
+    *prevp_ = static_cast<T *>(this);
+  }
+  virtual ~StackLinked() {
+    assert(*prevp_ == this);
+    *prevp_ = prev_;
+  }
+
+ private:
+  T **prevp_;
+  T *prev_;
+};
+
 #if __cplusplus >= 201103L
 # define KE_CXX11
 #endif
@@ -331,8 +380,12 @@ class SaveAndSet
 
 #if defined(_MSC_VER)
 # define KE_SIZET_FMT           "%Iu"
+# define KE_I64_FMT             "%I64d"
+# define KE_U64_FMT             "%I64u"
 #elif defined(__GNUC__)
 # define KE_SIZET_FMT           "%zu"
+# define KE_I64_FMT             "%lld"
+# define KE_U64_FMT             "%llu"
 #else
 # error "Implement format specifier string"
 #endif

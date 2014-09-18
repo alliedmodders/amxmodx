@@ -470,19 +470,16 @@ public CvarMenuSelection(id, menu, item)
 		{
 			DisplayPluginMenuDefault(id);
 		}
-		return PLUGIN_HANDLED;
 	}
 	else if (item==MENU_BACK)
 	{
 		--CurrentPage[id];
 		client_print(id,print_chat,"MENU_BACK");
-		return PLUGIN_HANDLED;
 	}
 	else if (item==MENU_MORE)
 	{
 		++CurrentPage[id];
 		client_print(id,print_chat,"MENU_MORE");
-		return PLUGIN_HANDLED;
 	}
 	else
 	{
@@ -497,7 +494,6 @@ public CvarMenuSelection(id, menu, item)
 		if (CurrentCvar[id]==0) // This should never happen, but just incase..
 		{
 			client_print(id,print_chat,"[AMXX] There was an error extracting the cvar pointer. (Name=^"%s^")",CvarName);
-			return PLUGIN_HANDLED;
 		}
 		// TODO: ML this
 		
@@ -515,10 +511,9 @@ public CvarMenuSelection(id, menu, item)
 		client_cmd(id,"messagemode amx_changecvar");
 		
 		menu_destroy(menu);
-		return PLUGIN_HANDLED;
 	}
 	
-	return 0;
+	return PLUGIN_HANDLED;
 }
 /**
  * Displays the cvar menu to a client.
@@ -785,7 +780,6 @@ public CommandExecuteCommand(id)
  */
 public CommandMenuSelection(id, menu, item)
 {
-	
 	if (item==MENU_EXIT)
 	{
 		menu_destroy(menu);
@@ -797,19 +791,16 @@ public CommandMenuSelection(id, menu, item)
 		{
 			client_cmd(id,"amx_plugincmdmenu");
 		}
-		return PLUGIN_HANDLED;
 	}
 	else if (item==MENU_BACK)
 	{
 		--CurrentPage[id];
 		client_print(id,print_chat,"MENU_BACK");
-		return PLUGIN_HANDLED;
 	}
 	else if (item==MENU_MORE)
 	{
 		++CurrentPage[id];
 		client_print(id,print_chat,"MENU_MORE");
-		return PLUGIN_HANDLED;
 	}
 	else
 	{
@@ -821,10 +812,9 @@ public CommandMenuSelection(id, menu, item)
 		menu_destroy(menu);
 		
 		DisplaySpecificCommand(id,str_to_num(Command));
-		return PLUGIN_HANDLED;
 	}
 	
-	return 0;
+	return PLUGIN_HANDLED;
 }
 /**
  * This blocks "say" and "say_team" commands. 

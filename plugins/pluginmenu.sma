@@ -494,6 +494,7 @@ public CvarMenuSelection(id, menu, item)
 		if (CurrentCvar[id]==0) // This should never happen, but just incase..
 		{
 			client_print(id,print_chat,"[AMXX] There was an error extracting the cvar pointer. (Name=^"%s^")",CvarName);
+			return PLUGIN_HANDLED;
 		}
 		// TODO: ML this
 		

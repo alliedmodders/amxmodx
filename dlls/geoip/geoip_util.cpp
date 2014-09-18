@@ -114,7 +114,7 @@ const char *lookupString(const char *ip, const char **path, int *length)
 
 	// Strings from database are not null terminated.
 	memcpy(buffer, result.utf8_string, maxLength);
-	buffer[result.data_size] = '\0';
+	buffer[maxLength] = '\0';
 
 	if (length)
 	{

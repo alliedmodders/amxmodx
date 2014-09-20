@@ -959,7 +959,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		switch (cc->getStatusValue())
 		{
 		case MODULE_FUNCNOTPRESENT:
-			report_error(1, "[AMXX] Module requested a not exisitng function (file \"%s\")%s%s%s", cc->getFilename(), cc->getMissingFunc() ? " (func \"" : "", 
+			report_error(1, "[AMXX] Module requested a not existing function (file \"%s\")%s%s%s", cc->getFilename(), cc->getMissingFunc() ? " (func \"" : "", 
 				cc->getMissingFunc() ? cc->getMissingFunc() : "", cc->getMissingFunc() ? "\")" : "");
 			break;
 		case MODULE_INTERROR:

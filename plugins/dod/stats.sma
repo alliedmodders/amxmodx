@@ -922,7 +922,7 @@ displayStats_steam(id,dest) {
  new name[MAX_NAME_LENGTH], stats[9], body[8]
  get_user_wstats(id,0,stats,body)
 
- new pos = copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px; color:#FFB000;}</style></head><pre><body>")
+ new pos = copy(g_Buffer,2047,"<html><head><meta charset=utf-8><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px; color:#FFB000;}</style></head><pre><body>")
  pos += format(g_Buffer[pos],2047-pos,"<table><tr><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td></tr>",
                dest,"M_KILLS",dest,"M_DEATHS",dest,"M_SCORE",dest,"M_TKS",dest,"M_HITS",dest,"M_SHOTS",dest,"M_HS")
 
@@ -961,7 +961,7 @@ displayRank_steam(id,dest) {
  new name[MAX_NAME_LENGTH], stats[9], body[8]
  new rank_pos = get_user_stats(id,stats,body)
 
- new pos = copy(g_Buffer,2047,"<html><head><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px;color:#FFB000;}</style></head><pre><body>")
+ new pos = copy(g_Buffer,2047,"<html><head><meta charset=utf-8><style type=^"text/css^">pre{color:#FFB000;}body{background:Black;margin-left:8px;margin-top:0px;color:#FFB000;}</style></head><pre><body>")
 
  pos += format(g_Buffer[pos],2047-pos,
                "<table><tr><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td><td>%L</td></tr>",dest,"M_KILLS",dest,"M_DEATHS",dest,"M_SCORE",dest,"M_TKS",dest,"M_HITS",dest,"M_SHOTS",dest,"M_HS")

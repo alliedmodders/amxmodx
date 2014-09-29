@@ -719,17 +719,14 @@ cleanup:
   #if !defined SC_LIGHT
     if (errnum==0 && strlen(errfname)==0) {
       int recursion;
-      //long stacksize=max_stacksize(&glbtab,&recursion);
       int flag_exceed=0;
       if (sc_amxlimit > 0 && (long)(hdrsize+code_idx+glb_declared*sizeof(cell)+sc_stksize*sizeof(cell)) >= sc_amxlimit)
         flag_exceed=1;
-      if ((sc_debug & sSYMBOLIC)!=0 || verbosity>=2 /*|| stacksize+32>=(long)sc_stksize*/ || flag_exceed) {
+      if ((sc_debug & sSYMBOLIC)!=0 || verbosity>=2 || flag_exceed) {
         pc_printf("Header size:       %8ld bytes\n", (long)hdrsize);
         pc_printf("Code size:         %8ld bytes\n", (long)code_idx);
         pc_printf("Data size:         %8ld bytes\n", (long)glb_declared*sizeof(cell));
         pc_printf("Stack/heap size:   %8ld bytes\n", (long)sc_stksize*sizeof(cell));
-        /*if (stacksize>0)
-          pc_printf("Estimated usage:   %8ld bytes\n", stacksize*sizeof(cell));*/
         pc_printf("Total requirements:%8ld bytes\n", (long)hdrsize+(long)code_idx+(long)glb_declared*sizeof(cell)+(long)sc_stksize*sizeof(cell));
       } /* if */
       if (flag_exceed)
@@ -4250,128 +4247,6 @@ static void reduce_referrers(symbol *root)
     /* after removing a symbol, check whether more can be removed */
   } while (restart>0);
 }
-
-#if !defined SC_LIGHT
-static long max_stacksize_recurse(symbol **sourcesym,symbol *sym,long basesize,int *pubfuncparams,int *recursion)
-{
-  long size,maxsize;
-  int i,stkpos;
-
-  assert(sourcesym!=NULL);
-  assert(sym!=NULL);
-  assert(sym->ident==iFUNCTN);
-  assert((sym->usage & uNATIVE)==0);
-  assert(recursion!=NULL);
-
-  maxsize=sym->x.stacksize;
-  for (i=0; i<sym->numrefers; i++) {
-    if (sym->refer[i]!=NULL) {
-      assert(sym->refer[i]->ident==iFUNCTN);
-      assert((sym->refer[i]->usage & uNATIVE)==0); /* a native function cannot refer to a user-function */
-      for (stkpos=0; sourcesym[stkpos]!=NULL; stkpos++) {
-        if (sym->refer[i]==sourcesym[stkpos]) {   /* recursion detection */
-          if ((sc_debug & sSYMBOLIC)!=0 || verbosity>=2) {
-            char symname[2*sNAMEMAX+16];/* allow space for user defined operators */
-            funcdisplayname(symname,sym->name);
-            errorset(sSETFILE,sym->fnumber);
-            errorset(sSETLINE,sym->lnumber);
-            error(234,symname);         /* recursive function */
-          } /* if */
-          *recursion=1;
-          goto break_recursion;         /* recursion was detected, quit loop */
-        } /* if */
-      } /* for */
-      /* add this symbol to the stack */
-      sourcesym[stkpos]=sym;
-      sourcesym[stkpos+1]=NULL;
-      /* check size of callee */
-      size=max_stacksize_recurse(sourcesym,sym->refer[i],sym->x.stacksize,pubfuncparams,recursion);
-      if (maxsize<size)
-        maxsize=size;
-      /* remove this symbol from the stack */
-      sourcesym[stkpos]=NULL;
-    } /* if */
-  } /* for */
-  break_recursion:
-
-  if ((sym->usage & uPUBLIC)!=0) {
-    /* Find out how many parameters a public function has, then see if this
-     * is bigger than some maximum
-     */
-    arginfo *arg=sym->dim.arglist;
-    int count=0;
-    assert(arg!=0);
-    while (arg->ident!=0) {
-      count++;
-      arg++;
-    } /* while */
-    assert(pubfuncparams!=0);
-    if (count>*pubfuncparams)
-      *pubfuncparams=count;
-  } /* if */
-
-  errorset(sEXPRRELEASE,0); /* clear error data */
-  errorset(sRESET,0);
-
-  return maxsize+basesize;
-}
-
-static long max_stacksize(symbol *root,int *recursion)
-{
-  /* Loop over all non-native functions. For each function, loop
-   * over all of its referrers, accumulating the stack requirements.
-   * Detect (indirect) recursion with a "mark-and-sweep" algorithm.
-   * I (mis-)use the "compound" field of the symbol structure for
-   * the marker, as this field is unused for functions.
-   *
-   * Note that the stack is shared with the heap. A host application
-   * may "eat" cells from the heap as well, through amx_Allot(). The
-   * stack requirements are thus only an estimate.
-   */
-  long size,maxsize;
-  int maxparams,numfunctions;
-  symbol *sym;
-  symbol **symstack;
-
-  assert(root!=NULL);
-  assert(recursion!=NULL);
-  /* count number of functions (for allocating the stack for recursion detection) */
-  numfunctions=0;
-  for (sym=root->next; sym!=NULL; sym=sym->next) {
-    if (sym->ident==iFUNCTN) {
-      assert(sym->compound==0);
-      if ((sym->usage & uNATIVE)==0)
-        numfunctions++;
-    } /* if */
-  } /* if */
-  /* allocate function symbol stack */
-  symstack=(symbol **)malloc((numfunctions+1)*sizeof(symbol*));
-  if (symstack==NULL)
-    error(103);         /* insufficient memory (fatal error) */
-  memset(symstack,0,(numfunctions+1)*sizeof(symbol*));
-
-  maxsize=0;
-  maxparams=0;
-  *recursion=0;         /* assume no recursion */
-  for (sym=root->next; sym!=NULL; sym=sym->next) {
-    /* drop out if this is not a user-implemented function */
-    if (sym->ident!=iFUNCTN || (sym->usage & uNATIVE)!=0)
-      continue;
-    /* accumulate stack size for this symbol */
-    symstack[0]=sym;
-    assert(symstack[1]==NULL);
-    size=max_stacksize_recurse(symstack,sym,0L,&maxparams,recursion);
-    assert(size>=0);
-    if (maxsize<size)
-      maxsize=size;
-  } /* for */
-
-  free((void*)symstack);
-  maxsize++;                  /* +1 because a zero cell is always pushed on top
-                               * of the stack to catch stack overwrites */
-  return maxsize+(maxparams+1);/* +1 because # of parameters is always pushed on entry */
-}
-#endif
 
 /*  testsymbols - test for unused local or global variables
  *

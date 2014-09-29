@@ -160,6 +160,19 @@ class Vector : public AllocPolicy
     return data_;
   }
 
+  bool resize(size_t newLength) {
+    if (newLength < length()) {
+      while (newLength < length())
+        pop();
+    } else if (newLength > length()) {
+      if (!ensure(newLength))
+        return false;
+      size_t count = newLength - length();
+      for (size_t i = 0; i < count; i++)
+        infallibleAppend(T());
+    }
+    return true;
+  }
   bool ensure(size_t desired) {
     if (desired <= length())
       return true;

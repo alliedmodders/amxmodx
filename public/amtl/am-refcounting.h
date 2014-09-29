@@ -143,6 +143,11 @@ class PassRef
     bool operator !() const {
         return !thing_;
     }
+#if defined(KE_CXX11)
+    explicit operator bool() const {
+        return !!thing_;
+    }
+#endif
 
     T *release() const {
         return ReturnAndVoid(thing_);

@@ -31,6 +31,7 @@
 #define _include_amtl_thread_local_h_
 
 #include <am-thread-utils.h>
+#include <stdio.h>
 
 namespace ke {
 
@@ -82,7 +83,7 @@ class ThreadLocal
 
 #if !defined(KE_SINGLE_THREADED)
  private:
-  int allocated_;
+  volatile int allocated_;
 
  public:
   ThreadLocal() {
@@ -116,7 +117,7 @@ class ThreadLocal
     TlsSetValue(key_, reinterpret_cast<LPVOID>(t));
   }
   bool allocate() {
-    if (InterlockedCompareExchange(&allocated_, 1, 0) == 1)
+    if (InterlockedCompareExchange((volatile LONG *)&allocated_, 1, 0) == 1)
       return true;
     key_ = TlsAlloc();
     return key_ != TLS_OUT_OF_INDEXES;

@@ -1052,6 +1052,9 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
         strncpy(ename,option_value(ptr),_MAX_PATH); /* set name of error file */
         ename[_MAX_PATH-1]='\0';
         break;
+      case 'E':
+        sc_warnings_are_errors = 1;
+        break;
 #if defined __WIN32__ || defined _WIN32 || defined _Windows
       case 'H':
         hwndFinish=(HWND)atoi(option_value(ptr));
@@ -1399,6 +1402,7 @@ static void about(void)
     pc_printf("         -t<num>  TAB indent size (in character positions, default=%d)\n",sc_tabsize);
     pc_printf("         -v<num>  verbosity level; 0=quiet, 1=normal, 2=verbose (default=%d)\n",verbosity);
     pc_printf("         -w<num>  disable a specific warning by its number\n");
+    pc_printf("         -E       treat warnings as errors\n");
     pc_printf("         -X<num>  abstract machine size limit in bytes\n");
     pc_printf("         -\\       use '\\' for escape characters\n");
     pc_printf("         -^       use '^' for escape characters\n");

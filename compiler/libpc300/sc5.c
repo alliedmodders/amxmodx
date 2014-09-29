@@ -75,6 +75,9 @@ static short lastfile;
   char *msg,*pre,*filename;
   va_list argptr;
   char string[128];
+  int is_warning;
+
+  is_warning = (number >= 200 && !sc_warnings_are_errors);
 
   /* errflag is reset on each semicolon.
    * In a two-pass compiler, an error should not be reported twice. Therefore
@@ -103,8 +106,13 @@ static short lastfile;
     errnum++;           /* a fatal error also counts as an error */
   } else {
     msg=warnmsg[number-200];
-    pre=prefix[2];
-    warnnum++;
+    if (sc_warnings_are_errors) {
+      pre=prefix[0];
+      errnum++;
+    } else {
+      pre=prefix[2];
+      warnnum++;
+    }
   } /* if */
 
   strexpand(string,(unsigned char *)msg,sizeof string,SCPACK_TABLE);
@@ -164,7 +172,7 @@ static short lastfile;
     errorcount=0;
   lastline=fline;
   lastfile=fcurrent;
-  if (number<200)
+  if (!is_warning)
     errorcount++;
   if (errorcount>=3)
     error(107);         /* too many error/warning messages on one line */

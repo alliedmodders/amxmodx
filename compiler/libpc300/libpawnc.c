@@ -52,7 +52,7 @@
   void extern __attribute__((visibility("default"))) EXCOMPILER(int argc, char **argv)
 # endif
   {
-	  pc_compile(argc, argv);
+      pc_compile(argc, argv);
   }
 #endif /* PAWNC_DLL */
 
@@ -112,8 +112,16 @@ static char *prefix[3]={ "error", "fatal error", "warning" };
 
   if (number!=0) {
     char *pre;
+    int idx;
 
-    pre=prefix[number/100];
+    if (number < 100 || (number >= 200 && sc_warnings_are_errors))
+      idx = 0;
+    else if (number < 200)
+      idx = 1;
+    else
+      idx = 2;
+
+    pre=prefix[idx];
     if (firstline>=0)
       pc_printf("%s(%d -- %d) : %s %03d: ",filename,firstline,lastline,pre,number);
     else

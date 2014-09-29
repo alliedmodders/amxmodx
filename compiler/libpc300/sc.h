@@ -798,6 +798,7 @@ SC_VDECL int rational_digits; /* number of fractional digits */
 SC_VDECL int sc_allowproccall;/* allow/detect tagnames in lex() */
 SC_VDECL short sc_is_utf8;    /* is this source file in UTF-8 encoding */
 SC_VDECL char *pc_deprecate;  /* if non-NULL, mark next declaration as deprecated */
+SC_VDECL int sc_warnings_are_errors;
 
 SC_VDECL constvalue sc_automaton_tab; /* automaton table */
 SC_VDECL constvalue sc_state_tab;     /* state table */

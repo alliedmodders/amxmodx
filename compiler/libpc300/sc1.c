@@ -719,17 +719,17 @@ cleanup:
   #if !defined SC_LIGHT
     if (errnum==0 && strlen(errfname)==0) {
       int recursion;
-      long stacksize=max_stacksize(&glbtab,&recursion);
+      //long stacksize=max_stacksize(&glbtab,&recursion);
       int flag_exceed=0;
       if (sc_amxlimit > 0 && (long)(hdrsize+code_idx+glb_declared*sizeof(cell)+sc_stksize*sizeof(cell)) >= sc_amxlimit)
         flag_exceed=1;
-      if ((sc_debug & sSYMBOLIC)!=0 || verbosity>=2 || stacksize+32>=(long)sc_stksize || flag_exceed) {
+      if ((sc_debug & sSYMBOLIC)!=0 || verbosity>=2 /*|| stacksize+32>=(long)sc_stksize*/ || flag_exceed) {
         pc_printf("Header size:       %8ld bytes\n", (long)hdrsize);
         pc_printf("Code size:         %8ld bytes\n", (long)code_idx);
         pc_printf("Data size:         %8ld bytes\n", (long)glb_declared*sizeof(cell));
         pc_printf("Stack/heap size:   %8ld bytes\n", (long)sc_stksize*sizeof(cell));
-        if (stacksize>0)
-          pc_printf("Estimated usage:   %8ld bytes\n", stacksize*sizeof(cell));
+        /*if (stacksize>0)
+          pc_printf("Estimated usage:   %8ld bytes\n", stacksize*sizeof(cell));*/
         pc_printf("Total requirements:%8ld bytes\n", (long)hdrsize+(long)code_idx+(long)glb_declared*sizeof(cell)+(long)sc_stksize*sizeof(cell));
       } /* if */
       if (flag_exceed)

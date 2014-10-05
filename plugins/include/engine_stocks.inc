@@ -159,32 +159,19 @@ stock set_rendering(index, fx=kRenderFxNone, r=255, g=255, b=255, render=kRender
 /* Set flags on an entity */
 stock set_entity_flags(ent,flag,onoff)
 {
-	if ((entity_get_int(ent,EV_INT_flags)&flag) > 0)
+	new iFlags = entity_get_int(ent, EV_INT_flags);
+	if(iFlags & flag)
 	{
-		if (onoff == 1)
-		{
-			return 2;
-		}
-		else
-		{
-			entity_set_int(ent,EV_INT_flags,entity_get_int(ent,EV_INT_flags)-flag);
-			return 1;
-		}
+		if(onoff == 1) return 2;
+		iFlags &= ~flag;
 	}
 	else
 	{
-		if (onoff == 0)
-		{
-			return 2;
-		}
-		else
-		{
-			entity_set_int(ent,EV_INT_flags,entity_get_int(ent,EV_INT_flags)+flag);
-			return 1;
-		}
+		if(onoff == 0) return 2;
+		iFlags |= flag;
 	}
-
-	return 0;
+	entity_set_int(ent, EV_INT_flags, iFlags);
+	return 1;
 }
 
 /* If visible = 1, entity will be set to be visible, else invisible. */

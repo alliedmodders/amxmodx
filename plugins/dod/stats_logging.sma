@@ -26,13 +26,13 @@ public client_disconnect(id) {
   remove_task( id )
   new szTeam[16],szName[MAX_NAME_LENGTH],szAuthid[32], iStats[9], iHits[8], szWeapon[16]
   new iUserid = get_user_userid( id )
-  get_user_info(id,"team", szTeam, 15 )
+  get_user_info(id,"team", szTeam, charsmax(szTeam) )
   szTeam[0] -= 32;
-  get_user_name(id, szName ,31 )
-  get_user_authid(id, szAuthid , 31 )
+  get_user_name(id, szName ,charsmax(szName) )
+  get_user_authid(id, szAuthid , charsmax(szAuthid) )
   for(new i = 1 ; i < DODMAX_WEAPONS; ++i ) {
     if( get_user_wstats( id , i ,iStats , iHits ) )   {
-      xmod_get_wpnlogname( i , szWeapon , 15 )
+      xmod_get_wpnlogname( i , szWeapon , charsmax(szWeapon) )
       log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")",
         szName,iUserid,szAuthid,szTeam,szWeapon,iStats[4],iStats[5],iStats[0], iStats[2],iStats[3],iStats[6],iStats[1],iStats[7])
       log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")",

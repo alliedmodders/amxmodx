@@ -1584,7 +1584,7 @@ endround_stats()
 public eventTeamScore()
 {
 	new sTeamID[1 + 1], iTeamScore
-	read_data(1, sTeamID, 1)
+	read_data(1, sTeamID, charsmax(sTeamID))
 	iTeamScore = read_data(2)
 	g_izTeamEventScore[(sTeamID[0] == 'C') ? 1 : 0] = iTeamScore
 
@@ -1637,7 +1637,7 @@ public end_game_stats()
 public eventSpecMode(id)
 {
 	new sData[12]
-	read_data(2, sData, 11)
+	read_data(2, sData, charsmax(sData))
 	g_izSpecMode[id] = (sData[10] == '2')
 
 	return PLUGIN_CONTINUE

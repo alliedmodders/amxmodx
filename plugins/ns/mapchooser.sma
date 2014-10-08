@@ -34,12 +34,12 @@ public plugin_init()
   register_cvar("amx_extendmap_max","90")
   register_cvar("amx_extendmap_step","15")
 
-  get_localinfo("lastMap",g_lastMap,31)
+  get_localinfo("lastMap",g_lastMap,charsmax(g_lastMap))
   set_localinfo("lastMap","")
 
   new maps_ini_file[64];
-  get_configsdir(maps_ini_file, 63);
-  format(maps_ini_file, 63, "%s/maps.ini", maps_ini_file);
+  get_configsdir(maps_ini_file, charsmax(maps_ini_file));
+  format(maps_ini_file, charsmax(maps_ini_file), "%s/maps.ini", maps_ini_file);
   if ( loadSettings(maps_ini_file) )
     set_task(15.0,"voteNextmap",987456,"",0,"b")
 }
@@ -51,7 +51,7 @@ public checkVotes(){
          b = a
    if ( g_voteCount[SELECTMAPS] > g_voteCount[b] ) {
       new mapname[32]
-      get_mapname(mapname,31)
+      get_mapname(mapname,charsmax(mapname))
       new Float:steptime = get_cvar_float("amx_extendmap_step")
       set_cvar_float("mp_timelimit", get_cvar_float("mp_timelimit") + steptime )
       client_print(0,print_chat,"Choosing finished. Current map will be extended to next %.0f minutes", steptime )
@@ -62,7 +62,7 @@ public checkVotes(){
    if ( g_voteCount[b] && g_voteCount[SELECTMAPS+1] <= g_voteCount[b] )
       set_cvar_string("amx_nextmap", g_mapName[g_nextName[b]] )
    new smap[32]
-   get_cvar_string("amx_nextmap",smap,31)
+   get_cvar_string("amx_nextmap",smap,charsmax(smap))
    client_print(0,print_chat,"Choosing finished. The nextmap will be %s", smap )
    log_amx("Vote: Voting for the nextmap finished. The nextmap will be %s", smap)
 }
@@ -70,7 +70,7 @@ public checkVotes(){
 public countVote(id,key){
    if ( get_cvar_float("amx_vote_answers") ) {
       new name[32]
-      get_user_name(id,name,31)
+      get_user_name(id,name,charsmax(name))
       if ( key == SELECTMAPS )
          client_print(0,print_chat,"%s chose map extending", name )
       else if ( key < SELECTMAPS )
@@ -98,7 +98,7 @@ public voteNextmap(){
     return
   g_selected = true
   new menu[512], a, mkeys = (1<<SELECTMAPS+1)
-  new pos = copy(menu,511,"AMX Choose nextmap:^n^n")
+  new pos = copy(menu,charsmax(menu),"AMX Choose nextmap:^n^n")
   new dmax = (g_mapNums > SELECTMAPS) ? SELECTMAPS : g_mapNums
   for(g_mapVoteNum = 0;g_mapVoteNum<dmax;++g_mapVoteNum){
     a=random_num(0,g_mapNums-1)
@@ -113,14 +113,14 @@ public voteNextmap(){
   g_voteCount[SELECTMAPS] = 0
   g_voteCount[SELECTMAPS+1] = 0
   new mapname[32]
-  get_mapname(mapname,31)
+  get_mapname(mapname,charsmax(mapname))
 
   if ( get_cvar_float("mp_timelimit") < get_cvar_float("amx_extendmap_max") ){
     pos += format(menu[pos], charsmax(menu) - pos, "%d. Extend map %s^n", SELECTMAPS+1, mapname)
     mkeys |= (1<<SELECTMAPS)
   }
 
-  format(menu[pos],511,"%d. None",SELECTMAPS+2)
+  format(menu[pos],charsmax(menu),"%d. None",SELECTMAPS+2)
   show_menu(0,mkeys,menu,15)
   set_task(15.0,"checkVotes")
   client_print(0,print_chat,"It's time to choose the nextmap...")
@@ -164,12 +164,12 @@ loadSettings(filename[])
   new szText[32]
   new a, pos = 0
   new currentMap[32]
-  get_mapname(currentMap,31)
+  get_mapname(currentMap,charsmax(currentMap))
 
-  while ( (g_mapNums < MAX_MAPS) && read_file(filename,pos++,szText,31,a) )
+  while ( (g_mapNums < MAX_MAPS) && read_file(filename,pos++,szText,charsmax(szText),a) )
   {
     if ( szText[0] != ';'
-    &&  parse(szText, g_mapName[g_mapNums] ,31 )
+    &&  parse(szText, g_mapName[g_mapNums] ,charsmax(g_mapName[]) )
     &&  ValidMap( g_mapName[g_mapNums] ) 
     &&  !equali( g_mapName[g_mapNums] ,g_lastMap)
     &&  !equali( g_mapName[g_mapNums] ,currentMap) )
@@ -181,6 +181,6 @@ loadSettings(filename[])
 
 public plugin_end(){
   new current_map[32]
-  get_mapname(current_map,31 )
+  get_mapname(current_map,charsmax(current_map) )
   set_localinfo("lastMap",current_map)
 }

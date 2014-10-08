@@ -92,7 +92,7 @@ check_idletime(id) {
 			client_print(id, print_chat, "[AMXX] You have %d seconds to move or you will be kicked for being idle", timeleft)
 		} else if (g_idletime[id] > maxidletime) {
 			new name[MAX_NAME_LENGTH]
-			get_user_name(id, name, 31)
+			get_user_name(id, name, charsmax(name))
 			client_print(0, print_chat, "[AMXX] %s was kicked for being idle longer than %d seconds", name, maxidletime)
 			log_amx("%s was kicked for being idle longer than %d seconds", name, maxidletime)
 			server_cmd("kick #%d ^"You were kicked for being idle longer than %d seconds^"", get_user_userid(id), maxidletime)

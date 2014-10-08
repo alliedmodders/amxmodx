@@ -376,7 +376,7 @@ switchCommand(id, action)
 		
 		for (new b = 2; b < c; ++b)
 		{
-			read_argv(b, arg, 31)
+			read_argv(b, arg, charsmax(arg))
 			
 			if ((a = findMenuId(arg)) != -1)
 			{
@@ -418,7 +418,7 @@ public cmdRest(id, level, cid)
 
 	new cmd[8]
 	
-	read_argv(1, cmd, 7)
+	read_argv(1, cmd, charsmax(cmd))
 	
 	if (equali("on", cmd))
 		switchCommand(id, 1)
@@ -427,7 +427,7 @@ public cmdRest(id, level, cid)
 	else if (equali("list", cmd))
 	{
 		new arg1[8]
-		new	start = read_argv(2, arg1, 7) ? str_to_num(arg1) : 1
+		new	start = read_argv(2, arg1, charsmax(arg1)) ? str_to_num(arg1) : 1
 		
 		if (--start < 0)
 			start = 0
@@ -442,9 +442,9 @@ public cmdRest(id, level, cid)
 		
 		new lName[16], lValue[16], lStatus[16], lOnOff[16]
 		
-		format(lName, 15, "%L", id, "NAME")
-		format(lValue, 15, "%L", id, "VALUE")
-		format(lStatus, 15, "%L", id, "STATUS")
+		format(lName, charsmax(lName), "%L", id, "NAME")
+		format(lValue, charsmax(lValue), "%L", id, "VALUE")
+		format(lStatus, charsmax(lStatus), "%L", id, "STATUS")
 		
 		console_print(id, "^n----- %L: -----", id, "WEAP_RES")
 		console_print(id, "     %-32.31s   %-10.9s   %-9.8s", lName, lValue, lStatus)
@@ -453,7 +453,7 @@ public cmdRest(id, level, cid)
 		{
 			for (new a = start; a < end; ++a)
 			{
-				format(lOnOff, 15, "%L", id, positionBlocked(a) ? "ON" : "OFF")
+				format(lOnOff, charsmax(lOnOff), "%L", id, positionBlocked(a) ? "ON" : "OFF")
 				console_print(id, "%3d: %-32.31s   %-10.9s   %-9.8s", a + 1, g_WeaponNames[a], g_Aliases[a], lOnOff)
 			}
 		}
@@ -477,15 +477,15 @@ public cmdRest(id, level, cid)
 	}
 	else if (equali("load", cmd))
 	{
-		setc(g_blockPos, 112, 0)	// Clear current settings
+		setc(g_blockPos, sizeof(g_blockPos), 0)	// Clear current settings
 		new arg1[64]
 
-		if (read_argv(2, arg1, 63))
+		if (read_argv(2, arg1, charsmax(arg1)))
 		{
 			new configsdir[32]
-			get_configsdir(configsdir, 31)
+			get_configsdir(configsdir, charsmax(configsdir))
 
-			format(arg1, 63, "%s/%s", configsdir, arg1)
+			format(arg1, charsmax(arg1), "%s/%s", configsdir, arg1)
 		}
 		
 		if (loadSettings(arg1))
@@ -522,7 +522,7 @@ displayMenu(id, pos)
 	if (start >= MAXMENUPOS)
 		start = pos = g_Position[id] = 0
 
-	new len = format(menubody, 511, "\y%L\R%d/5^n^n\w", id, "REST_WEAP", pos + 1)
+	new len = format(menubody, charsmax(menubody), "\y%L\R%d/5^n^n\w", id, "REST_WEAP", pos + 1)
 	new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
 
 	if (end > MAXMENUPOS)
@@ -531,18 +531,18 @@ displayMenu(id, pos)
 	for (new a = start; a < end; ++a)
 	{
 		keys |= (1<<k)
-		len += format(menubody[len], 511 - len, g_MenuItem[a], ++k, g_WeaponNames[a], id, positionBlocked(a) ? "ON" : "OFF")
+		len += format(menubody[len], charsmax(menubody) - len, g_MenuItem[a], ++k, g_WeaponNames[a], id, positionBlocked(a) ? "ON" : "OFF")
 	}
 
-	len += format(menubody[len], 511 - len, "^n8. %L \y\R%s^n\w", id, "SAVE_SET", g_Modified ? "*" : "")
+	len += format(menubody[len], charsmax(menubody) - len, "^n8. %L \y\R%s^n\w", id, "SAVE_SET", g_Modified ? "*" : "")
 
 	if (end != MAXMENUPOS)
 	{
-		format(menubody[len], 511-len, "^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
+		format(menubody[len], charsmax(menubody) - len, "^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
 		keys |= MENU_KEY_9
 	}
 	else
-		format(menubody[len], 511-len, "^n0. %L", id, pos ? "BACK" : "EXIT")
+		format(menubody[len], charsmax(menubody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT")
 
 	show_menu(id, keys, menubody, -1, "Restrict Weapons")
 }
@@ -624,7 +624,7 @@ public client_command(id)
 	{
 		new arg[13]
 
-		if (read_argv(0, arg, 12) > 11)		/* Longest buy command has 11 chars so if command is longer then don't care */
+		if (read_argv(0, arg, charsmax(arg)) > 11)		/* Longest buy command has 11 chars so if command is longer then don't care */
 		{
 			return PLUGIN_CONTINUE
 		}
@@ -638,7 +638,7 @@ public client_command(id)
 			{
 				new key[12], num
 				
-				read_argv(1, key, 11)
+				read_argv(1, key, charsmax(key))
 				num = str_to_num(key) - 1
 				
 				return checkRest(id, g_InBuyMenu[id], num)
@@ -732,7 +732,7 @@ saveSettings(filename[])
 	{
 		if (positionBlocked(a))
 		{
-			format(text, 63, "%-16.15s ; %s", g_Aliases[a], g_WeaponNames[a])
+			format(text, charsmax(text), "%-16.15s ; %s", g_Aliases[a], g_WeaponNames[a])
 			write_file(filename, text)
 		}
 	}
@@ -748,15 +748,15 @@ loadSettings(filename[])
 	new text[16]
 	new a, pos = 0
 
-	format(g_szEquipAmmoRestr, 9, "000000000")
-	format(g_szWeapRestr, 26, "00000000000000000000000000")
+	format(g_szEquipAmmoRestr, charsmax(g_szEquipAmmoRestr), "000000000")
+	format(g_szWeapRestr, charsmax(g_szWeapRestr), "00000000000000000000000000")
 
-	while (read_file(filename, pos++, text, 15, a))
+	while (read_file(filename, pos++, text, charsmax(test), a))
 	{
 		if (text[0] == ';' || !a)
 			continue	// line is a comment
 		
-		parse(text, text, 15)
+		parse(text, text, charsmax(text))
 		
 		if ((a = findAliasId(text)) != -1)
 		{
@@ -785,7 +785,7 @@ public fn_setautobuy(id)
 	
 	for (new i = 1; i < argCount; i++)		// Start at parameter 1; parameter 0 is just "cl_setautobuy"
 	{
-		read_argv(i, arg, 127)
+		read_argv(i, arg, charsmax(arg))
 		// Add this parameter to user's autobuy prefs
 		autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, "%s", arg)
 		
@@ -857,7 +857,7 @@ public HookEvent_ShowMenu(id)
 {
 	new menustring[24]
 	
-	read_data(4, menustring, 23)
+	read_data(4, menustring, charsmax(menustring))
 	
 	/* Early breakouts */
 	new curidx
@@ -950,13 +950,13 @@ public plugin_init()
 	register_event("ShowMenu", "HookEvent_ShowMenu", "b")
 
 	new configsDir[64];
-	get_configsdir(configsDir, 63);
+	get_configsdir(configsDir, charsmax(configsDir));
 #if defined MAPSETTINGS
 	new mapname[32]
-	get_mapname(mapname, 31)
-	format(g_saveFile, 63, "%s/weaprest_%s.ini", configsDir, mapname)
+	get_mapname(mapname, charsmax(mapname))
+	format(g_saveFile, charsmax(g_saveFile), "%s/weaprest_%s.ini", configsDir, mapname)
 #else
-	format(g_saveFile, 63, "%s/weaprest.ini", configsDir)
+	format(g_saveFile, charsmax(g_saveFile), "%s/weaprest.ini", configsDir)
 #endif
 	loadSettings(g_saveFile)
 }

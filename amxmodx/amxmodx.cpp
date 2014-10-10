@@ -1251,6 +1251,58 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 
 static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 {
+	// If show_menu is called from within a newmenu callback upon receiving MENU_EXIT
+	// it is possible for this native to recurse. We need to close newmenus right away
+	// because the recursive call would otherwise modify/corrupt the static get_amxstring
+	// buffer mid execution. This will either display incorrect text or result in UTIL_ShowMenu
+	// running into an infinite loop.
+	int index = params[1];
+	if (index == 0)
+	{
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
+		{
+			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
+
+			if (pPlayer->ingame)
+			{
+				pPlayer->keys = 0;
+				pPlayer->menu = 0;
+
+				// Fire newmenu callback so closing it can be handled by the plugin
+				if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
+					pMenu->Close(pPlayer->index);
+
+				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
+			}
+		}
+	}
+	else
+	{
+		if (index < 1 || index > gpGlobals->maxClients)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
+			return 0;
+		}
+
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+		if (pPlayer->ingame)
+		{
+			pPlayer->keys = 0;
+			pPlayer->menu = 0;
+
+			// Fire newmenu callback so closing it can be handled by the plugin
+			if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
+				pMenu->Close(pPlayer->index);
+
+			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
 	int ilen = 0, ilen2 = 0;
 	char *sMenu = get_amxstring(amx, params[3], 0, ilen);
 	char *lMenu = get_amxstring(amx, params[5], 1, ilen2);
@@ -1266,7 +1318,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 	int keys = params[2];
 	int time = params[4];
 	
-	if (params[1] == 0)
+	if (index == 0)
 	{
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
@@ -1274,15 +1326,6 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 
 			if (pPlayer->ingame)
 			{
-				pPlayer->keys = 0;
-				pPlayer->menu = 0;
-
-				// Fire newmenu callback so closing it can be handled by the plugin
-				if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
-					pMenu->Close(pPlayer->index);
-				
-				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
-
 				pPlayer->keys = keys;
 				pPlayer->menu = menuid;
 				pPlayer->vgui = false;
@@ -1296,40 +1339,20 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
 			}
 		}
-	} else {
-		int index = params[1];
-		
-		if (index < 1 || index > gpGlobals->maxClients)
-		{
-			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
-			return 0;
-		}
-		
+	} else {		
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
-		{
-			pPlayer->keys = 0;
-			pPlayer->menu = 0;
+		pPlayer->keys = keys;
+		pPlayer->menu = menuid;
+		pPlayer->vgui = false;			
 
-			// Fire newmenu callback so closing it can be handled by the plugin
-			if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
-				pMenu->Close(pPlayer->index);
-
-			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
-
-			pPlayer->keys = keys;
-			pPlayer->menu = menuid;
-			pPlayer->vgui = false;			
-
-			if (time == -1)
-				pPlayer->menuexpire = INFINITE;
-			else
-				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
+		if (time == -1)
+			pPlayer->menuexpire = INFINITE;
+		else
+			pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 			
-			pPlayer->page = 0;
-			UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
-		}
+		pPlayer->page = 0;
+		UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
 	}
 	
 	return 1;

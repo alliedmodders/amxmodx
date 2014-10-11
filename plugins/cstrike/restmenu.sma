@@ -343,7 +343,7 @@ setWeapon(a, action)
 
 findMenuId(name[])
 {
-	for (new i = 0; i < 7 ; ++i)
+	for (new i = 0; i < sizeof(g_menusNames) ; ++i)
 		if (equali(name, g_menusNames[i]))
 			return i
 	
@@ -898,7 +898,7 @@ public HookEvent_ShowMenu(id)
 		return
 	}
 	
-	for (new i=0; i<6; i++)
+	for (new i=0; i<sizeof(g_menuStrings); i++)
 	{
 		if (equali(menustring[curidx], g_menuStrings[i]))
 		{

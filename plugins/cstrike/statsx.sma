@@ -1347,7 +1347,7 @@ public eventSpawn(id)
 	args[0] = id
 
 	if (g_iPluginMode & MODE_HUD_DELAY)
-		set_task(0.1, "delay_spawn", 200 + id, args, 1)
+		set_task(0.1, "delay_spawn", 200 + id, args, sizeof(args))
 	else
 		delay_spawn(args)
 

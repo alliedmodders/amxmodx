@@ -751,7 +751,7 @@ loadSettings(filename[])
 	format(g_szEquipAmmoRestr, charsmax(g_szEquipAmmoRestr), "000000000")
 	format(g_szWeapRestr, charsmax(g_szWeapRestr), "00000000000000000000000000")
 
-	while (read_file(filename, pos++, text, charsmax(test), a))
+	while (read_file(filename, pos++, text, charsmax(text), a))
 	{
 		if (text[0] == ';' || !a)
 			continue	// line is a comment

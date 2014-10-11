@@ -678,7 +678,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
       new param[2]
       param[0] = killer 
       param[1] = g_multiKills[killer][0] 
-      set_task( 4.0 + float( param[1] ) ,"checkKills",0,param,2)
+      set_task( 4.0 + float( param[1] ) ,"checkKills",0,param,sizeof(param))
   }
 
   if ( xmod_is_melee_wpn(wpnindex) && ( KnifeKill || KnifeKillSound )  ){
@@ -989,7 +989,7 @@ public cmdTop15(id) {
   }
   getTop15_steam(id)
   new g_Top[16]
-  format(g_Top,charmax(g_Top),"%L",id,"TOPX",get_cvar_num("dodstats_topvalue")) 
+  format(g_Top,charsmax(g_Top),"%L",id,"TOPX",get_cvar_num("dodstats_topvalue")) 
 
   show_motd(id,g_Buffer,g_Top)
   return PLUGIN_CONTINUE

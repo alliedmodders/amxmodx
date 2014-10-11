@@ -737,9 +737,9 @@ load_settings(szFilename[])
 	{
 		if (text[0] == ';') continue
 
-		if (parse(text, g_clcmdName[g_clcmdNum], charsmax(g_clcmdName), g_clcmdCmd[g_clcmdNum], charsmax(g_clcmdCmd), szFlags, charsmax(szFlags), szAccess, charsmax(szAccess)) > 3)
+		if (parse(text, g_clcmdName[g_clcmdNum], charsmax(g_clcmdName[]), g_clcmdCmd[g_clcmdNum], charsmax(g_clcmdCmd[]), szFlags, charsmax(szFlags), szAccess, charsmax(szAccess)) > 3)
 		{
-			while (replace(g_clcmdCmd[g_clcmdNum], charsmax(g_clcmdCmd), "\'", "^""))
+			while (replace(g_clcmdCmd[g_clcmdNum], charsmax(g_clcmdCmd[]), "\'", "^""))
 			{
 				// do nothing
 			}

@@ -539,7 +539,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 			
 			param[0] = killer
 			param[1] = g_multiKills[killer][0]
-			set_task(4.0 + float(param[1]), "checkKills", killer, param, 2)
+			set_task(4.0 + float(param[1]), "checkKills", killer, param, sizeof(param))
 		}
 	}
 

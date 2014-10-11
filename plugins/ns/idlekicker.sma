@@ -114,7 +114,7 @@ public playerSpawned(id) {
 	g_spawned[id] = false
 	new sid[1]
 	sid[0] = id
-	set_task(0.75, "delayedSpawn",_, sid, 1)	// Give the player time to drop to the floor when spawning
+	set_task(0.75, "delayedSpawn",_, sid, sizeof(sid))	// Give the player time to drop to the floor when spawning
 	return PLUGIN_HANDLED
 }
 

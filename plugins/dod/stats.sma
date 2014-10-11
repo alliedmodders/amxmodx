@@ -337,7 +337,7 @@ getHits(id,killer) {
   new stats[9], body[8], pos = 0 
   g_Buffer[0] = 0 
   get_user_astats(id,killer,stats,body) 
-  for(new a = 1; a < 8; ++a) 
+  for(new a = 1; a < sizeof(body); ++a) 
     if(body[a]) 
       pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%L: %d^n",id,g_bodyParts[a],body[a]) 
 } 
@@ -348,7 +348,7 @@ getMyHits(id,killed) {
   get_user_name(killed,name,charsmax(name)) 
   new pos = format(g_Buffer,charsmax(g_Buffer),"%L",id,"YOU_HIT",name) 
   get_user_vstats(id,killed,stats,body) 
-  for(new a = 1; a < 8; ++a){ 
+  for(new a = 1; a < sizeof(body); ++a){ 
     if(body[a]){ 
       found = 1 
       pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos," %L: %d ",id,g_bodyParts[a],body[a]) 

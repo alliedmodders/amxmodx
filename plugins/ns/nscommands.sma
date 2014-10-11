@@ -123,7 +123,7 @@ public client_connect(id) {
 }
 stock UTIL_FindCommander() {
   new i=1;
-  while (i<32) {
+  while (i<MAX_PLAYERS) {
     if (g_Class[i]==PLAYERCLASS_COMMANDER) // this player is comm..
       return i;
     i++;

@@ -69,7 +69,7 @@ public checkVotes(){
 
 public countVote(id,key){
    if ( get_cvar_float("amx_vote_answers") ) {
-      new name[32]
+      new name[MAX_NAME_LENGTH]
       get_user_name(id,name,charsmax(name))
       if ( key == SELECTMAPS )
          client_print(0,print_chat,"%s chose map extending", name )

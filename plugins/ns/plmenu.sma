@@ -151,15 +151,15 @@ public plugin_init()
 	load_settings(clcmds_ini_file)
 	
 	// initialize the ns team names
-	copy(g_PrettyTeamNames[0], sizeof(g_PrettyTeamNames[]), "Ready Room");
-	copy(g_TeamNames[0], sizeof(g_TeamNames[]), "undefinedteam");
-	copy(g_TeamCommands[0], sizeof(g_TeamCommands[]), "readyroom;readyroom");
-	copy(g_AbbreviatedTeamNames[0], sizeof(g_AbbreviatedTeamNames[]), "RR");
+	copy(g_PrettyTeamNames[0], charsmax(g_PrettyTeamNames[]), "Ready Room");
+	copy(g_TeamNames[0], charsmax(g_TeamNames[]), "undefinedteam");
+	copy(g_TeamCommands[0], charsmax(g_TeamCommands[]), "readyroom;readyroom");
+	copy(g_AbbreviatedTeamNames[0], charsmax(g_AbbreviatedTeamNames[]), "RR");
 	
-	copy(g_PrettyTeamNames[3], sizeof(g_PrettyTeamNames[]), "Spectators");
-	copy(g_TeamNames[3], sizeof(g_TeamNames[]), "spectatorteam");
-	copy(g_TeamCommands[3], sizeof(g_TeamCommands[]), "readyroom;readyroom;spectate");
-	copy(g_AbbreviatedTeamNames[3], sizeof(g_AbbreviatedTeamNames[]), "SP");
+	copy(g_PrettyTeamNames[3], charsmax(g_PrettyTeamNames[]), "Spectators");
+	copy(g_TeamNames[3], charsmax(g_TeamNames[]), "spectatorteam");
+	copy(g_TeamCommands[3], charsmax(g_TeamCommands[]), "readyroom;readyroom;spectate");
+	copy(g_AbbreviatedTeamNames[3], charsmax(g_AbbreviatedTeamNames[]), "SP");
 	
 	if (g_gametype == NSGame_CantTell ||
 		g_gametype == NSGame_Unknown)
@@ -172,39 +172,39 @@ public plugin_init()
 	{
 		case NSGame_MarineVAlien:
 		{
-			copy(g_TeamNames[1], sizeof(g_TeamNames[]), "marine1team");
-			copy(g_PrettyTeamNames[1], sizeof(g_PrettyTeamNames[]), "Marines");
-			copy(g_AbbreviatedTeamNames[1], sizeof(g_AbbreviatedTeamNames[]), "M");
-			copy(g_TeamCommands[1], sizeof(g_TeamCommands[]), "readyroom;readyroom;jointeamone");
+			copy(g_TeamNames[1], charsmax(g_TeamNames[]), "marine1team");
+			copy(g_PrettyTeamNames[1], charsmax(g_PrettyTeamNames[]), "Marines");
+			copy(g_AbbreviatedTeamNames[1], charsmax(g_AbbreviatedTeamNames[]), "M");
+			copy(g_TeamCommands[1], charsmax(g_TeamCommands[]), "readyroom;readyroom;jointeamone");
 			
-			copy(g_TeamNames[2], sizeof(g_TeamNames[]), "alien1team");
-			copy(g_PrettyTeamNames[2], sizeof(g_PrettyTeamNames[]), "Aliens");
-			copy(g_AbbreviatedTeamNames[2], sizeof(g_AbbreviatedTeamNames[]), "A");
-			copy(g_TeamCommands[2], sizeof(g_TeamCommands[]), "readyroom;readyroom;jointeamtwo");
+			copy(g_TeamNames[2], charsmax(g_TeamNames[]), "alien1team");
+			copy(g_PrettyTeamNames[2], charsmax(g_PrettyTeamNames[]), "Aliens");
+			copy(g_AbbreviatedTeamNames[2], charsmax(g_AbbreviatedTeamNames[]), "A");
+			copy(g_TeamCommands[2], charsmax(g_TeamCommands[]), "readyroom;readyroom;jointeamtwo");
 		}
 		case NSGame_MarineVMarine:
 		{
-			copy(g_TeamNames[1], sizeof(g_TeamNames[]), "marine1team");
-			copy(g_PrettyTeamNames[1], sizeof(g_PrettyTeamNames[]), "Marine Team 1");
-			copy(g_AbbreviatedTeamNames[1], sizeof(g_AbbreviatedTeamNames[]), "M1");
-			copy(g_TeamCommands[1], sizeof(g_TeamCommands[]), "readyroom;readyroom;jointeamone");
+			copy(g_TeamNames[1], charsmax(g_TeamNames[]), "marine1team");
+			copy(g_PrettyTeamNames[1], charsmax(g_PrettyTeamNames[]), "Marine Team 1");
+			copy(g_AbbreviatedTeamNames[1], charsmax(g_AbbreviatedTeamNames[]), "M1");
+			copy(g_TeamCommands[1], charsmax(g_TeamCommands[]), "readyroom;readyroom;jointeamone");
 			
-			copy(g_TeamNames[2], sizeof(g_TeamNames[]), "marine2team");
-			copy(g_PrettyTeamNames[2], sizeof(g_PrettyTeamNames[]), "Marine Team 2");
-			copy(g_AbbreviatedTeamNames[2], sizeof(g_AbbreviatedTeamNames[]), "M2");
-			copy(g_TeamCommands[2], sizeof(g_TeamCommands[]), "readyroom;readyroom;jointeamthree");
+			copy(g_TeamNames[2], charsmax(g_TeamNames[]), "marine2team");
+			copy(g_PrettyTeamNames[2], charsmax(g_PrettyTeamNames[]), "Marine Team 2");
+			copy(g_AbbreviatedTeamNames[2], charsmax(g_AbbreviatedTeamNames[]), "M2");
+			copy(g_TeamCommands[2], charsmax(g_TeamCommands[]), "readyroom;readyroom;jointeamthree");
 		}
 		case NSGame_AlienVAlien:
 		{
-			copy(g_TeamNames[1], sizeof(g_TeamNames[]), "alien1team");
-			copy(g_PrettyTeamNames[1], sizeof(g_PrettyTeamNames[]), "Alien Team 1");
-			copy(g_AbbreviatedTeamNames[1], sizeof(g_AbbreviatedTeamNames[]), "A1");
-			copy(g_TeamCommands[1], sizeof(g_TeamCommands[]), "readyroom;readyroom;jointeamtwo");
+			copy(g_TeamNames[1], charsmax(g_TeamNames[]), "alien1team");
+			copy(g_PrettyTeamNames[1], charsmax(g_PrettyTeamNames[]), "Alien Team 1");
+			copy(g_AbbreviatedTeamNames[1], charsmax(g_AbbreviatedTeamNames[]), "A1");
+			copy(g_TeamCommands[1], charsmax(g_TeamCommands[]), "readyroom;readyroom;jointeamtwo");
 			
-			copy(g_TeamNames[2], sizeof(g_TeamNames[]), "alien2team");
-			copy(g_PrettyTeamNames[2], sizeof(g_PrettyTeamNames[]), "Alien Team 2");
-			copy(g_AbbreviatedTeamNames[2], sizeof(g_AbbreviatedTeamNames[]), "A2");
-			copy(g_TeamCommands[2], sizeof(g_TeamCommands[]), "readyroom;readyroom;jointeamfour");
+			copy(g_TeamNames[2], charsmax(g_TeamNames[]), "alien2team");
+			copy(g_PrettyTeamNames[2], charsmax(g_PrettyTeamNames[]), "Alien Team 2");
+			copy(g_AbbreviatedTeamNames[2], charsmax(g_AbbreviatedTeamNames[]), "A2");
+			copy(g_TeamCommands[2], charsmax(g_TeamCommands[]), "readyroom;readyroom;jointeamfour");
 		}
 	}
 

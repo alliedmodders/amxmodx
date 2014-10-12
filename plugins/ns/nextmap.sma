@@ -238,7 +238,7 @@ public sayNextMap(){
 public sayNextMapTimeLeft(){
 	new szName[32], szText[128]
 	get_cvar_string("amx_nextmap", szName, charsmax(szName))
-	format(szText, 64, "Next Map:  %s", szName)
+	format(szText, charsmax(szText), "Next Map:  %s", szName)
 
 	if (get_cvar_float("mp_timelimit")) {
 		new a = get_timeleft()

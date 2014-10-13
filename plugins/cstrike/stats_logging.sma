@@ -41,15 +41,15 @@ public client_disconnect(id)
 	new iUserid = get_user_userid(id)
 	new _max = xmod_get_maxweapons()
 	
-	get_user_team(id, szTeam, 15)
-	get_user_name(id, szName, 31)
-	get_user_authid(id, szAuthid, 31)
+	get_user_team(id, szTeam, charsmax(szTeam))
+	get_user_name(id, szName, charsmax(szName))
+	get_user_authid(id, szAuthid, charsmax(szAuthid))
 
 	for (new i = 1 ; i < _max ; ++i)
 	{
 		if (get_user_wstats(id, i, iStats, iHits))
 		{
-			xmod_get_wpnname(i, szWeapon, 23)
+			xmod_get_wpnname(i, szWeapon, charsmax(szWeapon))
 			
 			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")", 
 						szName, iUserid, szAuthid, szTeam, szWeapon, iStats[4], iStats[5], iStats[0], iStats[2], iStats[3], iStats[6], iStats[1])

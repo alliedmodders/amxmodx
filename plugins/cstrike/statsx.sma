@@ -607,7 +607,7 @@ add_attacker_hits(id, iAttacker, sBuffer[MAX_BUFFER_LENGTH + 1])
 
 			iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%L:^n", id, "HITS_YOU_IN", t_sName)
 
-			for (new i = 1; i < 8; i++)
+			for (new i = 1; i < sizeof(izBody); i++)
 			{
 				if (!izBody[i])
 					continue
@@ -640,7 +640,7 @@ format_kill_ainfo(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 
 		if (izStats[STATS_HITS])
 		{
-			for (new i = 1; i < 8; i++)
+			for (new i = 1; i < sizeof(izBody); i++)
 			{
 				if (!izBody[i])
 					continue
@@ -680,7 +680,7 @@ format_kill_vinfo(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 
 	if (izStats[STATS_HITS])
 	{
-		for (new i = 1; i < 8; i++)
+		for (new i = 1; i < sizeof(izBody); i++)
 		{
 			if (!izBody[i])
 				continue
@@ -757,7 +757,7 @@ format_rankstats(id, sBuffer[MAX_BUFFER_LENGTH + 1], iMyId = 0)
 
 	new L_BODY_PART[8][32]
 
-	for (new i = 1; i < 8; i++)
+	for (new i = 1; i < sizeof(L_BODY_PART); i++)
 	{
 		formatex(L_BODY_PART[i], charsmax(L_BODY_PART[]), "%L", id, BODY_PART[i])
 	}
@@ -1292,14 +1292,14 @@ public eventStartRound()
 			{
 				g_izTeamEventScore[iTeam] = 0
 
-				for (i = 0; i < 8; i++)
+				for (i = 0; i < sizeof(g_izTeamGameStats[]); i++)
 					g_izTeamGameStats[iTeam][i] = 0
 			}
 
 			// Clear game stats, incl '0' that is sum of all users.
 			for (id = 0; id <= MaxClients; id++)
 			{
-				for (i = 0; i < 8; i++)
+				for (i = 0; i < sizeof(g_izUserGameStats[]); i++)
 					g_izUserGameStats[id][i] = 0
 			}
 		}
@@ -1310,7 +1310,7 @@ public eventStartRound()
 		{
 			g_izTeamScore[iTeam] = g_izTeamEventScore[iTeam]
 
-			for (i = 0; i < 8; i++)
+			for (i = 0; i < sizeof(g_izTeamRndStats[]); i++)
 				g_izTeamRndStats[iTeam][i] = 0
 		}
 
@@ -1319,7 +1319,7 @@ public eventStartRound()
 		{
 			g_izUserRndName[id][0] = 0
 
-			for (i = 0; i < 8; i++)
+			for (i = 0; i < sizeof(g_izUserRndStats[]); i++)
 				g_izUserRndStats[id][i] = 0
 
 			g_fzShowUserStatsTime[id] = 0.0
@@ -1347,7 +1347,7 @@ public eventSpawn(id)
 	args[0] = id
 
 	if (g_iPluginMode & MODE_HUD_DELAY)
-		set_task(0.1, "delay_spawn", 200 + id, args, 1)
+		set_task(0.1, "delay_spawn", 200 + id, args, sizeof(args))
 	else
 		delay_spawn(args)
 
@@ -1462,7 +1462,7 @@ kill_stats(id)
 		// Update user's team round stats
 		if (iTeam >= 0 && iTeam < MAX_TEAMS)
 		{
-			for (i = 0; i < 8; i++)
+			for (i = 0; i < sizeof(izStats); i++)
 			{
 				g_izTeamRndStats[iTeam][i] += izStats[i]
 				g_izTeamGameStats[iTeam][i] += izStats[i]
@@ -1474,7 +1474,7 @@ kill_stats(id)
 		// Update user's round stats
 		if (g_izUserUserID[id] == get_user_userid(id))
 		{
-			for (i = 0; i < 8; i++)
+			for (i = 0; i < sizeof(izStats); i++)
 			{
 				g_izUserRndStats[id][i] += izStats[i]
 				g_izUserGameStats[id][i] += izStats[i]
@@ -1482,7 +1482,7 @@ kill_stats(id)
 		} else {
 			g_izUserUserID[id] = get_user_userid(id)
 
-			for (i = 0; i < 8; i++)
+			for (i = 0; i < sizeof(izStats); i++)
 			{
 				g_izUserRndStats[id][i] = izStats[i]
 				g_izUserGameStats[id][i] = izStats[i]
@@ -1584,7 +1584,7 @@ endround_stats()
 public eventTeamScore()
 {
 	new sTeamID[1 + 1], iTeamScore
-	read_data(1, sTeamID, 1)
+	read_data(1, sTeamID, charsmax(sTeamID))
 	iTeamScore = read_data(2)
 	g_izTeamEventScore[(sTeamID[0] == 'C') ? 1 : 0] = iTeamScore
 
@@ -1637,7 +1637,7 @@ public end_game_stats()
 public eventSpecMode(id)
 {
 	new sData[12]
-	read_data(2, sData, 11)
+	read_data(2, sData, charsmax(sData))
 	g_izSpecMode[id] = (sData[10] == '2')
 
 	return PLUGIN_CONTINUE

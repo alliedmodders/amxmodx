@@ -60,11 +60,11 @@ new g_ScoreInfo_Team;
 public plugin_init() {
   register_plugin("NS Commands",AMXX_VERSION_STR,"AMXX Dev Team");
   // create our semi-random acknowledgement commands
-  format(g_TeamOneAck,11,"namx_a%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
-  format(g_TeamTwoAck,11,"namx_b%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
-  format(g_ReadyRoomAck,11,"namx_c%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
-  format(g_AutoAssignAck,11,"namx_d%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
-  format(g_StopCommAck,11,"namx_e%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
+  format(g_TeamOneAck,charsmax(g_TeamOneAck),"namx_a%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
+  format(g_TeamTwoAck,charsmax(g_TeamTwoAck),"namx_b%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
+  format(g_ReadyRoomAck,charsmax(g_ReadyRoomAck),"namx_c%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
+  format(g_AutoAssignAck,charsmax(g_AutoAssignAck),"namx_d%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
+  format(g_StopCommAck,charsmax(g_StopCommAck),"namx_e%c%c%c%c%c",random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'),random_num('a','z'));
   
   // register them..
   register_clcmd(g_TeamOneAck,"ack_team_one");
@@ -123,7 +123,7 @@ public client_connect(id) {
 }
 stock UTIL_FindCommander() {
   new i=1;
-  while (i<32) {
+  while (i<MAX_PLAYERS) {
     if (g_Class[i]==PLAYERCLASS_COMMANDER) // this player is comm..
       return i;
     i++;
@@ -144,15 +144,15 @@ public cmdRandom(id,level,cid) {
     return PLUGIN_HANDLED
   if (read_argc()>1) { // person is specified..
     new arg[32]
-    read_argv(1,arg,31)
+    read_argv(1,arg,charsmax(arg))
     new player = cmd_target(id,arg,CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
     if (!player) return PLUGIN_HANDLED
     new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
-    get_user_name(id,name,31);
-    get_user_name(player,name_targ,31);
-    get_user_authid(id,auth,31);
-    get_user_authid(player,auth_targ,31);
+    get_user_name(id,name,charsmax(name));
+    get_user_name(player,name_targ,charsmax(name_targ));
+    get_user_authid(id,auth,charsmax(auth));
+    get_user_authid(player,auth_targ,charsmax(auth_targ));
     log_amx("Cmd: ^"%s<%d><%s><>^" random ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(player),auth_targ);
 	
 	show_activity(id, name, "random %s", name_targ);
@@ -174,8 +174,8 @@ public cmdRandom(id,level,cid) {
     }
     if (cur) {
       new name[MAX_NAME_LENGTH],auth[32];
-      get_user_name(id,name,31);
-      get_user_authid(id,auth,31);
+      get_user_name(id,name,charsmax(name));
+      get_user_authid(id,auth,charsmax(auth));
       log_amx("Cmd: ^"%s<%d><%s><>^" random all",name,get_user_userid(id),auth);
 	  
 	  show_activity(id, name, "random all");
@@ -210,15 +210,15 @@ public cmdReadyRoom(id,level,cid) {
     return PLUGIN_HANDLED
   if (read_argc()>1) { // person is specified..
     new arg[32]
-    read_argv(1,arg,31)
+    read_argv(1,arg,charsmax(arg))
     new player = cmd_target(id,arg,CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
     if (!player) return PLUGIN_HANDLED
     new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
-    get_user_name(id,name,31);
-    get_user_name(player,name_targ,31);
-    get_user_authid(id,auth,31);
-    get_user_authid(player,auth_targ,31);
+    get_user_name(id,name,charsmax(name));
+    get_user_name(player,name_targ,charsmax(name_targ));
+    get_user_authid(id,auth,charsmax(auth));
+    get_user_authid(player,auth_targ,charsmax(auth_targ));
     log_amx("Cmd: ^"%s<%d><%s><>^" ready room ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(player),auth_targ);
 	
 	show_activity(id, name, "ready room %s", name_targ);
@@ -238,8 +238,8 @@ public cmdReadyRoom(id,level,cid) {
     }
     if (cur) {
       new name[MAX_NAME_LENGTH],auth[32];
-      get_user_name(id,name,31);
-      get_user_authid(id,auth,31);
+      get_user_name(id,name,charsmax(name));
+      get_user_authid(id,auth,charsmax(auth));
       log_amx("Cmd: ^"%s<%d><%s><>^" ready room all",name,get_user_userid(id),auth);
 	  
 	  show_activity(id, name, "ready room all");
@@ -273,7 +273,7 @@ public cmdTeamTwo(id,level,cid) {
     return PLUGIN_HANDLED
   if (read_argc()>1) { // person is specified..
     new arg[32]
-    read_argv(1,arg,31)
+    read_argv(1,arg,charsmax(arg))
     new player = cmd_target(id,arg,CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
     if (!player) return PLUGIN_HANDLED
     if (g_Team[player]==2 || g_Team[player]==4 /*i think 4 is team 2 in ava..*/) {
@@ -282,10 +282,10 @@ public cmdTeamTwo(id,level,cid) {
     }
     new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
-    get_user_name(id,name,31);
-    get_user_name(player,name_targ,31);
-    get_user_authid(id,auth,31);
-    get_user_authid(player,auth_targ,31);
+    get_user_name(id,name,charsmax(name));
+    get_user_name(player,name_targ,charsmax(name_targ));
+    get_user_authid(id,auth,charsmax(auth));
+    get_user_authid(player,auth_targ,charsmax(auth_targ));
     log_amx("Cmd: ^"%s<%d><%s><>^" alien ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(player),auth_targ);
 	
 	show_activity(id, name, "alien %s", name_targ);
@@ -301,7 +301,7 @@ public cmdTeamOne(id,level,cid) {
     return PLUGIN_HANDLED
   if (read_argc()>1) { // person is specified..
     new arg[32]
-    read_argv(1,arg,31)
+    read_argv(1,arg,charsmax(arg))
     new player = cmd_target(id,arg,CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
     if (!player) return PLUGIN_HANDLED
     if (g_Team[player]==1 || g_Team[player]==3 /*i think 3 is team 2 in mvm..*/) {
@@ -310,10 +310,10 @@ public cmdTeamOne(id,level,cid) {
     }
     new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
-    get_user_name(id,name,31);
-    get_user_name(player,name_targ,31);
-    get_user_authid(id,auth,31);
-    get_user_authid(player,auth_targ,31);
+    get_user_name(id,name,charsmax(name));
+    get_user_name(player,name_targ,charsmax(name_targ));
+    get_user_authid(id,auth,charsmax(auth));
+    get_user_authid(player,auth_targ,charsmax(auth_targ));
     log_amx("Cmd: ^"%s<%d><%s><>^" marine ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(player),auth_targ);
 	
 	show_activity(id, name, "marine %s", name_targ);
@@ -334,10 +334,10 @@ public cmdUnComm(id,level,cid) {
     client_cmd(comm, "%s", g_StopCommAck);
     new name[MAX_NAME_LENGTH],name_targ[MAX_NAME_LENGTH];
     new auth[32],auth_targ[32];
-    get_user_name(id,name,31);
-    get_user_name(comm,name_targ,31);
-    get_user_authid(id,auth,31);
-    get_user_authid(comm,auth_targ,31);
+    get_user_name(id,name,charsmax(name));
+    get_user_name(comm,name_targ,charsmax(name_targ));
+    get_user_authid(id,auth,charsmax(auth));
+    get_user_authid(comm,auth_targ,charsmax(auth_targ));
     log_amx("Cmd: ^"%s<%d><%s><>^" uncomm ^"%s<%d><%s><>^"",name,get_user_userid(id),auth,  name_targ,get_user_userid(comm),auth_targ);
 
 	show_activity(id, name, "uncomm %s", name_targ);

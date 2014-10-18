@@ -422,12 +422,13 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 
 stock colored_menus()
 {
-	static const ModNames[][] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
 	static ColoredMenus = -1;
 
 	if (ColoredMenus == -1)
 	{
+		new const ModNames[][] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
 		new ModName[32];
+
 		get_modname(ModName, charsmax(ModName));
 
 		for (new Iterator = 0; Iterator < sizeof(ModNames); Iterator++)

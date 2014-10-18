@@ -420,12 +420,22 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 	}
 }
 
-stock colored_menus() 
+stock colored_menus()
 {
-	new mod_name[32];
-	get_modname(mod_name,31);
+	static const ModNames[][] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
+	static const ModsCount = sizeof(ModNames);
 
-	return ( equal(mod_name,"cstrike") || equal(mod_name,"czero") || equal(mod_name,"dod") );
+	static ModName[32], Iterator = 0;
+
+	get_modname(ModName, 31);
+
+	for (Iterator = 0; Iterator < ModsCount; Iterator++)
+	{
+		if (equal(ModName, ModNames[Iterator]))
+			return 1;
+	}
+
+	return 0;
 }
 
 stock cstrike_running() 

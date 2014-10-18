@@ -143,13 +143,11 @@ int FF_InconsistentFile = -1;
 int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
 
-static const bool ColoredMenus(String & ModName)
+bool ColoredMenus(String & ModName)
 {
-	static const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
-	static const size_t ModsCount = sizeof(pModNames) / sizeof(const char *);
-	static int Iterator = 0u;
+	const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
 
-	for (Iterator = 0u; Iterator < ModsCount; ++Iterator)
+	for (int Iterator = 0u; Iterator < sizeof(pModNames) / sizeof(const char *); ++Iterator)
 	{
 		if (ModName.compare(pModNames[Iterator]) == 0u)
 			return true; // this game modification currently supports colored menus	

@@ -12,7 +12,6 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <ctype.h> // toupper
 
 //by David "BAILOPAN" Anderson
 class String
@@ -22,6 +21,7 @@ public:
 	{
 		v = NULL;
 		a_size = 0;
+		//assign("");
 	}
 
 	~String()
@@ -38,30 +38,10 @@ public:
 	}
 
 	const char * _fread(FILE *fp) 	 
-	{
-		if (!fp) return NULL; // sanity check
+	{ 	 
 		Grow(512, false); 	 
 		char *ret = fgets(v, 511, fp); 	 
 		return ret; 	 
-	}
-
-	bool readFile(FILE *fp) // reads file to buffer
-	{
-		if (!fp) return false;
-
-		int c;
-
-		clear();
-
-		while ((c = fgetc(fp)) != EOF)
-			append(c);
-
-		return true;
-	}
-
-	size_t length()
-	{
-		return size();
 	}
 
 	String(const String &src) 
@@ -72,6 +52,7 @@ public:
 	}
 
 	const char *c_str() { return v?v:""; }
+
 	const char *c_str() const { return v?v:""; }
 
 	void append(const char *t)
@@ -117,12 +98,12 @@ public:
 			v[0] = '\0';
 	}
 
-	int compare(const char *d, bool inSen = false) const // added support for insensitive case - backwards compatibiliy OK
+	int compare (const char *d) const
 	{
 		if (!v)
-			return inSen == false ? strcmp("", d) : strcasecmp("", d);
+			return strcmp("", d);
 		else
-			return inSen == false ? strcmp(v, d) : strcasecmp(v, d);
+			return strcmp(v, d);
 	}
 
 	//Added this for amxx inclusion
@@ -154,30 +135,6 @@ public:
 			return npos;
 		int i = 0;
 		for (i=index; i<len; i++)
-		{
-			if (v[i] == c)
-			{
-				return i;
-			}
-		}
-
-		return npos;
-	}
-
-	int find_last_of(const char c, int index = npos) const
-	{
-		int len = static_cast<int>(size());
-		if (len < 1)
-			return npos;
-		if (index >= len || index < npos)
-			return npos;
-		int i;
-		if (index == npos)
-			i = len - 1;
-		else
-			i = index;
-
-		for (; i>=0; i--)
 		{
 			if (v[i] == c)
 			{
@@ -363,21 +320,8 @@ public:
 		size_t len = strlen(v);
 		for (i=0; i<len; i++)
 		{
-			if (v[i] >= 65 /*A*/ && v[i] <= 90/*Z*/)
+			if (v[i] >= 65 && v[i] <= 90)
 				v[i] &= ~(1<<5);
-		}
-	}
-
-	void toUpper(void)
-	{
-		if (!v)
-			return;
-		unsigned int i = 0;
-		size_t len = strlen(v);
-		for (i=0; i<len; i++)
-		{
-			if (v[i] >= 97 /*a*/ && v[i] <= 122/*z*/)
-				v[i] = toupper(v[i]);
 		}
 	}
 
@@ -420,19 +364,6 @@ public:
 		v[at] = c;
 
 		return true;
-	}
-
-	size_t replaceChars(char toRepl, char replWith) // returns replaced chars count, if any
-	{
-		if (!v) return 0;
-		int cnt = 0, i = 0;
-
-		for ( i = 0; i < (int)strlen(v); i++)
-		{
-			if (v[i] == toRepl)
-				v[i] = replWith, cnt ++;
-		}
-		return cnt;
 	}
 
 private:

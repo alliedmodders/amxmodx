@@ -12,6 +12,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h> // toupper
 
 //by David "BAILOPAN" Anderson
 class String

@@ -143,6 +143,21 @@ int FF_InconsistentFile = -1;
 int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
 
+static const bool ColoredMenus(String & ModName)
+{
+	static const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
+	static const size_t ModsCount = sizeof(pModNames) / sizeof(const char *);
+	static int Iterator = 0u;
+
+	for (Iterator = 0u; Iterator < ModsCount; ++Iterator)
+	{
+		if (ModName.compare(pModNames[Iterator]) == 0u)
+			return true; // this game modification currently supports colored menus	
+	}
+
+	return false; // no colored menus are supported for this game modification
+}
+
 void ParseAndOrAdd(CStack<String *> & files, const char *name)
 {
 	if (strncmp(name, "plugins-", 8) == 0)
@@ -1440,10 +1455,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	
 	g_mod_name.assign(a);
 
-	if (g_mod_name.compare("cstrike") == 0 || g_mod_name.compare("czero") == 0 || g_mod_name.compare("dod") == 0)
-		g_coloredmenus = true;
-	else
-		g_coloredmenus = false;
+	g_coloredmenus = ColoredMenus(g_mod_name); // whether or not to use colored menus
 
 	// ###### Print short GPL
 	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2014 AMX Mod X Development Team \n"

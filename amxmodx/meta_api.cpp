@@ -145,9 +145,10 @@ int FF_ChangeLevel = -1;
 
 bool ColoredMenus(String & ModName)
 {
-	const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
+	static const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
+	static const size_t ModsCount = sizeof(pModNames) / sizeof(const char *);
 
-	for (int Iterator = 0u; Iterator < sizeof(pModNames) / sizeof(const char *); ++Iterator)
+	for (int Iterator = 0u; Iterator < ModsCount; ++Iterator)
 	{
 		if (ModName.compare(pModNames[Iterator]) == 0u)
 			return true; // this game modification currently supports colored menus	

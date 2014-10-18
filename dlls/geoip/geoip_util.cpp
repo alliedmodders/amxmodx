@@ -160,7 +160,7 @@ int getContinentId(const char *code)
 						case 'F': index = CONTINENT_AFRICA; break;
 						case 'N': index = CONTINENT_ANTARCTICA; break;
 						case 'S': index = CONTINENT_ASIA; break;
-					}
+					} break;
 			}
 			case 'E': index = CONTINENT_EUROPE; break;
 			case 'O': index = CONTINENT_OCEANIA; break;

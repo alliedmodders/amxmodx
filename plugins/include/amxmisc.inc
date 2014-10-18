@@ -422,18 +422,29 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 
 stock colored_menus()
 {
-	new const ModNames[][] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
-	new ModName[32];
+	static const ModNames[][] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
+	static ColoredMenus = -1;
 
-	get_modname(ModName, charsmax(ModName));
-
-	for (new Iterator = 0; Iterator < sizeof(ModNames); Iterator++)
+	if (ColoredMenus == -1)
 	{
-		if (equal(ModName, ModNames[Iterator]))
-			return 1;
+		new ModName[32];
+		get_modname(ModName, charsmax(ModName));
+
+		for (new Iterator = 0; Iterator < sizeof(ModNames); Iterator++)
+		{
+			if (equal(ModName, ModNames[Iterator]))
+			{
+				ColoredMenus = 1;
+
+				break;
+			}
+		}
+
+		if (ColoredMenus == -1)
+			ColoredMenus = 0;
 	}
 
-	return 0;
+	return ColoredMenus;
 }
 
 stock cstrike_running() 

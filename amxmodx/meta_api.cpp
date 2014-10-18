@@ -145,8 +145,8 @@ int FF_ChangeLevel = -1;
 
 bool ColoredMenus(String & ModName)
 {
-	static const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
-	static const size_t ModsCount = sizeof(pModNames) / sizeof(const char *);
+	const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
+	const size_t ModsCount = sizeof(pModNames) / sizeof(const char *);
 
 	for (int Iterator = 0u; Iterator < ModsCount; ++Iterator)
 	{

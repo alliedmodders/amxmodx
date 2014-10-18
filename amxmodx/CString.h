@@ -120,9 +120,9 @@ public:
 	int compare(const char *d, bool inSen = false) const // added support for insensitive case - backwards compatibiliy OK
 	{
 		if (!v)
-			return inSen == false ? strcmp("", d) : stricmp("", d);
+			return inSen == false ? strcmp("", d) : strcasecmp("", d);
 		else
-			return inSen == false ? strcmp(v, d) : stricmp(v, d);
+			return inSen == false ? strcmp(v, d) : strcasecmp(v, d);
 	}
 
 	//Added this for amxx inclusion

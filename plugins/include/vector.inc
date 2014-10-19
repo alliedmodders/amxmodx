@@ -21,11 +21,16 @@
 #define ANGLEVECTOR_RIGHT        2
 #define ANGLEVECTOR_UP           3
 
+enum /* distanceType */ {
+	distance3d = 0,
+	distance2d,
+};
+
 /* Returns distance between two vectors. */
-native get_distance(const origin1[3], const origin2[3]);
+native get_distance(const origin1[3], const origin2[3], const distType = distance3d);
 
 /* Gets distance between two origins (float). */
-native Float:get_distance_f(const Float:Origin1[3], const Float:Origin2[3]);
+native Float:get_distance_f(const Float:Origin1[3], const Float:Origin2[3], const distType = distance3d);
 
 /* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
 native velocity_by_aim(iIndex, iVelocity, Float:vRetValue[3]);
@@ -37,10 +42,10 @@ native vector_to_angle(const Float:fVector[3], Float:vReturn[3]);
 native angle_vector(const Float:vector[3], FRU, Float:ret[3]);
 
 /* Gets the length of a vector (float[3]). */
-native Float:vector_length(const Float:vVector[3]);
+native Float:vector_length(const Float:vVector[3], const distType = distance3d);
 
 /* Gets the distance between 2 vectors (float[3]). */
-native Float:vector_distance(const Float:vVector[3], const Float:vVector2[3]);
+native Float:vector_distance(const Float:vVector[3], const Float:vVector2[3], const distType = distance3d);
 
 /* Changes an integer vec to a floating vec
  * This is not a for loop because that's slower

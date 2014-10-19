@@ -21,9 +21,29 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 	Vector vec1 = Vector((float)cpVec1[0], (float)cpVec1[1], (float)cpVec1[2]);
 	Vector vec2 = Vector((float)cpVec2[0], (float)cpVec2[1], (float)cpVec2[2]);
 
-	int iDist = (int)((vec1 - vec2).Length());
+	distanceType dType = (distanceType)params[3];
 
-	return iDist;
+	int Distance = 0;
+
+	switch (dType)
+	{
+	case distance3d:
+		Distance = (int)(vec1 - vec2).Length();
+
+		break;
+
+	case distance2d:
+		Distance = (int)(vec1 - vec2).Length2D();
+
+		break;
+
+	default:
+		LogError(amx, AMX_ERR_NATIVE, "Invalid distance type parameter (%d)", (int)dType);
+
+		break;
+	}
+
+	return Distance;
 }
 
 static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
@@ -34,9 +54,29 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
 	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
 
-	REAL fDist = (REAL) (vec1 - vec2).Length();
+	distanceType dType = (distanceType)params[3];
 
-	return amx_ftoc(fDist);
+	REAL fDistance = 0.0f;
+
+	switch (dType)
+	{
+	case distance3d:
+		fDistance = (REAL)(vec1 - vec2).Length();
+
+		break;
+
+	case distance2d:
+		fDistance = (REAL)(vec1 - vec2).Length2D();
+
+		break;
+
+	default:
+		LogError(amx, AMX_ERR_NATIVE, "Invalid distance type parameter (%d)", (int)dType);
+
+		break;
+	}
+
+	return amx_ftoc(fDistance);
 }
 
 static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
@@ -146,7 +186,27 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 
 	Vector vVector = Vector(fX, fY, fZ);
 
-	REAL fLength = vVector.Length();
+	distanceType dType = (distanceType)params[3];
+
+	REAL fLength = 0.0f;
+
+	switch (dType)
+	{
+	case distance3d:
+		fLength = (REAL)vVector.Length();
+
+		break;
+
+	case distance2d:
+		fLength = (REAL)vVector.Length2D();
+
+		break;
+
+	default:
+		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)dType);
+
+		break;
+	}
 
 	return amx_ftoc(fLength);
 }
@@ -166,9 +226,29 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 	Vector vVector = Vector(fX, fY, fZ);
 	Vector vVector2 = Vector(fX2, fY2, fZ2);
 
-	REAL fLength = (vVector - vVector2).Length();
+	distanceType dType = (distanceType)params[3];
 
-	return amx_ftoc(fLength);
+	REAL fDistance = 0.0f;
+
+	switch (dType)
+	{
+	case distance3d:
+		fDistance = (REAL)(vVector - vVector2).Length();
+
+		break;
+
+	case distance2d:
+		fDistance = (REAL)(vVector - vVector2).Length2D();
+
+		break;
+
+	default:
+		LogError(amx, AMX_ERR_NATIVE, "Invalid distance type parameter (%d)", (int)dType);
+
+		break;
+	}
+
+	return amx_ftoc(fDistance);
 }
 
 AMX_NATIVE_INFO vector_Natives[] = {

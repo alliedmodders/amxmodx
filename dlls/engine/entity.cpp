@@ -43,13 +43,33 @@ static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 	int idxa = params[1];
 	int idxb = params[2];
 
+	distanceType dType = (distanceType)params[3];
+
 	CHECK_ENTITY(idxa);
 	CHECK_ENTITY(idxb);
 
 	edict_t *pEntA = INDEXENT2(idxa);
 	edict_t *pEntB = INDEXENT2(idxb);
 
-	REAL fRet = (pEntA->v.origin - pEntB->v.origin).Length();
+	REAL fRet = 0.0f;
+
+	switch (dType)
+	{
+	case distance3d:
+		Distance = (REAL)(pEntA->v.origin - pEntB->v.origin).Length();
+
+		break;
+
+	case distance2d:
+		Distance = (REAL)(pEntA->v.origin - pEntB->v.origin).Length2D();
+
+		break;
+
+	default:
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid distance type parameter (%d)", (int)dType);
+
+		break;
+	}
 
 	return amx_ftoc(fRet);
 }

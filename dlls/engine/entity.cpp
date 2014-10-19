@@ -56,12 +56,12 @@ static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 	switch (dType)
 	{
 	case distance3d:
-		Distance = (REAL)(pEntA->v.origin - pEntB->v.origin).Length();
+		fRet = (REAL)(pEntA->v.origin - pEntB->v.origin).Length();
 
 		break;
 
 	case distance2d:
-		Distance = (REAL)(pEntA->v.origin - pEntB->v.origin).Length2D();
+		fRet = (REAL)(pEntA->v.origin - pEntB->v.origin).Length2D();
 
 		break;
 

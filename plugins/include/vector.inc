@@ -21,11 +21,6 @@
 #define ANGLEVECTOR_RIGHT        2
 #define ANGLEVECTOR_UP           3
 
-enum /* distanceType */ {
-	distance3d = 0,
-	distance2d,
-};
-
 /* Returns distance between two vectors. */
 native get_distance(const origin1[3], const origin2[3], const distType = distance3d);
 

@@ -357,6 +357,11 @@ enum PrintColor
 	print_team_blue = -3,
 };
 
+enum distanceType {
+	distance3d = 0u,	// old compatibility, zero or <unset> for len3d
+	distance2d,
+};
+
 extern enginefuncs_t *g_pEngTable;
 
 #endif // AMXMODX_H

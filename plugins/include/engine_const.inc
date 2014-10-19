@@ -265,7 +265,3 @@ enum
 	TR_Hitgroup			// (int) 0 == generic, non zero is specific body part
 };
 
-enum /* e_distanceType */ {
-	e_distance3d = 0,	// old compatibility, zero or <unset> for len3d
-	e_distance2d,
-};

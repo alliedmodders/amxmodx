@@ -463,3 +463,12 @@ enum AdminProp
 	AdminProp_Access,
 	AdminProp_Flags
 };
+
+/**
+ * Distance constants
+  */
+enum /* distanceType */
+{
+	distance3d = 0,	// old compatibility, zero or <unset> for len3d
+	distance2d,
+};

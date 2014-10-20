@@ -42,14 +42,14 @@ native Float:vector_length(const Float:vVector[3], const VecLenType:vlType = Vec
 /* Gets the distance between 2 vectors (float[3]). */
 native Float:vector_distance(const Float:vVector[3], const Float:vVector2[3], const VecLenType:vlType = VecLen3D);
 
-/* Gets the dot product of two vectors */
+/* Gets the dot product of 2 vectors. */
 native Float:vector_dot_product(const Float:vVector[3], const Float:vVector2[3], const VecLenType:vlType = VecLen3D);
 
-/* Gets the cross product of two vectors */
-native Float:vector_cross_product(const Float:vVector[3], const Float:vVector2[3]);
+/* Gets the cross product of 2 vectors. */
+native vector_cross_product(const Float:vVector[3], const Float:vVector2[3], Float:vResult[3]);
 
-/* Normalizes vector */
-native Float:normalize_vector(const Float:vSrc[3], Float:vDst[3], const VecLenType:vlType = VecLen3D);
+/* Normalizes vector. */
+native normalize_vector(const Float:vSrc[3], Float:vDst[3], const VecLenType:vlType = VecLen3D);
 
 /* Changes an integer vec to a floating vec
  * This is not a for loop because that's slower

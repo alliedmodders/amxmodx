@@ -73,8 +73,16 @@ native entity_set_size(index, const Float:mins[3], const Float:maxs[3]);
 /* Get decal index */
 native get_decal_index(const szDecalName[]);
 
-/* Returns the distance between two entities. */
-native Float:entity_range(ida, idb, const VecLenType:vlType = VecLen3D);
+/**
+ * Returns the Fl. distance between two entities.
+ *
+ * @param _In_ IdA          The first entity.
+ * @param _In_ IdB          The second entity.
+ * @param _In_ vlType       The type of vector length.
+ *
+ * @return                  The Fl. value of the distance between entities.
+ */
+native Float:entity_range(IdA, IdB, const VecLenType:vlType = VecLen3D);
 
 /* Sets/gets things in an entities Entvars Struct. */
 native entity_get_int(iIndex, iKey);

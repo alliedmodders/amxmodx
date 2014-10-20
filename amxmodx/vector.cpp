@@ -17,7 +17,7 @@
  * Returns vector's length if pVecB is null.
  * Returns the distance between vectors otherwise.
  */
-REAL ComputeVectorLength(AMX * pAMXHandle, Vector & VecA, Vector * pVecB /* Optional */, VecLenType Type)
+REAL ComputeVectorLength(Vector & VecA, Vector * pVecB /* Optional */, VecLenType Type)
 {
 	REAL Length = 0.0f;
 
@@ -29,10 +29,6 @@ REAL ComputeVectorLength(AMX * pAMXHandle, Vector & VecA, Vector * pVecB /* Opti
 
 	case VecLen2D:
 		Length = pVecB ? (REAL)(VecA - *pVecB).Length2D() : (REAL)VecA.Length2D();
-		break;
-
-	default:
-		LogError(pAMXHandle, AMX_ERR_NATIVE, "Invalid vector length type parameter (%d)", (int)Type);
 		break;
 	}
 
@@ -47,7 +43,7 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 	Vector VecA((REAL)pVecA[0], (REAL)pVecA[1], (REAL)pVecA[2]);
 	Vector VecB((REAL)pVecB[0], (REAL)pVecB[1], (REAL)pVecB[2]);
 
-	return (cell)ComputeVectorLength(amx, VecA, & VecB, (VecLenType)params[3]);
+	return (cell)ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
 }
 
 static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
@@ -58,7 +54,7 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 	Vector VecA((REAL)amx_ctof(pVecA[0]), (REAL)amx_ctof(pVecA[1]), (REAL)amx_ctof(pVecA[2]));
 	Vector VecB((REAL)amx_ctof(pVecB[0]), (REAL)amx_ctof(pVecB[1]), (REAL)amx_ctof(pVecB[2]));
 
-	REAL Length = ComputeVectorLength(amx, VecA, & VecB, (VecLenType)params[3]);
+	REAL Length = ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
 
 	return amx_ftoc(Length);
 }
@@ -158,7 +154,7 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 	cell * pSource = get_amxaddr(amx, params[1]);
 	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
 
-	REAL Length = ComputeVectorLength(amx, Source, NULL, (VecLenType)params[2]);
+	REAL Length = ComputeVectorLength(Source, NULL, (VecLenType)params[2]);
 
 	return amx_ftoc(Length);
 }
@@ -171,7 +167,7 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
 	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
 
-	REAL Length = ComputeVectorLength(amx, Source, & VecB, (VecLenType)params[3]);
+	REAL Length = ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
 
 	return amx_ftoc(Length);
 }
@@ -200,11 +196,6 @@ static cell AMX_NATIVE_CALL GetVectorDotProduct(AMX *amx, cell *params)
 		Vector2D VecB2D((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]));
 
 		Product = (REAL)DotProduct(VecA2D, VecB2D);
-
-		break;
-
-	default:
-		LogError(amx, AMX_ERR_NATIVE, "Invalid vector length type parameter (%d)", (int)Type);
 
 		break;
 	}
@@ -256,11 +247,6 @@ static cell AMX_NATIVE_CALL NormalizeVector(AMX *amx, cell *params)
 
 		pSet[0] = amx_ftoc(Normalized2D.x);
 		pSet[1] = amx_ftoc(Normalized2D.y);
-
-		break;
-
-	default:
-		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)Type);
 
 		break;
 	}

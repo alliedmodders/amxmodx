@@ -41,29 +41,19 @@ int is_ent_valid(int iEnt)
 static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 {
 	int IdA = params[1], IdB = params[2];
-	VecLenType Type = (VecLenType)params[3];
 
 	CHECK_ENTITY(IdA);
 	CHECK_ENTITY(IdB);
 
-	edict_t * pEntA = INDEXENT2(IdA);
-	edict_t * pEntB = INDEXENT2(IdB);
-
+	edict_t * pEntA = INDEXENT2(IdA), * pEntB = INDEXENT2(IdB);
+	VecLenType Type = (VecLenType)params[3];
 	REAL Length = 0.0f;
 
 	switch (Type)
 	{
-	case VecLen3D:
-		Length = (REAL)(pEntA->v.origin - pEntB->v.origin).Length();
-
-		break;
-
-	case VecLen2D:
-		Length = (REAL)(pEntA->v.origin - pEntB->v.origin).Length2D();
-
-		break;
+		case VecLen3D: Length = (REAL)(pEntA->v.origin - pEntB->v.origin).Length(); break;
+		case VecLen2D: Length = (REAL)(pEntA->v.origin - pEntB->v.origin).Length2D(); break;
 	}
-
 	return amx_ftoc(Length);
 }
 

@@ -63,7 +63,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 	int Entity = params[1], Velocity = params[2];
 	edict_t * pEntity = NULL;
 
-	if (iEntity < 0 || iEntity > gpGlobals->maxEntities)
+	if (Entity < 0 || Entity > gpGlobals->maxEntities)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", Entity);
 		return 0;

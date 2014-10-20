@@ -467,7 +467,7 @@ enum AdminProp
 /**
  * Vector length type constants
  */
-enum /* LengthType */
+enum LengthType
 {
 	Len3d = 0,
 	Len2d

@@ -24,35 +24,35 @@
 /* Returns distance between two vectors. */
 native get_distance(const origin1[3], const origin2[3], const VecLenType:vlType = VecLen3D);
 
-/* Gets distance between two origins (float). */
-native Float:get_distance_f(const Float:Origin1[3], const Float:Origin2[3], const VecLenType:vlType = VecLen3D);
+/* Gets distance between two vectors (float). */
+native Float:get_distance_f(const Float:fOrigin1[3], const Float:fOrigin2[3], const VecLenType:vlType = VecLen3D);
 
 /* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
-native velocity_by_aim(iIndex, iVelocity, Float:vRetValue[3]);
+native velocity_by_aim(iIndex, iVelocity, Float:vReturn[3]);
 
 /* Changes a vector into an angle vector. */
 native vector_to_angle(const Float:fVector[3], Float:vReturn[3]);
 
 /* Changes an angle vector into a vector. */
-native angle_vector(const Float:vector[3], FRU, Float:ret[3]);
+native angle_vector(const Float:fVector[3], FRU, Float:vReturn[3]);
 
 /* Gets the length of a vector (float[3]). */
-native Float:vector_length(const Float:vVector[3], const VecLenType:vlType = VecLen3D);
+native Float:vector_length(const Float:fVector[3], const VecLenType:vlType = VecLen3D);
 
-/* Gets the distance between 2 vectors (float[3]). */
-native Float:vector_distance(const Float:vVector[3], const Float:vVector2[3], const VecLenType:vlType = VecLen3D);
+/* Gets the distance between two vectors (float[3]). */
+native Float:vector_distance(const Float:fVector1[3], const Float:fVector2[3], const VecLenType:vlType = VecLen3D);
 
-/* Gets the dot product of 2 vectors. */
-native Float:vector_dot_product(const Float:vVector[3], const Float:vVector2[3], const VecLenType:vlType = VecLen3D);
+/* Gets the dot product of two vectors. */
+native Float:GetVectorDotProduct(const Float:fVector1[3], const Float:fVector2[3], const VecLenType:vlType = VecLen3D);
 
-/* Gets the cross product of 2 vectors. */
-native vector_cross_product(const Float:vVector[3], const Float:vVector2[3], Float:vResult[3]);
+/* Gets the cross product of two vectors. */
+native GetVectorCrossProduct(const Float:fVector1[3], const Float:fVector2[3], Float:fProductVector[3]);
 
 /* Normalizes vector. */
-native normalize_vector(const Float:vSrc[3], Float:vDst[3], const VecLenType:vlType = VecLen3D);
+native NormalizeVector(const Float:vSource[3], Float:vDestination[3], const VecLenType:vlType = VecLen3D);
 
-/* Changes an integer vec to a floating vec
- * This is not a for loop because that's slower
+/* Changes an integer vec to a floating vec.
+ * This is not a for loop because that's slower.
  */
 stock IVecFVec(const IVec[3], Float:FVec[3])
 {

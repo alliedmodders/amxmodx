@@ -45,44 +45,39 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 	{
 		if (errcode)
 			*errcode = -1;
-		if (error && maxlength)
-		{
+
+		if (error && maxlength > 0)
 			UTIL_Format(error, maxlength, "Initialization failed");
-		}
+
 		return NULL;
 	}
 
-	if (do_timeout && info->max_timeout)
-	{
+	if (do_timeout && info->max_timeout > 0)
 		mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *)&(info->max_timeout));
-	}
 
-	if (mysql_real_connect(mysql, 
-							info->host, 
-							info->user, 
-							info->pass, 
-							info->database,
-							info->port,
-							NULL,
-							CLIENT_MULTI_STATEMENTS) == NULL)
+	/** Have MySQL automatically reconnect if it times out or loses connection.
+	 * This will prevent "MySQL server has gone away" errors after a while.
+	 * This is currently used for SourceMod.
+	 */
+	my_bool my_true = true;
+	mysql_options(mysql, MYSQL_OPT_RECONNECT, (const char *)&my_true);
+
+	if (mysql_real_connect(mysql, info->host, info->user, info->pass, info->database, info->port, \
+		NULL, CLIENT_MULTI_STATEMENTS) == NULL)
 	{
 		if (errcode)
-		{
 			*errcode = mysql_errno(mysql);
-		}
-		if (error && maxlength)
-		{
+
+		if (error && maxlength > 0)
 			UTIL_Format(error, maxlength, "%s", mysql_error(mysql));
-		}
+
 		return NULL;
 	}
 
 	MysqlDatabase *pMysql = new MysqlDatabase(mysql, this);
 
 	if (info->charset && *info->charset)
-	{
 		pMysql->SetCharacterSet(info->charset);
-	}
 
 	return static_cast<IDatabase *>(pMysql);
 }
@@ -93,16 +88,12 @@ int MysqlDriver::QuoteString(const char *str, char buffer[], size_t maxlen, size
 	unsigned long needed = size*2 + 1;
 
 	if (maxlen < needed)
-	{
 		return (int)needed;
-	}
 
 	needed = mysql_escape_string(buffer, str, size);
+
 	if (newsize)
-	{
 		*newsize = static_cast<size_t>(needed);
-	}
 
 	return 0;
 }
-

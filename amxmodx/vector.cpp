@@ -251,6 +251,87 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 	return amx_ftoc(fDist);
 }
 
+static cell AMX_NATIVE_CALL vector_dot_product(AMX *amx, cell *params)
+{
+	cell *cpVec1 = get_amxaddr(amx, params[1]);
+	cell *cpVec2 = get_amxaddr(amx, params[2]);
+
+	Vector vec1((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
+	Vector vec2((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+
+	VecLenType vlType = (VecLenType)params[3];
+
+	REAL fRet = 0.0f;
+
+	switch (vlType)
+	{
+	case VecLen3D:
+		fRet = DotProduct(vec1, vec2);
+
+		break;
+
+	case VecLen2D:
+		fRet = DotProduct(vec1.Make2D(), vec2.Make2D());
+
+		break;
+
+	default:
+		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
+
+		break;
+	}
+
+	return amx_ftoc(fRet);
+}
+
+static cell AMX_NATIVE_CALL vector_cross_product(AMX *amx, cell *params)
+{
+	cell *cpVec1 = get_amxaddr(amx, params[1]);
+	cell *cpVec2 = get_amxaddr(amx, params[2]);
+
+	Vector vec1((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
+	Vector vec2((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+
+	return amx_ftoc(CrossProduct(vec1, vec2));
+}
+
+static cell AMX_NATIVE_CALL normalize_vector(AMX *amx, cell *params)
+{
+	cell *cpVec = get_amxaddr(amx, params[1]);
+	cell *cpRet = get_amxaddr(amx, params[2]);
+
+	Vector vec((float)amx_ctof(cpVec[0]), (float)amx_ctof(cpVec[1]), (float)amx_ctof(cpVec[2]));
+
+	VecLenType vlType = (VecLenType)params[3];
+
+	switch (vlType)
+	{
+	case VecLen3D:
+		Vector norm = vec.Normalize();
+
+		cpRet[0] = amx_ftoc(norm.x);
+		cpRet[1] = amx_ftoc(norm.y);
+		cpRet[2] = amx_ftoc(norm.z);
+
+		break;
+
+	case VecLen2D:
+		Vector2D norm = vec.Make2D().Normalize();
+
+		cpRet[0] = amx_ftoc(norm.x);
+		cpRet[1] = amx_ftoc(norm.y);
+
+		break;
+
+	default:
+		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
+
+		break;
+	}
+
+	return 0;
+}
+
 AMX_NATIVE_INFO vector_Natives[] = {
 	{"get_distance",		get_distance},
 	{"get_distance_f",		get_distance_f},
@@ -259,5 +340,8 @@ AMX_NATIVE_INFO vector_Natives[] = {
 	{"angle_vector",		angle_vector},
 	{"vector_length",		vector_length},
 	{"vector_distance",		vector_distance},
+	{"vector_dot_product",		vector_dot_product},
+	{"vector_cross_product",	vector_cross_product},
+	{"normalize_vector",		normalize_vector},
 	{NULL,					NULL},
 };

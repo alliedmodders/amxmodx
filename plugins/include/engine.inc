@@ -82,7 +82,7 @@ native get_decal_index(const szDecalName[]);
  *
  * @return                  The Fl. value of the distance between entities.
  */
-native Float:entity_range(IdA, IdB, const VecLenType:vlType = VecLen3D);
+native Float:entity_range(const IdA, const IdB, const VecLenType:vlType = VecLen3D);
 
 /* Sets/gets things in an entities Entvars Struct. */
 native entity_get_int(iIndex, iKey);

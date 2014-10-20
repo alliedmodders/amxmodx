@@ -27,12 +27,12 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 
 	switch (lenType)
 	{
-	case len3d:
+	case Len3d:
 		iDist = (int)(vec1 - vec2).Length();
 
 		break;
 
-	case len2d:
+	case Len2d:
 		iDist = (int)(vec1 - vec2).Length2D();
 
 		break;
@@ -60,12 +60,12 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 
 	switch (lenType)
 	{
-	case len3d:
+	case Len3d:
 		fDist = (REAL)(vec1 - vec2).Length();
 
 		break;
 
-	case len2d:
+	case Len2d:
 		fDist = (REAL)(vec1 - vec2).Length2D();
 
 		break;
@@ -192,12 +192,12 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 
 	switch (lenType)
 	{
-	case len3d:
+	case Len3d:
 		fLen = (REAL)vVector.Length();
 
 		break;
 
-	case len2d:
+	case Len2d:
 		fLen = (REAL)vVector.Length2D();
 
 		break;
@@ -232,12 +232,12 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 
 	switch (lenType)
 	{
-	case len3d:
+	case Len3d:
 		fDist = (REAL)(vVector - vVector2).Length();
 
 		break;
 
-	case len3d:
+	case Len2d:
 		fDist = (REAL)(vVector - vVector2).Length2D();
 
 		break;

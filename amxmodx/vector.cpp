@@ -9,9 +9,15 @@
 
 #include "amxmodx.h"
 
-#define ANGLEVECTORS_FORWARD	1
-#define ANGLEVECTORS_RIGHT	2
-#define ANGLEVECTORS_UP		3
+#define ANGLEVECTORS_FORWARD 1
+#define ANGLEVECTORS_RIGHT 2
+#define ANGLEVECTORS_UP 3
+
+/**
+ * Sets vector to address.
+ */
+#define SET_VECTOR(Addr, Vec) Addr[0] = FloatToCell(Vec.x), Addr[1] = FloatToCell(Vec.y), Addr[2] = FloatToCell(Vec.z);
+#define SET_VECTOR2D(Addr, Vec) Addr[0] = FloatToCell(Vec.x), Addr[1] = FloatToCell(Vec.y);
 
 /**
  * Returns vector's length if pVecB is null.
@@ -23,13 +29,8 @@ REAL ComputeVectorLength(Vector & VecA, Vector * pVecB = NULL /* Optional */, Ve
 
 	switch (Type)
 	{
-	case VecLen3D:
-		Length = pVecB ? (REAL)(VecA - *pVecB).Length() : (REAL)VecA.Length();
-		break;
-
-	case VecLen2D:
-		Length = pVecB ? (REAL)(VecA - *pVecB).Length2D() : (REAL)VecA.Length2D();
-		break;
+		case VecLen3D: Length = pVecB ? (VecA - *pVecB).Length() : VecA.Length(); break;
+		case VecLen2D: Length = pVecB ? (VecA - *pVecB).Length2D() : VecA.Length2D(); break;
 	}
 
 	return Length;
@@ -40,8 +41,8 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 	cell * pVecA = get_amxaddr(amx, params[1]);
 	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	Vector VecA((REAL)pVecA[0], (REAL)pVecA[1], (REAL)pVecA[2]);
-	Vector VecB((REAL)pVecB[0], (REAL)pVecB[1], (REAL)pVecB[2]);
+	Vector VecA(pVecA[0], pVecA[1], pVecA[2]);
+	Vector VecB(pVecB[0], pVecB[1], pVecB[2]);
 
 	return (cell)ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
 }
@@ -51,100 +52,83 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 	cell * pVecA = get_amxaddr(amx, params[1]);
 	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	Vector VecA((REAL)amx_ctof(pVecA[0]), (REAL)amx_ctof(pVecA[1]), (REAL)amx_ctof(pVecA[2]));
-	Vector VecB((REAL)amx_ctof(pVecB[0]), (REAL)amx_ctof(pVecB[1]), (REAL)amx_ctof(pVecB[2]));
+	Vector VecA(CellToFloat(pVecA[0]), CellToFloat(pVecA[1]), CellToFloat(pVecA[2]));
+	Vector VecB(CellToFloat(pVecB[0]), CellToFloat(pVecB[1]), CellToFloat(pVecB[2]));
 
 	REAL Length = ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
-
-	return amx_ftoc(Length);
+	return FloatToCell(Length);
 }
 
 static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 {
-	int iEntity = params[1], iVelocity = params[2];
+	int Entity = params[1], Velocity = params[2];
 	edict_t * pEntity = NULL;
 
 	if (iEntity < 0 || iEntity > gpGlobals->maxEntities)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", iEntity);
+		LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", Entity);
 		return 0;
 	}
 	else
 	{
-		if (iEntity > 0 && iEntity <= gpGlobals->maxClients)
+		if (Entity > 0 && Entity <= gpGlobals->maxClients)
 		{
-			if (!GET_PLAYER_POINTER_I(iEntity)->ingame)
+			if (!GET_PLAYER_POINTER_I(Entity)->ingame)
 			{
-				LogError(amx, AMX_ERR_NATIVE, "Player not in-game (%d)", iEntity);
+				LogError(amx, AMX_ERR_NATIVE, "Player not in-game (%d)", Entity);
 				return 0;
 			}
-
-			pEntity = GET_PLAYER_POINTER_I(iEntity)->pEdict;
+			pEntity = GET_PLAYER_POINTER_I(Entity)->pEdict;
 		}
 		else
-			pEntity = INDEXENT(iEntity);
+			pEntity = INDEXENT(Entity);
 	}
-
 	if (!pEntity)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Null entity (%d)", iEntity);
+		LogError(amx, AMX_ERR_NATIVE, "Null entity (%d)", Entity);
 		return 0;
 	}
 
 	MAKE_VECTORS(pEntity->v.v_angle);
-	Vector Result = gpGlobals->v_forward * iVelocity;
+	Vector Set = gpGlobals->v_forward * Velocity;
 
 	cell * pSet = get_amxaddr(amx, params[3]);
-	pSet[0] = FloatToCell(Result.x);
-	pSet[1] = FloatToCell(Result.y);
-	pSet[2] = FloatToCell(Result.z);
+	SET_VECTOR(pSet, Set)
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params)
 {
-	cell * pAddress = get_amxaddr(amx, params[1]);
-	Vector Source(amx_ctof(pAddress[0]), amx_ctof(pAddress[1]), amx_ctof(pAddress[2]));
+	cell * pSource = get_amxaddr(amx, params[1]);
+	Vector Source(CellToFloat(pSource[0]), CellToFloat(pSource[1]), CellToFloat(pSource[2]));
 
-	Vector Angles;
-	VEC_TO_ANGLES(Source, Angles);
+	Vector Set;
+	VEC_TO_ANGLES(Source, Set);
 
 	cell * pSet = get_amxaddr(amx, params[2]);
-	pSet[0] = FloatToCell(Angles.x);
-	pSet[1] = FloatToCell(Angles.y);
-	pSet[2] = FloatToCell(Angles.z);
+	SET_VECTOR(pSet, Set)
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 {
-	cell * pAngles = get_amxaddr(amx, params[1]);
-	Vector Angles(amx_ctof(pAngles[0]), amx_ctof(pAngles[1]), amx_ctof(pAngles[2]));
+	cell * pSource = get_amxaddr(amx, params[1]);
+	Vector Source(CellToFloat(pSource[0]), CellToFloat(pSource[1]), CellToFloat(pSource[2]));
 
-	Vector Result, Forward, Right, Up;
-	g_engfuncs.pfnAngleVectors(Angles, Forward, Right, Up);
+	Vector Set, Forward, Right, Up;
+	g_engfuncs.pfnAngleVectors(Source, Forward, Right, Up);
 
 	switch (params[2])
 	{
-	case ANGLEVECTORS_FORWARD:
-		Result = Forward;
-		break;
-
-	case ANGLEVECTORS_RIGHT:
-		Result = Right;
-		break;
-
-	case ANGLEVECTORS_UP:
-		Result = Up;
-		break;
+		case ANGLEVECTORS_FORWARD:	Set = Forward; break;
+		case ANGLEVECTORS_RIGHT:	Set = Right; break;
+		case ANGLEVECTORS_UP:		Set = Up; break;
 	}
 
-	pAngles = get_amxaddr(amx, params[3]);
-	pAngles[0] = FloatToCell(Result.x);
-	pAngles[1] = FloatToCell(Result.y);
-	pAngles[2] = FloatToCell(Result.z);
+	cell * pSet = get_amxaddr(amx, params[3]);
+	SET_VECTOR(pSet, Set)
 
 	return 1;
 }
@@ -152,11 +136,10 @@ static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 {
 	cell * pSource = get_amxaddr(amx, params[1]);
-	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
+	Vector Source(CellToFloat(pSource[0]), CellToFloat(pSource[1]), CellToFloat(pSource[2]));
 
 	REAL Length = ComputeVectorLength(Source, NULL, (VecLenType)params[2]);
-
-	return amx_ftoc(Length);
+	return FloatToCell(Length);
 }
 
 static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
@@ -164,12 +147,11 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 	cell * pVecA = get_amxaddr(amx, params[1]);
 	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
-	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
+	Vector VecA(CellToFloat(pVecA[0]), CellToFloat(pVecA[1]), CellToFloat(pVecA[2]));
+	Vector VecB(CellToFloat(pVecB[0]), CellToFloat(pVecB[1]), CellToFloat(pVecB[2]));
 
 	REAL Length = ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
-
-	return amx_ftoc(Length);
+	return FloatToCell(Length);
 }
 
 static cell AMX_NATIVE_CALL GetVectorDotProduct(AMX *amx, cell *params)
@@ -178,49 +160,43 @@ static cell AMX_NATIVE_CALL GetVectorDotProduct(AMX *amx, cell *params)
 	cell * pVecB = get_amxaddr(amx, params[2]);
 
 	VecLenType Type = (VecLenType)params[3];
-
 	REAL Product = 0.0f;
 
 	switch (Type)
 	{
 		case VecLen3D:
 		{
-			Vector VecA((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]), (float)amx_ctof(pVecA[2]));
-			Vector VecB((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]), (float)amx_ctof(pVecB[2]));
+			Vector VecA(CellToFloat(pVecA[0]), CellToFloat(pVecA[1]), CellToFloat(pVecA[2]));
+			Vector VecB(CellToFloat(pVecB[0]), CellToFloat(pVecB[1]), CellToFloat(pVecB[2]));
 
-			Product = (REAL)DotProduct(VecA, VecB);
-
+			Product = DotProduct(VecA, VecB);
 			break;
 		}
 
 		case VecLen2D:
 		{
-			Vector2D VecA2D((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]));
-			Vector2D VecB2D((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]));
+			Vector2D VecA2D(CellToFloat(pVecA[0]), CellToFloat(pVecA[1]));
+			Vector2D VecB2D(CellToFloat(pVecB[0]), CellToFloat(pVecB[1]));
 
-			Product = (REAL)DotProduct(VecA2D, VecB2D);
-
+			Product = DotProduct(VecA2D, VecB2D);
 			break;
 		}
 	}
 
-	return amx_ftoc(Product);
+	return FloatToCell(Product);
 }
 
 static cell AMX_NATIVE_CALL GetVectorCrossProduct(AMX *amx, cell *params)
 {
-	cell *pVecA = get_amxaddr(amx, params[1]);
-	cell *pVecB = get_amxaddr(amx, params[2]);
-	cell *pVecC = get_amxaddr(amx, params[3]);
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	Vector VecA((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]), (float)amx_ctof(pVecA[2]));
-	Vector VecB((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]), (float)amx_ctof(pVecB[2]));
+	Vector VecA(CellToFloat(pVecA[0]), CellToFloat(pVecA[1]), CellToFloat(pVecA[2]));
+	Vector VecB(CellToFloat(pVecB[0]), CellToFloat(pVecB[1]), CellToFloat(pVecB[2]));
 
-	Vector VecC = CrossProduct(VecA, VecB);
-
-	pVecC[0] = amx_ftoc(VecC.x);
-	pVecC[1] = amx_ftoc(VecC.y);
-	pVecC[2] = amx_ftoc(VecC.z);
+	Vector Set = CrossProduct(VecA, VecB);
+	cell * pSet = get_amxaddr(amx, params[3]);
+	SET_VECTOR(pSet, Set)
 
 	return 1;
 }
@@ -230,8 +206,7 @@ static cell AMX_NATIVE_CALL NormalizeVector(AMX *amx, cell *params)
 	cell * pSource = get_amxaddr(amx, params[1]);
 	cell * pSet = get_amxaddr(amx, params[2]);
 
-	Vector Source((float)amx_ctof(pSource[0]), (float)amx_ctof(pSource[1]), (float)amx_ctof(pSource[2]));
-
+	Vector Source(CellToFloat(pSource[0]), CellToFloat(pSource[1]), CellToFloat(pSource[2]));
 	VecLenType Type = (VecLenType)params[3];
 
 	switch (Type)
@@ -239,10 +214,7 @@ static cell AMX_NATIVE_CALL NormalizeVector(AMX *amx, cell *params)
 		case VecLen3D:
 		{
 			Vector Normalized = Source.Normalize();
-
-			pSet[0] = amx_ftoc(Normalized.x);
-			pSet[1] = amx_ftoc(Normalized.y);
-			pSet[2] = amx_ftoc(Normalized.z);
+			SET_VECTOR(pSet, Normalized)
 
 			break;
 		}
@@ -252,13 +224,11 @@ static cell AMX_NATIVE_CALL NormalizeVector(AMX *amx, cell *params)
 			Vector2D Source2D = Source.Make2D();
 			Vector2D Normalized2D = Source2D.Normalize();
 
-			pSet[0] = amx_ftoc(Normalized2D.x);
-			pSet[1] = amx_ftoc(Normalized2D.y);
+			SET_VECTOR2D(pSet, Normalized2D)
 
 			break;
 		}
 	}
-
 	return 1;
 }
 
@@ -273,5 +243,5 @@ AMX_NATIVE_INFO vector_Natives[] = {
 	{"GetVectorDotProduct",		GetVectorDotProduct},
 	{"GetVectorCrossProduct",	GetVectorCrossProduct},
 	{"NormalizeVector",		NormalizeVector},
-	{NULL,					NULL},
+	{NULL,				NULL},
 };

@@ -108,10 +108,10 @@ enum {
 	Meta_GetGameInfo		// const char *)		(plid_t plid, ginfo_t tag);
 };
 
-enum LengthType
+enum VecLenType
 {
-	Len3d = 0,
-	Len2d,
+	VecLen3D = 0,
+	VecLen2D,
 };
 
 //These two structs are relics from VexD

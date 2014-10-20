@@ -29,17 +29,12 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 	{
 	case VecLen3D:
 		iDist = (int)(vec1 - vec2).Length();
-
 		break;
-
 	case VecLen2D:
 		iDist = (int)(vec1 - vec2).Length2D();
-
 		break;
-
 	default:
 		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-
 		break;
 	}
 
@@ -62,17 +57,12 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 	{
 	case VecLen3D:
 		fDist = (REAL)(vec1 - vec2).Length();
-
 		break;
-
 	case VecLen2D:
 		fDist = (REAL)(vec1 - vec2).Length2D();
-
 		break;
-
 	default:
 		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-
 		break;
 	}
 
@@ -185,7 +175,6 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 	REAL fZ = amx_ctof(cAddr[2]);
 
 	Vector vVector = Vector(fX, fY, fZ);
-
 	VecLenType vlType = (VecLenType)params[2];
 
 	REAL fLen = 0.0f;
@@ -194,17 +183,12 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 	{
 	case VecLen3D:
 		fLen = (REAL)vVector.Length();
-
 		break;
-
 	case VecLen2D:
 		fLen = (REAL)vVector.Length2D();
-
 		break;
-
 	default:
 		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-
 		break;
 	}
 
@@ -227,24 +211,18 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 	Vector vVector2 = Vector(fX2, fY2, fZ2);
 
 	VecLenType vlType = (VecLenType)params[3];
-
 	REAL fDist = 0.0f;
 
 	switch (vlType)
 	{
 	case VecLen3D:
-		fDist = (REAL)(vVector - vVector2).Length();
-
+		fDist = (REL)(vVector - vVector2).Length();
 		break;
-
 	case VecLen2D:
 		fDist = (REAL)(vVector - vVector2).Length2D();
-
 		break;
-
 	default:
 		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-
 		break;
 	}
 
@@ -260,24 +238,18 @@ static cell AMX_NATIVE_CALL vector_dot_product(AMX *amx, cell *params)
 	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
 
 	VecLenType vlType = (VecLenType)params[3];
-
 	REAL fRet = 0.0f;
 
 	switch (vlType)
 	{
 	case VecLen3D:
 		fRet = (REAL) DotProduct(vec1, vec2);
-
 		break;
-
 	case VecLen2D:
 		fRet = (REAL) DotProduct(vec1.Make2D(), vec2.Make2D());
-
 		break;
-
 	default:
 		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-
 		break;
 	}
 
@@ -288,11 +260,18 @@ static cell AMX_NATIVE_CALL vector_cross_product(AMX *amx, cell *params)
 {
 	cell *cpVec1 = get_amxaddr(amx, params[1]);
 	cell *cpVec2 = get_amxaddr(amx, params[2]);
+	cell *cpRet = get_amxaddr(amx, params[3]);
 
 	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
 	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
 
-	return amx_ftoc((REAL)CrossProduct(vec1, vec2));
+	Vector vRet = CrossProduct(vec1, vec2);
+
+	cpRet[0] = amx_ftoc(vRet.x);
+	cpRet[1] = amx_ftoc(vRet.y);
+	cpRet[2] = amx_ftoc(vRet.z);
+
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL normalize_vector(AMX *amx, cell *params)
@@ -301,31 +280,23 @@ static cell AMX_NATIVE_CALL normalize_vector(AMX *amx, cell *params)
 	cell *cpRet = get_amxaddr(amx, params[2]);
 
 	Vector vVector = Vector((float)amx_ctof(cpVec[0]), (float)amx_ctof(cpVec[1]), (float)amx_ctof(cpVec[2]));
-
 	VecLenType vlType = (VecLenType)params[3];
 
 	switch (vlType)
 	{
 	case VecLen3D:
 		Vector vNorm = vVector.Normalize();
-
 		cpRet[0] = amx_ftoc(vNorm.x);
 		cpRet[1] = amx_ftoc(vNorm.y);
 		cpRet[2] = amx_ftoc(vNorm.z);
-
 		break;
-
 	case VecLen2D:
-		Vector2D vNorm = vVector.Make2D().Normalize();
-
-		cpRet[0] = amx_ftoc(vNorm.x);
-		cpRet[1] = amx_ftoc(vNorm.y);
-
+		Vector2D vNorm2D = vVector.Make2D().Normalize();
+		cpRet[0] = amx_ftoc(vNorm2D.x);
+		cpRet[1] = amx_ftoc(vNorm2D.y);
 		break;
-
 	default:
 		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-
 		break;
 	}
 

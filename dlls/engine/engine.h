@@ -108,9 +108,10 @@ enum {
 	Meta_GetGameInfo		// const char *)		(plid_t plid, ginfo_t tag);
 };
 
-enum distanceType {
-	distance3d = 0u,	// old compatibility, zero or <unset> for len3d
-	distance2d,
+enum LengthType
+{
+	Len3d = 0,
+	Len2d,
 };
 
 //These two structs are relics from VexD

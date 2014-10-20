@@ -10,297 +10,256 @@
 #include "amxmodx.h"
 
 #define ANGLEVECTORS_FORWARD	1
-#define ANGLEVECTORS_RIGHT		2
-#define ANGLEVECTORS_UP			3
+#define ANGLEVECTORS_RIGHT	2
+#define ANGLEVECTORS_UP		3
 
-static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
+/**
+ * Returns vector's length if pVecB is null.
+ * Returns the distance between vectors otherwise.
+ */
+REAL ComputeVectorLength(AMX * pAMXHandle, Vector & VecA, Vector * pVecB /* Optional */, VecLenType Type)
 {
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
+	REAL Length = 0.0f;
 
-	Vector vec1 = Vector((float)cpVec1[0], (float)cpVec1[1], (float)cpVec1[2]);
-	Vector vec2 = Vector((float)cpVec2[0], (float)cpVec2[1], (float)cpVec2[2]);
-
-	VecLenType vlType = (VecLenType)params[3];
-
-	int iDist = 0;
-
-	switch (vlType)
+	switch (Type)
 	{
 	case VecLen3D:
-		iDist = (int)(vec1 - vec2).Length();
+		Length = pVecB ? (REAL)(VecA - *pVecB).Length() : (REAL)VecA.Length();
 		break;
+
 	case VecLen2D:
-		iDist = (int)(vec1 - vec2).Length2D();
+		Length = pVecB ? (REAL)(VecA - *pVecB).Length2D() : (REAL)VecA.Length2D();
 		break;
+
 	default:
-		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
+		LogError(pAMXHandle, AMX_ERR_NATIVE, "Invalid vector length type parameter (%d)", (int)Type);
 		break;
 	}
 
-	return iDist;
+	return Length;
+}
+
+static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
+{
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
+
+	Vector VecA((REAL)pVecA[0], (REAL)pVecA[1], (REAL)pVecA[2]);
+	Vector VecB((REAL)pVecB[0], (REAL)pVecB[1], (REAL)pVecB[2]);
+
+	return (cell)ComputeVectorLength(amx, VecA, & VecB, (VecLenType)params[3]);
 }
 
 static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 {
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
-	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+	Vector VecA((REAL)amx_ctof(pVecA[0]), (REAL)amx_ctof(pVecA[1]), (REAL)amx_ctof(pVecA[2]));
+	Vector VecB((REAL)amx_ctof(pVecB[0]), (REAL)amx_ctof(pVecB[1]), (REAL)amx_ctof(pVecB[2]));
 
-	VecLenType vlType = (VecLenType)params[3];
-
-	REAL fDist = 0.0f;
-
-	switch (vlType)
-	{
-	case VecLen3D:
-		fDist = (REAL)(vec1 - vec2).Length();
-		break;
-	case VecLen2D:
-		fDist = (REAL)(vec1 - vec2).Length2D();
-		break;
-	default:
-		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-		break;
-	}
-
-	return amx_ftoc(fDist);
+	return amx_ftoc(ComputeVectorLength(amx, VecA, & VecB, (VecLenType)params[3]));
 }
 
 static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int iVelocity = params[2];
-	cell *vRet = get_amxaddr(amx, params[3]);
-	Vector vVector = Vector(0, 0, 0);
-	edict_t *pEnt = NULL;
+	int iEntity = params[1], iVelocity = params[2];
+	edict_t * pEntity = NULL;
 
-	if (iEnt < 0 || iEnt > gpGlobals->maxEntities)
+	if (iEntity < 0 || iEntity > gpGlobals->maxEntities)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", iEnt);
+		LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", iEntity);
 		return 0;
 	}
 	else
 	{
-		if (iEnt > 0 && iEnt <= gpGlobals->maxClients)
+		if (iEntity > 0 && iEntity <= gpGlobals->maxClients)
 		{
-			if (!GET_PLAYER_POINTER_I(iEnt)->ingame)
+			if (!GET_PLAYER_POINTER_I(iEntity)->ingame)
 			{
-				LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not ingame)", iEnt);
+				LogError(amx, AMX_ERR_NATIVE, "Player not in-game (%d)", iEntity);
 				return 0;
 			}
-			pEnt = GET_PLAYER_POINTER_I(iEnt)->pEdict;
-		} else {
-			pEnt = INDEXENT(iEnt);
+
+			pEntity = GET_PLAYER_POINTER_I(iEntity)->pEdict;
 		}
+		else
+			pEntity = INDEXENT(iEntity);
 	}
 
-	if (!pEnt)
+	if (!pEntity)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d (nullent)", iEnt);
+		LogError(amx, AMX_ERR_NATIVE, "Null entity (%d)", iEntity);
 		return 0;
 	}
 
-	MAKE_VECTORS(pEnt->v.v_angle);
-	vVector = gpGlobals->v_forward * iVelocity;
+	MAKE_VECTORS(pEntity->v.v_angle);
+	Vector Result = gpGlobals->v_forward * iVelocity;
 
-	vRet[0] = FloatToCell(vVector.x);
-	vRet[1] = FloatToCell(vVector.y);
-	vRet[2] = FloatToCell(vVector.z);
+	cell * pSet = get_amxaddr(amx, params[3]);
+	pSet[0] = FloatToCell(Result.x);
+	pSet[1] = FloatToCell(Result.y);
+	pSet[2] = FloatToCell(Result.z);
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params)
 {
-	cell *cAddr = get_amxaddr(amx, params[1]);
+	cell * pAddress = get_amxaddr(amx, params[1]);
+	Vector Source(amx_ctof(pAddress[0]), amx_ctof(pAddress[1]), amx_ctof(pAddress[2]));
 
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
+	Vector Angles;
+	VEC_TO_ANGLES(Source, Angles);
 
-	Vector vVector = Vector(fX, fY, fZ);
-	Vector vAngle = Vector(0, 0, 0);
-	VEC_TO_ANGLES(vVector, vAngle);
-
-	cell *vRet = get_amxaddr(amx, params[2]);
-
-	vRet[0] = FloatToCell(vAngle.x);
-	vRet[1] = FloatToCell(vAngle.y);
-	vRet[2] = FloatToCell(vAngle.z);
+	cell * pSet = get_amxaddr(amx, params[2]);
+	pSet[0] = FloatToCell(Angles.x);
+	pSet[1] = FloatToCell(Angles.y);
+	pSet[2] = FloatToCell(Angles.z);
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 {
-	Vector v_angles, v_forward, v_right, v_up, v_return;
+	cell * pAngles = get_amxaddr(amx, params[1]);
+	Vector Angles(amx_ctof(pAngles[0]), amx_ctof(pAngles[1]), amx_ctof(pAngles[2]));
 
-	cell *vCell = get_amxaddr(amx, params[1]);
-	v_angles.x = amx_ctof(vCell[0]);
-	v_angles.y = amx_ctof(vCell[1]);
-	v_angles.z = amx_ctof(vCell[2]);
-
-	g_engfuncs.pfnAngleVectors(v_angles, v_forward, v_right, v_up);
+	Vector Result, Forward, Right, Up;
+	g_engfuncs.pfnAngleVectors(Angles, Forward, Right, Up);
 
 	switch (params[2])
 	{
 	case ANGLEVECTORS_FORWARD:
-		v_return = v_forward;
+		Result = Forward;
 		break;
+
 	case ANGLEVECTORS_RIGHT:
-		v_return = v_right;
+		Result = Right;
 		break;
+
 	case ANGLEVECTORS_UP:
-		v_return = v_up;
+		Result = Up;
 		break;
 	}
 
-	vCell = get_amxaddr(amx, params[3]);
-	vCell[0] = FloatToCell(v_return.x);
-	vCell[1] = FloatToCell(v_return.y);
-	vCell[2] = FloatToCell(v_return.z);
+	pAngles = get_amxaddr(amx, params[3]);
+	pAngles[0] = FloatToCell(Result.x);
+	pAngles[1] = FloatToCell(Result.y);
+	pAngles[2] = FloatToCell(Result.z);
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 {
-	cell *cAddr = get_amxaddr(amx, params[1]);
+	cell * pSource = get_amxaddr(amx, params[1]);
+	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
 
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
-
-	Vector vVector = Vector(fX, fY, fZ);
-	VecLenType vlType = (VecLenType)params[2];
-
-	REAL fLen = 0.0f;
-
-	switch (vlType)
-	{
-	case VecLen3D:
-		fLen = (REAL)vVector.Length();
-		break;
-	case VecLen2D:
-		fLen = (REAL)vVector.Length2D();
-		break;
-	default:
-		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-		break;
-	}
-
-	return amx_ftoc(fLen);
+	return amx_ftoc(ComputeVectorLength(amx, Source, NULL, (VecLenType)params[2]));
 }
 
 static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 {
-	cell *cAddr = get_amxaddr(amx, params[1]);
-	cell *cAddr2 = get_amxaddr(amx, params[2]);
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
-	REAL fX2 = amx_ctof(cAddr2[0]);
-	REAL fY2 = amx_ctof(cAddr2[1]);
-	REAL fZ2 = amx_ctof(cAddr2[2]);
+	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
+	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
 
-	Vector vVector = Vector(fX, fY, fZ);
-	Vector vVector2 = Vector(fX2, fY2, fZ2);
+	return amx_ftoc(ComputeVectorLength(amx, Source, & VecB, (VecLenType)params[3]));
+}
 
-	VecLenType vlType = (VecLenType)params[3];
-	REAL fDist = 0.0f;
+static cell AMX_NATIVE_CALL GetVectorDotProduct(AMX *amx, cell *params)
+{
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	switch (vlType)
+	VecLenType Type = (VecLenType)params[3];
+
+	REAL Product = 0.0f;
+
+	switch (Type)
 	{
 	case VecLen3D:
-		fDist = (REL)(vVector - vVector2).Length();
+		Vector VecA((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]), (float)amx_ctof(pVecA[2]));
+		Vector VecB((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]), (float)amx_ctof(pVecB[2]));
+
+		Product = (REAL)DotProduct(VecA, VecB);
+
 		break;
+
 	case VecLen2D:
-		fDist = (REAL)(vVector - vVector2).Length2D();
+		Vector2D VecA((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]));
+		Vector2D VecB((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]));
+
+		Product = (REAL)DotProduct(VecA, VecB);
+
 		break;
+
 	default:
-		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid vector length type parameter (%d)", (int)Type);
+
 		break;
 	}
 
-	return amx_ftoc(fDist);
+	return amx_ftoc(Product);
 }
 
-static cell AMX_NATIVE_CALL vector_dot_product(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL GetVectorCrossProduct(AMX *amx, cell *params)
 {
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
+	cell *pVecA = get_amxaddr(amx, params[1]);
+	cell *pVecB = get_amxaddr(amx, params[2]);
+	cell *pVecC = get_amxaddr(amx, params[3]);
 
-	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
-	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+	Vector VecA((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]), (float)amx_ctof(pVecA[2]));
+	Vector VecB((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]), (float)amx_ctof(pVecB[2]));
 
-	VecLenType vlType = (VecLenType)params[3];
-	REAL fRet = 0.0f;
+	Vector VecC = CrossProduct(VecA, VecB);
 
-	switch (vlType)
+	pVecC[0] = amx_ftoc(VecC.x);
+	pVecC[1] = amx_ftoc(VecC.y);
+	pVecC[2] = amx_ftoc(VecC.z);
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL NormalizeVector(AMX *amx, cell *params)
+{
+	cell * pSource = get_amxaddr(amx, params[1]);
+	cell * pSet = get_amxaddr(amx, params[2]);
+
+	Vector Source((float)amx_ctof(pSource[0]), (float)amx_ctof(pSource[1]), (float)amx_ctof(pSource[2]));
+
+	VecLenType Type = (VecLenType)params[3];
+
+	switch (Type)
 	{
 	case VecLen3D:
-		fRet = (REAL) DotProduct(vec1, vec2);
+		Vector Normalized = Source.Normalize();
+
+		pSet[0] = amx_ftoc(vNorm.x);
+		pSet[1] = amx_ftoc(vNorm.y);
+		pSet[2] = amx_ftoc(vNorm.z);
+
 		break;
+
 	case VecLen2D:
-		fRet = (REAL) DotProduct(vec1.Make2D(), vec2.Make2D());
+		Vector2D Source2D = Source.Make2D();
+		Vector2D Normalized = Source2D.Normalize();
+
+		pSet[0] = amx_ftoc(Normalized.x);
+		pSet[1] = amx_ftoc(Normalized.y);
+
 		break;
+
 	default:
-		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)Type);
+
 		break;
 	}
 
-	return amx_ftoc(fRet);
-}
-
-static cell AMX_NATIVE_CALL vector_cross_product(AMX *amx, cell *params)
-{
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
-	cell *cpRet = get_amxaddr(amx, params[3]);
-
-	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
-	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
-
-	Vector vRet = CrossProduct(vec1, vec2);
-
-	cpRet[0] = amx_ftoc(vRet.x);
-	cpRet[1] = amx_ftoc(vRet.y);
-	cpRet[2] = amx_ftoc(vRet.z);
-
-	return 0;
-}
-
-static cell AMX_NATIVE_CALL normalize_vector(AMX *amx, cell *params)
-{
-	cell *cpVec = get_amxaddr(amx, params[1]);
-	cell *cpRet = get_amxaddr(amx, params[2]);
-
-	Vector vVector = Vector((float)amx_ctof(cpVec[0]), (float)amx_ctof(cpVec[1]), (float)amx_ctof(cpVec[2]));
-	VecLenType vlType = (VecLenType)params[3];
-
-	switch (vlType)
-	{
-	case VecLen3D:
-		Vector vNorm = vVector.Normalize();
-		cpRet[0] = amx_ftoc(vNorm.x);
-		cpRet[1] = amx_ftoc(vNorm.y);
-		cpRet[2] = amx_ftoc(vNorm.z);
-		break;
-	case VecLen2D:
-		Vector2D vNorm2D = vVector.Make2D().Normalize();
-		cpRet[0] = amx_ftoc(vNorm2D.x);
-		cpRet[1] = amx_ftoc(vNorm2D.y);
-		break;
-	default:
-		LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
-		break;
-	}
-
-	return 0;
+	return 1;
 }
 
 AMX_NATIVE_INFO vector_Natives[] = {
@@ -311,8 +270,8 @@ AMX_NATIVE_INFO vector_Natives[] = {
 	{"angle_vector",		angle_vector},
 	{"vector_length",		vector_length},
 	{"vector_distance",		vector_distance},
-	{"vector_dot_product",		vector_dot_product},
-	{"vector_cross_product",	vector_cross_product},
-	{"normalize_vector",		normalize_vector},
+	{"GetVectorDotProduct",		GetVectorDotProduct},
+	{"GetVectorCrossProduct",	GetVectorCrossProduct},
+	{"NormalizeVector",		NormalizeVector},
 	{NULL,					NULL},
 };

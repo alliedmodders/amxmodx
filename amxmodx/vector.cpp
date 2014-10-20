@@ -256,8 +256,8 @@ static cell AMX_NATIVE_CALL vector_dot_product(AMX *amx, cell *params)
 	cell *cpVec1 = get_amxaddr(amx, params[1]);
 	cell *cpVec2 = get_amxaddr(amx, params[2]);
 
-	Vector vec1((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
-	Vector vec2((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
+	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
 
 	VecLenType vlType = (VecLenType)params[3];
 
@@ -266,12 +266,12 @@ static cell AMX_NATIVE_CALL vector_dot_product(AMX *amx, cell *params)
 	switch (vlType)
 	{
 	case VecLen3D:
-		fRet = DotProduct(vec1, vec2);
+		fRet = (REAL) DotProduct(vec1, vec2);
 
 		break;
 
 	case VecLen2D:
-		fRet = DotProduct(vec1.Make2D(), vec2.Make2D());
+		fRet = (REAL) DotProduct(vec1.Make2D(), vec2.Make2D());
 
 		break;
 
@@ -289,10 +289,10 @@ static cell AMX_NATIVE_CALL vector_cross_product(AMX *amx, cell *params)
 	cell *cpVec1 = get_amxaddr(amx, params[1]);
 	cell *cpVec2 = get_amxaddr(amx, params[2]);
 
-	Vector vec1((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
-	Vector vec2((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
+	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
 
-	return amx_ftoc(CrossProduct(vec1, vec2));
+	return amx_ftoc((REAL)CrossProduct(vec1, vec2));
 }
 
 static cell AMX_NATIVE_CALL normalize_vector(AMX *amx, cell *params)
@@ -300,26 +300,26 @@ static cell AMX_NATIVE_CALL normalize_vector(AMX *amx, cell *params)
 	cell *cpVec = get_amxaddr(amx, params[1]);
 	cell *cpRet = get_amxaddr(amx, params[2]);
 
-	Vector vec((float)amx_ctof(cpVec[0]), (float)amx_ctof(cpVec[1]), (float)amx_ctof(cpVec[2]));
+	Vector vVector = Vector((float)amx_ctof(cpVec[0]), (float)amx_ctof(cpVec[1]), (float)amx_ctof(cpVec[2]));
 
 	VecLenType vlType = (VecLenType)params[3];
 
 	switch (vlType)
 	{
 	case VecLen3D:
-		Vector norm = vec.Normalize();
+		Vector vNorm = vVector.Normalize();
 
-		cpRet[0] = amx_ftoc(norm.x);
-		cpRet[1] = amx_ftoc(norm.y);
-		cpRet[2] = amx_ftoc(norm.z);
+		cpRet[0] = amx_ftoc(vNorm.x);
+		cpRet[1] = amx_ftoc(vNorm.y);
+		cpRet[2] = amx_ftoc(vNorm.z);
 
 		break;
 
 	case VecLen2D:
-		Vector2D norm = vec.Make2D().Normalize();
+		Vector2D vNorm = vVector.Make2D().Normalize();
 
-		cpRet[0] = amx_ftoc(norm.x);
-		cpRet[1] = amx_ftoc(norm.y);
+		cpRet[0] = amx_ftoc(vNorm.x);
+		cpRet[1] = amx_ftoc(vNorm.y);
 
 		break;
 

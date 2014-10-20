@@ -465,10 +465,10 @@ enum AdminProp
 };
 
 /**
- * Distance constants
-  */
-enum /* distanceType */
+ * Vector length type constants
+ */
+enum /* LengthType */
 {
-	distance3d = 0,	// old compatibility, zero or <unset> for len3d
-	distance2d,
+	Len3d = 0,
+	Len2d
 };

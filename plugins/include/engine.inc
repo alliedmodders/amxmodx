@@ -74,7 +74,7 @@ native entity_set_size(index, const Float:mins[3], const Float:maxs[3]);
 native get_decal_index(const szDecalName[]);
 
 /* Returns the distance between two entities. */
-native Float:entity_range(ida, idb, const lenType = Len3d);
+native Float:entity_range(ida, idb, const LengthType:lenType = Len3d);
 
 /* Sets/gets things in an entities Entvars Struct. */
 native entity_get_int(iIndex, iKey);

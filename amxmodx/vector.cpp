@@ -17,7 +17,7 @@
  * Returns vector's length if pVecB is null.
  * Returns the distance between vectors otherwise.
  */
-REAL ComputeVectorLength(Vector & VecA, Vector * pVecB = NULL /* Optional */, VecLenType Type)
+REAL ComputeVectorLength(Vector & VecA, Vector * pVecB = NULL /* Optional */, VecLenType Type = VecLen3D)
 {
 	REAL Length = 0.0f;
 

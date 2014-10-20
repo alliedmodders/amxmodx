@@ -40,38 +40,31 @@ int is_ent_valid(int iEnt)
 
 static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 {
-	int idxa = params[1];
-	int idxb = params[2];
+	int IdA = params[1], IdB = params[2];
+	VecLenType Type = (VecLenType)params[3];
 
-	VecLenType vlType = (VecLenType)params[3];
+	CHECK_ENTITY(IdA);
+	CHECK_ENTITY(IdB);
 
-	CHECK_ENTITY(idxa);
-	CHECK_ENTITY(idxb);
+	edict_t * pEntA = INDEXENT2(IdA);
+	edict_t * pEntB = INDEXENT2(IdB);
 
-	edict_t *pEntA = INDEXENT2(idxa);
-	edict_t *pEntB = INDEXENT2(idxb);
+	REAL Length = 0.0f;
 
-	REAL fRet = 0.0f;
-
-	switch (vlType)
+	switch (Type)
 	{
 	case VecLen3D:
-		fRet = (REAL)(pEntA->v.origin - pEntB->v.origin).Length();
+		Length = (REAL)(pEntA->v.origin - pEntB->v.origin).Length();
 
 		break;
 
 	case VecLen2D:
-		fRet = (REAL)(pEntA->v.origin - pEntB->v.origin).Length2D();
-
-		break;
-
-	default:
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid length type parameter (%d)", (int)vlType);
+		Length = (REAL)(pEntA->v.origin - pEntB->v.origin).Length2D();
 
 		break;
 	}
 
-	return amx_ftoc(fRet);
+	return amx_ftoc(Length);
 }
 
 /*********************

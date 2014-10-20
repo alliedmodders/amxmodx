@@ -17,7 +17,7 @@
  * Returns vector's length if pVecB is null.
  * Returns the distance between vectors otherwise.
  */
-REAL ComputeVectorLength(Vector & VecA, Vector * pVecB /* Optional */, VecLenType Type)
+REAL ComputeVectorLength(Vector & VecA, Vector * pVecB = NULL /* Optional */, VecLenType Type)
 {
 	REAL Length = 0.0f;
 
@@ -183,21 +183,25 @@ static cell AMX_NATIVE_CALL GetVectorDotProduct(AMX *amx, cell *params)
 
 	switch (Type)
 	{
-	case VecLen3D:
-		Vector VecA((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]), (float)amx_ctof(pVecA[2]));
-		Vector VecB((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]), (float)amx_ctof(pVecB[2]));
+		case VecLen3D:
+		{
+			Vector VecA((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]), (float)amx_ctof(pVecA[2]));
+			Vector VecB((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]), (float)amx_ctof(pVecB[2]));
 
-		Product = (REAL)DotProduct(VecA, VecB);
+			Product = (REAL)DotProduct(VecA, VecB);
 
-		break;
+			break;
+		}
 
-	case VecLen2D:
-		Vector2D VecA2D((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]));
-		Vector2D VecB2D((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]));
+		case VecLen2D:
+		{
+			Vector2D VecA2D((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]));
+			Vector2D VecB2D((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]));
 
-		Product = (REAL)DotProduct(VecA2D, VecB2D);
+			Product = (REAL)DotProduct(VecA2D, VecB2D);
 
-		break;
+			break;
+		}
 	}
 
 	return amx_ftoc(Product);
@@ -232,23 +236,27 @@ static cell AMX_NATIVE_CALL NormalizeVector(AMX *amx, cell *params)
 
 	switch (Type)
 	{
-	case VecLen3D:
-		Vector Normalized = Source.Normalize();
+		case VecLen3D:
+		{
+			Vector Normalized = Source.Normalize();
 
-		pSet[0] = amx_ftoc(Normalized.x);
-		pSet[1] = amx_ftoc(Normalized.y);
-		pSet[2] = amx_ftoc(Normalized.z);
+			pSet[0] = amx_ftoc(Normalized.x);
+			pSet[1] = amx_ftoc(Normalized.y);
+			pSet[2] = amx_ftoc(Normalized.z);
 
-		break;
+			break;
+		}
 
-	case VecLen2D:
-		Vector2D Source2D = Source.Make2D();
-		Vector2D Normalized2D = Source2D.Normalize();
+		case VecLen2D:
+		{
+			Vector2D Source2D = Source.Make2D();
+			Vector2D Normalized2D = Source2D.Normalize();
 
-		pSet[0] = amx_ftoc(Normalized2D.x);
-		pSet[1] = amx_ftoc(Normalized2D.y);
+			pSet[0] = amx_ftoc(Normalized2D.x);
+			pSet[1] = amx_ftoc(Normalized2D.y);
 
-		break;
+			break;
+		}
 	}
 
 	return 1;

@@ -51,8 +51,8 @@ static cell AMX_NATIVE_CALL entity_range(AMX *amx, cell *params)
 
 	switch (Type)
 	{
-		case VecLen3D: Length = (REAL)(pEntA->v.origin - pEntB->v.origin).Length(); break;
-		case VecLen2D: Length = (REAL)(pEntA->v.origin - pEntB->v.origin).Length2D(); break;
+		case VecLen3D: Length = (pEntA->v.origin - pEntB->v.origin).Length(); break;
+		case VecLen2D: Length = (pEntA->v.origin - pEntB->v.origin).Length2D(); break;
 	}
 	return amx_ftoc(Length);
 }

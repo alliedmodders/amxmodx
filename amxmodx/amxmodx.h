@@ -357,10 +357,10 @@ enum PrintColor
 	print_team_blue = -3,
 };
 
-enum LengthType
+enum VecLenType
 {
-	Len3d = 0,
-	Len2d,
+	VecLen3D = 0,
+	VecLen2D,
 };
 
 extern enginefuncs_t *g_pEngTable;

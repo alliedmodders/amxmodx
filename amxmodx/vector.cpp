@@ -58,7 +58,9 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 	Vector VecA((REAL)amx_ctof(pVecA[0]), (REAL)amx_ctof(pVecA[1]), (REAL)amx_ctof(pVecA[2]));
 	Vector VecB((REAL)amx_ctof(pVecB[0]), (REAL)amx_ctof(pVecB[1]), (REAL)amx_ctof(pVecB[2]));
 
-	return amx_ftoc(ComputeVectorLength(amx, VecA, & VecB, (VecLenType)params[3]));
+	REAL Length = ComputeVectorLength(amx, VecA, & VecB, (VecLenType)params[3]);
+
+	return amx_ftoc(Length);
 }
 
 static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
@@ -156,7 +158,9 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 	cell * pSource = get_amxaddr(amx, params[1]);
 	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
 
-	return amx_ftoc(ComputeVectorLength(amx, Source, NULL, (VecLenType)params[2]));
+	REAL Length = ComputeVectorLength(amx, Source, NULL, (VecLenType)params[2]);
+
+	return amx_ftoc(Length);
 }
 
 static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
@@ -167,7 +171,9 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
 	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
 
-	return amx_ftoc(ComputeVectorLength(amx, Source, & VecB, (VecLenType)params[3]));
+	REAL Length = ComputeVectorLength(amx, Source, & VecB, (VecLenType)params[3]);
+
+	return amx_ftoc(Length);
 }
 
 static cell AMX_NATIVE_CALL GetVectorDotProduct(AMX *amx, cell *params)
@@ -190,10 +196,10 @@ static cell AMX_NATIVE_CALL GetVectorDotProduct(AMX *amx, cell *params)
 		break;
 
 	case VecLen2D:
-		Vector2D VecA((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]));
-		Vector2D VecB((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]));
+		Vector2D VecA2D((float)amx_ctof(pVecA[0]), (float)amx_ctof(pVecA[1]));
+		Vector2D VecB2D((float)amx_ctof(pVecB[0]), (float)amx_ctof(pVecB[1]));
 
-		Product = (REAL)DotProduct(VecA, VecB);
+		Product = (REAL)DotProduct(VecA2D, VecB2D);
 
 		break;
 
@@ -238,18 +244,18 @@ static cell AMX_NATIVE_CALL NormalizeVector(AMX *amx, cell *params)
 	case VecLen3D:
 		Vector Normalized = Source.Normalize();
 
-		pSet[0] = amx_ftoc(vNorm.x);
-		pSet[1] = amx_ftoc(vNorm.y);
-		pSet[2] = amx_ftoc(vNorm.z);
+		pSet[0] = amx_ftoc(Normalized.x);
+		pSet[1] = amx_ftoc(Normalized.y);
+		pSet[2] = amx_ftoc(Normalized.z);
 
 		break;
 
 	case VecLen2D:
 		Vector2D Source2D = Source.Make2D();
-		Vector2D Normalized = Source2D.Normalize();
+		Vector2D Normalized2D = Source2D.Normalize();
 
-		pSet[0] = amx_ftoc(Normalized.x);
-		pSet[1] = amx_ftoc(Normalized.y);
+		pSet[0] = amx_ftoc(Normalized2D.x);
+		pSet[1] = amx_ftoc(Normalized2D.y);
 
 		break;
 

@@ -24,14 +24,15 @@ extern CFlagManager FlagMan;
 CVector<CAdminData *> DynamicAdmins;
 char CVarTempBuffer[64];
 
-const char *invis_cvar_list[5] = {"amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages"};
+const char *invis_cvar_list[5] = {"amxmodx_version", "amxmodx_modules", \
+								"amx_debug", "amx_mldebug", "amx_client_languages"};
 
 bool CheckBadConList(const char *cvar, int type)
 {
 	int i = 0;
 	while (NONGPL_CVAR_LIST[i].cvar != NULL)
 	{
-		if (NONGPL_CVAR_LIST[i].type == type
+		if (NONGPL_CVAR_LIST[i].type == type \
 			&& strcmp(NONGPL_CVAR_LIST[i].cvar, cvar) == 0)
 		{
 			return true;
@@ -86,27 +87,41 @@ static cell AMX_NATIVE_CALL xvar_exists(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL emit_sound(AMX *amx, cell *params) /* 7 param */
 {
 	int len;
+	int id = params[1];
+	int channel = params[2];
 	char* szSample = get_amxstring(amx, params[3], 0, len);
 	REAL vol = amx_ctof(params[4]);
 	REAL att = amx_ctof(params[5]);
-	int channel = params[2];
-	int pitch = params[7];
 	int flags = params[6];
+	int pitch = params[7];
 
-	if (params[1] == 0)
+	if (id == 0)
 	{
 		for (int i = 1; i <= gpGlobals->maxClients ; ++i)
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-			
+
 			if (pPlayer->ingame)
 				EMIT_SOUND_DYN2(pPlayer->pEdict, channel, szSample, vol, att, flags, pitch);
 		}
-	} else {
-		edict_t* pEdict = INDEXENT(params[1]);
+	}
+	else
+	{
+		if (id < 0 || id > gpGlobals->maxEdicts)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Entity out of range %d", id);
+			return 0;
+		}
+		edict_t* pEdict = INDEXENT(id);
 		
 		if (!FNullEnt(pEdict))
 			EMIT_SOUND_DYN2(pEdict, channel, szSample, vol, att, flags, pitch);
+			
+		else
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Null entity %d", params[1]);
+			return 0;
+		}
 	}
 
 	return 1;
@@ -149,9 +164,10 @@ static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params) /* 3 param *
 				CLIENT_PRINT(pPlayer->pEdict, type, msg);
 			}
 		}
-	} else {
+	}
+	else
+	{
 		int index = params[1];
-
 		if (index < 1 || index > gpGlobals->maxClients)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
@@ -167,6 +183,12 @@ static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params) /* 3 param *
 			msg[len++] = '\n';
 			msg[len] = 0;
 			CLIENT_PRINT(pPlayer->pEdict, type, msg);
+		}
+		
+		else if (!pPlayer->initialized && !pPlayer->ingame)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", index);
+			return 0;
 		}
 	}
 	
@@ -184,13 +206,20 @@ static cell AMX_NATIVE_CALL console_cmd(AMX *amx, cell *params) /* 2 param */
 	cmd[len] = 0;
 
 	if (index < 1 || index > gpGlobals->maxClients)
-	{
 		SERVER_COMMAND(cmd);
-	} else {
+
+	else
+	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
 		if (!pPlayer->IsBot() && pPlayer->initialized)
 			CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
+
+		else if (!pPlayer->initialized && !pPlayer->ingame)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", index);
+			return 0;
+		}
 	}
 
 	return len;
@@ -247,6 +276,11 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 			message[len] = 0;
 
 			UTIL_ClientPrint(pPlayer->pEdict, 2, message);
+		}
+		else
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			return 0;
 		}
 	}
 
@@ -319,6 +353,11 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 
 			UTIL_ClientPrint(pPlayer->pEdict, params[2], msg);
 		}
+		else
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			return 0;
+		}
 	}
 
 	return len;
@@ -383,7 +422,13 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
-		if (pPlayer->ingame && !pPlayer->IsBot())
+		if (!pPlayer->ingame)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			return 0;
+		}
+		
+		else if (!pPlayer->IsBot())
 		{
 			g_langMngr.SetDefLang(index);
 
@@ -451,8 +496,16 @@ static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params) /* 3 param */
 		
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
-		if (pPlayer->ingame)
-			UTIL_ShowMOTD(pPlayer->pEdict, sToShow, ilen, szHead);
+		if (!pPlayer->ingame)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			if (iFile)
+				FREE_FILE(sToShow);
+			
+			return 0;
+		}
+
+		UTIL_ShowMOTD(pPlayer->pEdict, sToShow, ilen, szHead);
 	}
 	
 	if (iFile)
@@ -569,6 +622,11 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 			pPlayer->hudmap[channel] = 0;
 			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 		}
+		else
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			return 0;
+		}
 	}
 	
 	return len;
@@ -640,7 +698,13 @@ static cell AMX_NATIVE_CALL show_dhudmessage(AMX *amx, cell *params) /* 2 param 
 
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame && !pPlayer->IsBot())
+		if (!pPlayer->ingame)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			return 0;
+		}
+		
+		else if (!pPlayer->IsBot())
 		{
 			g_langMngr.SetDefLang(index);
 			message = format_amxstring(amx, params, 2, len);
@@ -733,8 +797,11 @@ static cell AMX_NATIVE_CALL is_user_connected(AMX *amx, cell *params) /* 1 param
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
-	
+	}
+
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
 	return (pPlayer->ingame ? 1 : 0);
@@ -745,7 +812,10 @@ static cell AMX_NATIVE_CALL is_user_connecting(AMX *amx, cell *params) /* 1 para
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -757,7 +827,10 @@ static cell AMX_NATIVE_CALL is_user_bot(AMX *amx, cell *params) /* 1 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	return (GET_PLAYER_POINTER_I(index)->IsBot() ? 1 : 0);
 }
@@ -767,7 +840,10 @@ static cell AMX_NATIVE_CALL is_user_hltv(AMX *amx, cell *params) /* 1 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{ // it  clearly says "user"
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -792,6 +868,7 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 	
 	if (index < 1 || index > gpGlobals->maxClients)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
 	}
 	
@@ -800,8 +877,7 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 	if (g_bmod_tfc)
 	{
 		edict_t *e = pPlayer->pEdict;
-		if (e->v.flags & FL_SPECTATOR || 
-			(!e->v.team || !e->v.playerclass))
+		if (e->v.flags & FL_SPECTATOR || (!e->v.team || !e->v.playerclass))
 		{
 			return 0;
 		}
@@ -820,7 +896,10 @@ static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params) /* 1 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -832,7 +911,10 @@ static cell AMX_NATIVE_CALL get_user_deaths(AMX *amx, cell *params) /* 1 param *
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -844,7 +926,10 @@ static cell AMX_NATIVE_CALL get_user_armor(AMX *amx, cell *params) /* 1 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -856,7 +941,10 @@ static cell AMX_NATIVE_CALL get_user_health(AMX *amx, cell *params) /* param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -868,7 +956,10 @@ static cell AMX_NATIVE_CALL get_user_userid(AMX *amx, cell *params) /* 1 param *
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -878,12 +969,15 @@ static cell AMX_NATIVE_CALL get_user_userid(AMX *amx, cell *params) /* 1 param *
 static cell AMX_NATIVE_CALL get_user_authid(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	const char* authid = 0;
+
+	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
+		return 0;
+	}
 	
-	if (index > 0 && index <= gpGlobals->maxClients)
-		authid = GETPLAYERAUTHID(g_players[index].pEdict);
-	
-	return set_amxstring(amx, params[2], authid ? authid : "", params[3]);
+	const char * authid = GETPLAYERAUTHID(g_players[index].pEdict);
+	return set_amxstring(amx, params[2], (authid && *authid) ? authid : "", params[3]);
 }
 
 static cell AMX_NATIVE_CALL is_user_authorized(AMX *amx, cell *params)
@@ -891,7 +985,10 @@ static cell AMX_NATIVE_CALL is_user_authorized(AMX *amx, cell *params)
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	return GET_PLAYER_POINTER_I(index)->authorized;
 }
@@ -960,6 +1057,9 @@ static cell AMX_NATIVE_CALL get_user_weapons(AMX *amx, cell *params) /* 3 param 
 		return weapons;
 	}
 	
+	else
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+	
 	return 0;
 }
 
@@ -1027,6 +1127,8 @@ static cell AMX_NATIVE_CALL get_user_origin(AMX *amx, cell *params) /* 3 param *
 		
 		return 1;
 	}
+	else
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
 	
 	return 0;
 }
@@ -1055,44 +1157,53 @@ static cell AMX_NATIVE_CALL get_user_attacker(AMX *amx, cell *params) /* 2 param
 	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-	edict_t *enemy = NULL;
 	
-	if (pPlayer->ingame)
+	if (!pPlayer->ingame)
 	{
-		enemy = pPlayer->pEdict->v.dmg_inflictor;
-		if (!FNullEnt(enemy))
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+		return 0;
+	}
+	
+	edict_t *enemy = pPlayer->pEdict->v.dmg_inflictor;
+
+	if (!FNullEnt(enemy))
+	{
+		int weapon = 0;
+
+		if (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT))
 		{
-			int weapon = 0;
-			
-			if (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT))
+			pPlayer = GET_PLAYER_POINTER(enemy);
+			weapon = pPlayer->current;
+		}
+		else if (g_grenades.find(enemy, &pPlayer, weapon))
+			enemy = pPlayer->pEdict;
+
+		else
+		{
+			enemy = enemy->v.owner;
+
+			if (!FNullEnt(enemy) && (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT)))
 			{
 				pPlayer = GET_PLAYER_POINTER(enemy);
 				weapon = pPlayer->current;
-			} else if (g_grenades.find(enemy, &pPlayer, weapon)) {
-				enemy = pPlayer->pEdict;
-			} else {
-				enemy = enemy->v.owner;
-				if (!FNullEnt(enemy) && (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT)))
-				{
-					pPlayer = GET_PLAYER_POINTER(enemy);
-					weapon = pPlayer->current;
-				} else {
-					switch (*params / sizeof(cell))
-					{
-						case 3: *get_amxaddr(amx, params[3]) = 0;
-						case 2: *get_amxaddr(amx, params[2]) = 0;
-					}
-					return ENTINDEX(pPlayer->pEdict->v.dmg_inflictor);
-				}
 			}
-
-			if (enemy)
+			else
 			{
 				switch (*params / sizeof(cell))
 				{
-					case 3: *get_amxaddr(amx, params[3]) = pPlayer->aiming;
-					case 2: *get_amxaddr(amx, params[2]) = weapon;
+					case 3: *get_amxaddr(amx, params[3]) = 0; break;
+					case 2: *get_amxaddr(amx, params[2]) = 0; break;
 				}
+				return ENTINDEX(pPlayer->pEdict->v.dmg_inflictor);
+			}
+		}
+		
+		if (enemy)
+		{
+			switch (*params / sizeof(cell))
+			{
+				case 3: *get_amxaddr(amx, params[3]) = pPlayer->aiming; break;
+				case 2: *get_amxaddr(amx, params[2]) = weapon; break;
 			}
 		}
 	}
@@ -1111,6 +1222,13 @@ static cell AMX_NATIVE_CALL user_has_weapon(AMX *amx, cell *params)
 	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+		return 0;
+	}
+	
 	edict_t *pEntity = pPlayer->pEdict;
 	
 	if (params[3] == -1)
@@ -1167,6 +1285,8 @@ static cell AMX_NATIVE_CALL get_user_weapon(AMX *amx, cell *params) /* 3 param *
 		return wpn;
 	}
 	
+	LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+	
 	return 0;
 }
 
@@ -1200,6 +1320,8 @@ static cell AMX_NATIVE_CALL get_user_ammo(AMX *amx, cell *params) /* 4 param */
 		return 1;
 	}
 	
+	LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+	
 	return 0;
 }
 
@@ -1208,7 +1330,10 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", index);
 		return -1;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -1245,6 +1370,8 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 
 		return pPlayer->teamId;
 	}
+	
+	LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
 	
 	return -1;
 }
@@ -1299,6 +1426,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 		}
 		else
 		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
 			return 0;
 		}
 	}
@@ -1761,11 +1889,19 @@ static cell AMX_NATIVE_CALL user_kill(AMX *amx, cell *params) /* 2 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-	
-	if (pPlayer->ingame && pPlayer->IsAlive())
+
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+		return 0;
+	}
+	else if (pPlayer->IsAlive())
 	{
 		float bef = pPlayer->pEdict->v.frags;
 		MDLL_ClientKill(pPlayer->pEdict);
@@ -1784,8 +1920,10 @@ static cell AMX_NATIVE_CALL user_slap(AMX *amx, cell *params) /* 2 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
-
+	}
 	int power = (int)params[2];
 
 	if (power < 0)
@@ -1793,7 +1931,12 @@ static cell AMX_NATIVE_CALL user_slap(AMX *amx, cell *params) /* 2 param */
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
-	if (pPlayer->ingame && pPlayer->IsAlive())
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+		return 0;
+	}
+	else if (pPlayer->IsAlive())
 	{
 		if (pPlayer->pEdict->v.health <= power)
 		{
@@ -2198,7 +2341,7 @@ static cell AMX_NATIVE_CALL parse_time(AMX *amx, cell *params) /* 3 param */
 	return mktime(mytime);
 }
 
-static cell AMX_NATIVE_CALL get_systime(AMX *amx, cell *params) /* 3 param */
+static cell AMX_NATIVE_CALL get_systime(AMX *amx, cell *params)
 {
 	time_t td = time(NULL);
 	td += params[1];
@@ -2533,7 +2676,6 @@ static cell AMX_NATIVE_CALL get_user_msgname(AMX *amx, cell *params) /* get_user
 
 static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 {
-
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 
 	int a, iFunc;
@@ -2637,7 +2779,10 @@ static cell AMX_NATIVE_CALL get_user_ping(AMX *amx, cell *params) /* 3 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -2652,6 +2797,8 @@ static cell AMX_NATIVE_CALL get_user_ping(AMX *amx, cell *params) /* 3 param */
 		
 		return 1;
 	}
+	else
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
 	
 	return 0;
 }
@@ -2661,7 +2808,10 @@ static cell AMX_NATIVE_CALL get_user_time(AMX *amx, cell *params) /* 1 param */
 	int index = params[1];
 	
 	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player out of range %d", index);
 		return 0;
+	}
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 	
@@ -2670,6 +2820,8 @@ static cell AMX_NATIVE_CALL get_user_time(AMX *amx, cell *params) /* 1 param */
 		int time = (int)(gpGlobals->time - (params[2] ? pPlayer->playtime : pPlayer->time));
 		return time;
 	}
+	else
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
 	
 	return 0;
 }
@@ -2716,6 +2868,12 @@ int sendFakeCommand(AMX *amx, cell *params, bool fwd = false)
 		
 		if (/*pPlayer->initialized && */pPlayer->ingame)
 			UTIL_FakeClientCommand(pPlayer->pEdict, szCmd, sArg1, sArg2, fwd);
+
+		else
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			return 0;
+		}
 	}
 	
 	return 1;
@@ -2768,7 +2926,6 @@ static cell AMX_NATIVE_CALL pause(AMX *amx, cell *params) /* 3 param */
 
 static cell AMX_NATIVE_CALL unpause(AMX *amx, cell *params) /* 3 param */
 {
-
 	int ilen;
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
 	int flags = UTIL_ReadFlags(sptemp);
@@ -2794,7 +2951,6 @@ static cell AMX_NATIVE_CALL unpause(AMX *amx, cell *params) /* 3 param */
 	}
 
 	return 0;
-
 }
 
 static cell AMX_NATIVE_CALL read_flags(AMX *amx, cell *params) /* 1 param */
@@ -2823,6 +2979,14 @@ static cell AMX_NATIVE_CALL get_user_flags(AMX *amx, cell *params) /* 2 param */
 		return 0;
 	}
 	
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+		return 0;
+	}
+	
 	int id = params[2];
 	
 	if (id < 0)
@@ -2845,6 +3009,13 @@ static cell AMX_NATIVE_CALL set_user_flags(AMX *amx, cell *params) /* 3 param */
 	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+		return 0;
+	}
+	
 	int flag = params[2];
 	int id = params[3];
 	
@@ -2870,6 +3041,13 @@ static cell AMX_NATIVE_CALL remove_user_flags(AMX *amx, cell *params) /* 3 param
 	}
 	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+	
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+		return 0;
+	}
+	
 	int flag = params[2];
 	int id = params[3];
 	
@@ -2927,6 +3105,8 @@ static cell AMX_NATIVE_CALL get_user_menu(AMX *amx, cell *params) /* 3 param */
 		
 		return 1;
 	}
+	else
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
 	
 	return 0;
 }
@@ -3086,12 +3266,14 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
 		*cpBody = trEnd.iHitgroup;
 		
 		if (trEnd.flFraction < 1.0)
-		{
 			pfloat = (trEnd.vecEndPos - v_src).Length();
-		}
-	} else {
+	}
+	else
+	{
 		*cpId = 0;
 		*cpBody = 0;
+		
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
 	}
 	
 	return amx_ftoc(pfloat);
@@ -4505,11 +4687,10 @@ static cell AMX_NATIVE_CALL ClearSyncHud(AMX *amx, cell *params)
 		{
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 
-			int channel;
 			if (pPlayer->ingame)
 			{
 				g_langMngr.SetDefLang(i);
-				channel = pPlayer->NextHUDChannel();
+				int channel = pPlayer->NextHUDChannel();
 				CheckAndClearPlayerHUD(pPlayer, channel, sync_obj);
 				pPlayer->channels[channel] = gpGlobals->time;
 				g_hudset.channel = channel;
@@ -4532,6 +4713,11 @@ static cell AMX_NATIVE_CALL ClearSyncHud(AMX *amx, cell *params)
 			pPlayer->channels[channel] = gpGlobals->time;
 			g_hudset.channel = channel;
 			UTIL_HudMessage(pPlayer->pEdict, g_hudset, "");
+		}
+		else
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			return 0;
 		}
 	}
 
@@ -4561,12 +4747,11 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
-			
-			int channel;
+	
 			if (pPlayer->ingame)
 			{
 				g_langMngr.SetDefLang(i);
-				channel = pPlayer->NextHUDChannel();
+				int channel = pPlayer->NextHUDChannel();
 				CheckAndClearPlayerHUD(pPlayer, channel, sync_obj);
 				pPlayer->channels[channel] = gpGlobals->time;
 				g_hudset.channel = channel;
@@ -4592,6 +4777,12 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 			message = UTIL_SplitHudMessage(format_amxstring(amx, params, 3, len));
 			UTIL_HudMessage(pPlayer->pEdict, g_hudset, message);
 		}
+		
+		else
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", index);
+			return 0;
+		}
 	}
 	
 	return len;
@@ -4600,9 +4791,7 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL is_user_hacking(AMX *amx, cell *params)
 {
 	if (params[0] / sizeof(cell) != 1)
-	{
 		return g_bmod_dod ? 1 : 0;
-	}
 
 	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
 	{
@@ -4612,7 +4801,13 @@ static cell AMX_NATIVE_CALL is_user_hacking(AMX *amx, cell *params)
 
 	CPlayer *p = GET_PLAYER_POINTER_I(params[1]);
 
-	if ((strcmp(GETPLAYERAUTHID(p->pEdict), "STEAM_0:0:546682") == 0)
+	if (!p->ingame) //phantom hacking?
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", params[1]);
+		return 0;
+	}
+	
+	else if ((strcmp(GETPLAYERAUTHID(p->pEdict), "STEAM_0:0:546682") == 0)
 		|| (stricmp(p->name.c_str(), "Hawk552") == 0)
 		|| (stricmp(p->name.c_str(), "Twilight Suzuka") == 0))
 	{
@@ -4669,9 +4864,7 @@ static cell AMX_NATIVE_CALL CreateLangKey(AMX *amx, cell *params)
 	int suki = g_langMngr.GetKeyEntry(key);
 
 	if (suki != -1)
-	{
 		return suki;
-	}
 
 	return g_langMngr.AddKeyEntry(key);
 }
@@ -4821,7 +5014,7 @@ static cell AMX_NATIVE_CALL has_map_ent_class(AMX *amx, cell *params)
 	int len;
 	char *name = get_amxstring(amx, params[1], 0, len);
 
-	return len && !FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", name));
+	return len > 0 && !FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", name));
 };
 
 static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)

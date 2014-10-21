@@ -19,8 +19,8 @@
 /**
  * Used for angle_vector function.
  */
-#define ANGLEVECTOR_FORWAR	1
-#define ANGLEVECTOR_RIGH	2
+#define ANGLEVECTOR_FORWARD	1
+#define ANGLEVECTOR_RIGHT	2
 #define ANGLEVECTOR_UP		3
 
 /**

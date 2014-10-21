@@ -122,18 +122,6 @@ public:
 		
 		return false;
 	}
-	
-	inline bool IsHLTV(void)
-	{
-		if (pEdict->v.flags & FL_PROXY)
-			return true;
-
-		const char *auth = GETPLAYERAUTHID(pEdict);
-		if (auth && strcmp(auth, "HLTV") == 0)
-			return true;
-
-		return false;
-	}
 
 	inline bool IsAlive()
 	{

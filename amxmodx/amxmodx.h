@@ -357,12 +357,6 @@ enum PrintColor
 	print_team_blue = -3,
 };
 
-enum VecLenType
-{
-	VecLen3D = 0,
-	VecLen2D,
-};
-
 extern enginefuncs_t *g_pEngTable;
 
 #endif // AMXMODX_H

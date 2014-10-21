@@ -9,175 +9,198 @@
 
 #include "amxmodx.h"
 
-#define ANGLEVECTORS_FORWARD	1
-#define ANGLEVECTORS_RIGHT		2
-#define ANGLEVECTORS_UP			3
+#define ANGLEVECTORS_FORWARD 1
+#define ANGLEVECTORS_RIGHT 2
+#define ANGLEVECTORS_UP 3
+
+/**
+ * Sets vector to address.
+ */
+#define SET_VECTOR(Addr, Vec) Addr[0] = amx_ftoc(Vec.x), Addr[1] = amx_ftoc(Vec.y), Addr[2] = amx_ftoc(Vec.z);
+
+/**
+ * Returns vector's length if pVecB is null.
+ * Returns the distance between vectors otherwise.
+ */
+REAL ComputeVectorLength(Vector & VecA, Vector * pVecB = NULL /* Optional */, bool VecLen3D = true)
+{
+	if (VecLen3D) return pVecB ? (VecA - *pVecB).Length() : VecA.Length();
+	else return pVecB ? (VecA - *pVecB).Length2D() : VecA.Length2D();
+}
 
 static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 {
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	Vector vec1 = Vector((float)cpVec1[0], (float)cpVec1[1], (float)cpVec1[2]);
-	Vector vec2 = Vector((float)cpVec2[0], (float)cpVec2[1], (float)cpVec2[2]);
+	Vector VecA(pVecA[0], pVecA[1], pVecA[2]);
+	Vector VecB(pVecB[0], pVecB[1], pVecB[2]);
 
-	int iDist = (int)((vec1 - vec2).Length());
+	return (cell)ComputeVectorLength(VecA, & VecB);
+}
 
-	return iDist;
+static cell AMX_NATIVE_CALL get_distance2d(AMX *amx, cell *params)
+{
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
+
+	Vector VecA(pVecA[0], pVecA[1], pVecA[2]);
+	Vector VecB(pVecB[0], pVecB[1], pVecB[2]);
+
+	return (cell)ComputeVectorLength(VecA, & VecB, false);
 }
 
 static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 {
-	cell *cpVec1 = get_amxaddr(amx, params[1]);
-	cell *cpVec2 = get_amxaddr(amx, params[2]);
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	Vector vec1 = Vector((float)amx_ctof(cpVec1[0]), (float)amx_ctof(cpVec1[1]), (float)amx_ctof(cpVec1[2]));
-	Vector vec2 = Vector((float)amx_ctof(cpVec2[0]), (float)amx_ctof(cpVec2[1]), (float)amx_ctof(cpVec2[2]));
+	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
+	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
 
-	REAL fDist = (REAL) (vec1 - vec2).Length();
+	REAL Length = ComputeVectorLength(VecA, & VecB);
+	return amx_ftoc(Length);
+}
 
-	return amx_ftoc(fDist);
+static cell AMX_NATIVE_CALL get_distance2d_f(AMX *amx, cell *params)
+{
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
+
+	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
+	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
+
+	REAL Length = ComputeVectorLength(VecA, & VecB, false);
+	return amx_ftoc(Length);
 }
 
 static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 {
-	int iEnt = params[1];
-	int iVelocity = params[2];
-	cell *vRet = get_amxaddr(amx, params[3]);
-	Vector vVector = Vector(0, 0, 0);
-	edict_t *pEnt = NULL;
+	int Entity = params[1], Velocity = params[2];
+	edict_t * pEntity = NULL;
 
-	if (iEnt < 0 || iEnt > gpGlobals->maxEntities)
+	if (Entity < 0 || Entity > gpGlobals->maxEntities)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", iEnt);
+		LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", Entity);
 		return 0;
 	}
 	else
 	{
-		if (iEnt > 0 && iEnt <= gpGlobals->maxClients)
+		if (Entity > 0 && Entity <= gpGlobals->maxClients)
 		{
-			if (!GET_PLAYER_POINTER_I(iEnt)->ingame)
+			if (!GET_PLAYER_POINTER_I(Entity)->ingame)
 			{
-				LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not ingame)", iEnt);
+				LogError(amx, AMX_ERR_NATIVE, "Player not in-game (%d)", Entity);
 				return 0;
 			}
-			pEnt = GET_PLAYER_POINTER_I(iEnt)->pEdict;
-		} else {
-			pEnt = INDEXENT(iEnt);
+			pEntity = GET_PLAYER_POINTER_I(Entity)->pEdict;
 		}
+		else
+			pEntity = INDEXENT(Entity);
 	}
-
-	if (!pEnt)
+	if (!pEntity)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d (nullent)", iEnt);
+		LogError(amx, AMX_ERR_NATIVE, "Null entity (%d)", Entity);
 		return 0;
 	}
 
-	MAKE_VECTORS(pEnt->v.v_angle);
-	vVector = gpGlobals->v_forward * iVelocity;
+	MAKE_VECTORS(pEntity->v.v_angle);
+	Vector Set = gpGlobals->v_forward * Velocity;
 
-	vRet[0] = FloatToCell(vVector.x);
-	vRet[1] = FloatToCell(vVector.y);
-	vRet[2] = FloatToCell(vVector.z);
+	cell * pSet = get_amxaddr(amx, params[3]);
+	SET_VECTOR(pSet, Set)
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params)
 {
-	cell *cAddr = get_amxaddr(amx, params[1]);
+	cell * pAddress = get_amxaddr(amx, params[1]);
+	Vector Source(amx_ctof(pAddress[0]), amx_ctof(pAddress[1]), amx_ctof(pAddress[2]));
 
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
+	Vector Set;
+	VEC_TO_ANGLES(Source, Set);
 
-	Vector vVector = Vector(fX, fY, fZ);
-	Vector vAngle = Vector(0, 0, 0);
-	VEC_TO_ANGLES(vVector, vAngle);
-
-	cell *vRet = get_amxaddr(amx, params[2]);
-
-	vRet[0] = FloatToCell(vAngle.x);
-	vRet[1] = FloatToCell(vAngle.y);
-	vRet[2] = FloatToCell(vAngle.z);
+	pAddress = get_amxaddr(amx, params[2]);
+	SET_VECTOR(pAddress, Set)
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 {
-	Vector v_angles, v_forward, v_right, v_up, v_return;
+	cell * pAddress = get_amxaddr(amx, params[1]);
+	Vector Source(amx_ctof(pAddress[0]), amx_ctof(pAddress[1]), amx_ctof(pAddress[2]));
 
-	cell *vCell = get_amxaddr(amx, params[1]);
-	v_angles.x = amx_ctof(vCell[0]);
-	v_angles.y = amx_ctof(vCell[1]);
-	v_angles.z = amx_ctof(vCell[2]);
-
-	g_engfuncs.pfnAngleVectors(v_angles, v_forward, v_right, v_up);
+	Vector Set, Forward, Right, Up;
+	g_engfuncs.pfnAngleVectors(Source, Forward, Right, Up);
 
 	switch (params[2])
 	{
-	case ANGLEVECTORS_FORWARD:
-		v_return = v_forward;
-		break;
-	case ANGLEVECTORS_RIGHT:
-		v_return = v_right;
-		break;
-	case ANGLEVECTORS_UP:
-		v_return = v_up;
-		break;
+		case ANGLEVECTORS_FORWARD: Set = Forward; break;
+		case ANGLEVECTORS_RIGHT: Set = Right; break;
+		case ANGLEVECTORS_UP: Set = Up; break;
 	}
 
-	vCell = get_amxaddr(amx, params[3]);
-	vCell[0] = FloatToCell(v_return.x);
-	vCell[1] = FloatToCell(v_return.y);
-	vCell[2] = FloatToCell(v_return.z);
+	pAddress = get_amxaddr(amx, params[3]);
+	SET_VECTOR(pAddress, Set)
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 {
-	cell *cAddr = get_amxaddr(amx, params[1]);
+	cell * pSource = get_amxaddr(amx, params[1]);
+	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
 
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
+	REAL Length = ComputeVectorLength(Source, NULL);
+	return amx_ftoc(Length);
+}
 
-	Vector vVector = Vector(fX, fY, fZ);
+static cell AMX_NATIVE_CALL vector_length2d(AMX *amx, cell *params)
+{
+	cell * pSource = get_amxaddr(amx, params[1]);
+	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
 
-	REAL fLength = vVector.Length();
-
-	return amx_ftoc(fLength);
+	REAL Length = ComputeVectorLength(Source, NULL, false);
+	return amx_ftoc(Length);
 }
 
 static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 {
-	cell *cAddr = get_amxaddr(amx, params[1]);
-	cell *cAddr2 = get_amxaddr(amx, params[2]);
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	REAL fX = amx_ctof(cAddr[0]);
-	REAL fY = amx_ctof(cAddr[1]);
-	REAL fZ = amx_ctof(cAddr[2]);
-	REAL fX2 = amx_ctof(cAddr2[0]);
-	REAL fY2 = amx_ctof(cAddr2[1]);
-	REAL fZ2 = amx_ctof(cAddr2[2]);
+	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
+	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
 
-	Vector vVector = Vector(fX, fY, fZ);
-	Vector vVector2 = Vector(fX2, fY2, fZ2);
+	REAL Length = ComputeVectorLength(VecA, & VecB);
+	return amx_ftoc(Length);
+}
 
-	REAL fLength = (vVector - vVector2).Length();
+static cell AMX_NATIVE_CALL vector_distance2d(AMX *amx, cell *params)
+{
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
 
-	return amx_ftoc(fLength);
+	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
+	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
+
+	REAL Length = ComputeVectorLength(VecA, & VecB, false);
+	return amx_ftoc(Length);
 }
 
 AMX_NATIVE_INFO vector_Natives[] = {
-	{"get_distance",		get_distance},
-	{"get_distance_f",		get_distance_f},
-	{"velocity_by_aim",		VelocityByAim},
-	{"vector_to_angle",		vector_to_angle},
-	{"angle_vector",		angle_vector},
-	{"vector_length",		vector_length},
-	{"vector_distance",		vector_distance},
-	{NULL,					NULL},
+	{"get_distance",	get_distance},
+	{"get_distance2d",	get_distance2d},
+	{"get_distance_f",	get_distance_f},
+	{"get_distance2d_f",	get_distance2d_f},
+	{"velocity_by_aim",	VelocityByAim},
+	{"vector_to_angle",	vector_to_angle},
+	{"angle_vector",	angle_vector},
+	{"vector_length",	vector_length},
+	{"vector_length2d",	vector_length2d},
+	{"vector_distance",	vector_distance},
+	{"vector_distance2d",	vector_distance2d},
+	{NULL,			NULL},
 };

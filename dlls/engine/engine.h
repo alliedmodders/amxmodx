@@ -108,12 +108,6 @@ enum {
 	Meta_GetGameInfo		// const char *)		(plid_t plid, ginfo_t tag);
 };
 
-enum VecLenType
-{
-	VecLen3D = 0,
-	VecLen2D,
-};
-
 //These two structs are relics from VexD
 struct PlayerInfo {
 	int iSpeakFlags;

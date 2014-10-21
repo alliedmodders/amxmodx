@@ -19,31 +19,49 @@
 /**
  * Used for angle_vector function.
  */
-#define ANGLEVECTOR_FORWARD      1
-#define ANGLEVECTOR_RIGHT        2
-#define ANGLEVECTOR_UP           3
+#define ANGLEVECTOR_FORWAR	1
+#define ANGLEVECTOR_RIGH	2
+#define ANGLEVECTOR_UP		3
 
 /**
  * Returns the Int. value of the distance between two Int. vectors.
  *
  * @param _In_ OriginA			The first origin.
  * @param _In_ OriginB			The second origin.
- * @param _In_ vlType			The type of vector length.
  *
  * @return				Int. value of the distance.
  */
-native get_distance(const OriginA[3], const OriginB[3], const VecLenType:vlType = VecLen3D);
+native get_distance(const OriginA[3], const OriginB[3]);
+
+/**
+ * Returns the Int. value of the 2d distance between two Int. vectors.
+ *
+ * @param _In_ OriginA			The first origin.
+ * @param _In_ OriginB			The second origin.
+ *
+ * @return				Int. value of the 2d distance.
+ */
+native get_distance2d(const OriginA[3], const OriginB[3]);
 
 /**
  * Returns the Fl. value of the distance between two Fl. vectors.
  *
  * @param _In_ OriginA			The first origin.
  * @param _In_ OriginB			The second origin.
- * @param _In_ vlType			The type of vector length.
  *
  * @return				Fl. value of the distance.
  */
-native Float:get_distance_f(const Float:OriginA[3], const Float:OriginB[3], const VecLenType:vlType = VecLen3D);
+native Float:get_distance_f(const Float:OriginA[3], const Float:OriginB[3]);
+
+/**
+ * Returns the Fl. value of the 2d distance between two Fl. vectors.
+ *
+ * @param _In_ OriginA			The first origin.
+ * @param _In_ OriginB			The second origin.
+ *
+ * @return				Fl. value of the 2d distance.
+ */
+native Float:get_distance2d_f(const Float:OriginA[3], const Float:OriginB[3]);
 
 /**
  * Prepares a velocity in the direction the player is looking, multiplied by Velocity parameter.
@@ -81,55 +99,39 @@ native angle_vector(const Float:Vector[3], FRU, Float:Output[3]);
  * Gets the Fl. value of the length of a vector.
  *
  * @param _In_ Vector			The source vector.
- * @param _In_ vlType			The type of vector length.
  *
  * @return				The Fl. value of the vector's length.
  */
-native Float:vector_length(const Float:Vector[3], const VecLenType:vlType = VecLen3D);
+native Float:vector_length(const Float:Vector[3]);
+
+/**
+ * Gets the Fl. value of the 2d length of a vector.
+ *
+ * @param _In_ Vector			The source vector.
+ *
+ * @return				The Fl. value of the vector's 2d length.
+ */
+native Float:vector_length2d(const Float:Vector[3]);
 
 /**
  * Gets the Fl. value of the distance between two vectors.
  *
  * @param _In_ VectorA			The first vector.
  * @param _In_ VectorB			The second vector.
- * @param _In_ vlType			The type of vector length.
  *
  * @return				The Fl. value of the distance between the vectors.
  */
-native Float:vector_distance(const Float:VectorA[3], const Float:VectorB[3], const VecLenType:vlType = VecLen3D);
+native Float:vector_distance(const Float:VectorA[3], const Float:VectorB[3]);
 
 /**
- * Gets the dot product of two vectors.
+ * Gets the Fl. value of the 2d distance between two vectors.
  *
  * @param _In_ VectorA			The first vector.
  * @param _In_ VectorB			The second vector.
- * @param _In_ vlType			The type of vector length.
  *
- * @return				The Fl. value of the vectors' dot product.
+ * @return				The Fl. value of the 2d distance between the vectors.
  */
-native Float:GetVectorDotProduct(const Float:VectorA[3], const Float:VectorB[3], const VecLenType:vlType = VecLen3D);
-
-/**
- * Gets the cross product of two vectors.
- *
- * @param _In_ VectorA			The first vector.
- * @param _In_ VectorB			The second vector.
- * @param _Out_ Output			The obtained vector.
- *
- * @return				Positive.
- */
-native GetVectorCrossProduct(const Float:VectorA[3], const Float:VectorB[3], Float:Output[3]);
-
-/**
- * Normalizes vector.
- *
- * @param _In_ Vector			The vector.
- * @param _Out_ Output			The obtained vector.
- * @param _In_ vlType			The type of vector length.
- *
- * @return				Positive.
- */
-native NormalizeVector(const Float:Vector[3], Float:Output[3], const VecLenType:vlType = VecLen3D);
+native Float:vector_distance2d(const Float:VectorA[3], const Float:VectorB[3]);
 
 /** Changes an Int. vector to a Fl. vector.
  * This is not a 'for' loop because that's slower.

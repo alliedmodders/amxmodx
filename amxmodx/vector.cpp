@@ -17,22 +17,15 @@
  * Sets vector to address.
  */
 #define SET_VECTOR(Addr, Vec) Addr[0] = amx_ftoc(Vec.x), Addr[1] = amx_ftoc(Vec.y), Addr[2] = amx_ftoc(Vec.z);
-#define SET_VECTOR2D(Addr, Vec) Addr[0] = amx_ftoc(Vec.x), Addr[1] = amx_ftoc(Vec.y);
 
 /**
  * Returns vector's length if pVecB is null.
  * Returns the distance between vectors otherwise.
  */
-REAL ComputeVectorLength(Vector & VecA, Vector * pVecB = NULL /* Optional */, VecLenType Type = VecLen3D)
+REAL ComputeVectorLength(Vector & VecA, Vector * pVecB = NULL /* Optional */, bool VecLen3D = true)
 {
-	REAL Length = 0.0f;
-
-	switch (Type)
-	{
-		case VecLen3D: Length = pVecB ? (VecA - *pVecB).Length() : VecA.Length(); break;
-		case VecLen2D: Length = pVecB ? (VecA - *pVecB).Length2D() : VecA.Length2D(); break;
-	}
-	return Length;
+	if (VecLen3D) return pVecB ? (VecA - *pVecB).Length() : VecA.Length();
+	else return pVecB ? (VecA - *pVecB).Length2D() : VecA.Length2D();
 }
 
 static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
@@ -43,7 +36,18 @@ static cell AMX_NATIVE_CALL get_distance(AMX *amx, cell *params)
 	Vector VecA(pVecA[0], pVecA[1], pVecA[2]);
 	Vector VecB(pVecB[0], pVecB[1], pVecB[2]);
 
-	return (cell)ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
+	return (cell)ComputeVectorLength(VecA, & VecB);
+}
+
+static cell AMX_NATIVE_CALL get_distance2d(AMX *amx, cell *params)
+{
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
+
+	Vector VecA(pVecA[0], pVecA[1], pVecA[2]);
+	Vector VecB(pVecB[0], pVecB[1], pVecB[2]);
+
+	return (cell)ComputeVectorLength(VecA, & VecB, false);
 }
 
 static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
@@ -54,7 +58,19 @@ static cell AMX_NATIVE_CALL get_distance_f(AMX *amx, cell *params)
 	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
 	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
 
-	REAL Length = ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
+	REAL Length = ComputeVectorLength(VecA, & VecB);
+	return amx_ftoc(Length);
+}
+
+static cell AMX_NATIVE_CALL get_distance2d_f(AMX *amx, cell *params)
+{
+	cell * pVecA = get_amxaddr(amx, params[1]);
+	cell * pVecB = get_amxaddr(amx, params[2]);
+
+	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
+	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
+
+	REAL Length = ComputeVectorLength(VecA, & VecB, false);
 	return amx_ftoc(Length);
 }
 
@@ -99,21 +115,21 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params)
 {
-	cell * pSource = get_amxaddr(amx, params[1]);
+	cell * pAddress = get_amxaddr(amx, params[1]);
 	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
 
 	Vector Set;
 	VEC_TO_ANGLES(Source, Set);
 
-	cell * pSet = get_amxaddr(amx, params[2]);
-	SET_VECTOR(pSet, Set)
+	pAddress = get_amxaddr(amx, params[2]);
+	SET_VECTOR(pAddress, Set)
 
 	return 1;
 }
 
 static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 {
-	cell * pSource = get_amxaddr(amx, params[1]);
+	cell * pAddress = get_amxaddr(amx, params[1]);
 	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
 
 	Vector Set, Forward, Right, Up;
@@ -121,13 +137,13 @@ static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 
 	switch (params[2])
 	{
-		case ANGLEVECTORS_FORWARD:	Set = Forward; break;
-		case ANGLEVECTORS_RIGHT:	Set = Right; break;
-		case ANGLEVECTORS_UP:		Set = Up; break;
+		case ANGLEVECTORS_FORWARD: Set = Forward; break;
+		case ANGLEVECTORS_RIGHT: Set = Right; break;
+		case ANGLEVECTORS_UP: Set = Up; break;
 	}
 
-	cell * pSet = get_amxaddr(amx, params[3]);
-	SET_VECTOR(pSet, Set)
+	pAddress = get_amxaddr(amx, params[3]);
+	SET_VECTOR(pAddress, Set)
 
 	return 1;
 }
@@ -137,7 +153,16 @@ static cell AMX_NATIVE_CALL vector_length(AMX *amx, cell *params)
 	cell * pSource = get_amxaddr(amx, params[1]);
 	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
 
-	REAL Length = ComputeVectorLength(Source, NULL, (VecLenType)params[2]);
+	REAL Length = ComputeVectorLength(Source, NULL);
+	return amx_ftoc(Length);
+}
+
+static cell AMX_NATIVE_CALL vector_length2d(AMX *amx, cell *params)
+{
+	cell * pSource = get_amxaddr(amx, params[1]);
+	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
+
+	REAL Length = ComputeVectorLength(Source, NULL, false);
 	return amx_ftoc(Length);
 }
 
@@ -149,42 +174,11 @@ static cell AMX_NATIVE_CALL vector_distance(AMX *amx, cell *params)
 	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
 	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
 
-	REAL Length = ComputeVectorLength(VecA, & VecB, (VecLenType)params[3]);
+	REAL Length = ComputeVectorLength(VecA, & VecB);
 	return amx_ftoc(Length);
 }
 
-static cell AMX_NATIVE_CALL GetVectorDotProduct(AMX *amx, cell *params)
-{
-	cell * pVecA = get_amxaddr(amx, params[1]);
-	cell * pVecB = get_amxaddr(amx, params[2]);
-
-	VecLenType Type = (VecLenType)params[3];
-	REAL Product = 0.0f;
-
-	switch (Type)
-	{
-		case VecLen3D:
-		{
-			Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
-			Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
-
-			Product = DotProduct(VecA, VecB);
-			break;
-		}
-
-		case VecLen2D:
-		{
-			Vector2D VecA2D(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]));
-			Vector2D VecB2D(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]));
-
-			Product = DotProduct(VecA2D, VecB2D);
-			break;
-		}
-	}
-	return amx_ftoc(Product);
-}
-
-static cell AMX_NATIVE_CALL GetVectorCrossProduct(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL vector_distance2d(AMX *amx, cell *params)
 {
 	cell * pVecA = get_amxaddr(amx, params[1]);
 	cell * pVecB = get_amxaddr(amx, params[2]);
@@ -192,54 +186,21 @@ static cell AMX_NATIVE_CALL GetVectorCrossProduct(AMX *amx, cell *params)
 	Vector VecA(amx_ctof(pVecA[0]), amx_ctof(pVecA[1]), amx_ctof(pVecA[2]));
 	Vector VecB(amx_ctof(pVecB[0]), amx_ctof(pVecB[1]), amx_ctof(pVecB[2]));
 
-	Vector Set = CrossProduct(VecA, VecB);
-	cell * pSet = get_amxaddr(amx, params[3]);
-	SET_VECTOR(pSet, Set)
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL NormalizeVector(AMX *amx, cell *params)
-{
-	cell * pSource = get_amxaddr(amx, params[1]);
-	cell * pSet = get_amxaddr(amx, params[2]);
-
-	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
-	VecLenType Type = (VecLenType)params[3];
-
-	switch (Type)
-	{
-		case VecLen3D:
-		{
-			Vector Normalized = Source.Normalize();
-			SET_VECTOR(pSet, Normalized)
-
-			break;
-		}
-
-		case VecLen2D:
-		{
-			Vector2D Source2D = Source.Make2D();
-			Vector2D Normalized2D = Source2D.Normalize();
-
-			SET_VECTOR2D(pSet, Normalized2D)
-
-			break;
-		}
-	}
-	return 1;
+	REAL Length = ComputeVectorLength(VecA, & VecB, false);
+	return amx_ftoc(Length);
 }
 
 AMX_NATIVE_INFO vector_Natives[] = {
-	{"get_distance",		get_distance},
-	{"get_distance_f",		get_distance_f},
-	{"velocity_by_aim",		VelocityByAim},
-	{"vector_to_angle",		vector_to_angle},
-	{"angle_vector",		angle_vector},
-	{"vector_length",		vector_length},
-	{"vector_distance",		vector_distance},
-	{"GetVectorDotProduct",		GetVectorDotProduct},
-	{"GetVectorCrossProduct",	GetVectorCrossProduct},
-	{"NormalizeVector",		NormalizeVector},
-	{NULL,				NULL},
+	{"get_distance",	get_distance},
+	{"get_distance2d",	get_distance2d},
+	{"get_distance_f",	get_distance_f},
+	{"get_distance2d_f",	get_distance2d_f},
+	{"velocity_by_aim",	VelocityByAim},
+	{"vector_to_angle",	vector_to_angle},
+	{"angle_vector",	angle_vector},
+	{"vector_length",	vector_length},
+	{"vector_length2d",	vector_length2d},
+	{"vector_distance",	vector_distance},
+	{"vector_distance2d",	vector_distance2d},
+	{NULL,			NULL},
 };

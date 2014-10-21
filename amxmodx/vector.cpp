@@ -116,7 +116,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params)
 {
 	cell * pAddress = get_amxaddr(amx, params[1]);
-	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
+	Vector Source(amx_ctof(pAddress[0]), amx_ctof(pAddress[1]), amx_ctof(pAddress[2]));
 
 	Vector Set;
 	VEC_TO_ANGLES(Source, Set);
@@ -130,7 +130,7 @@ static cell AMX_NATIVE_CALL vector_to_angle(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL angle_vector(AMX *amx, cell *params)
 {
 	cell * pAddress = get_amxaddr(amx, params[1]);
-	Vector Source(amx_ctof(pSource[0]), amx_ctof(pSource[1]), amx_ctof(pSource[2]));
+	Vector Source(amx_ctof(pAddress[0]), amx_ctof(pAddress[1]), amx_ctof(pAddress[2]));
 
 	Vector Set, Forward, Right, Up;
 	g_engfuncs.pfnAngleVectors(Source, Forward, Right, Up);

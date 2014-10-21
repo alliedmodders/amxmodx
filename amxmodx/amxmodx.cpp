@@ -107,7 +107,7 @@ static cell AMX_NATIVE_CALL emit_sound(AMX *amx, cell *params) /* 7 param */
 	}
 	else
 	{
-		if (id < 0 || id > gpGlobals->maxEdicts)
+		if (id < 0 || id > gpGlobals->maxEntities)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Entity out of range %d", id);
 			return 0;

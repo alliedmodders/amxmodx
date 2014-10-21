@@ -463,12 +463,3 @@ enum AdminProp
 	AdminProp_Access,
 	AdminProp_Flags
 };
-
-/**
- * Vector length type constants
- */
-enum VecLenType
-{
-	VecLen3D = 0,
-	VecLen2D,
-};

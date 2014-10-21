@@ -790,8 +790,23 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 	
 	int player = params[1];
 	int page = params[3];
+	
+	if (player < 1 || player > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", player);
+		return 0;
+	}
+	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(player);
 	
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player not in-game %d", player);
+		return 0;
+	}
+	else if (pPlayer->IsBot() || pPlayer->IsHLTV())
+		return 0; // skips bots and HLTVs
+
 	/* If the stupid handler keeps drawing menus, 
 	 * We need to keep cancelling them.  But we put in a quick infinite loop
 	 * counter to prevent this from going nuts.
@@ -1057,8 +1072,10 @@ static cell AMX_NATIVE_CALL menu_cancel(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Player %d is not in game", index);
 		return 0;
 	}
+	else if (player->IsBot() || player->IsHLTV())
+		return 1; // considers it cancelled in case of applied for all players
 
-	if (Menu *pMenu = get_menu_by_id(player->newmenu)) {
+	else if (Menu *pMenu = get_menu_by_id(player->newmenu)) {
 		pMenu->Close(player->index);
 		return 1;
 	}
@@ -1107,6 +1124,8 @@ static cell AMX_NATIVE_CALL player_menu_info(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Player %d is not ingame", params[1]);
 		return 0;
 	}
+	else if (player->IsBot() || player->IsHLTV())
+		return 0; // skips bots and HLTVs
 
 	cell *m = get_amxaddr(amx, params[2]);
 	cell *n = get_amxaddr(amx, params[3]);

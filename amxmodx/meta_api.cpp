@@ -148,9 +148,9 @@ bool ColoredMenus(String & ModName)
 	const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
 	const size_t ModsCount = sizeof(pModNames) / sizeof(const char *);
 
-	for (int Iterator = 0u; Iterator < ModsCount; ++Iterator)
+	for (size_t i = 0; i < ModsCount; ++i)
 	{
-		if (ModName.compare(pModNames[Iterator]) == 0u)
+		if (ModName.compare(pModNames[i]) == 0)
 			return true; // this game modification currently supports colored menus	
 	}
 

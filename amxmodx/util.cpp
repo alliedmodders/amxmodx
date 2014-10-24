@@ -57,7 +57,7 @@ void UTIL_ShowMenu(edict_t* pEdict, int slots, int time, char *menu, int mlen)
 	if (!gmsgShowMenu)
 		return;			// some games don't support ShowMenu (Firearms)
 
-	while (*n)
+	do
 	{
 		a = mlen;
 		if (a > 175) a = 175;
@@ -74,6 +74,7 @@ void UTIL_ShowMenu(edict_t* pEdict, int slots, int time, char *menu, int mlen)
 		*n = c;
 		menu = n;
 	}
+	while (*n);
 }
 
 /* warning - don't pass here const string */

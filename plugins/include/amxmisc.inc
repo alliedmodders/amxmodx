@@ -578,3 +578,15 @@ stock has_all_flags(id, const flags[])
 	new FlagsNumber=read_flags(flags);
 	return ((get_user_flags(id) & FlagsNumber)==FlagsNumber);
 }
+
+/**
+ * Resets a client's menu.
+ *
+ * @note This is just a wrapper around show_menu for the sake of readability.
+ *
+ * @param index     Client to reset menu to, use 0 to reset to all clients
+ */
+stock reset_menu(index)
+{
+	show_menu(index, 0, "", 0);
+}

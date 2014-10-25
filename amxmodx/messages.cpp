@@ -389,6 +389,7 @@ static cell _message_begin(AMX *amx, cell *params, bool useFloat) /* 4 param */
 	case MSG_BROADCAST:
 	case MSG_ALL:
 	case MSG_SPEC:
+	case MSG_INIT:
 		MESSAGE_BEGIN(params[1], params[2], NULL);
 		break;
 	case MSG_PVS: case MSG_PAS:

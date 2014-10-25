@@ -1477,7 +1477,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	int iEnt = params[1];
 	int oEnt = params[3];
 	// Check index to start searching at, 0 must be possible for iEnt.
-	CHECK_ENTITY(oEnt);
+	CHECK_ENTITY_SIMPLE(oEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
 	edict_t *entOwner = INDEXENT2(oEnt);

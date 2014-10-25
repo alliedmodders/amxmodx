@@ -399,7 +399,8 @@ static cell AMX_NATIVE_CALL get_map_objectives(AMX *amx, cell *params)
 
 	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_hostage_rescue")) ||
 		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "info_hostage_rescue")) ||
-		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "hostage_entity"))) // there are maps with only this and using team spawn as rescue zone.
+		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "hostage_entity"))      || // ) there are maps with only this and using team spawn as rescue zone.
+		!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "monster_scientist")))     // ) 
 		flags |= MapObjective_Hostage;
 
 	if (!FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", "func_vip_safetyzone")))

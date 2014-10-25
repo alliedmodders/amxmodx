@@ -582,10 +582,12 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 		enableSpecialBot = params[5] > 0;
 	}
 
+	Forward *pfwd = new Forward(fwd);
+
 	// We've passed all tests...
 	if (strcmp(classname, "player") == 0 && enableSpecialBot)
 	{
-		SpecialbotHandler.RegisterHamSpecialBot(amx, func, function, post, fwd);
+		SpecialbotHandler.RegisterHamSpecialBot(amx, func, function, post, pfwd);
 	}
 
 	int **ivtable=(int **)vtable;
@@ -599,7 +601,6 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 		if (hooks[func].at(i)->tramp == vfunction)
 		{
 			// Yes, this function is hooked
-			Forward *pfwd=new Forward(fwd);
 			if (post)
 			{
 				hooks[func].at(i)->post.append(pfwd);
@@ -616,7 +617,6 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
 	hooks[func].append(hook);
 
-	Forward *pfwd=new Forward(fwd);
 	if (post)
 	{
 		hook->post.append(pfwd);

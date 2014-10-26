@@ -16,6 +16,7 @@
 
 #include "ham_utils.h"
 #include <am-vector.h>
+#include "forward.h"
 
 class CRegisterHamParams
 {
@@ -24,9 +25,9 @@ public:
 	int func;
 	char *function;
 	int post;
-	int fwd;
+	Forward *pfwd;
 	
-	CRegisterHamParams(AMX *arg_amx, int &arg_func, const char *arg_function, int &arg_post, int &arg_fwd);
+	CRegisterHamParams(AMX *arg_amx, int &arg_func, const char *arg_function, int &arg_post, Forward *arg_pfwd);
 	~CRegisterHamParams();
 private:
 	CRegisterHamParams(){}
@@ -37,10 +38,10 @@ class CHamSpecialBotHandler
 public:
 	CHamSpecialBotHandler();
 	void CheckClientKeyValue(int &clientIndex, char *infobuffer, const char *key, const char *value);
-	void RegisterHamSpecialBot(AMX *amx, int &func, const char *function, int &post, int &fwd);
+	void RegisterHamSpecialBot(AMX *amx, int &func, const char *function, int &post, Forward *pfwd);
 
 private:
-	void RegisterChecked(AMX *amx, int &func, const char *function, int &post, int &fwd);
+	void RegisterChecked(AMX *amx, int &func, const char *function, int &post, Forward *pfwd);
 
 	ke::Vector<CRegisterHamParams*> m_RHP_list;
 	void **m_specialbot_vtable;

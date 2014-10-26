@@ -19,14 +19,14 @@ extern ke::Vector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 extern hook_t hooklist[];
 
 
-CRegisterHamParams::CRegisterHamParams(AMX *arg_amx, int &arg_func, const char *arg_function, int &arg_post, int &arg_fwd)
+CRegisterHamParams::CRegisterHamParams(AMX *arg_amx, int &arg_func, const char *arg_function, int &arg_post, Forward *arg_pfwd)
 {
 	amx = arg_amx;
 	func = arg_func;
 	function = new char[strlen(arg_function)+1];
 	strcpy(function, arg_function);
 	post = arg_post;
-	fwd = arg_fwd;
+	pfwd = arg_pfwd;
 }
 
 CRegisterHamParams::~CRegisterHamParams()
@@ -64,25 +64,25 @@ void CHamSpecialBotHandler::CheckClientKeyValue(int &clientIndex, char *infobuff
 	for (size_t i = 0; i < m_RHP_list.length(); ++i)
 	{
 		CRegisterHamParams *item = m_RHP_list.at(i);
-		RegisterChecked(item->amx, item->func, item->function, item->post, item->fwd);
+		RegisterChecked(item->amx, item->func, item->function, item->post, item->pfwd);
 		delete item;
 	}
 
 	m_RHP_list.clear();
 }
 
-void CHamSpecialBotHandler::RegisterHamSpecialBot(AMX *amx, int &func, const char *function, int &post, int &fwd)
+void CHamSpecialBotHandler::RegisterHamSpecialBot(AMX *amx, int &func, const char *function, int &post, Forward *pfwd)
 {	
 	if(m_specialbot_vtable == NULL)
 	{
-		m_RHP_list.append( new CRegisterHamParams(amx, func, function, post, fwd) );
+		m_RHP_list.append(new CRegisterHamParams(amx, func, function, post, pfwd));
 		return;
 	}
 
-	RegisterChecked(amx, func, function, post, fwd);
+	RegisterChecked(amx, func, function, post, pfwd);
 }
 
-void CHamSpecialBotHandler::RegisterChecked(AMX *amx, int &func, const char *function, int &post, int &fwd)
+void CHamSpecialBotHandler::RegisterChecked(AMX *amx, int &func, const char *function, int &post, Forward *pfwd)
 {
 	void **vtable = m_specialbot_vtable;
 	int **ivtable=(int **)vtable;
@@ -94,7 +94,6 @@ void CHamSpecialBotHandler::RegisterChecked(AMX *amx, int &func, const char *fun
 		if (hooks[func].at(i)->tramp == vfunction)
 		{
 			// Yes, this function is hooked
-			Forward *pfwd = new Forward(fwd);
 			if (post)
 			{
 				hooks[func].at(i)->post.append(pfwd);
@@ -113,7 +112,6 @@ void CHamSpecialBotHandler::RegisterChecked(AMX *amx, int &func, const char *fun
 	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
 	hooks[func].append(hook);
 
-	Forward *pfwd=new Forward(fwd);
 	if (post)
 	{
 		hook->post.append(pfwd);

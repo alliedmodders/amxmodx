@@ -162,24 +162,27 @@ void Client_Damage_End(void* mValue){
 }
 
 void Client_CurWeapon(void* mValue){
-  static int iState;
-  static int iId;
-  switch (mState++){
-  case 0: 
-    iState = *(int*)mValue;
-    break;
-  case 1:
-    if (!iState) break; 
-    iId = *(int*)mValue;
-    break;
-  case 2:
-	if (!mPlayer || !iState ) break;
-    int iClip = *(int*)mValue;
-    if ((iClip > -1) && (iClip < mPlayer->weapons[iId].clip)) 
-      mPlayer->saveShot(iId);
-    mPlayer->weapons[iId].clip = iClip;
-	mPlayer->current = iId;
-  }
+	static int iState;
+	static int iId;
+	switch (mState++){
+		case 0: 
+			iState = *(int*)mValue;
+			break;
+		case 1:
+			if (!iState) break; 
+			iId = *(int*)mValue;
+			break;
+		case 2:
+			if (!mPlayer || !iState ) break;
+			int iClip = *(int*)mValue;
+			if (iClip > -1){
+				if (iClip < mPlayer->weapons[iId].clip){
+					mPlayer->saveShot(iId);
+				}
+				mPlayer->weapons[iId].clip = iClip;
+				mPlayer->current = iId;
+			}
+	}
 }
 
 void Client_AmmoX(void* mValue){

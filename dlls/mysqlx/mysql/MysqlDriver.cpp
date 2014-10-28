@@ -57,6 +57,12 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 		mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *)&(info->max_timeout));
 	}
 
+	/** Have MySQL automatically reconnect if it times out or loses connection.
+	 * This will prevent "MySQL server has gone away" errors after a while.
+	 */
+	my_bool my_true = true;
+	mysql_options(mysql, MYSQL_OPT_RECONNECT, (const char *)&my_true);
+
 	if (mysql_real_connect(mysql, 
 							info->host, 
 							info->user, 

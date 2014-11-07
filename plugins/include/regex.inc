@@ -305,7 +305,7 @@ native Regex:regex_match_all(const string[], const pattern[], flags = 0, error[]
 stock regex_match_simple(const str[], const pattern[], flags = 0, error[]= "", maxLen = 0, &errcode = 0)
 {
 	new Regex:regex = regex_compile_ex(pattern, flags, error, maxLen, errcode);
-	if (regex < REGEX_NO_MATCH)
+	if (regex < REGEX_OK)
 	{
 		return -1;
 	}

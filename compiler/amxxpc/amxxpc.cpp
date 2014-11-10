@@ -185,7 +185,12 @@ int main(int argc, char **argv)
 	fclose(fp);
 
 	unlink(file);
-
+	
+	/*
+	Without "Done" message "Compile and start Half-Life"
+	and "Compile and upload" buttons in AMXX-Studio doesn't work.
+	*/
+	pc_printf("Done.\n");
 #if !defined EMSCRIPTEN
 	dlclose(lib);
 #endif

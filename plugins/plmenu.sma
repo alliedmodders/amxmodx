@@ -753,6 +753,13 @@ public actionTeamMenu(id, key)
 					cs_set_user_deaths(player, deaths)
 				}
 				
+				if (g_silent[id] && cs_get_user_team(player) == CS_TEAM_SPECTATOR)
+				{
+					new deaths = cs_get_user_deaths(player)
+					user_kill(player, 1)
+					cs_set_user_deaths(player, deaths)
+				}
+					
 				cs_set_user_team(player, destTeamSlot + 1)
 
 			} else {
@@ -760,6 +767,12 @@ public actionTeamMenu(id, key)
 				{
 					user_kill(player, 1)
 				}
+				
+				if (g_silent[id] && cs_get_user_team(player) == CS_TEAM_SPECTATOR)
+				{
+					user_kill(player, 1)
+				}
+				
 				if( g_fakemeta )
 				{
 					set_pdata_bool(player, m_bTeamChanged, true);

@@ -668,10 +668,12 @@ static cell AMX_NATIVE_CALL show_dhudmessage(AMX *amx, cell *params) /* 2 param 
 static cell AMX_NATIVE_CALL get_user_name(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	
-	return set_amxstring_utf8(amx, params[2], (index < 1 || index > gpGlobals->maxClients) ? 
-			hostname->string : 
-			g_players[index].name.c_str(), g_players[index].name.size(), params[3] + 1);
+	int maxlen = params[3] + 1; // EOS.
+
+	if (index < 1 || index > gpGlobals->maxClients)
+		return set_amxstring_utf8(amx, params[2], hostname->string, strlen(hostname->string), maxlen);
+	else
+		return set_amxstring_utf8(amx, params[2], g_players[index].name.c_str(), g_players[index].name.size(), maxlen);
 }
 
 static cell AMX_NATIVE_CALL get_user_index(AMX *amx, cell *params) /* 1 param */

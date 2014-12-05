@@ -746,7 +746,7 @@ public actionTeamMenu(id, key)
 
 			if ( g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
 			{
-				if (is_user_alive(player) && !g_silent[id])
+				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
 				{
 					new deaths = cs_get_user_deaths(player)
 					user_kill(player, 1)
@@ -756,7 +756,7 @@ public actionTeamMenu(id, key)
 				cs_set_user_team(player, destTeamSlot + 1)
 
 			} else {
-				if (is_user_alive(player) && !g_silent[id])
+				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
 				{
 					user_kill(player, 1)
 				}

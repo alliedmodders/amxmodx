@@ -37,8 +37,8 @@ template<>
 int HashFunction<String>(const String &k)
 {
 	unsigned long hash = 5381;
-	register const char *str = k.c_str();
-	register char c;
+	const char *str = k.c_str();
+	char c;
 	while ((c = *str++)) 
 	{
 		hash = ((hash << 5) + hash) + c; // hash*33 + c
@@ -50,8 +50,8 @@ template<>
 int HashAlt<const char *>(char const * const &k)
 {
 	unsigned long hash = 5381;
-	register const char *str = k;
-	register char c;
+	const char *str = k;
+	char c;
 	while ((c = *str++)) 
 	{
 		hash = ((hash << 5) + hash) + c; // hash*33 + c

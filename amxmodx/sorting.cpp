@@ -174,8 +174,8 @@ int sort_strings_asc(const void *blk1, const void *blk2)
 	cell reloc1 = *(cell *)blk1;
 	cell reloc2 = *(cell *)blk2;
 	
-	register cell *str1 = (cell *)((char *)(&g_CurStringArray[reloc1]) + g_CurRebaseMap[reloc1]);
-	register cell *str2 = (cell *)((char *)(&g_CurStringArray[reloc2]) + g_CurRebaseMap[reloc2]);
+	cell *str1 = (cell *)((char *)(&g_CurStringArray[reloc1]) + g_CurRebaseMap[reloc1]);
+	cell *str2 = (cell *)((char *)(&g_CurStringArray[reloc2]) + g_CurRebaseMap[reloc2]);
 
 	while (*str1 == *str2++)
 	{
@@ -193,8 +193,8 @@ int sort_strings_desc(const void *blk1, const void *blk2)
 	cell reloc1 = *(cell *)blk1;
 	cell reloc2 = *(cell *)blk2;
 
-	register cell *str1 = (cell *)((char *)(&g_CurStringArray[reloc1]) + g_CurRebaseMap[reloc1]);
-	register cell *str2 = (cell *)((char *)(&g_CurStringArray[reloc2]) + g_CurRebaseMap[reloc2]);
+	cell *str1 = (cell *)((char *)(&g_CurStringArray[reloc1]) + g_CurRebaseMap[reloc1]);
+	cell *str2 = (cell *)((char *)(&g_CurStringArray[reloc2]) + g_CurRebaseMap[reloc2]);
 
 	while (*str1 == *str2++)
 	{

@@ -129,8 +129,8 @@ void LogEventsMngr::setLogString(const char* frmt, ...)
 
 void LogEventsMngr::parseLogString()
 {
-	register const char* b = logString;
-	register int a;
+	const char* b = logString;
+	int a;
 	
 	while (*b && logArgc < MAX_LOGARGS)
 	{

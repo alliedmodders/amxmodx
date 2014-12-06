@@ -13,10 +13,10 @@ if AMXX.mysql_path:
   binary.compiler.defines += [
     'SM_DEFAULT_THREADER',
     'HAVE_STDINT_H',
-    'stricmp=strcasecmp',
   ]
 
   if builder.target_platform is 'linux' or builder.target_platform is 'mac':
+    binary.compiler.defines += ['stricmp=strcasecmp']
     binary.compiler.linkflags += [
       os.path.join(AMXX.mysql_path, 'lib', 'libmysqlclient_r.a'),
       '-lz',

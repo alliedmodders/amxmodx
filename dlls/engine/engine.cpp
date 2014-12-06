@@ -82,12 +82,12 @@ static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
 	Touch *p = new Touch;
 
 	if (!strlen(Toucher) || strcmp(Toucher, "*")==0) {
-		p->Toucher.setVoid();
+		p->Toucher = "";
 	} else {
 		p->Toucher = Toucher;
 	}
 	if (!strlen(Touched) || strcmp(Touched, "*")==0) {
-		p->Touched.setVoid();
+		p->Touched = "";
 	} else {
 		p->Touched = Touched;
 	}

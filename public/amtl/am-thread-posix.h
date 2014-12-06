@@ -50,7 +50,7 @@ class Mutex : public Lockable
 #if !defined(NDEBUG)
     int rv =
 #endif
-      pthread_mutex_init(&mutex_, NULL);
+      pthread_mutex_init(&mutex_, nullptr);
     assert(rv == 0);
   }
   ~Mutex() {
@@ -85,7 +85,7 @@ class ConditionVariable : public Lockable
 #if !defined(NDEBUG)
     int rv =
 #endif
-      pthread_cond_init(&cv_, NULL);
+      pthread_cond_init(&cv_, nullptr);
     assert(rv == 0);
   }
   ~ConditionVariable() {
@@ -116,7 +116,7 @@ class ConditionVariable : public Lockable
       return Wait_Error;
 #else
     struct timeval tv;
-    gettimeofday(&tv, NULL);
+    gettimeofday(&tv, nullptr);
 
     struct timespec ts;
     ts.tv_sec = tv.tv_sec;
@@ -165,12 +165,12 @@ class Thread
     char name[17];
   };
  public:
-  Thread(IRunnable *run, const char *name = NULL) {
+  Thread(IRunnable *run, const char *name = nullptr) {
     ThreadData *data = new ThreadData;
     data->run = run;
     snprintf(data->name, sizeof(data->name), "%s", name ? name : "");
 
-    initialized_ = (pthread_create(&thread_, NULL, Main, data) == 0);
+    initialized_ = (pthread_create(&thread_, nullptr, Main, data) == 0);
     if (!initialized_)
       delete data;
   }
@@ -182,7 +182,7 @@ class Thread
   void Join() {
     if (!Succeeded())
       return;
-    pthread_join(thread_, NULL);
+    pthread_join(thread_, nullptr);
   }
 
  private:
@@ -199,7 +199,7 @@ class Thread
 #endif
     }
     data->run->Run();
-    return NULL;
+    return nullptr;
   }
 
  private:

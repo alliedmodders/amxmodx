@@ -58,18 +58,18 @@ class AString
     else
       length_ = 0;
   }
-  AString(Moveable<AString> other)
-    : chars_(other->chars_.take()),
-      length_(other->length_)
+  AString(AString &&other)
+    : chars_(other.chars_.take()),
+      length_(other.length_)
   {
-    other->length_ = 0;
+    other.length_ = 0;
   }
 
   AString &operator =(const char *str) {
     if (str && str[0]) {
       set(str, strlen(str));
     } else {
-      chars_ = NULL;
+      chars_ = nullptr;
       length_ = 0;
     }
     return *this;
@@ -78,15 +78,15 @@ class AString
     if (other.length_) {
       set(other.chars_, other.length_);
     } else {
-      chars_ = NULL;
+      chars_ = nullptr;
       length_ = 0;
     }
     return *this;
   }
-  AString &operator =(Moveable<AString> other) {
-    chars_ = other->chars_.take();
-    length_ = other->length_;
-    other->length_ = 0;
+  AString &operator =(AString &&other) {
+    chars_ = other.chars_.take();
+    length_ = other.length_;
+    other.length_ = 0;
     return *this;
   }
 
@@ -106,23 +106,13 @@ class AString
     return chars()[index];
   }
 
-  void setVoid() {
-    chars_ = NULL;
-    length_ = kInvalidLength;
-  }
-
-  bool isVoid() const {
-    return length_ == kInvalidLength;
-  }
-
   size_t length() const {
-    assert(!isVoid());
     return length_;
   }
 
   const char *chars() const {
     if (!chars_)
-      return isVoid() ? NULL : "";
+      return "";
     return chars_;
   }
 

@@ -52,18 +52,8 @@ class LinkedList : public AllocPolicy
  public:
   friend class iterator;
 
-  class Node
+  struct Node
   {
-   public:
-    Node(const T &o)
-     : obj(o)
-    {
-    }
-    Node(Moveable<T> o)
-     : obj(o)
-    {
-    }
-
     T obj;
     Node *next;
     Node *prev;
@@ -80,18 +70,14 @@ public:
     clear();
   }
 
-  bool append(const T &obj) {
-    return insertBefore(end(), obj) != end();
-  }
-  bool append(Moveable<T> obj) {
-    return insertBefore(end(), obj) != end();
+  template <typename U>
+  bool append(U &&obj) {
+    return insertBefore(end(), ke::Forward<U>(obj)) != end();
   }
 
-  bool prepend(const T &obj) {
-    return insertBefore(begin(), obj) != begin();
-  }
-  bool prepend(Moveable<T> obj) {
-    return insertBefore(begin(), obj) != begin();
+  template <typename U>
+  bool prepend(U &&obj) {
+    return insertBefore(begin(), ke::Forward<U>(obj)) != begin();
   }
 
   size_t length() const {
@@ -134,18 +120,12 @@ public:
     return sentinel_.address();
   }
 
-  Node *allocNode(const T &obj) {
+  template <typename U>
+  Node *allocNode(U &&obj) {
     Node *node = (Node *)this->malloc(sizeof(Node));
     if (!node)
-      return NULL;
-    new (node) Node(obj);
-    return node;
-  }
-  Node *allocNode(Moveable<T> obj) {
-    Node *node = (Node *)this->malloc(sizeof(Node));
-    if (!node)
-      return NULL;
-    new (node) Node(obj);
+      return nullptr;
+    new (&node->obj) T(ke::Forward<U>(obj));
     return node;
   }
 
@@ -165,7 +145,7 @@ public:
 
    public:
     iterator()
-     : this_(NULL)
+     : this_(nullptr)
     {
     }
     iterator(const LinkedList &src)
@@ -269,11 +249,9 @@ public:
 
     return iter;
   }
-  iterator insertBefore(iterator where, const T &obj) {
-    return insert(where, allocNode(obj));
-  }
-  iterator insertBefore(iterator where, Moveable<T> obj) {
-    return insert(where, allocNode(obj));
+  template <typename U>
+  iterator insertBefore(iterator where, U &&obj) {
+    return insert(where, allocNode(ke::Forward<U>(obj)));
   }
 
  public:

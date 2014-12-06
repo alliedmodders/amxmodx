@@ -27,8 +27,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef _include_amtl_hashmap_h_
-#define _include_amtl_hashmap_h_
+#ifndef _include_amtl_hashset_h_
+#define _include_amtl_hashset_h_
 
 #include <am-hashtable.h>
 
@@ -76,6 +76,7 @@ class HashSet : public AllocPolicy
 
   typedef typename Internal::Result Result;
   typedef typename Internal::Insert Insert;
+  typedef typename Internal::iterator iterator;
 
   template <typename Lookup>
   Result find(const Lookup &key) {
@@ -98,11 +99,9 @@ class HashSet : public AllocPolicy
 
   // The map must not have been mutated in between findForAdd() and add().
   // The Insert object is still valid after add() returns, however.
-  bool add(Insert &i, const K &key) {
-    return table_.add(i, key);
-  }
-  bool add(Insert &i, Moveable<K> key) {
-    return table_.add(i, key);
+  template <typename UK>
+  bool add(Insert &i, UK &&key) {
+    return table_.add(i, ke::Forward<UK>(key));
   }
 
   // This can be used to avoid compiler constructed temporaries, since AMTL
@@ -112,6 +111,9 @@ class HashSet : public AllocPolicy
     return table_.add(i);
   }
 
+  iterator iter() {
+    return iterator(&table_);
+  }
   void clear() {
     table_.clear();
   }

@@ -82,5 +82,7 @@ else:
     'sqlite-source/os_unix.c',
   ]
 
+if builder.target_platform == 'windows':
+  binary.sources += ['version.rc']
 
 AMXX.modules += [builder.Add(binary)]

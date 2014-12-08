@@ -9,6 +9,9 @@ binary.sources = [
 ]
 
 if builder.target_platform == 'windows':
+  binary.sources += ['version.rc']
+  
+if builder.target_platform == 'windows':
   binary.compiler.postlink += ['wsock32.lib', 'ws2_32.lib']
 
 AMXX.modules += [builder.Add(binary)]

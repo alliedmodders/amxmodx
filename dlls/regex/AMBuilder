@@ -14,11 +14,15 @@ binary.compiler.defines += [
   'PCRE_STATIC',
   'HAVE_STDINT_H',
 ]
+
 binary.sources = [
   '../../public/sdk/amxxmodule.cpp',
   'module.cpp',
   'CRegEx.cpp',
   'utils.cpp',
 ]
+
+if builder.target_platform == 'windows':
+  binary.sources += ['version.rc']
 
 AMXX.modules += [builder.Add(binary)]

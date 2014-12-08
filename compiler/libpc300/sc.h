@@ -370,8 +370,9 @@ typedef struct s_stringpair {
 #define tSYMBOL  330
 #define tLABEL   331
 #define tSTRING  332
-#define tEXPR    333    /* for assigment to "lastst" only */
-#define tEMPTYBLOCK 334 /* empty blocks for AM bug 4825 */
+#define tPENDING_STRING 333
+#define tEXPR    334    /* for assigment to "lastst" only */
+#define tEMPTYBLOCK 335 /* empty blocks for AM bug 4825 */
 
 /* (reversed) evaluation of staging buffer */
 #define sSTARTREORDER 0x01
@@ -810,6 +811,8 @@ SC_VDECL FILE *inpf_org;      /* main source file */
 SC_VDECL FILE *outf;          /* file written to */
 
 SC_VDECL jmp_buf errbuf;      /* target of longjmp() on a fatal error */
+
+SC_VDECL SC_VDEFINE char sLiteralQueueDisabled;
 
 #if !defined SC_LIGHT
   SC_VDECL int sc_makereport; /* generate a cross-reference report */

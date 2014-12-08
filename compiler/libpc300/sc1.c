@@ -2296,6 +2296,7 @@ static cell initarray(int ident,int tag,int dim[],int numdim,int cur,
 {
   cell dsize,totalsize;
   int idx,abortparse;
+  char disable = FALSE;
 
   assert(cur>=0 && cur<numdim);
   assert(startlit>=0);
@@ -2332,6 +2333,13 @@ static cell initarray(int ident,int tag,int dim[],int numdim,int cur,
     totalsize+=dsize;
     if (*errorfound || !matchtoken(','))
       abortparse=TRUE;
+    disable = sLiteralQueueDisabled;
+    sLiteralQueueDisabled = TRUE;
+    if (matchtoken('}')) {
+      abortparse = TRUE;
+      lexpush();
+    }
+    sLiteralQueueDisabled = disable;
   } /* for */
   needtoken('}');
   assert(counteddim!=NULL);

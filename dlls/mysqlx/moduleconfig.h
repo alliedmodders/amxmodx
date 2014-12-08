@@ -14,11 +14,7 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
-#if defined AMBUILD
-# include <amxmodx_version.h>
-#else
-# define SVN_VERSION "dev-local"
-#endif
+#include <amxmodx_version.h>
 
 /** Module info
  * -The logtag is the tag that the module's log messages will be
@@ -32,7 +28,7 @@
  *   to add multiple entries.
  */
 #define MODULE_NAME "MySQL"
-#define MODULE_VERSION SVN_VERSION
+#define MODULE_VERSION AMXX_VERSION
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org/"
 #define MODULE_LOGTAG "MySQL"

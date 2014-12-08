@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 		exit(0);
 	}
 
-	pc_printf("AMX Mod X Compiler %s\n", SVN_VERSION);
+	pc_printf("AMX Mod X Compiler %s\n", AMXX_VERSION);
 	pc_printf("Copyright (c) 1997-2006 ITB CompuPhase\n");
         pc_printf("Copyright (c) 2004-2013 AMX Mod X Team\n\n");
 	

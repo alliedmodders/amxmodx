@@ -14,6 +14,7 @@ class AMXXConfig(object):
     self.hlsdk_path = None
     self.mysql_path = None
     self.generated_headers = []
+    self.versionlib = None
     self.csx_app = None
     self.stdcxx_path = None
 
@@ -24,7 +25,6 @@ class AMXXConfig(object):
 
   def detectProductVersion(self):
     builder.AddConfigureFile('product.version')
-    builder.AddConfigureFile('.git/HEAD')
 
     # For OS X dylib versioning
     import re
@@ -243,11 +243,15 @@ class AMXXConfig(object):
     cfg.defines += [
       'AMX_NOPROPLIST',
       'PAWN_CELL_SIZE=32',
+      'AMXMODX_BUILD',
+      'AMXX_USE_VERSIONLIB',
     ]
 
     if self.use_auto_versioning():
-        cfg.defines += ['AMBUILD']
+        cfg.defines += ['AMXX_GENERATED_BUILD']
         cfg.includes += [os.path.join(builder.buildPath, 'includes')]
+        cfg.includes += [os.path.join(builder.sourcePath, 'support', 'versionlib')]
+        
     cfg.includes += [os.path.join(builder.sourcePath, 'public')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'sdk')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl')]
@@ -258,9 +262,10 @@ class AMXXConfig(object):
   # Low-level compiler and binary construction.
   #
 
-  def MMCompiler(self, context):
-    compiler = context.compiler.clone()
+  def ConfigureForModule(self, context, compiler):
     compiler.cxxincludes += [
+      os.path.join(context.currentSourcePath),
+      os.path.join(context.currentSourcePath, 'sdk'),
       os.path.join(self.metamod_path, 'metamod'),
       os.path.join(self.hlsdk_path, 'common'),
       os.path.join(self.hlsdk_path, 'dlls'),
@@ -271,49 +276,22 @@ class AMXXConfig(object):
     ]
     return compiler
 
-  def LibraryBuilder(self, context, compiler, name):
-    binary = compiler.Library(name)
-    binary.compiler.cxxincludes += [os.path.join(context.currentSourcePath)]
+  def AddVersioning(self, binary):
     if builder.target_platform == 'windows':
       binary.compiler.rcdefines += [
         'BINARY_NAME="{0}"'.format(binary.outputFile),
         'RC_COMPILE',
       ]
       if self.use_auto_versioning():
-        binary.compiler.rcdefines += ['AMBUILD']
+        binary.compiler.rcdefines += ['AMXX_GENERATED_BUILD']
     elif builder.target_platform == 'mac':
       binary.compiler.postlink += [
         '-compatibility_version', '1.0.0',
         '-current_version', self.productVersion
       ]
-      if self.use_auto_versioning():
-        binary.compiler.rcdefines += ['AMBUILD']
-
-    binary.compiler.sourcedeps += AMXX.generated_headers
-    return binary
-
-  def ModuleBuilder(self, context, compiler, name):
-    compiler.cxxincludes += [
-      os.path.join(context.currentSourcePath, 'sdk'),
-    ]
-
-    if builder.target_platform == 'mac' or builder.target_platform == 'windows':
-      name = name + '_amxx'
-    elif builder.target_platform == 'linux':
-      name = name + '_amxx_i386'
-
-    return self.LibraryBuilder(context, compiler, name)
-
-  def ProgramBuilder(self, context, compiler, name):
-    binary = compiler.Program(name)
-    binary.compiler.cxxincludes += [os.path.join(context.currentSourcePath)]
-    if builder.target_platform == 'windows':
-      binary.compiler.rcdefines += [
-        'BINARY_NAME="{0}"'.format(binary.outputFile),
-        'AMBUILD',
-        'RC_COMPILE',
-      ]
-    binary.compiler.sourcedeps += AMXX.generated_headers
+    if self.use_auto_versioning():
+      binary.compiler.linkflags += [self.versionlib]
+      binary.compiler.sourcedeps += AMXX.generated_headers
     return binary
 
   #
@@ -322,30 +300,39 @@ class AMXXConfig(object):
   #
 
   def Library(self, context, name):
-    compiler = context.compiler.clone()
-    return self.LibraryBuilder(context, compiler, name)
+    binary = context.compiler.Library(name)
+    return self.AddVersioning(binary)
 
   def MetaPlugin(self, context, name):
-    compiler = self.MMCompiler(context)
-
+    binary = context.compiler.Library(name)
+    self.ConfigureForModule(context, binary.compiler)
+    
     if builder.target_platform == 'mac' or builder.target_platform == 'windows':
       name = name + '_mm'
     elif builder.target_platform == 'linux':
       name = name + '_mm_i386'
 
-    return self.LibraryBuilder(context, compiler, name)
+    return self.AddVersioning(binary)
 
   def Module(self, context, name):
-    compiler = context.compiler.clone()
-    return self.ModuleBuilder(context, compiler, name)
+    binary = context.compiler.Library(name)
+    self.ConfigureForModule(context, binary.compiler)
+    return self.AddVersioning(binary)
 
   def MetaModule(self, context, name):
-    compiler = self.MMCompiler(context)
-    return self.ModuleBuilder(context, compiler, name)
+    binary = context.compiler.Library(name)
+    self.ConfigureForModule(context, binary.compiler)
+
+    if builder.target_platform == 'mac' or builder.target_platform == 'windows':
+      name = name + '_amxx'
+    elif builder.target_platform == 'linux':
+      name = name + '_amxx_i386'
+
+    return self.AddVersioning(binary)
 
   def Program(self, context, name):
-    compiler = context.compiler.clone()
-    return self.ProgramBuilder(context, compiler, name)
+    binary = context.compiler.Program(name)
+    return self.AddVersioning(binary)
 
 AMXX = AMXXConfig()
 AMXX.detectProductVersion()
@@ -357,6 +344,10 @@ AMXX.configure()
 if AMXX.use_auto_versioning():
   AMXX.generated_headers = builder.RunScript(
     'support/Versioning',
+    { 'AMXX': AMXX }
+  )
+  AMXX.versionlib = builder.RunScript(
+    'support/versionlib/AMBuilder',
     { 'AMXX': AMXX }
   )
 

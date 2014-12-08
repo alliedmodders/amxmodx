@@ -2296,7 +2296,7 @@ static cell initarray(int ident,int tag,int dim[],int numdim,int cur,
 {
   cell dsize,totalsize;
   int idx,abortparse;
-  static char disable = FALSE;
+  char disable = FALSE;
 
   assert(cur>=0 && cur<numdim);
   assert(startlit>=0);

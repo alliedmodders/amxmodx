@@ -1857,7 +1857,7 @@ char *sc_tokens[] = {
          "#endscript", "#error", "#file", "#if", "#include", "#line", "#pragma",
          "#tryinclude", "#undef",
          ";", ";", "-integer value-", "-rational value-", "-identifier-",
-         "-label-", "-string-"
+         "-label-", "-string-", "-string-"
        };
 
 SC_FUNC int lex(cell *lexvalue,char **lexsym)
@@ -1976,6 +1976,10 @@ SC_FUNC int lex(cell *lexvalue,char **lexsym)
     } /* if */
   } else if (*lptr=='\"' || (*lptr==sc_ctrlchar && *(lptr+1)=='\"'))
   {                                     /* unpacked string literal */
+    if (sLiteralQueueDisabled) {
+      _lextok=tPENDING_STRING;
+      return _lextok;
+    }
     _lextok=tSTRING;
     stringflags= (*lptr==sc_ctrlchar) ? RAWMODE : 0;
     *lexvalue=_lexval=litidx;
@@ -2045,6 +2049,10 @@ SC_FUNC int lex(cell *lexvalue,char **lexsym)
  */
 SC_FUNC void lexpush(void)
 {
+  if (_lextok == tPENDING_STRING) {
+    // Don't push back fake tokens.
+    return;
+  }
   assert(_pushed==FALSE);
   _pushed=TRUE;
 }
@@ -2204,6 +2212,7 @@ static void chk_grow_litq(void)
  */
 SC_FUNC void litadd(cell value)
 {
+  assert(!sLiteralQueueDisabled);
   chk_grow_litq();
   assert(litidx<litmax);
   litq[litidx++]=value;
@@ -2219,6 +2228,7 @@ SC_FUNC void litadd(cell value)
  */
 SC_FUNC void litinsert(cell value,int pos)
 {
+  assert(!sLiteralQueueDisabled);
   chk_grow_litq();
   assert(litidx<litmax);
   assert(pos>=0 && pos<=litidx);

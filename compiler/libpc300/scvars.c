@@ -100,6 +100,8 @@ SC_VDEFINE jmp_buf errbuf;
 
 SC_VDEFINE HashTable *sp_Globals = NULL;
 
+SC_VDEFINE char sLiteralQueueDisabled = FALSE;
+
 #if !defined SC_LIGHT
   SC_VDEFINE int sc_makereport=FALSE; /* generate a cross-reference report */
 #endif

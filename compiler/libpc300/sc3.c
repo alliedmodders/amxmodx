@@ -1225,7 +1225,7 @@ static int hier2(value *lval)
     return FALSE;
   case tLABEL:                  /* tagname override */
     tag=pc_addtag(st);
-    forceuntag=(*st == '_');    /* forced to be untagged with _: */
+    forceuntag=(*st == '_' && !tag);    /* forced to be untagged with _: */
     lvalue=hier2(lval);
     lval->tag=tag;
     lval->forceuntag=forceuntag;

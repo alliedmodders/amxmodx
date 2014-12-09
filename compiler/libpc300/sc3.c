@@ -974,27 +974,27 @@ static int hier14(value *lval1)
   } /* if */
   if (!oper) {  /* tagname mismatch (if "oper", warning already given in plunge2()) */
 
-	/* If left value is a symbol and is tagged, we want to check that first.
-	   If we tag array and an enum member is passed as index, we assume enum 
-	   is a simple list of constants (as opposite, not a "structure"). E.g.:
-	   enum X {A, B}; new Float:array[X]; 
-	   array[A] = 1.0; 
-	   ^ tag of array is checked instead of tag of A.
-	*/
+    /* If left value is a symbol and is tagged, we want to check that first.
+       If we tag array and an enum member is passed as index, we assume enum 
+       is a simple list of constants (as opposite, not a "structure"). E.g.:
+       enum X {A, B}; new Float:array[X]; 
+       array[A] = 1.0; 
+       ^ tag of array is checked instead of tag of A.
+    */
     if (lval3.sym && lval3.sym->tag != 0) {
       if (!matchtag(lval3.sym->tag, lval2.tag, TRUE))
         error(213);
     }
     else if (lval3.tag && !lval2.tag && lval2.forceuntag) {
       /* Because of the above fix included in AMXX 1.60, a regression has been introduced
-	     as well, where any tagged members of an enum is ignored when a tag check is required. 
-		 E.g.: enum X {Float:A, SomeTag:B }; new array[X];
-		       array[A] = 1.0;
+         as well, where any tagged members of an enum is ignored when a tag check is required. 
+         E.g.: enum X {Float:A, SomeTag:B }; new array[X];
+               array[A] = 1.0;
          With the original fix, tag of array is checked instead of tag of A. Result: tag mismatch.
-		 To bypass the issue, plugin has to untag the value like _:1.0.
-		 To fix this and to avoid old plugins suddenly getting spammed by warnings, we track 
-		 when a value is untagged, and if the related enum member is tagged and the value is forced 
-		 to be untagged, we assume this matches.
+         To bypass the issue, plugin has to untag the value like _:1.0.
+         To fix this and to avoid old plugins suddenly getting spammed by warnings, we track 
+         when a value is untagged, and if the related enum member is tagged and the value is forced 
+         to be untagged, we assume this matches.
        */
     }
     else if (!matchtag(lval3.tag, lval2.tag, TRUE)) {
@@ -1225,10 +1225,10 @@ static int hier2(value *lval)
     return FALSE;
   case tLABEL:                  /* tagname override */
     tag=pc_addtag(st);
-	forceuntag=(*st == '_');    /* forced to be untagged with _: */
+    forceuntag=(*st == '_');    /* forced to be untagged with _: */
     lvalue=hier2(lval);
     lval->tag=tag;
-	lval->forceuntag=forceuntag;
+    lval->forceuntag=forceuntag;
     return lvalue;
   case tDEFINED:
     paranthese=0;

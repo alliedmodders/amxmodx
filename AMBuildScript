@@ -304,30 +304,21 @@ class AMXXConfig(object):
     return self.AddVersioning(binary)
 
   def MetaPlugin(self, context, name):
-    binary = context.compiler.Library(name)
-    self.ConfigureForModule(context, binary.compiler)
-    
     if builder.target_platform == 'mac' or builder.target_platform == 'windows':
       name = name + '_mm'
     elif builder.target_platform == 'linux':
       name = name + '_mm_i386'
-
-    return self.AddVersioning(binary)
-
-  def Module(self, context, name):
     binary = context.compiler.Library(name)
     self.ConfigureForModule(context, binary.compiler)
     return self.AddVersioning(binary)
 
   def MetaModule(self, context, name):
-    binary = context.compiler.Library(name)
-    self.ConfigureForModule(context, binary.compiler)
-
     if builder.target_platform == 'mac' or builder.target_platform == 'windows':
       name = name + '_amxx'
     elif builder.target_platform == 'linux':
       name = name + '_amxx_i386'
-
+    binary = context.compiler.Library(name)
+    self.ConfigureForModule(context, binary.compiler)
     return self.AddVersioning(binary)
 
   def Program(self, context, name):

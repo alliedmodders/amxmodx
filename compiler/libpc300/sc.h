@@ -240,6 +240,7 @@ typedef struct s_value {
   cell constval;        /* value of the constant expression (if ident==iCONSTEXPR)
                          * also used for the size of a literal array */
   int tag;              /* tagname id (of the expression) */
+  char forceuntag;      /* whether expression is untagged using _: */
   char ident;           /* iCONSTEXPR, iVARIABLE, iARRAY, iARRAYCELL,
                          * iEXPRESSION or iREFERENCE */
   char boolresult;      /* boolean result for relational operators */

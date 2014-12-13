@@ -974,12 +974,9 @@ static int hier14(value *lval1)
   } /* if */
   if (!oper) {  /* tagname mismatch (if "oper", warning already given in plunge2()) */
 
-    /* If left value is a symbol and is tagged, we want to check that first.
-       If we tag array and an enum member is passed as index, we assume enum 
-       is a simple list of constants (as opposite, not a "structure"). E.g.:
-       enum X {A, B}; new Float:array[X]; 
-       array[A] = 1.0; 
-       ^ tag of array is checked instead of tag of A.
+    /* If the left value is a tagged symbol, assume that it is not an "enum struct." For
+       example, for "enum X { A, B }; new Float:array[X]" we assume that `A` and `B`
+       are not tagged and the array is an array of floats.
     */
     if (lval3.sym && lval3.sym->tag != 0) {
       if (!matchtag(lval3.sym->tag, lval2.tag, TRUE))
@@ -1150,7 +1147,6 @@ static int hier2(value *lval)
   char *st;
   symbol *sym=NULL;
   int saveresult;
-  char forceuntag=FALSE;
 
   sym = NULL;
   tok=lex(&val,&st);
@@ -1225,10 +1221,9 @@ static int hier2(value *lval)
     return FALSE;
   case tLABEL:                  /* tagname override */
     tag=pc_addtag(st);
-    forceuntag=(*st == '_' && !tag);    /* forced to be untagged with _: */
     lvalue=hier2(lval);
     lval->tag=tag;
-    lval->forceuntag=forceuntag;
+    lval->forceuntag=!tag;      /* forced to be untagged with _: */
     return lvalue;
   case tDEFINED:
     paranthese=0;

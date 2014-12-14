@@ -1689,7 +1689,7 @@ native parse_time(const input[], const format[], time=-1);
  * @param repeat        If the "a" flag is set the task will be repeated this
  *                      many times
  */
-native set_task(Float:time, const function[], id=0, const parameter[]="", len=0, const flags[]="", repeat=0);
+native set_task(Float:time, const function[], id=0, const any:parameter[]="", len=0, const flags[]="", repeat=0);
 
 /**
  * Removes all tasks with the specified id.

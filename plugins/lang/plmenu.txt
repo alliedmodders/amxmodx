@@ -145,6 +145,7 @@ ADMIN_TRANSF_1 = Admin przerzucil %s do %s
 ADMIN_TRANSF_2 = Admin %s przerzucil %s do %s
 TEAM_MENU = Menu druzyny
 TRANSF_TO = Przejdz do %s
+TRANSF_SILENT = Cichy transfer
 CL_CMD_MENU = menu komend klienta
 NO_CMDS = Nie ma zadnych komend
 CANT_PERF_PLAYER = Nie mozesz tego wykonac na gracz "%s"

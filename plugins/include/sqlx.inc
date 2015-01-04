@@ -72,6 +72,8 @@ native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
  * 
  * Example: "utf8", "latin1"
  *
+ * @note Only available in 1.8.3 and above.
+ *
  * @param h					Database or connection tuple Handle.
  * @param charset			The character set string to change to.
  * @return					True, if character set was changed, false otherwise.

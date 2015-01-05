@@ -64,7 +64,7 @@ int g_CurrentMsg;
 
 cvar_t init_csstats_maxsize ={"csstats_maxsize","3500", 0 , 3500.0 };
 cvar_t init_csstats_reset ={"csstats_reset","0"};
-cvar_t init_csstats_rank ={"csstats_rank","0"};
+cvar_t init_csstats_rank ={"csstats_rank","1"};
 cvar_t *csstats_maxsize;
 cvar_t *csstats_reset;
 cvar_t *csstats_rank;

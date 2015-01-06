@@ -2055,7 +2055,7 @@ SC_FUNC int lex(cell *lexvalue,char **lexsym)
              || (*lptr==sc_ctrlchar && *(lptr+1)=='!' && *(lptr+2)=='\"'))  /* packed raw string */
   {
     int stringflags,segmentflags;
-    unsigned char *cat;
+    char *cat;
     if (sLiteralQueueDisabled) {
       _lextok=tPENDING_STRING;
       return _lextok;
@@ -2083,9 +2083,12 @@ SC_FUNC int lex(cell *lexvalue,char **lexsym)
         error(238);       /* mixing packed/unpacked/raw strings in concatenation */
       cat=strchr(_lexstr,'\0');
       assert(cat!=NULL);
-      while ((*lptr!='\"' || *(lptr-1)==sc_ctrlchar) && *lptr!='\0' && (cat-_lexstr)<sLINEMAX) {
-        if (*lptr!='\a')  /* ignore '\a' (which was inserted at a line concatenation) */
+      while (*lptr!='"' && *lptr!='\0' && (cat-_lexstr)<sLINEMAX) {
+        if (*lptr!='\a') { /* ignore '\a' (which was inserted at a line concatenation) */
           *cat++=*lptr;
+          if (*lptr==sc_ctrlchar && *(lptr+1)!='\0')
+            *cat++=*++lptr; /* skip escape character plus the escaped character */
+        } /* if */
         lptr++;
       } /* while */
       *cat='\0';          /* terminate string */

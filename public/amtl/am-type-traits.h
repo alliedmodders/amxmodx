@@ -27,49 +27,38 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef _include_amtl_moveable_h_
-#define _include_amtl_moveable_h_
+#ifndef _include_amtl_type_traits_h_
+#define _include_amtl_type_traits_h_
 
-#include <am-type-traits.h>
+#include <am-cxx.h>
 
 namespace ke {
 
-// Previously, we implemented Move semantics without C++11. Now that we use
-// C++11, we implement this as STL does for std::move.
+// Remove references from types.
 template <typename T>
-static inline typename remove_reference<T>::type &&
-Move(T &&t)
-{
-  return static_cast<typename remove_reference<T>::type &&>(t);
-}
+struct remove_reference {
+  typedef T type;
+};
+template <typename T>
+struct remove_reference<T &> {
+  typedef T type;
+};
+template <typename T>
+struct remove_reference<T &&> {
+  typedef T type;
+};
 
-// std::forward replacement. See:
-//   http://thbecker.net/articles/rvalue_references/section_07.html and
-//   http://thbecker.net/articles/rvalue_references/section_08.html
-template <typename T>
-static KE_CONSTEXPR inline T &&
-Forward(typename remove_reference<T>::type &t) KE_NOEXCEPT
-{
-  return static_cast<T &&>(t);
-}
+template <typename T, T Value>
+struct integral_constant {
+  static const T value = Value;
+};
 
-template <typename T>
-static KE_CONSTEXPR inline T &&
-Forward(typename remove_reference<T>::type &&t) KE_NOEXCEPT
-{
-  return static_cast<T &&>(t);
-}
+typedef integral_constant<bool, true> true_type;
+typedef integral_constant<bool, false> false_type;
 
-template <typename T>
-static inline void
-MoveRange(T *dest, T *src, size_t length)
-{
-  for (size_t i = 0; i < length; i++) {
-    new (&dest[i]) T(ke::Move(src[i]));
-    src[i].~T();
-  }
-}
+template<class T> struct is_lvalue_reference : false_type{};
+template<class T> struct is_lvalue_reference<T&> : true_type {};
 
 } // namespace ke
 
-#endif // _include_amtl_moveable_h_
+#endif // _include_amtl_type_traits_h_

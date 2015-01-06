@@ -1,6 +1,6 @@
 // vim: set sts=8 ts=2 sw=2 tw=99 et:
 //
-// Copyright (C) 2013, David Anderson and AlliedModders LLC
+// Copyright (C) 2013-2014, David Anderson and AlliedModders LLC
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -26,50 +26,42 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
+#ifndef _include_amtl_bits_h_
+#define _include_amtl_bits_h_
 
-#ifndef _include_amtl_moveable_h_
-#define _include_amtl_moveable_h_
-
-#include <am-type-traits.h>
+#include <am-algorithm.h>
 
 namespace ke {
 
-// Previously, we implemented Move semantics without C++11. Now that we use
-// C++11, we implement this as STL does for std::move.
-template <typename T>
-static inline typename remove_reference<T>::type &&
-Move(T &&t)
+static inline bool
+TryUint64Multiply(uint64_t left, uint64_t right, uint64_t *out)
 {
-  return static_cast<typename remove_reference<T>::type &&>(t);
+  uint64_t r = left * right;
+  if (r != 0 && ((r / left) != right))
+    return false;
+
+  *out = r;
+  return true;
 }
 
-// std::forward replacement. See:
-//   http://thbecker.net/articles/rvalue_references/section_07.html and
-//   http://thbecker.net/articles/rvalue_references/section_08.html
-template <typename T>
-static KE_CONSTEXPR inline T &&
-Forward(typename remove_reference<T>::type &t) KE_NOEXCEPT
+static inline bool
+TryUint32Add(uint32_t left, uint32_t right, uint32_t *out)
 {
-  return static_cast<T &&>(t);
+  if (left + right < Max(left, right))
+    return false;
+  *out = left + right;
+  return true;
 }
 
-template <typename T>
-static KE_CONSTEXPR inline T &&
-Forward(typename remove_reference<T>::type &&t) KE_NOEXCEPT
+static inline bool
+TryUint64Add(uint64_t left, uint64_t right, uint64_t *out)
 {
-  return static_cast<T &&>(t);
-}
-
-template <typename T>
-static inline void
-MoveRange(T *dest, T *src, size_t length)
-{
-  for (size_t i = 0; i < length; i++) {
-    new (&dest[i]) T(ke::Move(src[i]));
-    src[i].~T();
-  }
+  if (left + right < Max(left, right))
+    return false;
+  *out = left + right;
+  return true;
 }
 
 } // namespace ke
 
-#endif // _include_amtl_moveable_h_
+#endif // _include_amtl_bits_h_

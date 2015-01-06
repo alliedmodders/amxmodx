@@ -253,9 +253,9 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	META_RES res=MRES_IGNORED;
 	for (i=0; i<Touches.length(); i++)
 	{
-		if (Touches[i]->Toucher.isVoid())
+		if (Touches[i]->Toucher.length() == 0)
 		{
-			if (Touches[i]->Touched.isVoid())
+			if (Touches[i]->Touched.length() == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, (cell)ptrIndex, (cell)ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
@@ -270,7 +270,7 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 					res=MRES_SUPERCEDE;
 			}
 		} else if (Touches[i]->Toucher.compare(ptrClass)==0) {
-			if (Touches[i]->Touched.isVoid())
+			if (Touches[i]->Touched.length() == 0)
 			{
 				retVal = MF_ExecuteForward(Touches[i]->Forward, (cell)ptrIndex, (cell)ptdIndex);
 				if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)

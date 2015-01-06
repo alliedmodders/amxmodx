@@ -1,6 +1,6 @@
 // vim: set sts=8 ts=2 sw=2 tw=99 et:
 //
-// Copyright (C) 2013, David Anderson and AlliedModders LLC
+// Copyright (C) 2013-2014, David Anderson and AlliedModders LLC
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -26,50 +26,33 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
+#ifndef _include_amtl_algorithm_h_
+#define _include_amtl_algorithm_h_
 
-#ifndef _include_amtl_moveable_h_
-#define _include_amtl_moveable_h_
-
-#include <am-type-traits.h>
+#include <am-moveable.h>
 
 namespace ke {
 
-// Previously, we implemented Move semantics without C++11. Now that we use
-// C++11, we implement this as STL does for std::move.
-template <typename T>
-static inline typename remove_reference<T>::type &&
-Move(T &&t)
+template <typename T> static inline T
+Min(const T &t1, const T &t2)
 {
-  return static_cast<typename remove_reference<T>::type &&>(t);
+    return t1 < t2 ? t1 : t2;
 }
 
-// std::forward replacement. See:
-//   http://thbecker.net/articles/rvalue_references/section_07.html and
-//   http://thbecker.net/articles/rvalue_references/section_08.html
-template <typename T>
-static KE_CONSTEXPR inline T &&
-Forward(typename remove_reference<T>::type &t) KE_NOEXCEPT
+template <typename T> static inline T
+Max(const T &t1, const T &t2)
 {
-  return static_cast<T &&>(t);
+    return t1 > t2 ? t1 : t2;
 }
 
-template <typename T>
-static KE_CONSTEXPR inline T &&
-Forward(typename remove_reference<T>::type &&t) KE_NOEXCEPT
+template <typename T> static inline void
+Swap(T &left, T &right)
 {
-  return static_cast<T &&>(t);
-}
-
-template <typename T>
-static inline void
-MoveRange(T *dest, T *src, size_t length)
-{
-  for (size_t i = 0; i < length; i++) {
-    new (&dest[i]) T(ke::Move(src[i]));
-    src[i].~T();
-  }
+  T tmp(Move(left));
+  left = Move(right);
+  right = Move(tmp);
 }
 
 } // namespace ke
 
-#endif // _include_amtl_moveable_h_
+#endif // _include_amtl_algorithm_h_

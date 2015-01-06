@@ -149,9 +149,8 @@ public:
 		if (!i.found())
 		{
 			memory_used_ += key.length() + 1;
-			if (!internal_.add(i))
+			if (!internal_.add(i, aKey))
 				return false;
-			i->key = aKey;
 		}
 		i->value = value;
 		return true;
@@ -163,11 +162,9 @@ public:
 		Insert i = internal_.findForAdd(key);
 		if (i.found())
 			return false;
-		if (!internal_.add(i))
+		if (!internal_.add(i, aKey, value))
 			return false;
 		memory_used_ += key.length() + 1;
-		i->key = aKey;
-		i->value = value;
 		return true;
 	}
 
@@ -225,9 +222,8 @@ public:
 	// Only value needs to be set after.
 	bool add(Insert &i, const char *aKey)
 	{
-		if (!internal_.add(i))
+		if (!internal_.add(i, aKey))
 			return false;
-		i->key = aKey;
 		return true;
 	}
 

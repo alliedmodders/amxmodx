@@ -136,6 +136,7 @@ class AMXXConfig(object):
       ]
       cfg.cxxflags += [
         '-Wno-invalid-offsetof',
+        '-std=c++11',
       ]
 
       cfg.linkflags += ['-m32']
@@ -143,11 +144,22 @@ class AMXXConfig(object):
       have_gcc = cxx.name == 'gcc'
       have_clang = cxx.name == 'clang'
 
-      if have_clang or (have_gcc and cxx.majorVersion >= 4):
+      if have_clang or (have_gcc and cxx.version >= '4'):
         cfg.cflags += ['-fvisibility=hidden']
         cfg.cxxflags += ['-fvisibility-inlines-hidden']
-        if (have_gcc and cxx.minorVersion >= 7) or (have_clang and cxx.majorVersion >= 3):
+        if have_clang or (have_gcc and cxx.version >= '4.6'):
+          cfg.cflags += ['-Wno-narrowing']
+        if (have_gcc and cxx.version >= '4.7') or (have_clang and cxx.version >= '3'):
           cfg.cxxflags += ['-Wno-delete-non-virtual-dtor']
+        if have_gcc and cxx.version >= '4.8':
+          cfg.cflags += ['-Wno-unused-result']
+      if have_clang:
+        cfg.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
+        if cxx.version >= 'apple-clang-5.1' or cxx.version >= 'clang-3.4':
+          cfg.cxxflags += ['-Wno-deprecated-register']
+        else:
+          cfg.cxxflags += ['-Wno-deprecated']
+        cfg.cflags += ['-Wno-sometimes-uninitialized']
 
       if have_gcc:
         cfg.cflags += ['-Wno-parentheses']

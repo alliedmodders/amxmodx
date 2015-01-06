@@ -66,7 +66,7 @@ class ConditionVariable : public Lockable
 {
  public:
   ConditionVariable() {
-    event_ = CreateEvent(NULL, FALSE, FALSE, NULL);
+    event_ = CreateEvent(nullptr, FALSE, FALSE, nullptr);
   }
   ~ConditionVariable() {
     CloseHandle(event_);
@@ -87,12 +87,12 @@ class ConditionVariable : public Lockable
     SetEvent(event_);
   }
 
-  WaitResult Wait(size_t timeout_ms) {
+  WaitResult Wait(size_t timeoutMs) {
     // This will assert if the lock has not been acquired. We don't need to be
     // atomic here, like pthread_cond_wait, because the event bit will stick
     // until reset by a wait function.
     Unlock();
-    DWORD rv = WaitForSingleObject(event_, timeout_ms);
+    DWORD rv = WaitForSingleObject(event_, int(timeoutMs));
     Lock();
 
     if (rv == WAIT_TIMEOUT)
@@ -114,8 +114,8 @@ class ConditionVariable : public Lockable
 class Thread
 {
  public:
-  Thread(IRunnable *run, const char *name = NULL) {
-    thread_ = CreateThread(NULL, 0, Main, run, 0, NULL);
+  Thread(IRunnable *run, const char *name = nullptr) {
+    thread_ = CreateThread(nullptr, 0, Main, run, 0, nullptr);
   }
   ~Thread() {
     if (!thread_)

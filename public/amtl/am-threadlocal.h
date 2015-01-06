@@ -135,7 +135,7 @@ class ThreadLocal
   bool allocate() {
     if (!__sync_bool_compare_and_swap(&allocated_, 0, 1))
       return true;
-    return pthread_key_create(&key_, NULL) == 0;
+    return pthread_key_create(&key_, nullptr) == 0;
   }
 
  private:

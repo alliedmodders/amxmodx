@@ -26,50 +26,41 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-
-#ifndef _include_amtl_moveable_h_
-#define _include_amtl_moveable_h_
-
-#include <am-type-traits.h>
+#ifndef _include_amtl_platform_h_
+#define _include_amtl_platform_h_
 
 namespace ke {
 
-// Previously, we implemented Move semantics without C++11. Now that we use
-// C++11, we implement this as STL does for std::move.
-template <typename T>
-static inline typename remove_reference<T>::type &&
-Move(T &&t)
-{
-  return static_cast<typename remove_reference<T>::type &&>(t);
-}
+#if defined(__NetBSD__)
+# define KE_NETBSD
+# define KE_BSD
+#elif defined(__FreeBSD__)
+# define KE_FREEBSD
+# define KE_BSD
+#elif defined(__OpenBSD__)
+# define KE_OPENBSD
+# define KE_BSD
+#elif defined(__APPLE__)
+# define KE_MACOSX
+# define KE_MACH
+# define KE_BSD
+#elif defined(__MACH__)
+# define KE_MACH
+# define KE_BSD
+#elif defined(_WIN32)
+# define KE_WINDOWS
+#elif defined(__linux__)
+# define KE_LINUX
+# define KE_POSIX
+#elif defined(__sun__)
+# define KE_SOLARIS
+# define KE_POSIX
+#endif
 
-// std::forward replacement. See:
-//   http://thbecker.net/articles/rvalue_references/section_07.html and
-//   http://thbecker.net/articles/rvalue_references/section_08.html
-template <typename T>
-static KE_CONSTEXPR inline T &&
-Forward(typename remove_reference<T>::type &t) KE_NOEXCEPT
-{
-  return static_cast<T &&>(t);
-}
+#if defined(KE_BSD)
+# define KE_POSIX
+#endif
 
-template <typename T>
-static KE_CONSTEXPR inline T &&
-Forward(typename remove_reference<T>::type &&t) KE_NOEXCEPT
-{
-  return static_cast<T &&>(t);
-}
+} // ke
 
-template <typename T>
-static inline void
-MoveRange(T *dest, T *src, size_t length)
-{
-  for (size_t i = 0; i < length; i++) {
-    new (&dest[i]) T(ke::Move(src[i]));
-    src[i].~T();
-  }
-}
-
-} // namespace ke
-
-#endif // _include_amtl_moveable_h_
+#endif // _include_amtl_platform_h_

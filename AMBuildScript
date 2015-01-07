@@ -297,10 +297,11 @@ class AMXXConfig(object):
       if self.use_auto_versioning():
         binary.compiler.rcdefines += ['AMXX_GENERATED_BUILD']
     elif builder.target_platform == 'mac':
-      binary.compiler.postlink += [
-        '-compatibility_version', '1.0.0',
-        '-current_version', self.productVersion
-      ]
+      if binary.type == 'library':
+        binary.compiler.postlink += [
+          '-compatibility_version', '1.0.0',
+          '-current_version', self.productVersion
+        ]
     if self.use_auto_versioning():
       binary.compiler.linkflags += [self.versionlib]
       binary.compiler.sourcedeps += AMXX.generated_headers

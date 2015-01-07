@@ -10,9 +10,7 @@
 #ifndef _AMXXSC_INCLUDE_H
 #define _AMXXSC_INCLUDE_H
 
-#ifndef SVN_VERSION
 #include <amxmodx_version.h>
-#endif
 
 #define MAGIC_HEADER2		0x414D5858
 #define	MAGIC_VERSION		0x0300

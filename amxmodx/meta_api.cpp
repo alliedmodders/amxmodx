@@ -36,7 +36,7 @@ plugin_info_t Plugin_info =
 {
 	META_INTERFACE_VERSION,		// ifvers
 	"AMX Mod X",				// name
-	SVN_VERSION_STRING,			// version
+	AMXX_VERSION,			// version
 	__DATE__,					// date
 	"AMX Mod X Dev Team",		// author
 	"http://www.amxmodx.org",	// url
@@ -450,7 +450,7 @@ int	C_Spawn(edict_t *pent)
 	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
 	
 	// Set some info about amx version and modules
-	CVAR_SET_STRING(init_amxmodx_version.name, SVN_VERSION_STRING);
+	CVAR_SET_STRING(init_amxmodx_version.name, AMXX_VERSION);
 	char buffer[32];
 	sprintf(buffer, "%d", loaded);
 	CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
@@ -1458,7 +1458,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	// ###### Print short GPL
 	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2014 AMX Mod X Development Team \n"
-					 "   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", SVN_VERSION_STRING);
+					 "   AMX Mod X comes with ABSOLUTELY NO WARRANTY; for details type `amxx gpl'.\n", AMXX_VERSION);
 	print_srvconsole("   This is free software and you are welcome to redistribute it under \n"
 					 "   certain conditions; type 'amxx gpl' for details.\n  \n");
 

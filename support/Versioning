@@ -13,7 +13,7 @@ argv = [
   os.path.join(builder.buildPath, 'includes'),
 ]
 outputs = [
-  os.path.join(builder.buildFolder, 'includes', 'amxmodx_version.h'),
+  os.path.join(builder.buildFolder, 'includes', 'amxmodx_version_auto.h'),
   os.path.join(builder.buildFolder, 'includes', 'amxmodx_version.inc'),
 ]
 

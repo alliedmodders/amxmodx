@@ -14,15 +14,11 @@
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
 
-#if defined AMBUILD
-# include <amxmodx_version.h>
-#else
-# define SVN_VERSION "dev-local"
-#endif
+#include <amxmodx_version.h>
 
 // Module info
 #define MODULE_NAME "DoD Fun"
-#define MODULE_VERSION SVN_VERSION
+#define MODULE_VERSION AMXX_VERSION
 #define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "http://www.amxmodx.org"
 #define MODULE_LOGTAG "DODFUN"

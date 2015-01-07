@@ -2,10 +2,13 @@
 import os.path
 
 binary = AMXX.MetaModule(builder, 'fun')
-
+ 
 binary.sources = [
   '../../public/sdk/amxxmodule.cpp',
   'fun.cpp',
 ]
 
+if builder.target_platform == 'windows':
+  binary.sources += ['version.rc']
+  
 AMXX.modules += [builder.Add(binary)]

@@ -1,7 +1,7 @@
 # vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
 import os.path
 
-binary = AMXX.Module(builder, 'nvault')
+binary = AMXX.MetaModule(builder, 'nvault')
 
 binary.compiler.defines += [
   'HAVE_STDINT_H',
@@ -14,5 +14,8 @@ binary.sources = [
   'Journal.cpp',
   'NVault.cpp',
 ]
+
+if builder.target_platform == 'windows':
+  binary.sources += ['version.rc']
 
 AMXX.modules += [builder.Add(binary)]

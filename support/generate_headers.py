@@ -60,29 +60,27 @@ def output_version_headers():
   if tag != "":
     fullstring += "-{0}".format(tag)
     if tag == "dev":
-      fullstring += "+{0}".format(shorthash)
+      fullstring += "+{0}".format(count)
 
-  with open(os.path.join(OutputFolder, 'amxmodx_version.h'), 'w') as fp:
+  with open(os.path.join(OutputFolder, 'amxmodx_version_auto.h'), 'w') as fp:
     fp.write("""
 #ifndef _AMXMODX_AUTO_VERSION_INFORMATION_H_
 #define _AMXMODX_AUTO_VERSION_INFORMATION_H_
 
-#define SVN_VERSION_STRING  "{fullstring}"
-#define SVN_VERSION_DWORD   {major}, {minor}, {release}, 0
-#define SVN_VERSION_PRODUCT "{product}"
-#define SVN_VERSION         SVN_VERSION_STRING
-#define SVN_BUILD_ID        "{count}:{longhash}"
+#define AMXX_BUILD_TAG        \"{0}\"
+#define AMXX_BUILD_CSET       \"{1}\"
+#define AMXX_BUILD_MAJOR      \"{2}\"
+#define AMXX_BUILD_MINOR      \"{3}\"
+#define AMXX_BUILD_RELEASE    \"{4}\"
+#define AMXX_BUILD_LOCAL_REV  \"{6}\"
+
+#define AMXX_BUILD_UNIQUEID   "{6}:" AMXX_BUILD_CSET
+
+#define AMXX_VERSION_STRING   \"{5}\"
+#define AMXX_VERSION_FILE     {2},{3},{4},0
 
 #endif // _AMXMODX_AUTO_VERSION_INFORMATION_H_
-    """.format(
-      fullstring = fullstring,
-      major = major,
-      minor = minor,
-      release = release,
-      product = product,
-      count = count,
-      longhash = longhash
-    ))
+    """.format(tag, shorthash, major, minor, release, fullstring, count))
 
   version_num = int(major) * 100 + int(minor) * 10 + int(release)
   with open(os.path.join(OutputFolder, 'amxmodx_version.inc'), 'w') as fp:
@@ -92,13 +90,23 @@ def output_version_headers():
 #endif
 #define _amxmodx_version_included
 
-#define AMXX_VERSION        {major}.{minor}{release}
-#define AMXX_VERSION_NUM    {version_num}
+#define AMXX_VERSION_TAG        \"{tag}\"
+#define AMXX_VERSION_CSET       \"{shorthash}\"
+#define AMXX_VERSION_MAJOR      \"{major}\"
+#define AMXX_VERSION_MINOR      \"{minor}\"
+#define AMXX_VERSION_RELEASE    \"{release}\"
+#define AMXX_VERSION_LOCAL_REV  \"{count}\"
+#define AMXX_VERSION            {major}.{minor}{release}
+#define AMXX_VERSION_NUM        {version_num}
+
 stock const AMXX_VERSION_STR[] = "{fullstring}";
     """.format(
+      tag = tag,
+      shorthash = shorthash,
       major = major,
       minor = minor,
       release = release,
+      count = count,
       version_num = version_num,
       fullstring = fullstring
     ))

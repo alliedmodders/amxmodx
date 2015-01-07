@@ -6,7 +6,7 @@ binary = AMXX.MetaModule(builder, 'engine')
 binary.compiler.defines += [
   'HAVE_STDINT_H',
 ]
-
+ 
 binary.sources = [
   '../../public/sdk/amxxmodule.cpp',
   'amxxapi.cpp',
@@ -15,5 +15,8 @@ binary.sources = [
   'globals.cpp',
   'forwards.cpp',
 ]
-
+ 
+if builder.target_platform == 'windows':
+  binary.sources += ['version.rc']
+    
 AMXX.modules += [builder.Add(binary)]

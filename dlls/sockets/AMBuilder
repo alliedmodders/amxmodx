@@ -1,13 +1,16 @@
 # vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
 import os.path
 
-binary = AMXX.Module(builder, 'sockets')
+binary = AMXX.MetaModule(builder, 'sockets')
 
 binary.sources = [
   '../../public/sdk/amxxmodule.cpp',
   'sockets.cpp',
 ]
 
+if builder.target_platform == 'windows':
+  binary.sources += ['version.rc']
+  
 if builder.target_platform == 'windows':
   binary.compiler.postlink += ['wsock32.lib', 'ws2_32.lib']
 

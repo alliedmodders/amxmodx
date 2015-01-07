@@ -814,7 +814,7 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 
 static cell AMX_NATIVE_CALL get_amxx_verstring(AMX *amx, cell *params) /* 2 params */
 {
-	return set_amxstring(amx, params[1], SVN_VERSION_STRING, params[2]);
+	return set_amxstring(amx, params[1], AMXX_VERSION, params[2]);
 }
 
 static cell AMX_NATIVE_CALL get_user_frags(AMX *amx, cell *params) /* 1 param */

@@ -46,6 +46,9 @@ if AMXX.mysql_path:
   ]
 
   if builder.target_platform == 'windows':
+    binary.sources += ['version.rc']
+    
+  if builder.target_platform == 'windows':
     binary.sources += [
       'thread/WinThreads.cpp',
     ]

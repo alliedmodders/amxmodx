@@ -21,4 +21,7 @@ binary.sources = [
   'hook_specialbot.cpp',
 ]
 
+if builder.target_platform == 'windows':
+    binary.sources += ['version.rc']
+    
 AMXX.modules += [builder.Add(binary)]

@@ -712,9 +712,9 @@ public actionTeamMenu(id, key)
 				return PLUGIN_HANDLED
 			}
 
-			if ( g_fakemeta )
+			if( g_fakemeta )
 			{
-				if ( get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance )
+				if( get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance )
 				{
 					new name[MAX_NAME_LENGTH]
 					get_user_name(player, name, charsmax(name))
@@ -739,6 +739,11 @@ public actionTeamMenu(id, key)
 			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_CSTeamNames[destTeamSlot])
 
 			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_CSTeamNames[destTeamSlot]);
+			
+			if( !g_fakemeta && destTeamSlot == 2 )
+			{
+				engclient_cmd(player, "joinclass", "6")
+			}
 
 			if ( g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
 			{

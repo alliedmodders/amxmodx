@@ -73,10 +73,10 @@ bool lookupByIp(const char *ip, const char **path, MMDB_entry_data_s *result)
 		// Dirty fall back to default language ("en") in case provided user's language is not localized.
 
 		// Searh "names" position.
-		while (strcmp(path[i++], "names"));  
+		while (path[i] && strcmp(path[i++], "names"));
 
 		// No localized entry or we use already default language.
-		if (!*path[i] || !strcmp(path[i], "en")) 
+		if (!path[i] || !strcmp(path[i], "en")) 
 		{
 			return false;
 		}

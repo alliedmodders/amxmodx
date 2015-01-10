@@ -106,7 +106,13 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 	int length;
 	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
 
-	const char *path[] = { "country", "names", getLang(params[4]), NULL };
+	int id = -1;
+	if (*params / sizeof(cell) >= 4)
+	{
+		id = params[4];
+	}
+
+	const char *path[] = { "country", "names", getLang(id), NULL };
 	const char *country = lookupString(ip, path, &length);
 
 	if (!country)

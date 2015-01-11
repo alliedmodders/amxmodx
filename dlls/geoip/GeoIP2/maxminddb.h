@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef MAXMINDDB_H
 #define MAXMINDDB_H
 
@@ -7,83 +11,33 @@
 
 #include "maxminddb_config.h"
 #include <stdarg.h>
+#if defined(_WIN32) && _MSC_VER < 1800 /* Arkshine: C99 supported only from VS 2013 */
+# include "msvc10-c99-headers/stdbool.h"
+#else
+# include <stdbool.h>
+#endif
 #include <stdint.h>
 #include <stdio.h>
 #include <sys/types.h>
 
 #ifdef _WIN32
-#include "stdbool.h" /* Arksnine: Not supported by MSVC */
-#include <BaseTsd.h> /* Arkshine: ssize_t replacement */
-typedef SSIZE_T ssize_t;
-#include <WinSock2.h>
-#include <WS2tcpip.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
 typedef ADDRESS_FAMILY sa_family_t;
+
+#if defined(_MSC_VER)
+/* MSVC doesn't define signed size_t, copy it from configure */
+#define ssize_t int
+#endif
 #else
-#include <stdbool.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #endif
 
-const char GeoIPCountryCode[][3] =
-{
-	"AP", "EU", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AN",
-	"AO", "AQ", "AR", "AS", "AT", "AU", "AW", "AZ", "BA", "BB",
-	"BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BM", "BN", "BO",
-	"BR", "BS", "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD",
-	"CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR",
-	"CU", "CV", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO",
-	"DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ",
-	"FK", "FM", "FO", "FR", "FX", "GA", "GB", "GD", "GE", "GF",
-	"GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT",
-	"GU", "GW", "GY", "HK", "HM", "HN", "HR", "HT", "HU", "ID",
-	"IE", "IL", "IN", "IO", "IQ", "IR", "IS", "IT", "JM", "JO",
-	"JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP", "KR", "KW",
-	"KY", "KZ", "LA", "LB", "LC", "LI", "LK", "LR", "LS", "LT",
-	"LU", "LV", "LY", "MA", "MC", "MD", "MG", "MH", "MK", "ML",
-	"MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV",
-	"MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI",
-	"NL", "NO", "NP", "NR", "NU", "NZ", "OM", "PA", "PE", "PF",
-	"PG", "PH", "PK", "PL", "PM", "PN", "PR", "PS", "PT", "PW",
-	"PY", "QA", "RE", "RO", "RU", "RW", "SA", "SB", "SC", "SD",
-	"SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO",
-	"SR", "ST", "SV", "SY", "SZ", "TC", "TD", "TF", "TG", "TH",
-	"TJ", "TK", "TM", "TN", "TO", "TL", "TR", "TT", "TV", "TW",
-	"TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", "VC", "VE",
-	"VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "RS", "ZA",
-	"ZM", "ME", "ZW", "A1", "A2", "O1", "AX", "GG", "IM", "JE",
-	"BL", "MF"
-};
-
-const char GeoIPCountryCode3[][4] =
-{
-	"AP", "EU", "AND", "ARE", "AFG", "ATG", "AIA", "ALB", "ARM", "ANT",
-	"AGO", "AQ", "ARG", "ASM", "AUT", "AUS", "ABW", "AZE", "BIH", "BRB",
-	"BGD", "BEL", "BFA", "BGR", "BHR", "BDI", "BEN", "BMU", "BRN", "BOL",
-	"BRA", "BHS", "BTN", "BV", "BWA", "BLR", "BLZ", "CAN", "CC", "COD",
-	"CAF", "COG", "CHE", "CIV", "COK", "CHL", "CMR", "CHN", "COL", "CRI",
-	"CUB", "CPV", "CX", "CYP", "CZE", "DEU", "DJI", "DNK", "DMA", "DOM",
-	"DZA", "ECU", "EST", "EGY", "ESH", "ERI", "ESP", "ETH", "FIN", "FJI",
-	"FLK", "FSM", "FRO", "FRA", "FX", "GAB", "GBR", "GRD", "GEO", "GUF",
-	"GHA", "GIB", "GRL", "GMB", "GIN", "GLP", "GNQ", "GRC", "GS", "GTM",
-	"GUM", "GNB", "GUY", "HKG", "HM", "HND", "HRV", "HTI", "HUN", "IDN",
-	"IRL", "ISR", "IND", "IO", "IRQ", "IRN", "ISL", "ITA", "JAM", "JOR",
-	"JPN", "KEN", "KGZ", "KHM", "KIR", "COM", "KNA", "PRK", "KOR", "KWT",
-	"CYM", "KAZ", "LAO", "LBN", "LCA", "LIE", "LKA", "LBR", "LSO", "LTU",
-	"LUX", "LVA", "LBY", "MAR", "MCO", "MDA", "MDG", "MHL", "MKD", "MLI",
-	"MMR", "MNG", "MAC", "MNP", "MTQ", "MRT", "MSR", "MLT", "MUS", "MDV",
-	"MWI", "MEX", "MYS", "MOZ", "NAM", "NCL", "NER", "NFK", "NGA", "NIC",
-	"NLD", "NOR", "NPL", "NRU", "NIU", "NZL", "OMN", "PAN", "PER", "PYF",
-	"PNG", "PHL", "PAK", "POL", "SPM", "PCN", "PRI", "PSE", "PRT", "PLW",
-	"PRY", "QAT", "REU", "ROU", "RUS", "RWA", "SAU", "SLB", "SYC", "SDN",
-	"SWE", "SGP", "SHN", "SVN", "SJM", "SVK", "SLE", "SMR", "SEN", "SOM",
-	"SUR", "STP", "SLV", "SYR", "SWZ", "TCA", "TCD", "TF", "TGO", "THA",
-	"TJK", "TKL", "TKM", "TUN", "TON", "TLS", "TUR", "TTO", "TUV", "TWN",
-	"TZA", "UKR", "UGA", "UM", "USA", "URY", "UZB", "VAT", "VCT", "VEN",
-	"VGB", "VIR", "VNM", "VUT", "WLF", "WSM", "YEM", "YT", "SRB", "ZAF",
-	"ZMB", "MNE", "ZWE", "A1", "A2", "O1", "ALA", "GGY", "IMN", "JEY",
-	"BLM", "MAF"
-};
+/* libmaxminddb package version from configure */
+#define PACKAGE_VERSION "1.0.4"
 
 #define MMDB_DATA_TYPE_EXTENDED (0)
 #define MMDB_DATA_TYPE_POINTER (1)
@@ -102,11 +56,11 @@ const char GeoIPCountryCode3[][4] =
 #define MMDB_DATA_TYPE_BOOLEAN (14)
 #define MMDB_DATA_TYPE_FLOAT (15)
 
-/* GEOIPDB flags */
+/* flags for open */
 #define MMDB_MODE_MMAP (1)
 #define MMDB_MODE_MASK (7)
 
-/* GEOIPDB err codes */
+/* error codes */
 #define MMDB_SUCCESS (0)
 #define MMDB_FILE_OPEN_ERROR (1)
 #define MMDB_CORRUPT_SEARCH_TREE_ERROR (2)
@@ -265,3 +219,7 @@ typedef struct MMDB_search_node_s {
     /* *INDENT-ON* */
 
 #endif                          /* MAXMINDDB_H */
+
+#ifdef __cplusplus
+}
+#endif

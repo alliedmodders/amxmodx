@@ -4833,7 +4833,7 @@ static void test(int label,int parens,int invert)
   if (parens)
     needtoken(')');
   if (ident==iARRAY || ident==iREFARRAY) {
-    char *ptr=(sym->name!=NULL) ? sym->name : "-unknown-";
+    char *ptr=(sym!=NULL) ? sym->name : "-unknown-";
     error(33,ptr);              /* array must be indexed */
   } /* if */
   if (ident==iCONSTEXPR) {      /* constant expression */

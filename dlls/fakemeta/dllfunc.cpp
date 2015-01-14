@@ -144,6 +144,12 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		gpGamedllFuncs->dllapi_table->pfnClientPutInServer(INDEXENT2(index));
 		return 1;
 
+	case	DLLFunc_ClientCommand:		// void )	( edict_t *pEntity );
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		index=cRet[0];
+		CHECK_ENTITY(index);
+		gpGamedllFuncs->dllapi_table->pfnClientCommand(INDEXENT2(index));
+		return 1;
 	case	DLLFunc_ServerDeactivate:	// void)	( void );
 		gpGamedllFuncs->dllapi_table->pfnServerDeactivate();
 		return 1;

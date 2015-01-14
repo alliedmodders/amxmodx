@@ -1707,6 +1707,28 @@ static cell AMX_NATIVE_CALL cs_set_c4_defusing(AMX* amx, cell* params)
 	return 1;
 }
 
+extern CreateNamedEntityFunc CS_CreateNamedEntity;
+
+// cs_create_entity(const classname[])
+static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
+{
+	if (CS_CreateNamedEntity > 0)
+	{
+		int len;
+		int iszClass = ALLOC_STRING(MF_GetAmxString(amx, params[1], 0, &len));
+
+		edict_t *pEnt = CS_CreateNamedEntity(iszClass);
+
+		if (!FNullEnt(pEnt))
+		{
+			return ENTINDEX(pEnt);
+		}
+	}
+
+	return 0;
+}
+
+
 #else
 
 static cell AMX_NATIVE_CALL not_on_64(AMX* amx, cell* params)
@@ -1791,6 +1813,7 @@ AMX_NATIVE_INFO CstrikeNatives[] = {
 	{"cs_set_c4_explode_time",		cs_set_c4_explode_time},
 	{"cs_get_c4_defusing",			cs_get_c4_defusing},
 	{"cs_set_c4_defusing",			cs_set_c4_defusing},
+	{"cs_create_entity",			cs_create_entity },	
 
 	{NULL,							NULL}
 };

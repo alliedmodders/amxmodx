@@ -140,23 +140,23 @@
 	#define CS_CLICMD_OFFS_BOTARGS				22
 #endif
 
-/** 
- * CS_OnBuy forward 
- */
 #if defined(__linux__)
-	#define CS_IDENT_GIVENSHIELD        "_ZN11CBasePlayer10GiveShieldEb"
-	#define CS_IDENT_GIVENAMEDITEM		"_ZN11CBasePlayer13GiveNamedItemEPKc"
-	#define CS_IDENT_ADDACCOUNT			"_ZN11CBasePlayer10AddAccountEib"
+	#define CS_IDENT_GIVENSHIELD        "_ZN11CBasePlayer10GiveShieldEb"		// CS_OnBuy forward 
+	#define CS_IDENT_GIVENAMEDITEM		"_ZN11CBasePlayer13GiveNamedItemEPKc"   // CS_OnBuy forward 
+	#define CS_IDENT_ADDACCOUNT			"_ZN11CBasePlayer10AddAccountEib"       // CS_OnBuy forward 
+	#define CS_IDENT_CREATENAMEDENTITY  "_Z19CREATE_NAMED_ENTITYj"              // cs_create_entity
 	#define CS_IDENT_HIDDEN_STATE		false
 #elif defined(__APPLE__)
 	#define CS_IDENT_GIVENSHIELD        "_ZN11CBasePlayer10GiveShieldEb"
 	#define CS_IDENT_GIVENAMEDITEM		"_ZN11CBasePlayer13GiveNamedItemEPKc"
 	#define CS_IDENT_ADDACCOUNT			"_ZN11CBasePlayer10AddAccountEib"
+	#define CS_IDENT_CREATENAMEDENTITY  "_Z19CREATE_NAMED_ENTITYj"
 	#define CS_IDENT_HIDDEN_STATE		true
 #elif defined(WIN32)
 	#define CS_IDENT_GIVENSHIELD        "\\x56\\x8B\\x2A\\x57\\x33\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\xB0"
 	#define CS_IDENT_GIVENAMEDITEM		"\\x8B\\x2A\\x2A\\x2A\\x56\\x57\\x8B\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x2B"
 	#define CS_IDENT_ADDACCOUNT			"\\x8B\\x2A\\x2A\\x2A\\x56\\x8B\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\x03"
+	#define CS_IDENT_CREATENAMEDENTITY  "\\x56\\x57\\x8B\\x2A\\x2A\\x2A\\x57\\xFF\\x2A\\x2A\\x2A\\x2A\\x2A\\x8B"
 	#define CS_IDENT_HIDDEN_STATE		false
 #endif
 
@@ -348,5 +348,7 @@ typedef enum
 	Menu_ClientBuy
 
 } Menu;
+
+typedef edict_t* (*CreateNamedEntityFunc)(string_t);
 
 #endif // CSTRIKE_DATA_H

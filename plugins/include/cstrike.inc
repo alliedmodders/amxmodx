@@ -351,6 +351,22 @@ native bool:cs_get_c4_defusing(c4index);
 native cs_set_c4_defusing(c4index, bool:defusing);
 
 /**
+ * Creates an entity.
+ *
+ * @note  Similar as create_entity() native from engine module, with the difference that in Counter-Strike
+ *        to improve lookup performance on entities, the classname is hashed and saved in a global list.
+ *        This means for classname, game uses a custom function which checks that list instead of calling pfnFindEntityByString.
+ *        You would want to use this native if you want having custom entities to be known by the game.
+ *        E.g. By creating a "weaponbox" entity, this will be automatically deleted by game on map restart.
+ *             With engine version, you would have to remove it manually.
+ *
+ * @param classname     Entity class name
+ *
+ * @return              Index of the created entity, 0 otherwise.
+ */
+native cs_create_entity(const classname[]);
+
+/**
  * Called when CS internally fires a command to a player.  It does this for a few 
  * functions, most notably rebuy/autobuy functionality.  This is also used to pass
  * commands to CZ bots internally.

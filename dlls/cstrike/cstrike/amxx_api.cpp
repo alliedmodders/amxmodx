@@ -13,6 +13,7 @@
 
 #include "amxxmodule.h"
 #include "CstrikeUtils.h"
+#include "CstrikeDatas.h"
 
 extern AMX_NATIVE_INFO CstrikeNatives[];
 
@@ -25,6 +26,7 @@ void ShutdownHacks();
 void ToggleDetour_ClientCommands(bool enable);
 void ToggleDetour_BuyCommands(bool enable);
 
+CreateNamedEntityFunc CS_CreateNamedEntity = NULL;
 
 int AmxxCheckGame(const char *game)
 {
@@ -39,7 +41,11 @@ int AmxxCheckGame(const char *game)
 void OnAmxxAttach()
 {
 	MF_AddNatives(CstrikeNatives);
+
 	InitializeHacks();
+
+	// cs_create_entity().
+	CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(UTIL_FindAddressFromEntry(CS_IDENT_CREATENAMEDENTITY, CS_IDENT_HIDDEN_STATE));
 }
 
 void OnPluginsLoaded()

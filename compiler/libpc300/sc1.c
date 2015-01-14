@@ -718,7 +718,6 @@ cleanup:
 
   #if !defined SC_LIGHT
     if (errnum==0 && strlen(errfname)==0) {
-      int recursion;
       int flag_exceed=0;
       if (sc_amxlimit > 0 && (long)(hdrsize+code_idx+glb_declared*sizeof(cell)+sc_stksize*sizeof(cell)) >= sc_amxlimit)
         flag_exceed=1;

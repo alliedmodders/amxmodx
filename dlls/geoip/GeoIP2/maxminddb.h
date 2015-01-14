@@ -9,13 +9,9 @@ extern "C" {
 #define _POSIX_C_SOURCE 200112L
 #endif
 
-#include "maxminddb_config.h"
+#include <maxminddb_config.h>
 #include <stdarg.h>
-#if defined(_WIN32) && _MSC_VER < 1800 /* Arkshine: C99 supported only from VS 2013 */
-# include "msvc10-c99-headers/stdbool.h"
-#else
-# include <stdbool.h>
-#endif
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -29,6 +25,9 @@ typedef ADDRESS_FAMILY sa_family_t;
 #if defined(_MSC_VER)
 /* MSVC doesn't define signed size_t, copy it from configure */
 #define ssize_t int
+
+/* MSVC doesn't support restricted pointers */
+#define restrict
 #endif
 #else
 #include <netdb.h>

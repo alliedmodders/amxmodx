@@ -9,7 +9,7 @@ binary.compiler.defines += [
 
 binary.sources = [
   '../../public/sdk/amxxmodule.cpp',
-  'GeoIP2/maxminddb.cpp',
+  'GeoIP2/maxminddb.c',
   'geoip_main.cpp',
   'geoip_natives.cpp',
   'geoip_util.cpp',

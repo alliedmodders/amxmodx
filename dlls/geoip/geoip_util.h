@@ -27,4 +27,7 @@ const char *getLang(int playerIndex);
 
 const char* stristr(const char* str, const char* substr);
 
+extern const char GeoIPCountryCode[252][3];
+extern const char GeoIPCountryCode3[252][4];
+
 #endif // _INCLUDE_GEOIPUTIL_H

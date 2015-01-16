@@ -15,7 +15,16 @@ CDetour *Cvar_DirectSetDetour;
 
 DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
 {
-	printf("Cvar_DirectSet - %s -> %s\n", var->name, value);
+	if (var && value)
+	{
+		if (strcmp(var->string, value) != 0)
+		{
+			if (executeForwards(FF_CvarChanged, reinterpret_cast<cell>(var), var->string, value, var->name) > 0)
+			{
+				return;
+			}
+		}
+	}
 
 	DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
 }

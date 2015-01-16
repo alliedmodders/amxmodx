@@ -29,6 +29,7 @@
 #include <newmenus>
 #include <textparse_smc>
 #include <textparse_ini>
+#include <cvars>
 
 /**
  * Called just after server activation.

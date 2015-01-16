@@ -245,6 +245,7 @@ scripting_files = [
   'include/csstats.inc',
   'include/cstrike.inc',
   'include/csx.inc',
+  'include/cvars.inc',
   'include/datapack.inc',
   'include/dbi.inc',
   'include/dodconst.inc',

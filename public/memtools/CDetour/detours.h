@@ -32,10 +32,12 @@
 #ifndef _INCLUDE_SOURCEMOD_DETOURS_H_
 #define _INCLUDE_SOURCEMOD_DETOURS_H_
 
-#include "amxxmodule.h"
 //#include <jit/jit_helpers.h>
 //#include <jit/x86/x86_macros.h>
 #include "detourhelpers.h"
+#include <stdint.h>
+
+typedef int32_t cell;
 
 /**
  * CDetours class for SourceMod Extensions by pRED*

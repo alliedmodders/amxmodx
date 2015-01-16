@@ -31,6 +31,7 @@
 #include "trie_natives.h"
 #include "CDataPack.h"
 #include "textparse.h"
+#include "cvars.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -1488,6 +1489,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	GET_HOOK_TABLES(PLID, &g_pEngTable, NULL, NULL);
 
 	FlagMan.SetFile("cmdaccess.ini");
+
+	CreateCvarHook();
 	
 	return (TRUE);
 }

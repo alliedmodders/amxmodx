@@ -47,6 +47,7 @@
 #include "CLang.h"
 #include "fakemeta.h"
 #include "amxxlog.h"
+#include "cvars.h"
 
 #define AMXXLOG_Log g_log.Log
 #define AMXXLOG_Error g_log.LogError

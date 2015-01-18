@@ -567,7 +567,8 @@ void AtomicResult::CopyFrom(IResultSet *rs)
 		{
 			*m_Table[i] = rs->FieldNumToName(i);
 		} else {
-			m_Table[i] = new ke::AString(rs->FieldNumToName(i));
+			const char* string = rs->FieldNumToName(i);
+			m_Table[i] = new ke::AString(string ? string : "");
 		}
 	}
 
@@ -582,7 +583,8 @@ void AtomicResult::CopyFrom(IResultSet *rs)
 			{
 				*m_Table[idx] = row->GetString(i);
 			} else {
-				m_Table[idx] = new ke::AString(row->GetString(i));
+				const char* string = row->GetString(i);
+				m_Table[idx] = new ke::AString(string ? string : "");
 			}
 		}
 		rs->NextRow();

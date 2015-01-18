@@ -108,15 +108,16 @@ public stock const MaxClients; /* Maximum number of players the server supports 
 /**
  * CVAR flags for register_cvar()
  */
-#define FCVAR_ARCHIVE       1   /* set to cause it to be saved to vars.rc */
-#define FCVAR_USERINFO      2   /* changes the client's info string */
-#define FCVAR_SERVER        4   /* notifies players when changed */
-#define FCVAR_EXTDLL        8   /* defined by external DLL */
-#define FCVAR_CLIENTDLL     16  /* defined by the client dll */
-#define FCVAR_PROTECTED     32  /* It's a server cvar, but we don't send the data since it's a password, etc.  Sends 1 if it's not bland/zero, 0 otherwise as value */
-#define FCVAR_SPONLY        64  /* This cvar cannot be changed by clients connected to a multiplayer server. */
-#define FCVAR_PRINTABLEONLY 128 /* This cvar's string cannot contain unprintable characters ( e.g., used for player name etc ). */
-#define FCVAR_UNLOGGED      256 /* If this is a FCVAR_SERVER, don't log changes to the log file / console if we are creating a log */
+#define FCVAR_ARCHIVE           1   /* Set to cause it to be saved to vars.rc */
+#define FCVAR_USERINFO          2   /* Changes the client's info string */
+#define FCVAR_SERVER            4   /* Notifies players when changed */
+#define FCVAR_EXTDLL            8   /* Defined by external DLL */
+#define FCVAR_CLIENTDLL         16  /* Defined by the client dll */
+#define FCVAR_PROTECTED         32  /* It's a server cvar, but we don't send the data since it's a password, etc.  Sends 1 if it's not bland/zero, 0 otherwise as value */
+#define FCVAR_SPONLY            64  /* This cvar cannot be changed by clients connected to a multiplayer server. */
+#define FCVAR_PRINTABLEONLY     128 /* This cvar's string cannot contain unprintable characters ( e.g., used for player name etc ). */
+#define FCVAR_UNLOGGED          256 /* If this is a FCVAR_SERVER, don't log changes to the log file / console if we are creating a log */
+#define FCVAR_NOEXTRAWHITEPACE  512 /* Strip trailing/leading white space from this cvar */
 
 /**
  * IDs of weapons in CS

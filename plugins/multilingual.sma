@@ -28,9 +28,9 @@ public plugin_init()
 	register_dictionary("multilingual.txt")
 	register_dictionary("common.txt")
 	register_dictionary("languages.txt")
-	
-	g_cvarClientLanguages = register_cvar("amx_client_languages", "1")
+    
 	g_cvarDisplayClientMessage = register_cvar("amx_language_display_msg", "1")
+	g_cvarClientLanguages = get_cvar_pointer("amx_client_languages")
 	g_cvarServerLanguage = get_cvar_pointer("amx_language");
 	
 	register_clcmd("amx_langmenu", "cmdLangMenu", ADMIN_ALL)

@@ -111,32 +111,7 @@ void amx_command()
 	}
 	else if (!strcmp(cmd, "cvars")) 
 	{
-		print_srvconsole("Registered cvars:\n");
-		print_srvconsole("       %-24.23s %-24.23s %-16.15s\n", "name", "value", "plugin");
-
-		int ammount = 0;
-
-		if (CMD_ARGC() > 2) // Searching for cvars registered to a plugin
-		{
-			const char* targetname = CMD_ARGV(2);
-			size_t len = strlen(targetname);
-			for (CList<CCVar>::iterator a = g_cvars.begin(); a; ++a)
-			{
-				if (strncmp((*a).getPluginName(), targetname, len) == 0)
-				{
-					print_srvconsole(" [%3d] %-24.23s %-24.23s %-16.15s\n", ++ammount, (*a).getName(), CVAR_GET_STRING((*a).getName()), (*a).getPluginName());
-				}
-			}
-		}
-		else // No search
-		{
-			for (CList<CCVar>::iterator a = g_cvars.begin(); a; ++a)
-			{
-				print_srvconsole(" [%3d] %-24.23s %-24.23s %-16.15s\n", ++ammount, (*a).getName(), CVAR_GET_STRING((*a).getName()), (*a).getPluginName());
-			}
-		}
-		
-		print_srvconsole("%d cvars\n", ammount);
+		g_CvarManager.OnConsoleCommand();
 	}
 	else if (!strcmp(cmd, "cmds")) 
 	{

@@ -162,7 +162,6 @@ extern CTaskMngr g_tasksMngr;
 extern CPlayer g_players[33];
 extern CPlayer* mPlayer;
 extern CmdMngr g_commands;
-extern CList<CCVar> g_cvars;
 extern CList<ForceObject> g_forcemodels;
 extern CList<ForceObject> g_forcesounds;
 extern CList<ForceObject> g_forcegeneric;

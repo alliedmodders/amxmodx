@@ -11,50 +11,53 @@
 #define CVARS_H
 
 #include "cvardef.h"
-#include <am-string.h>
+#include <am-inlinelist.h>
+#include <sm_namehashset.h>
 
 class CDetour;
 
-class CCVar
+struct CvarInfo : public ke::InlineListNode<CvarInfo>
 {
-	cvar_t cvar;
-	ke::AString name;
-	ke::AString plugin;
+	cvar_t*      var;
+	ke::AString  name;
+	ke::AString  defaultval;
+	ke::AString  plugin;
+	int          pluginId;
+	bool         amxmodx;
 
-public:
-	CCVar(const char* pname, const char* pplugin, int pflags, float pvalue) : name(pname), plugin(pplugin)
+	static inline bool matches(const char *name, const CvarInfo* info)
 	{
-		cvar.name   = name.chars();
-		cvar.flags  = pflags;
-		cvar.string = "";
-		cvar.value  = pvalue;
+		return strcmp(name, info->var->name) == 0;
 	}
-
-	inline cvar_t* getCvar() 
-	{
-		return &cvar;
-	}
-
-	inline const char* getPluginName() 
-	{
-		return plugin.chars();
-	}
-
-	inline const char* getName() 
-	{
-		return name.chars();
-	}
-
-	inline bool operator == (const char* string) 
-	{
-		return name.compare(string) == 0;
-	}
-
-	int plugin_id;
 };
 
-void CreateCvarHook(void);
+typedef NameHashSet<CvarInfo*> CvarsCache;
+typedef ke::InlineList<CvarInfo> CvarsList;
 
-extern CDetour *Cvar_DirectSetDetour;
+class CvarManager
+{
+	public:
+
+		CvarManager();
+		~CvarManager();
+
+	public:
+
+		void      CreateCvarHook();
+		cvar_t*   CreateCvar(const char* name, const char* value, float fvalue, int flags, const char* plugin, int plugnId);
+		cvar_t*   FindCvar(const char* name);
+		CvarInfo* FindCvar(size_t index);
+		size_t    GetRegCvarsCount();
+		void      OnConsoleCommand();
+
+	private:
+
+		CvarsCache m_Cache;
+		CvarsList  m_Cvars;
+		size_t     m_AmxmodxCvars;
+		CDetour*   m_HookDetour;
+};
+
+extern CvarManager g_CvarManager;
 
 #endif // CVARS_H

@@ -121,13 +121,3 @@ bool UTIL_CheckForPublic(const char *publicname)
 	return false; 
 }
 
-char *UTIL_StringToLower(char *str)
-{
-	char *p;
-	for (p = str; *p != '\0'; ++p)
-	{
-		*p = tolower(*p);
-	}
-
-	return str;
-}

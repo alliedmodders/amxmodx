@@ -90,9 +90,6 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 	// to be used in OnBuy* forwards.
 	if ((ForwardOnBuyAttempt != -1 || ForwardOnBuy != -1) && command && *command)
 	{
-		// Just for safety.
-		command = UTIL_StringToLower((char *)command);
-
 		int itemId = 0;
 		
 		// Handling buy via menu.

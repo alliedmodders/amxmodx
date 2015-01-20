@@ -421,6 +421,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\plugins\include\cellstack.inc" />
+    <None Include="..\..\plugins\include\cvars.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
     <None Include="..\..\plugins\include\textparse_ini.inc" />
     <None Include="..\..\plugins\include\textparse_smc.inc" />

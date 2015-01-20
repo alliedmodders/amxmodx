@@ -329,7 +329,6 @@ extern int FF_PluginEnd;
 extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;
 extern int FF_ChangeLevel;
-extern int FF_CvarChanged;
 
 extern bool g_coloredmenus;
 

@@ -19,5 +19,6 @@
  * @param oldValue      String containing the value of the cvar before it was changed
  * @param newValue      String containing the new value of the cvar
  * @param cvarName      String containing the name of the cvar
+ *
+ * public OnCvarChanged(cvarHandle, const oldValue[], const newValue[], const cvarName[]);
  */
-forward OnCvarChanged(cvarHandle, const oldValue[], const newValue[], const cvarName[]);

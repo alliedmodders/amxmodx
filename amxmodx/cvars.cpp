@@ -15,20 +15,13 @@ CvarManager g_CvarManager;
 
 DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
 {
-	static bool calledFromCallback = false;
-
-	if (!calledFromCallback && var && value)
+	// Sanity checks against bogus pointers.
+	if (var && value)
 	{
+		// Make sure old and new values are different to not trigger callbacks.
 		if (strcmp(var->string, value) != 0)
 		{
-			calledFromCallback = true;
-
-			if (executeForwards(FF_CvarChanged, reinterpret_cast<cell>(var), var->string, value, var->name) > 0)
-			{
-				//return;
-			}
-
-			calledFromCallback = false;
+			
 		}
 	}
 

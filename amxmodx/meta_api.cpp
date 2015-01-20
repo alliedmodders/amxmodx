@@ -142,7 +142,6 @@ int FF_PluginEnd = -1;
 int FF_InconsistentFile = -1;
 int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
-int FF_CvarChanged = -1;
 
 bool ColoredMenus(String & ModName)
 {
@@ -503,7 +502,6 @@ int	C_Spawn(edict_t *pent)
 	FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
 	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
-	FF_CvarChanged = registerForward("OnCvarChanged", ET_STOP, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_DONE);
 
 #if defined BINLOG_ENABLED
 	if (!g_BinLog.Open())

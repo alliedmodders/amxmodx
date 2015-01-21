@@ -30,3 +30,19 @@ NONGPL_CVAR_T NONGPL_CVAR_LIST[] =
 	{"amx_gg", 1},
 	{NULL, 0},
 };
+
+bool CheckBadConList(const char *cvar, int type)
+{
+	int i = 0;
+	while (NONGPL_CVAR_LIST[i].cvar != NULL)
+	{
+		if (NONGPL_CVAR_LIST[i].type == type
+			&& strcmp(NONGPL_CVAR_LIST[i].cvar, cvar) == 0)
+		{
+			return true;
+		}
+		i++;
+	}
+
+	return false;
+}

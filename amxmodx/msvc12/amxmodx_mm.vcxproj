@@ -319,6 +319,7 @@
     <ClCompile Include="..\CPlugin.cpp" />
     <ClCompile Include="..\CTask.cpp" />
     <ClCompile Include="..\CTextParsers.cpp" />
+    <ClCompile Include="..\CvarManager.cpp" />
     <ClCompile Include="..\cvars.cpp" />
     <ClCompile Include="..\CVault.cpp" />
     <ClCompile Include="..\datapacks.cpp" />
@@ -389,7 +390,7 @@
     <ClInclude Include="..\CString.h" />
     <ClInclude Include="..\CTask.h" />
     <ClInclude Include="..\CTextParsers.h" />
-    <ClInclude Include="..\cvars.h" />
+    <ClInclude Include="..\CvarManager.h" />
     <ClInclude Include="..\CVault.h" />
     <ClInclude Include="..\CVector.h" />
     <ClInclude Include="..\datastructs.h" />

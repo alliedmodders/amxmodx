@@ -47,7 +47,7 @@
 #include "CLang.h"
 #include "fakemeta.h"
 #include "amxxlog.h"
-#include "cvars.h"
+#include "CvarManager.h"
 
 #define AMXXLOG_Log g_log.Log
 #define AMXXLOG_Error g_log.LogError
@@ -66,6 +66,7 @@ extern AMX_NATIVE_INFO g_SortNatives[];
 extern AMX_NATIVE_INFO g_DataStructNatives[];
 extern AMX_NATIVE_INFO g_StackNatives[];
 extern AMX_NATIVE_INFO g_TextParserNatives[];
+extern AMX_NATIVE_INFO g_CvarNatives[];
 
 #if defined(_WIN32)
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)

@@ -7,342 +7,520 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-#include "cvars.h"
+#include "CvarManager.h"
 #include "amxmodx.h"
-#include <CDetour/detours.h>
+#include "nongpl_matches.h"
 
-CvarManager g_CvarManager;
+char CVarTempBuffer[64];
+const char *invis_cvar_list[5] = { "amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages" };
 
-/** 
- * Returns true to call original function, otherwise false to block it.
- */
-bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
+// register_cvar(const name[], const string[], flags=0, Float:fvalue=0.0)
+static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params)
 {
-	CvarInfo* info = nullptr;
+	int length;
+	const char* name  = get_amxstring(amx, params[1], 0, length);
+	const char* value = get_amxstring(amx, params[2], 1, length);
 
-	if (!var || !value                                    // Sanity checks against bogus pointers.
-		|| strcmp(var->string, value) == 0                // Make sure old and new values are different to not trigger callbacks.
-		|| !g_CvarManager.CacheLookup(var->name, &info)   // No data in cache, nothing to call.
-		|| info->hooks.empty())                           // No hooked cvars, nothing to call.
+	int   flags = params[3];
+	float fvalue = amx_ctof(params[4]);
+
+	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
+
+	if (CheckBadConList(name, 0))
 	{
-		return true;
+		plugin->AddToFailCounter(1);
 	}
 
-	int lastResult = 0;
-	int result;
+	cvar_t* var = g_CvarManager.CreateCvar(name, value, fvalue, flags, plugin->getName(), plugin->getId());
 
-	for (size_t i = 0; i < info->hooks.length(); ++i)
+	return reinterpret_cast<cell>(var);
+}
+
+// cvar_exists(const cvar[])
+static cell AMX_NATIVE_CALL cvar_exists(AMX *amx, cell *params)
+{
+	int ilen;
+	return (g_CvarManager.FindCvar(get_amxstring(amx, params[1], 0, ilen)) ? 1 : 0);
+}
+
+// get_cvar_pointer(const cvar[])
+static cell AMX_NATIVE_CALL get_cvar_pointer(AMX *amx, cell *params)
+{
+	int len;
+	char *name = get_amxstring(amx, params[1], 0, len);
+
+	cvar_t *ptr = g_CvarManager.FindCvar(name);
+
+	return reinterpret_cast<cell>(ptr);
+}
+
+// hook_cvar_change(cvarHandle, const callback[])
+static cell AMX_NATIVE_CALL hook_cvar_change(AMX *amx, cell *params)
+{
+	cvar_t* var = reinterpret_cast<cvar_t*>(params[1]);
+
+	if (!var)
 	{
-		CvarPlugin* p = info->hooks[i];
-
-		if (p->forward->state == Forward::FSTATE_OK) // Our callback can be enable/disabled by natives.
-		{
-			result = executeForwards(p->forward->id, reinterpret_cast<cvar_t*>(var), var->string, value);
-
-			if (result >= lastResult)
-			{
-				lastResult = result;
-			}
-		}
+		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar handle: %p", var);
+		return 0;
 	}
 
-	return !!!lastResult;
-}
+	const char* callback;
+	Forward* forward = g_CvarManager.HookCvarChange(var, amx, params[2], &callback);
 
-DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
-{
-	if (Cvar_DirectSet_Custom(var, value))
+	if (!forward)
 	{
-		DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
+		LogError(amx, AMX_ERR_NATIVE, "Function \"%s\" is not present", callback);
+		return 0;
 	}
+
+	return reinterpret_cast<cell>(forward);
 }
 
-CvarManager::CvarManager() : m_AmxmodxCvars(0), m_HookDetour(nullptr)
+// enable_cvar_hook(cvarhook:handle);
+static cell AMX_NATIVE_CALL enable_cvar_hook(AMX *amx, cell *params)
 {
+	Forward* forward = reinterpret_cast<Forward*>(params[1]);
+
+	if (!forward)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar hook handle: %p", forward);
+		return 0;
+	}
+
+	forward->state = Forward::FSTATE_OK;
+
+	return 1;
 }
 
-CvarManager::~CvarManager()
+// disable_cvar_hook(cvarhook:handle);
+static cell AMX_NATIVE_CALL disable_cvar_hook(AMX *amx, cell *params)
 {
-	OnAmxxShutdown();
+	Forward* forward = reinterpret_cast<Forward*>(params[1]);
+
+	if (!forward)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar hook handle: %p", forward);
+		return 0;
+	}
+
+	forward->state =  Forward::FSTATE_STOP;
+
+	return 1;
 }
 
-void CvarManager::CreateCvarHook(void)
+// get_cvar_flags(const cvar[])
+static cell AMX_NATIVE_CALL get_cvar_flags(AMX *amx, cell *params)
 {
-	// void PF_Cvar_DirectSet(struct cvar_s *var, const char *value) // = pfnCvar_DirectSet
-	// {
-	//   	Cvar_DirectSet(var, value); // <- We want to hook this.
-	// }
+	int ilen;
+	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
 
-	byte *baseAddress = (byte *)g_engfuncs.pfnCvar_DirectSet;
-	uintptr_t *functionAddress = nullptr;
+	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
 
-#if defined(WIN32)
-	// 55              push    ebp
-	// 8B EC           mov     ebp, esp
-	// 8B 45 0C        mov     eax, [ebp+arg_4]
-	// 8B 4D 08        mov     ecx, [ebp+arg_0]
-	// 50              push    eax
-	// 51              push    ecx
-	// E8 XX XX XX XX  call    Cvar_DirectSet
-	const byte opcodeJump = 0xE8;
-#else
-	// E9 XX XX XX XX  jmp     Cvar_DirectSet
-	const byte opcodeJump = 0xE9;
+	return pCvar ? pCvar->flags : 0;
+}
+
+// get_cvar_float(const cvarname[])
+static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params)
+{
+	int length;
+	const char* name = get_amxstring(amx, params[1], 0, length);
+
+	cvar_t* var = g_CvarManager.FindCvar(name);
+
+	return var ? amx_ftoc(var->value) : 0;
+}
+
+// get_cvar_num(const cvarname[])
+static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params)
+{
+	int length;
+	const char* name = get_amxstring(amx, params[1], 0, length);
+
+	cvar_t* var = g_CvarManager.FindCvar(name);
+
+	return var ? (int)var->value : 0;
+}
+
+// get_cvar_string(const cvarname[], output[], iLen)
+static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params)
+{
+	int length;
+	const char* name = get_amxstring(amx, params[1], 0, length);
+
+	cvar_t* var = g_CvarManager.FindCvar(name);
+
+	const char *value = var ? var->string : "";
+	length = var ? strlen(value) : 0;
+
+	return set_amxstring_utf8(amx, params[2], value, length, params[3] + 1); // + EOS
+}
+
+// set_cvar_flags(const cvar[], flags)
+static cell AMX_NATIVE_CALL set_cvar_flags(AMX *amx, cell *params)
+{
+	int ilen;
+	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
+
+	if (!strcmp(sCvar, "amx_version") || !strcmp(sCvar, "amxmodx_version") || !strcmp(sCvar, "fun_version") || !strcmp(sCvar, "sv_cheats"))
+		return 0;
+
+	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
+
+	if (pCvar)
+	{
+		pCvar->flags |= (int)(params[2]);
+		return 1;
+	}
+
+	return 0;
+}
+
+// set_cvar_float(const cvar[], Float:value)
+static cell AMX_NATIVE_CALL set_cvar_float(AMX *amx, cell *params)
+{
+	int length;
+	const char* name = get_amxstring(amx, params[1], 0, length);
+
+	cvar_t* var = g_CvarManager.FindCvar(name);
+
+	if (var)
+	{
+		UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
+		CVAR_DIRECTSET(var, &CVarTempBuffer[0]);
+	}
+
+	return 1;
+}
+
+// set_cvar_num(const cvarname[], value)
+static cell AMX_NATIVE_CALL set_cvar_num(AMX *amx, cell *params)
+{
+	int length;
+	const char* name = get_amxstring(amx, params[1], 0, length);
+	int value = params[2];
+
+	cvar_t* var = g_CvarManager.FindCvar(name);
+
+	if (var)
+	{
+		UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%d", value);
+		CVAR_DIRECTSET(var, &CVarTempBuffer[0]);
+	}
+
+	return 1;
+}
+
+// set_cvar_string(const cvar[], const value[])
+static cell AMX_NATIVE_CALL set_cvar_string(AMX *amx, cell *params)
+{
+	int length;
+	const char* name  = get_amxstring(amx, params[1], 0, length);
+
+	cvar_t* var = g_CvarManager.FindCvar(name);
+
+	if (var)
+	{
+		CVAR_DIRECTSET(var, get_amxstring(amx, params[2], 1, length));
+	}
+
+	return 1;
+}
+
+// get_pcvar_flags(pcvar)
+static cell AMX_NATIVE_CALL get_pcvar_flags(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return ptr->flags;
+}
+
+// Float:get_pcvar_float(pcvar)
+static cell AMX_NATIVE_CALL get_pcvar_float(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return amx_ftoc(ptr->value);
+}
+
+// get_pcvar_num(pcvar)
+static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return (int)ptr->value;
+}
+
+// get_pcvar_string(pcvar, string[], maxlen)
+static cell AMX_NATIVE_CALL get_pcvar_string(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return set_amxstring_utf8(amx, params[2], ptr->string ? ptr->string : "", ptr->string ? strlen(ptr->string) : 0, params[3] + 1); // EOS
+}
+
+// set_pcvar_flags(pcvar, flags)
+static cell AMX_NATIVE_CALL set_pcvar_flags(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	ptr->flags = static_cast<int>(params[2]);
+
+	return 1;
+}
+
+// set_pcvar_float(pcvar, Float:num)
+static cell AMX_NATIVE_CALL set_pcvar_float(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
+	CVAR_DIRECTSET(ptr, &CVarTempBuffer[0]);
+
+	return 1;
+}
+
+// set_pcvar_num(pcvar, num)
+static cell AMX_NATIVE_CALL set_pcvar_num(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%d", params[2]);
+	CVAR_DIRECTSET(ptr, &CVarTempBuffer[0]);
+
+	return 1;
+}
+
+// set_pcvar_string(pcvar, const string[])
+static cell AMX_NATIVE_CALL set_pcvar_string(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	int len;
+
+	CVAR_DIRECTSET(ptr, get_amxstring(amx, params[2], 0, len));
+
+	return 1;
+}
+
+// remove_cvar_flags(const cvar[], flags=-1)
+static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)
+{
+	int ilen;
+	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
+
+	if (!strcmp(sCvar, "amx_version") || !strcmp(sCvar, "amxmodx_version") || !strcmp(sCvar, "fun_version") || !strcmp(sCvar, "sv_cheats"))
+		return 0;
+
+	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
+
+	if (pCvar)
+	{
+		pCvar->flags &= ~((int)(params[2]));
+		return 1;
+	}
+
+	return 0;
+}
+
+// get_plugins_cvar(id, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0)
+static cell AMX_NATIVE_CALL get_plugins_cvar(AMX *amx, cell *params)
+{
+	CvarInfo* info = g_CvarManager.FindCvar(params[1]);
+
+	if (info)
+	{
+		set_amxstring(amx, params[2], info->name.chars(), params[3]);
+		*get_amxaddr(amx, params[4]) = info->var->flags;
+		*get_amxaddr(amx, params[5]) = info->pluginId;
+		*get_amxaddr(amx, params[6]) = reinterpret_cast<cell>(info->var);
+
+		return 1;
+	}
+
+	return 0;
+}
+
+// get_plugins_cvarsnum()
+static cell AMX_NATIVE_CALL get_plugins_cvarsnum(AMX *amx, cell *params)
+{
+	return g_CvarManager.GetRegCvarsCount();
+}
+
+#if defined AMD64
+static bool g_warned_ccqv = false;
+#endif
+// query_client_cvar(id, const cvar[], const resultfunc[])
+static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
+{
+	int numParams = params[0] / sizeof(cell);
+
+	if (numParams != 3 && numParams != 5)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed!");
+		return 0;
+	}
+
+#if defined AMD64
+	if (!g_warned_ccqv)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "[AMXX] Client CVAR Querying is not available on AMD64 (one time warn)");
+		g_warned_ccqv = true;
+	}
+
+	return 0;
 #endif
 
-	const byte opcodeJumpSize     = 5;
-	const byte opcodeJumpByteSize = 1;
-
-	const int maxBytesLimit = 20;
-
-	for (size_t i = 0; i < maxBytesLimit; ++i, ++baseAddress)
+	if (!g_NewDLL_Available)
 	{
-		if (*baseAddress == opcodeJump)
-		{
-			functionAddress = (uintptr_t *)(&baseAddress[opcodeJumpSize] + *(uintptr_t *)&baseAddress[opcodeJumpByteSize]);
-			break;
-		}
+		LogError(amx, AMX_ERR_NATIVE, "Client CVAR querying is not enabled - check MM version!");
+		return 0;
 	}
 
-	if (functionAddress)
-	{
-		m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, (void *)functionAddress);
+	int id = params[1];
 
-		if (m_HookDetour)
-		{
-			m_HookDetour->EnableDetour();
-		}
+	if (id < 1 || id > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", id);
+		return 0;
 	}
-}
 
-cvar_t* CvarManager::CreateCvar(const char* name, const char* value, float fvalue, int flags, const char* plugin, int plugnId)
-{
-	cvar_t*    var = nullptr;
-	CvarInfo* info = nullptr;
+	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
 
-	if (!CacheLookup(name, &info))
+	if (!pPlayer->initialized || pPlayer->IsBot())
 	{
-		// Not cached - Is cvar already exist?
-		var = CVAR_GET_POINTER(name);
+		LogError(amx, AMX_ERR_NATIVE, "Player %d is either not connected or a bot", id);
+		return 0;
+	}
 
-		// Whether it exists, we need to prepare a new entry.
-		info = new CvarInfo();
+	int dummy;
+	const char *cvarname = get_amxstring(amx, params[2], 0, dummy);
+	const char *resultfuncname = get_amxstring(amx, params[3], 1, dummy);
 
-		// Shared datas.
-		info->name     = name;
-		info->plugin   = plugin;
-		info->pluginId = plugnId;
+	// public clientcvarquery_result(id, const cvar[], const result[], [const param[]])
+	int iFunc;
 
-		if (var)
+	if (numParams == 5 && params[4] != 0)
+		iFunc = registerSPForwardByName(amx, resultfuncname, FP_CELL, FP_STRING, FP_STRING, FP_ARRAY, FP_DONE);
+	else
+		iFunc = registerSPForwardByName(amx, resultfuncname, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
+
+	if (iFunc == -1)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function \"%s\" is not present", resultfuncname);
+		return 0;
+	}
+
+	ClientCvarQuery_Info *queryObject = new ClientCvarQuery_Info;
+	queryObject->resultFwd = iFunc;
+	queryObject->requestId = MAKE_REQUESTID(PLID);
+
+	if (numParams == 5 && params[4] != 0)
+	{
+		queryObject->paramLen = params[4] + 1;
+		queryObject->params = new cell[queryObject->paramLen];
+
+		if (!queryObject->params)
 		{
-			// Cvar already exists. Just copy.
-			// "string" will be set after. "value" and "next" are automatically set.
-			info->var        = var;
-			info->defaultval = var->string;
-			info->amxmodx    = false;
-		}
-		else
-		{
-			// Registers a new cvar.
-			static cvar_t cvar_reg_helper;
-
-			// "string" will be set after. "value" and "next" are automatically set.
-			cvar_reg_helper.name   = info->name.chars();
-			cvar_reg_helper.string = "";
-			cvar_reg_helper.flags  = flags;
-
-			// Adds cvar to global list.
-			CVAR_REGISTER(&cvar_reg_helper);
-
-			// Registering can fail if name is already a registered command.
-			var = CVAR_GET_POINTER(name);
-
-			// If so, we can't go further.
-			if (!var)
-			{
-				delete info;
-				return nullptr;
-			}
-
-			// If ok, we got a valid pointer, we can copy.
-			info->var        = var;
-			info->defaultval = value;
-			info->amxmodx    = true;
-
-			// Keeps track count of cvars registered by AMXX.
-			++m_AmxmodxCvars;
+			delete queryObject;
+			unregisterSPForward(iFunc);
+			LogError(amx, AMX_ERR_MEMORY, "Hmm. Out of memory?");
+			return 0;
 		}
 
-		// Add a new entry in the caches.
-		m_Cvars.append(info);
-		m_Cache.insert(name, info);
+		memcpy(reinterpret_cast<void*>(queryObject->params), reinterpret_cast<const void *>(get_amxaddr(amx, params[5])), queryObject->paramLen * sizeof(cell));
 
-		// Make sure that whether an existing or new cvar is set to the given value.
-		CVAR_DIRECTSET(var, value);
+		queryObject->params[queryObject->paramLen - 1] = 0;
+	}
+	else {
+		queryObject->params = NULL;
+		queryObject->paramLen = 0;
 	}
 
-	return info->var;
+	pPlayer->queries.push_back(queryObject);
+
+	QUERY_CLIENT_CVAR_VALUE2(pPlayer->pEdict, cvarname, queryObject->requestId);
+
+	return 1;
 }
 
-cvar_t* CvarManager::FindCvar(const char* name)
+
+AMX_NATIVE_INFO g_CvarNatives[] =
 {
-	cvar_t* var = nullptr;
-	CvarInfo* info = nullptr;
+	{"register_cvar",			register_cvar},
+	{"cvar_exists",				cvar_exists},
+	{"get_cvar_pointer",		get_cvar_pointer},
 
-	// Do we have already cvar in cache?
-	if (CacheLookup(name, &info))
-	{
-		return info->var;
-	}
+	{"hook_cvar_change",        hook_cvar_change},
+	{"enable_cvar_hook",		enable_cvar_hook},
+	{"disable_cvar_hook",		disable_cvar_hook},
 
-	// Cvar doesn't exist.
-	if (!(var = CVAR_GET_POINTER(name)))
-	{
-		return nullptr;
-	}
+	{"get_cvar_flags",			get_cvar_flags},
+	{"get_cvar_float",			get_cvar_float},
+	{"get_cvar_num",			get_cvar_num},
+	{"get_cvar_string",			get_cvar_string},
 
-	// Create a new entry.
-	info = new CvarInfo();
-	info->var      = var;
-	info->name     = name;
-	info->plugin   = "";
-	info->pluginId = -1;
-	info->amxmodx  = false;
+	{"set_cvar_flags",			set_cvar_flags},
+	{"set_cvar_float",			set_cvar_float},
+	{"set_cvar_num",			set_cvar_num},
+	{"set_cvar_string",			set_cvar_string},
 
-	// Add entry in the caches.
-	m_Cvars.append(info);
-	m_Cache.insert(name, info);
+	{"get_pcvar_flags",			get_pcvar_flags},
+	{"get_pcvar_float",			get_pcvar_float},
+	{"get_pcvar_num",			get_pcvar_num},
+	{"get_pcvar_string",		get_pcvar_string},
 
-	return var;
-}
+	{"set_pcvar_flags",			set_pcvar_flags},
+	{"set_pcvar_float",			set_pcvar_float},
+	{"set_pcvar_string",		set_pcvar_string},
+	{"set_pcvar_num",			set_pcvar_num},
 
-CvarInfo* CvarManager::FindCvar(size_t index)
-{
-	// Used by get_plugins_cvar native.
-	// For compatibility, only cvars registered by AMXX are concerned.
+	{"remove_cvar_flags",		remove_cvar_flags},
 
-	size_t iter_id = 0;
-
-	for (CvarsList::iterator iter = m_Cvars.begin(); iter != m_Cvars.end(); iter++)
-	{
-		if (iter->amxmodx && iter_id++ == index)
-		{
-			return *(iter);
-		}
-	}
-
-	return nullptr;
-}
-
-bool CvarManager::CacheLookup(const char* name, CvarInfo** info)
-{
-	return m_Cache.retrieve(name, info);
-}
-
-Forward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, const char** callback)
-{
-	CvarInfo* info = nullptr;
-
-	// A cvar is guaranteed to be in cache if pointer is got from
-	// get_cvar_pointer and register_cvar natives. Though it might be 
-	// provided by another way. If by any chance we run in such 
-	// situation, we create a new entry right now.
-
-	if (!CacheLookup(var->name, &info))
-	{
-		// Create a new entry.
-		info = new CvarInfo();
-		info->var      = var;
-		info->name     = var->name;
-		info->plugin   = "";
-		info->pluginId = -1;
-		info->amxmodx  = false;
-
-		// Add entry in the caches.
-		m_Cvars.append(info);
-		m_Cache.insert(info->name.chars(), info);
-	}
-
-	int length;
-	*callback = get_amxstring(amx, param, 0, length);
-
-	int forwardId = registerSPForwardByName(amx, *callback, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
-
-	// Invalid callback, it could be: not a public function, wrongly named, or simply missing.
-	if (forwardId == -1)
-	{
-		return nullptr;
-	}
-
-	// Detour is disabled on map change.
-	m_HookDetour->EnableDetour();
+	{"get_plugins_cvar",		get_plugins_cvar},
+	{"get_plugins_cvarsnum",	get_plugins_cvarsnum},
 	
-	Forward* forward = new Forward(forwardId, *callback);
-	info->hooks.append(new CvarPlugin(g_plugins.findPlugin(amx)->getId(), forward));
+	{"query_client_cvar",		query_client_cvar},
 
-	return forward;
-}
-
-size_t CvarManager::GetRegCvarsCount()
-{
-	return m_AmxmodxCvars;
-}
-
-void CvarManager::OnConsoleCommand()
-{
-	print_srvconsole("Registered cvars:\n");
-	print_srvconsole("       %-24.23s %-24.23s %-16.15s\n", "name", "value", "plugin");
-
-	size_t index = 0;
-	ke::AString pluginName;
-
-	if (CMD_ARGC() > 2) // Searching for cvars registered to a plugin
-	{
-		pluginName = CMD_ARGV(2);
-	}
-
-	for (CvarsList::iterator iter = m_Cvars.begin(); iter != m_Cvars.end(); iter++)
-	{
-		CvarInfo* ci = (*iter);
-
-		if (ci->amxmodx && (!pluginName.length() || strncmp(ci->name.chars(), pluginName.chars(), pluginName.length()) == 0))
-		{
-			print_srvconsole(" [%3d] %-24.23s %-24.23s %-16.15s\n", ++index, ci->name.chars(), ci->var->string, ci->plugin.chars());
-		}
-	}
-}
-
-void CvarManager::OnPluginUnloaded()
-{
-	// Clear only plugin hooks list.
-	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar++)
-	{
-		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
-		{
-			delete (*cvar)->hooks[i];
-		}
-
-		(*cvar)->hooks.clear();
-	}
-
-	// There is no point to enable detour if at next map change
-	// no plugins hook cvars.
-	m_HookDetour->DisableDetour();
-}
-
-void CvarManager::OnAmxxShutdown()
-{
-	// Free everything.
-	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar = m_Cvars.erase(cvar))
-	{
-		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
-		{
-			delete (*cvar)->hooks[i];
-		}
-
-		delete (*cvar);
-	}
-
-	m_Cache.clear();
-	m_HookDetour->Destroy();
-}
+	{NULL,						NULL}
+};

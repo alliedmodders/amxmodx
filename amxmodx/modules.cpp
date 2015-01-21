@@ -553,6 +553,7 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, g_DatapackNatives, -1);
 	amx_Register(amx, g_StackNatives, -1);
 	amx_Register(amx, g_TextParserNatives, -1);
+	amx_Register(amx, g_CvarNatives, -1);
 
 	//we're not actually gonna check these here anymore
 	amx->flags |= AMX_FLAG_PRENIT;

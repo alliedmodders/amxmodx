@@ -192,14 +192,17 @@
     <ClCompile Include="..\..\public\sdk\amxxmodule.cpp">
       <Filter>SDK</Filter>
     </ClCompile>
-    <ClCompile Include="..\cvars.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\public\memtools\CDetour\detours.cpp">
       <Filter>Memtools\CDetour</Filter>
     </ClCompile>
     <ClCompile Include="..\..\public\memtools\CDetour\asm\asm.c">
       <Filter>Memtools\CDetour\asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CvarManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cvars.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,9 +350,6 @@
     <ClInclude Include="..\..\public\sdk\moduleconfig.h">
       <Filter>SDK</Filter>
     </ClInclude>
-    <ClInclude Include="..\cvars.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\public\memtools\CDetour\detourhelpers.h">
       <Filter>Memtools\CDetour</Filter>
     </ClInclude>
@@ -358,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="..\..\public\memtools\CDetour\asm\asm.h">
       <Filter>Memtools\CDetour\asm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CvarManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

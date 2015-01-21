@@ -22,25 +22,6 @@
 
 extern CFlagManager FlagMan;
 CVector<CAdminData *> DynamicAdmins;
-char CVarTempBuffer[64];
-
-const char *invis_cvar_list[5] = {"amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages"};
-
-bool CheckBadConList(const char *cvar, int type)
-{
-	int i = 0;
-	while (NONGPL_CVAR_LIST[i].cvar != NULL)
-	{
-		if (NONGPL_CVAR_LIST[i].type == type
-			&& strcmp(NONGPL_CVAR_LIST[i].cvar, cvar) == 0)
-		{
-			return true;
-		}
-		i++;
-	}
-
-	return false;
-}
 
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
@@ -108,36 +89,6 @@ static cell AMX_NATIVE_CALL emit_sound(AMX *amx, cell *params) /* 7 param */
 		if (!FNullEnt(pEdict))
 			EMIT_SOUND_DYN2(pEdict, channel, szSample, vol, att, flags, pitch);
 	}
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL enable_cvar_hook(AMX *amx, cell *params) /* 7 param */
-{
-	Forward* forward = reinterpret_cast<Forward*>(params[1]);
-
-	if (!forward)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar hook handle: %p", forward);
-		return 0;
-	}
-
-	forward->state = Forward::FSTATE_OK;
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL disable_cvar_hook(AMX *amx, cell *params) /* 7 param */
-{
-	Forward* forward = reinterpret_cast<Forward*>(params[1]);
-
-	if (!forward)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar hook handle: %p", forward);
-		return 0;
-	}
-
-	forward->state =  Forward::FSTATE_STOP;
 
 	return 1;
 }
@@ -1939,170 +1890,6 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
 	return len;
 }
 
-static cell AMX_NATIVE_CALL get_pcvar_string(AMX *amx, cell *params)
-{
-	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
-	if (!ptr)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
-		return 0;
-	}
-
-	return set_amxstring_utf8(amx, params[2], ptr->string ? ptr->string : "", ptr->string ? strlen(ptr->string) : 0, params[3] + 1); // EOS
-}
-
-static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params) /* 3 param */
-{
-	int length;
-	const char* name = get_amxstring(amx, params[1], 0, length);
-
-	cvar_t* var = g_CvarManager.FindCvar(name);
-
-	const char *value = var ? var->string : "";
-	length = var ? strlen(value) : 0;
-
-	return set_amxstring_utf8(amx, params[2], value, length, params[3] + 1); // + EOS
-}
-
-static cell AMX_NATIVE_CALL get_pcvar_float(AMX *amx, cell *params)
-{
-	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
-	if (!ptr)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
-		return 0;
-	}
-
-	return amx_ftoc(ptr->value);
-}
-
-static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params) /* 1 param */
-{
-	int length;
-	const char* name = get_amxstring(amx, params[1], 0, length);
-
-	cvar_t* var = g_CvarManager.FindCvar(name);
-
-	return var ? amx_ftoc(var->value) : 0;
-}
-
-static cell AMX_NATIVE_CALL set_pcvar_float(AMX *amx, cell *params)
-{
-	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
-	if (!ptr)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
-		return 0;
-	}
-
-	UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
-	CVAR_DIRECTSET(ptr, &CVarTempBuffer[0]);
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL set_cvar_float(AMX *amx, cell *params) /* 2 param */
-{
-	int length;
-	const char* name = get_amxstring(amx, params[1], 0, length);
-
-	cvar_t* var = g_CvarManager.FindCvar(name);
-
-	if (var)
-	{
-		UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
-		CVAR_DIRECTSET(var, &CVarTempBuffer[0]);
-	}
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
-{
-	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
-	if (!ptr)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
-		return 0;
-	}
-
-	return (int)ptr->value;
-}
-
-static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params) /* 1 param */
-{
-	int length;
-	const char* name = get_amxstring(amx, params[1], 0, length);
-
-	cvar_t* var = g_CvarManager.FindCvar(name);
-
-	return var ? (int)var->value : 0;
-
-}
-
-static cell AMX_NATIVE_CALL set_pcvar_num(AMX *amx, cell *params)
-{
-	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
-	if (!ptr)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
-		return 0;
-	}
-
-	UTIL_Format(CVarTempBuffer,sizeof(CVarTempBuffer)-1,"%d",params[2]);
-	CVAR_DIRECTSET(ptr, &CVarTempBuffer[0]);
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL set_cvar_num(AMX *amx, cell *params) /* 2 param */
-{
-	int length;
-	const char* name = get_amxstring(amx, params[1], 0, length);
-	int value = params[2];
-
-	cvar_t* var = g_CvarManager.FindCvar(name);
-
-	if (var)
-	{
-		UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%d", value);
-		CVAR_DIRECTSET(var, &CVarTempBuffer[0]);
-	}
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL set_cvar_string(AMX *amx, cell *params) /* 2 param */
-{
-	int length;
-	const char* name  = get_amxstring(amx, params[1], 0, length);
-	
-	cvar_t* var = g_CvarManager.FindCvar(name);
-
-	if (var)
-	{
-		CVAR_DIRECTSET(var, get_amxstring(amx, params[2], 1, length));
-	}
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL set_pcvar_string(AMX *amx, cell *params) /* 2 param */
-{
-	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
-	if (!ptr)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
-		return 0;
-	}
-
-	int len;
-
-	CVAR_DIRECTSET(ptr, get_amxstring(amx,params[2],0,len));
-
-	return 1;
-}
-
 static cell AMX_NATIVE_CALL log_message(AMX *amx, cell *params) /* 1 param */
 {
 	int len;
@@ -2655,33 +2442,6 @@ static cell AMX_NATIVE_CALL task_exists(AMX *amx, cell *params) /* 1 param */
 	return g_tasksMngr.taskExists(params[1], params[2] ? 0 : amx);
 }
 
-static cell AMX_NATIVE_CALL cvar_exists(AMX *amx, cell *params) /* 1 param */
-{
-	int ilen;
-	return (g_CvarManager.FindCvar(get_amxstring(amx, params[1], 0, ilen)) ? 1 : 0);
-}
-
-static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params) /* 3 param */
-{
-	int length;
-	const char* name  = get_amxstring(amx, params[1], 0, length);
-	const char* value = get_amxstring(amx, params[2], 1, length);
-
-	int   flags = params[3];
-	float fvalue = amx_ctof(params[4]);
-	
-	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
-
-	if (CheckBadConList(name, 0))
-	{
-		plugin->AddToFailCounter(1);
-	}
-
-	cvar_t* var = g_CvarManager.CreateCvar(name, value, fvalue, flags, plugin->getName(), plugin->getId());
-
-	return reinterpret_cast<cell>(var);
-}
-
 static cell AMX_NATIVE_CALL get_user_ping(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
@@ -3067,30 +2827,6 @@ static cell AMX_NATIVE_CALL remove_quotes(AMX *amx, cell *params) /* 1 param */
 	return 0;
 }
 
-//native get_plugins_cvar(id, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0);
-static cell AMX_NATIVE_CALL get_plugins_cvar(AMX *amx, cell *params)
-{
-	CvarInfo* info = g_CvarManager.FindCvar(params[1]);
-
-	if (info)
-	{
-		set_amxstring(amx, params[2], info->name.chars(), params[3]);
-		*get_amxaddr(amx, params[4]) = info->var->flags;
-		*get_amxaddr(amx, params[5]) = info->pluginId;
-		*get_amxaddr(amx, params[6]) = reinterpret_cast<cell>(info->var);
-
-		return 1;
-	}
-
-	return 0;
-}
-
-//native get_plugins_cvarsnum();
-static cell AMX_NATIVE_CALL get_plugins_cvarsnum(AMX *amx, cell *params)
-{
-	return g_CvarManager.GetRegCvarsCount();
-}
-
 static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param */
 {
 	int index = params[1];
@@ -3132,80 +2868,6 @@ static cell AMX_NATIVE_CALL get_user_aiming(AMX *amx, cell *params) /* 4 param *
 	}
 	
 	return amx_ftoc(pfloat);
-}
-
-static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)
-{
-	int ilen;
-	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
-	
-	if (!strcmp(sCvar, "amx_version") || !strcmp(sCvar, "amxmodx_version") || !strcmp(sCvar, "fun_version") || !strcmp(sCvar, "sv_cheats"))
-		return 0;
-	
-	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
-	
-	if (pCvar)
-	{
-		pCvar->flags &= ~((int)(params[2]));
-		return 1;
-	}
-
-	return 0;
-}
-
-static cell AMX_NATIVE_CALL get_pcvar_flags(AMX *amx, cell *params)
-{
-	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
-	if (!ptr)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
-		return 0;
-	}
-
-	return ptr->flags;
-}
-
-static cell AMX_NATIVE_CALL get_cvar_flags(AMX *amx, cell *params)
-{
-	int ilen;
-	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
-
-	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
-	
-	return pCvar ? pCvar->flags : 0;
-}
-
-static cell AMX_NATIVE_CALL set_pcvar_flags(AMX *amx, cell *params)
-{
-	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
-	if (!ptr)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
-		return 0;
-	}
-
-	ptr->flags = static_cast<int>(params[2]);
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL set_cvar_flags(AMX *amx, cell *params)
-{
-	int ilen;
-	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
-	
-	if (!strcmp(sCvar, "amx_version") || !strcmp(sCvar, "amxmodx_version") || !strcmp(sCvar, "fun_version") || !strcmp(sCvar, "sv_cheats"))
-		return 0;
-	
-	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
-	
-	if (pCvar)
-	{
-		pCvar->flags |= (int)(params[2]);
-		return 1;
-	}
-	
-	return 0;
 }
 
 static cell AMX_NATIVE_CALL force_unmodified(AMX *amx, cell *params)
@@ -4156,102 +3818,6 @@ static cell AMX_NATIVE_CALL int3(AMX *amx, cell *params)
 
 /*********************************************************************/
 
-#if defined AMD64
-static bool g_warned_ccqv = false;
-#endif
-// native query_client_cvar(id, const cvar[], const resultfunc[])
-static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
-{
-	int numParams = params[0] / sizeof(cell);
-	
-	if (numParams != 3 && numParams != 5)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid number of parameters passed!");
-		return 0;
-	}
-
-#if defined AMD64
-		if (!g_warned_ccqv)
-		{
-			LogError(amx, AMX_ERR_NATIVE, "[AMXX] Client CVAR Querying is not available on AMD64 (one time warn)");
-			g_warned_ccqv = true;
-		}
-
-		return 0;
-#endif
-
-	if (!g_NewDLL_Available)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Client CVAR querying is not enabled - check MM version!");
-		return 0;
-	}
-
-	int id = params[1];
-	
-	if (id < 1 || id > gpGlobals->maxClients)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", id);
-		return 0;
-	}
-
-	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
-
-	if (!pPlayer->initialized || pPlayer->IsBot())
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Player %d is either not connected or a bot", id);
-		return 0;
-	}
-
-	int dummy;
-	const char *cvarname = get_amxstring(amx, params[2], 0, dummy);
-	const char *resultfuncname = get_amxstring(amx, params[3], 1, dummy);
-
-	// public clientcvarquery_result(id, const cvar[], const result[], [const param[]])
-	int iFunc;
-	
-	if (numParams == 5 && params[4] != 0)
-		iFunc = registerSPForwardByName(amx, resultfuncname, FP_CELL, FP_STRING, FP_STRING, FP_ARRAY, FP_DONE);
-	else
-		iFunc = registerSPForwardByName(amx, resultfuncname, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
-
-	if (iFunc == -1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Function \"%s\" is not present", resultfuncname);
-		return 0;
-	}
-
-	ClientCvarQuery_Info *queryObject = new ClientCvarQuery_Info;
-	queryObject->resultFwd = iFunc;
-	queryObject->requestId = MAKE_REQUESTID(PLID);
-
-	if (numParams == 5 && params[4] != 0)
-	{
-		queryObject->paramLen = params[4] + 1;
-		queryObject->params = new cell[queryObject->paramLen];
-		
-		if (!queryObject->params)
-		{
-			delete queryObject;
-			unregisterSPForward(iFunc);
-			LogError(amx, AMX_ERR_MEMORY, "Hmm. Out of memory?");
-			return 0;
-		}
-		
-		memcpy(reinterpret_cast<void*>(queryObject->params), reinterpret_cast<const void *>(get_amxaddr(amx, params[5])), queryObject->paramLen * sizeof(cell));
-
-		queryObject->params[queryObject->paramLen - 1] = 0;
-	} else {
-		queryObject->params = NULL;
-		queryObject->paramLen = 0;
-	}
-
-	pPlayer->queries.push_back(queryObject);
-
-	QUERY_CLIENT_CVAR_VALUE2(pPlayer->pEdict, cvarname, queryObject->requestId);
-
-	return 1;
-}
-
 static cell AMX_NATIVE_CALL amx_abort(AMX *amx, cell *params)
 {
 	int err = params[1];
@@ -4478,16 +4044,6 @@ static cell AMX_NATIVE_CALL DestroyForward(AMX *amx, cell *params)
 		g_forwards.unregisterSPForward(id);
 
 	return 1;
-}
-
-static cell AMX_NATIVE_CALL get_cvar_pointer(AMX *amx, cell *params)
-{
-	int len;
-	char *name = get_amxstring(amx, params[1], 0, len);
-
-	cvar_t *ptr = g_CvarManager.FindCvar(name);
-
-	return reinterpret_cast<cell>(ptr);
 }
 
 CVector<cell *> g_hudsync;
@@ -4861,29 +4417,6 @@ static cell AMX_NATIVE_CALL has_map_ent_class(AMX *amx, cell *params)
 	return len && !FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", name));
 };
 
-// hook_cvar_change(cvarHandle, const callback[])
-static cell AMX_NATIVE_CALL hook_cvar_change(AMX *amx, cell *params)
-{
-	cvar_t* var = reinterpret_cast<cvar_t*>(params[1]);
-
-	if (!var)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar handle: %p", var);
-		return 0;
-	}
-
-	const char* callback;
-	Forward* forward = g_CvarManager.HookCvarChange(var, amx, params[2], &callback);
-
-	if (!forward)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid callback function: %s", callback);
-		return 0;
-	}
-
-	return reinterpret_cast<cell>(forward);
-}
-
 static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
 {
 	return 1;
@@ -4918,10 +4451,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"client_print_color",		client_print_color},
 	{"console_cmd",				console_cmd},
 	{"console_print",			console_print},
-	{"cvar_exists",				cvar_exists},
 	{"emit_sound",				emit_sound},
-	{"enable_cvar_hook",		enable_cvar_hook},
-	{"disable_cvar_hook",		disable_cvar_hook},
 	{"engclient_cmd",			engclient_cmd},
 	{"engclient_print",			engclient_print},
 	{"find_player",				find_player},
@@ -4933,11 +4463,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_concmd",				get_concmd},
 	{"get_concmdsnum",			get_concmdsnum},
 	{"get_concmd_plid",			get_concmd_plid},
-	{"get_cvar_flags",			get_cvar_flags},
-	{"get_cvar_float",			get_cvar_float},
-	{"get_cvar_num",			get_cvar_num},
-	{"get_cvar_pointer",		get_cvar_pointer},
-	{"get_cvar_string",			get_cvar_string},
 	{"get_flags",				get_flags},
 	{"get_func_id",				get_func_id},
 	{"get_gametime",			get_gametime},
@@ -4949,16 +4474,10 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_modname",				get_modname},
 	{"get_module",				get_module},
 	{"get_modulesnum",			get_modulesnum},
-	{"get_pcvar_flags",			get_pcvar_flags},
-	{"get_pcvar_float",			get_pcvar_float},
-	{"get_pcvar_num",			get_pcvar_num},
-	{"get_pcvar_string",		get_pcvar_string},
 	{"get_players",				get_players},
 	{"get_playersnum",			get_playersnum},
 	{"get_plugin",				get_plugin},
 	{"get_pluginsnum",			get_pluginsnum},
-	{"get_plugins_cvar",		get_plugins_cvar},
-	{"get_plugins_cvarsnum",	get_plugins_cvarsnum},
 	{"get_srvcmd",				get_srvcmd},
 	{"get_srvcmdsnum",			get_srvcmdsnum},
 	{"get_systime",				get_systime},
@@ -4995,7 +4514,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_xvar_id",				get_xvar_id},
 	{"get_xvar_num",			get_xvar_num},
 	{"has_map_ent_class",		has_map_ent_class},
-	{"hook_cvar_change",        hook_cvar_change},
 	{"int3",					int3},
 	{"is_amd64_server",			is_amd64_server},
 	{"is_dedicated_server",		is_dedicated_server},
@@ -5028,7 +4546,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"precache_model",			precache_model},
 	{"precache_sound",			precache_sound},
 	{"precache_generic",		precache_generic},
-	{"query_client_cvar",		query_client_cvar},
 	{"random_float",			random_float},
 	{"random_num",				random_num},
 	{"read_argc",				read_argc},
@@ -5043,7 +4560,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"read_logdata",			read_logdata},
 	{"register_clcmd",			register_clcmd},
 	{"register_concmd",			register_concmd},
-	{"register_cvar",			register_cvar},
 	{"register_dictionary",		register_dictionary},
 	{"register_event",			register_event},
 	{"register_logevent",		register_logevent},
@@ -5052,25 +4568,16 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"register_plugin",			register_plugin},
 	{"register_srvcmd",			register_srvcmd},
 	{"require_module",			require_module},
-	{"remove_cvar_flags",		remove_cvar_flags},
 	{"remove_quotes",			remove_quotes},
 	{"remove_task",				remove_task},
 	{"remove_user_flags",		remove_user_flags},
 	{"server_cmd",				server_cmd},
 	{"server_exec",				server_exec},
 	{"server_print",			server_print},
-	{"set_cvar_flags",			set_cvar_flags},
-	{"set_cvar_float",			set_cvar_float},
-	{"set_cvar_num",			set_cvar_num},
-	{"set_cvar_string",			set_cvar_string},
 	{"set_fail_state",			set_fail_state},
 	{"set_dhudmessage",			set_dhudmessage},
 	{"set_hudmessage",			set_hudmessage},
 	{"set_localinfo",			set_localinfo},
-	{"set_pcvar_flags",			set_pcvar_flags},
-	{"set_pcvar_float",			set_pcvar_float},
-	{"set_pcvar_string",		set_pcvar_string},
-	{"set_pcvar_num",			set_pcvar_num},
 	{"set_task",				set_task},
 	{"set_user_flags",			set_user_flags},
 	{"set_user_info",			set_user_info},

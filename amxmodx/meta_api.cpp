@@ -31,7 +31,7 @@
 #include "trie_natives.h"
 #include "CDataPack.h"
 #include "textparse.h"
-#include "cvars.h"
+#include "CvarManager.h"
 
 plugin_info_t Plugin_info = 
 {

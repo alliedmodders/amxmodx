@@ -22,7 +22,8 @@ OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules
 	  optimizer.cpp format.cpp messages.cpp libraries.cpp vector.cpp sorting.cpp \
 	  nongpl_matches.cpp CFlagManager.cpp datastructs.cpp \
 	  trie_natives.cpp CDataPack.cpp datapacks.cpp stackstructs.cpp \
-	  CTextParsers.cpp textparse.cpp \
+	  CTextParsers.cpp textparse.cpp CvarManager.cpp cvars.cpp \
+	  ../public/memtools/CDetour/detours.cpp ../public/memtools/CDetour/asm/asm.c
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###

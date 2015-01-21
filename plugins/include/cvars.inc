@@ -13,12 +13,40 @@
 #define _cvars_included
 
 /**
- * Called when a console variable's value is changed.
- * 
- * @param cvarHandle    Handle to the cvar that was changed
- * @param oldValue      String containing the value of the cvar before it was changed
- * @param newValue      String containing the new value of the cvar
- * @param cvarName      String containing the name of the cvar
+ * Creates a hook for when a console variable's value is changed.
  *
- * public OnCvarChanged(cvarHandle, const oldValue[], const newValue[], const cvarName[]);
+ * @note Callback will be called in the following manner:
+ *
+ *       public cvar_change_callback(pcvar, const old_value[], const new_value[])
+ *
+ *       pcvar         - Pointer to cvar that was changed
+ *       old_value     - String containing the value of the cvar before it was changed
+ *       new_value     - String containing the new value of the cvar
+ *
+ * @param pcvar         Pointer to cvar
+ * @param callback      Name of callback function
+ * @error               Invalid pointer or invalid callback function
  */
+native cvarhook:hook_cvar_change(pcvar, const callback[]);
+
+/**
+ * Stops a cvar hook forward from triggering.
+ *
+ * @note  Use the return value from hook_cvar_change as the parameter here.
+ *
+ * @param handle        Forward to stop
+ * @error               Invalid hook handle
+ */
+native disable_cvar_hook(cvarhook:handle);
+
+/**
+ * Starts a cvar hook forward back up.
+ *
+ * @note  Use the return value from hook_cvar_change as the parameter here.
+ *
+ * @param handle        Forward to back up
+ * @error               Invalid hook handle
+ */
+native enable_cvar_hook(cvarhook:handle);
+
+

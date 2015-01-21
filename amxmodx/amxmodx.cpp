@@ -112,6 +112,36 @@ static cell AMX_NATIVE_CALL emit_sound(AMX *amx, cell *params) /* 7 param */
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL enable_cvar_hook(AMX *amx, cell *params) /* 7 param */
+{
+	Forward* forward = reinterpret_cast<Forward*>(params[1]);
+
+	if (!forward)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar hook handle: %p", forward);
+		return 0;
+	}
+
+	forward->state = Forward::FSTATE_OK;
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL disable_cvar_hook(AMX *amx, cell *params) /* 7 param */
+{
+	Forward* forward = reinterpret_cast<Forward*>(params[1]);
+
+	if (!forward)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar hook handle: %p", forward);
+		return 0;
+	}
+
+	forward->state =  Forward::FSTATE_STOP;
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL server_print(AMX *amx, cell *params) /* 1 param */
 {
 	int len;
@@ -4831,6 +4861,29 @@ static cell AMX_NATIVE_CALL has_map_ent_class(AMX *amx, cell *params)
 	return len && !FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", name));
 };
 
+// hook_cvar_change(cvarHandle, const callback[])
+static cell AMX_NATIVE_CALL hook_cvar_change(AMX *amx, cell *params)
+{
+	cvar_t* var = reinterpret_cast<cvar_t*>(params[1]);
+
+	if (!var)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid cvar handle: %p", var);
+		return 0;
+	}
+
+	const char* callback;
+	Forward* forward = g_CvarManager.HookCvarChange(var, amx, params[2], &callback);
+
+	if (!forward)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid callback function: %s", callback);
+		return 0;
+	}
+
+	return reinterpret_cast<cell>(forward);
+}
+
 static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
 {
 	return 1;
@@ -4867,6 +4920,8 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"console_print",			console_print},
 	{"cvar_exists",				cvar_exists},
 	{"emit_sound",				emit_sound},
+	{"enable_cvar_hook",		enable_cvar_hook},
+	{"disable_cvar_hook",		disable_cvar_hook},
 	{"engclient_cmd",			engclient_cmd},
 	{"engclient_print",			engclient_print},
 	{"find_player",				find_player},
@@ -4940,6 +4995,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_xvar_id",				get_xvar_id},
 	{"get_xvar_num",			get_xvar_num},
 	{"has_map_ent_class",		has_map_ent_class},
+	{"hook_cvar_change",        hook_cvar_change},
 	{"int3",					int3},
 	{"is_amd64_server",			is_amd64_server},
 	{"is_dedicated_server",		is_dedicated_server},

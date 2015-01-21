@@ -13,19 +13,48 @@
 
 CvarManager g_CvarManager;
 
-DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
+/** 
+ * Returns true to call original function, otherwise false to block it.
+ */
+bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
 {
-	// Sanity checks against bogus pointers.
-	if (var && value)
+	CvarInfo* info = nullptr;
+
+	if (!var || !value                                    // Sanity checks against bogus pointers.
+		|| strcmp(var->string, value) == 0                // Make sure old and new values are different to not trigger callbacks.
+		|| !g_CvarManager.CacheLookup(var->name, &info)   // No data in cache, nothing to call.
+		|| info->hooks.empty())                           // No hooked cvars, nothing to call.
 	{
-		// Make sure old and new values are different to not trigger callbacks.
-		if (strcmp(var->string, value) != 0)
+		return true;
+	}
+
+	int lastResult = 0;
+	int result;
+
+	for (size_t i = 0; i < info->hooks.length(); ++i)
+	{
+		CvarPlugin* p = info->hooks[i];
+
+		if (p->forward->state == Forward::FSTATE_OK) // Our callback can be enable/disabled by natives.
 		{
-			
+			result = executeForwards(p->forward->id, reinterpret_cast<cvar_t*>(var), var->string, value);
+
+			if (result >= lastResult)
+			{
+				lastResult = result;
+			}
 		}
 	}
 
-	DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
+	return !!!lastResult;
+}
+
+DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
+{
+	if (Cvar_DirectSet_Custom(var, value))
+	{
+		DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
+	}
 }
 
 CvarManager::CvarManager() : m_AmxmodxCvars(0), m_HookDetour(nullptr)
@@ -34,19 +63,7 @@ CvarManager::CvarManager() : m_AmxmodxCvars(0), m_HookDetour(nullptr)
 
 CvarManager::~CvarManager()
 {
-	CvarsList::iterator iter = m_Cvars.begin();
-
-	while (iter != m_Cvars.end())
-	{
-		CvarInfo* info = (*iter);
-
-		iter = m_Cvars.erase(iter);
-
-		delete info;
-	}
-
-	m_Cache.clear();
-	m_HookDetour->Destroy();
+	OnAmxxShutdown();
 }
 
 void CvarManager::CreateCvarHook(void)
@@ -103,8 +120,7 @@ cvar_t* CvarManager::CreateCvar(const char* name, const char* value, float fvalu
 	cvar_t*    var = nullptr;
 	CvarInfo* info = nullptr;
 
-	// Is cvar already cached ?
-	if (!m_Cache.retrieve(name, &info))
+	if (!CacheLookup(name, &info))
 	{
 		// Not cached - Is cvar already exist?
 		var = CVAR_GET_POINTER(name);
@@ -174,7 +190,7 @@ cvar_t* CvarManager::FindCvar(const char* name)
 	CvarInfo* info = nullptr;
 
 	// Do we have already cvar in cache?
-	if (m_Cache.retrieve(name, &info))
+	if (CacheLookup(name, &info))
 	{
 		return info->var;
 	}
@@ -218,6 +234,55 @@ CvarInfo* CvarManager::FindCvar(size_t index)
 	return nullptr;
 }
 
+bool CvarManager::CacheLookup(const char* name, CvarInfo** info)
+{
+	return m_Cache.retrieve(name, info);
+}
+
+Forward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, const char** callback)
+{
+	CvarInfo* info = nullptr;
+
+	// A cvar is guaranteed to be in cache if pointer is got from
+	// get_cvar_pointer and register_cvar natives. Though it might be 
+	// provided by another way. If by any chance we run in such 
+	// situation, we create a new entry right now.
+
+	if (!CacheLookup(var->name, &info))
+	{
+		// Create a new entry.
+		info = new CvarInfo();
+		info->var      = var;
+		info->name     = var->name;
+		info->plugin   = "";
+		info->pluginId = -1;
+		info->amxmodx  = false;
+
+		// Add entry in the caches.
+		m_Cvars.append(info);
+		m_Cache.insert(info->name.chars(), info);
+	}
+
+	int length;
+	*callback = get_amxstring(amx, param, 0, length);
+
+	int forwardId = registerSPForwardByName(amx, *callback, FP_CELL, FP_STRING, FP_STRING, FP_DONE);
+
+	// Invalid callback, it could be: not a public function, wrongly named, or simply missing.
+	if (forwardId == -1)
+	{
+		return nullptr;
+	}
+
+	// Detour is disabled on map change.
+	m_HookDetour->EnableDetour();
+	
+	Forward* forward = new Forward(forwardId, *callback);
+	info->hooks.append(new CvarPlugin(g_plugins.findPlugin(amx)->getId(), forward));
+
+	return forward;
+}
+
 size_t CvarManager::GetRegCvarsCount()
 {
 	return m_AmxmodxCvars;
@@ -245,4 +310,39 @@ void CvarManager::OnConsoleCommand()
 			print_srvconsole(" [%3d] %-24.23s %-24.23s %-16.15s\n", ++index, ci->name.chars(), ci->var->string, ci->plugin.chars());
 		}
 	}
+}
+
+void CvarManager::OnPluginUnloaded()
+{
+	// Clear only plugin hooks list.
+	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar++)
+	{
+		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
+		{
+			delete (*cvar)->hooks[i];
+		}
+
+		(*cvar)->hooks.clear();
+	}
+
+	// There is no point to enable detour if at next map change
+	// no plugins hook cvars.
+	m_HookDetour->DisableDetour();
+}
+
+void CvarManager::OnAmxxShutdown()
+{
+	// Free everything.
+	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar = m_Cvars.erase(cvar))
+	{
+		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
+		{
+			delete (*cvar)->hooks[i];
+		}
+
+		delete (*cvar);
+	}
+
+	m_Cache.clear();
+	m_HookDetour->Destroy();
 }

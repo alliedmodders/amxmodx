@@ -15,6 +15,7 @@
 /**
  * CVAR flags for register_cvar()
  */
+#define FCVAR_NONE              0   /* No flags */
 #define FCVAR_ARCHIVE           1   /* Set to cause it to be saved to vars.rc */
 #define FCVAR_USERINFO          2   /* Changes the client's info string */
 #define FCVAR_SERVER            4   /* Notifies players when changed */
@@ -27,8 +28,31 @@
 #define FCVAR_NOEXTRAWHITEPACE  512 /* Strip trailing/leading white space from this cvar */
 
 /**
+ * Creates a new cvar for the engine.
+ *
+ * @note This is same as regitser_cvar but with more options.
+ * @note For a list of possible cvar flags see FCVAR_* constants above.
+ * @note If an already existing cvar is registered it will not be duplicated.
+ * @note The returned cvar pointer should be used with the get_pcvar_* and
+ *       set_pcvar_* set of functions.
+ *
+ * @param name      Cvar name
+ * @param string    Default cvar value
+ * @param flags     Optional bitstring of flags determining how the convar should be handled
+ * @param help_text Optional description of the cvar
+ * @param has_min   Optional boolean that determines if the convar has a minimum valu
+ * @param min_val   Minimum floating point value that the convar can have if has_min is true
+ * @param has_max   Optional boolean that determines if the convar has a maximum value
+ * @param max_val   Maximum floating point value that the convar can have if has_max is true
+ *
+ * @return          Unique cvar pointer
+ */
+native create_cvar(const name[], const string[], flags = FCVAR_NONE, const help_text[] = "", bool:has_min = false, Float:min_val = 0.0, bool:has_max = false, Float:max_val = 0.0);
+
+/**
  * Registers a new cvar for the engine.
  *
+ * @note Deprecated. Consider to use create_cvar for more options.
  * @note For a list of possible cvar flags see FCVAR_* constants in amxconst.inc
  * @note If an already existing cvar is registered it will not be duplicated.
  * @note The returned cvar pointer should be used with the get_pcvar_* and
@@ -41,7 +65,7 @@
  *
  * @return          Unique cvar pointer
  */
-native register_cvar(const name[], const string[], flags=0, Float:fvalue=0.0);
+native register_cvar(const name[], const string[], flags = FCVAR_NONE, Float:fvalue=0.0);
 
 /**
  * Returns if a cvar is registered on the server.

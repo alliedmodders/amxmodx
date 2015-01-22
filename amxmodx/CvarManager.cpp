@@ -22,8 +22,35 @@ bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
 
 	if (!var || !value                                    // Sanity checks against bogus pointers.
 		|| strcmp(var->string, value) == 0                // Make sure old and new values are different to not trigger callbacks.
-		|| !g_CvarManager.CacheLookup(var->name, &info)   // No data in cache, nothing to call.
-		|| info->hooks.empty())                           // No hooked cvars, nothing to call.
+		|| !g_CvarManager.CacheLookup(var->name, &info))  // No data in cache, nothing to do.
+	{
+		return true;
+	}
+
+	if (info->hasMin || info->hasMax) // cvar_s doesn't have min/max mechanism, so we check things here.
+	{
+		float fvalue = atof(value); 
+		bool oob = false;
+
+		if (info->hasMin && fvalue < info->minVal)
+		{
+			oob = true;
+			fvalue = info->minVal;
+		}
+		else if (info->hasMax && fvalue > info->maxVal)
+		{
+			oob = true;
+			fvalue = info->maxVal;
+		}
+
+		if (oob) // Found value out of bound, set new value and block original call.
+		{
+			CVAR_SET_FLOAT(var->name, fvalue);
+			return false;
+		}
+	}
+
+	if (info->hooks.empty()) // No hooked cvars, nothing to call.
 	{
 		return true;
 	}
@@ -115,7 +142,8 @@ void CvarManager::CreateCvarHook(void)
 	}
 }
 
-cvar_t* CvarManager::CreateCvar(const char* name, const char* value, float fvalue, int flags, const char* plugin, int plugnId)
+cvar_t* CvarManager::CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, int flags,
+								const char* helpText, bool hasMin, float min, bool hasMax, float max)
 {
 	cvar_t*    var = nullptr;
 	CvarInfo* info = nullptr;
@@ -126,12 +154,7 @@ cvar_t* CvarManager::CreateCvar(const char* name, const char* value, float fvalu
 		var = CVAR_GET_POINTER(name);
 
 		// Whether it exists, we need to prepare a new entry.
-		info = new CvarInfo();
-
-		// Shared datas.
-		info->name     = name;
-		info->plugin   = plugin;
-		info->pluginId = plugnId;
+		info = new CvarInfo(name, helpText, hasMin, min, hasMax, max, plugin, pluginId);
 
 		if (var)
 		{
@@ -202,12 +225,8 @@ cvar_t* CvarManager::FindCvar(const char* name)
 	}
 
 	// Create a new entry.
-	info = new CvarInfo();
-	info->var      = var;
-	info->name     = name;
-	info->plugin   = "";
-	info->pluginId = -1;
-	info->amxmodx  = false;
+	info = new CvarInfo(name);
+	info->var = var;
 
 	// Add entry in the caches.
 	m_Cvars.append(info);
@@ -251,12 +270,8 @@ Forward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, const ch
 	if (!CacheLookup(var->name, &info))
 	{
 		// Create a new entry.
-		info = new CvarInfo();
-		info->var      = var;
-		info->name     = var->name;
-		info->plugin   = "";
-		info->pluginId = -1;
-		info->amxmodx  = false;
+		info = new CvarInfo(var->name);
+		info->var = var;
 
 		// Add entry in the caches.
 		m_Cvars.append(info);

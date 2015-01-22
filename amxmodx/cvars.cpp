@@ -14,6 +14,32 @@
 char CVarTempBuffer[64];
 const char *invis_cvar_list[5] = { "amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages" };
 
+// create_cvar(const name[], const default_value[], flags = 0, const description[] = "", bool:has_min = false, Float:min_val = 0.0, bool:has_max = false, Float:max_val = 0.0)
+static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
+{
+	int length;
+	const char* name     = get_amxstring(amx, params[1], 0, length);
+	const char* value    = get_amxstring(amx, params[2], 1, length);
+	const char* helpText = get_amxstring(amx, params[4], 2, length);
+
+	int flags    = params[3];
+	bool hasMin  = params[5] > 0 ? true : false;
+	bool hasMax  = params[7] > 0 ? true : false;
+	float minVal = amx_ctof(params[6]);
+	float maxVal = amx_ctof(params[8]);
+
+	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
+
+	if (CheckBadConList(name, 0))
+	{
+		plugin->AddToFailCounter(1);
+	}
+
+	cvar_t* var = g_CvarManager.CreateCvar(name, value, plugin->getName(), plugin->getId(), flags, helpText, hasMin, minVal, hasMax, maxVal);
+
+	return reinterpret_cast<cell>(var);
+}
+
 // register_cvar(const name[], const string[], flags=0, Float:fvalue=0.0)
 static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params)
 {
@@ -31,7 +57,7 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params)
 		plugin->AddToFailCounter(1);
 	}
 
-	cvar_t* var = g_CvarManager.CreateCvar(name, value, fvalue, flags, plugin->getName(), plugin->getId());
+	cvar_t* var = g_CvarManager.CreateCvar(name, value, plugin->getName(), plugin->getId(), flags);
 
 	return reinterpret_cast<cell>(var);
 }
@@ -487,6 +513,7 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 
 AMX_NATIVE_INFO g_CvarNatives[] =
 {
+	{"create_cvar",				create_cvar},
 	{"register_cvar",			register_cvar},
 	{"cvar_exists",				cvar_exists},
 	{"get_cvar_pointer",		get_cvar_pointer},

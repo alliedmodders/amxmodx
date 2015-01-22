@@ -52,11 +52,29 @@ typedef ke::Vector<CvarPlugin*> CvarsHook;
 
 struct CvarInfo : public ke::InlineListNode<CvarInfo>
 {
+	CvarInfo(const char* name_, const char* helpText, bool hasMin_, float min_, bool hasMax_, float max_, 
+			 const char* plugin_, int pluginId_)
+		:
+		name(name_), description(helpText),	hasMin(hasMin_), minVal(min_), hasMax(hasMax_), maxVal(max_),
+		plugin(plugin_), pluginId(pluginId_) {};
+
+	CvarInfo(const char* name_)
+		:
+		name(name_), defaultval(""), description(""), hasMin(false), minVal(0), hasMax(false), maxVal(0),
+		plugin(""), pluginId(-1), amxmodx(false) {};
+
 	cvar_t*      var;
 	ke::AString  name;
 	ke::AString  defaultval;
+	ke::AString  description;
+	bool         hasMin;
+	bool         hasMax;
+	float        minVal;
+	float        maxVal;
+
 	ke::AString  plugin;
 	int          pluginId;
+
 	CvarsHook    hooks;
 	bool         amxmodx;
 
@@ -80,7 +98,10 @@ class CvarManager
 
 		void      CreateCvarHook();
 
-		cvar_t*   CreateCvar(const char* name, const char* value, float fvalue, int flags, const char* plugin, int plugnId);
+		cvar_t*   CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, 
+							 int flags = 0, const char* helpText = "",
+							 bool hasMin = false, float min = 0, 
+							 bool hasMax = false, float max = 0);
 		cvar_t*   FindCvar(const char* name);
 		CvarInfo* FindCvar(size_t index);
 		bool      CacheLookup(const char* name, CvarInfo** info);

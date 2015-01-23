@@ -2578,7 +2578,7 @@ static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
 	return g_tasksMngr.changeTasks(params[1], params[3] ? 0 : amx, flNewTime);
 }
 
-static cell AMX_NATIVE_CALL change_level(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL engine_changelevel(AMX *amx, cell *params)
 {
 	int length;
 	const char* new_map = get_amxstring(amx, params[1], 0, length);
@@ -4854,7 +4854,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"callfunc_push_str",		callfunc_push_str},
 	{"callfunc_push_array",		callfunc_push_array},
 	{"change_task",				change_task},
-	{"change_level",			change_level},
+	{"engine_changelevel",		engine_changelevel},
 	{"client_cmd",				client_cmd},
 	{"client_print",			client_print},
 	{"client_print_color",		client_print_color},

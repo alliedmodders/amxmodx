@@ -300,7 +300,9 @@ public cmdMapsMenu(id, level, cid)
 }
 
 public delayedChange(mapname[])
-	change_level(mapname)
+{
+	engine_changelevel(mapname)
+}
 
 public actionVoteMapMenu(id, key)
 {

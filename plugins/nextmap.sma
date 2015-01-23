@@ -97,7 +97,7 @@ public delayedChange(param[])
 	if (g_mp_chattime) {
 		set_pcvar_float(g_mp_chattime, get_pcvar_float(g_mp_chattime) - 2.0)
 	}
-	change_level(param)
+	engine_changelevel(param)
 }
 
 public changeMap()

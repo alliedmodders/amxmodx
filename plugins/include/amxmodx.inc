@@ -63,7 +63,7 @@ forward plugin_unpause();
  *       server command "changelevel" which is used by many plugins will not
  *       trigger this forward. Unfortunately this means that in practice this
  *       forward is very unreliable, and will not be called in many situations.
- * @note AMXX 1.8.3 has added the change_level() function which will utilize
+ * @note AMXX 1.8.3 has added the engine_changelevel() function which will utilize
  *       the correct engine function to change the map and therefore trigger
  *       this forward.
  *
@@ -262,7 +262,7 @@ native precache_generic(const szFile[]);
  *
  * @noreturn
  */
-native change_level(const map[]);
+native engine_changelevel(const map[]);
 
 /**
  * Sets info on the client.

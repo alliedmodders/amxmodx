@@ -73,11 +73,11 @@ static cell AMX_NATIVE_CALL cvar_exists(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_cvar_pointer(AMX *amx, cell *params)
 {
 	int len;
-	char *name = get_amxstring(amx, params[1], 0, len);
+	const char *name = get_amxstring(amx, params[1], 0, len);
 
-	cvar_t *ptr = g_CvarManager.FindCvar(name);
+	CvarInfo* info = g_CvarManager.FindCvar(name);
 
-	return reinterpret_cast<cell>(ptr);
+	return reinterpret_cast<cell>(info ? info->var : 0);
 }
 
 // hook_cvar_change(cvarHandle, const callback[])
@@ -141,9 +141,9 @@ static cell AMX_NATIVE_CALL get_cvar_flags(AMX *amx, cell *params)
 	int ilen;
 	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
 
-	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
+	CvarInfo* info = g_CvarManager.FindCvar(sCvar);
 
-	return pCvar ? pCvar->flags : 0;
+	return info ? info->var->flags : 0;
 }
 
 // get_cvar_float(const cvarname[])
@@ -152,9 +152,9 @@ static cell AMX_NATIVE_CALL get_cvar_float(AMX *amx, cell *params)
 	int length;
 	const char* name = get_amxstring(amx, params[1], 0, length);
 
-	cvar_t* var = g_CvarManager.FindCvar(name);
+	CvarInfo* info = g_CvarManager.FindCvar(name);
 
-	return var ? amx_ftoc(var->value) : 0;
+	return info ? amx_ftoc(info->var->value) : 0;
 }
 
 // get_cvar_num(const cvarname[])
@@ -163,9 +163,9 @@ static cell AMX_NATIVE_CALL get_cvar_num(AMX *amx, cell *params)
 	int length;
 	const char* name = get_amxstring(amx, params[1], 0, length);
 
-	cvar_t* var = g_CvarManager.FindCvar(name);
+	CvarInfo* info = g_CvarManager.FindCvar(name);
 
-	return var ? (int)var->value : 0;
+	return info ? (int)info->var->value : 0;
 }
 
 // get_cvar_string(const cvarname[], output[], iLen)
@@ -174,10 +174,10 @@ static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params)
 	int length;
 	const char* name = get_amxstring(amx, params[1], 0, length);
 
-	cvar_t* var = g_CvarManager.FindCvar(name);
+	CvarInfo* info = g_CvarManager.FindCvar(name);
 
-	const char *value = var ? var->string : "";
-	length = var ? strlen(value) : 0;
+	const char *value = info ? info->var->string : "";
+	length = info ? strlen(value) : 0;
 
 	return set_amxstring_utf8(amx, params[2], value, length, params[3] + 1); // + EOS
 }
@@ -186,16 +186,16 @@ static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_cvar_flags(AMX *amx, cell *params)
 {
 	int ilen;
-	char* sCvar = get_amxstring(amx, params[1], 0, ilen);
+	const char* sCvar = get_amxstring(amx, params[1], 0, ilen);
 
 	if (!strcmp(sCvar, "amx_version") || !strcmp(sCvar, "amxmodx_version") || !strcmp(sCvar, "fun_version") || !strcmp(sCvar, "sv_cheats"))
 		return 0;
 
-	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
+	CvarInfo* info = g_CvarManager.FindCvar(sCvar);
 
-	if (pCvar)
+	if (info)
 	{
-		pCvar->flags |= (int)(params[2]);
+		info->var->flags |= (int)(params[2]);
 		return 1;
 	}
 
@@ -208,12 +208,12 @@ static cell AMX_NATIVE_CALL set_cvar_float(AMX *amx, cell *params)
 	int length;
 	const char* name = get_amxstring(amx, params[1], 0, length);
 
-	cvar_t* var = g_CvarManager.FindCvar(name);
+	CvarInfo* info = g_CvarManager.FindCvar(name);
 
-	if (var)
+	if (info)
 	{
 		UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
-		CVAR_DIRECTSET(var, &CVarTempBuffer[0]);
+		CVAR_DIRECTSET(info->var, &CVarTempBuffer[0]);
 	}
 
 	return 1;
@@ -226,12 +226,12 @@ static cell AMX_NATIVE_CALL set_cvar_num(AMX *amx, cell *params)
 	const char* name = get_amxstring(amx, params[1], 0, length);
 	int value = params[2];
 
-	cvar_t* var = g_CvarManager.FindCvar(name);
+	CvarInfo* info = g_CvarManager.FindCvar(name);
 
-	if (var)
+	if (info)
 	{
 		UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%d", value);
-		CVAR_DIRECTSET(var, &CVarTempBuffer[0]);
+		CVAR_DIRECTSET(info->var, &CVarTempBuffer[0]);
 	}
 
 	return 1;
@@ -243,11 +243,11 @@ static cell AMX_NATIVE_CALL set_cvar_string(AMX *amx, cell *params)
 	int length;
 	const char* name  = get_amxstring(amx, params[1], 0, length);
 
-	cvar_t* var = g_CvarManager.FindCvar(name);
+	CvarInfo* info = g_CvarManager.FindCvar(name);
 
-	if (var)
+	if (info)
 	{
-		CVAR_DIRECTSET(var, get_amxstring(amx, params[2], 1, length));
+		CVAR_DIRECTSET(info->var, get_amxstring(amx, params[2], 1, length));
 	}
 
 	return 1;
@@ -303,6 +303,41 @@ static cell AMX_NATIVE_CALL get_pcvar_string(AMX *amx, cell *params)
 	}
 
 	return set_amxstring_utf8(amx, params[2], ptr->string ? ptr->string : "", ptr->string ? strlen(ptr->string) : 0, params[3] + 1); // EOS
+}
+
+// get_pcvar_bounds(pcvar, CvarBounds:type, &Float:value)
+static cell AMX_NATIVE_CALL get_pcvar_bounds(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	CvarInfo* info = nullptr;
+
+	if (!ptr || !(info = g_CvarManager.FindCvar(ptr->name)))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	bool hasBound = false;
+	float bound;
+
+	switch (params[2])
+	{
+		case CvarBound_Lower:
+			hasBound = info->hasMin;
+			bound = info->minVal;
+			break;
+		case CvarBound_Upper:
+			hasBound = info->hasMax;
+			bound = info->maxVal;
+			break;
+		default:
+			LogError(amx, AMX_ERR_NATIVE, "Invalid CvarBounds value: %d", params[2]);
+			return 0;
+	}
+
+	*get_amxaddr(amx, params[3]) = amx_ftoc(bound);
+
+	return hasBound;
 }
 
 // set_pcvar_flags(pcvar, flags)
@@ -369,6 +404,38 @@ static cell AMX_NATIVE_CALL set_pcvar_string(AMX *amx, cell *params)
 	return 1;
 }
 
+// set_pcvar_bounds(pcvar, CvarBounds:type, bool:set, Float:value = 0.0)
+static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	CvarInfo* info = nullptr;
+
+	if (!ptr || !(info = g_CvarManager.FindCvar(ptr->name)))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	bool set = params[3] > 0 ? true : false;
+
+	switch (params[2])
+	{
+		case CvarBound_Lower:
+			info->hasMin = set;
+			info->minVal = set ? amx_ctof(params[4]) : 0;
+			break;
+		case CvarBound_Upper:
+			info->hasMax = set;
+			info->maxVal = set ? amx_ctof(params[4]) : 0;
+			break;
+		default:
+			LogError(amx, AMX_ERR_NATIVE, "Invalid CvarBounds value: %d", params[2]);
+			return 0;
+	}
+
+	return 1;
+}
+
 // remove_cvar_flags(const cvar[], flags=-1)
 static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)
 {
@@ -378,11 +445,11 @@ static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)
 	if (!strcmp(sCvar, "amx_version") || !strcmp(sCvar, "amxmodx_version") || !strcmp(sCvar, "fun_version") || !strcmp(sCvar, "sv_cheats"))
 		return 0;
 
-	cvar_t* pCvar = g_CvarManager.FindCvar(sCvar);
+	CvarInfo* info = g_CvarManager.FindCvar(sCvar);
 
-	if (pCvar)
+	if (info)
 	{
-		pCvar->flags &= ~((int)(params[2]));
+		info->var->flags &= ~((int)(params[2]));
 		return 1;
 	}
 
@@ -536,11 +603,13 @@ AMX_NATIVE_INFO g_CvarNatives[] =
 	{"get_pcvar_float",			get_pcvar_float},
 	{"get_pcvar_num",			get_pcvar_num},
 	{"get_pcvar_string",		get_pcvar_string},
+	{"get_pcvar_bounds",		get_pcvar_bounds},
 
 	{"set_pcvar_flags",			set_pcvar_flags},
 	{"set_pcvar_float",			set_pcvar_float},
-	{"set_pcvar_string",		set_pcvar_string},
 	{"set_pcvar_num",			set_pcvar_num},
+	{"set_pcvar_string",		set_pcvar_string},
+	{"set_pcvar_bounds",		set_pcvar_bounds},
 
 	{"remove_cvar_flags",		remove_cvar_flags},
 

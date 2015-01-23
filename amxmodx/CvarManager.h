@@ -17,6 +17,12 @@
 
 class CDetour;
 
+enum CvarBounds
+{
+	CvarBound_Upper = 0,
+	CvarBound_Lower
+};
+
 struct Forward
 {
 	enum fwdstate
@@ -102,7 +108,8 @@ class CvarManager
 							 int flags = 0, const char* helpText = "",
 							 bool hasMin = false, float min = 0, 
 							 bool hasMax = false, float max = 0);
-		cvar_t*   FindCvar(const char* name);
+
+		CvarInfo* FindCvar(const char* name);
 		CvarInfo* FindCvar(size_t index);
 		bool      CacheLookup(const char* name, CvarInfo** info);
 

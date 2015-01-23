@@ -13,7 +13,7 @@
 #define _cvars_included
 
 /**
- * CVAR flags for register_cvar()
+ * CVAR flags for create_cvar()
  */
 #define FCVAR_NONE              0   /* No flags */
 #define FCVAR_ARCHIVE           1   /* Set to cause it to be saved to vars.rc */
@@ -360,6 +360,39 @@ native get_pcvar_string(pcvar, string[], maxlen);
  * @error           If an invalid cvar pointer is specified, an error is thrown.
  */
 native set_pcvar_string(pcvar, const string[]);
+
+/**
+ * Cvar bound values used with get/set_pcvar_bounds()
+ */
+enum CvarBounds
+{
+	CvarBound_Upper = 0,
+	CvarBound_Lower
+};
+
+/**
+ * Retrieves the specified bound of a cvar.
+ *
+ * @param pcvar     Pointer to cvar
+ * @param type      Type of bound to retrieve, CvarBound_Lower or CvarBound_Upper
+ * @param value     By-reference cell to store the specified floating point bound value
+ *
+ * @return          True if the cvar has the specified bound set, false otherwise.
+ * @error           If an invalid cvar pointer or CvarBounds value, an error is thrown.
+ */
+native bool:get_pcvar_bounds(pcvar, CvarBounds:type, &Float:value);
+
+/**
+ * Sets the specified bound of a cvar.
+ *
+ * @param pcvar     Pointer to cvar
+ * @param type      Type of bound to set, CvarBound_Lower or CvarBound_Upper
+ * @param set       If set to true, cvar will use specified bound. If false, bound will be removed
+ * @param value     Floating point value to use as the specified bound
+ *
+ * @error           If an invalid cvar pointer or CvarBounds value, an error is thrown.
+ */
+native set_pcvar_bounds(pcvar, CvarBounds:type, bool:set, Float:value = 0.0);
 
 /**
  * Returns the number of plugin-registered cvars.

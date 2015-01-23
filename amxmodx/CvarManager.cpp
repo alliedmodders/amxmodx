@@ -207,7 +207,7 @@ cvar_t* CvarManager::CreateCvar(const char* name, const char* value, const char*
 	return info->var;
 }
 
-cvar_t* CvarManager::FindCvar(const char* name)
+CvarInfo* CvarManager::FindCvar(const char* name)
 {
 	cvar_t* var = nullptr;
 	CvarInfo* info = nullptr;
@@ -215,7 +215,7 @@ cvar_t* CvarManager::FindCvar(const char* name)
 	// Do we have already cvar in cache?
 	if (CacheLookup(name, &info))
 	{
-		return info->var;
+		return info;
 	}
 
 	// Cvar doesn't exist.
@@ -232,7 +232,7 @@ cvar_t* CvarManager::FindCvar(const char* name)
 	m_Cvars.append(info);
 	m_Cache.insert(name, info);
 
-	return var;
+	return info;
 }
 
 CvarInfo* CvarManager::FindCvar(size_t index)

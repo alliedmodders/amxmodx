@@ -45,28 +45,51 @@ struct Forward
 	ke::AString callback;
 };
 
-struct CvarPlugin
+struct CvarHook
 {
-	CvarPlugin(int id, Forward* fwd) : pluginId(id), forward(fwd) {};
-	CvarPlugin(int id)               : pluginId(id), forward(new Forward()) {};
+	CvarHook(int id, Forward* fwd) : pluginId(id), forward(fwd) {};
+	CvarHook(int id)               : pluginId(id), forward(new Forward()) {};
 
 	int pluginId;
 	ke::AutoPtr<Forward> forward;
 };
 
-typedef ke::Vector<CvarPlugin*> CvarsHook;
+struct CvarBind
+{
+	enum CvarType
+	{
+		CvarType_Int,
+		CvarType_Float,
+		CvarType_String,
+	};
+
+	CvarBind(int id_, CvarType type_, cell* varAddress_, size_t varLength_)
+		: 
+		pluginId(id_), type(type_), varAddress(varAddress_), varLength(varLength_) {};
+
+	int      pluginId;
+	CvarType type;
+	cell*    varAddress;
+	size_t   varLength;
+};
+
+typedef ke::Vector<CvarHook*> CvarsHook;
+typedef ke::Vector<CvarBind*>   CvarsBind;
 
 struct CvarInfo : public ke::InlineListNode<CvarInfo>
 {
-	CvarInfo(const char* name_, const char* helpText, bool hasMin_, float min_, bool hasMax_, float max_, 
+	CvarInfo(const char* name_, const char* helpText, 
+			 bool hasMin_, float min_, bool hasMax_, float max_, 
 			 const char* plugin_, int pluginId_)
 		:
-		name(name_), description(helpText),	hasMin(hasMin_), minVal(min_), hasMax(hasMax_), maxVal(max_),
+		name(name_), description(helpText),	
+		hasMin(hasMin_), minVal(min_), hasMax(hasMax_), maxVal(max_),
 		plugin(plugin_), pluginId(pluginId_) {};
 
 	CvarInfo(const char* name_)
 		:
-		name(name_), defaultval(""), description(""), hasMin(false), minVal(0), hasMax(false), maxVal(0),
+		name(name_), defaultval(""), description(""), 
+		hasMin(false), minVal(0), hasMax(false), maxVal(0),
 		plugin(""), pluginId(-1), amxmodx(false) {};
 
 	cvar_t*      var;
@@ -81,6 +104,7 @@ struct CvarInfo : public ke::InlineListNode<CvarInfo>
 	ke::AString  plugin;
 	int          pluginId;
 
+	CvarsBind    binds;
 	CvarsHook    hooks;
 	bool         amxmodx;
 

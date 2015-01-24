@@ -89,7 +89,7 @@ native cvar_exists(const cvar[]);
 native get_cvar_pointer(const cvar[]);
 
 /**
- * Creates a hook for when a console variable's value is changed.
+ * Creates a hook for when a cvar's value is changed.
  *
  * @note Callback will be called in the following manner:
  *
@@ -393,6 +393,40 @@ native bool:get_pcvar_bounds(pcvar, CvarBounds:type, &Float:value);
  * @error           If an invalid cvar pointer or CvarBounds value, an error is thrown.
  */
 native set_pcvar_bounds(pcvar, CvarBounds:type, bool:set, Float:value = 0.0);
+
+/**
+ * Binds a cvar to a global integer variable.
+ * This means that variable will be automagically updated on cvar's value change.
+ *
+ * @param pcvar     Pointer to cvar
+ * @param var       Global variable to update to
+ *
+ * @error           Invalid cvar pointer, invalid provided variable or cvar/variable already binded.
+ */
+native bind_pcvar_num(pcvar, &any:var);
+
+/**
+ * Binds a cvar to a global float variable.
+ * This means that variable will be automagically updated on cvar's value change.
+ *
+ * @param pcvar     Pointer to cvar
+ * @param var       Global variable to update to
+ *
+ * @error           Invalid cvar pointer, invalid provided variable or cvar/variable already binded.
+ */
+native bind_pcvar_float(pcvar, &Float:var);
+
+/**
+ * Binds a cvar to a global string variable.
+ * This means that variable will be automagically updated on cvar's value change.
+ *
+ * @param pcvar     Pointer to cvar
+ * @param var       Global variable to update to
+ * @param varlen    Maximum length of string buffer
+ *
+ * @error           Invalid cvar pointer, invalid provided variable or cvar/variable already binded.
+ */
+native bind_pcvar_string(pcvar, any:var[], varlen);
 
 /**
  * Returns the number of plugin-registered cvars.

@@ -282,6 +282,7 @@ int amxstring_len(cell* cstr);
 int load_amxscript(AMX* amx, void** program, const char* path, char error[64], int debug);
 int set_amxnatives(AMX* amx, char error[64]);
 int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max);
+int set_amxstring_simple(cell *dest, const char *source, int max);
 template <typename T> int set_amxstring_utf8(AMX *amx, cell amx_addr, const T *source, size_t sourcelen, size_t maxlen);
 int set_amxstring_utf8_char(AMX *amx, cell amx_addr, const char *source, size_t sourcelen, size_t maxlen);
 int set_amxstring_utf8_cell(AMX *amx, cell amx_addr, const cell *source, size_t sourcelen, size_t maxlen);

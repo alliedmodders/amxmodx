@@ -50,30 +50,61 @@ bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
 		}
 	}
 
-	if (info->hooks.empty()) // No hooked cvars, nothing to call.
+	if (!info->hooks.empty())
 	{
-		return true;
+		int lastResult = 0;
+
+		for (size_t i = 0; i < info->hooks.length(); ++i)
+		{
+			CvarHook* hook = info->hooks[i];
+
+			if (hook->forward->state == Forward::FSTATE_OK) // Our callback can be enable/disabled by natives.
+			{
+				int result = executeForwards(hook->forward->id, reinterpret_cast<cvar_t*>(var), var->string, value);
+
+				if (result >= lastResult)
+				{
+					lastResult = result;
+				}
+			}
+		}
+
+		if (lastResult) // A plugin wants to block the forward.
+		{
+			return false;
+		}
 	}
 
-	int lastResult = 0;
-	int result;
-
-	for (size_t i = 0; i < info->hooks.length(); ++i)
+	if (!info->binds.empty()) // Time to update our available binds.
 	{
-		CvarPlugin* p = info->hooks[i];
-
-		if (p->forward->state == Forward::FSTATE_OK) // Our callback can be enable/disabled by natives.
+		for (size_t i = 0; i < info->binds.length(); ++i)
 		{
-			result = executeForwards(p->forward->id, reinterpret_cast<cvar_t*>(var), var->string, value);
+			CvarBind* bind = info->binds[i];
 
-			if (result >= lastResult)
+			switch (bind->type)
 			{
-				lastResult = result;
+				case CvarBind::CvarType_Int:
+				{
+					*bind->varAddress = atoi(value);
+					break;
+				}
+				case CvarBind::CvarType_Float:
+				{
+					float fvalue = atof(value);
+					*bind->varAddress = amx_ftoc(fvalue);
+					break;
+				}
+				case CvarBind::CvarType_String:
+				{
+					set_amxstring_simple(bind->varAddress, value, bind->varLength);
+					break;
+				}
 			}
 		}
 	}
 
-	return !!!lastResult;
+	// Nothing to block.
+	return true;
 }
 
 DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
@@ -204,6 +235,9 @@ cvar_t* CvarManager::CreateCvar(const char* name, const char* value, const char*
 		CVAR_DIRECTSET(var, value);
 	}
 
+	// Detour is disabled on map change.
+	m_HookDetour->EnableDetour();
+
 	return info->var;
 }
 
@@ -211,6 +245,9 @@ CvarInfo* CvarManager::FindCvar(const char* name)
 {
 	cvar_t* var = nullptr;
 	CvarInfo* info = nullptr;
+
+	// Detour is disabled on map change.
+	m_HookDetour->EnableDetour();
 
 	// Do we have already cvar in cache?
 	if (CacheLookup(name, &info))
@@ -293,7 +330,7 @@ Forward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, const ch
 	m_HookDetour->EnableDetour();
 	
 	Forward* forward = new Forward(forwardId, *callback);
-	info->hooks.append(new CvarPlugin(g_plugins.findPlugin(amx)->getId(), forward));
+	info->hooks.append(new CvarHook(g_plugins.findPlugin(amx)->getId(), forward));
 
 	return forward;
 }
@@ -332,11 +369,17 @@ void CvarManager::OnPluginUnloaded()
 	// Clear only plugin hooks list.
 	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar++)
 	{
+		for (size_t i = 0; i < (*cvar)->binds.length(); ++i)
+		{
+			delete (*cvar)->binds[i];
+		}
+
 		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
 		{
 			delete (*cvar)->hooks[i];
 		}
 
+		(*cvar)->binds.clear();
 		(*cvar)->hooks.clear();
 	}
 
@@ -350,6 +393,11 @@ void CvarManager::OnAmxxShutdown()
 	// Free everything.
 	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar = m_Cvars.erase(cvar))
 	{
+		for (size_t i = 0; i < (*cvar)->binds.length(); ++i)
+		{
+			delete (*cvar)->binds[i];
+		}
+
 		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
 		{
 			delete (*cvar)->hooks[i];

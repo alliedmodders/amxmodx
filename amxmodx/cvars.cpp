@@ -340,6 +340,103 @@ static cell AMX_NATIVE_CALL get_pcvar_bounds(AMX *amx, cell *params)
 	return hasBound;
 }
 
+bool bind_pcvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, cell varofs, size_t varlen = 0)
+{
+	if (varofs > amx->hlw) // If variable address is not inside global area, we can't bind it.
+	{
+		LogError(amx, AMX_ERR_NATIVE, "A global variable must be provided");
+		return false;
+	}
+
+	int pluginId = g_plugins.findPluginFast(amx)->getId();
+	cell* address = get_amxaddr(amx, varofs);
+
+	// To avoid unexpected behavior, probably better to error such situations.
+	for (size_t i = 0; i < info->binds.length(); ++i)
+	{
+		CvarBind* bind = info->binds[i];
+
+		if (bind->pluginId == pluginId)
+		{
+			if (bind->varAddress == address)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "A same variable can't be binded with several cvars");
+			}
+			else
+			{
+				LogError(amx, AMX_ERR_NATIVE, "A cvar can't be binded with several variables");
+			}
+
+			return false;
+		}
+	}
+
+	CvarBind* bind = new CvarBind(pluginId, type, get_amxaddr(amx, varofs), varlen);
+
+	info->binds.append(bind);
+
+	// Update right away variable with current cvar value.
+	switch (type)
+	{
+		case CvarBind::CvarType_Int:
+			*bind->varAddress = atoi(info->var->string);
+			break;
+		case CvarBind::CvarType_Float:
+			*bind->varAddress = amx_ftoc(info->var->value);
+			break;
+		case CvarBind::CvarType_String:
+			set_amxstring_simple(bind->varAddress, info->var->string, bind->varLength);
+			break;
+	}
+
+	return true;
+}
+
+// bind_pcvar_float(pcvar, &Float:var)
+static cell AMX_NATIVE_CALL bind_pcvar_float(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	CvarInfo* info = nullptr;
+
+	if (!ptr || !(info = g_CvarManager.FindCvar(ptr->name)))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return bind_pcvar(info, CvarBind::CvarType_Float, amx, params[2]);
+}
+
+// bind_pcvar_num(pcvar, &any:var)
+static cell AMX_NATIVE_CALL bind_pcvar_num(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	CvarInfo* info = nullptr;
+
+	if (!ptr || !(info = g_CvarManager.FindCvar(ptr->name)))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return bind_pcvar(info, CvarBind::CvarType_Int, amx, params[2]);
+}
+
+// bind_pcvar_string(pcvar, any:var[], varlen)
+static cell AMX_NATIVE_CALL bind_pcvar_string(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	CvarInfo* info = nullptr;
+
+	if (!ptr || !(info = g_CvarManager.FindCvar(ptr->name)))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return bind_pcvar(info, CvarBind::CvarType_String, amx, params[2], params[3]);
+}
+
 // set_pcvar_flags(pcvar, flags)
 static cell AMX_NATIVE_CALL set_pcvar_flags(AMX *amx, cell *params)
 {
@@ -612,6 +709,10 @@ AMX_NATIVE_INFO g_CvarNatives[] =
 	{"set_pcvar_bounds",		set_pcvar_bounds},
 
 	{"remove_cvar_flags",		remove_cvar_flags},
+
+	{"bind_pcvar_float",		bind_pcvar_float},
+	{"bind_pcvar_num",			bind_pcvar_num},
+	{"bind_pcvar_string",		bind_pcvar_string},
 
 	{"get_plugins_cvar",		get_plugins_cvar},
 	{"get_plugins_cvarsnum",	get_plugins_cvarsnum},

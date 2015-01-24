@@ -712,6 +712,18 @@ public actionTeamMenu(id, key)
 				return PLUGIN_HANDLED
 			}
 
+			if( g_fakemeta )
+			{
+				if( get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance )
+				{
+					new name[MAX_NAME_LENGTH]
+					get_user_name(player, name, charsmax(name))
+					client_print(id, print_chat, "%L", id, "CANT_PERF_PLAYER", name)
+					displayTeamMenu(id, g_menuPosition[id])
+					return PLUGIN_HANDLED
+				}
+			}
+
 			g_transferingAdmin = id
 
 			new authid[32], authid2[32], name[MAX_NAME_LENGTH], name2[MAX_NAME_LENGTH]
@@ -728,20 +740,9 @@ public actionTeamMenu(id, key)
 
 			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_CSTeamNames[destTeamSlot]);
 			
-			if( destTeamSlot == 2 )
+			if( !g_fakemeta && destTeamSlot == 2 )
 			{
-				if ( g_fakemeta )
-				{
-					if( get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance )
-					{
-						// works for both vgui and old style menus, and send menuselect could close other menus (and since get_user_menu fails to return VGUI and old style classes menus...)
-						engclient_cmd(player, "joinclass", "6");
-					}
-				}
-				else // force
-				{
-					engclient_cmd(player, "joinclass", "6");
-				}
+				engclient_cmd(player, "joinclass", "6")
 			}
 
 			if ( g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))

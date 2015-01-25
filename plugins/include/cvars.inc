@@ -36,18 +36,18 @@
  * @note The returned cvar pointer should be used with the get_pcvar_* and
  *       set_pcvar_* set of functions.
  *
- * @param name      Cvar name
- * @param string    Default cvar value
- * @param flags     Optional bitstring of flags determining how the convar should be handled
- * @param help_text Optional description of the cvar
- * @param has_min   Optional boolean that determines if the convar has a minimum valu
- * @param min_val   Minimum floating point value that the convar can have if has_min is true
- * @param has_max   Optional boolean that determines if the convar has a maximum value
- * @param max_val   Maximum floating point value that the convar can have if has_max is true
+ * @param name        Cvar name
+ * @param string      Default cvar value
+ * @param flags       Optional bitstring of flags determining how the convar should be handled
+ * @param description Optional description of the cvar
+ * @param has_min     Optional boolean that determines if the convar has a minimum valu
+ * @param min_val     Minimum floating point value that the convar can have if has_min is true
+ * @param has_max     Optional boolean that determines if the convar has a maximum value
+ * @param max_val     Maximum floating point value that the convar can have if has_max is true
  *
  * @return          Unique cvar pointer
  */
-native create_cvar(const name[], const string[], flags = FCVAR_NONE, const help_text[] = "", bool:has_min = false, Float:min_val = 0.0, bool:has_max = false, Float:max_val = 0.0);
+native create_cvar(const name[], const string[], flags = FCVAR_NONE, const description[] = "", bool:has_min = false, Float:min_val = 0.0, bool:has_max = false, Float:max_val = 0.0);
 
 /**
  * Registers a new cvar for the engine.
@@ -448,10 +448,12 @@ native get_plugins_cvarsnum();
  * @param flags         Variable to store cvar flags to
  * @param plugin_id     Variable to store id of the registering plugin to
  * @param pcvar_handle  Variable to store cvar pointer to
+ * @param description   Variable to store cvar description to
+ * @param desc_len      Maximum length of string buffer
  *
  * @return              1 on success, 0 if index is invalid
  */
-native get_plugins_cvar(num, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0);
+native get_plugins_cvar(num, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0, description[]="", desc_len=0);
 
 /**
  * Dispatches a client cvar query, allowing the plugin to query for its value on

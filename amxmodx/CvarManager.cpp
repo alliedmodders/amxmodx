@@ -234,6 +234,17 @@ cvar_t* CvarManager::CreateCvar(const char* name, const char* value, const char*
 		// Make sure that whether an existing or new cvar is set to the given value.
 		CVAR_DIRECTSET(var, value);
 	}
+	else
+	{
+		// In case a plugin has been recompiling with some changes
+		// after a change map occurred, we keep default data up to date.
+		info->description = helpText;
+		info->defaultval  = value;
+		info->hasMin      = hasMin;
+		info->minVal      = min;
+		info->hasMax      = hasMin;
+		info->maxVal      = max;
+	}
 
 	// Detour is disabled on map change.
 	m_HookDetour->EnableDetour();

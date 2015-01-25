@@ -553,7 +553,7 @@ static cell AMX_NATIVE_CALL remove_cvar_flags(AMX *amx, cell *params)
 	return 0;
 }
 
-// get_plugins_cvar(id, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0)
+// get_plugins_cvar(id, name[], namelen, &flags=0, &plugin_id=0, &pcvar_handle=0, description[]="", desc_len=0)
 static cell AMX_NATIVE_CALL get_plugins_cvar(AMX *amx, cell *params)
 {
 	CvarInfo* info = g_CvarManager.FindCvar(params[1]);
@@ -564,6 +564,11 @@ static cell AMX_NATIVE_CALL get_plugins_cvar(AMX *amx, cell *params)
 		*get_amxaddr(amx, params[4]) = info->var->flags;
 		*get_amxaddr(amx, params[5]) = info->pluginId;
 		*get_amxaddr(amx, params[6]) = reinterpret_cast<cell>(info->var);
+
+		if (*params / sizeof(cell) >= 7)
+		{
+			set_amxstring(amx, params[7], info->description.chars(), params[8]);
+		}
 
 		return 1;
 	}

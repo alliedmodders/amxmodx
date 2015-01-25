@@ -307,6 +307,16 @@ native set_pcvar_flags(pcvar, flags);
 native get_pcvar_num(pcvar);
 
 /**
+ * Returns an boolean value from a cvar via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to retrieve value from
+ *
+ * @return          Cvar value, converted to bool
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
+native bool:get_pcvar_bool(pcvar);
+
+/**
  * Sets an integer value to a cvar via direct pointer access.
  *
  * @param pcvar     Pointer to cvar to set value of
@@ -316,6 +326,17 @@ native get_pcvar_num(pcvar);
  * @error           If an invalid cvar pointer is specified, an error is thrown.
  */
 native set_pcvar_num(pcvar, num);
+
+/**
+ * Sets a boolean value to a cvar via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to set value of
+ * @param num       Value to set cvar to
+ *
+ * @noreturn
+ * @error           If an invalid cvar pointer is specified, an error is thrown.
+ */
+native set_pcvar_bool(pcvar, bool:num);
 
 /**
  * Returns a float value from a cvar via direct pointer access.

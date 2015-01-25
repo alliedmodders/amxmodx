@@ -292,6 +292,12 @@ static cell AMX_NATIVE_CALL get_pcvar_num(AMX *amx, cell *params)
 	return (int)ptr->value;
 }
 
+// bool:get_pcvar_bool(pcvar)
+static cell AMX_NATIVE_CALL get_pcvar_bool(AMX *amx, cell *params)
+{
+	return !!get_pcvar_num(amx, params);
+}
+
 // get_pcvar_string(pcvar, string[], maxlen)
 static cell AMX_NATIVE_CALL get_pcvar_string(AMX *amx, cell *params)
 {
@@ -704,12 +710,14 @@ AMX_NATIVE_INFO g_CvarNatives[] =
 	{"get_pcvar_flags",			get_pcvar_flags},
 	{"get_pcvar_float",			get_pcvar_float},
 	{"get_pcvar_num",			get_pcvar_num},
+	{"get_pcvar_bool",			get_pcvar_bool},
 	{"get_pcvar_string",		get_pcvar_string},
 	{"get_pcvar_bounds",		get_pcvar_bounds},
 
 	{"set_pcvar_flags",			set_pcvar_flags},
 	{"set_pcvar_float",			set_pcvar_float},
 	{"set_pcvar_num",			set_pcvar_num},
+	{"set_pcvar_bool",			set_pcvar_num},
 	{"set_pcvar_string",		set_pcvar_string},
 	{"set_pcvar_bounds",		set_pcvar_bounds},
 

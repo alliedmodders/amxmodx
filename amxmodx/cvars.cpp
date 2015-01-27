@@ -367,13 +367,8 @@ bool bind_pcvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, cell varofs, 
 			if (bind->varAddress == address)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "A same variable can't be binded with several cvars");
+				return false;
 			}
-			else
-			{
-				LogError(amx, AMX_ERR_NATIVE, "A cvar can't be binded with several variables");
-			}
-
-			return false;
 		}
 	}
 
@@ -521,22 +516,65 @@ static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
 
 	bool set = params[3] > 0 ? true : false;
 	int pluginId = g_plugins.findPluginFast(amx)->getId();
+	float value = 0;
+	bool should_update = false;
 
 	switch (params[2])
 	{
 		case CvarBound_Lower:
+		{
 			info->bound.hasMin = set;
-			info->bound.minVal = set ? amx_ctof(params[4]) : 0;
-			info->bound.minPluginId = pluginId;
+
+			if (set)
+			{
+				value = amx_ctof(params[4]);
+
+				if (info->bound.hasMax && value > info->bound.maxVal)
+				{
+					LogError(amx, AMX_ERR_NATIVE, "A lower bound can't be above an upper bound");
+					return 0;
+				}
+
+				should_update = true;
+
+				info->bound.minVal = value;
+				info->bound.minPluginId = pluginId;
+			}
+
 			break;
+		}
 		case CvarBound_Upper:
+		{
 			info->bound.hasMax = set;
-			info->bound.maxVal = set ? amx_ctof(params[4]) : 0;
-			info->bound.maxPluginId = pluginId;
+
+			if (set)
+			{
+				value = amx_ctof(params[4]);
+
+				if (info->bound.hasMin && value < info->bound.minVal)
+				{
+					LogError(amx, AMX_ERR_NATIVE, "An upper bound can't be below a lower bound");
+					return 0;
+				}
+
+				should_update = true;
+
+				info->bound.maxVal = value;
+				info->bound.maxPluginId = pluginId;
+			}
+
 			break;
+		}
 		default:
+		{
 			LogError(amx, AMX_ERR_NATIVE, "Invalid CvarBounds value: %d", params[2]);
 			return 0;
+		}
+	}
+
+	if (should_update)
+	{
+		CVAR_SET_FLOAT(ptr->name, value);
 	}
 
 	return 1;

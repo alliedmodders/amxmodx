@@ -91,6 +91,9 @@ native get_cvar_pointer(const cvar[]);
 /**
  * Creates a hook for when a cvar's value is changed.
  *
+ * @note You cannot prevent cvar changes from happening, you can only change the value again.
+ * @note Be careful not to set a cvar inside a cvar change hook such that 
+ *       it re-invokes he same callback. This results in infinite recursion.
  * @note Callback will be called in the following manner:
  *
  *       public cvar_change_callback(pcvar, const old_value[], const new_value[])

@@ -14,10 +14,7 @@
 
 CvarManager g_CvarManager;
 
-/** 
- * Returns true to call original function, otherwise false to block it.
- */
-bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
+DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
 {
 	CvarInfo* info = nullptr;
 
@@ -25,12 +22,13 @@ bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
 		|| strcmp(var->string, value) == 0                // Make sure old and new values are different to not trigger callbacks.
 		|| !g_CvarManager.CacheLookup(var->name, &info))  // No data in cache, nothing to do.
 	{
-		return true;
+		DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
+		return;
 	}
 
 	if (info->bound.hasMin || info->bound.hasMax) // cvar_s doesn't have min/max mechanism, so we check things here.
 	{
-		float fvalue = atof(value); 
+		float fvalue = atof(value);
 		bool oob = false;
 
 		if (info->bound.hasMin && fvalue < info->bound.minVal)
@@ -47,36 +45,20 @@ bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
 		if (oob) // Found value out of bound, set new value and block original call.
 		{
 			CVAR_SET_FLOAT(var->name, fvalue);
-			return false;
+			return;
 		}
 	}
-
+	
+	ke::AString oldValue; // We save old value since it will be likely changed after original function called.
+	
 	if (!info->hooks.empty())
 	{
-		int lastResult = 0;
-
-		for (size_t i = 0; i < info->hooks.length(); ++i)
-		{
-			CvarHook* hook = info->hooks[i];
-
-			if (hook->forward->state == AutoForward::FSTATE_OK) // Our callback can be enable/disabled by natives.
-			{
-				int result = executeForwards(hook->forward->id, reinterpret_cast<cvar_t*>(var), var->string, value);
-
-				if (result >= lastResult)
-				{
-					lastResult = result;
-				}
-			}
-		}
-
-		if (lastResult) // A plugin wants to block the forward.
-		{
-			return false;
-		}
+		oldValue = var->string;
 	}
 
-	if (!info->binds.empty()) // Time to update our available binds.
+	DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
+
+	if (!info->binds.empty()) 
 	{
 		for (size_t i = 0; i < info->binds.length(); ++i)
 		{
@@ -86,33 +68,35 @@ bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
 			{
 				case CvarBind::CvarType_Int:
 				{
-					*bind->varAddress = atoi(value);
+					*bind->varAddress = atoi(var->string);
 					break;
 				}
 				case CvarBind::CvarType_Float:
 				{
-					float fvalue = atof(value);
+					float fvalue = atof(var->string);
 					*bind->varAddress = amx_ftoc(fvalue);
 					break;
 				}
 				case CvarBind::CvarType_String:
 				{
-					set_amxstring_simple(bind->varAddress, value, bind->varLength);
+					set_amxstring_simple(bind->varAddress, var->string, bind->varLength);
 					break;
 				}
 			}
 		}
 	}
 
-	// Nothing to block.
-	return true;
-}
-
-DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
-{
-	if (Cvar_DirectSet_Custom(var, value))
+	if (!info->hooks.empty())
 	{
-		DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
+		for (size_t i = 0; i < info->hooks.length(); ++i)
+		{
+			CvarHook* hook = info->hooks[i];
+
+			if (hook->forward->state == AutoForward::FSTATE_OK) // Our callback can be enable/disabled by natives.
+			{
+				executeForwards(hook->forward->id, reinterpret_cast<cvar_t*>(var), oldValue.chars(), var->string);
+			}
+		}
 	}
 }
 
@@ -165,12 +149,8 @@ void CvarManager::CreateCvarHook(void)
 
 	if (functionAddress)
 	{
+		// Disabled by default.
 		m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, (void *)functionAddress);
-
-		if (m_HookDetour)
-		{
-			m_HookDetour->EnableDetour();
-		}
 	}
 }
 
@@ -375,7 +355,7 @@ void CvarManager::OnConsoleCommand()
 
 	int argcount = CMD_ARGC();
 
-	// amxx cvars <partial cvar name> <index from listing>
+	// amxx cvars [partial plugin name] [index from listing]
 	// E.g.:
 	//   amxx cvars test   <- list all cvars from plugin name starting by "test"
 	//   amxx cvars 2      <- show informations about cvar in position 2 from "amxx cvars" list

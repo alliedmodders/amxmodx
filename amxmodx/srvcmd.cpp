@@ -232,14 +232,14 @@ void amx_command()
 	} else {
 		print_srvconsole("Usage: amxx < command > [ argument ]\n");
 		print_srvconsole("Commands:\n");
-		print_srvconsole("   version                - display amxx version info\n");
-		print_srvconsole("   gpl                    - print the license\n");
-		print_srvconsole("   plugins                - list plugins currently loaded\n");
-		print_srvconsole("   modules                - list modules currently loaded\n");
-		print_srvconsole("   cvars [ plugin ]       - list cvars registered by plugins\n");
-		print_srvconsole("   cmds [ plugin ]        - list commands registered by plugins\n");
-		print_srvconsole("   pause < plugin >       - pause a running plugin\n");
-		print_srvconsole("   unpause < plugin >     - unpause a previously paused plugin\n");
+		print_srvconsole("   version                    - display amxx version info\n");
+		print_srvconsole("   gpl                        - print the license\n");
+		print_srvconsole("   plugins                    - list plugins currently loaded\n");
+		print_srvconsole("   modules                    - list modules currently loaded\n");
+		print_srvconsole("   cvars [ plugin ] [ index ] - list cvars handled by amxx or show informations about a cvar if index is provided\n");
+		print_srvconsole("   cmds [ plugin ]            - list commands registered by plugins\n");
+		print_srvconsole("   pause < plugin >           - pause a running plugin\n");
+		print_srvconsole("   unpause < plugin >         - unpause a previously paused plugin\n");
 	}
 }
 

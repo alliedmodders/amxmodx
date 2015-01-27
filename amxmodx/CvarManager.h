@@ -23,7 +23,7 @@ enum CvarBounds
 	CvarBound_Lower
 };
 
-struct Forward
+struct AutoForward
 {
 	enum fwdstate
 	{
@@ -32,10 +32,10 @@ struct Forward
 		FSTATE_STOP,
 	};
 
-	Forward(int id_, const char* handler) : id(id_), state(FSTATE_OK), callback(handler) {};
-	Forward()                             : id(-1) , state(FSTATE_INVALID) {};
+	AutoForward(int id_, const char* handler) : id(id_), state(FSTATE_OK), callback(handler) {};
+	AutoForward()                             : id(-1) , state(FSTATE_INVALID) {};
 
-	~Forward()
+	~AutoForward()
 	{
 		unregisterSPForward(id);
 	}
@@ -47,11 +47,11 @@ struct Forward
 
 struct CvarHook
 {
-	CvarHook(int id, Forward* fwd) : pluginId(id), forward(fwd) {};
-	CvarHook(int id)               : pluginId(id), forward(new Forward()) {};
+	CvarHook(int id, AutoForward* fwd) : pluginId(id), forward(fwd) {};
+	CvarHook(int id)                   : pluginId(id), forward(new AutoForward()) {};
 
 	int pluginId;
-	ke::AutoPtr<Forward> forward;
+	ke::AutoPtr<AutoForward> forward;
 };
 
 struct CvarBind
@@ -65,7 +65,10 @@ struct CvarBind
 
 	CvarBind(int id_, CvarType type_, cell* varAddress_, size_t varLength_)
 		: 
-		pluginId(id_), type(type_), varAddress(varAddress_), varLength(varLength_) {};
+		pluginId(id_), 
+		type(type_), 
+		varAddress(varAddress_), 
+		varLength(varLength_) {};
 
 	int      pluginId;
 	CvarType type;
@@ -73,8 +76,30 @@ struct CvarBind
 	size_t   varLength;
 };
 
+struct CvarBound
+{
+	CvarBound(bool hasMin_, float minVal_, bool hasMax_, float maxVal_, int minPluginId_, int maxPluginId_)
+		:
+		hasMin(hasMin_), hasMax(hasMax_), 
+		minVal(minVal_), maxVal(maxVal_),
+		minPluginId(minPluginId_), 
+		maxPluginId(maxPluginId_) {};
+
+	CvarBound()
+		:
+		hasMin(false), hasMax(false), 
+		minVal(0), maxVal(0) {};
+
+	bool    hasMin;
+	bool    hasMax;
+	float   minVal;
+	float   maxVal;
+	int     minPluginId;
+	int     maxPluginId;
+};
+
 typedef ke::Vector<CvarHook*> CvarsHook;
-typedef ke::Vector<CvarBind*>   CvarsBind;
+typedef ke::Vector<CvarBind*> CvarsBind;
 
 struct CvarInfo : public ke::InlineListNode<CvarInfo>
 {
@@ -83,29 +108,26 @@ struct CvarInfo : public ke::InlineListNode<CvarInfo>
 			 const char* plugin_, int pluginId_)
 		:
 		name(name_), description(helpText),	
-		hasMin(hasMin_), minVal(min_), hasMax(hasMax_), maxVal(max_),
+		bound(hasMin_, min_, hasMax_, max_, pluginId_, pluginId_),
 		plugin(plugin_), pluginId(pluginId_) {};
 
 	CvarInfo(const char* name_)
 		:
 		name(name_), defaultval(""), description(""), 
-		hasMin(false), minVal(0), hasMax(false), maxVal(0),
-		plugin(""), pluginId(-1), amxmodx(false) {};
+		bound(), plugin(""), pluginId(-1), amxmodx(false) {};
 
 	cvar_t*      var;
 	ke::AString  name;
 	ke::AString  defaultval;
 	ke::AString  description;
-	bool         hasMin;
-	bool         hasMax;
-	float        minVal;
-	float        maxVal;
 
 	ke::AString  plugin;
 	int          pluginId;
 
+	CvarBound    bound;
 	CvarsBind    binds;
 	CvarsHook    hooks;
+
 	bool         amxmodx;
 
 	static inline bool matches(const char *name, const CvarInfo* info)
@@ -137,7 +159,7 @@ class CvarManager
 		CvarInfo* FindCvar(size_t index);
 		bool      CacheLookup(const char* name, CvarInfo** info);
 
-		Forward*  HookCvarChange(cvar_t* var, AMX* amx, cell param, const char** callback);
+		AutoForward*  HookCvarChange(cvar_t* var, AMX* amx, cell param, const char** callback);
 
 		size_t    GetRegCvarsCount();
 

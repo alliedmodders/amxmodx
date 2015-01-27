@@ -10,6 +10,7 @@
 #include "CvarManager.h"
 #include "amxmodx.h"
 #include <CDetour/detours.h>
+#include <auto-string.h>
 
 CvarManager g_CvarManager;
 
@@ -27,20 +28,20 @@ bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
 		return true;
 	}
 
-	if (info->hasMin || info->hasMax) // cvar_s doesn't have min/max mechanism, so we check things here.
+	if (info->bound.hasMin || info->bound.hasMax) // cvar_s doesn't have min/max mechanism, so we check things here.
 	{
 		float fvalue = atof(value); 
 		bool oob = false;
 
-		if (info->hasMin && fvalue < info->minVal)
+		if (info->bound.hasMin && fvalue < info->bound.minVal)
 		{
 			oob = true;
-			fvalue = info->minVal;
+			fvalue = info->bound.minVal;
 		}
-		else if (info->hasMax && fvalue > info->maxVal)
+		else if (info->bound.hasMax && fvalue > info->bound.maxVal)
 		{
 			oob = true;
-			fvalue = info->maxVal;
+			fvalue = info->bound.maxVal;
 		}
 
 		if (oob) // Found value out of bound, set new value and block original call.
@@ -58,7 +59,7 @@ bool Cvar_DirectSet_Custom(cvar_t* var, const char* value)
 		{
 			CvarHook* hook = info->hooks[i];
 
-			if (hook->forward->state == Forward::FSTATE_OK) // Our callback can be enable/disabled by natives.
+			if (hook->forward->state == AutoForward::FSTATE_OK) // Our callback can be enable/disabled by natives.
 			{
 				int result = executeForwards(hook->forward->id, reinterpret_cast<cvar_t*>(var), var->string, value);
 
@@ -295,7 +296,7 @@ bool CvarManager::CacheLookup(const char* name, CvarInfo** info)
 	return m_Cache.retrieve(name, info);
 }
 
-Forward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, const char** callback)
+AutoForward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, const char** callback)
 {
 	CvarInfo* info = nullptr;
 
@@ -329,7 +330,7 @@ Forward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, const ch
 	// Detour is disabled on map change.
 	m_HookDetour->EnableDetour();
 	
-	Forward* forward = new Forward(forwardId, *callback);
+	AutoForward* forward = new AutoForward(forwardId, *callback);
 	info->hooks.append(new CvarHook(g_plugins.findPlugin(amx)->getId(), forward));
 
 	return forward;
@@ -340,26 +341,141 @@ size_t CvarManager::GetRegCvarsCount()
 	return m_AmxmodxCvars;
 }
 
+AutoString convertFlagsToString(int flags)
+{
+	AutoString flagsName;
+
+	if (flags > 0)
+	{
+		if (flags & FCVAR_ARCHIVE)          flagsName = flagsName + "FCVAR_ARCHIVE ";
+		if (flags & FCVAR_USERINFO)         flagsName = flagsName + "FCVAR_USERINFO ";
+		if (flags & FCVAR_SERVER)           flagsName = flagsName + "FCVAR_SERVER ";
+		if (flags & FCVAR_EXTDLL)           flagsName = flagsName + "FCVAR_EXTDLL ";
+		if (flags & FCVAR_CLIENTDLL)        flagsName = flagsName + "FCVAR_CLIENTDLL ";
+		if (flags & FCVAR_PROTECTED)        flagsName = flagsName + "FCVAR_PROTECTED ";
+		if (flags & FCVAR_SPONLY)           flagsName = flagsName + "FCVAR_SPONLY ";
+		if (flags & FCVAR_PRINTABLEONLY)    flagsName = flagsName + "FCVAR_PRINTABLEONLY ";
+		if (flags & FCVAR_UNLOGGED)         flagsName = flagsName + "FCVAR_UNLOGGED ";
+		if (flags & FCVAR_NOEXTRAWHITEPACE) flagsName = flagsName + "FCVAR_NOEXTRAWHITEPACE ";
+	}
+
+	if (!flagsName.length())
+	{
+		flagsName = "-";
+	}
+
+	return flagsName;
+}
+
 void CvarManager::OnConsoleCommand()
 {
-	print_srvconsole("Registered cvars:\n");
-	print_srvconsole("       %-24.23s %-24.23s %-16.15s\n", "name", "value", "plugin");
-
 	size_t index = 0;
-	ke::AString pluginName;
+	size_t indexToSearch = 0;
+	ke::AString partialName;
 
-	if (CMD_ARGC() > 2) // Searching for cvars registered to a plugin
+	int argcount = CMD_ARGC();
+
+	// amxx cvars <partial cvar name> <index from listing>
+	// E.g.:
+	//   amxx cvars test   <- list all cvars from plugin name starting by "test"
+	//   amxx cvars 2      <- show informations about cvar in position 2 from "amxx cvars" list
+	//   amxx cvars test 2 <- show informations about cvar in position 2 from "amxx cvars test" list
+
+	if (argcount > 2)
 	{
-		pluginName = CMD_ARGV(2);
+		const char* argument = CMD_ARGV(2);
+		
+		indexToSearch = atoi(argument); // amxx cvars 2
+
+		if (!indexToSearch)
+		{
+			partialName = argument; // amxx cvars test
+
+			if (argcount > 3)       // amxx cvars test 2
+			{
+				indexToSearch = atoi(CMD_ARGV(3));
+			}
+		}
+	}
+
+	if (!indexToSearch)
+	{
+		print_srvconsole("\nManaged cvars:\n");
+		print_srvconsole("       %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", "NAME", "VALUE", "PLUGIN", "BINDED", "HOOKED", "BOUNDED");
+		print_srvconsole(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n");
+
 	}
 
 	for (CvarsList::iterator iter = m_Cvars.begin(); iter != m_Cvars.end(); iter++)
 	{
 		CvarInfo* ci = (*iter);
 
-		if (ci->amxmodx && (!pluginName.length() || strncmp(ci->name.chars(), pluginName.chars(), pluginName.length()) == 0))
+		// List any cvars having a status either created, hooked, binded or bounded by a plugin.
+		bool in_list = ci->amxmodx || !ci->binds.empty() || !ci->hooks.empty() || ci->bound.hasMin || ci->bound.hasMax;
+
+		if (in_list && (!partialName.length() || strncmp(ci->plugin.chars(), partialName.chars(), partialName.length()) == 0))
 		{
-			print_srvconsole(" [%3d] %-24.23s %-24.23s %-16.15s\n", ++index, ci->name.chars(), ci->var->string, ci->plugin.chars());
+			if (!indexToSearch)
+			{
+				print_srvconsole(" [%3d] %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", ++index, ci->name.chars(), ci->var->string,
+								 ci->plugin.length() ? ci->plugin.chars() : "-",
+								 ci->binds.empty() ? "no" : "yes",
+								 ci->hooks.empty() ? "no" : "yes",
+								 ci->bound.hasMin || ci->bound.hasMax ? "yes" : "no");
+			}
+			else 
+			{	
+				if (++index != indexToSearch)
+				{
+					continue;
+				}
+
+				print_srvconsole("\nCvar details :\n\n");
+				print_srvconsole(" Cvar name   : %s\n", ci->var->name);
+				print_srvconsole(" Value       : %s\n", ci->var->string);
+				print_srvconsole(" Def. value  : %s\n", ci->defaultval.chars());
+				print_srvconsole(" Description : %s\n", ci->description.chars());
+				print_srvconsole(" Flags       : %s\n\n", convertFlagsToString(ci->var->flags).ptr());
+
+				print_srvconsole(" %-12s  %-26.25s %s\n", "STATUS", "PLUGIN", "INFOS");
+				print_srvconsole(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+			
+				if (ci->amxmodx)
+				{
+					print_srvconsole(" Registered    %-26.25s %s\n", ci->plugin.chars(), "-");
+				}
+
+				if (ci->bound.hasMin)
+				{
+					print_srvconsole(" Min Bounded   %-26.25s %f\n", g_plugins.findPlugin(ci->bound.minPluginId)->getName(), ci->bound.minVal);
+				}
+
+				if (ci->bound.hasMax)
+				{
+					print_srvconsole(" Max Bounded   %-26.25s %f\n", g_plugins.findPlugin(ci->bound.maxPluginId)->getName(), ci->bound.maxVal);
+				}
+
+				if (!ci->binds.empty())
+				{
+					for (size_t i = 0; i < ci->binds.length(); ++i)
+					{
+						print_srvconsole(" Binded        %-26.25s %s\n", g_plugins.findPlugin(ci->binds[i]->pluginId)->getName(), "-");
+					}
+				}
+
+				if (!ci->hooks.empty())
+				{
+					for (size_t i = 0; i < ci->hooks.length(); ++i)
+					{
+						CvarHook* hook = ci->hooks[i];
+
+						print_srvconsole(" Hooked        %-26.25s %s (%s)\n", g_plugins.findPlugin(hook->pluginId)->getName(),
+										 hook->forward->callback.chars(), 
+										 hook->forward->state == AutoForward::FSTATE_OK ? "active" : "inactive");
+					}
+				}
+				break;
+			}
 		}
 	}
 }
@@ -391,6 +507,7 @@ void CvarManager::OnPluginUnloaded()
 void CvarManager::OnAmxxShutdown()
 {
 	// Free everything.
+
 	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar = m_Cvars.erase(cvar))
 	{
 		for (size_t i = 0; i < (*cvar)->binds.length(); ++i)

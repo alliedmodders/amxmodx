@@ -92,7 +92,7 @@ static cell AMX_NATIVE_CALL hook_cvar_change(AMX *amx, cell *params)
 	}
 
 	const char* callback;
-	Forward* forward = g_CvarManager.HookCvarChange(var, amx, params[2], &callback);
+	AutoForward* forward = g_CvarManager.HookCvarChange(var, amx, params[2], &callback);
 
 	if (!forward)
 	{
@@ -106,7 +106,7 @@ static cell AMX_NATIVE_CALL hook_cvar_change(AMX *amx, cell *params)
 // enable_cvar_hook(cvarhook:handle);
 static cell AMX_NATIVE_CALL enable_cvar_hook(AMX *amx, cell *params)
 {
-	Forward* forward = reinterpret_cast<Forward*>(params[1]);
+	AutoForward* forward = reinterpret_cast<AutoForward*>(params[1]);
 
 	if (!forward)
 	{
@@ -114,7 +114,7 @@ static cell AMX_NATIVE_CALL enable_cvar_hook(AMX *amx, cell *params)
 		return 0;
 	}
 
-	forward->state = Forward::FSTATE_OK;
+	forward->state = AutoForward::FSTATE_OK;
 
 	return 1;
 }
@@ -122,7 +122,7 @@ static cell AMX_NATIVE_CALL enable_cvar_hook(AMX *amx, cell *params)
 // disable_cvar_hook(cvarhook:handle);
 static cell AMX_NATIVE_CALL disable_cvar_hook(AMX *amx, cell *params)
 {
-	Forward* forward = reinterpret_cast<Forward*>(params[1]);
+	AutoForward* forward = reinterpret_cast<AutoForward*>(params[1]);
 
 	if (!forward)
 	{
@@ -130,7 +130,7 @@ static cell AMX_NATIVE_CALL disable_cvar_hook(AMX *amx, cell *params)
 		return 0;
 	}
 
-	forward->state =  Forward::FSTATE_STOP;
+	forward->state =  AutoForward::FSTATE_STOP;
 
 	return 1;
 }
@@ -329,12 +329,12 @@ static cell AMX_NATIVE_CALL get_pcvar_bounds(AMX *amx, cell *params)
 	switch (params[2])
 	{
 		case CvarBound_Lower:
-			hasBound = info->hasMin;
-			bound = info->minVal;
+			hasBound = info->bound.hasMin;
+			bound = info->bound.minVal;
 			break;
 		case CvarBound_Upper:
-			hasBound = info->hasMax;
-			bound = info->maxVal;
+			hasBound = info->bound.hasMax;
+			bound = info->bound.maxVal;
 			break;
 		default:
 			LogError(amx, AMX_ERR_NATIVE, "Invalid CvarBounds value: %d", params[2]);
@@ -520,16 +520,19 @@ static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
 	}
 
 	bool set = params[3] > 0 ? true : false;
+	int pluginId = g_plugins.findPluginFast(amx)->getId();
 
 	switch (params[2])
 	{
 		case CvarBound_Lower:
-			info->hasMin = set;
-			info->minVal = set ? amx_ctof(params[4]) : 0;
+			info->bound.hasMin = set;
+			info->bound.minVal = set ? amx_ctof(params[4]) : 0;
+			info->bound.minPluginId = pluginId;
 			break;
 		case CvarBound_Upper:
-			info->hasMax = set;
-			info->maxVal = set ? amx_ctof(params[4]) : 0;
+			info->bound.hasMax = set;
+			info->bound.maxVal = set ? amx_ctof(params[4]) : 0;
+			info->bound.maxPluginId = pluginId;
 			break;
 		default:
 			LogError(amx, AMX_ERR_NATIVE, "Invalid CvarBounds value: %d", params[2]);

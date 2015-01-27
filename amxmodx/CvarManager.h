@@ -80,19 +80,19 @@ struct CvarBound
 {
 	CvarBound(bool hasMin_, float minVal_, bool hasMax_, float maxVal_, int minPluginId_, int maxPluginId_)
 		:
-		hasMin(hasMin_), hasMax(hasMax_), 
-		minVal(minVal_), maxVal(maxVal_),
+		hasMin(hasMin_), minVal(minVal_),
+		hasMax(hasMax_), maxVal(maxVal_),
 		minPluginId(minPluginId_), 
 		maxPluginId(maxPluginId_) {};
 
 	CvarBound()
 		:
-		hasMin(false), hasMax(false), 
-		minVal(0), maxVal(0) {};
+		hasMin(false), minVal(0), 
+		hasMax(false), maxVal(0) {};
 
 	bool    hasMin;
-	bool    hasMax;
 	float   minVal;
+	bool    hasMax;
 	float   maxVal;
 	int     minPluginId;
 	int     maxPluginId;
@@ -108,13 +108,13 @@ struct CvarInfo : public ke::InlineListNode<CvarInfo>
 			 const char* plugin_, int pluginId_)
 		:
 		name(name_), description(helpText),	
-		bound(hasMin_, min_, hasMax_, max_, pluginId_, pluginId_),
-		plugin(plugin_), pluginId(pluginId_) {};
+		plugin(plugin_), pluginId(pluginId_),
+		bound(hasMin_, min_, hasMax_, max_, pluginId_, pluginId_) {};
 
 	CvarInfo(const char* name_)
 		:
 		name(name_), defaultval(""), description(""), 
-		bound(), plugin(""), pluginId(-1), amxmodx(false) {};
+		plugin(""), pluginId(-1), bound(), amxmodx(false) {};
 
 	cvar_t*      var;
 	ke::AString  name;

@@ -23,8 +23,8 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 	const char* helpText = get_amxstring(amx, params[4], 2, length);
 
 	int flags    = params[3];
-	bool hasMin  = params[5] > 0 ? true : false;
-	bool hasMax  = params[7] > 0 ? true : false;
+	bool hasMin  = params[5] != 0;
+	bool hasMax  = params[7] != 0;
 	float minVal = 0;
 	float maxVal = 0;
 
@@ -536,7 +536,7 @@ static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
 		return 0;
 	}
 
-	bool set = params[3] > 0 ? true : false;
+	bool set = params[3] != 0;
 	int pluginId = g_plugins.findPluginFast(amx)->getId();
 	float value = 0;
 	bool should_update = false;

@@ -25,8 +25,30 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 	int flags    = params[3];
 	bool hasMin  = params[5] > 0 ? true : false;
 	bool hasMax  = params[7] > 0 ? true : false;
-	float minVal = amx_ctof(params[6]);
-	float maxVal = amx_ctof(params[8]);
+	float minVal = 0;
+	float maxVal = 0;
+
+	if (hasMin)
+	{
+		minVal = amx_ctof(params[6]);
+
+		if (hasMax && minVal > maxVal)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "A lower bound can't be above an upper bound");
+			return 0;
+		}
+	}
+	
+	if (hasMax)
+	{
+		maxVal = amx_ctof(params[8]);
+
+		if (hasMin && maxVal < minVal)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "An upper bound can't be below a lower bound");
+			return 0;
+		}
+	}
 
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 

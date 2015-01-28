@@ -154,7 +154,7 @@ void CvarManager::CreateCvarHook(void)
 	}
 }
 
-cvar_t* CvarManager::CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, int flags,
+CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, int flags,
 								const char* helpText, bool hasMin, float min, bool hasMax, float max)
 {
 	cvar_t*    var = nullptr;
@@ -215,20 +215,33 @@ cvar_t* CvarManager::CreateCvar(const char* name, const char* value, const char*
 		// Make sure that whether an existing or new cvar is set to the given value.
 		CVAR_DIRECTSET(var, value);
 	}
+	else if (info->pluginId == -1)
+	{
+		// In situation where a plugin has been modified/recompiled
+		// or new added plugins, and a change map occurs. We want to keep data up to date.
+		info->bound.hasMin = hasMin;
+		info->bound.minVal = min;
+		info->bound.hasMax = hasMax;
+		info->bound.maxVal = max;
+		info->defaultval   = value;
+		info->description  = helpText;
+		info->pluginId     = pluginId;
+	}
 
 	// Detour is disabled on map change.
-	m_HookDetour->EnableDetour();
+	// Don't enable it unless there are things to do.
+	if (info->bound.hasMin || info->bound.hasMax)
+	{
+		m_HookDetour->EnableDetour();
+	}
 
-	return info->var;
+	return info;
 }
 
 CvarInfo* CvarManager::FindCvar(const char* name)
 {
 	cvar_t* var = nullptr;
 	CvarInfo* info = nullptr;
-
-	// Detour is disabled on map change.
-	m_HookDetour->EnableDetour();
 
 	// Do we have already cvar in cache?
 	if (CacheLookup(name, &info))
@@ -314,6 +327,104 @@ AutoForward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, cons
 	info->hooks.append(new CvarHook(g_plugins.findPlugin(amx)->getId(), forward));
 
 	return forward;
+}
+
+bool CvarManager::BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, cell varofs, size_t varlen)
+{
+	if (varofs > amx->hlw) // If variable address is not inside global area, we can't bind it.
+	{
+		LogError(amx, AMX_ERR_NATIVE, "A global variable must be provided");
+		return false;
+	}
+
+	int pluginId = g_plugins.findPluginFast(amx)->getId();
+	cell* address = get_amxaddr(amx, varofs);
+
+	// To avoid unexpected behavior, probably better to error such situations.
+	for (size_t i = 0; i < info->binds.length(); ++i)
+	{
+		CvarBind* bind = info->binds[i];
+
+		if (bind->pluginId == pluginId)
+		{
+			if (bind->varAddress == address)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "A same variable can't be binded with several cvars");
+				return false;
+			}
+		}
+	}
+
+	CvarBind* bind = new CvarBind(pluginId, type, get_amxaddr(amx, varofs), varlen);
+
+	info->binds.append(bind);
+
+	// Update right away variable with current cvar value.
+	switch (type)
+	{
+		case CvarBind::CvarType_Int:
+			*bind->varAddress = atoi(info->var->string);
+			break;
+		case CvarBind::CvarType_Float:
+			*bind->varAddress = amx_ftoc(info->var->value);
+			break;
+		case CvarBind::CvarType_String:
+			set_amxstring_simple(bind->varAddress, info->var->string, bind->varLength);
+			break;
+	}
+
+	// Detour is disabled on map change.
+	m_HookDetour->EnableDetour();
+
+	return true;
+}
+
+bool CvarManager::SetCvarMin(CvarInfo* info, bool set, float value, int pluginId)
+{
+	info->bound.hasMin = set;
+	info->bound.minPluginId = pluginId;
+
+	if (set)
+	{
+		if (info->bound.hasMax && value > info->bound.maxVal)
+		{
+			return false;
+		}
+
+		info->bound.minVal = value;
+	
+		// Detour is disabled on map change.
+		m_HookDetour->EnableDetour();
+
+		// Update if needed.
+		CVAR_SET_FLOAT(info->var->name, value);
+	}
+
+	return true;
+}
+
+bool CvarManager::SetCvarMax(CvarInfo* info, bool set, float value, int pluginId)
+{
+	info->bound.hasMax = set;
+	info->bound.maxPluginId = pluginId;
+
+	if (set)
+	{
+		if (info->bound.hasMin && value < info->bound.minVal)
+		{
+			return false;
+		}
+
+		info->bound.maxVal = value;
+
+		// Detour is disabled on map change.
+		m_HookDetour->EnableDetour();
+
+		// Update if needed.
+		CVAR_SET_FLOAT(info->var->name, value);
+	}
+
+	return true;
 }
 
 size_t CvarManager::GetRegCvarsCount()
@@ -473,6 +584,11 @@ void CvarManager::OnPluginUnloaded()
 		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
 		{
 			delete (*cvar)->hooks[i];
+		}
+
+		if ((*cvar)->amxmodx) // Mark registered cvars so we can refresh default datas at next map.
+		{
+			(*cvar)->pluginId = -1;
 		}
 
 		(*cvar)->binds.clear();

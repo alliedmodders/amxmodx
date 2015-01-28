@@ -22,34 +22,8 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 	const char* value    = get_amxstring(amx, params[2], 1, length);
 	const char* helpText = get_amxstring(amx, params[4], 2, length);
 
-	int flags    = params[3];
-	bool hasMin  = params[5] != 0;
-	bool hasMax  = params[7] != 0;
-	float minVal = 0;
-	float maxVal = 0;
-
-	if (hasMin)
-	{
-		minVal = amx_ctof(params[6]);
-
-		if (hasMax && minVal > maxVal)
-		{
-			LogError(amx, AMX_ERR_NATIVE, "A lower bound can't be above an upper bound");
-			return 0;
-		}
-	}
+	int flags = params[3];
 	
-	if (hasMax)
-	{
-		maxVal = amx_ctof(params[8]);
-
-		if (hasMin && maxVal < minVal)
-		{
-			LogError(amx, AMX_ERR_NATIVE, "An upper bound can't be below a lower bound");
-			return 0;
-		}
-	}
-
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 
 	if (CheckBadConList(name, 0))
@@ -57,9 +31,31 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 		plugin->AddToFailCounter(1);
 	}
 
-	cvar_t* var = g_CvarManager.CreateCvar(name, value, plugin->getName(), plugin->getId(), flags, helpText, hasMin, minVal, hasMax, maxVal);
+	CvarInfo* info = g_CvarManager.CreateCvar(name, value, plugin->getName(), plugin->getId(), flags, helpText);
 
-	return reinterpret_cast<cell>(var);
+	if (info)
+	{
+		bool hasMin  = params[5] != 0;
+		bool hasMax  = params[7] != 0;
+		float minVal = amx_ctof(params[6]);
+		float maxVal = amx_ctof(params[8]);
+
+		if (!g_CvarManager.SetCvarMin(info, hasMin, minVal, plugin->getId()))
+		{
+			LogError(amx, AMX_ERR_NATIVE, "A lower bound can't be above an upper bound");
+			return 0;
+		}
+
+		if (!g_CvarManager.SetCvarMax(info, hasMax, maxVal, plugin->getId()))
+		{
+			LogError(amx, AMX_ERR_NATIVE, "An upper bound can't be below a lower bound");
+			return 0;
+		}
+
+		return reinterpret_cast<cell>(info->var);
+	}
+
+	return 0;
 }
 
 // register_cvar(const name[], const string[], flags=0, Float:fvalue=0.0)
@@ -79,9 +75,14 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params)
 		plugin->AddToFailCounter(1);
 	}
 
-	cvar_t* var = g_CvarManager.CreateCvar(name, value, plugin->getName(), plugin->getId(), flags);
+	CvarInfo* info = g_CvarManager.CreateCvar(name, value, plugin->getName(), plugin->getId(), flags);
 
-	return reinterpret_cast<cell>(var);
+	if (info)
+	{
+		return reinterpret_cast<cell>(info->var);
+	}
+
+	return 0;
 }
 
 // cvar_exists(const cvar[])
@@ -368,53 +369,6 @@ static cell AMX_NATIVE_CALL get_pcvar_bounds(AMX *amx, cell *params)
 	return hasBound;
 }
 
-bool bind_pcvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, cell varofs, size_t varlen = 0)
-{
-	if (varofs > amx->hlw) // If variable address is not inside global area, we can't bind it.
-	{
-		LogError(amx, AMX_ERR_NATIVE, "A global variable must be provided");
-		return false;
-	}
-
-	int pluginId = g_plugins.findPluginFast(amx)->getId();
-	cell* address = get_amxaddr(amx, varofs);
-
-	// To avoid unexpected behavior, probably better to error such situations.
-	for (size_t i = 0; i < info->binds.length(); ++i)
-	{
-		CvarBind* bind = info->binds[i];
-
-		if (bind->pluginId == pluginId)
-		{
-			if (bind->varAddress == address)
-			{
-				LogError(amx, AMX_ERR_NATIVE, "A same variable can't be binded with several cvars");
-				return false;
-			}
-		}
-	}
-
-	CvarBind* bind = new CvarBind(pluginId, type, get_amxaddr(amx, varofs), varlen);
-
-	info->binds.append(bind);
-
-	// Update right away variable with current cvar value.
-	switch (type)
-	{
-		case CvarBind::CvarType_Int:
-			*bind->varAddress = atoi(info->var->string);
-			break;
-		case CvarBind::CvarType_Float:
-			*bind->varAddress = amx_ftoc(info->var->value);
-			break;
-		case CvarBind::CvarType_String:
-			set_amxstring_simple(bind->varAddress, info->var->string, bind->varLength);
-			break;
-	}
-
-	return true;
-}
-
 // bind_pcvar_float(pcvar, &Float:var)
 static cell AMX_NATIVE_CALL bind_pcvar_float(AMX *amx, cell *params)
 {
@@ -427,7 +381,7 @@ static cell AMX_NATIVE_CALL bind_pcvar_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return bind_pcvar(info, CvarBind::CvarType_Float, amx, params[2]);
+	return g_CvarManager.BindCvar(info, CvarBind::CvarType_Float, amx, params[2]);
 }
 
 // bind_pcvar_num(pcvar, &any:var)
@@ -442,7 +396,7 @@ static cell AMX_NATIVE_CALL bind_pcvar_num(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return bind_pcvar(info, CvarBind::CvarType_Int, amx, params[2]);
+	return g_CvarManager.BindCvar(info, CvarBind::CvarType_Int, amx, params[2]);
 }
 
 // bind_pcvar_string(pcvar, any:var[], varlen)
@@ -457,7 +411,7 @@ static cell AMX_NATIVE_CALL bind_pcvar_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return bind_pcvar(info, CvarBind::CvarType_String, amx, params[2], params[3]);
+	return g_CvarManager.BindCvar(info, CvarBind::CvarType_String, amx, params[2], params[3]);
 }
 
 // set_pcvar_flags(pcvar, flags)
@@ -538,53 +492,26 @@ static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
 
 	bool set = params[3] != 0;
 	int pluginId = g_plugins.findPluginFast(amx)->getId();
-	float value = 0;
-	bool should_update = false;
+	float value  = amx_ctof(params[4]);
 
 	switch (params[2])
 	{
 		case CvarBound_Lower:
 		{
-			info->bound.hasMin = set;
-
-			if (set)
+			if (!g_CvarManager.SetCvarMin(info, set, value, pluginId))
 			{
-				value = amx_ctof(params[4]);
-
-				if (info->bound.hasMax && value > info->bound.maxVal)
-				{
-					LogError(amx, AMX_ERR_NATIVE, "A lower bound can't be above an upper bound");
-					return 0;
-				}
-
-				should_update = true;
-
-				info->bound.minVal = value;
-				info->bound.minPluginId = pluginId;
+				LogError(amx, AMX_ERR_NATIVE, "A lower bound can't be above an upper bound");
+				return 0;
 			}
-
 			break;
 		}
 		case CvarBound_Upper:
 		{
-			info->bound.hasMax = set;
-
-			if (set)
+			if (!g_CvarManager.SetCvarMax(info, set, value, pluginId))
 			{
-				value = amx_ctof(params[4]);
-
-				if (info->bound.hasMin && value < info->bound.minVal)
-				{
-					LogError(amx, AMX_ERR_NATIVE, "An upper bound can't be below a lower bound");
-					return 0;
-				}
-
-				should_update = true;
-
-				info->bound.maxVal = value;
-				info->bound.maxPluginId = pluginId;
+				LogError(amx, AMX_ERR_NATIVE, "An upper bound can't be below a lower bound");
+				return 0;
 			}
-
 			break;
 		}
 		default:
@@ -592,11 +519,6 @@ static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
 			LogError(amx, AMX_ERR_NATIVE, "Invalid CvarBounds value: %d", params[2]);
 			return 0;
 		}
-	}
-
-	if (should_update)
-	{
-		CVAR_SET_FLOAT(ptr->name, value);
 	}
 
 	return 1;

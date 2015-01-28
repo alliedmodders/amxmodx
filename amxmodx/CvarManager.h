@@ -150,7 +150,7 @@ class CvarManager
 
 		void      CreateCvarHook();
 
-		cvar_t*   CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, 
+		CvarInfo* CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, 
 							 int flags = 0, const char* helpText = "",
 							 bool hasMin = false, float min = 0, 
 							 bool hasMax = false, float max = 0);
@@ -160,6 +160,9 @@ class CvarManager
 		bool      CacheLookup(const char* name, CvarInfo** info);
 
 		AutoForward*  HookCvarChange(cvar_t* var, AMX* amx, cell param, const char** callback);
+		bool          BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, cell varofs, size_t varlen = 0);
+		bool          SetCvarMin(CvarInfo* info, bool set, float value, int pluginId);
+		bool          SetCvarMax(CvarInfo* info, bool set, float value, int pluginId);
 
 		size_t    GetRegCvarsCount();
 

@@ -48,9 +48,9 @@ DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, valu
 			return;
 		}
 	}
-	
+
 	ke::AString oldValue; // We save old value since it will be likely changed after original function called.
-	
+
 	if (!info->hooks.empty())
 	{
 		oldValue = var->string;
@@ -58,7 +58,7 @@ DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, valu
 
 	DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
 
-	if (!info->binds.empty()) 
+	if (!info->binds.empty())
 	{
 		for (size_t i = 0; i < info->binds.length(); ++i)
 		{
@@ -155,7 +155,7 @@ void CvarManager::CreateCvarHook(void)
 }
 
 CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, int flags,
-								const char* helpText, bool hasMin, float min, bool hasMax, float max)
+								  const char* helpText, bool hasMin, float min, bool hasMax, float max)
 {
 	cvar_t*    var = nullptr;
 	CvarInfo* info = nullptr;
@@ -294,8 +294,8 @@ AutoForward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, cons
 	CvarInfo* info = nullptr;
 
 	// A cvar is guaranteed to be in cache if pointer is got from
-	// get_cvar_pointer and register_cvar natives. Though it might be 
-	// provided by another way. If by any chance we run in such 
+	// get_cvar_pointer and register_cvar natives. Though it might be
+	// provided by another way. If by any chance we run in such
 	// situation, we create a new entry right now.
 
 	if (!CacheLookup(var->name, &info))
@@ -322,7 +322,7 @@ AutoForward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, cons
 
 	// Detour is disabled on map change.
 	m_HookDetour->EnableDetour();
-	
+
 	AutoForward* forward = new AutoForward(forwardId, *callback);
 	info->hooks.append(new CvarHook(g_plugins.findPlugin(amx)->getId(), forward));
 
@@ -333,7 +333,7 @@ bool CvarManager::BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, ce
 {
 	if (varofs > amx->hlw) // If variable address is not inside global area, we can't bind it.
 	{
-		LogError(amx, AMX_ERR_NATIVE, "A global variable must be provided");
+		LogError(amx, AMX_ERR_NATIVE, "Cvars can only be bound to global variables");
 		return false;
 	}
 
@@ -349,7 +349,7 @@ bool CvarManager::BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, ce
 		{
 			if (bind->varAddress == address)
 			{
-				LogError(amx, AMX_ERR_NATIVE, "A same variable can't be binded with several cvars");
+				LogError(amx, AMX_ERR_NATIVE, "A global variable can not be bound to multiple Cvars");
 				return false;
 			}
 		}
@@ -392,7 +392,7 @@ bool CvarManager::SetCvarMin(CvarInfo* info, bool set, float value, int pluginId
 		}
 
 		info->bound.minVal = value;
-	
+
 		// Detour is disabled on map change.
 		m_HookDetour->EnableDetour();
 
@@ -475,7 +475,7 @@ void CvarManager::OnConsoleCommand()
 	if (argcount > 2)
 	{
 		const char* argument = CMD_ARGV(2);
-		
+
 		indexToSearch = atoi(argument); // amxx cvars 2
 
 		if (!indexToSearch)
@@ -492,16 +492,15 @@ void CvarManager::OnConsoleCommand()
 	if (!indexToSearch)
 	{
 		print_srvconsole("\nManaged cvars:\n");
-		print_srvconsole("       %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", "NAME", "VALUE", "PLUGIN", "BINDED", "HOOKED", "BOUNDED");
+		print_srvconsole("       %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", "NAME", "VALUE", "PLUGIN", "BOUND", "HOOKED", "BOUNDED");
 		print_srvconsole(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n");
-
 	}
 
 	for (CvarsList::iterator iter = m_Cvars.begin(); iter != m_Cvars.end(); iter++)
 	{
 		CvarInfo* ci = (*iter);
 
-		// List any cvars having a status either created, hooked, binded or bounded by a plugin.
+		// List any cvars having a status either created, hooked or bound by a plugin.
 		bool in_list = ci->amxmodx || !ci->binds.empty() || !ci->hooks.empty() || ci->bound.hasMin || ci->bound.hasMax;
 
 		if (in_list && (!partialName.length() || strncmp(ci->plugin.chars(), partialName.chars(), partialName.length()) == 0))
@@ -514,8 +513,8 @@ void CvarManager::OnConsoleCommand()
 								 ci->hooks.empty() ? "no" : "yes",
 								 ci->bound.hasMin || ci->bound.hasMax ? "yes" : "no");
 			}
-			else 
-			{	
+			else
+			{
 				if (++index != indexToSearch)
 				{
 					continue;
@@ -530,7 +529,7 @@ void CvarManager::OnConsoleCommand()
 
 				print_srvconsole(" %-12s  %-26.25s %s\n", "STATUS", "PLUGIN", "INFOS");
 				print_srvconsole(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-			
+
 				if (ci->amxmodx)
 				{
 					print_srvconsole(" Registered    %-26.25s %s\n", ci->plugin.chars(), "-");
@@ -538,19 +537,19 @@ void CvarManager::OnConsoleCommand()
 
 				if (ci->bound.hasMin)
 				{
-					print_srvconsole(" Min Bounded   %-26.25s %f\n", g_plugins.findPlugin(ci->bound.minPluginId)->getName(), ci->bound.minVal);
+					print_srvconsole(" Min value   %-26.25s %f\n", g_plugins.findPlugin(ci->bound.minPluginId)->getName(), ci->bound.minVal);
 				}
 
 				if (ci->bound.hasMax)
 				{
-					print_srvconsole(" Max Bounded   %-26.25s %f\n", g_plugins.findPlugin(ci->bound.maxPluginId)->getName(), ci->bound.maxVal);
+					print_srvconsole(" Max value   %-26.25s %f\n", g_plugins.findPlugin(ci->bound.maxPluginId)->getName(), ci->bound.maxVal);
 				}
 
 				if (!ci->binds.empty())
 				{
 					for (size_t i = 0; i < ci->binds.length(); ++i)
 					{
-						print_srvconsole(" Binded        %-26.25s %s\n", g_plugins.findPlugin(ci->binds[i]->pluginId)->getName(), "-");
+						print_srvconsole(" Bound        %-26.25s %s\n", g_plugins.findPlugin(ci->binds[i]->pluginId)->getName(), "-");
 					}
 				}
 
@@ -561,7 +560,7 @@ void CvarManager::OnConsoleCommand()
 						CvarHook* hook = ci->hooks[i];
 
 						print_srvconsole(" Hooked        %-26.25s %s (%s)\n", g_plugins.findPlugin(hook->pluginId)->getName(),
-										 hook->forward->callback.chars(), 
+										 hook->forward->callback.chars(),
 										 hook->forward->state == AutoForward::FSTATE_OK ? "active" : "inactive");
 					}
 				}

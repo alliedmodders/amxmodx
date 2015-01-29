@@ -8,7 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #if defined _cvars_included
-	#endinput
+    #endinput
 #endif
 #define _cvars_included
 
@@ -30,7 +30,7 @@
 /**
  * Creates a new cvar for the engine.
  *
- * @note This is same as regitser_cvar but with more options.
+ * @note This has the same effect as register_cvar but provides more options.
  * @note For a list of possible cvar flags see FCVAR_* constants above.
  * @note If an already existing cvar is registered it will not be duplicated.
  * @note The returned cvar pointer should be used with the get_pcvar_* and
@@ -38,12 +38,12 @@
  *
  * @param name        Cvar name
  * @param string      Default cvar value
- * @param flags       Optional bitstring of flags determining how the convar should be handled
+ * @param flags       Optional bitsum of flags specifying cvar behavior
  * @param description Optional description of the cvar
- * @param has_min     Optional boolean that determines if the convar has a minimum valu
- * @param min_val     Minimum floating point value that the convar can have if has_min is true
- * @param has_max     Optional boolean that determines if the convar has a maximum value
- * @param max_val     Maximum floating point value that the convar can have if has_max is true
+ * @param has_min     Optional boolean that specifies if the cvar has a minimum value
+ * @param min_val     Minimum floating point value
+ * @param has_max     Optional boolean that specifies if the cvar has a maximum value
+ * @param max_val     Maximum floating point value
  *
  * @return          Unique cvar pointer
  */
@@ -60,7 +60,7 @@ native create_cvar(const name[], const string[], flags = FCVAR_NONE, const descr
  *
  * @param name      Cvar name
  * @param string    Default cvar value
- * @param flags     Cvar flags
+ * @param flags     Optional bitsum of flags specifying cvar behavior
  * @param fvalue    Unused
  *
  * @return          Unique cvar pointer
@@ -91,9 +91,8 @@ native get_cvar_pointer(const cvar[]);
 /**
  * Creates a hook for when a cvar's value is changed.
  *
- * @note You cannot prevent cvar changes from happening, you can only change the value again.
- * @note Be careful not to set a cvar inside a cvar change hook such that 
- *       it re-invokes he same callback. This results in infinite recursion.
+ * @note Changing the cvar value from within this forward can lead to infinite
+ *       recursion and should be avoided.
  * @note Callback will be called in the following manner:
  *
  *       public cvar_change_callback(pcvar, const old_value[], const new_value[])
@@ -102,16 +101,20 @@ native get_cvar_pointer(const cvar[]);
  *       old_value     - String containing the value of the cvar before it was changed
  *       new_value     - String containing the new value of the cvar
  *
+ *       The return value is ignored
+ *
  * @param pcvar         Pointer to cvar
  * @param callback      Name of callback function
- * @error               Invalid pointer or invalid callback function
+ *
+ * @return              Callback handle that can be used with [disable|enable]_cvar_hook
+ * @error               Invalid cvar pointer or invalid callback function
  */
 native cvarhook:hook_cvar_change(pcvar, const callback[]);
 
 /**
  * Stops a cvar hook forward from triggering.
  *
- * @note  Use the return value from hook_cvar_change as the parameter here.
+ * @note  Use the handle returned by hook_cvar_change as the parameter here.
  *
  * @param handle        Forward to stop
  * @error               Invalid hook handle
@@ -121,7 +124,7 @@ native disable_cvar_hook(cvarhook:handle);
 /**
  * Starts a cvar hook forward back up.
  *
- * @note  Use the return value from hook_cvar_change as the parameter here.
+ * @note  Use the handle returned by hook_cvar_change as the parameter here.
  *
  * @param handle        Forward to back up
  * @error               Invalid hook handle
@@ -390,16 +393,16 @@ native set_pcvar_string(pcvar, const string[]);
  */
 enum CvarBounds
 {
-	CvarBound_Upper = 0,
-	CvarBound_Lower
+    CvarBound_Upper = 0,
+    CvarBound_Lower
 };
 
 /**
- * Retrieves the specified bound of a cvar.
+ * Retrieves the specified value bounds of a cvar.
  *
  * @param pcvar     Pointer to cvar
  * @param type      Type of bound to retrieve, CvarBound_Lower or CvarBound_Upper
- * @param value     By-reference cell to store the specified floating point bound value
+ * @param value     Variable to store the specified bound to
  *
  * @return          True if the cvar has the specified bound set, false otherwise.
  * @error           If an invalid cvar pointer or CvarBounds value, an error is thrown.
@@ -407,7 +410,7 @@ enum CvarBounds
 native bool:get_pcvar_bounds(pcvar, CvarBounds:type, &Float:value);
 
 /**
- * Sets the specified bound of a cvar.
+ * Sets the specified bounds of a cvar.
  *
  * @param pcvar     Pointer to cvar
  * @param type      Type of bound to set, CvarBound_Lower or CvarBound_Upper
@@ -419,34 +422,46 @@ native bool:get_pcvar_bounds(pcvar, CvarBounds:type, &Float:value);
 native set_pcvar_bounds(pcvar, CvarBounds:type, bool:set, Float:value = 0.0);
 
 /**
- * Binds a cvar to a global integer variable.
- * This means that variable will be automagically updated on cvar's value change.
+ * Binds a cvar's integer value to a global variable. The variable will then
+ * always contain the current cvar value as it is automatically kept up to date.
+ *
+ * @note The variable *has* to be a global or a static variable. Local variables
+ *       created within functions can not be used for technical reasons.
+ * @note Variables can not be bound to multiple cvars.
  *
  * @param pcvar     Pointer to cvar
- * @param var       Global variable to update to
+ * @param var       Global variable to keep updated
  *
  * @error           Invalid cvar pointer, invalid provided variable or cvar/variable already binded.
  */
 native bind_pcvar_num(pcvar, &any:var);
 
 /**
- * Binds a cvar to a global float variable.
- * This means that variable will be automagically updated on cvar's value change.
+ * Binds a cvar's float value to a global variable. The variable will then
+ * always contain the current cvar value as it is automatically kept up to date.
+ *
+ * @note The variable *has* to be a global or a static variable. Local variables
+ *       created within functions can not be used for technical reasons.
+ * @note Variables can not be bound to multiple cvars.
  *
  * @param pcvar     Pointer to cvar
- * @param var       Global variable to update to
+ * @param var       Global variable to keep updated
  *
  * @error           Invalid cvar pointer, invalid provided variable or cvar/variable already binded.
  */
 native bind_pcvar_float(pcvar, &Float:var);
 
 /**
- * Binds a cvar to a global string variable.
- * This means that variable will be automagically updated on cvar's value change.
+ * Binds a cvar's string value to a global array. The array will then
+ * always contain the current cvar value as it is automatically kept up to date.
+ *
+ * @note The array *has* to be a global or a static array. Local arrays
+ *       created within functions can not be used for technical reasons.
+ * @note Arrays can not be bound to multiple cvars.
  *
  * @param pcvar     Pointer to cvar
- * @param var       Global variable to update to
- * @param varlen    Maximum length of string buffer
+ * @param var       Global array to keep updated
+ * @param varlen    Maximum length of string array
  *
  * @error           Invalid cvar pointer, invalid provided variable or cvar/variable already binded.
  */

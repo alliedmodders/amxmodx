@@ -12,7 +12,7 @@
 #include "nongpl_matches.h"
 
 char CVarTempBuffer[64];
-const char *invis_cvar_list[5] = { "amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages" };
+const char *invis_cvar_list[5] ={ "amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages" };
 
 // create_cvar(const name[], const default_value[], flags = 0, const description[] = "", bool:has_min = false, Float:min_val = 0.0, bool:has_max = false, Float:max_val = 0.0)
 static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
@@ -23,7 +23,7 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 	const char* helpText = get_amxstring(amx, params[4], 2, length);
 
 	int flags = params[3];
-	
+
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 
 	if (CheckBadConList(name, 0))
@@ -42,13 +42,13 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 
 		if (!g_CvarManager.SetCvarMin(info, hasMin, minVal, plugin->getId()))
 		{
-			LogError(amx, AMX_ERR_NATIVE, "A lower bound can't be above an upper bound");
+			LogError(amx, AMX_ERR_NATIVE, "The minimum value can not be above the maximum value");
 			return 0;
 		}
 
 		if (!g_CvarManager.SetCvarMax(info, hasMax, maxVal, plugin->getId()))
 		{
-			LogError(amx, AMX_ERR_NATIVE, "An upper bound can't be below a lower bound");
+			LogError(amx, AMX_ERR_NATIVE, "The maximum value can not be below the minimum value");
 			return 0;
 		}
 
@@ -500,7 +500,7 @@ static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
 		{
 			if (!g_CvarManager.SetCvarMin(info, set, value, pluginId))
 			{
-				LogError(amx, AMX_ERR_NATIVE, "A lower bound can't be above an upper bound");
+				LogError(amx, AMX_ERR_NATIVE, "The minimum value can not be above the maximum value");
 				return 0;
 			}
 			break;
@@ -509,7 +509,7 @@ static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
 		{
 			if (!g_CvarManager.SetCvarMax(info, set, value, pluginId))
 			{
-				LogError(amx, AMX_ERR_NATIVE, "An upper bound can't be below a lower bound");
+				LogError(amx, AMX_ERR_NATIVE, "The maximum value can not be below the minimum value");
 				return 0;
 			}
 			break;
@@ -670,7 +670,6 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 	return 1;
 }
 
-
 AMX_NATIVE_INFO g_CvarNatives[] =
 {
 	{"create_cvar",				create_cvar},
@@ -714,7 +713,7 @@ AMX_NATIVE_INFO g_CvarNatives[] =
 
 	{"get_plugins_cvar",		get_plugins_cvar},
 	{"get_plugins_cvarsnum",	get_plugins_cvarsnum},
-	
+
 	{"query_client_cvar",		query_client_cvar},
 
 	{NULL,						NULL}

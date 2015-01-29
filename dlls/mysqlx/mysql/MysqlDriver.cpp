@@ -52,10 +52,21 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 		return NULL;
 	}
 
-	if (do_timeout && info->max_timeout)
+	decltype(info->max_timeout) timeout = atoi(LOCALINFO("mysql_timeout"));
+
+	if (timeout <= 0)
 	{
-		mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *)&(info->max_timeout));
+		timeout = 60;
 	}
+
+	if (do_timeout && info->max_timeout > 0)
+	{
+		timeout = info->max_timeout;
+	}
+
+	mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *)&timeout);
+	mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, (const char *)&timeout);
+	mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, (const char *)&timeout);
 
 	/** Have MySQL automatically reconnect if it times out or loses connection.
 	 * This will prevent "MySQL server has gone away" errors after a while.

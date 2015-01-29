@@ -73,6 +73,7 @@ public plugin_init()
 	register_cvar("amx_sql_pass", "", FCVAR_PROTECTED)
 	register_cvar("amx_sql_db", "amx", FCVAR_PROTECTED)
 	register_cvar("amx_sql_type", "mysql", FCVAR_PROTECTED)
+	register_cvar("amx_sql_timeout", "60", FCVAR_PROTECTED)
 
 	register_concmd("amx_reloadadmins", "cmdReload", ADMIN_CFG)
 	register_concmd("amx_addadmin", "addadminfn", ADMIN_RCON, "<playername|auth> <accessflags> [password] [authtype] - add specified player as an admin to users.ini")

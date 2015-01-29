@@ -2,7 +2,7 @@
 ; Licensed under the GNU General Public License
 ; Originally written by -=HaXoMaTiC=-
 !define PRODUCT_NAME "AMX Mod X Installer"
-!define PRODUCT_VERSION "1.8.2"
+!define PRODUCT_VERSION "1.8.3"
 !define PRODUCT_PUBLISHER "AMX Mod X Dev Team"
 !define PRODUCT_WEB_SITE "http://www.amxmodx.org/"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Installer.exe"

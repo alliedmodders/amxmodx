@@ -172,8 +172,8 @@ static cell nvault_set(AMX *amx, cell *params)
 	}
 	NVault *pVault = g_Vaults.at(id);
 	int len;
-	char *key = MF_GetAmxString(amx, params[2], 0, &len);
-	char *val = MF_FormatAmxString(amx, params, 3, &len);
+	const char *key = MF_GetAmxString(amx, params[2], 0, &len);
+	const char *val = MF_GetAmxString(amx, params[3], 1, &len);
 
 	pVault->SetValue(key, val);
 
@@ -190,8 +190,8 @@ static cell nvault_pset(AMX *amx, cell *params)
 	}
 	NVault *pVault = g_Vaults.at(id);
 	int len;
-	char *key = MF_GetAmxString(amx, params[2], 0, &len);
-	char *val = MF_FormatAmxString(amx, params, 3, &len);
+	const char *key = MF_GetAmxString(amx, params[2], 0, &len);
+	const char *val = MF_GetAmxString(amx, params[3], 1, &len);
 
 	pVault->SetValue(key, val, 0);
 

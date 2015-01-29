@@ -219,10 +219,10 @@ CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const cha
 	{
 		// In situation where a plugin has been modified/recompiled
 		// or new added plugins, and a change map occurs. We want to keep data up to date.
-		info->bound.hasMin = hasMin;
-		info->bound.minVal = min;
-		info->bound.hasMax = hasMax;
-		info->bound.maxVal = max;
+		info->bound.hasMin = false;
+		info->bound.minVal = 0;
+		info->bound.hasMax = false;
+		info->bound.maxVal = 0;
 		info->defaultval   = value;
 		info->description  = helpText;
 		info->pluginId     = pluginId;

@@ -14,6 +14,7 @@
 #include "CstrikeDatas.h"
 #include "CstrikePlayer.h"
 #include "CstrikeUtils.h"
+#include "CstrikeHLTypeConversion.h"
 
 CCstrikePlayer g_players[33];
 int g_zooming[33] = {0};
@@ -1708,6 +1709,7 @@ static cell AMX_NATIVE_CALL cs_set_c4_defusing(AMX* amx, cell* params)
 }
 
 extern CreateNamedEntityFunc CS_CreateNamedEntity;
+extern UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
 
 // cs_create_entity(const classname[])
 static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
@@ -1722,6 +1724,26 @@ static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
 		if (!FNullEnt(pEnt))
 		{
 			return ENTINDEX(pEnt);
+		}
+	}
+
+	return 0;
+}
+
+// cs_find_ent_by_class(start_index, const classname[])
+static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
+{
+	if (CS_UTIL_FindEntityByString > 0)
+	{
+		int len;
+		void* pEntity = G_HL_TypeConversion.id_to_cbase(params[1]);
+		const char* value = MF_GetAmxString(amx, params[2], 0, &len);
+
+		int index = G_HL_TypeConversion.cbase_to_id(CS_UTIL_FindEntityByString(pEntity, "classname", value));
+
+		if (index != -1)
+		{
+			return index;
 		}
 	}
 
@@ -1814,6 +1836,7 @@ AMX_NATIVE_INFO CstrikeNatives[] = {
 	{"cs_get_c4_defusing",			cs_get_c4_defusing},
 	{"cs_set_c4_defusing",			cs_set_c4_defusing},
 	{"cs_create_entity",			cs_create_entity },	
+	{"cs_find_ent_by_class",		cs_find_ent_by_class },	
 
 	{NULL,							NULL}
 };

@@ -15,7 +15,7 @@ PUBLIC_ROOT = ../../../public
 
 PROJECT = cstrike
 
-OBJECTS = amxxmodule.cpp amxx_api.cpp CstrikePlayer.cpp CstrikeNatives.cpp CstrikeHacks.cpp CstrikeUtils.cpp \
+OBJECTS = amxxmodule.cpp amxx_api.cpp CstrikePlayer.cpp CstrikeNatives.cpp CstrikeHacks.cpp CstrikeUtils.cpp CstrikeHLTypeConversion.cpp \
 			MemoryUtils.cpp detours.cpp asm.c
 
 ##############################################

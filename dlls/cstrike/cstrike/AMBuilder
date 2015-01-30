@@ -14,6 +14,7 @@ binary.sources = [
   'CstrikeNatives.cpp',
   'CstrikeHacks.cpp',
   'CstrikeUtils.cpp',
+  'CstrikeHLTypeConversion.cpp',
   '../../../public/memtools/MemoryUtils.cpp',
   '../../../public/memtools/CDetour/detours.cpp',
   '../../../public/memtools/CDetour/asm/asm.c',

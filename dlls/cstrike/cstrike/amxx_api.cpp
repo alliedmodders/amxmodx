@@ -14,6 +14,7 @@
 #include "amxxmodule.h"
 #include "CstrikeUtils.h"
 #include "CstrikeDatas.h"
+#include "CstrikeHLTypeConversion.h"
 
 extern AMX_NATIVE_INFO CstrikeNatives[];
 
@@ -26,7 +27,8 @@ void ShutdownHacks();
 void ToggleDetour_ClientCommands(bool enable);
 void ToggleDetour_BuyCommands(bool enable);
 
-CreateNamedEntityFunc CS_CreateNamedEntity = NULL;
+CreateNamedEntityFunc CS_CreateNamedEntity = nullptr;
+UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString = nullptr;
 
 int AmxxCheckGame(const char *game)
 {
@@ -44,8 +46,14 @@ void OnAmxxAttach()
 
 	InitializeHacks();
 
-	// cs_create_entity().
+	// cs_create_entity()
 	CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(UTIL_FindAddressFromEntry(CS_IDENT_CREATENAMEDENTITY, CS_IDENT_HIDDEN_STATE));
+	
+	// cs_find_ent_by_class()
+	CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(UTIL_FindAddressFromEntry(CS_IDENT_UTIL_FINDENTITYBYSTRING, CS_IDENT_HIDDEN_STATE));
+
+	// Search pev offset automatically.
+	G_OffsetHandler = new OffsetHandler;
 }
 
 void OnPluginsLoaded()

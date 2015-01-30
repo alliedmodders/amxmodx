@@ -65,6 +65,20 @@ cell* get_amxaddr(AMX *amx, cell amx_addr)
 	return (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
 }
 
+int set_amxstring_simple(cell *dest, const char *source, int max)
+{
+	cell* start = dest;
+
+	while (max-- && *source)
+	{
+		*dest++ = (unsigned char)*source++;
+	}
+
+	*dest = 0;
+
+	return dest - start;
+}
+
 int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max)
 {
 	register cell* dest = (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));

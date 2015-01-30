@@ -31,6 +31,7 @@
 #include "trie_natives.h"
 #include "CDataPack.h"
 #include "textparse.h"
+#include "CvarManager.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -63,7 +64,6 @@ extern CVector<CAdminData *> DynamicAdmins;
 CLog g_log;
 CForwardMngr g_forwards;
 CList<CPlayer*> g_auth;
-CList<CCVar> g_cvars;
 CList<ForceObject> g_forcemodels;
 CList<ForceObject> g_forcesounds;
 CList<ForceObject> g_forcegeneric;
@@ -121,7 +121,7 @@ cvar_t init_amxmodx_modules = {"amxmodx_modules", "", FCVAR_SPONLY};
 cvar_t init_amxmodx_debug = {"amx_debug", "1", FCVAR_SPONLY};
 cvar_t init_amxmodx_mldebug = {"amx_mldebug", "", FCVAR_SPONLY};
 cvar_t init_amxmodx_language = {"amx_language", "en", FCVAR_SERVER};
-cvar_t init_amxmodx_cl_langs = {"amx_client_languages", "", FCVAR_SERVER};
+cvar_t init_amxmodx_cl_langs = {"amx_client_languages", "1", FCVAR_SERVER};
 cvar_t* amxmodx_version = NULL;
 cvar_t* amxmodx_modules = NULL;
 cvar_t* amxmodx_language = NULL;
@@ -697,6 +697,9 @@ void C_ServerDeactivate_Post()
 	g_vault.clear();
 	g_xvars.clear();
 	g_plugins.clear();
+
+	g_CvarManager.OnPluginUnloaded();
+
 	ClearPluginLibraries();
 	modules_callPluginsUnloaded();
 
@@ -1488,6 +1491,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	GET_HOOK_TABLES(PLID, &g_pEngTable, NULL, NULL);
 
 	FlagMan.SetFile("cmdaccess.ini");
+
+	g_CvarManager.CreateCvarHook();
 	
 	return (TRUE);
 }
@@ -1517,7 +1522,6 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	g_vault.clear();
 	g_xvars.clear();
 	g_plugins.clear();
-	g_cvars.clear();
 	g_langMngr.Clear();
 
 	ClearMessages();

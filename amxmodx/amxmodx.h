@@ -47,6 +47,7 @@
 #include "CLang.h"
 #include "fakemeta.h"
 #include "amxxlog.h"
+#include "CvarManager.h"
 
 #define AMXXLOG_Log g_log.Log
 #define AMXXLOG_Error g_log.LogError
@@ -65,6 +66,7 @@ extern AMX_NATIVE_INFO g_SortNatives[];
 extern AMX_NATIVE_INFO g_DataStructNatives[];
 extern AMX_NATIVE_INFO g_StackNatives[];
 extern AMX_NATIVE_INFO g_TextParserNatives[];
+extern AMX_NATIVE_INFO g_CvarNatives[];
 
 #if defined(_WIN32)
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)
@@ -161,7 +163,6 @@ extern CTaskMngr g_tasksMngr;
 extern CPlayer g_players[33];
 extern CPlayer* mPlayer;
 extern CmdMngr g_commands;
-extern CList<CCVar> g_cvars;
 extern CList<ForceObject> g_forcemodels;
 extern CList<ForceObject> g_forcesounds;
 extern CList<ForceObject> g_forcegeneric;
@@ -281,6 +282,7 @@ int amxstring_len(cell* cstr);
 int load_amxscript(AMX* amx, void** program, const char* path, char error[64], int debug);
 int set_amxnatives(AMX* amx, char error[64]);
 int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max);
+int set_amxstring_simple(cell *dest, const char *source, int max);
 template <typename T> int set_amxstring_utf8(AMX *amx, cell amx_addr, const T *source, size_t sourcelen, size_t maxlen);
 int set_amxstring_utf8_char(AMX *amx, cell amx_addr, const char *source, size_t sourcelen, size_t maxlen);
 int set_amxstring_utf8_cell(AMX *amx, cell amx_addr, const cell *source, size_t sourcelen, size_t maxlen);
@@ -329,6 +331,7 @@ extern int FF_PluginEnd;
 extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;
 extern int FF_ChangeLevel;
+
 extern bool g_coloredmenus;
 
 typedef void (*AUTHORIZEFUNC)(int player, const char *authstring);

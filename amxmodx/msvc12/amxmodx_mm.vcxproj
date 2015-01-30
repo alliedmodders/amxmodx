@@ -96,7 +96,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -149,7 +149,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <StringPooling>true</StringPooling>
@@ -200,7 +200,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;BINLOG_ENABLED;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -252,7 +252,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;HAVE_STDINT_H;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;BINLOG_ENABLED;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <StringPooling>true</StringPooling>
@@ -292,6 +292,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\public\memtools\CDetour\asm\asm.c" />
+    <ClCompile Include="..\..\public\memtools\CDetour\detours.cpp" />
     <ClCompile Include="..\amx.cpp" />
     <ClCompile Include="..\amxcore.cpp" />
     <ClCompile Include="..\amxdbg.cpp" />
@@ -317,6 +319,8 @@
     <ClCompile Include="..\CPlugin.cpp" />
     <ClCompile Include="..\CTask.cpp" />
     <ClCompile Include="..\CTextParsers.cpp" />
+    <ClCompile Include="..\CvarManager.cpp" />
+    <ClCompile Include="..\cvars.cpp" />
     <ClCompile Include="..\CVault.cpp" />
     <ClCompile Include="..\datapacks.cpp" />
     <ClCompile Include="..\debugger.cpp" />
@@ -360,6 +364,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\public\memtools\CDetour\asm\asm.h" />
+    <ClInclude Include="..\..\public\memtools\CDetour\detourhelpers.h" />
+    <ClInclude Include="..\..\public\memtools\CDetour\detours.h" />
     <ClInclude Include="..\amx.h" />
     <ClInclude Include="..\amxdbg.h" />
     <ClInclude Include="..\amxmodx.h" />
@@ -383,6 +390,7 @@
     <ClInclude Include="..\CString.h" />
     <ClInclude Include="..\CTask.h" />
     <ClInclude Include="..\CTextParsers.h" />
+    <ClInclude Include="..\CvarManager.h" />
     <ClInclude Include="..\CVault.h" />
     <ClInclude Include="..\CVector.h" />
     <ClInclude Include="..\datastructs.h" />
@@ -414,6 +422,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\plugins\include\cellstack.inc" />
+    <None Include="..\..\plugins\include\cvars.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
     <None Include="..\..\plugins\include\textparse_ini.inc" />
     <None Include="..\..\plugins\include\textparse_smc.inc" />

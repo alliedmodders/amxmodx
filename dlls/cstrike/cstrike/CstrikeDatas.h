@@ -145,14 +145,14 @@
 	#define CS_IDENT_GIVENAMEDITEM		      "_ZN11CBasePlayer13GiveNamedItemEPKc"             // CS_OnBuy forward 
 	#define CS_IDENT_ADDACCOUNT			      "_ZN11CBasePlayer10AddAccountEib"                 // CS_OnBuy forward 
 	#define CS_IDENT_CREATENAMEDENTITY        "_Z19CREATE_NAMED_ENTITYj"                        // cs_create_entity
-	#define CS_IDENTI_UTIL_FINDENTITYBYSTRING "_Z23UTIL_FindEntityByStringP11CBaseEntityPKcS2_" // cs_create_entity
+	#define CS_IDENT_UTIL_FINDENTITYBYSTRING  "_Z23UTIL_FindEntityByStringP11CBaseEntityPKcS2_" // cs_create_entity
 	#define CS_IDENT_HIDDEN_STATE		      false
 #elif defined(__APPLE__)
 	#define CS_IDENT_GIVENSHIELD              "_ZN11CBasePlayer10GiveShieldEb"
 	#define CS_IDENT_GIVENAMEDITEM		      "_ZN11CBasePlayer13GiveNamedItemEPKc"
 	#define CS_IDENT_ADDACCOUNT			      "_ZN11CBasePlayer10AddAccountEib"
 	#define CS_IDENT_CREATENAMEDENTITY        "_Z19CREATE_NAMED_ENTITYj"
-	#define CS_IDENTI_UTIL_FINDENTITYBYSTRING "_Z23UTIL_FindEntityByStringP11CBaseEntityPKcS2_"
+	#define CS_IDENT_UTIL_FINDENTITYBYSTRING  "_Z23UTIL_FindEntityByStringP11CBaseEntityPKcS2_"
 	#define CS_IDENT_HIDDEN_STATE		      true
 #elif defined(WIN32)
 	#define CS_IDENT_GIVENSHIELD              "\\x56\\x8B\\x2A\\x57\\x33\\x2A\\x8B\\x2A\\x2A\\x2A\\x2A\\x2A\\xB0"

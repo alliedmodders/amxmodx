@@ -19,8 +19,6 @@
 #include <cstrike>
 #include <fakemeta>
 
-#pragma semicolon 1
-
 new g_menuPosition[MAX_PLAYERS];
 new g_menuPlayers[MAX_PLAYERS][32];
 new g_menuPlayersNum[MAX_PLAYERS];

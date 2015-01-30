@@ -393,6 +393,11 @@ stock Handle:SQL_MakeStdTuple(timeout = 0)
 	get_cvar_string("amx_sql_pass", pass, 31);
 	get_cvar_string("amx_sql_type", set_type, 11);
 	get_cvar_string("amx_sql_db", db, 127);
+
+	if (timeout <= 0)
+	{
+		timeout = get_cvar_num("amx_sql_timeout");
+	}
 	
 	SQL_GetAffinity(get_type, 12);
 	

@@ -339,7 +339,7 @@ void CtrlDetours_BuyCommands(bool set)
 
 		if (!GiveShieldDetour || !GiveNamedItemDetour || !AddAccountDetour)
 		{
-			if (!GiveNamedItemDetour)
+			if (!GiveShieldDetour)
 			{
 				MF_Log("GiveShield is not available");
 			}

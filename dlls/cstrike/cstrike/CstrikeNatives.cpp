@@ -1714,17 +1714,20 @@ extern UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
 // cs_create_entity(const classname[])
 static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
 {
-	if (CS_CreateNamedEntity > 0)
+	if (CS_CreateNamedEntity <= 0)
 	{
-		int len;
-		int iszClass = ALLOC_STRING(MF_GetAmxString(amx, params[1], 0, &len));
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_create_entity() is disabled");
+		return 0;
+	}
 
-		edict_t *pEnt = CS_CreateNamedEntity(iszClass);
+	int len;
+	int iszClass = ALLOC_STRING(MF_GetAmxString(amx, params[1], 0, &len));
 
-		if (!FNullEnt(pEnt))
-		{
-			return ENTINDEX(pEnt);
-		}
+	edict_t *pEnt = CS_CreateNamedEntity(iszClass);
+
+	if (!FNullEnt(pEnt))
+	{
+		return ENTINDEX(pEnt);
 	}
 
 	return 0;
@@ -1733,18 +1736,21 @@ static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
 // cs_find_ent_by_class(start_index, const classname[])
 static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
 {
-	if (CS_UTIL_FindEntityByString > 0)
+	if (CS_UTIL_FindEntityByString <= 0)
 	{
-		int len;
-		void* pEntity = G_HL_TypeConversion.id_to_cbase(params[1]);
-		const char* value = MF_GetAmxString(amx, params[2], 0, &len);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_find_ent_by_class() is disabled");
+		return 0;
+	}
 
-		int index = G_HL_TypeConversion.cbase_to_id(CS_UTIL_FindEntityByString(pEntity, "classname", value));
+	int len;
+	void* pEntity = G_HL_TypeConversion.id_to_cbase(params[1]);
+	const char* value = MF_GetAmxString(amx, params[2], 0, &len);
 
-		if (index != -1)
-		{
-			return index;
-		}
+	int index = G_HL_TypeConversion.cbase_to_id(CS_UTIL_FindEntityByString(pEntity, "classname", value));
+
+	if (index != -1)
+	{
+		return index;
 	}
 
 	return 0;
@@ -1836,7 +1842,7 @@ AMX_NATIVE_INFO CstrikeNatives[] = {
 	{"cs_get_c4_defusing",			cs_get_c4_defusing},
 	{"cs_set_c4_defusing",			cs_set_c4_defusing},
 	{"cs_create_entity",			cs_create_entity },	
-	{"cs_find_ent_by_class",		cs_find_ent_by_class },	
+	{"cs_find_ent_by_class",		cs_find_ent_by_class},	
 
 	{NULL,							NULL}
 };

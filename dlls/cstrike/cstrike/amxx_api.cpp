@@ -13,6 +13,8 @@
 
 #include "amxxmodule.h"
 #include "CstrikeUtils.h"
+#include "CstrikeDatas.h"
+#include "CstrikeHLTypeConversion.h"
 
 extern AMX_NATIVE_INFO CstrikeNatives[];
 
@@ -25,6 +27,8 @@ void ShutdownHacks();
 void ToggleDetour_ClientCommands(bool enable);
 void ToggleDetour_BuyCommands(bool enable);
 
+CreateNamedEntityFunc CS_CreateNamedEntity = nullptr;
+UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString = nullptr;
 
 int AmxxCheckGame(const char *game)
 {
@@ -39,7 +43,27 @@ int AmxxCheckGame(const char *game)
 void OnAmxxAttach()
 {
 	MF_AddNatives(CstrikeNatives);
+
 	InitializeHacks();
+
+	// cs_create_entity()
+	CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(UTIL_FindAddressFromEntry(CS_IDENT_CREATENAMEDENTITY, CS_IDENT_HIDDEN_STATE));
+
+	if (CS_CreateNamedEntity <= 0)
+	{
+		MF_Log("CREATE_NAMED_ENITTY is not available - native cs_create_entity() has been disabled");
+	}
+
+	// cs_find_ent_by_class()
+	CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(UTIL_FindAddressFromEntry(CS_IDENT_UTIL_FINDENTITYBYSTRING, CS_IDENT_HIDDEN_STATE));
+	
+	if (CS_UTIL_FindEntityByString <= 0)
+	{
+		MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
+	}
+
+	// Search pev offset automatically.
+	G_OffsetHandler = new OffsetHandler;
 }
 
 void OnPluginsLoaded()

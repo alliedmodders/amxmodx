@@ -351,6 +351,48 @@ native bool:cs_get_c4_defusing(c4index);
 native cs_set_c4_defusing(c4index, bool:defusing);
 
 /**
+ * Creates an entity using Counter-Strike's custom CreateNamedEntity wrapper.
+ *
+ * @note Unlike other mods CS keeps track of entities using a custom hashtable.
+ *       This function adds entities to this hashtable, providing benefits over
+ *       the default CreateNamedEntity (used by create_entity() for example):
+ *       - Storing entities in a hashtable allows CS to improve classname lookup
+ *         performance compared to functions like FindEntityByString (used by
+ *         find_ent_by_class() for example) that usually have to loop
+ *         through all entities incrementally.
+ *       - As CS exclusively uses the hashtable for classname lookup, entities
+ *         created using the default engine functions will not be found by the
+ *         game. For example "weaponbox" entities are supposed to be
+ *         automatically cleaned up on round restart but are not considered if
+ *         they have not been added to the hashtable.
+ * @note The faster hashtable lookup can be utilized with cs_find_ent_by_class()
+ *
+ * @param classname     Entity class name
+ *
+ * @return              Index of the created entity, 0 otherwise.
+ */
+native cs_create_entity(const classname[]);
+
+/**
+ * Finds an entity in the world using Counter-Strike's custom FindEntityByString
+ * wrapper.
+ *
+ * @note Unlike other mods CS keeps track of entities using a custom hashtable.
+ *       This function utilizes the hasthable and allows for considerably faster
+ *       classname lookup compared to the default FindEntityByString (used by
+ *       find_ent_by_class() for example).
+ * @note This exclusively considers entities in the hashtable, created by the
+ *       game itself or using cs_create_entity().
+ *
+ * @param start_index   Entity index to start searching from. -1 to start from
+ *                      the first entity
+ * @param classname     Classname to search for
+ *
+ * @return              Entity index > 0 if found, 0 otherwise
+ */
+native cs_find_ent_by_class(start_index, const classname[]);
+
+/**
  * Called when CS internally fires a command to a player.  It does this for a few 
  * functions, most notably rebuy/autobuy functionality.  This is also used to pass
  * commands to CZ bots internally.

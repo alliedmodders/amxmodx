@@ -251,9 +251,9 @@ void CtrlDetours_ClientCommand(bool set)
 #endif
 		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
 
-		if (ClientCommandDetour == NULL)
+		if (!ClientCommandDetour)
 		{
-			MF_Log("No Client Commands detour could be initialized - Disabled Client Command forward.");
+			MF_Log("ClientCommand is not available - forward client_command has been disabled");
 		}
 	}
 	else
@@ -337,9 +337,24 @@ void CtrlDetours_BuyCommands(bool set)
 		GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
 		AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
 
-		if (GiveNamedItemDetour == NULL || AddAccountDetour == NULL)
+		if (!GiveShieldDetour || !GiveNamedItemDetour || !AddAccountDetour)
 		{
-			MF_Log("No Buy Commands detours could be initialized - Disabled Buy forward.");
+			if (!GiveShieldDetour)
+			{
+				MF_Log("GiveShield is not available");
+			}
+
+			if (!GiveNamedItemDetour)
+			{
+				MF_Log("GiveNamedItem is not available");
+			}
+
+			if (!AddAccountDetour)
+			{
+				MF_Log("AddAccount is not available");
+			}
+
+			MF_Log("Some functions are not available - forward CS_OnBuyAttempt and CS_OnBuy have been disabled");
 		}
 	}
 	else

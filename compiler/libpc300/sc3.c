@@ -1243,6 +1243,7 @@ static int hier2(value *lval)
     clear_value(lval);
     lval->ident=iCONSTEXPR;
     lval->constval= val;
+    lval->tag=pc_addtag("bool");
     ldconst(lval->constval,sPRI);
     while (paranthese--)
       needtoken(')');
@@ -1335,7 +1336,7 @@ static int hier2(value *lval)
     exporttag(tag);
     clear_value(lval);
     lval->ident=iCONSTEXPR;
-    lval->constval=tag;
+    lval->constval=tag | PUBLICTAG;
     ldconst(lval->constval,sPRI);
     while (paranthese--)
       needtoken(')');
@@ -1852,6 +1853,7 @@ static int nesting=0;
   arginfo *arg;
   char arglist[sMAXARGS];
   constvalue arrayszlst = { NULL, "", 0, 0}; /* array size list starts empty */
+  constvalue taglst = { NULL, "", 0, 0};    /* tag list starts empty */
   symbol *symret;
   cell lexval;
   char *lexstr;
@@ -2001,6 +2003,8 @@ static int nesting=0;
             markusage(lval.sym,uWRITTEN);
           if (!checktag(arg[argidx].tags,arg[argidx].numtags,lval.tag))
             error(213);
+          if (lval.tag != 0)
+            append_constval(&taglst, arg[argidx].name, lval.tag, 0);
           break;
         case iVARIABLE:
           if (lval.ident==iLABEL || lval.ident==iFUNCTN || lval.ident==iREFFUNC
@@ -2013,6 +2017,8 @@ static int nesting=0;
           check_userop(NULL,lval.tag,arg[argidx].tags[0],2,NULL,&lval.tag);
           if (!checktag(arg[argidx].tags,arg[argidx].numtags,lval.tag))
             error(213);
+          if (lval.tag != 0)
+            append_constval(&taglst, arg[argidx].name, lval.tag, 0);
           argidx++;               /* argument done */
           break;
         case iREFERENCE:
@@ -2033,6 +2039,8 @@ static int nesting=0;
           /* otherwise, the address is already in PRI */
           if (!checktag(arg[argidx].tags,arg[argidx].numtags,lval.tag))
             error(213);
+          if (lval.tag != 0)
+            append_constval(&taglst, arg[argidx].name, lval.tag, 0);
           argidx++;               /* argument done */
           if (lval.sym!=NULL)
             markusage(lval.sym,uWRITTEN);
@@ -2108,6 +2116,8 @@ static int nesting=0;
           /* address already in PRI */
           if (!checktag(arg[argidx].tags,arg[argidx].numtags,lval.tag))
             error(213);
+          if (lval.tag != 0)
+            append_constval(&taglst, arg[argidx].name, lval.tag, 0);
           // ??? set uWRITTEN?
           argidx++;               /* argument done */
           break;
@@ -2215,13 +2225,14 @@ static int nesting=0;
         array_sz=1;
       } /* if */
     } else {
-      symbol *sym;
-      assert((arg[argidx].hasdefault & uTAGOF)!=0);
-      sym=findloc(arg[argidx].defvalue.size.symname);
-      if (sym==NULL)
-        sym=findglb(arg[argidx].defvalue.size.symname);
-      array_sz=(sym!=NULL) ? sym->tag : 0;
-      exporttag((int)array_sz);
+      asz=find_constval(&taglst,arg[argidx].defvalue.size.symname,
+                        arg[argidx].defvalue.size.level);
+      if (asz != NULL) {
+        exporttag(asz->value);
+        array_sz=asz->value | PUBLICTAG;  /* must be set, because it just was exported */
+      } else {
+        array_sz=0;
+      } /* if */
     } /* if */
     ldconst(array_sz,sPRI);
     pushreg(sPRI);              /* store the function argument on the stack */
@@ -2245,6 +2256,7 @@ static int nesting=0;
   sideeffect=TRUE;              /* assume functions carry out a side-effect */
   sc_allowproccall=FALSE;
   delete_consttable(&arrayszlst);     /* clear list of array sizes */
+  delete_consttable(&taglst);   /* clear list of parameter tags */
 
   /* maintain max. amount of memory used */
   {
@@ -2381,7 +2393,8 @@ static int constant(value *lval)
         error(213);             /* tagname mismatch */
       litadd(item);             /* store expression result in literal table */
     } while (matchtoken(','));
-    needtoken('}');
+    if (!needtoken('}'))
+      lexclr(FALSE);
     ldconst((val+glb_declared)*sizeof(cell),sPRI);
     lval->ident=iARRAY;         /* pretend this is a global array */
     lval->constval=litidx-val;  /* constval == the size of the literal array */

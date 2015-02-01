@@ -20,7 +20,7 @@
 #include <fakemeta>
 
 new g_menuPosition[MAX_PLAYERS + 1];
-new g_menuPlayers[MAX_PLAYERS + 1][32];
+new g_menuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS];
 new g_menuPlayersNum[MAX_PLAYERS + 1];
 new g_menuOption[MAX_PLAYERS + 1];
 new g_menuSettings[MAX_PLAYERS + 1];

@@ -117,7 +117,7 @@ new g_iPluginMode                                       = 0
 
 new g_izUserMenuPosition[MAX_PLAYERS + 1]               = {0, ...}
 new g_izUserMenuAction[MAX_PLAYERS + 1]                 = {0, ...}
-new g_izUserMenuPlayers[MAX_PLAYERS + 1][32]
+new g_izUserMenuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS]
 
 new g_izSpecMode[MAX_PLAYERS + 1]                       = {0, ...}
 

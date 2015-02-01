@@ -75,7 +75,7 @@ new g_RoundScore[2]
 
 new g_userPosition[MAX_PLAYERS + 1]
 new g_userState[MAX_PLAYERS + 1]
-new g_userPlayers[MAX_PLAYERS + 1][32]
+new g_userPlayers[MAX_PLAYERS + 1][MAX_PLAYERS]
 new g_Buffer[2048]
 
 new g_Killers[MAX_PLAYERS + 1][3]

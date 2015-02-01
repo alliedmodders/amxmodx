@@ -16,8 +16,8 @@
 #include <tsx>
 #include <tsfun>
 
-new g_pingSum[MAX_PLAYERS]
-new g_pingCount[MAX_PLAYERS]
+new g_pingSum[MAX_PLAYERS + 1]
+new g_pingCount[MAX_PLAYERS + 1]
 
 public plugin_init()
   register_plugin("Stats Logging",AMXX_VERSION_STR,"AMXX Dev Team")

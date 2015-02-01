@@ -66,20 +66,20 @@ public EnemyGreKillSound
 public LeadSounds
 public MortarKill
 
-new g_streakKills[MAX_PLAYERS][2]
-new g_multiKills[MAX_PLAYERS][2]
+new g_streakKills[MAX_PLAYERS + 1][2]
+new g_multiKills[MAX_PLAYERS + 1][2]
 new Float:g_prevKill
 new g_prevKillerId
 new g_KillCount;
 new g_RoundScore[2]
 
-new g_userPosition[MAX_PLAYERS]
-new g_userState[MAX_PLAYERS]
-new g_userPlayers[MAX_PLAYERS][32]
+new g_userPosition[MAX_PLAYERS + 1]
+new g_userState[MAX_PLAYERS + 1]
+new g_userPlayers[MAX_PLAYERS + 1][32]
 new g_Buffer[2048]
 
-new g_Killers[MAX_PLAYERS][3]
-new Float:g_DeathStats[MAX_PLAYERS]
+new g_Killers[MAX_PLAYERS + 1][3]
+new Float:g_DeathStats[MAX_PLAYERS + 1]
 
 new g_damage_sync
 new g_center1_sync
@@ -259,14 +259,14 @@ public cmdFF(id){
 public endGameStats(){
   new i
   if ( EndPlayer ){
-    new players[32], inum
+    new players[MAX_PLAYERS], inum
     get_players(players,inum)
     for(i = 0; i < inum; ++i){
         displayStats_steam(players[i],players[i])
     }
   } 
   else if ( EndTop15 ){
-    new players[32], inum
+    new players[MAX_PLAYERS], inum
     get_players(players,inum)
 
     new g_Top[16], top = get_cvar_num("dodstats_topvalue") 
@@ -479,7 +479,7 @@ public round_end(){
 
   if ( !EndRoundStats ) return PLUGIN_CONTINUE
 
-  new g_Buffer2[1024], len, players[32], pnum, stats[9],bodyhits[8]
+  new g_Buffer2[1024], len, players[MAX_PLAYERS], pnum, stats[9],bodyhits[8]
   get_players( players , pnum ) 
 
 
@@ -719,7 +719,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK)
 
   if ( headshot && (HeadShotKill || HeadShotKillSound) && !xmod_is_melee_wpn(wpnindex) ){
     if ( HeadShotKill ){
-      new weapon[32], message[256], players[32], pnum
+      new weapon[32], message[256], players[MAX_PLAYERS], pnum
       xmod_get_wpnname(wpnindex,weapon,charsmax(weapon)) 
 
       get_players(players,pnum,"c")
@@ -817,7 +817,7 @@ public checkKills(param[]){
 new LeaderScore 
 new NumOfLeaders 
 new LeaderID 
-new PScore[MAX_PLAYERS] 
+new PScore[MAX_PLAYERS + 1] 
 
 public client_disconnect(id) { 
   if ( !LeadSounds || isDSMActive() ) return PLUGIN_CONTINUE
@@ -826,7 +826,7 @@ public client_disconnect(id) {
     PScore[id] = 0 
     if ( NumOfLeaders == 0 ){ 
       LeaderScore = 0 
-      for ( new i=1; i<MAX_PLAYERS; i++ ) 
+      for ( new i=1; i<=MAX_PLAYERS; i++ ) 
         if ( PScore[i] > LeaderScore ){ 
 
 
@@ -853,7 +853,7 @@ public client_disconnect(id) {
         client_cmd( LeaderID,"spk misc/takenlead" ) 
       } 
       else { 
-        for ( new i=1; i<MAX_PLAYERS; i++ ) 
+        for ( new i=1; i<=MAX_PLAYERS; i++ ) 
         if ( PScore[i] == LeaderScore ) client_cmd( i,"spk misc/takenlead" ) 
       } 
   } 
@@ -878,13 +878,13 @@ public get_score(){
       } 
       else if ( NumOfLeaders > 1 ){ 
 
-        for ( new i=1; i<MAX_PLAYERS; i++ ) 
+        for ( new i=1; i<=MAX_PLAYERS; i++ ) 
           if ( PScore[i] == LeaderScore  && i != PlayerID ) 
             client_cmd( i,"spk misc/lostlead" ) 
         client_cmd( PlayerID,"spk misc/takenlead" ) 
       } 
       else if ( NumOfLeaders == 0 ){ // start 
-        for ( new i=1; i<MAX_PLAYERS; i++ ) 
+        for ( new i=1; i<=MAX_PLAYERS; i++ ) 
           if ( i != PlayerID && is_user_connected(i) ) client_cmd( i,"spk misc/lostlead" ) 
         client_cmd( PlayerID,"spk misc/takenlead" ) 
       } 

@@ -19,10 +19,10 @@
 #define CHECK_FREQ		5			// This is also the warning message frequency.
 #define CLASS_GESTATE	9
 
-new g_oldangles[MAX_PLAYERS][3]
-new g_idletime[MAX_PLAYERS]
-new bool:g_spawned[MAX_PLAYERS] = {true, ...}
-new g_class[MAX_PLAYERS]	// stored info from the "ScoreInfo" message
+new g_oldangles[MAX_PLAYERS + 1][3]
+new g_idletime[MAX_PLAYERS + 1]
+new bool:g_spawned[MAX_PLAYERS + 1] = {true, ...}
+new g_class[MAX_PLAYERS + 1]	// stored info from the "ScoreInfo" message
 
 new mp_tournamentmode;
 new amx_idle_time;
@@ -129,17 +129,9 @@ public delayedSpawn(sid[]) {
 
 public msgScoreInfo() {
   new id=read_data(1);
-  if (id>32||id<1) {
-    // just incase..
-    return;
-  }
   g_class[id]=read_data(5);
 }
 public msgScoreInfo32() {
   new id=read_data(1);
-  if (id>32||id<1) {
-    // just incase..
-    return;
-  }
   g_class[id]=read_data(6);
 }

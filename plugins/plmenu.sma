@@ -19,14 +19,14 @@
 #include <cstrike>
 #include <fakemeta>
 
-new g_menuPosition[MAX_PLAYERS];
-new g_menuPlayers[MAX_PLAYERS][32];
-new g_menuPlayersNum[MAX_PLAYERS];
-new g_menuOption[MAX_PLAYERS];
-new g_menuSettings[MAX_PLAYERS];
+new g_menuPosition[MAX_PLAYERS + 1];
+new g_menuPlayers[MAX_PLAYERS + 1][32];
+new g_menuPlayersNum[MAX_PLAYERS + 1];
+new g_menuOption[MAX_PLAYERS + 1];
+new g_menuSettings[MAX_PLAYERS + 1];
 
-new g_menuSelect[MAX_PLAYERS][64];
-new g_menuSelectNum[MAX_PLAYERS];
+new g_menuSelect[MAX_PLAYERS + 1][64];
+new g_menuSelectNum[MAX_PLAYERS + 1];
 
 #define MAX_CLCMDS 24
 
@@ -58,7 +58,7 @@ new g_CSTeamiNumbers[3] = {
 	3
 };
 
-new g_CSPlayerCanSwitchFromSpec[MAX_PLAYERS];
+new g_CSPlayerCanSwitchFromSpec[MAX_PLAYERS + 1];
 new g_transferingAdmin;
 
 new allow_spectators, mp_limitteams;
@@ -66,7 +66,7 @@ new allow_spectators, mp_limitteams;
 new p_amx_tempban_maxtime;
 new Trie:g_tempBans;
 
-new g_silent[MAX_PLAYERS];
+new g_silent[MAX_PLAYERS + 1];
 
 public plugin_natives()
 {

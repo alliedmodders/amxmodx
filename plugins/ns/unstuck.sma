@@ -18,7 +18,7 @@
 #define MAX_ATTEMPTS		128			// How many times to search in an area for a free space
 #define BLOCKED_MASKS		MASK_PLAYER_STUNNED | MASK_ENSNARED | MASK_ALIEN_EMBRYO
 
-new Float:g_lastcmdtime[MAX_PLAYERS]
+new Float:g_lastcmdtime[MAX_PLAYERS + 1]
 
 new amx_unstuck_frequency;
 

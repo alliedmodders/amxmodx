@@ -340,7 +340,7 @@ public cmdAddBan(id, level, cid)
 		else
 		{
 			new Auth[32];
-			new Name[32];
+			new Name[MAX_NAME_LENGTH];
 			new dummy[1];
 			new Access;
 			for (new i = 0; i < g_Size; i++)
@@ -449,7 +449,7 @@ public cmdBan(id, level, cid)
 
 	new msg[256];
 	new len;
-	new players[32], pnum, plr
+	new players[MAX_PLAYERS], pnum, plr
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
@@ -536,7 +536,7 @@ public cmdBanIP(id, level, cid)
 
 	new msg[256];
 	new len;
-	new players[32], pnum, plr
+	new players[MAX_PLAYERS], pnum, plr
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
@@ -776,7 +776,7 @@ public cmdCvar(id, level, cid)
 	// Display the message to all clients
 
 	new cvar_val[64];
-	new players[32], pnum, plr
+	new players[MAX_PLAYERS], pnum, plr
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
@@ -900,7 +900,7 @@ public cmdXvar(id, level, cid)
 	log_amx("Cmd: ^"%s<%d><%s><>^" set xvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, arg1, arg2);
 	
 	// Display the message to all clients
-	new players[32], pnum, plr;
+	new players[MAX_PLAYERS], pnum, plr;
 	get_players(players, pnum, "ch");
 	for (new i; i<pnum; i++)
 	{
@@ -1105,7 +1105,7 @@ public cmdPause(id, level, cid)
 
 	// Display the message to all clients
 
-	new players[32], pnum
+	new players[MAX_PLAYERS], pnum
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
@@ -1164,7 +1164,7 @@ public cmdWho(id, level, cid)
 	if (!cmd_access(id, level, cid, 1))
 		return PLUGIN_HANDLED
 
-	new players[32], inum, cl_on_server[64], authid[32], name[MAX_NAME_LENGTH], flags, sflags[32], plr
+	new players[MAX_PLAYERS], inum, cl_on_server[64], authid[32], name[MAX_NAME_LENGTH], flags, sflags[32], plr
 	new lImm[16], lRes[16], lAccess[16], lYes[16], lNo[16]
 	
 	formatex(lImm, charsmax(lImm), "%L", id, "IMMU")

@@ -19,17 +19,17 @@ if AMXX.mysql_path:
     binary.compiler.defines += ['stricmp=strcasecmp']
     binary.compiler.linkflags += [
       os.path.join(AMXX.mysql_path, 'lib', 'libmysqlclient_r.a'),
-      '-lz',
       '-lpthread',
       '-lm'
     ]
   elif builder.target_platform is 'windows':
     binary.compiler.linkflags += [
       os.path.join(AMXX.mysql_path, 'lib', 'opt', 'mysqlclient.lib'),
-      os.path.join(AMXX.mysql_path, 'lib', 'opt', 'zlib.lib'),
       'ws2_32.lib'
     ]
 
+  binary.compiler.linkflags += [AMXX.zlib.binary]
+    
   binary.sources = [
     'basic_sql.cpp',
     'handles.cpp',

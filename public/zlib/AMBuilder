@@ -1,0 +1,27 @@
+# vim: sts=2 ts=8 sw=2 tw=99 et ft=python: 
+import os, platform
+
+builder.SetBuildFolder('zlib')
+
+lib = builder.compiler.StaticLibrary('zlib')
+
+lib.compiler.includes += [
+  os.path.join(builder.sourcePath, 'public', 'zlib'),
+]
+
+lib.sources += [
+  'adler32.c',
+  'compress.c',
+  'crc32.c',
+  'deflate.c',
+  'gzio.c',
+  'infback.c',
+  'inffast.c',
+  'inflate.c',
+  'inftrees.c',
+  'trees.c',
+  'uncompr.c',
+  'zutil.c',
+]
+
+rvalue = builder.Add(lib)

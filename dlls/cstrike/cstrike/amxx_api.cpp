@@ -61,9 +61,6 @@ void OnAmxxAttach()
 	{
 		MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
 	}
-
-	// Search pev offset automatically.
-	G_OffsetHandler = new OffsetHandler;
 }
 
 void OnPluginsLoaded()
@@ -81,6 +78,12 @@ void OnPluginsLoaded()
 	// And enable/disable detours when necessary.
 	ToggleDetour_ClientCommands(ForwardInternalCommand != -1 || ForwardOnBuy != -1 || ForwardOnBuy != -1);
 	ToggleDetour_BuyCommands(ForwardOnBuy != -1);
+
+	// Search pev offset automatically.
+	if (!G_OffsetHandler)
+	{
+		G_OffsetHandler = new OffsetHandler;
+	}
 }
 
 void OnAmxxDetach()

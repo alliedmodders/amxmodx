@@ -32,13 +32,7 @@ elif builder.target_platform == 'windows':
   ]
 
 binary.compiler.linkflags += jit_objects
-
-if builder.target_platform == 'linux':
-  binary.compiler.linkflags += [binary.Dep('zlib/libz.a')]
-elif builder.target_platform == 'mac':
-  binary.compiler.linkflags += [binary.Dep('zlib/libz-darwin.a')]
-elif builder.target_platform == 'windows':
-  binary.compiler.linkflags += [binary.Dep('zlib\\zlib.lib')]
+binary.compiler.linkflags += [AMXX.zlib.binary]
 
 if builder.target_platform == 'mac':
   binary.compiler.postlink += [

@@ -26,8 +26,8 @@ new amx_show_activity;
 new amx_flood_time;
 new g_AdminChatFlag = ADMIN_CHAT;
 
-new Float:g_Flooding[MAX_PLAYERS] = {0.0, ...}
-new g_Flood[MAX_PLAYERS] = {0, ...}
+new Float:g_Flooding[MAX_PLAYERS + 1] = {0.0, ...}
+new g_Flood[MAX_PLAYERS + 1] = {0, ...}
 
 public plugin_init()
 {
@@ -139,7 +139,7 @@ public cmdSayChat(id, level)
 	{
 		case 3, 4:
 		{
-			new players[32], plrsnum, pl
+			new players[MAX_PLAYERS], plrsnum, pl
 			get_players(players, plrsnum, "ch")
 			for(new j; j<plrsnum; j++)
 			{
@@ -205,7 +205,7 @@ public cmdSayAdmin(id)
 	}
 
 	new message[192], name[MAX_NAME_LENGTH], authid[32], userid
-	new players[32], inum, pl
+	new players[MAX_PLAYERS], inum, pl
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
@@ -246,7 +246,7 @@ public cmdChat(id, level, cid)
 	if (!message[0])
 		return PLUGIN_HANDLED
 	
-	new name[MAX_NAME_LENGTH], players[32], inum, authid[32], userid, pl
+	new name[MAX_NAME_LENGTH], players[MAX_PLAYERS], inum, authid[32], userid, pl
 	
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
@@ -386,7 +386,7 @@ public cmdTsay(id, level, cid)
 	{
 		case 3, 4:
 		{
-			new players[32], plrsnum, pl
+			new players[MAX_PLAYERS], plrsnum, pl
 			get_players(players, plrsnum, "ch")
 			for(new i; i<plrsnum; i++)
 			{

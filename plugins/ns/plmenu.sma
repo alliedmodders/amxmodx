@@ -15,14 +15,14 @@
 #include <amxmisc>
 #include <ns>
 
-new g_menuPosition[MAX_PLAYERS]
-new g_menuPlayers[MAX_PLAYERS][32]
-new g_menuPlayersNum[MAX_PLAYERS]
-new g_menuOption[MAX_PLAYERS]
-new g_menuSettings[MAX_PLAYERS]
+new g_menuPosition[MAX_PLAYERS + 1]
+new g_menuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS]
+new g_menuPlayersNum[MAX_PLAYERS + 1]
+new g_menuOption[MAX_PLAYERS + 1]
+new g_menuSettings[MAX_PLAYERS + 1]
 
-new g_menuSelect[MAX_PLAYERS][64]
-new g_menuSelectNum[MAX_PLAYERS]
+new g_menuSelect[MAX_PLAYERS + 1][64]
+new g_menuSelectNum[MAX_PLAYERS + 1]
 
 #define MAX_CLCMDS 24
 

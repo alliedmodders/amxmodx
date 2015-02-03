@@ -55,20 +55,20 @@ public DoubleKill
 public DoubleKillSound
 public BulletDamage
 
-new g_streakKills[MAX_PLAYERS][2]
-new g_multiKills[MAX_PLAYERS][2]
+new g_streakKills[MAX_PLAYERS + 1][2]
+new g_multiKills[MAX_PLAYERS + 1][2]
 new Float:g_prevKill
 new g_prevKillerId
 new g_KillCount;
 
-new g_userPosition[MAX_PLAYERS]
-new g_userState[MAX_PLAYERS]
-new g_userPlayers[MAX_PLAYERS][32]
+new g_userPosition[MAX_PLAYERS + 1]
+new g_userState[MAX_PLAYERS + 1]
+new g_userPlayers[MAX_PLAYERS + 1][MAX_PLAYERS]
 new g_Buffer[2048]
 
 
-new g_Killers[MAX_PLAYERS][4]
-new Float:g_DeathStats[MAX_PLAYERS]
+new g_Killers[MAX_PLAYERS + 1][4]
+new Float:g_DeathStats[MAX_PLAYERS + 1]
 
 new g_center1_sync
 new g_center2_sync
@@ -286,14 +286,14 @@ getTop15(){
 
 public endGameStats(){
   if ( EndPlayer ){
-    new players[32], inum
+    new players[MAX_PLAYERS], inum
     get_players(players,inum)
     for(new i = 0; i < inum; ++i){
       displayStats(players[i],players[i])
     }
   } 
   else if ( EndTop15 ){
-    new players[32], inum
+    new players[MAX_PLAYERS], inum
     get_players(players,inum)
     getTop15()
     for(new i = 0; i < inum; ++i)

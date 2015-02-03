@@ -20,25 +20,25 @@ new DisabledCallback;
 new EnabledCallback;
 
 // pcvar that the client is currently modifying
-new CurrentCvar[MAX_PLAYERS];
+new CurrentCvar[MAX_PLAYERS + 1];
 
 // Name of the cvar being modified
-new CurrentCvarName[MAX_PLAYERS][32];
+new CurrentCvarName[MAX_PLAYERS + 1][32];
 
 // Plugin ID that the client is modifying
-new CurrentPlid[MAX_PLAYERS];
+new CurrentPlid[MAX_PLAYERS + 1];
 
 // Page that the client is currently on
-new CurrentPage[MAX_PLAYERS];
+new CurrentPage[MAX_PLAYERS + 1];
 
 // Menu function ID that the client is in
-new CurrentMenuFunction[MAX_PLAYERS] = { -1,... };
+new CurrentMenuFunction[MAX_PLAYERS + 1] = { -1,... };
 
-new CurrentCommand[MAX_PLAYERS][32];
+new CurrentCommand[MAX_PLAYERS + 1][32];
 new cvarmenu_cmdid;
 new cmdmenu_cmdid;
 
-new ExplicitPlugin[MAX_PLAYERS];
+new ExplicitPlugin[MAX_PLAYERS + 1];
 
 public plugin_init()
 {

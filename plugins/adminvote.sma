@@ -129,7 +129,7 @@ public checkVotes()
 	new votesNum = g_voteCount[0] + g_voteCount[1] + g_voteCount[2] + g_voteCount[3]
 	new iRatio = votesNum ? floatround(g_voteRatio * float(votesNum), floatround_ceil) : 1
 	new iResult = g_voteCount[best]
-	new players[32], pnum, i
+	new players[MAX_PLAYERS], pnum, i
 	
 	get_players(players, pnum, "c")
 	
@@ -449,7 +449,7 @@ public cmdVoteKickBan(id, level, cid)
 	
 	if (voteban && is_user_bot(player))
 	{
-		new imname[32]
+		new imname[MAX_NAME_LENGTH]
 		
 		get_user_name(player, imname, charsmax(imname))
 		console_print(id, "%L", id, "ACTION_PERFORMED", imname)

@@ -50,9 +50,8 @@ enum {
   TEAM_SPECTATOR
 };
 
-
-new g_Class[MAX_PLAYERS]; // stored info from the "ScoreInfo" message
-new g_Team[MAX_PLAYERS];
+new g_Class[MAX_PLAYERS + 1] = {0, ...}; // stored info from the "ScoreInfo" message
+new g_Team[MAX_PLAYERS + 1] = {1, ...};
 
 new g_ScoreInfo_Class;
 new g_ScoreInfo_Team;
@@ -80,14 +79,6 @@ public plugin_init() {
   register_concmd("amx_random","cmdRandom",ADMIN_LEVEL_H,"<name or #userid> - omit to do all in rr");
   register_concmd("amx_readyroom","cmdReadyRoom",ADMIN_LEVEL_H,"<name or #userid> - omit to do everybody");
 
-  // clear class info..
-  new i=0;
-  while (i<MAX_PLAYERS) {
-    g_Class[i]=0;
-    g_Team[i]=-1;
-    i++;
-  }
-  
   if (cvar_exists("sv_structurelimit"))
   {
     // ns 3.2 beta
@@ -106,10 +97,6 @@ public plugin_init() {
 }
 public msgScoreInfo() {
   new id=read_data(1);
-  if (id>32||id<1) {
-    // just incase..
-    return;
-  }
   g_Class[id]=read_data(g_ScoreInfo_Class);
   g_Team[id]=read_data(g_ScoreInfo_Team);
 }
@@ -123,7 +110,7 @@ public client_connect(id) {
 }
 stock UTIL_FindCommander() {
   new i=1;
-  while (i<MAX_PLAYERS) {
+  while (i<=MAX_PLAYERS) {
     if (g_Class[i]==PLAYERCLASS_COMMANDER) // this player is comm..
       return i;
     i++;

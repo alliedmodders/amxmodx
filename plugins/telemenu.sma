@@ -15,12 +15,12 @@
 #include <amxmisc>
 #include <fakemeta>
 
-new g_menuPosition[MAX_PLAYERS]
-new g_menuPlayers[MAX_PLAYERS][32]
-new g_menuPlayersNum[MAX_PLAYERS]
-new g_menuOption[MAX_PLAYERS] = {-1, ...}
-new Float:g_menuOrigin[MAX_PLAYERS][3]
-new Float:g_menuVAngle[MAX_PLAYERS][3]
+new g_menuPosition[MAX_PLAYERS + 1]
+new g_menuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS]
+new g_menuPlayersNum[MAX_PLAYERS + 1]
+new g_menuOption[MAX_PLAYERS + 1] = {-1, ...}
+new Float:g_menuOrigin[MAX_PLAYERS + 1][3]
+new Float:g_menuVAngle[MAX_PLAYERS + 1][3]
 new g_coloredMenus
 
 new g_bDuckingStateSaved

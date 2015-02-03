@@ -13,8 +13,8 @@
 
 #include <amxmodx>
 
-new Float:g_Flooding[MAX_PLAYERS] = {0.0, ...}
-new g_Flood[MAX_PLAYERS] = {0, ...}
+new Float:g_Flooding[MAX_PLAYERS + 1] = {0.0, ...}
+new g_Flood[MAX_PLAYERS + 1] = {0, ...}
 
 new amx_flood_time;
 

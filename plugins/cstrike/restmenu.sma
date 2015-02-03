@@ -19,14 +19,14 @@
 
 #define MAXMENUPOS 34
 
-new g_Position[MAX_PLAYERS]
+new g_Position[MAX_PLAYERS + 1]
 new g_Modified
 new g_blockPos[112]
 new g_saveFile[64]
 new g_Restricted[] = "* This item is restricted *"
 new g_szWeapRestr[27] = "00000000000000000000000000"
 new g_szEquipAmmoRestr[10] = "000000000"
-new g_InBuyMenu[MAX_PLAYERS]
+new g_InBuyMenu[MAX_PLAYERS + 1]
 new g_RegisteredMenus[10]
 
 new g_menuStrings[6][] =
@@ -283,8 +283,8 @@ new g_Aliases2[MAXMENUPOS][] =
 }
 
 #define AUTOBUYLENGTH 511
-new g_Autobuy[MAX_PLAYERS][AUTOBUYLENGTH + 1]
-//new g_Rebuy[MAX_PLAYERS][AUTOBUYLENGTH + 1]
+new g_Autobuy[MAX_PLAYERS + 1][AUTOBUYLENGTH + 1]
+//new g_Rebuy[MAX_PLAYERS + 1][AUTOBUYLENGTH + 1]
 
 bool:IsOurMenuID(id)
 {

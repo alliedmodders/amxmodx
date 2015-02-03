@@ -107,56 +107,56 @@ new BODY_PART[8][] =
 #define KILLED_TEAM             3   // Killer's team
 #define KILLED_KILLER_STATSFIX  4   // Fix to register the last hit/kill
 
-new g_izKilled[MAX_PLAYERS][5]
+new g_izKilled[MAX_PLAYERS + 1][5]
 
 // Menu variables and configuration
 #define MAX_PPL_MENU_ACTIONS    2   // Number of player menu actions
 #define PPL_MENU_OPTIONS        7   // Number of player options per displayed menu
 
-new g_iPluginMode                                   = 0
+new g_iPluginMode                                       = 0
 
-new g_izUserMenuPosition[MAX_PLAYERS]               = {0, ...}
-new g_izUserMenuAction[MAX_PLAYERS]                 = {0, ...}
-new g_izUserMenuPlayers[MAX_PLAYERS][32]
+new g_izUserMenuPosition[MAX_PLAYERS + 1]               = {0, ...}
+new g_izUserMenuAction[MAX_PLAYERS + 1]                 = {0, ...}
+new g_izUserMenuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS]
 
-new g_izSpecMode[MAX_PLAYERS]                       = {0, ...}
+new g_izSpecMode[MAX_PLAYERS + 1]                       = {0, ...}
 
-new g_izShowStatsFlags[MAX_PLAYERS]                 = {0, ...}
-new g_izStatsSwitch[MAX_PLAYERS]                    = {0, ...}
-new Float:g_fzShowUserStatsTime[MAX_PLAYERS]        = {0.0, ...}
-new Float:g_fShowStatsTime                          = 0.0
-new Float:g_fFreezeTime                             = 0.0
-new Float:g_fFreezeLimitTime                        = 0.0
-new Float:g_fHUDDuration                            = 0.0
+new g_izShowStatsFlags[MAX_PLAYERS + 1]                 = {0, ...}
+new g_izStatsSwitch[MAX_PLAYERS + 1]                    = {0, ...}
+new Float:g_fzShowUserStatsTime[MAX_PLAYERS + 1]        = {0.0, ...}
+new Float:g_fShowStatsTime                              = 0.0
+new Float:g_fFreezeTime                                 = 0.0
+new Float:g_fFreezeLimitTime                            = 0.0
+new Float:g_fHUDDuration                                = 0.0
 
-new g_iRoundEndTriggered                            = 0
-new g_iRoundEndProcessed                            = 0
+new g_iRoundEndTriggered                                = 0
+new g_iRoundEndProcessed                                = 0
 
-new g_pFreezeTime                                   = 0
-new g_pRoundTime                                    = 0
-new g_pHudDuration                                  = 0
-new g_pHudFreezeLimit                               = 0
+new g_pFreezeTime                                       = 0
+new g_pRoundTime                                        = 0
+new g_pHudDuration                                      = 0
+new g_pHudFreezeLimit                                   = 0
 
-new Float:g_fStartGame                              = 0.0
-new g_izTeamScore[MAX_TEAMS]                        = {0, ...}
-new g_izTeamEventScore[MAX_TEAMS]                   = {0, ...}
+new Float:g_fStartGame                                  = 0.0
+new g_izTeamScore[MAX_TEAMS]                            = {0, ...}
+new g_izTeamEventScore[MAX_TEAMS]                       = {0, ...}
 new g_izTeamRndStats[MAX_TEAMS][8]
 new g_izTeamGameStats[MAX_TEAMS][8]
-new g_izUserUserID[MAX_PLAYERS]                     = {0, ...}
-new g_izUserAttackerDistance[MAX_PLAYERS]           = {0, ...}
-new g_izUserVictimDistance[MAX_PLAYERS][MAX_PLAYERS]
-new g_izUserRndName[MAX_PLAYERS][MAX_NAME_LENGTH]
-new g_izUserRndStats[MAX_PLAYERS][8]
-new g_izUserGameStats[MAX_PLAYERS][8]
+new g_izUserUserID[MAX_PLAYERS + 1]                     = {0, ...}
+new g_izUserAttackerDistance[MAX_PLAYERS + 1]           = {0, ...}
+new g_izUserVictimDistance[MAX_PLAYERS + 1][MAX_PLAYERS + 1]
+new g_izUserRndName[MAX_PLAYERS + 1][MAX_NAME_LENGTH]
+new g_izUserRndStats[MAX_PLAYERS + 1][8]
+new g_izUserGameStats[MAX_PLAYERS + 1][8]
 
 // Common buffer to improve performance, as Small always zero-initializes all vars
-new g_sBuffer[MAX_BUFFER_LENGTH + 1]                = ""
-new g_sScore[MAX_TEXT_LENGTH + 1]                   = ""
-new g_sAwardAndScore[MAX_BUFFER_LENGTH + 1]         = ""
+new g_sBuffer[MAX_BUFFER_LENGTH + 1]                    = ""
+new g_sScore[MAX_TEXT_LENGTH + 1]                       = ""
+new g_sAwardAndScore[MAX_BUFFER_LENGTH + 1]             = ""
 
-new t_sText[MAX_TEXT_LENGTH + 1]                    = ""
-new t_sName[MAX_NAME_LENGTH + 1]                    = ""
-new t_sWpn[MAX_WEAPON_LENGTH + 1]                   = ""
+new t_sText[MAX_TEXT_LENGTH + 1]                        = ""
+new t_sName[MAX_NAME_LENGTH + 1]                        = ""
+new t_sWpn[MAX_WEAPON_LENGTH + 1]                       = ""
 
 new g_HudSync_EndRound
 new g_HudSync_SpecInfo
@@ -1547,7 +1547,7 @@ endround_stats()
 	if (g_iRoundEndProcessed || !g_iRoundEndTriggered)
 		return
 
-	new iaPlayers[32], iPlayer, iPlayers, id
+	new iaPlayers[MAX_PLAYERS], iPlayer, iPlayers, id
 
 	get_players(iaPlayers, iPlayers)
 
@@ -1599,7 +1599,7 @@ public eventIntermission()
 
 public end_game_stats()
 {
-	new iaPlayers[32], iPlayer, iPlayers, id
+	new iaPlayers[MAX_PLAYERS], iPlayer, iPlayers, id
 
 	if (EndPlayer)
 	{

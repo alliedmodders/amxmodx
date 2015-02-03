@@ -115,7 +115,7 @@ public getNextValidMap(szNextMap[]) {
 		while(looped < 2) {
 			new minPlayers = g_mapCycle[g_nextPos][MIN]
 			new maxPlayers = g_mapCycle[g_nextPos][MAX]
-			if (maxPlayers == 0) maxPlayers = 32
+			if (maxPlayers == 0) maxPlayers = MAX_PLAYERS
 			if (minPlayers <= g_numPlayers <= maxPlayers) break
 			if (minPlayers <= curNumPlayers <= maxPlayers) {
 				g_numPlayers = curNumPlayers
@@ -215,9 +215,9 @@ readMapCycle() {
 			new szKey1[11], szKey2[11], szValue1[3], szValue2[3]
 			parse(szMapPlayerNum, szKey1, charsmax(szKey1), szValue1, charsmax(szValue1), szKey2, charsmax(szKey2), szValue2, charsmax(szValue2))
 			if (equal(szKey1, "minplayers"))
-				g_mapCycle[g_numMaps][MIN] = clamp(str_to_num(szValue1), 0, 32)
+				g_mapCycle[g_numMaps][MIN] = clamp(str_to_num(szValue1), 0, MAX_PLAYERS)
 			if (equal(szKey2, "maxplayers"))
-				g_mapCycle[g_numMaps][MAX] = clamp(str_to_num(szValue2), 0, 32)
+				g_mapCycle[g_numMaps][MAX] = clamp(str_to_num(szValue2), 0, MAX_PLAYERS)
 
 			if (++g_numMaps == MAX_MAPS) break
 		}

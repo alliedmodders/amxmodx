@@ -65,10 +65,10 @@ new g_cvarCmd[MAX_CVARS*5][32]
 new g_cvarCmdNum
 new g_cvarNum
 
-new g_menuPosition[MAX_PLAYERS]
-new g_menuSelect[MAX_PLAYERS][MAX_CMDS]
-new g_menuSelectNum[MAX_PLAYERS]
-new g_menuLayer[MAX_PLAYERS]
+new g_menuPosition[MAX_PLAYERS + 1]
+new g_menuSelect[MAX_PLAYERS + 1][MAX_CMDS]
+new g_menuSelectNum[MAX_PLAYERS + 1]
+new g_menuLayer[MAX_PLAYERS + 1]
 
 new g_coloredMenus
 

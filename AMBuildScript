@@ -230,7 +230,7 @@ class AMXXConfig(object):
     # Platform-specifics
     if builder.target_platform == 'linux':
       cfg.defines += ['_LINUX', 'POSIX', 'LINUX']
-      cfg.postlink += ['-ldl']
+      cfg.postlink += ['-ldl', '-lm']
       if cxx.name == 'gcc':
         cfg.postlink += ['-static-libgcc']
       elif cxx.name == 'clang':

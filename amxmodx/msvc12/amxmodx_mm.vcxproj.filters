@@ -241,9 +241,6 @@
     <ClCompile Include="..\..\public\zlib\deflate.c">
       <Filter>Source Files\zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\gzio.c">
-      <Filter>Source Files\zlib</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\public\zlib\infback.c">
       <Filter>Source Files\zlib</Filter>
     </ClCompile>
@@ -263,6 +260,18 @@
       <Filter>Source Files\zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\public\zlib\zutil.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\zlib\gzclose.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\zlib\gzlib.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\zlib\gzread.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\zlib\gzwrite.c">
       <Filter>Source Files\zlib</Filter>
     </ClCompile>
   </ItemGroup>

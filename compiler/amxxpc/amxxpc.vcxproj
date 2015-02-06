@@ -101,7 +101,10 @@
     <ClCompile Include="..\..\public\zlib\compress.c" />
     <ClCompile Include="..\..\public\zlib\crc32.c" />
     <ClCompile Include="..\..\public\zlib\deflate.c" />
-    <ClCompile Include="..\..\public\zlib\gzio.c" />
+    <ClCompile Include="..\..\public\zlib\gzclose.c" />
+    <ClCompile Include="..\..\public\zlib\gzlib.c" />
+    <ClCompile Include="..\..\public\zlib\gzread.c" />
+    <ClCompile Include="..\..\public\zlib\gzwrite.c" />
     <ClCompile Include="..\..\public\zlib\infback.c" />
     <ClCompile Include="..\..\public\zlib\inffast.c" />
     <ClCompile Include="..\..\public\zlib\inflate.c" />

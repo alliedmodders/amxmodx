@@ -39,9 +39,6 @@
     <ClCompile Include="..\..\public\zlib\deflate.c">
       <Filter>zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\gzio.c">
-      <Filter>zlib</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\public\zlib\infback.c">
       <Filter>zlib</Filter>
     </ClCompile>
@@ -61,6 +58,18 @@
       <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\public\zlib\zutil.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\zlib\gzclose.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\zlib\gzlib.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\zlib\gzread.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\zlib\gzwrite.c">
       <Filter>zlib</Filter>
     </ClCompile>
   </ItemGroup>

@@ -35,6 +35,7 @@
 #if defined(__linux__) || defined(__APPLE__)
 	#include <sys/mman.h>
 	#include <unistd.h>
+	#include <stdlib.h>
 	#ifndef PAGE_SIZE
 		#define	PAGE_SIZE	4096
 	#endif

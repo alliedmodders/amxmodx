@@ -80,10 +80,10 @@ stock access(id, level)
 
 /** 
  * Flags related to cmd_target:
- *  1 - obey immunity
- *  2 - allow yourself
- *  4 - must be alive
- *  8 - can't be bot
+ * 1 - obey immunity
+ * 2 - allow yourself
+ * 4 - must be alive
+ * 8 - can't be bot
  */
 #define CMDTARGET_OBEY_IMMUNITY (1<<0)
 #define CMDTARGET_ALLOW_SELF    (1<<1)

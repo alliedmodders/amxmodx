@@ -117,6 +117,7 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 
 	if (!country)
 	{
+		MF_SetAmxString(amx, params[2], "error", params[3]); // to keep compatibility with previous version
 		return 0;
 	}
 

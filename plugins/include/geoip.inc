@@ -78,7 +78,7 @@ native geoip_code2(const ip[], ccode[3]);
  *
  * @return          The result length.
  */
-#pragma deprecated Use geoip_code3() instead.
+#pragma deprecated Use geoip_code3_ex() instead.
 native geoip_code3(const ip[], result[4]);
 
 /**

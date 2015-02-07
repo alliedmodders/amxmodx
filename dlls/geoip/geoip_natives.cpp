@@ -100,8 +100,26 @@ static cell AMX_NATIVE_CALL amx_geoip_code3_ex(AMX *amx, cell *params)
 	return 1;
 }
 
-// native geoip_country(const ip[], result[], len, id = -1);
+// native geoip_country(const ip[], result[], len = 45);
+// Deprecated.
 static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
+{
+	int length;
+	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
+
+	const char *path[] = { "country", "names", "en", NULL };
+	const char *country = lookupString(ip, path, &length);
+
+	if (!country)
+	{
+		return MF_SetAmxString(amx, params[2], "error", params[3]);
+	}
+
+	return MF_SetAmxStringUTF8Char(amx, params[2], country, length, params[3] + 1);
+}
+
+// native geoip_country_ex(const ip[], result[], len, id = -1);
+static cell AMX_NATIVE_CALL amx_geoip_country_ex(AMX *amx, cell *params)
 {
 	int length;
 	char *ip = stripPort(MF_GetAmxString(amx, params[1], 0, &length));
@@ -115,12 +133,7 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 	const char *path[] = { "country", "names", getLang(id), NULL };
 	const char *country = lookupString(ip, path, &length);
 
-	if (!country)
-	{
-		return 0;
-	}
-
-	return MF_SetAmxStringUTF8Char(amx, params[2], country, length, params[3] + 1);
+	return MF_SetAmxStringUTF8Char(amx, params[2], country ? country : "", length, params[3] + 1);
 }
 
 // native geoip_city(const ip[], result[], len, id = -1);
@@ -152,7 +165,7 @@ static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
 		finalLength = length + 1; // + 1 for dash.
 		UTIL_Format(code, finalLength + 1, "%s-", countryCode); // + EOS.
 
-		const char *pathRegion[] = { "subdivisions",  "0", "iso_code", NULL }; // First result.
+		const char *pathRegion[] = { "subdivisions", "0", "iso_code", NULL }; // First result.
 		const char *regionCode = lookupString(ip, pathRegion, &length);
 
 		if (regionCode)
@@ -259,22 +272,23 @@ static cell AMX_NATIVE_CALL amx_geoip_continent_name(AMX *amx, cell *params)
 
 AMX_NATIVE_INFO GeoipNatives[] =
 {
-	{ "geoip_code2", amx_geoip_code2 },
-	{ "geoip_code3", amx_geoip_code3 },
+	{ "geoip_code2"         , amx_geoip_code2 }, // Deprecated
+	{ "geoip_code3"         , amx_geoip_code3 }, // Deprecated
 
-	{ "geoip_code2_ex", amx_geoip_code2_ex },
-	{ "geoip_code3_ex", amx_geoip_code3_ex },
+	{ "geoip_code2_ex"      , amx_geoip_code2_ex },
+	{ "geoip_code3_ex"      , amx_geoip_code3_ex },
 
-	{ "geoip_country", amx_geoip_country },
-	{ "geoip_city"   , amx_geoip_city },
+	{ "geoip_country"       , amx_geoip_country }, // Deprecated
+	{ "geoip_country_ex"    , amx_geoip_country_ex },
+	{ "geoip_city"          , amx_geoip_city },
 
-	{ "geoip_region_code", amx_geoip_region_code },
-	{ "geoip_region_name", amx_geoip_region_name },
+	{ "geoip_region_code"   , amx_geoip_region_code },
+	{ "geoip_region_name"   , amx_geoip_region_name },
 
-	{ "geoip_timezone" , amx_geoip_timezone  },
-	{ "geoip_latitude" , amx_geoip_latitude  },
-	{ "geoip_longitude", amx_geoip_longitude },
-	{ "geoip_distance" , amx_geoip_distance  },
+	{ "geoip_timezone"      , amx_geoip_timezone },
+	{ "geoip_latitude"      , amx_geoip_latitude },
+	{ "geoip_longitude"     , amx_geoip_longitude },
+	{ "geoip_distance"      , amx_geoip_distance },
 
 	{ "geoip_continent_code", amx_geoip_continent_code },
 	{ "geoip_continent_name", amx_geoip_continent_name },

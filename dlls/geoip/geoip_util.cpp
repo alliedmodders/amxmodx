@@ -136,17 +136,17 @@ bool lookupByIp(const char *ip, const char **path, MMDB_entry_data_s *result)
 		while (path[i] && strcmp(path[i++], "names"));
 
 		// No localized entry or we use already default language.
-		if (!path[i] || !strcmp(path[i], "en")) 
+		if (!path[i] || !strcmp(path[i], "en"))
 		{
 			return false;
 		}
 
 		// Overwrite user's language.
-		path[i] = "en"; 
-		
+		path[i] = "en";
+
 		// Try again.
 		gai_error = mmdb_error = 0;
-		MMDB_aget_value(&lookup.entry, &entry_data, path); 
+		MMDB_aget_value(&lookup.entry, &entry_data, path);
 
 		if (!entry_data.has_data)
 		{
@@ -170,7 +170,7 @@ const char *lookupString(const char *ip, const char **path, int *length)
 	}
 
 	// Let's avoid a crash in case we go over the buffer size.
-	size_t maxLength = ke::Min((size_t)result.data_size, sizeof(buffer)-1);
+	size_t maxLength = ke::Min((size_t)result.data_size, sizeof(buffer) - 1);
 
 	// Strings from database are not null terminated.
 	memcpy(buffer, result.utf8_string, maxLength);
@@ -221,10 +221,10 @@ int getContinentId(const char *code)
 					case 'N': index = CONTINENT_ANTARCTICA; break;
 					case 'S': index = CONTINENT_ASIA; break;
 				}
-				
+
 				break;
 			}
-			
+
 			case 'E': index = CONTINENT_EUROPE; break;
 			case 'O': index = CONTINENT_OCEANIA; break;
 			case 'N': index = CONTINENT_NORTH_AMERICA; break;
@@ -241,10 +241,10 @@ const char *getLang(int playerIndex)
 	static cvar_t *amxmodx_cl_langs = NULL;
 
 	if (!amxmodx_language)
-		 amxmodx_language = CVAR_GET_POINTER("amx_language");
+		amxmodx_language = CVAR_GET_POINTER("amx_language");
 
 	if (!amxmodx_cl_langs)
-		 amxmodx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
+		amxmodx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
 
 	if (playerIndex >= 0 && amxmodx_cl_langs && amxmodx_language)
 	{

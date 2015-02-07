@@ -52,7 +52,8 @@ native bool:geoip_code2_ex(const ip[], result[3]);
 native bool:geoip_code3_ex(const ip[], result[4]);
 
 /**
- * Lookup the two character country code for a given IP address.
+ * Lookup the two character country code for a given IP address. Sets the buffer to "error" on
+ * an unsuccessful lookup.
  *
  * @deprecated  This native will overflow the buffer by one cell on an unknown ip lookup!
  *              Use geoip_code2_ex instead.
@@ -60,13 +61,14 @@ native bool:geoip_code3_ex(const ip[], result[4]);
  * @param ip        The IP address to lookup.
  * @param result    The result buffer.
  *
- * @return          1 on a successful lookup, 0 otherwise.
+ * @return          The result length.
  */
 #pragma deprecated Use geoip_code2_ex() instead.
 native geoip_code2(const ip[], ccode[3]);
 
 /**
- * Lookup the three character country code for a given IP address.
+ * Lookup the three character country code for a given IP address. Sets the buffer to "error" on
+ * an unsuccessful lookup.
  *
  * @deprecated  This native will overflow the buffer by one cell on an unknown ip lookup!
  *              Use geoip_code3_ex instead.
@@ -74,7 +76,7 @@ native geoip_code2(const ip[], ccode[3]);
  * @param ip        The IP address to lookup.
  * @param result    The result buffer.
  *
- * @return          1 on a successful lookup, 0 otherwise.
+ * @return          The result length.
  */
 #pragma deprecated Use geoip_code3() instead.
 native geoip_code3(const ip[], result[4]);
@@ -82,6 +84,18 @@ native geoip_code3(const ip[], result[4]);
 /**
  * Lookup the full country name for the given IP address.  Sets the buffer to "error" on
  * an unsuccessful lookup.
+ *
+ * @param ip        The IP address to lookup.
+ * @param result    The result of the geoip lookup.
+ * @param len       The maximum length of the result buffer.
+ *
+ * @return          The result length.
+ */
+#pragma deprecated Use geoip_country_ex() instead.
+native geoip_country(const ip[], result[], len = 45);
+
+/**
+ * Lookup the full country name for the given IP address.
  *
  * @param ip        The IP address to lookup.
  * @param result    The result of the geoip lookup.
@@ -94,8 +108,7 @@ native geoip_code3(const ip[], result[4]);
  *
  * @return          The result length on successful lookup, 0 otherwise.
  */
-native geoip_country(const ip[], result[], len = 45, id = -1);
-
+native geoip_country_ex(const ip[], result[], len, id = -1);
 
 /**
  * Look up the full city name for the given IP address.

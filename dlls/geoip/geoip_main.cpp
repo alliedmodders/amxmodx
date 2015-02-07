@@ -44,7 +44,7 @@ void OnGeoipCommand()
 	{
 		if (!HandleDB.filename)
 		{
-			printf("\n  Database is not loaded.\n");
+			MF_PrintSrvConsole("\n  Database is not loaded.\n");
 			return;
 		}
 
@@ -62,20 +62,20 @@ void OnGeoipCommand()
 		strftime(date, sizeof(date), "%Y-%m-%d %H:%M:%S UTC", gmtime((const time_t *)&HandleDB.metadata.build_epoch));
 
 		fprintf(stdout, meta_dump,
-			HandleDB.metadata.node_count,
-			HandleDB.metadata.record_size,
-			HandleDB.metadata.ip_version,
-			HandleDB.metadata.binary_format_major_version,
-			HandleDB.metadata.binary_format_minor_version,
-			HandleDB.metadata.build_epoch,
-			date,
-			HandleDB.metadata.database_type);
+				HandleDB.metadata.node_count,
+				HandleDB.metadata.record_size,
+				HandleDB.metadata.ip_version,
+				HandleDB.metadata.binary_format_major_version,
+				HandleDB.metadata.binary_format_minor_version,
+				HandleDB.metadata.build_epoch,
+				date,
+				HandleDB.metadata.database_type);
 
 		for (size_t i = 0; i < HandleDB.metadata.languages.count; ++i)
 		{
 			fprintf(stdout, "%s", HandleDB.metadata.languages.names[i]);
 
-			if (i <HandleDB.metadata.languages.count - 1) 
+			if (i < HandleDB.metadata.languages.count - 1)
 			{
 				fprintf(stdout, " ");
 			}
@@ -84,11 +84,11 @@ void OnGeoipCommand()
 		fprintf(stdout, "\n");
 		fprintf(stdout, "    Description:\n");
 
-		for (size_t i = 0; i < HandleDB.metadata.description.count; ++i) 
+		for (size_t i = 0; i < HandleDB.metadata.description.count; ++i)
 		{
 			fprintf(stdout, "      %s:   %s\n",
-				HandleDB.metadata.description.descriptions[i]->language,
-				HandleDB.metadata.description.descriptions[i]->description);
+					HandleDB.metadata.description.descriptions[i]->language,
+					HandleDB.metadata.description.descriptions[i]->description);
 		}
 		fprintf(stdout, "\n");
 	}
@@ -96,7 +96,7 @@ void OnGeoipCommand()
 	{
 		if (!HandleDB.filename)
 		{
-			printf("\n  Database is not loaded.\n\n");
+			MF_PrintSrvConsole("\n  Database is not loaded.\n\n");
 			return;
 		}
 
@@ -104,10 +104,10 @@ void OnGeoipCommand()
 
 		if (num_args < 3)
 		{
-			printf("\n  An IP address must be provided.\n\n");
+			MF_PrintSrvConsole("\n  An IP address must be provided.\n\n");
 			return;
 		}
-		
+
 		char *ip = stripPort((char *)CMD_ARGV(2));
 
 		int gai_error = 0;
@@ -117,16 +117,16 @@ void OnGeoipCommand()
 
 		if (gai_error != 0 || mmdb_error != MMDB_SUCCESS || !result.found_entry)
 		{
-			printf("\n  Either look up failed or no found result.\n\n");
+			MF_PrintSrvConsole("\n  Either look up failed or no found result.\n\n");
 			return;
 		}
 
 		MMDB_entry_data_list_s *entry_data_list = NULL;
-		int status = -1; 
+		int status = -1;
 
 		if ((status = MMDB_get_entry_data_list(&result.entry, &entry_data_list)) != MMDB_SUCCESS || entry_data_list == NULL)
 		{
-			printf("\n  Could not retrieve data list - %s.\n\n", MMDB_strerror(status));
+			MF_PrintSrvConsole("\n  Could not retrieve data list - %s.\n\n", MMDB_strerror(status));
 			return;
 		}
 
@@ -158,13 +158,13 @@ void OnGeoipCommand()
 	}
 	else
 	{
-		printf("\n");
-		printf("  Usage: geoip <command> [argument]\n");
-		printf("  Commands:\n");
-		printf("     version                 - display geoip database metadata\n");
-		printf("     dump <ip> [output file] - dump all data from an IP address formatted in a JSON-ish fashion.\n");
-		printf("                               An output file is mod-based and if not provided, it will print in the console.\n");
-		printf("\n");
+		MF_PrintSrvConsole("\n");
+		MF_PrintSrvConsole("  Usage: geoip <command> [argument]\n");
+		MF_PrintSrvConsole("  Commands:\n");
+		MF_PrintSrvConsole("     version                 - display geoip database metadata\n");
+		MF_PrintSrvConsole("     dump <ip> [output file] - dump all data from an IP address formatted in a JSON-ish fashion.\n");
+		MF_PrintSrvConsole("                               An output file is mod-based and if not provided, it will print in the console.\n");
+		MF_PrintSrvConsole("\n");
 	}
 }
 
@@ -177,7 +177,7 @@ bool loadDatabase()
 
 	const char *databases[] =
 	{
-		"City",   
+		"City",
 		"Country" // Is the default shipped database with AMXX.
 	};
 
@@ -192,8 +192,8 @@ bool loadDatabase()
 		// MF_BuildPathname not used because backslash
 		// makes CreateFileMapping failing under windows.
 
-		UTIL_Format(file, sizeof(file)-1, "%s/%s/GeoLite2-%s.mmdb", modName, dataDir, databases[i]);
-                                             
+		UTIL_Format(file, sizeof(file) - 1, "%s/%s/GeoLite2-%s.mmdb", modName, dataDir, databases[i]);
+
 		status = MMDB_open(file, MMDB_MODE_MMAP, &HandleDB);
 
 		if (status == MMDB_SUCCESS)
@@ -218,9 +218,9 @@ bool loadDatabase()
 	}
 
 	MF_Log("Database info: %s %i.%i",
-		HandleDB.metadata.description.descriptions[0]->description,
-		HandleDB.metadata.binary_format_major_version,
-		HandleDB.metadata.binary_format_minor_version);
+		   HandleDB.metadata.description.descriptions[0]->description,
+		   HandleDB.metadata.binary_format_major_version,
+		   HandleDB.metadata.binary_format_minor_version);
 
 	// Retrieve supported languages.
 	for (size_t i = 0; i < HandleDB.metadata.languages.count; i++)

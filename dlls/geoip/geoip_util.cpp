@@ -167,7 +167,9 @@ const char *lookupString(const char *ip, const char **path, int *length)
 	if (!lookupByIp(ip, path, &result))
 	{
 		if (length)
+		{
 			*length = 0;
+		}
 
 		return NULL;
 	}

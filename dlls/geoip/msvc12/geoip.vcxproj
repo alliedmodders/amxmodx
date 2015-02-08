@@ -98,7 +98,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\GeoIP2\maxminddb.cpp" />
+    <ClCompile Include="..\GeoIP2\maxminddb.c" />
     <ClCompile Include="..\geoip_main.cpp" />
     <ClCompile Include="..\geoip_natives.cpp" />
     <ClCompile Include="..\geoip_util.cpp" />

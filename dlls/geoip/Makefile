@@ -15,7 +15,7 @@ PUBLIC_ROOT = ../../public
 
 PROJECT = geoip
 
-OBJECTS = amxxmodule.cpp GeoIP2/maxminddb.cpp geoip_main.cpp geoip_natives.cpp geoip_util.cpp
+OBJECTS = amxxmodule.cpp GeoIP2/maxminddb.c geoip_main.cpp geoip_natives.cpp geoip_util.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###

@@ -23,7 +23,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\GeoIP2\maxminddb.cpp">
+    <ClCompile Include="..\GeoIP2\maxminddb.c">
       <Filter>GeoIP2</Filter>
     </ClCompile>
     <ClCompile Include="..\geoip_util.cpp">

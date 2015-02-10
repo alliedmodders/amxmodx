@@ -230,7 +230,7 @@ CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const cha
 
 	// Detour is disabled on map change.
 	// Don't enable it unless there are things to do.
-	if (info->bound.hasMin || info->bound.hasMax && m_HookDetour)
+	if ((info->bound.hasMin || info->bound.hasMax) && m_HookDetour)
 	{
 		m_HookDetour->EnableDetour();
 	}

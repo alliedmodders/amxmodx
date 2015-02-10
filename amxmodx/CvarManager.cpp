@@ -230,7 +230,7 @@ CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const cha
 
 	// Detour is disabled on map change.
 	// Don't enable it unless there are things to do.
-	if (info->bound.hasMin || info->bound.hasMax)
+	if ((info->bound.hasMin || info->bound.hasMax) && m_HookDetour)
 	{
 		m_HookDetour->EnableDetour();
 	}
@@ -321,7 +321,10 @@ AutoForward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, cons
 	}
 
 	// Detour is disabled on map change.
-	m_HookDetour->EnableDetour();
+	if (m_HookDetour)
+	{
+		m_HookDetour->EnableDetour();
+	}
 
 	AutoForward* forward = new AutoForward(forwardId, *callback);
 	info->hooks.append(new CvarHook(g_plugins.findPlugin(amx)->getId(), forward));
@@ -374,7 +377,10 @@ bool CvarManager::BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, ce
 	}
 
 	// Detour is disabled on map change.
-	m_HookDetour->EnableDetour();
+	if (m_HookDetour)
+	{
+		m_HookDetour->EnableDetour();
+	}
 
 	return true;
 }
@@ -394,7 +400,10 @@ bool CvarManager::SetCvarMin(CvarInfo* info, bool set, float value, int pluginId
 		info->bound.minVal = value;
 
 		// Detour is disabled on map change.
-		m_HookDetour->EnableDetour();
+		if (m_HookDetour)
+		{
+			m_HookDetour->EnableDetour();
+		}
 
 		// Update if needed.
 		CVAR_SET_FLOAT(info->var->name, value);
@@ -418,7 +427,10 @@ bool CvarManager::SetCvarMax(CvarInfo* info, bool set, float value, int pluginId
 		info->bound.maxVal = value;
 
 		// Detour is disabled on map change.
-		m_HookDetour->EnableDetour();
+		if (m_HookDetour)
+		{
+			m_HookDetour->EnableDetour();
+		}
 
 		// Update if needed.
 		CVAR_SET_FLOAT(info->var->name, value);
@@ -596,7 +608,10 @@ void CvarManager::OnPluginUnloaded()
 
 	// There is no point to enable detour if at next map change
 	// no plugins hook cvars.
-	m_HookDetour->DisableDetour();
+	if (m_HookDetour)
+	{
+		m_HookDetour->DisableDetour();
+	}
 }
 
 void CvarManager::OnAmxxShutdown()
@@ -619,5 +634,9 @@ void CvarManager::OnAmxxShutdown()
 	}
 
 	m_Cache.clear();
-	m_HookDetour->Destroy();
+
+	if (m_HookDetour)
+	{
+		m_HookDetour->Destroy();
+	}
 }

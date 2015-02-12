@@ -618,19 +618,25 @@ void CvarManager::OnAmxxShutdown()
 {
 	// Free everything.
 
-	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar = m_Cvars.erase(cvar))
+	CvarsList::iterator iter = m_Cvars.begin();
+
+	while (iter != m_Cvars.end())
 	{
-		for (size_t i = 0; i < (*cvar)->binds.length(); ++i)
+		CvarInfo* cvar = (*iter);
+
+		for (size_t i = 0; i < cvar->binds.length(); ++i)
 		{
-			delete (*cvar)->binds[i];
+			delete cvar->binds[i];
 		}
 
-		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
+		for (size_t i = 0; i < cvar->hooks.length(); ++i)
 		{
-			delete (*cvar)->hooks[i];
+			delete cvar->hooks[i];
 		}
 
-		delete (*cvar);
+		iter = m_Cvars.erase(iter);
+
+		delete cvar;
 	}
 
 	m_Cache.clear();

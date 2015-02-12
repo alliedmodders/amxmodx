@@ -158,8 +158,8 @@ void amx_command()
 		print_srvconsole("\tBorja \"faluco\" Ferrer, Scott \"DS\" Ehlert\n");
 		print_srvconsole("Compiled: %s\n", AMXX_BUILD_TIME);
 #if defined(AMXX_GENERATED_BUILD)
-		print_srvconsole("Built from: https://github.com/alliedmodders/amxmodx/commit/%s", AMXX_SHA);
-		print_srvconsole("Build ID: %s:%s", AMXX_LOCAL_REV, AMXX_SHA);
+		print_srvconsole("Built from: https://github.com/alliedmodders/amxmodx/commit/%s\n", AMXX_SHA);
+		print_srvconsole("Build ID: %s:%s\n", AMXX_LOCAL_REV, AMXX_SHA);
 #endif
 #if defined JIT && !defined ASM32
 		print_srvconsole("Core mode: JIT Only\n");

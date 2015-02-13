@@ -4422,6 +4422,66 @@ static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
 	return 1;
 };
 
+/** native bool:is_arkshine_a_doctor() */
+static cell AMX_NATIVE_CALL is_arkshine_a_doctor(AMX *amx, cell *params)
+{
+	int major, minor, release;
+	sscanf(AMXX_VERSION, "%d.%d.%d%*s", &major, &minor, &release);
+
+	return major >= 1 && minor >= 8 && release >= 3 ? 1 : 0;
+};
+
+/** native create_fake_client(const name[]) */
+static cell AMX_NATIVE_CALL create_fake_client(AMX *amx, cell *params)
+{
+	int len, id;
+	char *name = get_amxstring(amx, params[1], 0, len);
+	edict_t *ent = g_engfuncs.pfnCreateFakeClient(STRING(ALLOC_STRING(name)));
+	static string_t nullStr;
+	static bool allocated = false;
+
+	if (!allocated) /** allocs a null string for a few ent vars */
+	{
+		nullStr = ALLOC_STRING("");
+		allocated = true;
+	};
+
+	if (FNullEnt(ent))
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Unable to create a fake client");
+		return 0;
+	}
+
+	else if (ent->pvPrivateData)
+	{
+		FREE_PRIVATE(ent);
+		ent->pvPrivateData = NULL;
+	};
+
+	CALL_GAME_ENTITY(PLID, "player", VARS(ent));
+
+	ent->v.frags = 0.0f;
+	ent->v.flags |= FL_FAKECLIENT;
+	ent->v.model = nullStr;
+	ent->v.viewmodel = nullStr;
+	ent->v.modelindex = 0;
+	ent->v.renderfx = kRenderFxNone;
+	ent->v.rendermode = kRenderTransAlpha;
+	ent->v.renderamt = 0.0f;
+
+	id = ENTINDEX(ent);
+
+	if (g_bmod_cstrike)
+	{
+		MESSAGE_BEGIN(MSG_BROADCAST, gmsgTeamInfo);
+		WRITE_BYTE(id);
+		WRITE_STRING("UNASSIGNED");
+		MESSAGE_END();
+	};
+
+	return (cell)id;
+};
+
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -4607,5 +4667,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
 	{"is_rukia_a_hag",			is_rukia_a_hag},
+	{"is_arkshine_a_doctor",		is_arkshine_a_doctor},
+	{"create_fake_client",			create_fake_client},
 	{NULL,						NULL}
 };

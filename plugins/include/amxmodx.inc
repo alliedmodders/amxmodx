@@ -3076,6 +3076,21 @@ native admins_flush();
  */
 native bool:has_map_ent_class(const classname[]);
 
+/**
+ * Creates a fake client and sends a global TeamInfo message
+ * for the fake client if the current game supports TeamInfo.
+ *
+ * @note                Ensure there are enough free slots on the server
+ *                      to create a new fake client. Otherwise,
+ *                      an error message is thrown.
+ *
+ * @param name          Name to be assigned to the fake client.
+ *                      If the name is the same with any other player's,
+ *                      then it will start with (1), (2) etc.
+ *
+ * @return              The fake client's ID.
+ */
+native create_fake_client(const name[]);
 
 // Always keep this at the bottom of this file
 #include <message_stocks>

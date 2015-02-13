@@ -69,7 +69,7 @@ static cell AMX_NATIVE_CALL SQL_ThreadQuery(AMX *amx, cell *params)
 
 	int len;
 	const char *handler = MF_GetAmxString(amx, params[2], 0, &len);
-	int fwd = MF_RegisterSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_STRING, FP_CELL, FP_ARRAY, FP_CELL, FP_DONE);
+	int fwd = MF_RegisterSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_STRING, FP_CELL, FP_ARRAY, FP_CELL, FP_CELL, FP_DONE);
 	if (fwd < 1)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Function not found: %s", handler);

@@ -318,8 +318,8 @@ void reparse_color(String* def)
 // -- BAILOPAN
 int CLangMngr::MergeDefinitionFile(const char *file)
 {
-	FILE *fp = fopen(file, "rt");
-	if (!fp)
+	const char* md5buffer = hashFile(file, Hash_Md5);
+	if (!md5buffer)
 	{
 		CVector<md5Pair *>::iterator iter;
 		for (iter = FileList.begin(); iter != FileList.end(); ++iter)
@@ -335,11 +335,6 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		return 0;
 	}
 	
-	MD5 md5;
-	md5.update(fp);			// closes for us
-	md5.finalize();
-	char md5buffer[33];
-	md5.hex_digest(md5buffer);
 	bool foundFlag = false;
 	
 	CVector<md5Pair *>::iterator iter;
@@ -366,7 +361,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 		FileList.push_back(p);
 	}
 
-	fp = fopen(file, "rt");
+	FILE* fp = fopen(file, "rt");
 	if (!fp)
 	{
 		AMXXLOG_Log("[AMXX] Failed to re-open dictionary file: %s", file);

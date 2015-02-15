@@ -69,7 +69,6 @@ binary.sources = [
   'fakemeta.cpp',
   'amxxfile.cpp',
   'CLang.cpp',
-  'md5.cpp',
   'emsg.cpp',
   'CForward.cpp',
   'CPlugin.cpp',
@@ -100,6 +99,13 @@ binary.sources = [
   'cvars.cpp',
   '../public/memtools/CDetour/detours.cpp',
   '../public/memtools/CDetour/asm/asm.c',
+  '../public/hashing/hashing.cpp',
+  '../public/hashing/hashers/crc32.cpp',
+  '../public/hashing/hashers/md5.cpp',
+  '../public/hashing/hashers/sha1.cpp',
+  '../public/hashing/hashers/sha256.cpp',
+  '../public/hashing/hashers/sha3.cpp',
+  '../public/hashing/hashers/keccak.cpp'
 ]
 
 if builder.target_platform == 'windows':

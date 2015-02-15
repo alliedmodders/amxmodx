@@ -2310,6 +2310,7 @@ native force_unmodified(force_type, const mins[3], const maxs[3], const filename
  *
  * @return              Number of cells written to the buffer (always 32)
  */
+#pragma deprecated Use now hash_string() function. Also, see Hash_* constants.
 native md5(const szString[], md5buffer[34]);
 
 /**
@@ -2321,7 +2322,33 @@ native md5(const szString[], md5buffer[34]);
  * @return              Number of cells written to the buffer (always 32)
  * @error               If the file can not be opened, and error is thrown.
  */
+#pragma deprecated Use now hash_file() function. Also, see Hash_* constants.
 native md5_file(const file[], md5buffer[34]);
+
+/**
+ * Hashes a string.
+ *
+ * @param string        String to hash.
+ * @param type          Type of hash. See Hash_* constants in amxconst.inc file.
+ * @param output        Output string to store hash in.
+ * @param outputSize    The maximum size of the output string to store hash in.
+ *
+ * @return              Number of written bytes.
+ */
+native hash_string(const string[], const HashType:type, output[], const outputSize);
+
+/**
+ * Hashes a file's content (bytes).
+ *
+ * @param fileName      File to hash.
+ * @param type          Type of hash. See Hash_* constants in amxconst.inc file.
+ * @param output        Output string to store hash in.
+ * @param outputSize    The maximum size of the output string to store hash in.
+ *
+ * @return              Number of written bytes.
+ * @error               If the file couldn't be opened, an error is thrown.
+ */
+native hash_file(const fileName[], const HashType:type, output[], const outputSize);
 
 /**
  * Returns the internal flags set on the plugin's state.
@@ -3075,7 +3102,6 @@ native admins_flush();
  * @return              True if an entity is found, false otherwise
  */
 native bool:has_map_ent_class(const classname[]);
-
 
 // Always keep this at the bottom of this file
 #include <message_stocks>

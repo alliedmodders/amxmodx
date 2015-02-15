@@ -149,7 +149,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\public\hashing;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <StringPooling>true</StringPooling>
@@ -294,6 +294,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\public\memtools\CDetour\asm\asm.c" />
     <ClCompile Include="..\..\public\memtools\CDetour\detours.cpp" />
+    <ClCompile Include="..\..\public\hashing\hashing.cpp" />
+    <ClCompile Include="..\..\public\hashing\hashers\crc32.cpp" />
+    <ClCompile Include="..\..\public\hashing\hashers\md5.cpp" />
+    <ClCompile Include="..\..\public\hashing\hashers\sha1.cpp" />
+    <ClCompile Include="..\..\public\hashing\hashers\sha256.cpp" />
+    <ClCompile Include="..\..\public\hashing\hashers\sha3.cpp" />
+    <ClCompile Include="..\..\public\hashing\hashers\keccak.cpp" />
     <ClCompile Include="..\amx.cpp" />
     <ClCompile Include="..\amxcore.cpp" />
     <ClCompile Include="..\amxdbg.cpp" />
@@ -333,7 +340,6 @@
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
     <ClCompile Include="..\libraries.cpp" />
-    <ClCompile Include="..\md5.cpp" />
     <ClCompile Include="..\messages.cpp" />
     <ClCompile Include="..\meta_api.cpp" />
     <ClCompile Include="..\modules.cpp" />
@@ -367,6 +373,13 @@
     <ClInclude Include="..\..\public\memtools\CDetour\asm\asm.h" />
     <ClInclude Include="..\..\public\memtools\CDetour\detourhelpers.h" />
     <ClInclude Include="..\..\public\memtools\CDetour\detours.h" />
+    <ClInclude Include="..\..\public\hashing\hashing.h" />
+    <ClInclude Include="..\..\public\hashing\hashers\crc32.h" />
+    <ClInclude Include="..\..\public\hashing\hashers\md5.h" />
+    <ClInclude Include="..\..\public\hashing\hashers\sha1.h" />
+    <ClInclude Include="..\..\public\hashing\hashers\sha256.h" />
+    <ClInclude Include="..\..\public\hashing\hashers\sha3.h" />
+    <ClInclude Include="..\..\public\hashing\hashers\keccak.h" />
     <ClInclude Include="..\amx.h" />
     <ClInclude Include="..\amxdbg.h" />
     <ClInclude Include="..\amxmodx.h" />
@@ -398,7 +411,6 @@
     <ClInclude Include="..\fakemeta.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\libraries.h" />
-    <ClInclude Include="..\md5.h" />
     <ClInclude Include="..\messages.h" />
     <ClInclude Include="..\modules.h" />
     <ClInclude Include="..\natives.h" />

@@ -29,7 +29,7 @@
 	#endif
 #endif
 
-#include "md5.h"
+#include "hashing.h"
 #include "CVector.h"
 #include "CList.h"
 #include "CQueue.h"

@@ -222,6 +222,7 @@ scripting_files = [
   'testsuite/fmttest.sma',
   'testsuite/fwdtest1.sma',
   'testsuite/fwdtest2.sma',
+  'testsuite/hashing_test.sma',
   'testsuite/logtest.sma',
   'testsuite/menutest.sma',
   'testsuite/native_test.sma',

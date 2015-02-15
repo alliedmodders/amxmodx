@@ -450,3 +450,25 @@ enum AdminProp
 	AdminProp_Access,
 	AdminProp_Flags
 };
+
+/**
+ * HashType constants
+ * To be used on hash_file() and hash_string()
+ */
+enum HashType
+{
+	Hash_Crc32 = 0,   // Provides CRC32 hashing
+	Hash_Md5,         // Provides MD5 hashing
+	Hash_Sha1,        // Provides SHA1 hashing
+	Hash_Sha256,      // Provides SHA256 hashing
+
+	Hash_Sha3_224,    // Provides SHA3 224 bit hashing
+	Hash_Sha3_256,    // Provides SHA3 256 bit hashing
+	Hash_Sha3_384,    // Provides SHA3 384 bit hashing
+	Hash_Sha3_512,    // Provides SHA3 512 bit hashing
+
+	Hash_Keccak_224,  // Provides Keccak 224 bit hashing
+	Hash_Keccak_256,  // Provides Keccak 256 bit hashing
+	Hash_Keccak_384,  // Provides Keccak 384 bit hashing
+	Hash_Keccak_512   // Provides Keccak 512 bit hashing
+};

@@ -17,13 +17,17 @@ PROJECT = amxmodx
 OBJECTS = meta_api.cpp CFile.cpp CVault.cpp vault.cpp float.cpp file.cpp modules.cpp \
 	  CMisc.cpp CTask.cpp string.cpp amxmodx.cpp CEvent.cpp CCmd.cpp CLogEvent.cpp \
 	  srvcmd.cpp strptime.cpp amxcore.cpp amxtime.cpp power.cpp amxxlog.cpp fakemeta.cpp \
-	  amxxfile.cpp CLang.cpp md5.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
+	  amxxfile.cpp CLang.cpp emsg.cpp CForward.cpp CPlugin.cpp CModule.cpp \
 	  CMenu.cpp util.cpp amx.cpp amxdbg.cpp natives.cpp newmenus.cpp debugger.cpp \
 	  optimizer.cpp format.cpp messages.cpp libraries.cpp vector.cpp sorting.cpp \
 	  nongpl_matches.cpp CFlagManager.cpp datastructs.cpp \
 	  trie_natives.cpp CDataPack.cpp datapacks.cpp stackstructs.cpp \
 	  CTextParsers.cpp textparse.cpp CvarManager.cpp cvars.cpp \
-	  ../public/memtools/CDetour/detours.cpp ../public/memtools/CDetour/asm/asm.c
+	  ../public/memtools/CDetour/detours.cpp ../public/memtools/CDetour/asm/asm.c \
+	  ../public/hashing/hashing.cpp ../public/hashing/hashers/crc32.cpp \
+	  ../public/hashing/hashers/md5.cpp ../public/hashing/hashers/sha1.cpp \
+	  ../public/hashing/hashers/sha256.cpp ../public/hashing/hashers/sha3.cpp \
+	  ../public/hashing/hashers/keccak.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###
@@ -38,8 +42,8 @@ CPP_OSX = clang
 
 LINK = -Lzlib
 
-INCLUDE = -I. -I../public/amtl -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared \
-	  -I$(HLSDK)/public -I$(MM_ROOT)
+INCLUDE = -I. -I../public/amtl -I../public/hashing -I$(HLSDK) -I$(HLSDK)/common -I$(HLSDK)/dlls \
+	-I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/public -I$(MM_ROOT)
 
 ################################################
 ### DO NOT EDIT BELOW HERE FOR MOST PROJECTS ###

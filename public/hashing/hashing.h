@@ -24,15 +24,15 @@
    #include <endian.h>
 #elif defined(__APPLE__)
    #include <sys/types.h>
-   #define __BYTE_ORDER BYTE_ORDER
+   #define __BYTE_ORDER    BYTE_ORDER
 #endif
 
 #if !defined(BIG_ENDIAN)
-   #define BIG_ENDIAN     4321
+   #define BIG_ENDIAN      4321
 #endif
 
 #if !defined(LITTLE_ENDIAN)
-   #define LITTLE_ENDIAN  1234
+   #define LITTLE_ENDIAN   1234
 #endif
 
 /**
@@ -51,35 +51,35 @@
  */
 enum HashType
 {
-	Hash_Crc32 = 0,		// Provides CRC32 hashing
-	Hash_Md5,			// Provides MD5 hashing
-	Hash_Sha1,			// Provides SHA1 hashing
-	Hash_Sha256,		// Provides SHA256 hashing
+	Hash_Crc32 = 0,   // Provides CRC32 hashing
+	Hash_Md5,         // Provides MD5 hashing
+	Hash_Sha1,        // Provides SHA1 hashing
+	Hash_Sha256,      // Provides SHA256 hashing
 
-	Hash_Sha3_224,		// Provides SHA3 224 bit hashing
-	Hash_Sha3_256,		// Provides SHA3 256 bit hashing
-	Hash_Sha3_384,		// Provides SHA3 384 bit hashing
-	Hash_Sha3_512,		// Provides SHA3 512 bit hashing
+	Hash_Sha3_224,    // Provides SHA3 224 bit hashing
+	Hash_Sha3_256,    // Provides SHA3 256 bit hashing
+	Hash_Sha3_384,    // Provides SHA3 384 bit hashing
+	Hash_Sha3_512,    // Provides SHA3 512 bit hashing
 
-	Hash_Keccak_224,	// Provides KECCAK 224 bit hashing
-	Hash_Keccak_256,	// Provides KECCAK 256 bit hashing
-	Hash_Keccak_384,	// Provides KECCAK 384 bit hashing
-	Hash_Keccak_512,	// Provides KECCAK 512 bit hashing
+	Hash_Keccak_224,  // Provides KECCAK 224 bit hashing
+	Hash_Keccak_256,  // Provides KECCAK 256 bit hashing
+	Hash_Keccak_384,  // Provides KECCAK 384 bit hashing
+	Hash_Keccak_512,  // Provides KECCAK 512 bit hashing
 };
 
 /**
  * Hashes a file content (bytes)
- * @note			Returns NULL if "fileName" does not represent a file name
- * @note			Returns NULL if file could not be opened
- * @note			Returns NULL if invalid "Type" is specified
+ * @note       Returns NULL if "fileName" does not represent a file name
+ * @note       Returns NULL if file could not be opened
+ * @note       Returns NULL if invalid "Type" is specified
  */
 const char* hashFile(const char* fileName, HashType Type);
 
 /**
  * Hashes a string
- * @note			Returns NULL if "String" does not represent a string
- * @note			Returns NULL if the string has no bytes to hash
- * @note			Returns NULL if invalid "Type" is specified
+ * @note       Returns NULL if "String" does not represent a string
+ * @note       Returns NULL if the string has no bytes to hash
+ * @note       Returns NULL if invalid "Type" is specified
  */
 const char* hashString(const char* String, size_t stringLen, HashType Type);
 

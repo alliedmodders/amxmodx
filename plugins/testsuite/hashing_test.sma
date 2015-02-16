@@ -9,39 +9,71 @@
 
 #include <amxmodx>
 
+new const g_hashTypes[HashType][] =
+{
+	"CRC32",
+	"MD5",
+	"SHA1",
+	"SHA256",
+	"SHA3 224",
+	"SHA3 256",
+	"SHA3 384",
+	"SHA3 512",
+	"Keccak 224",
+	"Keccak 256",
+	"Keccak 384",
+	"Keccak 512"
+};
+
 public plugin_init()
 {
 	register_plugin("Hashing Test", "1.0", "Hattrick (Claudiu HKS)");
+	register_srvcmd("hash_string", "cmdHashString");
+	register_srvcmd("hash_file", "cmdHashFile");
 }
 
-public client_command(Id)
+public cmdHashString()
 {
-	new Command[64], StringOrFile[8], Data[64], HashTypeStr[4], Output[256], HashType:Type;
-
-	if (is_user_connected(Id) && !is_user_bot(Id) && !is_user_hltv(Id))
+	if (read_argc() < 2)
 	{
-		read_argv(0, Command, charsmax(Command));
-		read_argv(1, StringOrFile, charsmax(StringOrFile));
-		read_argv(2, Data, charsmax(Data));
-		read_argv(3, HashTypeStr, charsmax(HashTypeStr));
-
-		if (equali(Command, "Hash"))
-		{
-			if (equali(StringOrFile, "File"))
-			{
-				Type = HashType:str_to_num(HashTypeStr);
-
-				hash_file(Data, Type, Output, charsmax(Output));
-				log_amx("Original: %s Hashed: %s", Data, Output);
-			}
-
-			else if (equali(StringOrFile, "String"))
-			{
-				Type = HashType:str_to_num(HashTypeStr);
-
-				hash_string(Data, Type, Output, charsmax(Output));
-				log_amx("Original: %s Hashed: %s", Data, Output);
-			}
-		}
+		server_print("Specify string to be hashed.");
+		return PLUGIN_HANDLED;
 	}
+
+	new String[256], Output[256], HashType:Type;
+	read_argv(1, String, charsmax(String));
+
+	log_amx("Hashing string %s...", String);
+	log_amx("-----------------------------------");
+
+	for (Type = Hash_Crc32; Type < any:sizeof g_hashTypes; Type++)
+	{
+		hash_string(String, Type, Output, charsmax(Output));
+		log_amx("%s :  %s", g_hashTypes[Type], Output);
+	}
+
+	return PLUGIN_HANDLED;
+}
+
+public cmdHashFile()
+{
+	if (read_argc() < 2)
+	{
+		server_print("Specify file to be hashed.");
+		return PLUGIN_HANDLED;
+	}
+
+	new File[256], Output[256], HashType:Type;
+	read_argv(1, File, charsmax(File));
+
+	log_amx("Hashing file %s...", File);
+	log_amx("-----------------------------------");
+
+	for (Type = Hash_Crc32; Type < any:sizeof g_hashTypes; Type++)
+	{
+		hash_file(File, Type, Output, charsmax(Output));
+		log_amx("%s :  %s", g_hashTypes[Type], Output);
+	}
+
+	return PLUGIN_HANDLED;
 }

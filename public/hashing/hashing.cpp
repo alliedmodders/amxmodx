@@ -12,9 +12,9 @@
 
 /**
  * Hashes a file content (bytes)
- * @note			Returns NULL if "fileName" does not represent a file name
- * @note			Returns NULL if file could not be opened
- * @note			Returns NULL if invalid "Type" is specified
+ * @note       Returns NULL if "fileName" does not represent a file name
+ * @note       Returns NULL if file could not be opened
+ * @note       Returns NULL if invalid "Type" is specified
  */
 const char* hashFile(const char* fileName, HashType Type)
 {
@@ -46,12 +46,12 @@ const char* hashFile(const char* fileName, HashType Type)
 	 */
 	switch (Type)
 	{
-	case Hash_Sha3_224:		Sha3.changeBits(SHA3::Bits224);		break;
-	case Hash_Sha3_384:		Sha3.changeBits(SHA3::Bits384);		break;
-	case Hash_Sha3_512:		Sha3.changeBits(SHA3::Bits512);		break;
-	case Hash_Keccak_224:	Kec.changeBits(Keccak::Keccak224);	break;
-	case Hash_Keccak_384:	Kec.changeBits(Keccak::Keccak384);	break;
-	case Hash_Keccak_512:	Kec.changeBits(Keccak::Keccak512);	break;
+	case Hash_Sha3_224:   Sha3.changeBits(SHA3::Bits224);   break;
+	case Hash_Sha3_384:   Sha3.changeBits(SHA3::Bits384);    break;
+	case Hash_Sha3_512:   Sha3.changeBits(SHA3::Bits512);    break;
+	case Hash_Keccak_224: Kec.changeBits(Keccak::Keccak224); break;
+	case Hash_Keccak_384: Kec.changeBits(Keccak::Keccak384); break;
+	case Hash_Keccak_512: Kec.changeBits(Keccak::Keccak512); break;
 	};
 
 	/**
@@ -63,18 +63,18 @@ const char* hashFile(const char* fileName, HashType Type)
 	{
 		switch (Type)
 		{
-		case Hash_Crc32:		Crc32.add(Bytes, Count);	break;
-		case Hash_Md5:			Md5.add(Bytes, Count);		break;
-		case Hash_Sha1:			Sha1.add(Bytes, Count);		break;
-		case Hash_Sha256:		Sha256.add(Bytes, Count);	break;
+		case Hash_Crc32:     Crc32.add(Bytes, Count);  break;
+		case Hash_Md5:       Md5.add(Bytes, Count);    break;
+		case Hash_Sha1:      Sha1.add(Bytes, Count);   break;
+		case Hash_Sha256:    Sha256.add(Bytes, Count); break;
 		case Hash_Sha3_224:
 		case Hash_Sha3_256:
 		case Hash_Sha3_384:
-		case Hash_Sha3_512:		Sha3.add(Bytes, Count);		break;
+		case Hash_Sha3_512:   Sha3.add(Bytes, Count);  break;
 		case Hash_Keccak_224:
 		case Hash_Keccak_256:
 		case Hash_Keccak_384:
-		case Hash_Keccak_512:	Kec.add(Bytes, Count);		break;
+		case Hash_Keccak_512: Kec.add(Bytes, Count);   break;
 		};
 	};
 
@@ -88,18 +88,18 @@ const char* hashFile(const char* fileName, HashType Type)
 	 */
 	switch (Type)
 	{
-	case Hash_Crc32:		return Crc32.getHash();
-	case Hash_Md5:			return Md5.getHash();
-	case Hash_Sha1:			return Sha1.getHash();
-	case Hash_Sha256:		return Sha256.getHash();
+	case Hash_Crc32:      return Crc32.getHash();
+	case Hash_Md5:        return Md5.getHash();
+	case Hash_Sha1:       return Sha1.getHash();
+	case Hash_Sha256:     return Sha256.getHash();
 	case Hash_Sha3_224:
 	case Hash_Sha3_256:
 	case Hash_Sha3_384:
-	case Hash_Sha3_512:		return Sha3.getHash();
+	case Hash_Sha3_512:   return Sha3.getHash();
 	case Hash_Keccak_224:
 	case Hash_Keccak_256:
 	case Hash_Keccak_384:
-	case Hash_Keccak_512:	return Kec.getHash();
+	case Hash_Keccak_512: return Kec.getHash();
 	};
 
 	/**
@@ -110,8 +110,8 @@ const char* hashFile(const char* fileName, HashType Type)
 
 /**
  * Hashes a string
- * @note            Returns NULL if "String" does not represent a string
- * @note            Returns NULL if invalid "Type" is specified
+ * @note       Returns NULL if "String" does not represent a string
+ * @note       Returns NULL if invalid "Type" is specified
  */
 const char* hashString(const char* String, size_t stringLen, HashType Type)
 {
@@ -136,12 +136,12 @@ const char* hashString(const char* String, size_t stringLen, HashType Type)
 	 */
 	switch (Type)
 	{
-	case Hash_Sha3_224:		Sha3.changeBits(SHA3::Bits224);		break;
-	case Hash_Sha3_384:		Sha3.changeBits(SHA3::Bits384);		break;
-	case Hash_Sha3_512:		Sha3.changeBits(SHA3::Bits512);		break;
-	case Hash_Keccak_224:	Kec.changeBits(Keccak::Keccak224);	break;
-	case Hash_Keccak_384:	Kec.changeBits(Keccak::Keccak384);	break;
-	case Hash_Keccak_512:	Kec.changeBits(Keccak::Keccak512);	break;
+	case Hash_Sha3_224:   Sha3.changeBits(SHA3::Bits224);    break;
+	case Hash_Sha3_384:   Sha3.changeBits(SHA3::Bits384);    break;
+	case Hash_Sha3_512:   Sha3.changeBits(SHA3::Bits512);    break;
+	case Hash_Keccak_224: Kec.changeBits(Keccak::Keccak224); break;
+	case Hash_Keccak_384: Kec.changeBits(Keccak::Keccak384); break;
+	case Hash_Keccak_512: Kec.changeBits(Keccak::Keccak512); break;
 	};
 
 	/**
@@ -149,18 +149,18 @@ const char* hashString(const char* String, size_t stringLen, HashType Type)
 	 */
 	switch (Type)
 	{
-	case Hash_Crc32:		return Crc32(String, stringLen);
-	case Hash_Md5:			return Md5(String, stringLen);
-	case Hash_Sha1:			return Sha1(String, stringLen);
-	case Hash_Sha256:		return Sha256(String, stringLen);
+	case Hash_Crc32:      return Crc32(String, stringLen);
+	case Hash_Md5:        return Md5(String, stringLen);
+	case Hash_Sha1:       return Sha1(String, stringLen);
+	case Hash_Sha256:     return Sha256(String, stringLen);
 	case Hash_Sha3_224:
 	case Hash_Sha3_256:
 	case Hash_Sha3_384:
-	case Hash_Sha3_512:		return Sha3(String, stringLen);
+	case Hash_Sha3_512:   return Sha3(String, stringLen);
 	case Hash_Keccak_224:
 	case Hash_Keccak_256:
 	case Hash_Keccak_384:
-	case Hash_Keccak_512:	return Kec(String, stringLen);
+	case Hash_Keccak_512: return Kec(String, stringLen);
 	};
 
 	/**

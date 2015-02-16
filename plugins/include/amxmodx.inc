@@ -2310,7 +2310,7 @@ native force_unmodified(force_type, const mins[3], const maxs[3], const filename
  *
  * @return              Number of cells written to the buffer (always 32)
  */
-#pragma deprecated Use now hash_string() function. Also, see Hash_* constants.
+#pragma deprecated Use hash_string() function. Also, see Hash_* constants.
 native md5(const szString[], md5buffer[34]);
 
 /**
@@ -2322,14 +2322,14 @@ native md5(const szString[], md5buffer[34]);
  * @return              Number of cells written to the buffer (always 32)
  * @error               If the file can not be opened, and error is thrown.
  */
-#pragma deprecated Use now hash_file() function. Also, see Hash_* constants.
+#pragma deprecated Use hash_file() function. Also, see Hash_* constants.
 native md5_file(const file[], md5buffer[34]);
 
 /**
- * Hashes a string.
+ * Generate a hash value (message digest)
  *
- * @param string        String to hash.
- * @param type          Type of hash. See Hash_* constants in amxconst.inc file.
+ * @param string        String to be hashed.
+ * @param type          Type of selected hashing algorithm. See Hash_* constants in amxconst.inc file.
  * @param output        Output string to store hash in.
  * @param outputSize    The maximum size of the output string to store hash in.
  *
@@ -2338,10 +2338,10 @@ native md5_file(const file[], md5buffer[34]);
 native hash_string(const string[], const HashType:type, output[], const outputSize);
 
 /**
- * Hashes a file's content (bytes).
+ * Generate a hash value using the contents of a given file
  *
- * @param fileName      File to hash.
- * @param type          Type of hash. See Hash_* constants in amxconst.inc file.
+ * @param fileName      Path of file to be hashed.
+ * @param type          Type of selected hashing algorithm. See Hash_* constants in amxconst.inc file.
  * @param output        Output string to store hash in.
  * @param outputSize    The maximum size of the output string to store hash in.
  *

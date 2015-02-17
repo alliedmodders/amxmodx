@@ -146,7 +146,6 @@
     <ClCompile Include="..\..\..\..\public\memtools\MemoryUtils.cpp" />
     <ClCompile Include="..\amxx_api.cpp" />
     <ClCompile Include="..\CstrikeHacks.cpp" />
-    <ClCompile Include="..\CstrikeHLTypeConversion.cpp" />
     <ClCompile Include="..\CstrikeNatives.cpp" />
     <ClCompile Include="..\CstrikePlayer.cpp" />
     <ClCompile Include="..\CstrikeUtils.cpp" />

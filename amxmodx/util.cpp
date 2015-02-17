@@ -291,7 +291,6 @@ void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 		MESSAGE_BEGIN(MSG_BROADCAST, gmsgTextMsg);
 	
 	WRITE_BYTE(msg_dest);
-	WRITE_STRING("%s");
 	WRITE_STRING(msg);
 	MESSAGE_END();
 	msg[190] = c;
@@ -307,7 +306,6 @@ void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
 
 	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEntity);
 	WRITE_BYTE(sender);
-	WRITE_STRING("%s");
 	WRITE_STRING(msg);
 	MESSAGE_END();
 	msg[190] = c;

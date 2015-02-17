@@ -241,6 +241,12 @@ static cell AMX_NATIVE_CALL IsStackEmpty(AMX* amx, cell* params)
 static cell AMX_NATIVE_CALL DestroyStack(AMX* amx, cell* params)
 {
 	cell *handle = get_amxaddr(amx, params[1]);
+
+	if (*handle == 0)
+	{
+		return 0;
+	}
+
 	CellArray *vec = HandleToVector(amx, *handle);
 
 	if (vec == NULL)

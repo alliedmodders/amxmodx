@@ -18,7 +18,7 @@
 #define ERR_BADKEY	1	// Lang key not found
 #define ERR_BADLANG 2	// Invalid lang
 
-struct md5Pair
+struct CRC32Pair
 {
 	String file;
 	String val;
@@ -118,7 +118,7 @@ private:
 	
 	LangVec m_Languages;
 
-	CVector<md5Pair *> FileList;
+	CVector<CRC32Pair *> FileList;
 	CVector<String *> KeyList;
 	THash<String, keytbl_val> KeyTable;
 

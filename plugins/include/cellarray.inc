@@ -63,7 +63,9 @@ stock ByteCountToCells(size)
  *                      number of items. The items are not valid to read or set
  *                      until they have actually been pushed into the array.
  *
- * @return              Handle to the array.
+ * @return              New array handle, which must be freed via ArrayDestroy()
+ * @error               If an invalid cellsize is provided an error will be
+ * 	                    thrown.
  */
 native Array:ArrayCreate(cellsize = 1, reserved = 32);
 
@@ -431,7 +433,7 @@ native DoNotUse:ArrayGetStringHandle(Array:which, item);
  *
  * @param which         Array to destroy
  *
- * @return              1 if the array was destroyed, 0 if nothing had to be
+ * @return              1 if the Array was destroyed, 0 if nothing had to be
  *                      destroyed (invalid handle)
  */
 native ArrayDestroy(&Array:which);
@@ -444,10 +446,10 @@ native ArrayDestroy(&Array:which);
  *
  * public MySortFunc(Array:array, item1, item2, const data[], data_size)
  *
- *  array           - Array handle in its current un-sorted state
- *  item1, item2    - Current item pair being compared
- *  data[]          - Extra data array passed to the sort func
- *  data_size       - Size of extra data
+ *   array           - Array handle in its current un-sorted state
+ *   item1, item2    - Current item pair being compared
+ *   data[]          - Extra data array passed to the sort func
+ *   data_size       - Size of extra data
  *
  * @note The comparison function should return:
  *         -1 if item1 should go before item2
@@ -485,20 +487,20 @@ native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
  *
  * public MySortFunc(Array:array, elem1, elem2, const data[], data_size)
  *
- *  array           - Array handle in its current un-sorted state
- *  elem1, elem2    - Current element pair being compared
- *  data[]          - Extra data array passed to the sort func
- *  data_size       - Size of extra data
+ *   array           - Array handle in its current un-sorted state
+ *   elem1, elem2    - Current element pair being compared
+ *   data[]          - Extra data array passed to the sort func
+ *   data_size       - Size of extra data
  *
  * @note For Arrays with a cellsize larger than 1 (used for storing arrays and
  *       strings), the function is called in the following manner:
  *
  * public MySortFunc(Array:array, elem1[], elem2[], const data[], data_size)
  *
- *  array               - Array handle in its current un-sorted state
- *  elem1[], elem2[]    - Current element pair being compared
- *  data[]              - Extra data array passed to the sort func
- *  data_size           - Size of extra data
+ *   array               - Array handle in its current un-sorted state
+ *   elem1[], elem2[]    - Current element pair being compared
+ *   data[]              - Extra data array passed to the sort func
+ *   data_size           - Size of extra data
  *
  *
  * @note The comparison function should return:

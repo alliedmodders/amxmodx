@@ -16,12 +16,35 @@
 	#include <amxmodx>
 #endif
 
+/**
+ * Returns if the client has any admin flags set
+ *
+ * @param id    Client index
+ *
+ * @return      1 if client has any admin flags, 0 otherwise
+ */
 stock is_user_admin(id)
 {
 	new __flags = get_user_flags(id);
 	return (__flags > 0 && !(__flags & ADMIN_USER));
 }
 
+/**
+ * Returns if the user can execute the current command by checking the necessary
+ * admin flags and parameter count. Displays a denied access message to the user
+ * if missing privileges or a usage example if too few parameters are provided.
+ *
+ * @note This should be used inside of a command forward as it uses read_argc()
+ *       to check the parameter count.
+ *
+ * @param id            Client index
+ * @param level         Required admin flags
+ * @param cid           Command id
+ * @param num           Required number of parameters
+ * @param acesssilent   If true no denied access message will be printed
+ *
+ * @return              1 if access granted and parameters provided, 0 otherwise
+ */
 stock cmd_access(id, level, cid, num, bool:accesssilent = false)
 {
 	new has_access = 0;
@@ -64,6 +87,14 @@ stock cmd_access(id, level, cid, num, bool:accesssilent = false)
 	return 1;
 }
 
+/**
+ * Returns if the client has the specified admin flags.
+ *
+ * @param id        Client index
+ * @param level     Required admin flags
+ *
+ * @return          1 if client has the admin flags, 0 otherwise
+ */
 stock access(id, level)
 {
 	if (level == ADMIN_ADMIN)
@@ -78,18 +109,36 @@ stock access(id, level)
 	return (get_user_flags(id) & level);
 }
 
-/** 
- * Flags related to cmd_target:
- * 1 - obey immunity
- * 2 - allow yourself
- * 4 - must be alive
- * 8 - can't be bot
+/**
+ * cmd_target flags
  */
-#define CMDTARGET_OBEY_IMMUNITY (1<<0)
-#define CMDTARGET_ALLOW_SELF    (1<<1)
-#define CMDTARGET_ONLY_ALIVE    (1<<2)
-#define CMDTARGET_NO_BOTS       (1<<3)
+#define CMDTARGET_OBEY_IMMUNITY (1<<0) // Obey immunity
+#define CMDTARGET_ALLOW_SELF    (1<<1) // Allow self targeting
+#define CMDTARGET_ONLY_ALIVE    (1<<2) // Target must be alive
+#define CMDTARGET_NO_BOTS       (1<<3) // Target can't be a bot
 
+/**
+ * Processes a generic target pattern and tries to match it to a client based
+ * on filtering flags. If no unique target is found an appropriate message is
+ * displayed to the admin.
+ *
+ * @note The pattern is first matched case insensitively against client names.
+ *       If no match is found it is matched against client authids. If still no
+ *       match is found and the pattern starts with '#' it is finally matched
+ *       against client userids.
+ * @note Since client names are matched by substring the pattern can potentially
+ *       match multiple targets. In that case the function will return 0 and ask
+ *       the admin to provide a unique pattern.
+ * @note The filtering flags are applied after the pattern matching has
+ *       finished. That means the pattern has to be unique against all clients
+ *       on the server even if some of them are not eligible.
+ *
+ * @param id        Client index of admin performing an action
+ * @param arg       Target pattern
+ * @param flags     Filtering flags, see CMDTARGET_* constants above
+ *
+ * @return          Client index, or 0 if no or multiple clients matched
+ */
 stock cmd_target(id, const arg[], flags = CMDTARGET_OBEY_IMMUNITY)
 {
 	new player = find_player("bl", arg);
@@ -145,12 +194,13 @@ stock cmd_target(id, const arg[], flags = CMDTARGET_OBEY_IMMUNITY)
 }
 
 /**
- * Standard method to show activity to clients connected to the server.
- * This depends on the amx_show_activity cvar.  See documentation for more details.
+ * Standard method to show admin activity to clients connected to the server.
+ * This depends on the amx_show_activity cvar. See documentation for more details.
  *
- * @param id     The user id of the person doing the action.
- * @param name   The name of the person doing the action.
- * @param fmt    The format string to display.  Do not put the "ADMIN:" prefix in this.
+ * @param id     Client index performing the action
+ * @param name   Name of client performing the action
+ * @param fmt    Formatting rules
+ * @param ...    Variable number of formatting parameters
  *
  * @noreturn
  */
@@ -237,14 +287,14 @@ stock show_activity(id, const name[], const fmt[], any:...)
 }
 
 /**
- * Standard method to show activity to one single client.
- * This is useful for messages that get pieced together by many language keys.
- * This depends on the amx_show_activity cvar.  See documentation for more details.
+ * Standard method to show admin activity to a single client.
+ * This depends on the amx_show_activity cvar. See documentation for more details.
  *
- * @param idtarget   The user id of the person to display to.  0 is invalid.
- * @param idadmin    The user id of the person doing the action.
- * @param name       The name of the person doing the action.
- * @param fmt        The format string to display.  Do not put the "ADMIN:" prefix in this.
+ * @param idtarget  Client index to display message to
+ * @param id        Client index performing the action
+ * @param name      Name of client performing the action
+ * @param fmt       Formatting rules
+ * @param ...       Variable number of formatting parameters
  *
  * @noreturn
  */
@@ -254,7 +304,7 @@ stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
 	{
 		return;
 	}
-	
+
 	static __amx_show_activity;
 	if (__amx_show_activity == 0)
 	{
@@ -437,6 +487,18 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 	}
 }
 
+/**
+ * Returns if the mod running on the server supports colored menus.
+ *
+ * @note The full list of mods supporting colored menus:
+ *       Counter-Strike, Counter-Strike: Condition Zero, Deathmatch Classic,
+ *       Day of Defeat, Team Fortress Classic and Half-Life: Deathmatch.
+ * @note Since this is a stock and compiled into the plugin, the list of
+ *       supported mods will not update and require recompilation of the plugin
+ *       if the list ever changed.
+ *
+ * @return  1 if colored menus are supported, 0 otherwise
+ */
 stock colored_menus()
 {
 	static ColoredMenus = -1;
@@ -465,6 +527,11 @@ stock colored_menus()
 	return ColoredMenus;
 }
 
+/**
+ * Returns if the mod running on the server is a version of Counter-Strike.
+ *
+ * @return  1 if mod is Counter-Strike, 0 otherwise
+ */
 stock cstrike_running()
 {
 	new mod_name[32];
@@ -473,6 +540,13 @@ stock cstrike_running()
 	return (equal(mod_name, "cstrike") || equal(mod_name, "czero") || equal(mod_name, "csv15") || equal(mod_name, "cs13"));
 }
 
+/**
+ * Returns if the server is running a specific mod.
+ *
+ * @param mod   Mod name to check for
+ *
+ * @return      1 if mod name matches, 0 otherwise
+ */
 stock is_running(const mod[])
 {
 	new mod_name[32];
@@ -481,42 +555,92 @@ stock is_running(const mod[])
 	return equal(mod_name, mod);
 }
 
+/**
+ * Retrieves the path to the AMXX base directory.
+ *
+ * @param name  Buffer to copy path to
+ * @param len   Maximum buffer size
+ *
+ * @return      Number of cells written to buffer
+ */
 stock get_basedir(name[], len)
 {
 	return get_localinfo("amxx_basedir", name, len);
 }
 
+/**
+ * Retrieves the path to the AMXX configs directory.
+ *
+ * @param name  Buffer to copy path to
+ * @param len   Maximum buffer size
+ *
+ * @return      Number of cells written to buffer
+ */
 stock get_configsdir(name[], len)
 {
 	return get_localinfo("amxx_configsdir", name, len);
 }
 
+/**
+ * Retrieves the path to the AMXX data directory.
+ *
+ * @param name  Buffer to copy path to
+ * @param len   Maximum buffer size
+ *
+ * @return      Number of cells written to buffer
+ */
 stock get_datadir(name[], len)
 {
 	return get_localinfo("amxx_datadir", name, len);
 }
 
+/**
+ * Provides a shorthand to register a working menu.
+ *
+ * @note Combines the necessary calls to register_menuid() and
+ *       register_menucmd() into a single function.
+ *
+ * @param title     Menu name
+ * @param keys      Key flags
+ * @param function  Callback function
+ * @param outside   Catch menus outside the calling plugin
+ *
+ * @noreturn
+ * @error           If an invalid callback function is specified, an error will
+ *                  be thrown.
+ */
 stock register_menu(const title[], keys, const function[], outside = 0)
 {
 	register_menucmd(register_menuid(title, outside), keys, function);
 }
 
 /**
- * Backwards Compatibility
- * don't use it!
+ * Alias to get_configsdir provided for backwards compatibility. Originally
+ * intended to retrieve the AMXX custom directory.
+ *
+ * @deprecated Should not be used as the concept of a custom directory does no
+ *             longer exists in AMXX.
+ *
+ * @param name  Buffer to copy path to
+ * @param len   Maximum buffer size
+ *
+ * @return      Number of cells written to buffer
  */
+#pragma deprecated The concept of a custom directory no longer exists in AMXX. Do not use.
 stock get_customdir(name[], len)
 {
-	return get_localinfo("amxx_configsdir", name, len);
+	return get_configsdir(name, len);
 }
 
 /**
- * Add a menu item to Menus Front-End plugin ("amxmodmenu").
+ * Adds a menu item/command to the admin menu (amxmodmenu) handled by the
+ * "Menus Front-End" plugin, if it is loaded.
  *
- * @param MENU_TEXT     Text that will be shown for this item in menu.
- * @param MENU_CMD      Command that should be executed to start menu.
- * @param MENU_ACCESS   Access required for menu.
- * @param MENU_PLUGIN   The exact case-insensitive name of plugin holding the menu command.
+ * @param MENU_TEXT     Item text that will be displayed in the menu
+ * @param MENU_CMD      Command that will be executed on the client
+ * @param MENU_ACCESS   Admin access required for menu command
+ * @param MENU_PLUGIN   Case-insensitive name or filename of plugin providing
+ *                      the menu command
  *
  * @noreturn
  */
@@ -526,12 +650,15 @@ stock AddMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const 
 }
 
 /**
- * Add a menu item to "amx_menu", that should also be accessible by non-admins.
+ * Adds a menu item/command to the client menu (amx_menu) handled by the
+ * "Menus Front-End" plugin, if it is loaded. Items should be accessible by
+ * non-admins.
  *
- * @param MENU_TEXT     Text that will be shown for this item in menu.
- * @param MENU_CMD      Command that should be executed to start menu.
- * @param MENU_ACCESS   Access required for menu.
- * @param MENU_PLUGIN   The exact case-insensitive name of plugin holding the menu command.
+ * @param MENU_TEXT     Item text that will be displayed in the menu
+ * @param MENU_CMD      Command that will be executed on the client
+ * @param MENU_ACCESS   Admin access required for menu command
+ * @param MENU_PLUGIN   Case-insensitive name or filename of plugin providing
+ *                      the menu command
  *
  * @noreturn
  */
@@ -541,7 +668,17 @@ stock AddClientMenuItem(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, 
 }
 
 /**
- * Internal function used by above stocks.
+ * Helper function used by AddMenuItem() and AddClientMenuItem()
+ *
+ * @param MENU_TEXT             Item text that will be displayed in the menu
+ * @param MENU_CMD              Command that will be executed on the client
+ * @param MENU_ACCESS           Admin access required for menu command
+ * @param MENU_PLUGIN           Case-insensitive name or filename of plugin
+ *                              providing the menu command
+ * @param ADD_TO_CLIENT_MENU    If true adds command to client menu, false adds
+ *                              to admin menu
+ *
+ * @noreturn
  */
 stock AddMenuItem_call(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, const MENU_PLUGIN[], const bool:ADD_TO_CLIENT_MENU)
 {
@@ -557,7 +694,7 @@ stock AddMenuItem_call(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, c
 
 	new status = callfunc_begin(ADD_TO_CLIENT_MENU ? "AddClientMenu" : "AddMenu", filename);
 	new bool:failed = true;
-	switch (status) 
+	switch (status)
 	{
 		case 1:
 		{
@@ -592,11 +729,28 @@ stock AddMenuItem_call(const MENU_TEXT[], const MENU_CMD[], const MENU_ACCESS, c
 	callfunc_end();
 }
 
+/**
+ * Computes an offset from a given value while constraining it between the
+ * specified bounds, rolling over if necessary.
+ *
+ * @note Example: The range is 1-5 and the base value (seed) is 3, the offset
+ *       that the value should be moved by is also 3. Offsetting the value by 3
+ *       would result in 6, but it is to be constrained between 1 and 5. With
+ *       clamp() this would result in 5, but this function rolls the value over
+ *       and returns 1 instead.
+ *
+ * @param low       Lower bound
+ * @param high      Higher bound
+ * @param seed      Base value
+ * @param offset    Offset to move
+ *
+ * @return          Computed offset value between specified bounds
+ */
 stock constraint_offset(low, high, seed, offset)
 {
 	new numElements = high - low + 1;
 	offset += seed - low;
-   
+
 	if (offset >= 0)
 	{
 		return low + (offset % numElements);
@@ -610,25 +764,25 @@ stock constraint_offset(low, high, seed, offset)
 }
 
 /**
- * Tells if the user has ANY of the provided flags.
+ * Returns if the client has any of the specified admin flags.
  *
  * @param id      Client index
  * @param flags   Flag string
  *
- * @return        1 if the user has ANY of the provided flags, 0 otherwise
+ * @return        1 if the user has any of the specified flags, 0 otherwise
  */
 stock has_flag(id, const flags[])
 {
 	return (get_user_flags(id) & read_flags(flags));
 }
 
- /**
- * Tells if the user has ALL of the provided flags.
+/**
+ * Returns if the client has all of the specified admin flags.
  *
  * @param id      Client index
  * @param flags   Flag string
  *
- * @return        1 if the user has ALL of the provided flags, 0 otherwise
+ * @return        1 if the user has all of the specified flags, 0 otherwise
  */
 stock has_all_flags(id, const flags[])
 {
@@ -637,11 +791,11 @@ stock has_all_flags(id, const flags[])
 }
 
 /**
- * Resets a client's menu.
+ * Resets the client's menu.
  *
- * @note This is just a wrapper around show_menu for the sake of readability.
+ * @note This is a wrapper around show_menu() for the sake of readability.
  *
- * @param index     Client to reset menu to, use 0 to reset to all clients
+ * @param index     Client to reset menu of, 0 to reset all clients
  *
  * @noreturn
  */

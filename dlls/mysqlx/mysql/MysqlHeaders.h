@@ -30,7 +30,7 @@
 
 #include <ISQLDriver.h>
 #if defined WIN32 || defined _WIN32
-#include <winsock.h>
+#include <WinSock2.h>
 #endif
 typedef unsigned long ulong;
 #include <mysql.h>

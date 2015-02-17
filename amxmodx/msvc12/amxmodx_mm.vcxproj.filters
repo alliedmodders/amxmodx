@@ -34,6 +34,12 @@
     <Filter Include="Memtools\CDetour\asm">
       <UniqueIdentifier>{64a22cd4-3715-45de-8af2-e54017733be6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Hashing">
+      <UniqueIdentifier>{c9218ea1-c21e-4b90-b7a2-cb665d905a3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hashing\Hashers">
+      <UniqueIdentifier>{v3248ea1-a53v-5ax5-b2d1-f3gh53d2fg43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\amx.cpp">
@@ -120,9 +126,6 @@
     <ClCompile Include="..\libraries.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\md5.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\messages.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -203,6 +206,27 @@
     </ClCompile>
     <ClCompile Include="..\cvars.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\hashing\hashing.cpp">
+      <Filter>Hashing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\hashing\hashers\crc32.cpp">
+      <Filter>Hashing\Hashers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\hashing\hashers\md5.cpp">
+      <Filter>Hashing\Hashers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\hashing\hashers\sha1.cpp">
+      <Filter>Hashing\Hashers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\hashing\hashers\sha256.cpp">
+      <Filter>Hashing\Hashers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\hashing\hashers\sha3.cpp">
+      <Filter>Hashing\Hashers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\hashing\hashers\keccak.cpp">
+      <Filter>Hashing\Hashers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -290,9 +314,6 @@
     <ClInclude Include="..\libraries.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\md5.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\messages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -361,6 +382,27 @@
     </ClInclude>
     <ClInclude Include="..\CvarManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\hashing\hashing.h">
+      <Filter>Hashing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\hashing\hashers\crc32.h">
+      <Filter>Hashing\Hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\hashing\hashers\md5.h">
+      <Filter>Hashing\Hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\hashing\hashers\sha1.h">
+      <Filter>Hashing\Hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\hashing\hashers\sha256.h">
+      <Filter>Hashing\Hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\hashing\hashers\sha3.h">
+      <Filter>Hashing\Hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\hashing\hashers\keccak.h">
+      <Filter>Hashing\Hashers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

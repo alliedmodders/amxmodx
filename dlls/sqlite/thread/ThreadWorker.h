@@ -12,7 +12,7 @@
 
 #include "BaseWorker.h"
 
-#define DEFAULT_THINK_TIME_MS	500
+#define DEFAULT_THINK_TIME_MS	25
 
 class ThreadWorker : public BaseWorker, public IThread
 {

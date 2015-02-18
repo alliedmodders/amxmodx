@@ -29,6 +29,8 @@ void ShutdownThreading()
 {
 	if (g_pWorker)
 	{
+		// Flush all the remaining job fast!
+		g_pWorker->SetMaxThreadsPerFrame(8192);
 		g_pWorker->Stop(true);
 		delete g_pWorker;
 		g_pWorker = NULL;
@@ -316,7 +318,7 @@ void OnPluginsLoaded()
 		g_QueueLock = g_Threader.MakeMutex();
 	}
 
-	g_pWorker = new ThreadWorker(&g_Threader, 250);
+	g_pWorker = new ThreadWorker(&g_Threader, DEFAULT_THINK_TIME_MS);
 	if (!g_pWorker->Start())
 	{
 		delete g_pWorker;
@@ -333,7 +335,7 @@ void StartFrame()
 {
 	if (g_pWorker && (g_lasttime < gpGlobals->time))
 	{
-        g_lasttime = gpGlobals->time + 0.05f;
+		g_lasttime = gpGlobals->time + 0.025f;
 		g_QueueLock->Lock();
 		size_t remaining = g_ThreadQueue.size();
 		if (remaining)
@@ -364,6 +366,8 @@ void OnPluginsUnloading()
 		return;
 	}
 
+	// Flush all the remaining job fast!
+	g_pWorker->SetMaxThreadsPerFrame(8192);
 	g_pWorker->Stop(false);
 	delete g_pWorker;
 	g_pWorker = NULL;

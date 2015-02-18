@@ -318,15 +318,15 @@ void reparse_color(String* def)
 // -- BAILOPAN
 int CLangMngr::MergeDefinitionFile(const char *file)
 {
-	const char* md5buffer = hashFile(file, Hash_Md5);
-	if (!md5buffer)
+	const char* hashBuffer = hashFile(file, Hash_Crc32);
+	if (!hashBuffer)
 	{
-		CVector<md5Pair *>::iterator iter;
+		CVector<CRC32Pair *>::iterator iter;
 		for (iter = FileList.begin(); iter != FileList.end(); ++iter)
 		{
 			if ((*iter)->file.compare(file) == 0)
 			{
-				char buf[33] = {0};
+				char buf[8 /* CRC32 Length */ + 1] = { 0 };
 				(*iter)->val.assign(buf);
 				break;
 			}	
@@ -337,16 +337,16 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	
 	bool foundFlag = false;
 	
-	CVector<md5Pair *>::iterator iter;
+	CVector<CRC32Pair *>::iterator iter;
 	for (iter = FileList.begin(); iter != FileList.end(); ++iter)
 	{
 		if ((*iter)->file.compare(file) == 0)
 		{
-			if ((*iter)->val.compare(md5buffer) == 0)
+			if ((*iter)->val.compare(hashBuffer) == 0)
 			{
 				return -1;
 			} else {
-				(*iter)->val.assign(md5buffer);
+				(*iter)->val.assign(hashBuffer);
 				break;
 			}
 			foundFlag = true;
@@ -355,9 +355,9 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 
 	if (!foundFlag)
 	{
-		md5Pair *p = new md5Pair;
+		CRC32Pair *p = new CRC32Pair;
 		p->file.assign(file);
-		p->val.assign(md5buffer);
+		p->val.assign(hashBuffer);
 		FileList.push_back(p);
 	}
 

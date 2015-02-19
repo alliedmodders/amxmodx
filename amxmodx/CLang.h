@@ -11,6 +11,7 @@
 #define _INCLUDE_CLANG_H
 
 #include "sh_tinyhash.h"
+#include "sm_stringhashmap.h"
 
 #define LANG_SERVER 0
 #define LANG_PLAYER -1
@@ -118,7 +119,7 @@ private:
 	
 	LangVec m_Languages;
 
-	CVector<CRC32Pair *> FileList;
+	StringHashMap<time_t> FileList;
 	CVector<String *> KeyList;
 	THash<String, keytbl_val> KeyTable;
 

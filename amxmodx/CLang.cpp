@@ -318,48 +318,22 @@ void reparse_color(String* def)
 // -- BAILOPAN
 int CLangMngr::MergeDefinitionFile(const char *file)
 {
-	const char* hashBuffer = hashFile(file, Hash_Crc32);
-	if (!hashBuffer)
+	/** Tries to open the file. */
+	struct stat fileStat;
+	if (stat(file, &fileStat))
 	{
-		CVector<CRC32Pair *>::iterator iter;
-		for (iter = FileList.begin(); iter != FileList.end(); ++iter)
-		{
-			if ((*iter)->file.compare(file) == 0)
-			{
-				char buf[8 /* CRC32 Length */ + 1] = { 0 };
-				(*iter)->val.assign(buf);
-				break;
-			}	
-		}
+		FileList.remove(file);
 		AMXXLOG_Log("[AMXX] Failed to open dictionary file: %s", file);
 		return 0;
 	}
-	
-	bool foundFlag = false;
-	
-	CVector<CRC32Pair *>::iterator iter;
-	for (iter = FileList.begin(); iter != FileList.end(); ++iter)
-	{
-		if ((*iter)->file.compare(file) == 0)
-		{
-			if ((*iter)->val.compare(hashBuffer) == 0)
-			{
-				return -1;
-			} else {
-				(*iter)->val.assign(hashBuffer);
-				break;
-			}
-			foundFlag = true;
-		}
-	}
 
-	if (!foundFlag)
-	{
-		CRC32Pair *p = new CRC32Pair;
-		p->file.assign(file);
-		p->val.assign(hashBuffer);
-		FileList.push_back(p);
-	}
+	/** Checks if there is an existing entry with same time stamp. */
+	time_t timeStamp;
+	if (FileList.retrieve(file, &timeStamp) && fileStat.st_mtime == timeStamp)
+		return -1;
+
+	/** If yes, it either means that the entry doesn't exist or the existing entry needs to be updated. */
+	FileList.replace(file, fileStat.st_mtime);
 
 	FILE* fp = fopen(file, "rt");
 	if (!fp)
@@ -532,12 +506,6 @@ const char *CLangMngr::GetDef(const char *langName, const char *key, int &status
 
 void CLangMngr::InvalidateCache()
 {
-	for (size_t i = 0; i < FileList.size(); i++)
-	{
-		if (FileList[i])
-			delete FileList[i];
-	}
-
 	FileList.clear();
 }
 
@@ -556,12 +524,6 @@ void CLangMngr::Clear()
 	{
 		if (m_Languages[i])
 			delete m_Languages[i];
-	}
-
-	for (i = 0; i < FileList.size(); i++)
-	{
-		if (FileList[i])
-			delete FileList[i];
 	}
 
 	for (i = 0; i < KeyList.size(); i++)

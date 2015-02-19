@@ -40,17 +40,19 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 		float minVal = amx_ctof(params[6]);
 		float maxVal = amx_ctof(params[8]);
 
-		if (!g_CvarManager.SetCvarMin(info, hasMin, minVal, plugin->getId()))
+		if (hasMax && minVal > maxVal)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "The minimum value can not be above the maximum value");
 			return 0;
 		}
-
-		if (!g_CvarManager.SetCvarMax(info, hasMax, maxVal, plugin->getId()))
+		else if (hasMin && maxVal < minVal)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "The maximum value can not be below the minimum value");
 			return 0;
 		}
+
+		g_CvarManager.SetCvarMin(info, hasMin, minVal, plugin->getId());
+		g_CvarManager.SetCvarMax(info, hasMax, maxVal, plugin->getId());
 
 		return reinterpret_cast<cell>(info->var);
 	}
@@ -498,20 +500,24 @@ static cell AMX_NATIVE_CALL set_pcvar_bounds(AMX *amx, cell *params)
 	{
 		case CvarBound_Lower:
 		{
-			if (!g_CvarManager.SetCvarMin(info, set, value, pluginId))
+			if (set && info->bound.hasMax && value > info->bound.maxVal)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "The minimum value can not be above the maximum value");
 				return 0;
 			}
+
+			g_CvarManager.SetCvarMin(info, set, value, pluginId);
 			break;
 		}
 		case CvarBound_Upper:
 		{
-			if (!g_CvarManager.SetCvarMax(info, set, value, pluginId))
+			if (set && info->bound.hasMin && value < info->bound.minVal)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "The maximum value can not be below the minimum value");
 				return 0;
 			}
+
+			g_CvarManager.SetCvarMax(info, set, value, pluginId);
 			break;
 		}
 		default:

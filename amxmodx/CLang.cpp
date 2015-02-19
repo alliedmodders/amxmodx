@@ -318,48 +318,22 @@ void reparse_color(String* def)
 // -- BAILOPAN
 int CLangMngr::MergeDefinitionFile(const char *file)
 {
-	const char* md5buffer = hashFile(file, Hash_Md5);
-	if (!md5buffer)
+	/** Tries to open the file. */
+	struct stat fileStat;
+	if (stat(file, &fileStat))
 	{
-		CVector<md5Pair *>::iterator iter;
-		for (iter = FileList.begin(); iter != FileList.end(); ++iter)
-		{
-			if ((*iter)->file.compare(file) == 0)
-			{
-				char buf[33] = {0};
-				(*iter)->val.assign(buf);
-				break;
-			}	
-		}
+		FileList.remove(file);
 		AMXXLOG_Log("[AMXX] Failed to open dictionary file: %s", file);
 		return 0;
 	}
-	
-	bool foundFlag = false;
-	
-	CVector<md5Pair *>::iterator iter;
-	for (iter = FileList.begin(); iter != FileList.end(); ++iter)
-	{
-		if ((*iter)->file.compare(file) == 0)
-		{
-			if ((*iter)->val.compare(md5buffer) == 0)
-			{
-				return -1;
-			} else {
-				(*iter)->val.assign(md5buffer);
-				break;
-			}
-			foundFlag = true;
-		}
-	}
 
-	if (!foundFlag)
-	{
-		md5Pair *p = new md5Pair;
-		p->file.assign(file);
-		p->val.assign(md5buffer);
-		FileList.push_back(p);
-	}
+	/** Checks if there is an existing entry with same time stamp. */
+	time_t timeStamp;
+	if (FileList.retrieve(file, &timeStamp) && fileStat.st_mtime == timeStamp)
+		return -1;
+
+	/** If yes, it either means that the entry doesn't exist or the existing entry needs to be updated. */
+	FileList.replace(file, fileStat.st_mtime);
 
 	FILE* fp = fopen(file, "rt");
 	if (!fp)
@@ -532,12 +506,6 @@ const char *CLangMngr::GetDef(const char *langName, const char *key, int &status
 
 void CLangMngr::InvalidateCache()
 {
-	for (size_t i = 0; i < FileList.size(); i++)
-	{
-		if (FileList[i])
-			delete FileList[i];
-	}
-
 	FileList.clear();
 }
 
@@ -556,12 +524,6 @@ void CLangMngr::Clear()
 	{
 		if (m_Languages[i])
 			delete m_Languages[i];
-	}
-
-	for (i = 0; i < FileList.size(); i++)
-	{
-		if (FileList[i])
-			delete FileList[i];
 	}
 
 	for (i = 0; i < KeyList.size(); i++)

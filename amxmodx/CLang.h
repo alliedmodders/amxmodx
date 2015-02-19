@@ -11,18 +11,13 @@
 #define _INCLUDE_CLANG_H
 
 #include "sh_tinyhash.h"
+#include "sm_stringhashmap.h"
 
 #define LANG_SERVER 0
 #define LANG_PLAYER -1
 
 #define ERR_BADKEY	1	// Lang key not found
 #define ERR_BADLANG 2	// Invalid lang
-
-struct md5Pair
-{
-	String file;
-	String val;
-};
 
 struct sKeyDef
 {
@@ -118,7 +113,7 @@ private:
 	
 	LangVec m_Languages;
 
-	CVector<md5Pair *> FileList;
+	StringHashMap<time_t> FileList;
 	CVector<String *> KeyList;
 	THash<String, keytbl_val> KeyTable;
 

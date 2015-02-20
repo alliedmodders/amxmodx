@@ -155,7 +155,7 @@ void CvarManager::CreateCvarHook(void)
 }
 
 CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, int flags,
-								  const char* helpText, bool hasMin, float min, bool hasMax, float max)
+								  const char* helpText)
 {
 	cvar_t*    var = nullptr;
 	CvarInfo* info = nullptr;
@@ -166,7 +166,7 @@ CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const cha
 		var = CVAR_GET_POINTER(name);
 
 		// Whether it exists, we need to prepare a new entry.
-		info = new CvarInfo(name, helpText, hasMin, min, hasMax, max, plugin, pluginId);
+		info = new CvarInfo(name, helpText, plugin, pluginId);
 
 		if (var)
 		{
@@ -385,19 +385,20 @@ bool CvarManager::BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, ce
 	return true;
 }
 
-bool CvarManager::SetCvarMin(CvarInfo* info, bool set, float value, int pluginId)
+void CvarManager::SetCvarMin(CvarInfo* info, bool set, float value, int pluginId)
 {
 	info->bound.hasMin = set;
 	info->bound.minPluginId = pluginId;
 
 	if (set)
 	{
-		if (info->bound.hasMax && value > info->bound.maxVal)
-		{
-			return false;
-		}
-
 		info->bound.minVal = value;
+
+		// Current value is already in the allowed range.
+		if (info->var->value >= value)
+		{
+			return;
+		}
 
 		// Detour is disabled on map change.
 		if (m_HookDetour)
@@ -408,23 +409,22 @@ bool CvarManager::SetCvarMin(CvarInfo* info, bool set, float value, int pluginId
 		// Update if needed.
 		CVAR_SET_FLOAT(info->var->name, value);
 	}
-
-	return true;
 }
 
-bool CvarManager::SetCvarMax(CvarInfo* info, bool set, float value, int pluginId)
+void CvarManager::SetCvarMax(CvarInfo* info, bool set, float value, int pluginId)
 {
 	info->bound.hasMax = set;
 	info->bound.maxPluginId = pluginId;
 
 	if (set)
 	{
-		if (info->bound.hasMin && value < info->bound.minVal)
-		{
-			return false;
-		}
-
 		info->bound.maxVal = value;
+
+		// Current value is already in the allowed range.
+		if (info->var->value <= value)
+		{
+			return;
+		}
 
 		// Detour is disabled on map change.
 		if (m_HookDetour)
@@ -435,8 +435,6 @@ bool CvarManager::SetCvarMax(CvarInfo* info, bool set, float value, int pluginId
 		// Update if needed.
 		CVAR_SET_FLOAT(info->var->name, value);
 	}
-
-	return true;
 }
 
 size_t CvarManager::GetRegCvarsCount()

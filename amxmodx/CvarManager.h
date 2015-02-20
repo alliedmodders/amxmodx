@@ -78,17 +78,12 @@ struct CvarBind
 
 struct CvarBound
 {
-	CvarBound(bool hasMin_, float minVal_, bool hasMax_, float maxVal_, int minPluginId_, int maxPluginId_)
-		:
-		hasMin(hasMin_), minVal(minVal_),
-		hasMax(hasMax_), maxVal(maxVal_),
-		minPluginId(minPluginId_), 
-		maxPluginId(maxPluginId_) {};
-
 	CvarBound()
 		:
 		hasMin(false), minVal(0), 
-		hasMax(false), maxVal(0) {};
+		hasMax(false), maxVal(0),
+		minPluginId(-1),
+		maxPluginId(-1) {};
 
 	bool    hasMin;
 	float   minVal;
@@ -103,13 +98,10 @@ typedef ke::Vector<CvarBind*> CvarsBind;
 
 struct CvarInfo : public ke::InlineListNode<CvarInfo>
 {
-	CvarInfo(const char* name_, const char* helpText, 
-			 bool hasMin_, float min_, bool hasMax_, float max_, 
-			 const char* plugin_, int pluginId_)
+	CvarInfo(const char* name_, const char* helpText, const char* plugin_, int pluginId_)
 		:
 		name(name_), description(helpText),	
-		plugin(plugin_), pluginId(pluginId_),
-		bound(hasMin_, min_, hasMax_, max_, pluginId_, pluginId_) {};
+		plugin(plugin_), pluginId(pluginId_), bound() {};
 
 	CvarInfo(const char* name_)
 		:
@@ -150,19 +142,15 @@ class CvarManager
 
 		void      CreateCvarHook();
 
-		CvarInfo* CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, 
-							 int flags = 0, const char* helpText = "",
-							 bool hasMin = false, float min = 0, 
-							 bool hasMax = false, float max = 0);
-
+		CvarInfo* CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, int flags = 0, const char* helpText = "");
 		CvarInfo* FindCvar(const char* name);
 		CvarInfo* FindCvar(size_t index);
 		bool      CacheLookup(const char* name, CvarInfo** info);
 
 		AutoForward*  HookCvarChange(cvar_t* var, AMX* amx, cell param, const char** callback);
 		bool          BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, cell varofs, size_t varlen = 0);
-		bool          SetCvarMin(CvarInfo* info, bool set, float value, int pluginId);
-		bool          SetCvarMax(CvarInfo* info, bool set, float value, int pluginId);
+		void          SetCvarMin(CvarInfo* info, bool set, float value, int pluginId);
+		void          SetCvarMax(CvarInfo* info, bool set, float value, int pluginId);
 
 		size_t    GetRegCvarsCount();
 

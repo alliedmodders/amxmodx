@@ -19,12 +19,32 @@ if not exist amxxpc.exe (
 
 if not exist compiled mkdir compiled
 
-for %%i in (*.sma) do (
-	echo // Compiling %%i ...
+if "%1"=="" (
+	for %%i in (*.sma) do (
+		echo // Compiling %%i ...
 
-	amxxpc.exe "%%i" -ocompiled/"%%~ni.amxx"
+		amxxpc.exe "%%i" -ocompiled/"%%~ni.amxx"
 
-	echo.
+		if %ERRORLEVEL% EQU 0 (
+			pause
+			exit
+		)
+
+		echo.
+	)
+) else (
+	for %%i in (%1) do (
+		echo // Compiling %%i ...
+
+		amxxpc.exe "%%i" -ocompiled/"%%~ni.amxx"
+
+		if %ERRORLEVEL% EQU 0 (
+			pause
+			exit
+		)
+
+		echo.
+	)
 )
 
 pause

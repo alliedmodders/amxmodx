@@ -149,7 +149,7 @@ public actionMenu(id, key)
 	{
 		case 8: displayMenu(id, ++g_menuPosition[id])
 		case 9: displayMenu(id, --g_menuPosition[id])
-		default: client_cmd(id, "%s", g_menuCmd[g_menuPosition[id] * 8 + key]) // may need to replace : amxclient_cmd?
+		default: client_cmd(id, "%s", g_menuCmd[g_menuPosition[id] * 8 + key])
 	}
 	return PLUGIN_HANDLED
 }
@@ -160,7 +160,7 @@ public clientActionMenu(id, key)
 	{
 		case 8: clientDisplayMenu(id, ++g_menuPosition[id])
 		case 9: clientDisplayMenu(id, --g_menuPosition[id])
-		default: client_cmd(id, "%s", g_clientMenuCmd[g_menuPosition[id] * 8 + key]) // may need to replace : amxclient_cmd?
+		default: client_cmd(id, "%s", g_clientMenuCmd[g_menuPosition[id] * 8 + key])
 	}
 	return PLUGIN_HANDLED
 }
@@ -187,7 +187,7 @@ displayMenu(id, pos)
 	new iUserFlags = get_user_flags(id);
 	for (new a = start; a < end; ++a)
 	{
-		if ( iUserFlags & g_menuAccess[a] && 
+		if ( (g_menuAccess[a] == 0 || iUserFlags & g_menuAccess[a]) && 
 			((is_plugin_loaded(g_menuPlugin[a]) != -1) ||			// search plugins for registered name
 			 (is_plugin_loaded(g_menuPlugin[a], true) != -1)))	// search plugins for filename
 		{
@@ -246,7 +246,7 @@ clientDisplayMenu(id, pos)
 	new iUserFlags = get_user_flags(id);
 	for (new a = start; a < end; ++a)
 	{
-		if ( iUserFlags & g_clientMenuAccess[a] && 
+		if ( (g_clientMenuAccess[a] == 0 || iUserFlags & g_clientMenuAccess[a]) && 
 			((is_plugin_loaded(g_clientMenuPlugin[a]) != -1) ||			// search plugins for registered name
 			 (is_plugin_loaded(g_clientMenuPlugin[a], true) != -1)))		// search plugins for file name
 		{

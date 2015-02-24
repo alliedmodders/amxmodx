@@ -8,7 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #if defined _amxmisc_included
-  #endinput
+	#endinput
 #endif
 #define _amxmisc_included
 

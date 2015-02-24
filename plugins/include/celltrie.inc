@@ -8,7 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #if defined _celltrie_included
-    #endinput
+	#endinput
 #endif
 #define _celltrie_included
 

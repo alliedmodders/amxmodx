@@ -8,7 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #if defined _amxmodx_included
-  #endinput
+	#endinput
 #endif
 #define _amxmodx_included
 
@@ -100,8 +100,8 @@ forward plugin_end();
 /**
  * Called when a message is about to be logged.
  *
- * @note Message data and information can be retrieved using the read_log set of
- *       functions.
+ * @note Message data and information can be retrieved using the read_log* set
+ * 		 of functions.
  *
  * @return      PLUGIN_CONTINUE to let the log message through
  *              PLUGIN_HANDLED or higher to stop the log message
@@ -687,40 +687,34 @@ native read_datatype();
 /**
  * Retrieves current log message.
  *
- * @note Can only be used inside of the plugin_log() forward.
+ * @note Should only be used inside of the plugin_log() forward.
  *
  * @param output    Buffer to copy log message to
  * @param len       Maximum buffer size
  *
  * @return          Number of cells written to buffer
- * @error           If called outside of the plugin_log() forward, an error is
- *                  thrown.
  */
 native read_logdata(output[], len);
 
 /**
  * Returns number of log message arguments.
  *
- * @note Can only be used inside of the plugin_log() forward.
+ * @note Should only be used inside of the plugin_log() forward.
  *
  * @return          Number of arguments in the log message
- * @error           If called outside of the plugin_log() forward, an error is
- *                  thrown.
  */
 native read_logargc();
 
 /**
  * Retrieves argument of log message.
  *
- * @note Can only be used inside of the plugin_log() forward.
+ * @note Should only be used inside of the plugin_log() forward.
  *
  * @param id        Argument index, starting from 0
  * @param output    Buffer to copy log argument to
  * @param len       Maximum buffer size
  *
  * @return          Number of cells written to buffer
- * @error           If called outside of the plugin_log() forward, an error is
- *                  thrown.
  */
 native read_logargv(id, output[], len);
 
@@ -871,7 +865,6 @@ native get_amxx_verstring(buffer[], length);
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients an error will be thrown.
  */
-
 native get_user_attacker(index, ...);
 
 /**

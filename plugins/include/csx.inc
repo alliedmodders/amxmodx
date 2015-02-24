@@ -12,7 +12,7 @@
 //
 
 #if defined _csx_included
-  #endinput
+	#endinput
 #endif
 #define _csx_included
 
@@ -32,10 +32,10 @@
  */
 enum MapObjective
 {
-    MapObjective_Bomb    = (1<<0),
-    MapObjective_Hostage = (1<<1),
-    MapObjective_Vip     = (1<<2),
-    MapObjective_Escape  = (1<<3),
+	MapObjective_Bomb    = (1<<0),
+	MapObjective_Hostage = (1<<1),
+	MapObjective_Vip     = (1<<2),
+	MapObjective_Escape  = (1<<3),
 };
 
 /**
@@ -154,7 +154,7 @@ forward bomb_defused(defuser);
 native custom_weapon_add(const wpnname[], melee = 0, const logname[] = "");
 
 /**
- * Trigger a damage event on a custom weapon, adding it to the internal stats.
+ * Triggers a damage event on a custom weapon, adding it to the internal stats.
  *
  * @note This will also call the client_damage() and client_kill() forwards if
  *       applicable.
@@ -175,7 +175,7 @@ native custom_weapon_add(const wpnname[], melee = 0, const logname[] = "");
 native custom_weapon_dmg(weapon, att, vic, damage, hitplace = 0);
 
 /**
- * Add a shot event on a custom weapon to the internal stats.
+ * Adds a shot event on a custom weapon to the internal stats.
  *
  * @param weapon    Custom weapon id
  * @param index     Client index
@@ -184,7 +184,7 @@ native custom_weapon_dmg(weapon, att, vic, damage, hitplace = 0);
  * @error           If the weapon id is not a custom weapon or an invalid client
  *                  index is provided, an error will be thrown.
  */
-native custom_weapon_shot(weapon, index); // weapon id , player id
+native custom_weapon_shot(weapon, index);
 
 /**
  * Returns if the weapon is considered a melee weapon.

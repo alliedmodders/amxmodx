@@ -8,7 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #if defined _datapack_included
-    #endinput
+	#endinput
 #endif
 #define _datapack_included
 
@@ -24,10 +24,9 @@
  *       Failing to free handles will result in the plugin and AMXX leaking
  *       memory.
  */
-
 enum DataPack
 {
-    Invalid_DataPack = 0
+	Invalid_DataPack = 0
 };
 
 /**

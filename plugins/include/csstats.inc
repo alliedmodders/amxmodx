@@ -8,7 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #if defined _csstats_included
-  #endinput
+	#endinput
 #endif
 #define _csstats_included
 
@@ -75,7 +75,9 @@ native get_user_wrstats(index, wpnindex, stats[8], bodyhits[8]);
  * server.
  *
  * @note The permanent storage is updated on every respawn or client disconnect.
- * @note Player rank is determined by the difference of kills to deaths.
+ * @note Player rank is determined by the customizable "get_score" function in
+ *       "data/csstats.amxx". By default it uses the difference of kills to
+ *       deaths/teamkills.
  * @note For a list of possible body hitplaces see the HIT_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
@@ -199,7 +201,9 @@ native reset_user_wstats(index);
  * incremental access.
  *
  * @note The permanent storage is updated on every respawn or client disconnect.
- * @note Player rank is determined by the difference of kills to deaths.
+ * @note Player rank is determined by the customizable "get_score" function in
+ *       "data/csstats.amxx". By default it uses the difference of kills to
+ *       deaths/teamkills.
  * @note For a list of possible body hitplaces see the HIT_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:

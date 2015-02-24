@@ -8,7 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #if defined _cvars_included
-    #endinput
+	#endinput
 #endif
 #define _cvars_included
 
@@ -32,8 +32,8 @@
  */
 enum CvarBounds
 {
-    CvarBound_Upper = 0,
-    CvarBound_Lower
+	CvarBound_Upper = 0,
+	CvarBound_Lower
 };
 
 /**
@@ -156,7 +156,7 @@ native disable_cvar_hook(cvarhook:handle);
 native enable_cvar_hook(cvarhook:handle);
 
 /**
- * Returns a flags of a cvar. The cvar is accessed by name.
+ * Returns flags of a cvar. The cvar is accessed by name.
  *
  * @note For a list of possible flags see the FCVAR_* constants in amxconst.inc
  * @note Accessing a Cvar by name is slower than direct pointer access, which is

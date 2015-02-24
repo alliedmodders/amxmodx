@@ -6,7 +6,7 @@
 */
 
 #if defined _core_included
-  #endinput
+	#endinput
 #endif
 #define _core_included
 
@@ -198,5 +198,5 @@ native tickcount(&granularity = 0);
  */
 stock abs(x)
 {
-    return x > 0 ? x : -x;
+	return x > 0 ? x : -x;
 }

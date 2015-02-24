@@ -12,7 +12,7 @@
 //
 
 #if defined _cstrike_included
- #endinput
+	#endinput
 #endif
 #define _cstrike_included
 
@@ -36,18 +36,18 @@
  */
 enum CsInternalModel
 {
-    CS_DONTCHANGE = 0,
-    CS_CT_URBAN = 1,
-    CS_T_TERROR = 2,
-    CS_T_LEET = 3,
-    CS_T_ARCTIC = 4,
-    CS_CT_GSG9 = 5,
-    CS_CT_GIGN = 6,
-    CS_CT_SAS = 7,
-    CS_T_GUERILLA = 8,
-    CS_CT_VIP = 9,
-    CZ_T_MILITIA = 10,
-    CZ_CT_SPETSNAZ = 11,
+	CS_DONTCHANGE = 0,
+	CS_CT_URBAN = 1,
+	CS_T_TERROR = 2,
+	CS_T_LEET = 3,
+	CS_T_ARCTIC = 4,
+	CS_CT_GSG9 = 5,
+	CS_CT_GIGN = 6,
+	CS_CT_SAS = 7,
+	CS_T_GUERILLA = 8,
+	CS_CT_VIP = 9,
+	CZ_T_MILITIA = 10,
+	CZ_CT_SPETSNAZ = 11,
 };
 
 /**
@@ -55,10 +55,10 @@ enum CsInternalModel
  */
 enum CsTeams
 {
-    CS_TEAM_UNASSIGNED = 0,
-    CS_TEAM_T = 1,
-    CS_TEAM_CT = 2,
-    CS_TEAM_SPECTATOR = 3,
+	CS_TEAM_UNASSIGNED = 0,
+	CS_TEAM_T = 1,
+	CS_TEAM_CT = 2,
+	CS_TEAM_SPECTATOR = 3,
 };
 
 /**
@@ -70,9 +70,9 @@ enum CsTeams
  */
 enum CsArmorType
 {
-    CS_ARMOR_NONE = 0,      // no armor
-    CS_ARMOR_KEVLAR = 1,    // body vest only
-    CS_ARMOR_VESTHELM = 2,  // vest and helmet
+	CS_ARMOR_NONE = 0,      // no armor
+	CS_ARMOR_KEVLAR = 1,    // body vest only
+	CS_ARMOR_VESTHELM = 2,  // vest and helmet
 };
 
 /**
@@ -89,11 +89,11 @@ enum CsArmorType
  */
 enum
 {
-    CS_RESET_ZOOM = 0,      // Reset any zoom blocking (mode has no effect)
-    CS_SET_NO_ZOOM,         // Disable any sort of zoom
-    CS_SET_FIRST_ZOOM,      // Set first zoom level (AWP style)
-    CS_SET_SECOND_ZOOM,     // Set second zoom level (AWP style)
-    CS_SET_AUGSG552_ZOOM,   // Set AUG/SG552 zoom style
+	CS_RESET_ZOOM = 0,      // Reset any zoom blocking (mode has no effect)
+	CS_SET_NO_ZOOM,         // Disable any sort of zoom
+	CS_SET_FIRST_ZOOM,      // Set first zoom level (AWP style)
+	CS_SET_SECOND_ZOOM,     // Set second zoom level (AWP style)
+	CS_SET_AUGSG552_ZOOM,   // Set AUG/SG552 zoom style
 };
 
 /**
@@ -246,19 +246,19 @@ native cs_get_user_bpammo(index, weapon);
  *       amxconst.inc
  * @note Some weapons share ammo types and therefore ammo backpack pools. List
  *       of ammo types:
- *       awp - ammo_338magnum
- *       scout, ak47, g3sg1 - ammo_762nato
- *       m249 - ammo_556natobox
- *       famas, m4a1, aug, sg550, galil, sg552 - ammo_556nato
- *       m3, xm1014 - ammo_buckshot
- *       usp, ump45, mac10 - ammo_45acp
- *       fiveseven, p90 - ammo_57mm
- *       deagle - ammo_50ae
- *       p228 - ammo_357sig
- *       glock, mp5, tmp, elites - ammo_9mm
- *       hegrenade - /
- *       flashbang - /
- *       smokegrenade - /
+ *       ammo_338magnum  - awp
+ *       ammo_762nato    - scout, ak47, g3sg1
+ *       ammo_556natobox - m249
+ *       ammo_556nato    - famas, m4a1, aug, sg550, galil, sg552
+ *       ammo_buckshot   - m3, xm1014
+ *       ammo_45acp      - usp, ump45, mac10
+ *       ammo_57mm       - fiveseven, p90
+ *       ammo_50ae       - deagle
+ *       ammo_357sig     - p228
+ *       ammo_9mm        - glock, mp5, tmp, elites
+ *       /               - hegrenade
+ *       /               - flashbang
+ *       /               - smokegrenade
  *
  * @param index     Client index
  * @param weapon    Weapon id
@@ -1061,7 +1061,7 @@ native cs_set_c4_explode_time(index, Float:value);
 /**
  * Returns if the bomb is being defused.
  *
- * @param index     C4 entity
+ * @param c4index   C4 entity
  *
  * @return          1 if the bomb is being defused, 0 otherwise
  * @error           If the provided entity index is not a bomb, an error will be
@@ -1072,7 +1072,7 @@ native bool:cs_get_c4_defusing(c4index);
 /**
  * Sets if the bomb is being defused.
  *
- * @param index     C4 entity
+ * @param c4index   C4 entity
  * @param defusing  True if the bomb should be defused, false otherwise
  *
  * @noreturn

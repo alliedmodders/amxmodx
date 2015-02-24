@@ -12,20 +12,16 @@
 //
 
 #if defined _dodx_included
-  #endinput
+	#endinput
 #endif
 #define _dodx_included
 
 #include <dodconst>
 #include <dodstats>
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqclass xstats
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma defclasslib xstats dodx
- #endif
-#else
- #pragma library dodx
+#pragma reqclass xstats
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma defclasslib xstats dodx
 #endif
 
 /************* Shared Natives Start ********************************/

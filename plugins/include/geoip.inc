@@ -16,13 +16,9 @@
 #endif
 #define _geoip_included
 
-#if AMXX_VERSION_NUM >= 175
-	#pragma reqlib geoip
-	#if !defined AMXMODX_NOAUTOLOAD
-		#pragma loadlib geoip
-	#endif
-#else
-	#pragma library geoip
+#pragma reqlib geoip
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib geoip
 #endif
 
 /**

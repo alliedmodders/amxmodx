@@ -12,17 +12,13 @@
 //
 
 #if defined _fun_included
-  #endinput
+	#endinput
 #endif
 #define _fun_included
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib fun
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib fun
- #endif
-#else
- #pragma library fun
+#pragma reqlib fun
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib fun
 #endif
 
 /* Returns 1 if receiver hears sender via voice communication. */

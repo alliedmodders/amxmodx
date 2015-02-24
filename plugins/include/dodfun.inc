@@ -12,19 +12,15 @@
 //
 
 #if defined _dodfun_included
-  #endinput
+	#endinput
 #endif
 #define _dodfun_included
 
 #include <dodconst>
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib dodfun
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib dodfun
- #endif
-#else
- #pragma library dodfun
+#pragma reqlib dodfun
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib dodfun
 #endif
 
 /* Function is called after grenade throw */

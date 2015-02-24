@@ -12,19 +12,17 @@
 //
 
 #if defined _sqlx_included
-  #endinput
+	#endinput
 #endif
 #define _sqlx_included
 
 //eh..
 #define SQL_NumRows SQL_NumResults
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqclass sqlx
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma defclasslib sqlx mysql
- #endif //!defined AMXMODX_NOAUTOLOAD
-#endif //AMXX_VERSION_NUM
+#pragma reqclass sqlx
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma defclasslib sqlx mysql
+#endif
 
 enum Handle
 {

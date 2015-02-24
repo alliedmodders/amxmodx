@@ -26,7 +26,7 @@
 //
 
 #if defined _dbi_included
-  #endinput
+	#endinput
 #endif
 #define _dbi_included
 
@@ -34,11 +34,7 @@
 // there's really no reason to anyway.
 #assert !defined _sqlx_included
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqclass dbi
-#else
- #pragma library dbi
-#endif
+#pragma reqclass dbi
 
 enum Sql
 {

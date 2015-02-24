@@ -13,19 +13,15 @@
 //
 
 #if defined _engine_included
-  #endinput
+	#endinput
 #endif
 #define _engine_included
 
 #include <engine_const>
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib engine
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib engine
- #endif
-#else
- #pragma library engine
+#pragma reqlib engine
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib engine
 #endif
 
 native traceresult(type,any:...);

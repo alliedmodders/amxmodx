@@ -339,7 +339,8 @@ native show_motd(player, const message[], const header[] = "");
  *       last, to the client with the highest index.
  *
  * @param index     Client index, use 0 to display to all clients
- * @param type      Message type, see print_* destination constants in amxconst
+ * @param type      Message type, see print_* destination constants in
+ *                  amxconst.inc
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
@@ -361,8 +362,9 @@ native client_print(index, type, const message[], any:...);
  *                                ; This only works at the start of the string,
  *                                ; and precludes using other control characters
  *          default         x01   ; use default color from this point forward
- * @note The team color is defined by the sender's index or a specific team
- *       color using the print_team_* constants in amxconst
+ * @note The team color is defined by the sender's index. Alternatively a
+ *       specific team color can be enforced using the print_team_* constants in
+ *       amxconst.inc
  * @note Usage examples:
  *       client_print_color(id, print_team_red, "^4Green ^3Red ^1Default")
  *       client_print_color(id, id2, "^4Green ^3id2's team color, ^1Default")
@@ -376,9 +378,7 @@ native client_print(index, type, const message[], any:...);
  *       last, to the client with the highest index.
  *
  * @param index     Client index, use 0 to display to all clients
- * @param sender    Client index used as the sender, defining the team color
- *                  used in the message. Use print_team_* constants to force
- *                  a specific color.
+ * @param sender    Client index used as the message sender
  * @param fmt       Formatting rules
  * @param ...       Variable number of formatting parameters
  *
@@ -399,7 +399,8 @@ native client_print_color(index, sender, const message[], any:...);
  *       last, to the client with the highest index.
  *
  * @param player    Client index, use 0 to display to all clients
- * @param type      Message type, see print_* destination constants in amxconst
+ * @param type      Message type, see print_* destination constants in
+ *                  amxconst.inc
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *

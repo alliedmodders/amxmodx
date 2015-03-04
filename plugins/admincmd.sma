@@ -1124,12 +1124,14 @@ public cmdShowRcon(id, level, cid)
 		
 	new password[64]
 	
-	get_pcvar_string(rcon_password, password, 63)
+	get_pcvar_string(rcon_password, password, charsmax(password))
 	
 	if (!password[0])
 	{
 		cmdRcon(id, level, cid)
-	} else {
+	} 
+	else 
+	{
 		new args[128]
 		
 		read_args(args, charsmax(args))

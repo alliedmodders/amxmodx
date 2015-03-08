@@ -1101,6 +1101,42 @@ static cell AMX_NATIVE_CALL GetFileTime(AMX *amx, cell *params)
 	return static_cast<cell>(time_val);
 }
 
+#define FPERM_U_READ       0x0100   /* User can read.    */
+#define FPERM_U_WRITE      0x0080   /* User can write.   */
+#define FPERM_U_EXEC       0x0040   /* User can exec.    */
+#define FPERM_G_READ       0x0020   /* Group can read.   */
+#define FPERM_G_WRITE      0x0010   /* Group can write.  */
+#define FPERM_G_EXEC       0x0008   /* Group can exec.   */
+#define FPERM_O_READ       0x0004   /* Anyone can read.  */
+#define FPERM_O_WRITE      0x0002   /* Anyone can write. */
+#define FPERM_O_EXEC       0x0001   /* Anyone can exec.  */
+
+// native bool:SetFilePermissions(const path[], int mode);
+static cell SetFilePermissions(AMX *amx, cell *params)
+{
+	int length;
+	const char* realpath = build_pathname(get_amxstring(amx, params[1], 0, length));
+
+#if defined PLATFORM_WINDOWS
+
+	int mask = 0;
+
+	if (params[2] & (FPERM_U_WRITE | FPERM_G_WRITE | FPERM_O_WRITE))
+	{
+		mask |= _S_IWRITE;
+	}
+
+	if (params[2] & (FPERM_U_READ | FPERM_G_READ | FPERM_O_READ | FPERM_U_EXEC | FPERM_G_EXEC | FPERM_O_EXEC))
+	{
+		mask |= _S_IREAD;
+	}
+
+	return _chmod(realpath, mask) == 0;
+#elif 
+	return chmod(realpath, params[2]) == 0;
+#endif
+}
+
 AMX_NATIVE_INFO file_Natives[] =
 {
 	{"read_dir",		read_dir},
@@ -1147,6 +1183,8 @@ AMX_NATIVE_INFO file_Natives[] =
 
 	{"LoadFileForMe",	LoadFileForMe},
 	{"GetFileTime",		GetFileTime},
+	{"SetFilePermissions", SetFilePermissions},
+
 	{NULL,				NULL}
 };
 

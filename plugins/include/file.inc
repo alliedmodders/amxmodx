@@ -59,7 +59,7 @@ enum FileTimeType
 #define BLOCK_BYTE  1
 
 /**
- * File permissions flags for use with mkdir().
+ * File permissions flags for use with mkdir() and SetFilePermissions().
  */
 #define FPERM_U_READ       0x0100   /* User can read.    */
 #define FPERM_U_WRITE      0x0080   /* User can write.   */
@@ -227,14 +227,14 @@ native file_size(const file[], flag = FSOPT_BYTES_COUNT, bool:use_valve_fs = fal
  *
  * @note Registered paths ID are (in priority order) :
  *         GAME           All paths related to current mod, including fallback
- *                        Depending settings, it includes: <gamedir>_lv/_addon/_<language>/_hd 
+ *                        Depending settings, it includes: <gamedir>_lv/_addon/_<language>/_hd
  *                        and <gamedir> itself
  *         GAMECONFIG     The default writable directory (<gamedir>)
  *         GAMEDOWNLOAD   The download directory (<gamedir>_download)
  *         GAME_FALLBACK  All paths related to fallback game, same as GAME
  *         DEFAULTGAME    All paths related to the default game which is "valve", same as GAME
  *         BASE           The base path where server is installed
- *         
+ *
  *         Note that some paths are non-writable. It includes all <gamedir>_* (expect _download)
  *         and DEFAULTGAME. Any file inside a non-writable path will be ignored if you try to open
  *         it in writing mode.
@@ -556,3 +556,13 @@ native LoadFileForMe(const file[], buffer[], maxlength, &length = 0);
  * @return              Returns a file timestamp as a unix timestamp
  */
 native GetFileTime(const file[], FileTimeType:tmode);
+
+/**
+ * Changes a file or directories permissions.
+ *
+ * @param path          Path to the file
+ * @param mode          Permissions to set, see FPERM_* constants
+ *
+ * @return              True on success, false otherwise
+ */
+native bool:SetFilePermissions(const path[], mode);

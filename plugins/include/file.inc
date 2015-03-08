@@ -566,3 +566,88 @@ native GetFileTime(const file[], FileTimeType:tmode);
  * @return              True on success, false otherwise
  */
 native bool:SetFilePermissions(const path[], mode);
+
+/**
+ * Reads a single int8 (byte) from a file. The returned value is sign-
+ * extended to an int32.
+ *
+ * @param file          Handle to the file
+ * @param data          Variable to store the data read
+ *
+ * @return              True on success, false on failure
+ */
+native bool:FileReadInt8(file, &any:data);
+
+/**
+ * Reads a single uint8 (unsigned byte) from a file. The returned value is
+ * zero-extended to an int32.
+ *
+ * @param file          Handle to the file
+ * @param data          Variable to store the data read
+ *
+ * @return              True on success, false on failure
+ */
+native bool:FileReadUint8(file, &any:data);
+
+/**
+ * Reads a single int16 (short) from a file. The value is sign-extended to
+ * an int32.
+ *
+ * @param file          Handle to the file
+ * @param data          Variable to store the data read
+ *
+ * @return              True on success, false on failure
+ */
+native bool:FileReadInt16(file, &any:data);
+
+/**
+ * Reads a single unt16 (unsigned short) from a file. The value is zero-
+ * extended to an int32.
+ *
+ * @param file          Handle to the file
+ * @param data          Variable to store the data read
+ *
+ * @return              True on success, false on failure
+ */
+native bool:FileReadUint16(file, &any:data);
+
+/**
+ * Reads a single int32 (int/cell) from a file.
+ *
+ * @param file          Handle to the file
+ * @param data          Variable to store the data read
+ *
+ * @return              True on success, false on failure
+ */
+native bool:FileReadInt32(file, &any:data);
+
+/**
+ * Writes a single int8 (byte) to a file.
+ *
+ * @param file          Handle to the file
+ * @param data          Data to write (truncated to an int8)
+ *
+ * @return              True on success, false on failure
+ */
+native bool:FileWriteInt8(file, any:data);
+
+/**
+ * Writes a single int16 (short) to a file.
+ *
+ * @param file          Handle to the file
+ * @param data          Data to write (truncated to an int16)
+ *
+ * @return              True on success, false on failure
+ */
+native bool:FileWriteInt16(file, any:data);
+
+/**
+ * Writes a single int32 (int/cell) to a file.
+ *
+ * @param file          Handle to the file
+ * @param data          Data to write
+ *
+ * @return              True on success, false on failure
+ */
+native bool:FileWriteInt32(file, any:data);
+

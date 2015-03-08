@@ -1132,9 +1132,47 @@ static cell SetFilePermissions(AMX *amx, cell *params)
 	}
 
 	return _chmod(realpath, mask) == 0;
-#elif 
+#else
 	return chmod(realpath, params[2]) == 0;
 #endif
+}
+
+template <typename T>
+static cell File_ReadTyped(AMX *amx, cell *params)
+{
+	FileObject* fp = reinterpret_cast<FileObject*>(params[1]);
+
+	if (!fp)
+	{
+		return 0;
+	}
+
+	cell* data = get_amxaddr(amx, params[2]);
+
+	T value;
+
+	if (fp->Read(&value, sizeof(value)) != sizeof(value))
+	{
+		return 0;
+	}
+
+	*data = value;
+	return 1;
+}
+
+template <typename T>
+static cell File_WriteTyped(AMX *amx, cell *params)
+{
+	FileObject* fp = reinterpret_cast<FileObject*>(params[1]);
+
+	if (!fp)
+	{
+		return 0;
+	}
+
+	T value = static_cast<T>(params[2]);
+
+	return !!(fp->Write(&value, sizeof(value)) == sizeof(value));
 }
 
 AMX_NATIVE_INFO file_Natives[] =
@@ -1181,10 +1219,17 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"rmdir",			amx_rmdir},
 	{"mkdir",			amx_mkdir},
 
-	{"LoadFileForMe",	LoadFileForMe},
-	{"GetFileTime",		GetFileTime},
-	{"SetFilePermissions", SetFilePermissions},
+	{"LoadFileForMe",		LoadFileForMe},
+	{"GetFileTime",			GetFileTime},
+	{"SetFilePermissions",	SetFilePermissions},
+	{"FileReadInt8",		File_ReadTyped<int8_t>},
+	{"FileReadUint8",		File_ReadTyped<uint8_t>},
+	{"FileReadInt16",		File_ReadTyped<int16_t>},
+	{"FileReadUint16",		File_ReadTyped<uint16_t>},
+	{"FileReadInt32",		File_ReadTyped<int32_t>},
+	{"FileWriteInt8",		File_WriteTyped<int8_t>},
+	{"FileWriteInt16",		File_WriteTyped<int16_t>},
+	{"FileWriteInt32",		File_WriteTyped<int32_t>},
 
 	{NULL,				NULL}
 };
-

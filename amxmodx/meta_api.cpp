@@ -8,13 +8,6 @@
 //     https://alliedmods.net/amxmodx-license
 
 #include <time.h>
-
-#if defined WIN32
-#include <direct.h>
-#else
-#include <dirent.h>
-#endif
-
 #include "amxmodx.h"
 #include "fakemeta.h"
 #include "CMenu.h"
@@ -32,6 +25,8 @@
 #include "CDataPack.h"
 #include "textparse.h"
 #include "CvarManager.h"
+#include "CLibrarySys.h"
+#include "CFileSystem.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -142,6 +137,8 @@ int FF_PluginEnd = -1;
 int FF_InconsistentFile = -1;
 int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
+
+IFileSystem* g_FileSystem;
 
 bool ColoredMenus(String & ModName)
 {
@@ -1493,7 +1490,9 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	FlagMan.SetFile("cmdaccess.ini");
 
 	g_CvarManager.CreateCvarHook();
-	
+
+	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);
+
 	return (TRUE);
 }
 

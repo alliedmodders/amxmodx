@@ -93,6 +93,7 @@ binary.sources = [
   'cvars.cpp',
   '../public/memtools/CDetour/detours.cpp',
   '../public/memtools/CDetour/asm/asm.c',
+  'CLibrarySys.cpp',
 ]
 
 if builder.target_platform == 'windows':

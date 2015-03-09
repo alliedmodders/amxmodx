@@ -1,0 +1,18 @@
+version: 1.0.{build}
+clone_folder: c:\projects\amxmodx
+install:
+- git submodule update --init --recursive
+- 'c:'
+- chdir c:\projects
+- git clone https://github.com/alliedmodders/ambuild
+- git clone https://github.com/alliedmodders/metamod-hl1
+- git clone https://github.com/alliedmodders/hlsdk
+- cd ambuild
+- c:\python27\python setup.py install
+- cd ..\amxmodx
+build_script:
+- '"%VS120COMNTOOLS%\vsvars32.bat"'
+- mkdir build
+- cd build
+- c:\python27\python ../configure.py --enable-optimize --no-mysql
+- c:\python27\scripts\ambuild

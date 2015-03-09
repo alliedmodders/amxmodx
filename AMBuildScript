@@ -266,7 +266,7 @@ class AMXXConfig(object):
         
     cfg.includes += [os.path.join(builder.sourcePath, 'public')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'sdk')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl', 'include')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'memtools')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'hashing')]
     return

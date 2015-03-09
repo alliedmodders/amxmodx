@@ -56,9 +56,6 @@
     <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\CstrikeHLTypeConversion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CstrikePlayer.h">

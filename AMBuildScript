@@ -15,6 +15,7 @@ class AMXXConfig(object):
     self.mysql_path = None
     self.generated_headers = []
     self.versionlib = None
+    self.zlib = None
     self.csx_app = None
     self.stdcxx_path = None
 
@@ -356,6 +357,10 @@ if AMXX.use_auto_versioning():
     { 'AMXX': AMXX }
   )
 
+AMXX.zlib = builder.RunScript(
+  'public/zlib/AMBuilder'
+)
+  
 builder.RunBuildScripts(
   [
     'amxmodx/AMBuilder',

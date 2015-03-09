@@ -121,7 +121,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>..\zlib\zlib.lib;..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>0.1</Version>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\extra\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -176,7 +176,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>..\zlib\zlib.lib;..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\extra\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBC;LIBCD;LIBCMTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -225,7 +225,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>..\zlib\zlib.lib;..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>0.1</Version>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\extra\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -278,7 +278,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>..\zlib\zlib.lib;..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\extra\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBC;LIBCD;LIBCMTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -301,6 +301,21 @@
     <ClCompile Include="..\..\public\hashing\hashers\sha256.cpp" />
     <ClCompile Include="..\..\public\hashing\hashers\sha3.cpp" />
     <ClCompile Include="..\..\public\hashing\hashers\keccak.cpp" />
+    <ClCompile Include="..\..\public\zlib\adler32.c" />
+    <ClCompile Include="..\..\public\zlib\compress.c" />
+    <ClCompile Include="..\..\public\zlib\crc32.c" />
+    <ClCompile Include="..\..\public\zlib\deflate.c" />
+    <ClCompile Include="..\..\public\zlib\gzclose.c" />
+    <ClCompile Include="..\..\public\zlib\gzlib.c" />
+    <ClCompile Include="..\..\public\zlib\gzread.c" />
+    <ClCompile Include="..\..\public\zlib\gzwrite.c" />
+    <ClCompile Include="..\..\public\zlib\infback.c" />
+    <ClCompile Include="..\..\public\zlib\inffast.c" />
+    <ClCompile Include="..\..\public\zlib\inflate.c" />
+    <ClCompile Include="..\..\public\zlib\inftrees.c" />
+    <ClCompile Include="..\..\public\zlib\trees.c" />
+    <ClCompile Include="..\..\public\zlib\uncompr.c" />
+    <ClCompile Include="..\..\public\zlib\zutil.c" />
     <ClCompile Include="..\amx.cpp" />
     <ClCompile Include="..\amxcore.cpp" />
     <ClCompile Include="..\amxdbg.cpp" />

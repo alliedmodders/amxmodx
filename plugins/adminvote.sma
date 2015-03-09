@@ -459,11 +459,11 @@ public cmdVoteKickBan(id, level, cid)
 	new keys = MENU_KEY_1|MENU_KEY_2
 	new menu_msg[256], lYes[16], lNo[16], lKickBan[16]
 	
-	format(lYes, charsmax(lYes), "%L", LANG_SERVER, "YES")
+	format(lYes, charsmax(lYes), "%L", LANG_SERVER, "YES") 
 	format(lNo, charsmax(lNo), "%L", LANG_SERVER, "NO")
 	format(lKickBan, charsmax(lKickBan), "%L", LANG_SERVER, voteban ? "BAN" : "KICK")
 	ucfirst(lKickBan)
-	get_user_name(player, arg, 31)
+	get_user_name(player, arg, charsmax(arg))
 	format(menu_msg, charsmax(menu_msg), g_coloredMenus ? "\y%s %s?\w^n^n1.  %s^n2.  %s" : "%s %s?^n^n1.  %s^n2.  %s", lKickBan, arg, lYes, lNo)
 	g_yesNoVote = 1
 	

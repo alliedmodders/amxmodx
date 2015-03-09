@@ -1,8 +1,6 @@
 # vim: sts=2 ts=8 sw=2 tw=99 et ft=python: 
 import os, platform
 
-builder.SetBuildFolder('zlib')
-
 lib = builder.compiler.StaticLibrary('zlib')
 
 lib.compiler.includes += [

@@ -1,12 +1,12 @@
 version: 1.0.{build}
 clone_folder: c:\projects\amxmodx
 install:
+- git submodule update --init --recursive
 - 'c:'
 - chdir c:\projects
 - git clone https://github.com/alliedmodders/ambuild
 - git clone https://github.com/alliedmodders/metamod-hl1
 - git clone https://github.com/alliedmodders/hlsdk
-- git submodule update --init --recursive
 - cd ambuild
 - c:\python27\python setup.py install
 - cd ..\amxmodx

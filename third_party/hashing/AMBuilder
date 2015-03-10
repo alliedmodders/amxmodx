@@ -1,0 +1,20 @@
+# vim: sts=2 ts=8 sw=2 tw=99 et ft=python: 
+import os, platform
+
+lib = builder.compiler.StaticLibrary('hashinglib')
+
+lib.compiler.includes += [
+  os.path.join(builder.sourcePath, 'third_party', 'hashing'),
+]
+
+lib.sources += [
+  'hashing.cpp',
+  'hashers/crc32.cpp',
+  'hashers/keccak.cpp',
+  'hashers/md5.cpp',
+  'hashers/sha1.cpp',
+  'hashers/sha3.cpp',
+  'hashers/sha256.cpp',
+]
+
+rvalue = builder.Add(lib)

@@ -18,13 +18,9 @@
 
 #include <fakemeta_const> 
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib fakemeta
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib fakemeta
- #endif
-#else
- #pragma library fakemeta
+#pragma reqlib fakemeta
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib fakemeta
 #endif
 
 /**

@@ -12,17 +12,13 @@
 //
 
 #if defined _nvault_included
-  #endinput
+	#endinput
 #endif
 #define _nvault_included
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib nvault
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib nvault
- #endif
-#else
- #pragma library nvault
+#pragma reqlib nvault
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib nvault
 #endif
 
 /* All timestamps are in UNIX epoch form. */

@@ -27,13 +27,9 @@
 
 #include <ham_const>
 
-#if AMXX_VERSION_NUM >= 175
-	#pragma reqlib hamsandwich
-	#if !defined AMXMODX_NOAUTOLOAD
-		#pragma loadlib hamsandwich
-	#endif
-#else
-	#pragma library hamsandwich
+#pragma reqlib hamsandwich
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib hamsandwich
 #endif
 
 /**

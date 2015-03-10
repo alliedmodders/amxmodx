@@ -16,13 +16,9 @@
 #endif
 #define _cstrike_included
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib cstrike
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib cstrike
- #endif
-#else
- #pragma library cstrike
+#pragma reqlib cstrike
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib cstrike
 #endif
 
 /**

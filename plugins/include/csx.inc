@@ -18,13 +18,9 @@
 
 #include <csstats>
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqclass xstats
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma defclasslib xstats csx
- #endif
-#else
- #pragma library csx
+#pragma reqclass xstats
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma defclasslib xstats csx
 #endif
 
 /**

@@ -16,13 +16,9 @@
 #endif
 #define _regex_included
 
-#if AMXX_VERSION_NUM >= 175
-	#pragma reqlib regex
-	#if !defined AMXMODX_NOAUTOLOAD
-		#pragma loadlib regex
-	#endif
-#else
-	#pragma library regex
+#pragma reqlib regex
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib regex
 #endif
 
 

@@ -12,7 +12,7 @@
 //
 
 #if defined _tsxfun_included
-  #endinput
+	#endinput
 #endif
 #define _tsxfun_included
 
@@ -27,13 +27,9 @@ enum {
   XMF_DEATH,
 };
 
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib tsfun
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib tsfun
- #endif
-#else
- #pragma library tsfun
+#pragma reqlib tsfun
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib tsfun
 #endif
 
 /************* Shared Natives End ********************************/

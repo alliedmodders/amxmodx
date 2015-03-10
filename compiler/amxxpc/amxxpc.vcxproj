@@ -55,7 +55,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;AMX_ANSIONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE; AMX_ANSIONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -64,7 +64,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\public;..\..\public\zlib;..\..\amxmodx\;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\public;..\..\third_party;..\..\third_party\zlib;..\..\amxmodx\;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
@@ -77,7 +77,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;AMX_ANSIONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE; AMX_ANSIONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -85,7 +85,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\public;..\..\public\zlib;..\..\amxmodx\;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\public;..\..\third_party;..\..\third_party\zlib;..\..\amxmodx\;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
@@ -97,26 +97,76 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\public\zlib\adler32.c" />
-    <ClCompile Include="..\..\public\zlib\compress.c" />
-    <ClCompile Include="..\..\public\zlib\crc32.c" />
-    <ClCompile Include="..\..\public\zlib\deflate.c" />
-    <ClCompile Include="..\..\public\zlib\gzclose.c" />
-    <ClCompile Include="..\..\public\zlib\gzlib.c" />
-    <ClCompile Include="..\..\public\zlib\gzread.c" />
-    <ClCompile Include="..\..\public\zlib\gzwrite.c" />
-    <ClCompile Include="..\..\public\zlib\infback.c" />
-    <ClCompile Include="..\..\public\zlib\inffast.c" />
-    <ClCompile Include="..\..\public\zlib\inflate.c" />
-    <ClCompile Include="..\..\public\zlib\inftrees.c" />
-    <ClCompile Include="..\..\public\zlib\trees.c" />
-    <ClCompile Include="..\..\public\zlib\uncompr.c" />
-    <ClCompile Include="..\..\public\zlib\zutil.c" />
+    <ClCompile Include="..\..\third_party\zlib\adler32.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\compress.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\crc32.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\deflate.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\gzclose.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\gzlib.c" />
+    <ClCompile Include="..\..\third_party\zlib\gzread.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\gzwrite.c" />
+    <ClCompile Include="..\..\third_party\zlib\infback.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\inffast.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\inflate.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\inftrees.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\trees.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\uncompr.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\zutil.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)zlib\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)zlib\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="amx.cpp" />
     <ClCompile Include="amxxpc.cpp" />
     <ClCompile Include="Binary.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\third_party\zlib\crc32.h" />
+    <ClInclude Include="..\..\third_party\zlib\deflate.h" />
+    <ClInclude Include="..\..\third_party\zlib\gzguts.h" />
+    <ClInclude Include="..\..\third_party\zlib\inffast.h" />
+    <ClInclude Include="..\..\third_party\zlib\inffixed.h" />
+    <ClInclude Include="..\..\third_party\zlib\inflate.h" />
+    <ClInclude Include="..\..\third_party\zlib\inftrees.h" />
+    <ClInclude Include="..\..\third_party\zlib\trees.h" />
+    <ClInclude Include="..\..\third_party\zlib\zconf.h" />
+    <ClInclude Include="..\..\third_party\zlib\zlib.h" />
+    <ClInclude Include="..\..\third_party\zlib\zutil.h" />
     <ClInclude Include="amx.h" />
     <ClInclude Include="amxdbg.h" />
     <ClInclude Include="amxxpc.h" />
@@ -125,8 +175,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="sclinux.h" />
-    <ClInclude Include="zconf.h" />
-    <ClInclude Include="zlib.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="amxxpc1.rc">

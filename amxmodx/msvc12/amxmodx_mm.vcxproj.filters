@@ -34,13 +34,17 @@
     <Filter Include="Memtools\CDetour\asm">
       <UniqueIdentifier>{64a22cd4-3715-45de-8af2-e54017733be6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Hashing">
-      <UniqueIdentifier>{c9218ea1-c21e-4b90-b7a2-cb665d905a3f}</UniqueIdentifier>
+    <Filter Include="Third Party">
+      <UniqueIdentifier>{080705f5-5e95-4251-a521-e1671b60a989}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Hashing\Hashers">
-      <UniqueIdentifier>{v3248ea1-a53v-5ax5-b2d1-f3gh53d2fg43}</UniqueIdentifier>
-    <Filter Include="Source Files\zlib">
-      <UniqueIdentifier>{2b925879-cb15-4a3d-9236-cf43eaf6b3cf}</UniqueIdentifier>
+    <Filter Include="Third Party\Zlib">
+      <UniqueIdentifier>{7cc6a54c-6244-43e9-85ac-c2fb76bd92bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Third Party\Hashing">
+      <UniqueIdentifier>{06763df9-3070-414e-b666-080b079f4319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Third Party\Hashing\hashers">
+      <UniqueIdentifier>{fb5fd616-bb2e-42f1-a113-a61eb9ead739}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -96,9 +100,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\CModule.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\CTask.cpp">
@@ -209,70 +210,74 @@
     <ClCompile Include="..\cvars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\hashing\hashing.cpp">
-      <Filter>Hashing</Filter>
+    <ClCompile Include="..\..\third_party\zlib\adler32.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\hashing\hashers\crc32.cpp">
-      <Filter>Hashing\Hashers</Filter>
+    <ClCompile Include="..\..\third_party\zlib\compress.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\hashing\hashers\md5.cpp">
-      <Filter>Hashing\Hashers</Filter>
+    <ClCompile Include="..\..\third_party\zlib\crc32.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\hashing\hashers\sha1.cpp">
-      <Filter>Hashing\Hashers</Filter>
+    <ClCompile Include="..\..\third_party\zlib\deflate.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\hashing\hashers\sha256.cpp">
-      <Filter>Hashing\Hashers</Filter>
+    <ClCompile Include="..\..\third_party\zlib\gzclose.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\hashing\hashers\sha3.cpp">
-      <Filter>Hashing\Hashers</Filter>
+    <ClCompile Include="..\..\third_party\zlib\gzlib.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\hashing\hashers\keccak.cpp">
-      <Filter>Hashing\Hashers</Filter>
-    <ClCompile Include="..\..\public\zlib\adler32.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\gzread.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\compress.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\gzwrite.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\crc32.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\infback.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\deflate.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\inffast.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\infback.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\inflate.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\inffast.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\inftrees.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\inflate.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\trees.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\inftrees.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\uncompr.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\trees.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\zlib\zutil.c">
+      <Filter>Third Party\Zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\uncompr.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\hashing\hashing.cpp">
+      <Filter>Third Party\Hashing</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\zutil.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\hashing\hashers\crc32.cpp">
+      <Filter>Third Party\Hashing\hashers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\gzclose.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\hashing\hashers\keccak.cpp">
+      <Filter>Third Party\Hashing\hashers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\gzlib.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\hashing\hashers\md5.cpp">
+      <Filter>Third Party\Hashing\hashers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\gzread.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\hashing\hashers\sha1.cpp">
+      <Filter>Third Party\Hashing\hashers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\zlib\gzwrite.c">
-      <Filter>Source Files\zlib</Filter>
+    <ClCompile Include="..\..\third_party\hashing\hashers\sha3.cpp">
+      <Filter>Third Party\Hashing\hashers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\hashing\hashers\sha256.cpp">
+      <Filter>Third Party\Hashing\hashers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CPlugin.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -378,9 +383,6 @@
     <ClInclude Include="..\optimizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\sh_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -390,16 +392,7 @@
     <ClInclude Include="..\sh_tinyhash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\svn_version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\trie_natives.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\zlib\zconf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\zlib\zlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CDataPack.h">
@@ -429,26 +422,59 @@
     <ClInclude Include="..\CvarManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\hashing\hashing.h">
-      <Filter>Hashing</Filter>
+    <ClInclude Include="..\..\third_party\zlib\crc32.h">
+      <Filter>Third Party\Zlib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\hashing\hashers\crc32.h">
-      <Filter>Hashing\Hashers</Filter>
+    <ClInclude Include="..\..\third_party\zlib\deflate.h">
+      <Filter>Third Party\Zlib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\hashing\hashers\md5.h">
-      <Filter>Hashing\Hashers</Filter>
+    <ClInclude Include="..\..\third_party\zlib\gzguts.h">
+      <Filter>Third Party\Zlib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\hashing\hashers\sha1.h">
-      <Filter>Hashing\Hashers</Filter>
+    <ClInclude Include="..\..\third_party\zlib\inffast.h">
+      <Filter>Third Party\Zlib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\hashing\hashers\sha256.h">
-      <Filter>Hashing\Hashers</Filter>
+    <ClInclude Include="..\..\third_party\zlib\inffixed.h">
+      <Filter>Third Party\Zlib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\hashing\hashers\sha3.h">
-      <Filter>Hashing\Hashers</Filter>
+    <ClInclude Include="..\..\third_party\zlib\inflate.h">
+      <Filter>Third Party\Zlib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\hashing\hashers\keccak.h">
-      <Filter>Hashing\Hashers</Filter>
+    <ClInclude Include="..\..\third_party\zlib\inftrees.h">
+      <Filter>Third Party\Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\zlib\trees.h">
+      <Filter>Third Party\Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\zlib\zconf.h">
+      <Filter>Third Party\Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\zlib\zlib.h">
+      <Filter>Third Party\Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\zlib\zutil.h">
+      <Filter>Third Party\Zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\hashing\hashing.h">
+      <Filter>Third Party\Hashing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\hashing\hashers\crc32.h">
+      <Filter>Third Party\Hashing\hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\hashing\hashers\keccak.h">
+      <Filter>Third Party\Hashing\hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\hashing\hashers\md5.h">
+      <Filter>Third Party\Hashing\hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\hashing\hashers\sha1.h">
+      <Filter>Third Party\Hashing\hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\hashing\hashers\sha3.h">
+      <Filter>Third Party\Hashing\hashers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\hashing\hashers\sha256.h">
+      <Filter>Third Party\Hashing\hashers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

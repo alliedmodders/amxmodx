@@ -4,7 +4,7 @@ import os, platform
 lib = builder.compiler.StaticLibrary('zlib')
 
 lib.compiler.includes += [
-  os.path.join(builder.sourcePath, 'public', 'zlib'),
+  os.path.join(builder.sourcePath, 'third_party', 'zlib'),
 ]
 
 lib.sources += [

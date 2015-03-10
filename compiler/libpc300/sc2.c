@@ -1936,7 +1936,7 @@ char *sc_tokens[] = {
 
 SC_FUNC int lex(cell *lexvalue,char **lexsym)
 {
-  int i,toolong,newline,stringflags;
+  int i,toolong,newline;
   char **tokptr;
   const unsigned char *starttoken;
 

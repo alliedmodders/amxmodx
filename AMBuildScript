@@ -16,6 +16,7 @@ class AMXXConfig(object):
     self.generated_headers = []
     self.versionlib = None
     self.zlib = None
+    self.hashing = None
     self.csx_app = None
     self.stdcxx_path = None
 
@@ -269,7 +270,9 @@ class AMXXConfig(object):
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'sdk')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl', 'include')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'memtools')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'hashing')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'third_party')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'third_party', 'hashing')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'third_party', 'zlib')]
     return
 
   #
@@ -358,7 +361,11 @@ if AMXX.use_auto_versioning():
   )
 
 AMXX.zlib = builder.RunScript(
-  'public/zlib/AMBuilder'
+  'third_party/zlib/AMBuilder'
+)
+
+AMXX.hashing = builder.RunScript(
+  'third_party/hashing/AMBuilder'
 )
   
 builder.RunBuildScripts(

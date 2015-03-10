@@ -115,8 +115,6 @@ static short lastfile;
     }
   } /* if */
 
-  strexpand(string,(unsigned char *)msg,sizeof string,SCPACK_TABLE);
-
  if (errline>0)
     errstart=errline;           /* forced error position, set single line destination */
   else

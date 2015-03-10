@@ -1,0 +1,24 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Tell GitHub that these files are SourcePawn
+*.inc text linguist-language=sourcepawn
+*.sma text linguist-language=sourcepawn
+
+# Custom for Visual Studio
+*.cs diff=csharp
+
+# Sources
+*.C text
+*.cc text
+*.cxx text
+*.cpp text
+*.c++ text
+*.hpp text
+*.h text
+*.h++ text
+*.hh text
+
+# Compiled Object files
+*.o binary
+*.obj binary

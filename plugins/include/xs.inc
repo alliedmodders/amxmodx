@@ -101,7 +101,7 @@ enum xs_logtypes
 stock const xs__logtypenames[xs_logtypes_count][] = {"DEBUG", "", "WARNING", "ERROR", "FATAL ERROR", "DEBUG ASSERTION FAILED"};
 
 // tested
-stock xs_log(xs_logtypes:logtype, {Float,_}:...)
+stock xs_log(xs_logtypes:logtype, any:...)
 {
 	// WARNING: Don't try to use assert in here; it uses this func
 	
@@ -123,7 +123,7 @@ stock xs_log(xs_logtypes:logtype, {Float,_}:...)
 
 // Assertion
 // tested
-stock xs_assertfunc({Float,_}:exp, const desc[])
+stock xs_assertfunc(any:exp, const desc[])
 {
 	// Check exp
 	if (exp)

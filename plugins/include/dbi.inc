@@ -82,13 +82,13 @@ native dbi_nextrow(Result:_result);
  * One extra param: returns Float: byref
  * Two extra param: Stores string with length
  */
-native dbi_field(Result:_result, _fieldnum, {Float,_}:... );
+native dbi_field(Result:_result, _fieldnum, any:... );
 
 /* Gets a field by name.  Returns 0 on failure.
  * One extra param: returns Float: byref
  * Two extra param: Stores string with length
  */
-native dbi_result(Result:_result, _field[], {Float,_}:... );
+native dbi_result(Result:_result, _field[], any:... );
 
 /* Returns the number of rows returned from a query
  */

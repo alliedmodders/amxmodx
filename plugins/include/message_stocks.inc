@@ -114,7 +114,7 @@ stock client_printex(index, type, const msg_name[], const msg_param1[] = "", con
 		msgTextMsg = get_user_msgid("TextMsg"); 
 	}
 
-	message_begin(index > 0 ? MSG_ONE_UNRELIABLE : MSG_BROADCAST, msgTextMsg, .player = index);
+	message_begin(index > 0 ? MSG_ONE_UNRELIABLE : MSG_BROADCAST, msgTextMsg, {0,0,0}, index);
 	write_byte(type);
 	write_string(msg_name);
 	if (msg_param1[0]) { write_string(msg_param1); }

@@ -478,7 +478,7 @@ native cs_set_user_plant(index, plant = 1, showbombicon = 1);
  *                  MaxClients, or the client is not connected, an error will be
  *                  thrown.
  */
-native cs_set_user_team(index, {CsTeams,_}:team, {CsInternalModel,_}:model = CS_DONTCHANGE);
+native cs_set_user_team(index, any:team, any:model = CS_DONTCHANGE);
 
 /**
  * Returns the client's team and optionally the model id.
@@ -494,7 +494,7 @@ native cs_set_user_team(index, {CsTeams,_}:team, {CsInternalModel,_}:model = CS_
  *                  MaxClients, or the client is not connected, an error will be
  *                  thrown.
  */
-native CsTeams:cs_get_user_team(index, &{CsInternalModel,_}:model = CS_DONTCHANGE);
+native CsTeams:cs_get_user_team(index, &any:model = CS_DONTCHANGE);
 
 /**
  * Returns if the client is a VIP.

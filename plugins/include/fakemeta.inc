@@ -427,7 +427,7 @@ native forward_return(type,any:...);
  * get_orig_retval(&Float:value) - retrieves float return value by reference
  * get_orig_retval(value[], len) - retrives string return value
  */
-native get_orig_retval({Float,_}:...);
+native get_orig_retval(any:...);
 
 native engfunc(type,any:...);
 native dllfunc(type,any:...);
@@ -435,14 +435,14 @@ native dllfunc(type,any:...);
 //only use this with functions that pass a Trace
 // get: zero extra params - return int, one extra param = byref float or vector
 // set: use anything
-native get_tr(TraceResult:tr_member, {Float,_}:...);
-native set_tr(TraceResult:tr_member, {Float,_}:...);
+native get_tr(TraceResult:tr_member, any:...);
+native set_tr(TraceResult:tr_member, any:...);
 
 //Upgraded version takes in a TraceResult handle, optionally passed in as the last parameter to the
 //TraceResult forward.  Use 0 to specify the global traceresult handle set from calling 
 // some of the Engfucs.
-native get_tr2(tr_handle, {TraceResult,_}:tr_member, {Float,_}:...);
-native set_tr2(tr_handle, {TraceResult,_}:tr_member, {Float,_}:...);
+native get_tr2(tr_handle, any:tr_member, any:...);
+native set_tr2(tr_handle, any:tr_member, any:...);
 
 /**
  * Creates a traceresult handle.  This value should never be altered.
@@ -466,33 +466,33 @@ native free_tr2(tr_handle);
 
 //Same as above, use either a kvd_handle or 0 for global reserved kvd data
 //kvd_handle is passed by the kvd hook, last param
-native get_kvd(kvd_handle, KeyValueData:member, {Float,_}:...);
+native get_kvd(kvd_handle, KeyValueData:member, any:...);
 
 //Using set_kvd with the handle from the hook for anything under KV_fHandled
 // is considered an undefined operation (it could crash).  You should fire a new
 // keyvalues structure rather than changing the internal engine strings.
-native set_kvd(kvd_handle, KeyValueData:member, {Float,_}:...);
+native set_kvd(kvd_handle, KeyValueData:member, any:...);
 
 // These functions are used with the clientdata data structure (FM_UpdateClientData)
 // Get: 0 extra params - Return integer; 1 extra param - by ref float or vector; 2 extra params - string and length
 // Set: Use anything
 // Use 0 for cd_handle to specify the global clientdata handle
-native get_cd(cd_handle, ClientData:member, {Float,_}:...);
-native set_cd(cd_handle, ClientData:member, {Float,_}:...);
+native get_cd(cd_handle, ClientData:member, any:...);
+native set_cd(cd_handle, ClientData:member, any:...);
 
 // These functions are used with the entity_state data structure (FM_AddToFullPack)
 // Get: 0 extra params - Return integer; 1 extra param - by ref float or vector or array
 // Set: Use anything
 // Use 0 for es_handle to specify the global entity_state handle
-native get_es(es_handle, EntityState:member, {Float,_}:...);
-native set_es(es_handle, EntityState:member, {Float,_}:...);
+native get_es(es_handle, EntityState:member, any:...);
+native set_es(es_handle, EntityState:member, any:...);
 
 // These functions are used with the usercmd data structure (FM_CmdStart)
 // Get: 0 extra params - Return integer; 1 extra param - by ref float or vector
 // Set: Use anything
 // Use 0 for uc_handle to specify the global usercmd handle
-native get_uc(uc_handle, UserCmd:member, {Float,_}:...);
-native set_uc(uc_handle, UserCmd:member, {Float,_}:...);
+native get_uc(uc_handle, UserCmd:member, any:...);
+native set_uc(uc_handle, UserCmd:member, any:...);
 
 //NOTE that for the string offsets below, on AMD64, a byref (char **) offset is NOT the same as an int offset
 //In fact it's QWORD aligned rather than DWORD aligned, so the offset will be exactly half.

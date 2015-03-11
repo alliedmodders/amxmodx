@@ -81,13 +81,33 @@ native ts_giveweapon( index,weapon,clips,extra );
 
 native ts_getuserpwup( index );
 
-stock ts_has_slowmo(id) return (ts_getuserpwup(id) &TSPWUP_SLOWMO);
-stock ts_has_infammo(id) return (ts_getuserpwup(id) &TSPWUP_INFAMMO);
-stock ts_has_slowpause(id) return (ts_getuserpwup(id) &TSPWUP_SLOWPAUSE);
-stock ts_has_dfirerate(id) return (ts_getuserpwup(id) &TSPWUP_DFIRERATE);
-stock ts_has_grenade(id) return (ts_getuserpwup(id) &TSPWUP_GRENADE);
-stock ts_has_health(id) return (ts_getuserpwup(id) &TSPWUP_HEALTH);
-stock ts_has_armor(id) return (ts_getuserpwup(id) &TSPWUP_ARMOR);
+stock ts_has_slowmo(id) {
+	return (ts_getuserpwup(id) &TSPWUP_SLOWMO);
+}
+
+stock ts_has_infammo(id) {
+	return (ts_getuserpwup(id) &TSPWUP_INFAMMO);
+}
+
+stock ts_has_slowpause(id) {
+	return (ts_getuserpwup(id) &TSPWUP_SLOWPAUSE);
+}
+
+stock ts_has_dfirerate(id) {
+	return (ts_getuserpwup(id) &TSPWUP_DFIRERATE);
+}
+
+stock ts_has_grenade(id) {
+	return (ts_getuserpwup(id) &TSPWUP_GRENADE);
+}
+
+stock ts_has_health(id) {
+	return (ts_getuserpwup(id) &TSPWUP_HEALTH);
+}
+
+stock ts_has_armor(id) {
+	return (ts_getuserpwup(id) &TSPWUP_ARMOR);
+}
 
 /* Function will create pwup entity and return its index (pwupent) */
 native ts_createpwup( pwup );
@@ -112,13 +132,34 @@ stock ts_is_normal(id)
 	if( (msg > 11) || (msg > 6 && msg < 10) ) return 1;
 	return 0;
 }
-stock ts_is_waiting(id) return (ts_get_message(id) == TSMSG_WAITING);
-stock ts_is_dead(id) return (ts_get_message(id) == TSMSG_DEAD);
-stock ts_is_killer(id) return (ts_get_message(id) == TSMSG_KILLER);
-stock ts_is_demolition(id) return (ts_get_message(id) == TSMSG_DEMOLITION);
-stock ts_is_specialist(id) return (ts_get_message(id) == TSMSG_SPECIALIST);
-stock ts_is_unstoppable(id) return (ts_get_message(id) == TSMSG_UNSTOPPABLE);
-stock ts_is_theone(id) return (ts_get_message(id) == TSMSG_THEONE);
+
+stock ts_is_waiting(id) {
+	return (ts_get_message(id) == TSMSG_WAITING);
+}
+
+stock ts_is_dead(id) {
+	return (ts_get_message(id) == TSMSG_DEAD);
+}
+
+stock ts_is_killer(id) {
+	return (ts_get_message(id) == TSMSG_KILLER);
+}
+
+stock ts_is_demolition(id) {
+	return (ts_get_message(id) == TSMSG_DEMOLITION);
+}
+
+stock ts_is_specialist(id) {
+	return (ts_get_message(id) == TSMSG_SPECIALIST);
+}
+
+stock ts_is_unstoppable(id) {
+	return (ts_get_message(id) == TSMSG_UNSTOPPABLE);
+}
+
+stock ts_is_theone(id) {
+	return (ts_get_message(id) == TSMSG_THEONE);
+}
 
 // Return one on true, 0 on false
 // UNAVAILABLE IN 1.70

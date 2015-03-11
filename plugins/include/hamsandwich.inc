@@ -58,7 +58,7 @@ native HamHook:RegisterHam(Ham:function, const EntityClass[], const Callback[], 
  */
 stock HamHook:RegisterHamPlayer(Ham:function, const Callback[], Post=0)
 {
-	return RegisterHam(function, "player", Callback, Post, .specialbot = true);
+	return RegisterHam(function, "player", Callback, Post, true);
 }
 
 /**

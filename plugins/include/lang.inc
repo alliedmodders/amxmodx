@@ -59,4 +59,4 @@ native AddTranslation(const lang[3], TransKey:key, const phrase[]);
  * NOTE: LANG_PLAYER is invalid in this, use a player index
  *       or LANG_SERVER
  */
-native LookupLangKey(Output[], OutputSize, const Key[], const &id);
+native LookupLangKey(Output[], OutputSize, const Key[], &id);

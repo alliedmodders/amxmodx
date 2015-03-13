@@ -7,43 +7,43 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amxmodx_mm", "amxmodx_mm.vc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{1A75873D-E05D-4F07-A4E2-28DC1BB03226}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cstrike", "..\..\dlls\cstrike\cstrike\msvc12\cstrike.vcxproj", "{AB148B92-4F47-42E6-8268-AB4E588EC6A2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cstrike", "..\..\modules\cstrike\cstrike\msvc12\cstrike.vcxproj", "{AB148B92-4F47-42E6-8268-AB4E588EC6A2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csx", "..\..\dlls\cstrike\csx\msvc12\csx.vcxproj", "{1DC4A99A-F23F-4AAE-881C-79D157C91155}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csx", "..\..\modules\cstrike\csx\msvc12\csx.vcxproj", "{1DC4A99A-F23F-4AAE-881C-79D157C91155}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinCSX", "..\..\dlls\cstrike\csx\WinCSX\msvc12\WinCSX.vcxproj", "{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinCSX", "..\..\modules\cstrike\csx\WinCSX\msvc12\WinCSX.vcxproj", "{39A1E5DD-81A1-441D-B99A-E50A01DB05D7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dodfun", "..\..\dlls\dod\dodfun\msvc12\dodfun.vcxproj", "{2742C607-9FAB-47B3-8A13-E999BC6FDB54}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dodfun", "..\..\modules\dod\dodfun\msvc12\dodfun.vcxproj", "{2742C607-9FAB-47B3-8A13-E999BC6FDB54}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dodx", "..\..\dlls\dod\dodx\msvc12\dodx.vcxproj", "{9008A886-2DD0-443C-B468-AD84868D89B0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dodx", "..\..\modules\dod\dodx\msvc12\dodx.vcxproj", "{9008A886-2DD0-443C-B468-AD84868D89B0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "..\..\dlls\engine\msvc12\engine.vcxproj", "{B3F4467B-6148-4EBF-B897-168D81CF8D9B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "..\..\modules\engine\msvc12\engine.vcxproj", "{B3F4467B-6148-4EBF-B897-168D81CF8D9B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fakemeta", "..\..\dlls\fakemeta\msvc12\fakemeta.vcxproj", "{5E393C37-22F2-4CA2-9022-6400DC582447}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fakemeta", "..\..\modules\fakemeta\msvc12\fakemeta.vcxproj", "{5E393C37-22F2-4CA2-9022-6400DC582447}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fun", "..\..\dlls\fun\msvc12\fun.vcxproj", "{43B95C78-8D1A-4D12-B668-2520B38E1DA3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fun", "..\..\modules\fun\msvc12\fun.vcxproj", "{43B95C78-8D1A-4D12-B668-2520B38E1DA3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geoip", "..\..\dlls\geoip\msvc12\geoip.vcxproj", "{036FA046-A6BF-4D80-8986-71FDD1528B55}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geoip", "..\..\modules\geoip\msvc12\geoip.vcxproj", "{036FA046-A6BF-4D80-8986-71FDD1528B55}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hamsandwich", "..\..\dlls\hamsandwich\msvc12\hamsandwich.vcxproj", "{A8B3717F-2663-4099-AE96-AF5B7266FDA8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hamsandwich", "..\..\modules\hamsandwich\msvc12\hamsandwich.vcxproj", "{A8B3717F-2663-4099-AE96-AF5B7266FDA8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mysqlx", "..\..\dlls\mysqlx\msvc12\mysqlx.vcxproj", "{7877D370-E48E-4A85-8EE4-131863A5B09F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mysqlx", "..\..\modules\mysqlx\msvc12\mysqlx.vcxproj", "{7877D370-E48E-4A85-8EE4-131863A5B09F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ns", "..\..\dlls\ns\msvc12\ns.vcxproj", "{5B5DEFD0-28ED-4D0E-A1B0-50F9304A65DF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ns", "..\..\modules\ns\msvc12\ns.vcxproj", "{5B5DEFD0-28ED-4D0E-A1B0-50F9304A65DF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nvault", "..\..\dlls\nvault\msvc12\nvault.vcxproj", "{E2827EDF-F83F-4D54-8FD1-F47BA1E4D328}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nvault", "..\..\modules\nvault\msvc12\nvault.vcxproj", "{E2827EDF-F83F-4D54-8FD1-F47BA1E4D328}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "regex", "..\..\dlls\regex\msvc12\regex.vcxproj", "{1D4E991A-7EC1-43C5-90FC-DC9D713052D8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "regex", "..\..\modules\regex\msvc12\regex.vcxproj", "{1D4E991A-7EC1-43C5-90FC-DC9D713052D8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sockets", "..\..\dlls\sockets\msvc12\sockets.vcxproj", "{F15BBA96-2F66-44BB-9DDF-D91AE6D33AE7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sockets", "..\..\modules\sockets\msvc12\sockets.vcxproj", "{F15BBA96-2F66-44BB-9DDF-D91AE6D33AE7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "..\..\dlls\sqlite\msvc12\sqlite.vcxproj", "{4FDFD106-7163-44F0-85C4-9FAFECD14973}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "..\..\modules\sqlite\msvc12\sqlite.vcxproj", "{4FDFD106-7163-44F0-85C4-9FAFECD14973}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tfcx", "..\..\dlls\tfcx\msvc12\tfcx.vcxproj", "{87519113-8E9D-4C6F-BA1F-55F4D8829E83}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tfcx", "..\..\modules\tfcx\msvc12\tfcx.vcxproj", "{87519113-8E9D-4C6F-BA1F-55F4D8829E83}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tsfun", "..\..\dlls\ts\tsfun\msvc12\tsfun.vcxproj", "{9036672C-71DB-4DC9-90CC-B14C02465497}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tsfun", "..\..\modules\ts\tsfun\msvc12\tsfun.vcxproj", "{9036672C-71DB-4DC9-90CC-B14C02465497}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tsx", "..\..\dlls\ts\tsx\msvc12\tsx.vcxproj", "{7F18E00C-6271-4CAB-B18A-746BE3EC68E7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tsx", "..\..\modules\ts\tsx\msvc12\tsx.vcxproj", "{7F18E00C-6271-4CAB-B18A-746BE3EC68E7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compiler", "Compiler", "{0BB61E37-4EA5-4B18-A164-6CB4810E50F4}"
 EndProject

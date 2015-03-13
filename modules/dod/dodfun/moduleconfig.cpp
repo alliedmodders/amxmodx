@@ -233,8 +233,8 @@ void SetModel_Post(edict_t *e, const char *m) {
 			w_id = newNade ? DODW_STICKGRENADE : DODW_STICKGRENADE_EX;
 		} else if(m[9]=='m' && m[10]=='i') {				// w_mills.mdl (British)
 			w_id = newNade ? DODW_MILLS_BOMB : DODW_HANDGRENADE_EX;
-			// A mills_ex weapon should be added in dlls/dod/dodfun/CMisc.h, plugins/include/dodconst.inc,
-			//   and probably dlls/dod/dodx/NBase.cpp. The DODMAX_WEAPONS define should be updated too.
+			// A mills_ex weapon should be added in modules/dod/dodfun/CMisc.h, plugins/include/dodconst.inc,
+			//   and probably modules/dod/dodx/NBase.cpp. The DODMAX_WEAPONS define should be updated too.
 		}
 
 		if(!w_id) {	// Fail-safe, just in case..

@@ -8,7 +8,8 @@
 HLSDK = ../../../hlsdk
 MM_ROOT = ../../../metamod/metamod
 PUBLIC_ROOT = ../../public
-SQL = sqlite-source
+THIRD_PARTY = $(PUBLIC_ROOT)/third_party
+SQL = $(THIRD_PARTY)/sqlite
 
 #####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###

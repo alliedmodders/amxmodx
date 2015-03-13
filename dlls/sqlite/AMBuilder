@@ -5,7 +5,7 @@ binary = AMXX.MetaModule(builder, 'sqlite')
 binary.compiler.cxxincludes += [
   os.path.join(builder.currentSourcePath, 'sqlitepp'),
   os.path.join(builder.currentSourcePath, 'thread'),
-  os.path.join(builder.currentSourcePath, 'sqlite-source'),
+  os.path.join(builder.currentSourcePath, '..', '..', 'third_party', 'sqlite'),
 ]
 binary.compiler.defines += [
   'SM_DEFAULT_THREADER',
@@ -29,7 +29,7 @@ binary.sources += [
   'sqlitepp/SqliteResultSet.cpp',
   'sqlitepp/SqliteDatabase.cpp',
   'sqlitepp/SqliteDriver.cpp',
-  'sqlite-source/sqlite3.c',
+  '../../third_party/sqlite/sqlite3.c',
 ]
 
 if builder.target_platform == 'windows':

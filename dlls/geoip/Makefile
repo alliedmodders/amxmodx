@@ -8,6 +8,8 @@
 HLSDK = ../../../hlsdk
 MM_ROOT = ../../../metamod/metamod
 PUBLIC_ROOT = ../../public
+THIRD_PARTY = $(PUBLIC_ROOT)/third_party
+GEOIP = $(THIRD_PARTY)/libmaxminddb
 
 #####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###
@@ -15,7 +17,7 @@ PUBLIC_ROOT = ../../public
 
 PROJECT = geoip
 
-OBJECTS = amxxmodule.cpp GeoIP2/maxminddb.c geoip_main.cpp geoip_natives.cpp geoip_util.cpp
+OBJECTS = amxxmodule.cpp $(GEOIP)/maxminddb.c geoip_main.cpp geoip_natives.cpp geoip_util.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###

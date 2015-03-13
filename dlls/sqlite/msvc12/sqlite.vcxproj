@@ -55,7 +55,7 @@
     <ClCompile>
       <AdditionalOptions>/D "NO_TCL" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;..\sqlite-source;..\sqlitepp;..\thread;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;..\..\..\third_party\sqlite;..\sqlitepp;..\thread;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;sqlite_EXPORTS;SM_DEFAULT_THREADER;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -85,7 +85,7 @@
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;..\sqlite-source;..\sqlitepp;..\thread;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;..\..\..\third_party\sqlite;..\sqlitepp;..\thread;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;sqlite_EXPORTS;SM_DEFAULT_THREADER;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -111,7 +111,7 @@
     <ClCompile Include="..\handles.cpp" />
     <ClCompile Include="..\module.cpp" />
     <ClCompile Include="..\oldcompat_sql.cpp" />
-    <ClCompile Include="..\sqlite-source\sqlite3.c" />
+    <ClCompile Include="..\..\..\third_party\sqlite\sqlite3.c" />
     <ClCompile Include="..\threading.cpp" />
     <ClCompile Include="..\sqlitepp\SqliteDatabase.cpp" />
     <ClCompile Include="..\sqlitepp\SqliteDriver.cpp" />
@@ -124,7 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\sqlheaders.h" />
-    <ClInclude Include="..\sqlite-source\sqlite3.h" />
+    <ClInclude Include="..\..\..\third_party\sqlite\sqlite3.h" />
     <ClInclude Include="..\sqlite_header.h" />
     <ClInclude Include="..\threading.h" />
     <ClInclude Include="..\sqlitepp\ISQLDriver.h" />

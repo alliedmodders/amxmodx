@@ -14,7 +14,7 @@
 #ifndef _INCLUDE_GEOIPMAIN_H
 #define _INCLUDE_GEOIPMAIN_H
 
-#include "GeoIP2/maxminddb.h"
+#include "maxminddb.h"
 #include "amxxmodule.h"
 
 bool loadDatabase();

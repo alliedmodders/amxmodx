@@ -42,9 +42,6 @@
     <ClCompile Include="sc7.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scexpand.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sci18n.c">
       <Filter>Source Files</Filter>
     </ClCompile>

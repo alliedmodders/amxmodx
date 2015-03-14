@@ -2,7 +2,7 @@
 trap "exit" INT
 
 if [ ! -d "amxmodx" ]; then
-  git clone https://github.com/alliedmodders/amxmodx.git
+  git clone --recursive https://github.com/alliedmodders/amxmodx.git
 fi
 
 if [ "$1" != "--no-mysql" ]; then

@@ -94,7 +94,7 @@ static cell AMX_NATIVE_CALL ReadPackCell(AMX* amx, cell* params)
 		return 0;
 	}
 
-	if (!d->IsReadable(sizeof(size_t) + sizeof(cell)))
+	if (!d->IsReadable(sizeof(char) + sizeof(size_t) + sizeof(cell)))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
 		return 0;
@@ -113,7 +113,7 @@ static cell AMX_NATIVE_CALL ReadPackFloat(AMX* amx, cell* params)
 		return 0;
 	}
 
-	if (!d->IsReadable(sizeof(size_t) + sizeof(float)))
+	if (!d->IsReadable(sizeof(char) + sizeof(size_t) + sizeof(float)))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
 		return 0;

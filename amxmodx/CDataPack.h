@@ -108,6 +108,11 @@ public:
 	 */
 	void *ReadMemory(size_t *size) const;
 
+	bool CanReadCell() const;
+	bool CanReadFloat() const;
+	bool CanReadString(size_t *len) const;
+	bool CanReadMemory(size_t *size) const;
+
 public:
 	/**
 	 * @brief Resets the used size of the stream back to zero.

@@ -168,23 +168,32 @@ bool CDataPack::SetPosition(size_t pos) const
 	return true;
 }
 
-cell CDataPack::ReadCell() const
+bool CDataPack::CanReadCell() const
 {
 	if (!IsReadable(sizeof(char) + sizeof(size_t) + sizeof(cell)))
 	{
-		return 0;
+		return false;
 	}
 	if (*reinterpret_cast<char *>(m_curptr) != DataPackType::Cell)
 	{
-		return 0;
+		return false;
 	}
-	m_curptr += sizeof(char);
+	if (*reinterpret_cast<size_t *>(m_curptr + sizeof(char)) != sizeof(cell))
+	{
+		return false;
+	}
 
-	if (*reinterpret_cast<size_t *>(m_curptr) != sizeof(cell))
+	return true;
+}
+
+cell CDataPack::ReadCell() const
+{
+	if (!CanReadCell())
 	{
 		return 0;
 	}
 
+	m_curptr += sizeof(char);
 	m_curptr += sizeof(size_t);
 
 	cell val = *reinterpret_cast<cell *>(m_curptr);
@@ -192,23 +201,32 @@ cell CDataPack::ReadCell() const
 	return val;
 }
 
-float CDataPack::ReadFloat() const
+bool CDataPack::CanReadFloat() const
 {
 	if (!IsReadable(sizeof(char) + sizeof(size_t) + sizeof(float)))
 	{
-		return 0;
+		return false;
 	}
 	if (*reinterpret_cast<char *>(m_curptr) != DataPackType::Float)
 	{
-		return 0;
+		return false;
 	}
-	m_curptr += sizeof(char);
+	if (*reinterpret_cast<size_t *>(m_curptr + sizeof(char)) != sizeof(float))
+	{
+		return false;
+	}
 
-	if (*reinterpret_cast<size_t *>(m_curptr) != sizeof(float))
+	return true;
+}
+
+float CDataPack::ReadFloat() const
+{
+	if (!CanReadFloat())
 	{
 		return 0;
 	}
 
+	m_curptr += sizeof(char);
 	m_curptr += sizeof(size_t);
 
 	float val = *reinterpret_cast<float *>(m_curptr);
@@ -221,26 +239,23 @@ bool CDataPack::IsReadable(size_t bytes) const
 	return (bytes + (m_curptr - m_pBase) > m_size) ? false : true;
 }
 
-const char *CDataPack::ReadString(size_t *len) const
+bool CDataPack::CanReadString(size_t *len) const
 {
 	if (!IsReadable(sizeof(char) + sizeof(size_t)))
 	{
-		return NULL;
+		return false;
 	}
 	if (*reinterpret_cast<char *>(m_curptr) != DataPackType::String)
 	{
-		return NULL;
+		return false;
 	}
-	m_curptr += sizeof(char);
 
-	size_t real_len = *(size_t *)m_curptr;
+	size_t real_len = *(size_t *)(m_curptr + sizeof(char));
+	char *str = (char *)(m_curptr + sizeof(char) + sizeof(size_t));
 
-	m_curptr += sizeof(size_t);
-	char *str = (char *)m_curptr;
-
-	if ((strlen(str) != real_len) || !(IsReadable(real_len+1)))
+	if ((strlen(str) != real_len) || !(IsReadable(sizeof(char) + sizeof(size_t) + real_len + 1)))
 	{
-		return NULL;
+		return false;
 	}
 
 	if (len)
@@ -248,7 +263,27 @@ const char *CDataPack::ReadString(size_t *len) const
 		*len = real_len;
 	}
 
+	return true;
+}
+
+const char *CDataPack::ReadString(size_t *len) const
+{
+	size_t real_len;
+	if (!CanReadString(&real_len))
+	{
+		return NULL;
+	}
+
+	m_curptr += sizeof(char);
+	m_curptr += sizeof(size_t);
+
+	char *str = (char *)m_curptr;
 	m_curptr += real_len + 1;
+
+	if (len)
+	{
+		*len = real_len;
+	}
 
 	return str;
 }
@@ -258,34 +293,49 @@ void *CDataPack::GetMemory() const
 	return m_curptr;
 }
 
-void *CDataPack::ReadMemory(size_t *size) const
+bool CDataPack::CanReadMemory(size_t *size) const
 {
-	if (!IsReadable(sizeof(size_t)))
+	if (!IsReadable(sizeof(char) + sizeof(size_t)))
 	{
-		return NULL;
+		return false;
 	}
 	if (*reinterpret_cast<char *>(m_curptr) != DataPackType::Raw)
 	{
-		return NULL;
+		return false;
 	}
-	m_curptr += sizeof(char);
 
-	size_t bytecount = *(size_t *)m_curptr;
-	m_curptr += sizeof(size_t);
-
-	if (!IsReadable(bytecount))
+	size_t bytecount = *(size_t *)(m_curptr + sizeof(char));
+	if (!IsReadable(sizeof(char) + sizeof(size_t) + bytecount))
 	{
-		return NULL;
+		return false;
 	}
-
-	void *ptr = m_curptr;
 
 	if (size)
 	{
 		*size = bytecount;
 	}
 
+	return true;
+}
+
+void *CDataPack::ReadMemory(size_t *size) const
+{
+	size_t bytecount;
+	if (!CanReadMemory(&bytecount))
+	{
+		return NULL;
+	}
+
+	m_curptr += sizeof(char);
+	m_curptr += sizeof(size_t);
+
+	void *ptr = m_curptr;
 	m_curptr += bytecount;
+
+	if (size)
+	{
+		*size = bytecount;
+	}
 
 	return ptr;
 }

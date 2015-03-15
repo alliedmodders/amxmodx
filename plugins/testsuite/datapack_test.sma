@@ -41,51 +41,57 @@ public datapacktest()
 {
 	failcount = 0;
 	passcount = 0;
-	
+
 	new DataPack:pack = CreateDataPack();
 	new DataPack:oldPack = pack; // Makes sure that the trie handle system recycles old handles
-	
+
 	new refCell = 23;
 	new Float:refFloat = 42.42;
 	new refString[] = "I'm a little teapot.";
-	
+
 	// Write
-	WritePackCell(pack, refCell);		// 8 
-	WritePackString(pack, refString);	// 25 (sizeof string + 4)
-	WritePackFloat(pack, refFloat);		// 8
-	 
-	test("Position #1 test", .pass = GetPackPosition(pack) == 41);
-	test("Readable #1 test", .pass = !IsPackReadable(pack, 41));
-	
+	new cellPos = GetPackPosition(pack);
+	WritePackCell(pack, refCell);
+	new floatPos = GetPackPosition(pack);
+	WritePackFloat(pack, refFloat);
+	new strPos = GetPackPosition(pack);
+	WritePackString(pack, refString);
+	new endPos = GetPackPosition(pack);
+
+	test("Write position test",
+		.pass = (cellPos != floatPos && cellPos != strPos && cellPos != endPos
+				&& floatPos != strPos && floatPos != endPos && strPos != endPos));
+
 	//resets the index to the beginning, necessary for read.
 	ResetPack(pack);
-	
-	test("Position #2 test", .pass = GetPackPosition(pack) == 0 );
-	test("Readable #2 test", .pass = IsPackReadable(pack, 15));
-	
-	// Read
+
+	test("Position #1 test", .pass = (GetPackPosition(pack) == cellPos));
+	test("Readable #1 test", .pass = !IsPackEnded(pack));
+
 	new cellValue = ReadPackCell(pack);
+	test("Cell test", .pass = (cellValue == refCell));
+
+	test("Position #2 test", .pass = (GetPackPosition(pack) == floatPos));
+	test("Readable #2 test", .pass = !IsPackEnded(pack));
+
+	new Float:floatValue = ReadPackFloat(pack);
+	test("Float test", .pass = (floatValue == refFloat));
+
+	test("Position #3 test", .pass = (GetPackPosition(pack) == strPos));
+	test("Readable #3 test", .pass = !IsPackEnded(pack));
+
 	new buffer[1024];
 	ReadPackString(pack, buffer, 1024);
-	new Float:floatvalue = ReadPackFloat(pack);
-	
-	test("Cell test", .pass = cellValue == refCell);
-	test("String test", .pass = bool:equal(buffer, refString));
-	test("Float test #1", .pass = floatvalue == refFloat);
-	
-	SetPackPosition(pack, 33);
-	test("Set Position test", .pass = GetPackPosition(pack) == 33);
-	
-	WritePackFloat(pack, refFloat + 1);
-	SetPackPosition(pack, 33);
-	test("Float test #2", .pass = ReadPackFloat(pack) == refFloat + 1);
+	test("String test #1", .pass = bool:equal(buffer, refString));
+
+	test("End test", .pass = IsPackEnded(pack));
 
 	ResetPack(pack, .clear = true);
-	test("Clear test", .pass = !IsPackReadable(pack, 15));
-	
+	test("Clear test", .pass = IsPackEnded(pack));
+
 	DestroyDataPack(pack);
-	
+
 	test("Recycle handles", CreateDataPack() == oldPack);
-	
+
 	done();
 }

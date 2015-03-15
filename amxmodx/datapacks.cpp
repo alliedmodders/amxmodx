@@ -197,19 +197,6 @@ static cell AMX_NATIVE_CALL SetPackPosition(AMX* amx, cell* params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL IsPackReadable(AMX* amx, cell* params)
-{
-	CDataPack *d = g_DataPackHandles.lookup(params[1]);
-
-	if (d == NULL)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid datapack handle provided (%d)", params[1]);
-		return 0;
-	}
-
-	return d->IsReadable(params[2]) ? 1 : 0;
-}
-
 static cell AMX_NATIVE_CALL DestroyDataPack(AMX* amx, cell* params)
 {
 	cell *ptr = get_amxaddr(amx, params[1]);
@@ -243,7 +230,6 @@ AMX_NATIVE_INFO g_DatapackNatives[] =
 	{ "ResetPack",					ResetPack },
 	{ "GetPackPosition",			GetPackPosition },
 	{ "SetPackPosition",			SetPackPosition },
-	{ "IsPackReadable",				IsPackReadable },
 	{ "DestroyDataPack",			DestroyDataPack },
 	{NULL,							NULL}
 };

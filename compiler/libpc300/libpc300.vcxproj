@@ -101,7 +101,6 @@
     <ClCompile Include="sc5.c" />
     <ClCompile Include="sc6.c" />
     <ClCompile Include="sc7.c" />
-    <ClCompile Include="scexpand.c" />
     <ClCompile Include="sci18n.c" />
     <ClCompile Include="sclist.c" />
     <ClCompile Include="scmemfil.c" />

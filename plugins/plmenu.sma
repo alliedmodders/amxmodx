@@ -121,7 +121,9 @@ public plugin_init()
 	load_settings(clcmds_ini_file);
 
 	if (LibraryExists("cstrike", LibType_Library))
+	{
 		g_cstrike = 1;
+	}
 	if (LibraryExists("fakemeta", LibType_Library))
 	{
 		g_fakemeta = 1;
@@ -132,7 +134,7 @@ public plugin_init()
 
 	new modname[9];
 	get_modname(modname, charsmax(modname));
-	if( equal(modname, "cstrike") || equal(modname, "czero") )
+	if (equal(modname, "cstrike") || equal(modname, "czero"))
 	{
 		register_event("TeamInfo", "Event_TeamInfo", "a", "2=TERRORIST", "2=CT");
 		register_event("TextMsg", "Event_TextMsg", "b", "1=4", "2=#Only_1_Team_Change");
@@ -145,13 +147,13 @@ public plugin_init()
 public plugin_cfg()
 {
 	new x = get_xvar_id("g_tempBans");
-	if( x )
+	if (x)
 	{
 		g_tempBans = Trie:get_xvar_num(x);
 	}
 	new amx_tempban_maxtime[] = "amx_tempban_maxtime";
 	p_amx_tempban_maxtime = get_cvar_pointer(amx_tempban_maxtime);
-	if( !p_amx_tempban_maxtime )
+	if (!p_amx_tempban_maxtime)
 	{
 		p_amx_tempban_maxtime = register_cvar(amx_tempban_maxtime, "4320", FCVAR_PROTECTED);
 		server_cmd("amx_cvar add %s", amx_tempban_maxtime);
@@ -208,7 +210,9 @@ public plmenu_setslapdmg()
 public module_filter(const module[])
 {
 	if (equali(module, "cstrike") || equali(module, "fakemeta"))
+	{
 		return PLUGIN_HANDLED;
+	}
 
 	return PLUGIN_CONTINUE;
 }
@@ -216,7 +220,9 @@ public module_filter(const module[])
 public native_filter(const name[], index, trap)
 {
 	if (!trap)
+	{
 		return PLUGIN_HANDLED;
+	}
 
 	return PLUGIN_CONTINUE;
 }
@@ -238,12 +244,18 @@ public actionBanMenu(id, key)
 
 			displayBanMenu(id, g_menuPosition[id]);
 		}
-		case 8: displayBanMenu(id, ++g_menuPosition[id]);
-		case 9: displayBanMenu(id, --g_menuPosition[id]);
+		case 8:
+		{
+			displayBanMenu(id, ++g_menuPosition[id]);
+		}
+		case 9:
+		{
+			displayBanMenu(id, --g_menuPosition[id]);
+		}
 		default:
 		{
 			new banTime = g_menuSettings[id];
-			if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (banTime <= 0 || banTime > get_pcvar_num(p_amx_tempban_maxtime)) )
+			if (~get_user_flags(id) & (ADMIN_BAN | ADMIN_RCON) && (banTime <= 0 || banTime > get_pcvar_num(p_amx_tempban_maxtime)))
 			{
 				console_print(id, "%L", id, "NO_ACC_COM");
 				displayBanMenu(id, g_menuPosition[id]);
@@ -261,7 +273,7 @@ public actionBanMenu(id, key)
 
 			log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%d^")", name, get_user_userid(id), authid, name2, userid2, authid2, banTime);
 
-			if ( !banTime ) // permanent
+			if (!banTime) // permanent
 			{
 				for (new i = 1; i <= MaxClients; i++)
 				{
@@ -290,7 +302,7 @@ public actionBanMenu(id, key)
 				get_user_ip(player, ipa, charsmax(ipa), 1);
 
 				server_cmd("addip %d %s;writeip", banTime, ipa);
-				if( g_tempBans )
+				if (g_tempBans)
 				{
 					TrieSetString(g_tempBans, ipa, authid);
 				}
@@ -298,7 +310,7 @@ public actionBanMenu(id, key)
 			else
 			{
 				server_cmd("banid %d #%d kick;writeid", banTime, userid2);
-				if( g_tempBans )
+				if (g_tempBans)
 				{
 					TrieSetString(g_tempBans, authid2, authid);
 				}
@@ -316,7 +328,9 @@ public actionBanMenu(id, key)
 displayBanMenu(id, pos)
 {
 	if (pos < 0)
+	{
 		return;
+	}
 
 	get_players(g_menuPlayers[id], g_menuPlayersNum[id]);
 
@@ -327,14 +341,18 @@ displayBanMenu(id, pos)
 	new start = pos * 7;
 
 	if (start >= g_menuPlayersNum[id])
+	{
 		start = pos = g_menuPosition[id] = 0;
+	}
 
 	new len = formatex(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "BAN_MENU", pos + 1, (g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0)));
 	new end = start + 7;
 	new keys = MENU_KEY_0|MENU_KEY_8;
 
 	if (end > g_menuPlayersNum[id])
+	{
 		end = g_menuPlayersNum[id];
+	}
 
 	for (new a = start; a < end; ++a)
 	{
@@ -346,23 +364,37 @@ displayBanMenu(id, pos)
 			++b;
 
 			if (g_coloredMenus)
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "\d%d. %s^n\w", b, name);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "#. %s^n", name);
-		} else {
+			}
+		}
+		else
+		{
 			keys |= (1<<b);
 
 			if (is_user_admin(i))
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "%d. %s^n", ++b, name);
+			}
 		}
 	}
 
 	if (g_menuSettings[id])
+	{
 		len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "BAN_FOR_MIN", g_menuSettings[id]);
+	}
 	else
+	{
 		len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "BAN_PERM");
+	}
 
 	if (end != g_menuPlayersNum[id])
 	{
@@ -370,7 +402,9 @@ displayBanMenu(id, pos)
 		keys |= MENU_KEY_9;
 	}
 	else
+	{
 		formatex(menuBody[len], charsmax(menuBody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT");
+	}
 
 	show_menu(id, keys, menuBody, -1, "Ban Menu");
 }
@@ -378,7 +412,9 @@ displayBanMenu(id, pos)
 public cmdBanMenu(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 1))
+	{
 		return PLUGIN_HANDLED;
+	}
 
 	g_menuOption[id] = 0;
 
@@ -412,8 +448,14 @@ public actionSlapMenu(id, key)
 
 			displaySlapMenu(id, g_menuPosition[id]);
 		}
-		case 8: displaySlapMenu(id, ++g_menuPosition[id]);
-		case 9: displaySlapMenu(id, --g_menuPosition[id]);
+		case 8:
+		{
+			displaySlapMenu(id, ++g_menuPosition[id]);
+		}
+		case 9:
+		{
+			displaySlapMenu(id, --g_menuPosition[id]);
+		}
 		default:
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key];
@@ -442,7 +484,9 @@ public actionSlapMenu(id, key)
 				show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, g_menuSettings[id]);
 
 				user_slap(player, (get_user_health(player) > g_menuSettings[id]) ? g_menuSettings[id] : 0);
-			} else { // aSize == 1 or g_menuOption[id] == aSize - 1 // last option
+			}
+			else // aSize == 1 or g_menuOption[id] == aSize - 1 // last option
+			{
 				log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2);
 
 				show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
@@ -460,7 +504,9 @@ public actionSlapMenu(id, key)
 displaySlapMenu(id, pos)
 {
 	if (pos < 0)
+	{
 		return;
+	}
 
 	get_players(g_menuPlayers[id], g_menuPlayersNum[id]);
 
@@ -471,14 +517,18 @@ displaySlapMenu(id, pos)
 	new start = pos * 7;
 
 	if (start >= g_menuPlayersNum[id])
+	{
 		start = pos = g_menuPosition[id] = 0;
+	}
 
 	new len = formatex(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "SLAP_SLAY_MENU", pos + 1, (g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0)));
 	new end = start + 7;
 	new keys = MENU_KEY_0|MENU_KEY_8;
 
 	if (end > g_menuPlayersNum[id])
+	{
 		end = g_menuPlayersNum[id];
+	}
 
 	for (new a = start; a < end; ++a)
 	{
@@ -494,10 +544,14 @@ displaySlapMenu(id, pos)
 			else if (cs_get_user_team(i) == CS_TEAM_CT)
 			{
 				copy(team, charsmax(team), "CT");
-			} else {
+			}
+			else
+			{
 				get_user_team(i, team, charsmax(team));
 			}
-		} else {
+		}
+		else
+		{
 			get_user_team(i, team, charsmax(team));
 		}
 
@@ -506,23 +560,37 @@ displaySlapMenu(id, pos)
 			++b;
 
 			if (g_coloredMenus)
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "\d%d. %s\R%s^n\w", b, name, team);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "#. %s   %s^n", name, team);
-		} else {
+			}
+		}
+		else
+		{
 			keys |= (1<<b);
 
 			if (is_user_admin(i))
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "%d. %s \r*\y\R%s^n\w" : "%d. %s *   %s^n", ++b, name, team);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s   %s^n", ++b, name, team);
+			}
 		}
 	}
 
 	if (g_menuOption[id] == ArraySize(g_slapsettings) - 1)
+	{
 		len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "SLAY");
+	}
 	else
+	{
 		len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "SLAP_WITH_DMG", g_menuSettings[id]);
+	}
 
 	if (end != g_menuPlayersNum[id])
 	{
@@ -530,7 +598,9 @@ displaySlapMenu(id, pos)
 		keys |= MENU_KEY_9;
 	}
 	else
+	{
 		formatex(menuBody[len], charsmax(menuBody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT");
+	}
 
 	show_menu(id, keys, menuBody, -1, "Slap/Slay Menu");
 }
@@ -538,7 +608,9 @@ displaySlapMenu(id, pos)
 public cmdSlapMenu(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 1))
+	{
 		return PLUGIN_HANDLED;
+	}
 
 	g_menuOption[id] = 0;
 	if (ArraySize(g_slapsettings) > 0)
@@ -562,8 +634,14 @@ public actionKickMenu(id, key)
 {
 	switch (key)
 	{
-		case 8: displayKickMenu(id, ++g_menuPosition[id]);
-		case 9: displayKickMenu(id, --g_menuPosition[id]);
+		case 8:
+		{
+			displayKickMenu(id, ++g_menuPosition[id]);
+		}
+		case 9:
+		{
+			displayKickMenu(id, --g_menuPosition[id]);
+		}
 		default:
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 8 + key];
@@ -593,7 +671,9 @@ public actionKickMenu(id, key)
 displayKickMenu(id, pos)
 {
 	if (pos < 0)
+	{
 		return;
+	}
 
 	get_players(g_menuPlayers[id], g_menuPlayersNum[id]);
 
@@ -604,14 +684,18 @@ displayKickMenu(id, pos)
 	new start = pos * 8;
 
 	if (start >= g_menuPlayersNum[id])
+	{
 		start = pos = g_menuPosition[id] = 0;
+	}
 
 	new len = formatex(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "KICK_MENU", pos + 1, (g_menuPlayersNum[id] / 8 + ((g_menuPlayersNum[id] % 8) ? 1 : 0)));
 	new end = start + 8;
 	new keys = MENU_KEY_0;
 
 	if (end > g_menuPlayersNum[id])
+	{
 		end = g_menuPlayersNum[id];
+	}
 
 	for (new a = start; a < end; ++a)
 	{
@@ -623,16 +707,26 @@ displayKickMenu(id, pos)
 			++b;
 
 			if (g_coloredMenus)
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "\d%d. %s^n\w", b, name);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "#. %s^n", name);
-		} else {
+			}
+		}
+		else
+		{
 			keys |= (1<<b);
 
 			if (is_user_admin(i))
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "%d. %s^n", ++b, name);
+			}
 		}
 	}
 
@@ -642,7 +736,9 @@ displayKickMenu(id, pos)
 		keys |= MENU_KEY_9;
 	}
 	else
+	{
 		formatex(menuBody[len], charsmax(menuBody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT");
+	}
 
 	show_menu(id, keys, menuBody, -1, "Kick Menu");
 }
@@ -650,7 +746,9 @@ displayKickMenu(id, pos)
 public cmdKickMenu(id, level, cid)
 {
 	if (cmd_access(id, level, cid, 1))
+	{
 		displayKickMenu(id, g_menuPosition[id] = 0);
+	}
 
 	return PLUGIN_HANDLED;
 }
@@ -666,15 +764,15 @@ public client_putinserver(id)
 public Event_TeamInfo()
 {
 	new id = read_data(1);
-	if ( is_user_connected(id) )
+	if (is_user_connected(id))
 	{
 		g_CSPlayerCanSwitchFromSpec[id] = true;
 	}
 }
 
-public Event_TextMsg( id ) // #Only_1_Team_Change
+public Event_TextMsg(id) // #Only_1_Team_Change
 {
-	if( g_transferingAdmin && is_user_connected(id) && (id == g_transferingAdmin || is_user_connected(g_transferingAdmin)) )
+	if (g_transferingAdmin && is_user_connected(id) && (id == g_transferingAdmin || is_user_connected(g_transferingAdmin)))
 	{
 		new name[MAX_NAME_LENGTH];
 		get_user_name(id, name, charsmax(name));
@@ -696,12 +794,18 @@ public actionTeamMenu(id, key)
 			g_menuOption[id] = (g_menuOption[id] + 1) % 3;
 			displayTeamMenu(id, g_menuPosition[id]);
 		}
-		case 8: displayTeamMenu(id, ++g_menuPosition[id]);
-		case 9: displayTeamMenu(id, --g_menuPosition[id]);
+		case 8:
+		{
+			displayTeamMenu(id, ++g_menuPosition[id]);
+		}
+		case 9:
+		{
+			displayTeamMenu(id, --g_menuPosition[id]);
+		}
 		default:
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 6 + key];
-			if( !is_user_connected(player) ) // dunno why this check hasn't be implemented in the past
+			if (!is_user_connected(player)) // dunno why this check hasn't be implemented in the past
 			{
 				displayTeamMenu(id, g_menuPosition[id]);
 				return PLUGIN_HANDLED;
@@ -723,11 +827,11 @@ public actionTeamMenu(id, key)
 
 			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_CSTeamNames[destTeamSlot]);
 
-			if( destTeamSlot == 2 )
+			if (destTeamSlot == 2)
 			{
-				if ( g_fakemeta )
+				if (g_fakemeta)
 				{
-					if( get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance )
+					if (get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance)
 					{
 						// works for both vgui and old style menus, and send menuselect could close other menus (and since get_user_menu fails to return VGUI and old style classes menus...)
 						engclient_cmd(player, "joinclass", "6");
@@ -739,7 +843,7 @@ public actionTeamMenu(id, key)
 				}
 			}
 
-			if ( g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
+			if (g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
 			{
 				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
 				{
@@ -750,51 +854,57 @@ public actionTeamMenu(id, key)
 
 				cs_set_user_team(player, destTeamSlot + 1);
 
-			} else {
+			}
+			else
+			{
 				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
 				{
 					user_kill(player, 1);
 				}
-				if( g_fakemeta )
+				if (g_fakemeta)
 				{
 					set_pdata_bool(player, m_bTeamChanged, true);
 				}
 				new limit_setting;
-				if( mp_limitteams )
+				if (mp_limitteams)
 				{
 					limit_setting = get_pcvar_num(mp_limitteams);
 
 					set_pcvar_num(mp_limitteams, 0);
 				}
 
-				if( destTeamSlot == 2 )
+				if (destTeamSlot == 2)
 				{
 					new Float:allow_spectators_setting;
-					if( allow_spectators )
+					if (allow_spectators)
 					{
 						allow_spectators_setting = get_pcvar_float(allow_spectators);
-						if( allow_spectators_setting != 1.0 )
+						if (allow_spectators_setting != 1.0)
+						{
 							set_pcvar_float(allow_spectators, 1.0);
+						}
 					}
 					engclient_cmd(player, "jointeam", g_CSTeamNumbers[destTeamSlot]);
-					if( allow_spectators && allow_spectators_setting != 1.0 )
+					if (allow_spectators && allow_spectators_setting != 1.0)
+					{
 						set_pcvar_float(allow_spectators, allow_spectators_setting);
+					}
 				}
 				else
 				{
 					engclient_cmd(player, "jointeam", g_CSTeamNumbers[destTeamSlot]);
 					engclient_cmd(player, "joinclass", "1");
 				}
-				if( mp_limitteams && limit_setting != 0 )
+				if (mp_limitteams && limit_setting != 0)
 				{
 					set_pcvar_num(mp_limitteams, limit_setting);
 				}
 			}
-			if( g_cstrike )
+			if (g_cstrike)
 			{
 				cs_reset_user_model(player);
 			}
-			if( g_fakemeta )
+			if (g_fakemeta)
 			{
 				set_pdata_bool(player, m_bTeamChanged, true);
 			}
@@ -810,7 +920,9 @@ public actionTeamMenu(id, key)
 displayTeamMenu(id, pos)
 {
 	if (pos < 0)
+	{
 		return;
+	}
 
 	get_players(g_menuPlayers[id], g_menuPlayersNum[id]);
 
@@ -821,14 +933,18 @@ displayTeamMenu(id, pos)
 	new start = pos * 6;
 
 	if (start >= g_menuPlayersNum[id])
+	{
 		start = pos = g_menuPosition[id] = 0;
+	}
 
 	new len = formatex(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TEAM_MENU", pos + 1, (g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0)));
 	new end = start + 6;
 	new keys = MENU_KEY_0|MENU_KEY_7|MENU_KEY_8;
 
 	if (end > g_menuPlayersNum[id])
+	{
 		end = g_menuPlayersNum[id];
+	}
 
 	for (new a = start; a < end; ++a)
 	{
@@ -851,13 +967,17 @@ displayTeamMenu(id, pos)
 			{
 				copy(team, charsmax(team), "SPE");
 				// iteam = 6; // oO WTF is this ?? fixed g_CSTeamiNumbers.
-			} else {
+			}
+			else
+			{
 				iteam = get_user_team(i, team, charsmax(team));
 			}
-		} else {
+		}
+		else
+		{
 			iteam = get_user_team(i, team, charsmax(team));
 		}
-		if( !iteam )
+		if (!iteam)
 		{
 			iteam = 3; // fix get_user_team returning 0 on spectators
 		}
@@ -867,16 +987,26 @@ displayTeamMenu(id, pos)
 			++b;
 
 			if (g_coloredMenus)
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "\d%d. %s\R%s^n\w", b, name, team);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "#. %s   %s^n", name, team);
-		} else {
+			}
+		}
+		else
+		{
 			keys |= (1<<b);
 
 			if (is_user_admin(i))
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "%d. %s \r*\y\R%s^n\w" : "%d. %s *   %s^n", ++b, name, team);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "%d. %s\y\R%s^n\w" : "%d. %s   %s^n", ++b, name, team);
+			}
 		}
 	}
 
@@ -889,7 +1019,9 @@ displayTeamMenu(id, pos)
 		keys |= MENU_KEY_9;
 	}
 	else
+	{
 		formatex(menuBody[len], charsmax(menuBody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT");
+	}
 
 	show_menu(id, keys, menuBody, -1, "Team Menu");
 }
@@ -897,7 +1029,9 @@ displayTeamMenu(id, pos)
 public cmdTeamMenu(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 1))
+	{
 		return PLUGIN_HANDLED;
+	}
 
 	g_menuOption[id] = 0;
 
@@ -918,8 +1052,14 @@ public actionClcmdMenu(id, key)
 			g_menuOption[id] %= g_menuSelectNum[id];
 			displayClcmdMenu(id, g_menuPosition[id]);
 		}
-		case 8: displayClcmdMenu(id, ++g_menuPosition[id]);
-		case 9: displayClcmdMenu(id, --g_menuPosition[id]);
+		case 8:
+		{
+			displayClcmdMenu(id, ++g_menuPosition[id]);
+		}
+		case 9:
+		{
+			displayClcmdMenu(id, --g_menuPosition[id]);
+		}
 		default:
 		{
 			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key];
@@ -942,14 +1082,21 @@ public actionClcmdMenu(id, key)
 				{
 					server_cmd("%s", command);
 					server_exec();
-				} else if (flags & 2)
+				}
+				else if (flags & 2)
+				{
 					client_cmd(id, "%s", command);
+				}
 				else if (flags & 4)
+				{
 					client_cmd(player, "%s", command);
+				}
 			}
 
 			if (flags & 8)
+			{
 				displayClcmdMenu(id, g_menuPosition[id]);
+			}
 		}
 	}
 
@@ -959,7 +1106,9 @@ public actionClcmdMenu(id, key)
 displayClcmdMenu(id, pos)
 {
 	if (pos < 0)
+	{
 		return;
+	}
 
 	get_players(g_menuPlayers[id], g_menuPlayersNum[id]);
 
@@ -970,14 +1119,18 @@ displayClcmdMenu(id, pos)
 	new start = pos * 7;
 
 	if (start >= g_menuPlayersNum[id])
+	{
 		start = pos = g_menuPosition[id] = 0;
+	}
 
 	new len = formatex(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "CL_CMD_MENU", pos + 1, (g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0)));
 	new end = start + 7;
 	new keys = MENU_KEY_0|MENU_KEY_8;
 
 	if (end > g_menuPlayersNum[id])
+	{
 		end = g_menuPlayersNum[id];
+	}
 
 	for (new a = start; a < end; ++a)
 	{
@@ -989,23 +1142,37 @@ displayClcmdMenu(id, pos)
 			++b;
 
 			if (g_coloredMenus)
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "\d%d. %s^n\w", b, name);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "#. %s^n", name);
-		} else {
+			}
+		}
+		else
+		{
 			keys |= (1<<b);
 
 			if (is_user_admin(i))
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "%d. %s \r*^n\w" : "%d. %s *^n", ++b, name);
+			}
 			else
+			{
 				len += formatex(menuBody[len], charsmax(menuBody) - len, "%d. %s^n", ++b, name);
+			}
 		}
 	}
 
 	if (g_menuSelectNum[id])
+	{
 		len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %s^n", g_clcmdName[g_menuSelect[id][g_menuOption[id]]]);
+	}
 	else
+	{
 		len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "NO_CMDS");
+	}
 
 	if (end != g_menuPlayersNum[id])
 	{
@@ -1013,7 +1180,9 @@ displayClcmdMenu(id, pos)
 		keys |= MENU_KEY_9;
 	}
 	else
+	{
 		formatex(menuBody[len], charsmax(menuBody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT");
+	}
 
 	show_menu(id, keys, menuBody, -1, "Client Cmds Menu");
 }
@@ -1021,13 +1190,19 @@ displayClcmdMenu(id, pos)
 public cmdClcmdMenu(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 1))
+	{
 		return PLUGIN_HANDLED;
+	}
 
 	g_menuSelectNum[id] = 0;
 
 	for (new a = 0; a < g_clcmdNum; ++a)
+	{
 		if (access(id, g_clcmdMisc[a][0]))
+		{
 			g_menuSelect[id][g_menuSelectNum[id]++] = a;
+		}
+	}
 
 	g_menuOption[id] = 0;
 
@@ -1039,14 +1214,19 @@ public cmdClcmdMenu(id, level, cid)
 load_settings(szFilename[])
 {
 	if (!file_exists(szFilename))
+	{
 		return 0;
+	}
 
 	new text[256], szFlags[32], szAccess[32];
 	new a, pos = 0;
 
 	while (g_clcmdNum < MAX_CLCMDS && read_file(szFilename, pos++, text, charsmax(text), a))
 	{
-		if (text[0] == ';') continue;
+		if (text[0] == ';')
+		{
+			continue;
+		}
 
 		if (parse(text, g_clcmdName[g_clcmdNum], charsmax(g_clcmdName[]), g_clcmdCmd[g_clcmdNum], charsmax(g_clcmdCmd[]), szFlags, charsmax(szFlags), szAccess, charsmax(szAccess)) > 3)
 		{

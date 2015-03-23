@@ -79,14 +79,14 @@ class ValveFile : public FileObject
 
 		static bool Delete(const char* filename, const char* pathID) 
 		{
-			if (!g_FileSystem->FileExists(filename))
+			if (!Exists(filename))
 			{
 				return false;
 			}
 
 			g_FileSystem->RemoveFile(filename, pathID);
 
-			if (g_FileSystem->FileExists(filename))
+			if (Exists(filename))
 			{
 				return false;
 			}

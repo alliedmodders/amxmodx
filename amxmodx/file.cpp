@@ -37,9 +37,9 @@ static cell AMX_NATIVE_CALL read_dir(AMX *amx, cell *params)
 	}
 
 	const char* entry = dir->GetEntryName();
+	cell* outputLen = get_amxaddr(amx, params[5]);
 
-	size_t entrylen = set_amxstring_utf8(amx, params[3], entry, strlen(entry), params[4] + 1);
-	*get_amxaddr(amx, params[5]) = entrylen;
+	*outputLen = set_amxstring_utf8(amx, params[3], entry, strlen(entry), params[4] + 1);
 
 	return offset;
 }
@@ -79,8 +79,8 @@ static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params)
 		if (buffer[length - 1] == '\r')
 			buffer[--length] = '\0';
 
-		length = set_amxstring_utf8(amx, params[3], buffer, length, params[4] + 1); // + EOS
-		*get_amxaddr(amx, params[5]) = length;
+		cell* textLen = get_amxaddr(amx, params[5]);
+		*textLen = set_amxstring_utf8(amx, params[3], buffer, length, params[4] + 1); // + EOS
 
 		return currentLine;
 	}
@@ -761,7 +761,7 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 
 	size_t numParams = *params / sizeof(cell);
 
-	if (*params / sizeof(cell) >= 4 && params[5] > 0)
+	if (numParams >= 4 && params[5] > 0)
 	{
 		const char* wildcardedPath = g_LibSys.PathFormat("%s%s*", path, (path[length - 1] != '/' && path[length - 1] != '\\') ? "/" : "");
 		const char* pathID = get_amxstring(amx, params[6], 1, length);
@@ -780,8 +780,9 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 		}
 
 		set_amxstring_utf8(amx, params[2], pFirst, strlen(pFirst), params[3] + 1);
+		cell* fileType = get_amxaddr(amx, params[4]);
 
-		*get_amxaddr(amx, params[4]) = g_FileSystem->FindIsDirectory(handle) ? FileType_Directory : FileType_File;
+		*fileType = g_FileSystem->FindIsDirectory(handle) ? FileType_Directory : FileType_File;
 
 		return reinterpret_cast<cell>(new DirectoryHandle(reinterpret_cast<void*>(&handle), true));
 	}
@@ -795,7 +796,8 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 
 	if (numParams >= 4)
 	{
-		*get_amxaddr(amx, params[4]) = dir->IsEntryDirectory() ? FileType_Directory : FileType_File;
+		cell* fileType = get_amxaddr(amx, params[4]);
+		*fileType = dir->IsEntryDirectory() ? FileType_Directory : FileType_File;
 	}
 
 	const char* entry = dir->GetEntryName();
@@ -858,7 +860,8 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 
 		if (numParams >= 4)
 		{
-			*get_amxaddr(amx, params[4]) = g_FileSystem->FindIsDirectory(*handle) ? FileType_Directory : FileType_File;
+			cell* fileType = get_amxaddr(amx, params[4]);
+			*fileType = g_FileSystem->FindIsDirectory(*handle) ? FileType_Directory : FileType_File;
 		}
 
 		set_amxstring_utf8(amx, params[2], entry, strlen(entry), params[3] + 1);
@@ -881,7 +884,8 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 
 		if (numParams >= 4)
 		{
-			*get_amxaddr(amx, params[4]) = handle->IsEntryDirectory() ? FileType_Directory : FileType_File;
+			cell* fileType = get_amxaddr(amx, params[4]);
+			*fileType = handle->IsEntryDirectory() ? FileType_Directory : FileType_File;
 		}
 
 		const char* entry = handle->GetEntryName();

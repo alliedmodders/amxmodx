@@ -89,12 +89,12 @@ public:
 
 		for (size_t i = 0; i < pre.length(); ++i)
 		{
-			delete pre.at(i);
+			pre.at(i)->Release();
 		}
 
 		for (size_t i = 0; i < post.length(); ++i)
 		{
-			delete post.at(i);
+			post.at(i)->Release();
 		}
 
 		pre.clear();

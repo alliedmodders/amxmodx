@@ -84,6 +84,8 @@ void CHamSpecialBotHandler::RegisterHamSpecialBot(AMX *amx, int &func, const cha
 
 void CHamSpecialBotHandler::RegisterChecked(AMX *amx, int &func, const char *function, int &post, Forward *pfwd)
 {
+	pfwd->AddRef();
+
 	void **vtable = m_specialbot_vtable;
 	int **ivtable=(int **)vtable;
 

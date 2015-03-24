@@ -16,6 +16,8 @@
 #ifndef FORWARD_H
 #define FORWARD_H
 
+#include <am-refcounting.h>
+
 enum fwdstate
 {
 	FSTATE_INVALID = 0,
@@ -25,7 +27,7 @@ enum fwdstate
 	FSTATE_DESTROY
 };
 
-class Forward
+class Forward :public ke::Refcounted<Forward>
 {
 public:
 	int      id;    // id of the forward

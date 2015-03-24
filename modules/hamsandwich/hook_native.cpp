@@ -583,6 +583,7 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	}
 
 	Forward *pfwd = new Forward(fwd);
+	pfwd->AddRef();
 
 	// We've passed all tests...
 	if (strcmp(classname, "player") == 0 && enableSpecialBot)
@@ -676,6 +677,9 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 
 	// We've passed all tests...
 
+	Forward *pfwd = new Forward(fwd);
+	pfwd->AddRef();
+
 	int **ivtable=(int **)vtable;
 
 	void *vfunction=(void *)ivtable[hooklist[func].vtid];
@@ -687,7 +691,6 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 		if (hooks[func].at(i)->tramp == vfunction)
 		{
 			// Yes, this function is hooked
-			Forward *pfwd=new Forward(fwd);
 			if (post)
 			{
 				hooks[func].at(i)->post.append(pfwd);
@@ -710,7 +713,6 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
 	hooks[func].append(hook);
 
-	Forward *pfwd=new Forward(fwd);
 	if (post)
 	{
 		hook->post.append(pfwd);

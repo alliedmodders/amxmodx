@@ -29,7 +29,30 @@ static cell AMX_NATIVE_CALL read_dir(AMX *amx, cell *params)
 
 	cell offset = Max(0, params[2]);
 
-	dir->NextEntry(&offset);
+	if (offset >= 0)
+	{
+#if defined PLATFORM_WINDOWS
+		// Should be declared after so entry starts to '.' and not '..'
+		// But old code did that, so keep this for compatibility.
+		++offset;
+
+		for (cell i = 0; i < offset && dir->MoreFiles(); ++i)
+		{
+			dir->NextEntry();
+		}
+
+#elif defined PLATFORM_POSIX
+
+		seekdir(dir->GetHandle(), offset);
+
+		dir->NextEntry();
+
+		if (dir->IsValid())
+		{
+			offset = telldir(dir->GetHandle());
+		}
+#endif
+	}
 
 	if (!dir->IsValid())
 	{
@@ -190,12 +213,7 @@ static cell AMX_NATIVE_CALL delete_file(AMX *amx, cell *params)
 
 	if (*params / sizeof(cell) >= 2 && params[2] > 0)
 	{
-		const char* pathID = get_amxstring(amx, params[3], 1, length);
-
-		if (!strcmp(pathID, "ALL"))
-		{
-			pathID = nullptr;
-		}
+		const char* pathID = get_amxstring_null(amx, params[3], 1, length);
 
 		return ValveFile::Delete(file, pathID);
 	}
@@ -240,7 +258,7 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params)
 {
 	int length;
 	const char* path = get_amxstring(amx, params[1], 0, length);
-	int flag = params[2];
+	int flag = FSOPT_BYTES_COUNT;
 
 	AutoPtr<FileObject> fp;
 
@@ -248,12 +266,7 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params)
 
 	if (numParams >= 3 && params[3] > 0)
 	{
-		const char* pathID = get_amxstring(amx, params[4], 1, length);
-
-		if (!strcmp(pathID, "ALL"))
-		{
-			pathID = nullptr;
-		}
+		const char* pathID = get_amxstring_null(amx, params[4], 1, length);
 
 		fp = ValveFile::Open(path, "r", pathID);
 	}
@@ -267,9 +280,13 @@ static cell AMX_NATIVE_CALL file_size(AMX *amx, cell *params)
 		return -1;
 	}
 
+	if (numParams >= 2)
+	{
+		flag = params[2];
+	}
+
 	switch (flag)
 	{
-		default:
 		case FSOPT_BYTES_COUNT:
 		{
 			fp->Seek(0, SEEK_END);
@@ -314,12 +331,7 @@ static cell AMX_NATIVE_CALL amx_fopen(AMX *amx, cell *params)
 
 	if (*params / sizeof(cell) >= 3 && params[3] > 0)
 	{
-		const char* pathID = get_amxstring(amx, params[4], 2, length);
-
-		if (!strcmp(pathID, "ALL"))
-		{
-			pathID = nullptr;
-		}
+		const char* pathID = get_amxstring_null(amx, params[4], 2, length);
 
 		fp = ValveFile::Open(file, flags, pathID);
 	}
@@ -388,16 +400,14 @@ static cell AMX_NATIVE_CALL amx_fwrite_blocks(AMX *amx, cell *params)
 			}
 			break;
 		}
-		default:
-		{
-			if (size != BLOCK_INT)
-			{
-				size = BLOCK_INT;
-			}
-		}
 		case BLOCK_INT:
 		{
 			read = fp->Write(data, sizeof(cell) * blocks);
+			break;
+		}
+		default:
+		{
+			return 0;
 		}
 	}
 
@@ -429,7 +439,6 @@ static cell AMX_NATIVE_CALL amx_fwrite(AMX *amx, cell *params)
 			short value = static_cast<short>(data);
 			return fp->Write(&value, sizeof(value));
 		}
-		default:
 		case BLOCK_INT:
 		{
 			int value = static_cast<int>(data);
@@ -499,7 +508,6 @@ static cell AMX_NATIVE_CALL amx_fread(AMX *amx, cell *params)
 			return res;
 		}
 		case BLOCK_INT:
-		default:
 		{
 			int value;
 			size_t res = fp->Read(&value, sizeof(value));
@@ -561,17 +569,14 @@ static cell AMX_NATIVE_CALL amx_fread_blocks(AMX *amx, cell *params)
 			}
 			break;
 		}
-		default:
-		{
-			if (size != BLOCK_INT)
-			{
-				size = BLOCK_INT;
-			}
-		}
 		case BLOCK_INT:
 		{
 			read = fp->Read(data, sizeof(cell) * blocks);
 			break;
+		}
+		default:
+		{
+			return 0;
 		}
 	}
 
@@ -764,12 +769,7 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 	if (numParams >= 4 && params[5] > 0)
 	{
 		const char* wildcardedPath = g_LibSys.PathFormat("%s%s*", path, (path[length - 1] != '/' && path[length - 1] != '\\') ? "/" : "");
-		const char* pathID = get_amxstring(amx, params[6], 1, length);
-
-		if (!strcmp(pathID, "ALL"))
-		{
-			pathID = nullptr;
-		}
+		const char* pathID = get_amxstring_null(amx, params[6], 1, length);
 
 		static FileFindHandle_t handle;
 		const char* pFirst = g_FileSystem->FindFirst(wildcardedPath, &handle, pathID);
@@ -976,16 +976,11 @@ static cell AMX_NATIVE_CALL amx_mkdir(AMX *amx, cell *params)
 
 	if (numParams >= 3 && params[3] > 0)
 	{
-		const char* pathID = get_amxstring(amx, params[4], 1, length);
+		const char* pathID = get_amxstring_null(amx, params[4], 1, length);
 
 		if (g_FileSystem->IsDirectory(path))
 		{
 			return -1;
-		}
-
-		if (!strcmp(pathID, "ALL"))
-		{
-			pathID = nullptr;
 		}
 
 		g_FileSystem->CreateDirHierarchy(path, pathID);

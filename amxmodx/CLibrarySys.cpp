@@ -61,28 +61,16 @@ CDirectory::~CDirectory()
 	}
 }
 
-void CDirectory::NextEntry(cell* offset)
+DirHandle CDirectory::GetHandle()
+{
+	return m_dir;
+}
+
+void CDirectory::NextEntry()
 {
 #if defined PLATFORM_WINDOWS
 
-	if (offset)
-	{
-		// Should be declared after loop so entry starts to '.' and not '..'
-		// But old code did that, so keep this for compatibility.
-		++*offset;
-
-		for (cell i = 0; i < *offset; ++i)
-		{
-			if (FindNextFile(m_dir, &m_fd) == 0)
-			{
-				*offset = 0;
-				FindClose(m_dir);
-				m_dir = INVALID_HANDLE_VALUE;
-				return;
-			}
-		}
-	}
-	else if (FindNextFile(m_dir, &m_fd) == 0)
+	if (FindNextFile(m_dir, &m_fd) == 0)
 	{
 		FindClose(m_dir);
 		m_dir = INVALID_HANDLE_VALUE;
@@ -90,22 +78,7 @@ void CDirectory::NextEntry(cell* offset)
 
 #elif defined PLATFORM_POSIX
 
-	if (offset)
-	{
-		seekdir(m_dir, *offset);
-
-		if (!(m_ep = readdir(m_dir)))
-		{
-			*offset = 0;
-			closedir(m_dir);
-			m_dir = nullptr;
-		}
-		else
-		{
-			*offset = telldir(m_dir);
-		}
-	}
-	else if (!(m_ep = readdir(m_dir)))
+	if (!(m_ep = readdir(m_dir)))
 	{
 		closedir(m_dir);
 		m_dir = nullptr;

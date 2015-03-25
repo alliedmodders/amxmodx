@@ -58,9 +58,15 @@
 #define PLATFORM_MAX_PATH 260
 
 #if defined PLATFORM_WINDOWS
+
 	typedef HMODULE  LibraryHandle;
+	typedef HANDLE   DirHandle;
+
 #elif defined PLATFORM_POSIX
+
 	typedef void*    LibraryHandle;
+	typedef DIR*     DirHandle;
+
 #endif
 
 enum FileTimeType
@@ -80,7 +86,7 @@ class CDirectory
 	public:
 
 		bool MoreFiles();
-		void NextEntry(cell* offset = nullptr);
+		void NextEntry();
 		const char* GetEntryName();
 		bool IsEntryDirectory();
 		bool IsEntryFile();
@@ -89,6 +95,7 @@ class CDirectory
 	public:
 
 		bool IsValid();
+		DirHandle GetHandle();
 
 	private:
 

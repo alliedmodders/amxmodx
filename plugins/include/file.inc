@@ -149,7 +149,7 @@ native write_file(const file[], const text[], line = -1);
  *                      This can be used to delete files existing in the Valve
  *                      search path, rather than solely files existing directly
  *                      in the gamedir.
- * @param valve_path_id If use_valve_fs, a search path from gameinfo or "ALL" for all search paths.
+ * @param valve_path_id If use_valve_fs, a search path from gameinfo or NULL_STRING for all search paths.
  *
  * @return              1 on success, 0 on failure or if file not immediately removed.
  */
@@ -204,7 +204,7 @@ native dir_exists(const dir[], bool:use_valve_fs = false);
  *                      the Valve search paths, rather than solely files
  *                      existing directly in the gamedir.
  *                      If used, flag option is ignored.
- * @param valve_path_id If use_valve_fs, a search path from gameinfo or "ALL" for all search paths
+ * @param valve_path_id If use_valve_fs, a search path from gameinfo or NULL_STRING for all search paths
  *
  * @return              If flag is FSOPT_BYTES_COUNT or use_valve_fs to true, the file size in bytes
  *                      If flag is FSOPT_LINES_COUNT, the number of lines in the file
@@ -258,7 +258,7 @@ native file_size(const file[], flag = FSOPT_BYTES_COUNT, bool:use_valve_fs = fal
  *                      This can be used to finred files existing in valve
  *                      search paths, rather than solely files existing directly
  *                      in the gamedir.
- * @param valve_path_id If use_valve_fs, a search path from gameinfo or "ALL" for all search paths
+ * @param valve_path_id If use_valve_fs, a search path from gameinfo or NULL_STRING for all search paths
  *
  * @return              A file handle, or null if the file could not be opened.
  */
@@ -481,7 +481,7 @@ native rmdir(const path[]);
  * @param use_valve_fs  If true, the Valve file system will be used instead
  *                      This can be used to create folders in the game's
  *                      Valve search paths, rather than directly in the gamedir.
- * @param valve_path_id If use_valve_fs, a search path from gameinfo or "ALL" for default
+ * @param valve_path_id If use_valve_fs, a search path from gameinfo or NULL_STRING for default
  *                      In this case, mode is ignored
  *
  * @return              0 on success, -1 otherwise
@@ -496,7 +496,7 @@ native mkdir(const dirname[], mode = FPERM_DIR_DEFAULT, bool:use_valve_fs = fals
  *                      This can be used to delete files existing in the Valve
  *                      search path, rather than solely files existing directly
  *                      in the gamedir.
- * @param valve_path_id If use_valve_fs, a search path from gameinfo or "ALL" for all search paths
+ * @param valve_path_id If use_valve_fs, a search path from gameinfo or NULL_STRING for all search paths
  *
  * @return              1 on success, 0 on failure or if file not immediately removed
  */
@@ -515,7 +515,7 @@ native unlink(const filename[], bool:use_valve_fs = false, const valve_path_id[]
  *                      This can be used to find files existing in any of
  *                      the Valve search paths, rather than solely files
  *                      existing directly in the gamedir.
- * @param valve_path_id If use_valve_fs, a search path from gameinfo or "ALL" for all search paths.
+ * @param valve_path_id If use_valve_fs, a search path from gameinfo or NULL_STRING for all search paths.
  *
  * @return              Handle to the directory, 0 otherwise
  */

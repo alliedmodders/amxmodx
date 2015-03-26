@@ -650,16 +650,26 @@ reswitch:
 			arg++;
 			break;
 		case 'L':
+		case 'l':
 			{
-				CHECK_ARGS(1);
-				cell addr = params[arg++];
+				cell target;
+				if (ch == 'L')
+				{
+					CHECK_ARGS(1);
+					target = params[arg++];
+				}
+				else
+				{
+					CHECK_ARGS(0);
+					target = g_langMngr.GetDefLang();
+				}
 				int len;
 				const char *key = get_amxstring(amx, params[arg++], 3, len);
-				const char *def = translate(amx, addr, key);
+				const char *def = translate(amx, target, key);
 				if (!def)
 				{
 					static char buf[255];
-					UTIL_Format(buf, sizeof(buf)-1, "ML_NOTFOUND: %s", key);
+					UTIL_Format(buf, sizeof(buf) - 1, "ML_NOTFOUND: %s", key);
 					def = buf;
 				}
 				size_t written = atcprintf(buf_p, llen, def, amx, params, &arg);

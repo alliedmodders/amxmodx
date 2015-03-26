@@ -39,16 +39,19 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 		bool hasMax  = params[7] != 0;
 		float minVal = amx_ctof(params[6]);
 		float maxVal = amx_ctof(params[8]);
-
-		if (hasMax && minVal > maxVal)
+		
+		if (hasMin && hasMax)
 		{
-			LogError(amx, AMX_ERR_NATIVE, "The minimum value can not be above the maximum value");
-			return 0;
-		}
-		else if (hasMin && maxVal < minVal)
-		{
-			LogError(amx, AMX_ERR_NATIVE, "The maximum value can not be below the minimum value");
-			return 0;
+			if (minVal > maxVal)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "The minimum value can not be above the maximum value");
+				return 0;
+			}
+			else if (maxVal < minVal)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "The maximum value can not be below the minimum value");
+				return 0;
+			}
 		}
 
 		g_CvarManager.SetCvarMin(info, hasMin, minVal, plugin->getId());

@@ -60,3 +60,16 @@ native AddTranslation(const lang[3], TransKey:key, const phrase[]);
  *       or LANG_SERVER
  */
 native LookupLangKey(Output[], OutputSize, const Key[], &id);
+
+/**
+ * Sets the global language target.  
+ *
+ * @note This is useful for creating functions
+ *       that will be compatible with the %l format specifier.  Note that invalid
+ *       indexes can be specified but the error will occur during translation,
+ *       not during this function call.
+ *
+ * @param client    Client index or LANG_SERVER
+ * @noreturn
+ */
+native SetGlobalTransTarget(client);

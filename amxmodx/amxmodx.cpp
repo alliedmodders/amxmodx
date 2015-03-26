@@ -4431,6 +4431,14 @@ static cell AMX_NATIVE_CALL LookupLangKey(AMX *amx, cell *params)
 	return 1;
 };
 
+// SetGlobalTransTarget(client)
+static cell AMX_NATIVE_CALL SetGlobalTransTarget(AMX *amx, cell *params)
+{
+	g_langMngr.SetDefLang(params[1]);
+
+	return 1;
+};
+
 // has_map_ent_class(const classname[])
 static cell AMX_NATIVE_CALL has_map_ent_class(AMX *amx, cell *params)
 {
@@ -4629,6 +4637,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"GetLangTransKey",			GetLangTransKey},
 	{"LibraryExists",			LibraryExists},
 	{"LookupLangKey",			LookupLangKey},
+	{"SetGlobalTransTarget",	SetGlobalTransTarget},
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
 	{"is_rukia_a_hag",			is_rukia_a_hag},

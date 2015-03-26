@@ -58,10 +58,7 @@ new const g_CSTeamiNumbers[3] = {
 	3
 };
 
-new SwitchFromSpecStatus;
-#define AllowSwitchFromSpec(%1)		SwitchFromSpecStatus |= 1<<(%1&31)
-#define ForbidSwitchFromSpec(%1)	SwitchFromSpecStatus &= ~(1<<(%1&31))
-#define CanSwitchFromSpec(%1)		SwitchFromSpecStatus & 1<<(%1&31)
+new g_CSPlayerCanSwitchFromSpec[MAX_PLAYERS + 1];
 new g_transferingAdmin;
 
 new allow_spectators, mp_limitteams;
@@ -69,10 +66,7 @@ new allow_spectators, mp_limitteams;
 new p_amx_tempban_maxtime;
 new Trie:g_tempBans;
 
-new SilentTransferStatus;
-#define EnableSilentTransfer(%1)	SilentTransferStatus |= 1<<(%1&31)
-#define DisableSilentTransfer(%1)	SilentTransferStatus &= ~(1<<(%1&31))
-#define HasSilentTransfer(%1)		SilentTransferStatus & 1<<(%1&31)
+new g_silent[MAX_PLAYERS + 1];
 
 public plugin_natives()
 {
@@ -763,8 +757,8 @@ public cmdKickMenu(id, level, cid)
 
 public client_putinserver(id)
 {
-	ForbidSwitchFromSpec(id);
-	DisableSilentTransfer(id);
+	g_CSPlayerCanSwitchFromSpec[id] = false;
+	g_silent[id] = false;
 }
 
 public Event_TeamInfo()
@@ -772,7 +766,7 @@ public Event_TeamInfo()
 	new id = read_data(1);
 	if (is_user_connected(id))
 	{
-		AllowSwitchFromSpec(id);
+		g_CSPlayerCanSwitchFromSpec[id] = true;
 	}
 }
 
@@ -792,7 +786,7 @@ public actionTeamMenu(id, key)
 	{
 		case 6: 
 		{
-			HasSilentTransfer(id) ? (DisableSilentTransfer(id)) : (EnableSilentTransfer(id));
+			g_silent[id] = !g_silent[id];
 			displayTeamMenu(id, g_menuPosition[id]);
 		}
 		case 7:
@@ -849,9 +843,9 @@ public actionTeamMenu(id, key)
 				}
 			}
 
-			if (CanSwitchFromSpec(player) && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
+			if (g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
 			{
-				if (is_user_alive(player) && (~HasSilentTransfer(id) || destTeamSlot == 2))
+				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
 				{
 					new deaths = cs_get_user_deaths(player);
 					user_kill(player, 1);
@@ -863,7 +857,7 @@ public actionTeamMenu(id, key)
 			}
 			else
 			{
-				if (is_user_alive(player) && (~HasSilentTransfer(id) || destTeamSlot == 2))
+				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
 				{
 					user_kill(player, 1);
 				}
@@ -1016,7 +1010,7 @@ displayTeamMenu(id, pos)
 		}
 	}
 
-	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n7. %L: %L", id, "TRANSF_SILENT", id, HasSilentTransfer(id) ? "YES" : "NO");
+	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n7. %L: %L", id, "TRANSF_SILENT", id, g_silent[id] ? "YES" : "NO");
 	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "TRANSF_TO", g_CSTeamNames[g_menuOption[id] % 3]);
 
 	if (end != g_menuPlayersNum[id])

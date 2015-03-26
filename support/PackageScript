@@ -317,7 +317,7 @@ weirdfiles = [
 
 if builder.target_platform == 'windows':
   weirdfiles += [
-    ('plugins/compile.exe', 'base/addons/amxmodx/scripting'),
+    ('plugins/compile.bat', 'base/addons/amxmodx/scripting'),
   ]
 else:
   weirdfiles += [

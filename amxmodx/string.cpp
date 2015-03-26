@@ -176,6 +176,16 @@ char *get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 	return buffer[id];
 }
 
+char *get_amxstring_null(AMX *amx, cell amx_addr, int id, int& len)
+{
+	if (get_amxaddr(amx, amx_addr) == g_plugins.findPluginFast(amx)->getNullStringOfs())
+	{
+		return nullptr;
+	}
+
+	return get_amxstring(amx, amx_addr, id, len);
+}
+
 void copy_amxmemory(cell* dest, cell* src, int len)
 {
 	while (len--)

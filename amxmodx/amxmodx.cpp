@@ -29,7 +29,7 @@ static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 	char* sName = get_amxstring(amx, params[1], 0, len);
 	cell ptr;
 
-	if (!strcmp(sName, "MaxClients"))
+	if (!strcmp(sName, "MaxClients") || !strcmp(sName, "NULL_STRING"))
 	{
 		return -1;
 	}
@@ -3784,19 +3784,6 @@ cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL amx_mkdir(AMX *amx, cell *params)
-{
-	int len = 0;
-	char *path = get_amxstring(amx, params[1], 0, len);
-	char *realpath = build_pathname("%s", path);
-
-#if defined(__linux__) || defined(__APPLE__)
-	return mkdir(realpath, 0700);
-#else
-	return mkdir(realpath);
-#endif
-}
-
 static cell AMX_NATIVE_CALL find_plugin_byfile(AMX *amx, cell *params)
 {
 	typedef int (*STRCOMPARE)(const char*, const char*);
@@ -4561,7 +4548,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"hash_string",				amx_hash_string},
 	{"hash_file",				amx_hash_file},
 	{"module_exists",			module_exists},
-	{"mkdir",					amx_mkdir},
 	{"next_hudchannel",			next_hudchannel},
 	{"num_to_word",				num_to_word},
 	{"parse_loguser",			parse_loguser},

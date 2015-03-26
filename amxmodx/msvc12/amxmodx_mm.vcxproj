@@ -256,6 +256,7 @@
     <ClCompile Include="..\CFlagManager.cpp" />
     <ClCompile Include="..\CForward.cpp" />
     <ClCompile Include="..\CLang.cpp" />
+    <ClCompile Include="..\CLibrarySys.cpp" />
     <ClCompile Include="..\CLogEvent.cpp" />
     <ClCompile Include="..\CMenu.cpp" />
     <ClCompile Include="..\CMisc.cpp" />
@@ -334,9 +335,11 @@
     <ClInclude Include="..\CDataPack.h" />
     <ClInclude Include="..\CEvent.h" />
     <ClInclude Include="..\CFile.h" />
+    <ClInclude Include="..\CFileSystem.h" />
     <ClInclude Include="..\CFlagManager.h" />
     <ClInclude Include="..\CForward.h" />
     <ClInclude Include="..\CLang.h" />
+    <ClInclude Include="..\CLibrarySys.h" />
     <ClInclude Include="..\CList.h" />
     <ClInclude Include="..\CLogEvent.h" />
     <ClInclude Include="..\CMenu.h" />

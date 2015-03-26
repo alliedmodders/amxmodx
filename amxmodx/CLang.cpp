@@ -12,6 +12,8 @@
 #include "CLang.h"
 #include "format.h"
 
+CVector<FILE *> FileList;
+
 #define LITIDX_NONE			0
 #define LITIDX_BRACKET		1
 #define LITIDX_DEFINITION	2

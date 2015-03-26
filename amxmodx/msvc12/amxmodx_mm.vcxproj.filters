@@ -277,6 +277,9 @@
       <Filter>Third Party\Hashing\hashers</Filter>
     </ClCompile>
     <ClCompile Include="..\CPlugin.cpp">
+    	<Filter>Source Files</Filter>
+	</ClCompile>
+    <ClCompile Include="..\CLibrarySys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -475,6 +478,12 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\hashing\hashers\sha256.h">
       <Filter>Third Party\Hashing\hashers</Filter>
+	</ClInclude>
+    <ClInclude Include="..\CFileSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CLibrarySys.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -61,6 +61,7 @@ public:
 		~CPlugin();
 		
 		bool m_Debug;
+		cell* m_pNullStringOfs;
 	public:
 		inline const char* getName() { return name.c_str();}
 		inline const char* getVersion() { return version.c_str();}
@@ -90,6 +91,7 @@ public:
 		
 		const char* getStatus() const;
 		inline bool isDebug() const { return m_Debug; }
+		inline cell* getNullStringOfs() const { return m_pNullStringOfs; }
 	}; 
 	
 private:	

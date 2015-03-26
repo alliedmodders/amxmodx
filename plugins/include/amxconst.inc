@@ -39,7 +39,15 @@
  */
 #define MAX_PLAYERS 32 /* Maximum number of players AMX Mod X supports */
 
-public stock const MaxClients; /* Maximum number of players the server supports */
+/**
+ * Maximum number of players the server supports 
+ */
+public stock const MaxClients; 
+
+/**
+ * Pass this into certain functions to act as a C++ NULL 
+ */
+public stock const NULL_STRING[1];
 
 /**
  * The maximum buffer size required to store a clients name.

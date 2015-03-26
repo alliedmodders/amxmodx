@@ -152,6 +152,11 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 			{
 				*get_amxaddr(plugin->getAMX(), addr) = gpGlobals->maxClients;
 			}
+
+			if (amx_FindPubVar(plugin->getAMX(), "NULL_STRING", &addr) != AMX_ERR_NOTFOUND)
+			{
+				plugin->m_pNullStringOfs = get_amxaddr(plugin->getAMX(), addr);
+			}
 		}
 	}
 
@@ -256,7 +261,7 @@ const char* CPluginMngr::CPlugin::getStatus() const
 	return "error";
 }
 
-CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int d) : name(n), title(n)
+CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int d) : name(n), title(n), m_pNullStringOfs(nullptr)
 {
 	const char* unk = "unknown";
 	

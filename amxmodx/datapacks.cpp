@@ -94,9 +94,9 @@ static cell AMX_NATIVE_CALL ReadPackCell(AMX* amx, cell* params)
 		return 0;
 	}
 
-	if (!d->IsReadable(sizeof(char) + sizeof(size_t) + sizeof(cell)))
+	if (!d->CanReadCell())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
+		LogError(amx, AMX_ERR_NATIVE, "Datapack operation is invalid.");
 		return 0;
 	}
 
@@ -113,9 +113,9 @@ static cell AMX_NATIVE_CALL ReadPackFloat(AMX* amx, cell* params)
 		return 0;
 	}
 
-	if (!d->IsReadable(sizeof(char) + sizeof(size_t) + sizeof(float)))
+	if (!d->CanReadFloat())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
+		LogError(amx, AMX_ERR_NATIVE, "Datapack operation is invalid.");
 		return 0;
 	}
 
@@ -134,13 +134,14 @@ static cell AMX_NATIVE_CALL ReadPackString(AMX* amx, cell* params)
 		return 0;
 	}
 
-	const char *str;
-	size_t len;
-	if (!(str = d->ReadString(&len)))
+	if (!d->CanReadString(NULL))
 	{
-		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
+		LogError(amx, AMX_ERR_NATIVE, "Datapack operation is invalid.");
 		return 0;
 	}
+
+	size_t len;
+	const char *str = d->ReadString(&len);
 
 	return set_amxstring_utf8(amx, params[2], str, len, params[3] + 1); // + EOS
 }

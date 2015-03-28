@@ -62,6 +62,49 @@ void Client_WeaponList(void* mValue){
 }
 */
 
+int get_pdata_ehandle(edict_t* pEntity, int offset)
+{
+	if (FNullEnt(pEntity) || !pEntity->pvPrivateData)
+	{
+		return 0;
+	}
+
+	edict_t* pEdict = *(edict_t **)((char *)(pEntity->pvPrivateData) + offset);
+
+	if (!pEdict)
+	{
+		return 0;
+	}
+
+	static edict_t* pWorld = nullptr;
+
+	if (!pWorld)
+	{
+		pWorld = INDEXENT(0);
+	}
+		
+	int index = pEdict - pWorld;
+
+	if (index < 0 || index > gpGlobals->maxEntities)
+	{
+		return 0;
+	}
+
+	if (pEdict->free || !pEdict->pvPrivateData)
+	{
+		return 0;
+	}
+
+	int serialnumber = *(int *)((char *)pEntity->pvPrivateData + offset + 4);
+
+	if (pEdict->serialnumber != serialnumber)
+	{
+		return 0;
+	}
+
+	return index;
+}
+
 void Client_Damage(void* mValue){
   switch (mState++) {
   case 1: 
@@ -144,15 +187,20 @@ void Client_Damage(void* mValue){
 				case 'e':
 					weapon = TFC_WPN_TIMER; // TFC_WPN_MEDKIT ??
 
-					tempInt = *( (int*)mPlayer->pEdict->pvPrivateData + pdTimerOwner );
-					if (!tempInt)
+					tempInt = get_pdata_ehandle(mPlayer->pEdict, pdTimerOwner * 4); // function is char-based.
+
+					if (tempInt < 1 || tempInt > gpGlobals->maxClients)
+					{
 						break;
-					tempEnt = (edict_t*)tempInt;
-					pAttacker = GET_PLAYER_POINTER(tempEnt);
-					
-					if ( pAttacker->teamId == mPlayer->teamId ) // ???
+					}
+
+					pAttacker = GET_PLAYER_POINTER_I(tempInt);
+
+					if (pAttacker->teamId == mPlayer->teamId) // ???
+					{
 						ignoreDamage = true;
-					
+					}
+
 					pAttacker->saveShot(weapon); // ??? save shot too
 					break;
 				case 'f':
@@ -174,12 +222,16 @@ void Client_Damage(void* mValue){
 		}
 	}
     else { // nailgrenade , mirvgrenade , normalgrenade , rockets
-		if ( strstr("sentrygun",STRING(enemy->v.classname)) ){
-			tempInt = *( (int*)enemy->pvPrivateData + pdSentryGunOwner );
-			if ( !tempInt )
+		if ( strstr("sentrygun",STRING(enemy->v.classname)) )
+		{
+			tempInt = get_pdata_ehandle(mPlayer->pEdict, pdSentryGunOwner * 4); // function is char-based.
+
+			if (tempInt < 1 || tempInt > gpGlobals->maxClients)
+			{
 				break;
-			tempEnt = (edict_t*)tempInt;
-			pAttacker = GET_PLAYER_POINTER(tempEnt);
+			}
+
+			pAttacker = GET_PLAYER_POINTER_I(tempInt);
 			weapon = TFC_WPN_SENTRYGUN;
 			pAttacker->saveShot(weapon); // save shot too
 			pAttacker->saveHit( mPlayer , weapon , damage, aim );

@@ -19,25 +19,27 @@
 #include "CRank.h"
 
 #if defined(_WIN32)
-	#define LINUXOFFSET		0
-	#define CLIP_LINUXOFFSET	0
+	#define LINUXOFFSET         0
+	#define PLAYER_LINUXOFFSET  0
+	#define CLIP_LINUXOFFSET    0
 #else
-	#define LINUXOFFSET		4
-	#define CLIP_LINUXOFFSET	4
+	#define LINUXOFFSET         4
+	#define PLAYER_LINUXOFFSET  5
+	#define CLIP_LINUXOFFSET    4
 #endif
 
-#define TFCMAX_CUSTOMWPNS	5
-#define TFCMAX_WEAPONS		MAX_WEAPONS + TFCMAX_CUSTOMWPNS
+#define TFCMAX_CUSTOMWPNS   5
+#define TFCMAX_WEAPONS      MAX_WEAPONS + TFCMAX_CUSTOMWPNS
 
-#define PD_HAS_GOALITEM		26  + LINUXOFFSET
-#define PD_GOALITEM_TEAM	36  + LINUXOFFSET
-#define PD_SENTRY_OWNER		83	+ LINUXOFFSET
-#define PD_TIMER_OWNER		932	+ LINUXOFFSET
+#define PD_HAS_GOALITEM     26  + LINUXOFFSET
+#define PD_GOALITEM_TEAM    36  + LINUXOFFSET
+#define PD_SENTRY_OWNER     83	+ LINUXOFFSET
+#define PD_TIMER_OWNER      932	+ PLAYER_LINUXOFFSET
 
 // If somehow TFC updates, the following two offsets can be updated by
 // disassembling CBaseEntity::KeyValuePartThree(KeyValueData_s *)
-#define PD_REPLACE_MODEL	170 + LINUXOFFSET
-#define PD_REPLACE_SKIN		172 + LINUXOFFSET
+#define PD_REPLACE_MODEL    170 + LINUXOFFSET
+#define PD_REPLACE_SKIN     172 + LINUXOFFSET
 
 
 #define MAX_TRACE		13
@@ -194,12 +196,12 @@ class Grenades
 {
   struct Obj
   {
-    CPlayer* player;
-    edict_t* grenade;
-    float time;
-    int type;
-    Obj* next;
-    Obj* prev;
+	CPlayer* player;
+	edict_t* grenade;
+	float time;
+	int type;
+	Obj* next;
+	Obj* prev;
   } *head;
 
 

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("AlliedModders, LLC")]
 [assembly: AssemblyProduct("AMXX BinLog Reader")]
-[assembly: AssemblyCopyright("(C)Copyright 2004-2014 AlliedModders, LLC")]
+[assembly: AssemblyCopyright("(C)Copyright 2004-2015 AlliedModders, LLC")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

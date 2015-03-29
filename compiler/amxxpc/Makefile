@@ -1,4 +1,4 @@
-# (C)2004-2013 AMX Mod X Development Team
+# (C)2004-2015 AMX Mod X Development Team
 # Makefile written by David "BAILOPAN" Anderson
 
 #####################################

@@ -142,6 +142,17 @@ native GetPackPosition(DataPack:pack);
 native SetPackPosition(DataPack:pack, position);
 
 /**
+ * Returns if the datapack has reached its end and no more data can be read.
+ *
+ * @param pack      Datapack handle
+ *
+ * @return          True if datapack has reached the end, false otherwise
+ * @error           If an invalid handle is provided, or the new position is
+ *                  out of datapack bounds, an error will be thrown.
+ */
+ native bool:IsPackEnded(DataPack:pack);
+
+/**
  * Destroys the datapack and frees its memory.
  *
  * @param pack      Datapack handle

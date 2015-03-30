@@ -94,9 +94,9 @@ static cell AMX_NATIVE_CALL ReadPackCell(AMX* amx, cell* params)
 		return 0;
 	}
 
-	if (!d->IsReadable(sizeof(size_t) + sizeof(cell)))
+	if (!d->CanReadCell())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
+		LogError(amx, AMX_ERR_NATIVE, "Datapack operation is invalid.");
 		return 0;
 	}
 
@@ -113,9 +113,9 @@ static cell AMX_NATIVE_CALL ReadPackFloat(AMX* amx, cell* params)
 		return 0;
 	}
 
-	if (!d->IsReadable(sizeof(size_t) + sizeof(float)))
+	if (!d->CanReadFloat())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
+		LogError(amx, AMX_ERR_NATIVE, "Datapack operation is invalid.");
 		return 0;
 	}
 
@@ -134,13 +134,14 @@ static cell AMX_NATIVE_CALL ReadPackString(AMX* amx, cell* params)
 		return 0;
 	}
 
-	const char *str;
-	size_t len;
-	if (!(str = d->ReadString(&len)))
+	if (!d->CanReadString(NULL))
 	{
-		LogError(amx, AMX_ERR_NATIVE, "DataPack operation is out of bounds.");
+		LogError(amx, AMX_ERR_NATIVE, "Datapack operation is invalid.");
 		return 0;
 	}
+
+	size_t len;
+	const char *str = d->ReadString(&len);
 
 	return set_amxstring_utf8(amx, params[2], str, len, params[3] + 1); // + EOS
 }
@@ -197,7 +198,7 @@ static cell AMX_NATIVE_CALL SetPackPosition(AMX* amx, cell* params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL IsPackReadable(AMX* amx, cell* params)
+static cell AMX_NATIVE_CALL IsPackEnded(AMX* amx, cell* params)
 {
 	CDataPack *d = g_DataPackHandles.lookup(params[1]);
 
@@ -207,7 +208,7 @@ static cell AMX_NATIVE_CALL IsPackReadable(AMX* amx, cell* params)
 		return 0;
 	}
 
-	return d->IsReadable(params[2]) ? 1 : 0;
+	return d->IsReadable(1) ? false : true;
 }
 
 static cell AMX_NATIVE_CALL DestroyDataPack(AMX* amx, cell* params)
@@ -243,7 +244,7 @@ AMX_NATIVE_INFO g_DatapackNatives[] =
 	{ "ResetPack",					ResetPack },
 	{ "GetPackPosition",			GetPackPosition },
 	{ "SetPackPosition",			SetPackPosition },
-	{ "IsPackReadable",				IsPackReadable },
+	{ "IsPackEnded",				IsPackEnded },
 	{ "DestroyDataPack",			DestroyDataPack },
 	{NULL,							NULL}
 };

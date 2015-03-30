@@ -17,7 +17,7 @@ BEGIN
 			VALUE "FileDescription", "AMXXPC compile.exe\0"
 			VALUE "FileVersion", "1.5\0"
 			VALUE "InternalName", "AMXXPC compile.exe\0"
-			VALUE "LegalCopyright", "(c) 2004-2014, AMXX Development Team\0"
+			VALUE "LegalCopyright", "(c) 2004-2015, AMXX Development Team\0"
 			//VALUE "LegalTrademarks", "\0"
 			VALUE "OriginalFilename", "compile.exe\0"
 			//VALUE "PrivateBuild", "\0"

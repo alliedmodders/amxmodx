@@ -622,10 +622,7 @@ static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
 	static char buffer[4096];
 	buffer[0] = '\0';
 
-	if (!fp->ReadLine(buffer, sizeof(buffer) - 1))
-	{
-		return 0;
-	}
+	fp->ReadLine(buffer, sizeof(buffer) - 1);
 
 	return set_amxstring_utf8(amx, params[2], buffer, strlen(buffer), params[3] + 1); // + EOS
 }

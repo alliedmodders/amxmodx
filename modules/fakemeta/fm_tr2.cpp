@@ -15,9 +15,12 @@
 #include "sh_stack.h"
 
 TraceResult g_tr_2;
-KeyValueData g_kvd_2;
 
 KVD_Wrapper g_kvd_glb;
+KVD_Wrapper g_kvd_ext;
+
+ke::Vector<KVD_Wrapper *>g_KVDWs;
+ke::Vector<KVD_Wrapper *>g_FreeKVDWs;
 
 clientdata_t g_cd_glb;
 entity_state_t g_es_glb;
@@ -206,13 +209,11 @@ static cell AMX_NATIVE_CALL get_tr2(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 {
-	KVD_Wrapper *kvdw;
 	KeyValueData *kvd;
 	if (params[1] == 0)
-		kvdw = &g_kvd_glb;
+		kvd = &(g_kvd_glb.kvd);
 	else
-		kvdw = reinterpret_cast<KVD_Wrapper *>(params[1]);
-	kvd = kvdw->kvd;
+		kvd = reinterpret_cast<KeyValueData *>(params[1]);
 
 	switch (params[2])
 	{
@@ -263,13 +264,26 @@ static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_kvd(AMX *amx, cell *params)
 {
-	KVD_Wrapper *kvdw;
-	KeyValueData *kvd;
-	if (params[1] == 0)
+	KVD_Wrapper *kvdw = nullptr;
+	KeyValueData *kvd = nullptr;
+	
+	KVD_Wrapper *tmpw = reinterpret_cast<KVD_Wrapper *>(params[1]);
+	if (params[1] == 0 || tmpw == &g_kvd_glb) {
 		kvdw = &g_kvd_glb;
-	else
-		kvdw = reinterpret_cast<KVD_Wrapper *>(params[1]);
-	kvd = kvdw->kvd;
+		kvd = &(kvdw->kvd);
+	} else {
+		for (size_t i = 0; i < g_KVDWs.length(); ++i) {
+			if (g_KVDWs[i] == tmpw) {
+				kvdw = tmpw;
+				kvd = &(kvdw->kvd);
+			}
+		}
+
+		if (kvdw == nullptr) {
+			kvdw = &g_kvd_ext;
+			kvd = reinterpret_cast<KeyValueData *>(tmpw);
+		}
+	}
 
 	if (*params / sizeof(cell) < 3)
 	{
@@ -1257,12 +1271,55 @@ static cell AMX_NATIVE_CALL free_tr2(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL create_kvd(AMX *amx, cell *params)
+{
+	KVD_Wrapper *kvdw;
+	if (g_FreeKVDWs.empty()) {
+		kvdw = new KVD_Wrapper;
+	} else {
+		kvdw = g_FreeKVDWs.popCopy();
+	}
+
+	kvdw->cls = "";
+	kvdw->kvd.szClassName = const_cast<char*>(kvdw->cls.chars());
+	kvdw->key = "";
+	kvdw->kvd.szKeyName = const_cast<char*>(kvdw->key.chars());
+	kvdw->val = "";
+	kvdw->kvd.szValue = const_cast<char*>(kvdw->val.chars());
+	kvdw->kvd.fHandled = 0;
+
+	g_KVDWs.append(kvdw);
+
+	return reinterpret_cast<cell>(kvdw);
+}
+
+static cell AMX_NATIVE_CALL free_kvd(AMX *amx, cell *params) {
+	if (params[1] == 0) {
+		return 0;
+	}
+
+	KVD_Wrapper *kvdw = reinterpret_cast<KVD_Wrapper *>(params[1]);
+
+	for (size_t i = 0; i < g_KVDWs.length(); ++i) {
+		if (g_KVDWs[i] == kvdw) {
+			g_KVDWs.remove(i);
+			g_FreeKVDWs.append(kvdw);
+
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 AMX_NATIVE_INFO ext2_natives[] = 
 {
 	{"create_tr2",		create_tr2},
 	{"free_tr2",		free_tr2},
 	{"get_tr2",			get_tr2},
 	{"set_tr2",			set_tr2},
+	{"create_kvd",		create_kvd},
+	{"free_kvd",		free_kvd},
 	{"get_kvd",			get_kvd},
 	{"set_kvd",			set_kvd},
 	{"get_cd",			get_cd},

@@ -20,7 +20,6 @@ extern TraceResult *gfm_tr;
 
 //these also don't fit in here but gaben does not care.  GABEN DOES NOT CARE!!!
 extern TraceResult g_tr_2;
-extern KeyValueData g_kvd_2;
 extern clientdata_t g_cd_glb;
 extern clientdata_t *g_cd_hook;
 extern entity_state_t g_es_glb;
@@ -30,14 +29,13 @@ extern usercmd_t *g_uc_hook;
 
 struct KVD_Wrapper
 {
-	KeyValueData *kvd;
+	KeyValueData kvd;
 	ke::AString cls;
 	ke::AString key;
 	ke::AString val;
 };
 
 extern KVD_Wrapper g_kvd_glb;
-extern KVD_Wrapper g_kvd_hook;
 
 enum
 {

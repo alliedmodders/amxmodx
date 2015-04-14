@@ -473,6 +473,9 @@ native get_kvd(kvd_handle, KeyValueData:member, any:...);
 // keyvalues structure rather than changing the internal engine strings.
 native set_kvd(kvd_handle, KeyValueData:member, any:...);
 
+native create_kvd();
+native free_kvd(kvd_handle);
+
 // These functions are used with the clientdata data structure (FM_UpdateClientData)
 // Get: 0 extra params - Return integer; 1 extra param - by ref float or vector; 2 extra params - string and length
 // Set: Use anything

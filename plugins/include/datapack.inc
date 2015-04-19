@@ -89,7 +89,7 @@ native any:ReadPackCell(DataPack:pack);
  * @error           If an invalid handle is provided, or not enough data is left
  *                  in the datapack, an error will be thrown.
  */
-native Float:ReadPackFloat(datapack:pack);
+native Float:ReadPackFloat(DataPack:pack);
 
 /**
  * Reads a string from a Datapack.

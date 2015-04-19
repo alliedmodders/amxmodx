@@ -1,11 +1,21 @@
+addons:
+  apt:
+    packages:
+    - lib32stdc++6
+    - lib32z1-dev
+    - libc6-dev-i386
+    - gcc-multilib
+    - g++-multilib
 language: cpp
+sudo: false
 compiler:
   - clang
 before_script:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y g++-multilib libc6-dev-i386 lib32stdc++6 lib32z1-dev
-  - CHECKOUT_DIR=$PWD && cd .. && $CHECKOUT_DIR/support/checkout-deps.sh --no-mysql && cd $CHECKOUT_DIR
+  - CHECKOUT_DIR=$PWD && cd .. 
+  - chmod a+x $CHECKOUT_DIR/support/checkout-deps.sh 
+  - $CHECKOUT_DIR/support/checkout-deps.sh --no-mysql && cd $CHECKOUT_DIR
 script:
   - mkdir build && cd build
+  - PATH="~/.local/bin:$PATH"
   - python ../configure.py --enable-optimize --no-mysql
   - ambuild

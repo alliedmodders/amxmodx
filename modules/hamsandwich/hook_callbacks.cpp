@@ -429,9 +429,11 @@ int Hook_Int_Int_Str_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i
 {
 	int ret=0;
 	int origret=0;
+	ke::AString a;
+
 	PUSH_INT()
 
-	ke::AString a(sz1);
+	a = sz1;
 
 	MAKE_VECTOR()
 	
@@ -462,9 +464,11 @@ int Hook_Int_Int_Str_Int_Int(Hook *hook, void *pthis, int i1, const char *sz1, i
 {
 	int ret = 0;
 	int origret = 0;
+	ke::AString a;
+
 	PUSH_INT()
 
-	ke::AString a(sz1);
+	a = sz1;
 
 	MAKE_VECTOR()
 
@@ -1398,8 +1402,11 @@ int Hook_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2)
 
 void Hook_Void_Str_Float_Float_Float(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3)
 {
+	ke::AString a;
+
 	PUSH_VOID()
-	ke::AString a(sz1);
+	
+	a = sz1;
 
 	MAKE_VECTOR()
 
@@ -1428,9 +1435,11 @@ void Hook_Void_Str_Float_Float_Float(Hook *hook, void *pthis, const char *sz1, f
 
 void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3, int i1, void *cb)
 {
+	ke::AString a;
+
 	PUSH_VOID()
 
-	ke::AString a(sz1);
+	a = sz1;
 	int iEnt=PrivateToIndex(cb);
 
 	MAKE_VECTOR()
@@ -1639,9 +1648,11 @@ int Hook_Int_Str(Hook *hook, void *pthis, const char *sz1)
 {
 	int ret=0;
 	int origret=0;
+	ke::AString a;
 
 	PUSH_INT()
-	ke::AString a(sz1);
+	
+	a = sz1;
 
 	MAKE_VECTOR()
 	P_STR(a)
@@ -1754,8 +1765,11 @@ void Hook_Void_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
 
 void Hook_Void_Str_Bool(Hook *hook, void *pthis, const char *sz1, bool b2)
 {
+	ke::AString a;
+
 	PUSH_VOID()
-	ke::AString a(sz1);
+	
+	a = sz1;
 
 	MAKE_VECTOR()
 
@@ -1854,9 +1868,11 @@ int Hook_Int_Int_Int_Float_Int(Hook *hook, void *pthis, int i1, int i2, float f1
 
 void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2)
 {
+	ke::AString a;
+
 	PUSH_VOID()
 	
-	ke::AString a(sz1);
+	a = sz1;
 
 	MAKE_VECTOR()
 
@@ -1911,8 +1927,11 @@ void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
 
 void Hook_Void_Str(Hook *hook, void *pthis, const char *sz1)
 {
+	ke::AString a;
+
 	PUSH_VOID()
-	ke::AString a(sz1);
+	
+	a = sz1;
 
 	MAKE_VECTOR()
 
@@ -1965,11 +1984,13 @@ int Hook_Int_Str_Vector_Str(Hook *hook, void *pthis, const char *sz1, Vector v2,
 {
 	int ret=0;
 	int origret=0;
+	ke::AString a;
+	ke::AString b;
 
 	PUSH_INT()
 
-	ke::AString a(sz1);
-	ke::AString b(sz2);
+	a = sz1;
+	b = sz2;
 
 	MAKE_VECTOR()
 
@@ -2002,11 +2023,13 @@ int Hook_Int_Str_Str(Hook *hook, void *pthis, const char *sz1, const char *sz2)
 {
 	int ret=0;
 	int origret=0;
+	ke::AString a;
+	ke::AString b;
 
 	PUSH_INT()
 
-	ke::AString a(sz1);
-	ke::AString b(sz2);
+	a = sz1;
+	b = sz2;
 
 	MAKE_VECTOR()
 
@@ -2062,10 +2085,13 @@ void Hook_Void_Float_Float(Hook *hook, void *pthis, float f1, float f2)
 
 void Hook_Void_Str_Str_Int(Hook *hook, void *pthis, const char *sz1, const char *sz2, int i3)
 {
+	ke::AString a;
+	ke::AString b;
+
 	PUSH_VOID()
 
-	ke::AString a(sz1);
-	ke::AString b(sz2);
+	a = sz1;
+	b = sz2;
 
 	MAKE_VECTOR()
 
@@ -2746,7 +2772,9 @@ const char *Hook_Str_Str(Hook *hook, void *pthis, const char* str)
 {
 	ke::AString ret;
 	ke::AString origret;
-	ke::AString a(str);
+	ke::AString a;
+	
+	a = str;
 
 	MAKE_VECTOR()
 

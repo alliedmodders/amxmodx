@@ -67,7 +67,8 @@ native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
  * 
  * If a connection tuple is supplied, this should be called before SQL_Connect or SQL_ThreadQuery.
  * Also note the change will remain until you call this function with another value.
- * 
+ * This native does nothing in SQLite. 
+ *
  * Example: "utf8", "latin1"
  *
  * @param h					Database or connection tuple Handle.

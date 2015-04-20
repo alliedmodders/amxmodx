@@ -595,6 +595,12 @@ static cell AMX_NATIVE_CALL SQL_QuoteStringFmt(AMX *amx, cell *params)
 	}
 }
 
+static cell AMX_NATIVE_CALL SQL_SetCharset(AMX *amx, cell *params)
+{
+	/* SQLite supports only UTF-8/16 */
+	return 0;
+}
+
 AMX_NATIVE_INFO g_BaseSqlNatives[] = 
 {
 	{"SQL_MakeDbTuple",		SQL_MakeDbTuple},
@@ -620,6 +626,7 @@ AMX_NATIVE_INFO g_BaseSqlNatives[] =
 	{"SQL_QuoteString",		SQL_QuoteString},
 	{"SQL_QuoteStringFmt",	SQL_QuoteStringFmt},
 	{"SQL_NextResultSet",	SQL_NextResultSet},
+	{"SQL_SetCharset",      SQL_SetCharset},
 
 	{NULL,					NULL},
 };

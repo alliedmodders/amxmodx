@@ -80,7 +80,7 @@
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\sqlite-source\sqlite3.c">
+    <ClCompile Include="..\..\..\third_party\sqlite\sqlite3.c">
       <Filter>SQLite Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -136,7 +136,7 @@
     <ClInclude Include="..\moduleconfig.h">
       <Filter>Module SDK</Filter>
     </ClInclude>
-    <ClInclude Include="..\sqlite-source\sqlite3.h">
+    <ClInclude Include="..\..\..\third_party\sqlite\sqlite3.h">
       <Filter>SQLite Source</Filter>
     </ClInclude>
   </ItemGroup>

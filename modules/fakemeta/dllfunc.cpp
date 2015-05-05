@@ -72,12 +72,14 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 			index=cRet[0];
 			CHECK_ENTITY(index);
 			cRet = MF_GetAmxAddr(amx, params[3]);
-			KVD_Wrapper *kvdw;
+
+			KeyValueData *kvd;
 			if (*cRet == 0)
-				kvdw = &g_kvd_glb;
+				kvd = &(g_kvd_glb.kvd);
 			else
-				kvdw = reinterpret_cast<KVD_Wrapper *>(*cRet);
-			gpGamedllFuncs->dllapi_table->pfnKeyValue(INDEXENT2(index), kvdw->kvd);
+				kvd = reinterpret_cast<KeyValueData *>(*cRet);
+
+			gpGamedllFuncs->dllapi_table->pfnKeyValue(INDEXENT2(index), kvd);
 			return 1;
 		}
 

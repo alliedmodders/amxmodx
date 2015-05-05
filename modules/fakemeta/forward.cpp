@@ -262,15 +262,13 @@ typedef struct KeyValueData_s
 */
 void KeyValue(edict_t* entity, KeyValueData* data)
 {
-	g_kvd_hook.kvd = data;
-	FM_ENG_HANDLE(FM_KeyValue, (Engine[FM_KeyValue].at(i), (cell)ENTINDEX(entity), (cell)(&g_kvd_hook)));
+	FM_ENG_HANDLE(FM_KeyValue, (Engine[FM_KeyValue].at(i), (cell)ENTINDEX(entity), (cell)(data)));
 	RETURN_META(mswi(lastFmRes));
 }
 
 void KeyValue_post(edict_t* entity, KeyValueData* data)
 {
-	g_kvd_hook.kvd = data;
-	FM_ENG_HANDLE_POST(FM_KeyValue, (EnginePost[FM_KeyValue].at(i), (cell)ENTINDEX(entity), (cell)(&g_kvd_hook)));
+	FM_ENG_HANDLE_POST(FM_KeyValue, (EnginePost[FM_KeyValue].at(i), (cell)ENTINDEX(entity), (cell)(data)));
 	RETURN_META(MRES_IGNORED);
 }
 

@@ -29,13 +29,16 @@ void OnAmxxAttach()
 	MF_AddNatives(glb_natives);
 	MF_AddNatives(ext2_natives);
 	MF_AddNatives(misc_natives);
-	g_kvd_2.szClassName = "";
-	g_kvd_2.szKeyName = "";
-	g_kvd_2.szValue = "";
-	g_kvd_glb.kvd = &g_kvd_2;
+	g_kvd_glb.kvd.szClassName = const_cast<char *>(g_kvd_glb.cls.chars());
+	g_kvd_glb.kvd.szKeyName = const_cast<char *>(g_kvd_glb.key.chars());
+	g_kvd_glb.kvd.szValue = const_cast<char *>(g_kvd_glb.val.chars());
+	g_kvd_glb.kvd.fHandled = 0;
 }
 
 extern CStack<TraceResult *> g_FreeTRs;
+extern ke::Vector<KVD_Wrapper *> g_KVDWs;
+extern ke::Vector<KVD_Wrapper *> g_FreeKVDWs;
+
 void OnAmxxDetach()
 {
 	while (!g_FreeTRs.empty())
@@ -43,6 +46,12 @@ void OnAmxxDetach()
 		delete g_FreeTRs.front();
 		g_FreeTRs.pop();
 	}
+
+	while (!g_KVDWs.empty())
+		delete g_KVDWs.popCopy();
+
+	while (!g_FreeKVDWs.empty())
+		delete g_FreeKVDWs.popCopy();
 }
 
 int GetHullBounds(int hullnumber, float *mins, float *maxs);

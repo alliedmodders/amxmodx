@@ -70,7 +70,7 @@ enum Ham
 	/**
 	 * Description:		Typically this is similar to an engine keyvalue call.
 	 *					Use the kvd natives from fakemeta to handle the kvd_handle passed.
-	 *					NOTE: Do not pass handle 0 to this! Use get_kvd_handle(0) from fakemeta instead!
+	 *					NOTE: Do not pass handle 0 to this! Use create_kvd() from fakemeta instead!
 	 * Forward params:	function(this, kvd_handle);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_Keyvalue, this, kvd_handle);

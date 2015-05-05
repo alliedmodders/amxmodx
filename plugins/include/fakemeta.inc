@@ -473,7 +473,22 @@ native get_kvd(kvd_handle, KeyValueData:member, any:...);
 // keyvalues structure rather than changing the internal engine strings.
 native set_kvd(kvd_handle, KeyValueData:member, any:...);
 
+/**
+ * Creates a KeyValueData handle.
+ *
+ * @note Handles should be freed using free_kvd().
+ *
+ * @return		New KeyValueData handle
+ */
 native create_kvd();
+
+/**
+ * Frees a KeyValueData handle.
+ *
+ * @param kvd_handle	KeyValueData handle
+ *
+ * @noreturn
+ */
 native free_kvd(kvd_handle);
 
 // These functions are used with the clientdata data structure (FM_UpdateClientData)

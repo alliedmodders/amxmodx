@@ -186,6 +186,17 @@ char *get_amxstring_null(AMX *amx, cell amx_addr, int id, int& len)
 	return get_amxstring(amx, amx_addr, id, len);
 }
 
+cell *get_amxvector_null(AMX *amx, cell amx_addr)
+{
+	cell *addr = get_amxaddr(amx, amx_addr);
+	if (addr == g_plugins.findPluginFast(amx)->getNullVectorOfs())
+	{
+		return nullptr;
+	}
+
+	return addr;
+}
+
 void copy_amxmemory(cell* dest, cell* src, int len)
 {
 	while (len--)

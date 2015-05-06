@@ -29,7 +29,7 @@ static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 	char* sName = get_amxstring(amx, params[1], 0, len);
 	cell ptr;
 
-	if (!strcmp(sName, "MaxClients") || !strcmp(sName, "NULL_STRING"))
+	if (!strcmp(sName, "MaxClients") || !strcmp(sName, "NULL_STRING") || !strcmp(sName, "NULL_VECTOR"))
 	{
 		return -1;
 	}

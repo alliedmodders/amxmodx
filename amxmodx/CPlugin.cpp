@@ -157,6 +157,11 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 			{
 				plugin->m_pNullStringOfs = get_amxaddr(plugin->getAMX(), addr);
 			}
+
+			if (amx_FindPubVar(plugin->getAMX(), "NULL_VECTOR", &addr) != AMX_ERR_NOTFOUND)
+			{
+				plugin->m_pNullVectorOfs = get_amxaddr(plugin->getAMX(), addr);
+			}
 		}
 	}
 
@@ -261,7 +266,7 @@ const char* CPluginMngr::CPlugin::getStatus() const
 	return "error";
 }
 
-CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int d) : name(n), title(n), m_pNullStringOfs(nullptr)
+CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int d) : name(n), title(n), m_pNullStringOfs(nullptr), m_pNullVectorOfs(nullptr)
 {
 	const char* unk = "unknown";
 	

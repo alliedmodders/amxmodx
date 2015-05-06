@@ -50,6 +50,11 @@ public stock const MaxClients;
 public stock const NULL_STRING[1];
 
 /**
+ * Pass this into certain functions to act as a C++ NULL
+ */
+public stock const Float:NULL_VECTOR[3];
+
+/**
  * The maximum buffer size required to store a clients name.
  */
 #define MAX_NAME_LENGTH 32

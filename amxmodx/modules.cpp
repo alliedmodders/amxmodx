@@ -1239,6 +1239,17 @@ extern "C" char *MNF_GetAmxString(AMX *amx, cell amx_addr, int bufferId, int *pL
 	return retVal;
 }
 
+extern "C" char *MNF_GetAmxStringNull(AMX *amx, cell amx_addr, int bufferId, int *pLen)
+{
+	int len;
+	char *retVal = get_amxstring_null(amx, amx_addr, bufferId, len);
+
+	if (pLen && retVal)
+		*pLen = len;
+
+	return retVal;
+}
+
 int MNF_GetAmxStringLen(const cell *ptr)
 {
 	register int c = 0;
@@ -1827,10 +1838,12 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("SetAmxStringUTF8Char", set_amxstring_utf8_char)
 	REGISTER_FUNC("SetAmxStringUTF8Cell", set_amxstring_utf8_cell)
 	REGISTER_FUNC("GetAmxString", MNF_GetAmxString)
+	REGISTER_FUNC("GetAmxStringNull", MNF_GetAmxStringNull)
 	REGISTER_FUNC("GetAmxStringLen", MNF_GetAmxStringLen)
 	REGISTER_FUNC("FormatAmxString", MNF_FormatAmxString)
 	REGISTER_FUNC("CopyAmxMemory", MNF_CopyAmxMemory)
 	REGISTER_FUNC("GetAmxAddr", get_amxaddr)
+	REGISTER_FUNC("GetAmxVectorNull", get_amxvector_null)
 	REGISTER_FUNC("AmxReregister", amx_Reregister);
 
 	// other amx stuff

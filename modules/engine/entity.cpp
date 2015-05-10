@@ -1057,7 +1057,7 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL entity_get_edict2(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 	int idx = params[2];
@@ -1103,14 +1103,24 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
 			pRet = pEnt->v.euser4;
 			break;
 		default:
-			return 0;
+			return -1;
 			break;
 	}
 
 	if (FNullEnt(pRet))
-		return 0;
+		return -1;
 
 	return ENTINDEX(pRet);
+}
+
+static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
+{
+	cell res = entity_get_edict2(amx, params);
+
+	if (res == -1)
+		res = 0;
+
+	return res;
 }
 
 static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
@@ -1602,6 +1612,7 @@ AMX_NATIVE_INFO ent_Natives[] = {
 	{"entity_get_string",	entity_get_string},
 	{"entity_set_string",	entity_set_string},
 	{"entity_get_edict",	entity_get_edict},
+	{"entity_get_edict2",	entity_get_edict2},
 	{"entity_set_edict",	entity_set_edict},
 	{"entity_get_byte",		entity_get_byte},
 	{"entity_set_byte",		entity_set_byte},

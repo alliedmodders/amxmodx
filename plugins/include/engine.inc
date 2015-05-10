@@ -307,6 +307,21 @@ native get_global_vector(variable, Float:vector[3]);
 native get_global_edict(variable);
 
 /**
+ * Returns a edict type value from the server globals.
+ *
+ * @note For a list of valid edict type entries, see the GL_* constants in
+ *       engine_const.inc under the "Edict" section.
+ * @note This native returns -1 as a safe error value if the edict retrieved is
+ *       an invalid entity. Otherwise it is identical to get_global_edict().
+ *
+ * @param variable  Entry to retrieve from
+ *
+ * @return          Value of specified entry
+ * @error           If an invalid entry is provided, an error will be thrown.
+ */
+native get_global_edict2(variable);
+
+/**
  * Sets the size of the entity bounding box, as described by the minimum and
  * maximum vectors relative to the origin.
  *
@@ -475,6 +490,26 @@ native entity_set_vector(iIndex, iKey, const Float:vNewVector[3]);
  *                  thrown.
  */
 native entity_get_edict(iIndex, iKey);
+
+/**
+ * Returns an edict type value from an entities entvar struct.
+ *
+ * @note For a list of valid edict type entries, see the EV_ENT_* constants in
+ *       engine_const.inc
+ * @note This native returns -1 as a safe error value if the edict retrieved
+ *       from the entvar is an invalid entity. Otherwise it is identical to
+ *       entity_get_edict().
+ *
+ * @param iIndex    Entity index
+ * @param iKey      Entry to retrieve from
+ *
+ * @return          Entity index in specified entry, -1 if the edict in the
+ *                  entvar is not a valid entity or an invalid entry was
+ *                  specified
+ * @error           If an invalid entity index is provided, an error will be
+ *                  thrown.
+ */
+native entity_get_edict2(iIndex, iKey);
 
 /**
  * Sets an edict type value in an entities entvar struct.

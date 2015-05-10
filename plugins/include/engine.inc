@@ -621,6 +621,8 @@ native create_entity(const szClassname[]);
  *
  * @return          1 if entity was sucessfully removed, 0 if an invalid entity
  *                  was provided
+ * @error           If an entity index in the range of 0 to MaxClients is
+ *                  provided, an error will be thrown.
  */
 native remove_entity(iIndex);
 

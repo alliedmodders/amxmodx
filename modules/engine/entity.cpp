@@ -120,11 +120,17 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params)
 {
 	int id = params[1];
+	if (id >= 0 && id <= gpGlobals->maxClients)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d can not be removed", id);
+		return 0;
+	}
+	
 	edict_t *pEnt = INDEXENT2(id);
 
 	if (FNullEnt(pEnt))
 		return 0;
-	
+
 	REMOVE_ENTITY(pEnt);
 
 	return 1;

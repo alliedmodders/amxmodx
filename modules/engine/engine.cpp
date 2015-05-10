@@ -574,16 +574,27 @@ static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 {
 	int iResult=0;
 	TraceResult tr;
-	Vector vPos;
+	Vector vStart;
+	Vector vEnd;
 	cell *vCell;
 
 	vCell = MF_GetAmxAddr(amx, params[1]);
 
-	vPos.x = amx_ctof(vCell[0]);
-	vPos.y = amx_ctof(vCell[1]);
-	vPos.z = amx_ctof(vCell[2]);
+	vStart.x = amx_ctof(vCell[0]);
+	vStart.y = amx_ctof(vCell[1]);
+	vStart.z = amx_ctof(vCell[2]);
 
-	TRACE_HULL(vPos,vPos, params[4], params[2], params[3] > 0 ? INDEXENT2(params[3]) : 0 , &tr);
+	if (params[0] / sizeof(cell) >= 5 && (vCell = MF_GetAmxVectorNull(amx, params[5])))
+	{
+
+		vEnd.x = amx_ctof(vCell[0]);
+		vEnd.y = amx_ctof(vCell[1]);
+		vEnd.z = amx_ctof(vCell[2]);
+	}
+	else
+		vEnd = vStart;
+
+	TRACE_HULL(vStart, vEnd, params[4], params[2], params[3] > 0 ? INDEXENT2(params[3]) : 0, &tr);
 
 	if (tr.fStartSolid) {
 		iResult += 1;

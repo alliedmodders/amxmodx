@@ -999,7 +999,7 @@ native trace_line(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Float:
 native trace_normal(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Float:vReturn[3]);
 
 /**
- * Fires a trace hull on a specified origin.
+ * Fires a trace hull on a specified origin or between two origins.
  *
  * @note This native writes to the global trace handle. Additional trace results
  *       can be retrieved using traceresult().
@@ -1008,15 +1008,16 @@ native trace_normal(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Floa
  * @note For a list of valid ignore types see the *IGNORE_* constants in
  *       hlsdk_const.inc
  *
- * @param origin            Trace startin and end point
+ * @param origin            Trace start point (and end point if not specified)
  * @param hull              Hull type
  * @param ignoredent        Entity index that trace will ignore
  * @param ignoremonsters    Entity ignore type
+ * @param end               Trace end point, pass NULL_VECTOR to use start point
  *
  * @return                  Custom bitflag sum of relevant trace results
  *                          StartSolid (1), AllSolid (2) and InOpen (4)
  */
-native trace_hull(const Float:origin[3], hull, ignoredent = 0, ignoremonsters = 0);
+native trace_hull(const Float:origin[3], hull, ignoredent = 0, ignoremonsters = 0, const Float:end[3] = NULL_VECTOR);
 
 /**
  * Attempts to describe an obstacle by firing trace lines in a specified

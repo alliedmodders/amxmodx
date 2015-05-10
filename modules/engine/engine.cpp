@@ -55,6 +55,27 @@ static cell AMX_NATIVE_CALL register_think(AMX *amx, cell *params)
 	return p->Forward;
 }
 
+static cell AMX_NATIVE_CALL unregister_think(AMX *amx, cell *params)
+{
+	int fwd = params[1];
+	for (size_t i = 0; i < Thinks.length(); ++i)
+	{
+		EntClass *p = Thinks.at(i);
+		if (p->Forward == fwd)
+		{
+			Thinks.remove(i);
+			delete p;
+
+			if (!Thinks.length())
+				g_pFunctionTable->pfnThink = NULL;
+
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 static cell AMX_NATIVE_CALL register_impulse(AMX *amx, cell *params)
 {
 	int len;
@@ -70,6 +91,27 @@ static cell AMX_NATIVE_CALL register_impulse(AMX *amx, cell *params)
 		g_pFunctionTable->pfnCmdStart=CmdStart;
 
 	return p->Forward;
+}
+
+static cell AMX_NATIVE_CALL unregister_impulse(AMX *amx, cell *params)
+{
+	int fwd = params[1];
+	for (size_t i = 0; i < Impulses.length(); ++i)
+	{
+		Impulse *p = Impulses.at(i);
+		if (p->Forward == fwd)
+		{
+			Impulses.remove(i);
+			delete p;
+
+			if (!Impulses.length())
+				g_pFunctionTable->pfnCmdStart = NULL;
+
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
@@ -100,6 +142,27 @@ static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
 		g_pFunctionTable->pfnTouch=pfnTouch;
 
 	return p->Forward;
+}
+
+static cell AMX_NATIVE_CALL unregister_touch(AMX *amx, cell *params)
+{
+	int fwd = params[1];
+	for (size_t i = 0; i < Touches.length(); ++i)
+	{
+		Touch *p = Touches.at(i);
+		if (p->Forward == fwd)
+		{
+			Touches.remove(i);
+			delete p;
+
+			if (!Touches.length())
+				g_pFunctionTable->pfnTouch = NULL;
+
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL halflife_time(AMX *amx, cell *params)
@@ -983,10 +1046,12 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"get_usercmd",			get_usercmd},
 	{"set_usercmd",			set_usercmd},
 
-
 	{"register_impulse",	register_impulse},
 	{"register_think",		register_think},
 	{"register_touch",		register_touch},
+	{"unregister_impulse",	unregister_impulse},
+	{"unregister_think",	unregister_think},
+	{"unregister_touch",	unregister_touch},
 
 	{"eng_get_string",		get_string},
 	{"is_in_viewcone",		in_view_cone},

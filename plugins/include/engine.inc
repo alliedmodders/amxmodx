@@ -70,7 +70,7 @@ native traceresult(type, any:...);
  * @param impulse   Impulse to hook
  * @param function  Name of callback function
  *
- * @noreturn
+ * @return          Impulse forward id
  */
 native register_impulse(impulse, const function[]);
 
@@ -96,7 +96,7 @@ native register_impulse(impulse, const function[]);
  * @param Toucher   Entity classname touching, "*" or "" for any class
  * @param function  Name of callback function
  *
- * @noreturn
+ * @return          Touch forward id
  */
 native register_touch(const Touched[], const Toucher[], const function[]);
 
@@ -120,9 +120,36 @@ native register_touch(const Touched[], const Toucher[], const function[]);
  * @param Touched   Entity classname to hook
  * @param function  Name of callback function
  *
- * @noreturn
+ * @return 	        Think forward id
  */
 native register_think(const Classname[], const function[]);
+
+/**
+ * Removes a previously registered impulse hook.
+ *
+ * @param registerid    Impulse forward id
+ *
+ * @return              1 on success, 0 if nothing was removed
+ */
+native unregister_impulse(registerid);
+
+/**
+ * Removes a previously registered touch hook.
+ *
+ * @param registerid    Touch forward id
+ *
+ * @return              1 on success, 0 if nothing was removed
+ */
+native unregister_touch(registerid);
+
+/**
+ * Removes a previously registered think hook.
+ *
+ * @param registerid    Think forward id
+ *
+ * @return              1 on success, 0 if nothing was removed
+ */
+native unregister_think(registerid);
 
 /**
  * Precaches an event file.

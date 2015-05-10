@@ -174,7 +174,13 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 		kvd.fHandled = 0;
 
 		MDLL_KeyValue(pEntity, &kvd);
-	} else {
+	} else if (count == 2) {
+		if (!g_inKeyValue)
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "DispatchKeyValue() with two arguments can only be used inside of pfn_keyvalue()");
+			return 0;
+		}
+
 		int iLength;
 		char *char1 = MF_GetAmxString(amx, params[1], 0, &iLength);
 		char *char2 = MF_GetAmxString(amx, params[2], 1, &iLength);

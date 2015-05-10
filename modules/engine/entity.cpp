@@ -200,20 +200,21 @@ static cell AMX_NATIVE_CALL get_keyvalue(AMX *amx, cell *params)
 	edict_t *pEntity = INDEXENT2(idx);
 	int iLength=0;
 	char *char1 = MF_GetAmxString(amx, params[2], 1, &iLength);
-	return MF_SetAmxString(amx, params[3], INFO_KEY_VALUE(INFO_KEY_BUFFER(pEntity),char1), params[4]); 
+	char *val = INFO_KEY_VALUE(INFO_KEY_BUFFER(pEntity), char1);
+	return MF_SetAmxStringUTF8Char(amx, params[3], val, strlen(val), params[4]); 
 }
 
 static cell AMX_NATIVE_CALL copy_keyvalue(AMX *amx, cell *params)
 {
 	if (!g_inKeyValue)
 		return 0;
-	
+
 	if (g_pkvd->szClassName)
-		MF_SetAmxString(amx, params[1], g_pkvd->szClassName, params[2]);
+		MF_SetAmxStringUTF8Char(amx, params[1], g_pkvd->szClassName, strlen(g_pkvd->szClassName), params[2]);
 	if (g_pkvd->szKeyName)
-		MF_SetAmxString(amx, params[3], g_pkvd->szKeyName, params[4]);
+		MF_SetAmxStringUTF8Char(amx, params[3], g_pkvd->szKeyName, strlen(g_pkvd->szKeyName), params[4]);
 	if (g_pkvd->szValue)
-		MF_SetAmxString(amx, params[5], g_pkvd->szValue, params[6]);
+		MF_SetAmxStringUTF8Char(amx, params[5], g_pkvd->szValue, strlen(g_pkvd->szValue), params[6]);
 
 	return 1;
 }

@@ -372,7 +372,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 
 	char *info = GETINFOKEYBUFFER((iEnt == -1) ? NULL : INDEXENT2(iEnt));
 	
-	return MF_SetAmxString(amx, params[2], info, params[3]);
+	return MF_SetAmxStringUTF8Char(amx, params[2], info, strlen(info), params[3]);
 }
 
 //from jghg, who says it doesn't work

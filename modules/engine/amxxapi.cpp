@@ -57,7 +57,6 @@ void OnAmxxAttach()
 	MF_AddNatives(global_Natives);
 	memset(glinfo.szLastLights, 0x0, 128);
 	memset(glinfo.szRealLights, 0x0, 128);
-	glinfo.fNextLights = 0;
 	glinfo.bCheckLights = false;
 }
 
@@ -197,7 +196,6 @@ void ServerDeactivate()
 	memset(glinfo.szLastLights, 0x0, 128);
 	memset(glinfo.szRealLights, 0x0, 128);
 	glinfo.bCheckLights = false;
-	glinfo.fNextLights = 0;
 	
 	// Reset all forwarding function tables (so that forwards won't be called before plugins are initialized)
 	g_pFunctionTable->pfnAddToFullPack=NULL;
@@ -226,10 +224,13 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	RETURN_META(MRES_IGNORED);
 }
 
-void LightStyle(int style, const char *val) {
-	if (!style) {
+void LightStyle_Post(int style, const char *val) {
+	if (!style && strcmp(val, glinfo.szRealLights)) {
 		memset(glinfo.szRealLights, 0x0, 128);
-		memcpy(glinfo.szRealLights, val, strlen(val));
+		memcpy(glinfo.szRealLights, val, min(strlen(val), 127));
+
+		if (glinfo.bCheckLights && strcmp(val, glinfo.szLastLights))
+			g_pFunctionTable_Post->pfnStartFrame = StartFrame_Post;
 	}
 
 	RETURN_META(MRES_IGNORED);

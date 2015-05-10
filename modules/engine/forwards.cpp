@@ -120,15 +120,8 @@ void StartFrame()
 
 void StartFrame_Post()
 {
-	if (glinfo.bCheckLights)
-	{
-		if (glinfo.fNextLights < gpGlobals->time)
-		{
-			(g_engfuncs.pfnLightStyle)(0, glinfo.szLastLights);
-			glinfo.fNextLights = gpGlobals->time + 1;
-		}
-	}
-
+	g_pFunctionTable_Post->pfnStartFrame = NULL;
+	LIGHT_STYLE(0, glinfo.szLastLights);
 	RETURN_META(MRES_IGNORED);
 }
 

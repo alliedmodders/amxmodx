@@ -243,7 +243,7 @@
 // #define FN_ServerExecute						ServerExecute
 // #define FN_engClientCommand					engClientCommand
 // #define FN_ParticleEffect					ParticleEffect
-#define FN_LightStyle						LightStyle
+// #define FN_LightStyle						LightStyle
 // #define FN_DecalIndex						DecalIndex
 // #define FN_PointContents						PointContents
 // #define FN_MessageBegin						MessageBegin
@@ -389,7 +389,7 @@
 // #define FN_ServerExecute_Post				ServerExecute_Post
 // #define FN_engClientCommand_Post				engClientCommand_Post
 // #define FN_ParticleEffect_Post				ParticleEffect_Post
-// #define FN_LightStyle_Post					LightStyle_Post
+#define FN_LightStyle_Post					LightStyle_Post
 // #define FN_DecalIndex_Post					DecalIndex_Post
 // #define FN_PointContents_Post				PointContents_Post
 // #define FN_MessageBegin_Post					MessageBegin_Post

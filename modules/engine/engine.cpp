@@ -493,19 +493,17 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 		glinfo.bCheckLights = false;
 		g_pFunctionTable_Post->pfnStartFrame = NULL;
 		memset(glinfo.szLastLights, 0x0, 128);
-		(g_engfuncs.pfnLightStyle)(0, glinfo.szRealLights);
+		LIGHT_STYLE(0, glinfo.szRealLights);
 		return 1;
 	}
 	
-	g_pFunctionTable_Post->pfnStartFrame = StartFrame_Post;
 	glinfo.bCheckLights = true;
 
-	//Reset LastLights
+	//Reset LastLights and store custom lighting
 	memset(glinfo.szLastLights, 0x0, 128);
-	//Store the previous lighting.
-	memcpy(glinfo.szLastLights, szLights, strlen(szLights));
+	memcpy(glinfo.szLastLights, szLights, min(iLength, 127));
 
-	(g_engfuncs.pfnLightStyle)(0, szLights);
+	LIGHT_STYLE(0, szLights);
 
 	// These make it so that players/weaponmodels look like whatever the lighting is
 	// at. otherwise it would color players under the skybox to these values.

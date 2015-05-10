@@ -380,8 +380,8 @@ native bool:entity_intersects(entity, other);
  * @param iKey      Entry to retrieve from
  *
  * @return          Value of specified entry
- * @error           If an invalid entity index or entry is provided, an error
- *                  will be thrown.
+ * @error           If an invalid entity index is provided, an error will be
+ *                  thrown.
  */
 native entity_get_int(iIndex, iKey);
 

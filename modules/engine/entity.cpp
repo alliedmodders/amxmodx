@@ -609,7 +609,6 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 			iRetValue = pEnt->v.deadflag;
 			break;
 		default:
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid property %d", idx);
 			return 0;
 			break;
 	}

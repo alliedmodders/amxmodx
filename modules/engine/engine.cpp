@@ -284,14 +284,13 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
 
-	TraceResult tr;
-	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &tr);
+	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &g_tr);
 
-	vRet[0] = amx_ftoc(tr.vecPlaneNormal.x);
-	vRet[1] = amx_ftoc(tr.vecPlaneNormal.y);
-	vRet[2] = amx_ftoc(tr.vecPlaneNormal.z);
+	vRet[0] = amx_ftoc(g_tr.vecPlaneNormal.x);
+	vRet[1] = amx_ftoc(g_tr.vecPlaneNormal.y);
+	vRet[2] = amx_ftoc(g_tr.vecPlaneNormal.z);
 
-	if (tr.flFraction >= 1.0)
+	if (g_tr.flFraction >= 1.0)
 		return 0;
 
 	return 1;
@@ -314,19 +313,17 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
-
-	TraceResult tr;
-
+	
 	if (iEnt == -1)
-		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &tr);
+		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &g_tr);
 	else
-		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &tr);
+		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &g_tr);
 
-	edict_t *pHit = tr.pHit;
+	edict_t *pHit = g_tr.pHit;
 
-	vRet[0] = amx_ftoc(tr.vecEndPos.x);
-	vRet[1] = amx_ftoc(tr.vecEndPos.y);
-	vRet[2] = amx_ftoc(tr.vecEndPos.z);
+	vRet[0] = amx_ftoc(g_tr.vecEndPos.x);
+	vRet[1] = amx_ftoc(g_tr.vecEndPos.y);
+	vRet[2] = amx_ftoc(g_tr.vecEndPos.z);
 
 	if (FNullEnt(pHit))
 		return 0;
@@ -573,7 +570,6 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 {
 	int iResult=0;
-	TraceResult tr;
 	Vector vStart;
 	Vector vEnd;
 	cell *vCell;
@@ -594,15 +590,15 @@ static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 	else
 		vEnd = vStart;
 
-	TRACE_HULL(vStart, vEnd, params[4], params[2], params[3] > 0 ? INDEXENT2(params[3]) : 0, &tr);
+	TRACE_HULL(vStart, vEnd, params[4], params[2], params[3] > 0 ? INDEXENT2(params[3]) : 0, &g_tr);
 
-	if (tr.fStartSolid) {
+	if (g_tr.fStartSolid) {
 		iResult += 1;
 	}
-	if (tr.fAllSolid) {
+	if (g_tr.fAllSolid) {
 		iResult += 2;
 	}
-	if (!tr.fInOpen) {
+	if (!g_tr.fInOpen) {
 		iResult += 4;
 	}
 	return iResult;

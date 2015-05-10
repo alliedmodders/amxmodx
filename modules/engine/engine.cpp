@@ -367,11 +367,10 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 	
-	CHECK_ENTITY(iEnt);
+	if (iEnt != -1)
+		CHECK_ENTITY(iEnt);
 
-	edict_t *e = INDEXENT2(iEnt);
-
-	char *info = GETINFOKEYBUFFER(e);
+	char *info = GETINFOKEYBUFFER((iEnt == -1) ? NULL : INDEXENT2(iEnt));
 	
 	return MF_SetAmxString(amx, params[2], info, params[3]);
 }

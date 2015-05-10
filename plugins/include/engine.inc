@@ -25,7 +25,7 @@
 #endif
 
 /**
- * Retrieves a result from the global trace handle.
+ * Retrieves a result from the global engine module trace handle.
  *
  * @note For a list of trace results available see the TR_* constants in
  *       engine_const.inc.
@@ -964,8 +964,8 @@ native is_visible(entity, target);
  * Fires a trace line between two origins, retrieving the end point and entity
  * hit.
  *
- * @note This native writes to the global trace handle. Additional trace results
- *       can be retrieved using traceresult().
+ * @note This native writes to the global engine module trace handle. Additional
+ *       trace results can be retrieved using traceresult().
  * @note This native returns 0 if the trace did not hit anything. As 0 is an
  *       entity index that is considered to be a valid value for a trace hit
  *       ("worldspawn"), this native can potentially return a misleading value.
@@ -984,8 +984,8 @@ native trace_line(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Float:
 /**
  * Fires a trace line between two origins, retrieving the trace normal.
  *
- * @note This native writes to the global trace handle. Additional trace results
- *       can be retrieved using traceresult().
+ * @note This native writes to the global engine module trace handle. Additional
+ *       trace results can be retrieved using traceresult().
  *
  * @param iIgnoreEnt    Entity index that trace will ignore, -1 if trace should
  *                      not ignore any entities
@@ -1001,8 +1001,8 @@ native trace_normal(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Floa
 /**
  * Fires a trace hull on a specified origin or between two origins.
  *
- * @note This native writes to the global trace handle. Additional trace results
- *       can be retrieved using traceresult().
+ * @note This native writes to the global engine module trace handle. Additional
+ *       trace results can be retrieved using traceresult().
  * @note For a list of valid hull types see the HULL_* constants in
  *       hlsdk_const.inc
  * @note For a list of valid ignore types see the *IGNORE_* constants in
@@ -1024,7 +1024,8 @@ native trace_hull(const Float:origin[3], hull, ignoredent = 0, ignoremonsters = 
  * direction, offset on the z-axis around an origin.
  *
  * @note The functionality of this native can mostly be replaced by a single
- *       hull trace. This native does not write to the global trace handle.
+ *       hull trace. This native does not write to the global engine module
+ *       trace handle.
  * @note This native is intended to examine an obstacle in front of a standing
  *       player. Start should usually be the origin of a client while angle
  *       should be its forward angle vector. 73 traces are fired, each offset by

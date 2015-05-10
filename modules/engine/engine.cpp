@@ -269,6 +269,7 @@ static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
+	CHECK_ENTITY(iEnt);
 
 	cell *cStart = MF_GetAmxAddr(amx, params[2]);
 	cell *cEnd = MF_GetAmxAddr(amx, params[3]);
@@ -299,6 +300,8 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
+	if (iEnt != -1)
+		CHECK_ENTITY(iEnt);
 
 	cell *cStart = MF_GetAmxAddr(amx, params[2]);
 	cell *cEnd = MF_GetAmxAddr(amx, params[3]);
@@ -397,6 +400,7 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 	int iTargetIndex = params[2];
 
 	CHECK_ENTITY(iIndex);
+	CHECK_ENTITY(iTargetIndex);
 
 	SET_VIEW(INDEXENT2(iIndex), INDEXENT2(iTargetIndex));
 
@@ -568,6 +572,10 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 //(mahnsawce)
 static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 {
+	int iEnt = params[3];
+	if (iEnt > 0)
+		CHECK_ENTITY(iEnt);
+
 	int iResult=0;
 	Vector vStart;
 	Vector vEnd;
@@ -589,7 +597,8 @@ static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 	else
 		vEnd = vStart;
 
-	TRACE_HULL(vStart, vEnd, params[4], params[2], params[3] > 0 ? INDEXENT2(params[3]) : 0, &g_tr);
+
+	TRACE_HULL(vStart, vEnd, params[4], params[2], iEnt > 0 ? INDEXENT2(iEnt) : NULL, &g_tr);
 
 	if (g_tr.fStartSolid) {
 		iResult += 1;
@@ -623,6 +632,7 @@ static cell AMX_NATIVE_CALL playback_event(AMX *amx, cell *params)
 	int bparam1;
 	int bparam2;
 	flags = params[1];
+	CHECK_ENTITY(params[2]);
 	pInvoker=INDEXENT2(params[2]);
 	eventindex=params[3];
 	delay=amx_ctof(params[4]);
@@ -940,6 +950,9 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    cell *cAngles = MF_GetAmxAddr(amx, params[2]);
    REAL fGive = amx_ctof(params[3]);
    int iIgnoreEnt = params[4];
+   if (iIgnoreEnt != -1)
+	   CHECK_ENTITY(iIgnoreEnt);
+
    cell *hitX = MF_GetAmxAddr(amx, params[5]);
    cell *hitY = MF_GetAmxAddr(amx, params[6]);
    cell *shortestDistance = MF_GetAmxAddr(amx, params[7]);

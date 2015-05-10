@@ -120,7 +120,7 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params)
 {
 	int id = params[1];
-	if (id >= 0 && id <= gpGlobals->maxClients)
+	if (id <= gpGlobals->maxClients || id > gpGlobals->maxEntities)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d can not be removed", id);
 		return 0;
@@ -156,11 +156,7 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 		cell *cVal = MF_GetAmxAddr(amx, params[1]);
 		int iValue = *cVal;
 
-		if (iValue != 0 && (FNullEnt(INDEXENT2(iValue)) || iValue < 0 || iValue > gpGlobals->maxEntities)) 
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", iValue);
-			return 0;
-		}
+		CHECK_ENTITY_SIMPLE(iValue);
 
 		edict_t *pEntity = INDEXENT2(iValue);
 		KeyValueData kvd;
@@ -1342,6 +1338,7 @@ static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_en
 static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 {
 	int idx = params[1];
+	CHECK_ENTITY_SIMPLE(idx);
 
 	edict_t *pEnt = INDEXENT2(idx);
 	cell *cAddr = MF_GetAmxAddr(amx, params[2]);
@@ -1362,7 +1359,10 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param */
 {
-	edict_t *pEnt = INDEXENT2(params[1]);
+	int idx = params[1];
+	CHECK_ENTITY_SIMPLE(idx);
+
+	edict_t *pEnt = INDEXENT2(idx);
 
 	int len;
 	char* sValue = MF_GetAmxString(amx, params[2], 0, &len);
@@ -1498,7 +1498,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 {
 	int iEnt = params[1];
 	int oEnt = params[3];
-	// Check index to start searching at, 0 must be possible for iEnt.
+	CHECK_ENTITY_SIMPLE(iEnt);
 	CHECK_ENTITY_SIMPLE(oEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
@@ -1534,6 +1534,7 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 	int index = params[1];
 	const char *szModel;
 
+	CHECK_ENTITY_SIMPLE(params[4]);
 	CHECK_ENTITY(index);
 
 	edict_t* pentFind = INDEXENT2(params[4]);

@@ -642,8 +642,8 @@ native cs_set_user_armor(index, armorvalue, CsArmorType:armortype);
  *
  * @note Only the Glock and Famas can return 1 as they are the only guns in the
  *       game that have a burst fire mode.
- * @note This native does not check that the provided entity is actually a
- *       weapon entity. It will return incorrect values for non-weapon entities.
+ * @note This native does not verify that the provided entity is a weapon
+ *       entity. It will return incorrect values for non-weapon entities.
  *
  * @param index     Weapon entity index
  *
@@ -658,9 +658,9 @@ native cs_get_weapon_burst(index);
  *
  * @note Only the Glock and Famas can be set to burst fire mode as they are the
  *       only guns in the game that provide such a mode.
- * @note This native does not check that the provided entity is actually a
- *       weapon entity. It will result in undefined behavior if used on
- *       non-weapon entities.
+ * @note This native does not verify that the provided entity is a weapon
+ *       entity. It will result in undefined behavior if used on non-weapon
+ *       entities.
  *
  * @param index         Weapon entity index
  * @param burstmode     If nonzero the weapon will be put into burstmode,
@@ -678,8 +678,8 @@ native cs_set_weapon_burst(index, burstmode = 1);
  *
  * @note Only the USP and M4A1 can return 1 as they are the only guns in the
  *       game that have a silenced fire mode.
- * @note This native does not check that the provided entity is actually a
- *       weapon entity. It will return incorrect values for non-weapon entities.
+ * @note This native does not verify that the provided entity is a weapon
+ *       entity. It will return incorrect values for non-weapon entities.
  *
  * @param index     Weapon entity index
  *
@@ -694,9 +694,9 @@ native cs_get_weapon_silen(index);
  *
  * @note Only the USP and M4A1 can be set to silenced fire mode as they are the
  *       only guns in the game that provide such a mode.
- * @note This native does not check that the provided entity is actually a
- *       weapon entity. It will result in undefined behavior if used on
- *       non-weapon entities.
+ * @note This native does not verify that the provided entity is a weapon
+ *       entity. It will result in undefined behavior if used on non-weapon
+ *       entities.
  *
  * @param index             Weapon entity index
  * @param silence           If nonzero the weapon will be put into silenced
@@ -715,8 +715,8 @@ native cs_set_weapon_silen(index, silence = 1, draw_animation = 1);
 /**
  * Returns the amount of ammo in weapon's magazine.
  *
- * @note This native does not check that the provided entity is actually a
- *       weapon entity. It will return incorrect values for non-weapon entities.
+ * @note This native does not verify that the provided entity is a weapon
+ *       entity. It will return incorrect values for non-weapon entities.
  *
  * @param index     Weapon entity index
  *
@@ -729,9 +729,9 @@ native cs_get_weapon_ammo(index);
 /**
  * Sets the amount of ammo in weapon's clip.
  *
- * @note This native does not check that the provided entity is actually a
- *       weapon entity. It will result in undefined behavior if used on
- *       non-weapon entities.
+ * @note This native does not verify that the provided entity is a weapon
+ *       entity. It will result in undefined behavior if used on non-weapon
+ *       entities.
  *
  * @param index     Weapon entity index
  * @param newammo   New ammo amount
@@ -747,8 +747,8 @@ native cs_set_weapon_ammo(index, newammo);
  *
  * @note For a list of possible weapon ids see the CSW_* constants in
  *       amxconst.inc
- * @note This native does not check that the provided entity is actually a
- *       weapon entity. It will return incorrect values for non-weapon entities.
+ * @note This native does not verify that the provided entity is a weapon
+ *       entity. It will return incorrect values for non-weapon entities.
  *
  * @param index     Weapon entity index
  *
@@ -973,8 +973,8 @@ native cs_get_user_hostagekills(index);
  * @note This is the value that the internal Counter-Strike hostage punisher
  *       uses to determine if a client should be kicked, depending on the
  *       value of the mp_hostagepenalty value. The punisher only checks this
- *       value when a hostage is actually killed, so setting this will not cause
- *       a client to be kicked until they actually kill a hostage.
+ *       value when a hostage is killed, so setting this will not cause the
+ *       client to be kicked until they actually kill a hostage.
  *
  * @param index     Client index
  * @param value     New amount of hostages killed
@@ -1093,6 +1093,11 @@ native cs_set_c4_defusing(c4index, bool:defusing);
  *         automatically cleaned up on round restart but are not considered if
  *         they have not been added to the hashtable.
  * @note The faster hashtable lookup can be utilized with cs_find_ent_by_class()
+ * @note When creating an entity the classname has to be valid in the mod, as
+ *       the engine needs to link the entity to an existing class internally.
+ *       The classname string that is stored in the entvar struct
+ *       (EV_SZ_classname) is separate from this association and can later be
+ *       freely changed to serve other purposes.
  *
  * @param classname     Entity class name
  *
@@ -1137,8 +1142,7 @@ forward CS_InternalCommand(id, const cmd[]);
  * Called when a client attempts to purchase an item.
  *
  * @note This is called immediately when the client issues a buy command. The
- *       game has not actually checked if the client can actually buy the
- *       weapon.
+ *       game has not yet checked if the client can actually buy the weapon.
  * @note For a list of possible item ids see the CSI_* constants.
  *
  * @param index     Client index

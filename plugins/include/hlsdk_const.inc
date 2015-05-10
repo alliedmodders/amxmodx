@@ -78,6 +78,12 @@
 #define WALKMOVE_CHECKONLY              2           // Move, but don't touch triggers
 
 /**
+ * engfunc(EngFunc_MoveToOrigin, entity, Float:goal[3], Float:distance, moveType) moveType values
+ */
+#define MOVE_NORMAL                     0           // normal move in the direction monster is facing
+#define MOVE_STRAFE                     1           // moves in direction specified, no matter which way monster is facing
+
+/**
  * pev(entity, pev_movetype) values
  */
 #define MOVETYPE_NONE                   0           // Never moves
@@ -234,6 +240,7 @@
 /**
  * @section pev(entity, pev_spawnflags) values
  */
+
 /**
  * func_train
  */

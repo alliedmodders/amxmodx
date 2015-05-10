@@ -366,14 +366,6 @@ static cell AMX_NATIVE_CALL get_decal_index(AMX *amx, cell *params)
 	return DECAL_INDEX(szDecal);
 }
 
-static cell AMX_NATIVE_CALL precache_event(AMX *amx, cell *params)
-{
-	int len;
-	char *szEvent = MF_FormatAmxString(amx, params, 2, &len);
-	return PRECACHE_EVENT(params[1], (char *)STRING(ALLOC_STRING(szEvent)));
-
-}
-
 static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
@@ -1032,7 +1024,6 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"set_speak",			set_speak},
 	{"get_speak",			get_speak},
 
-	{"precache_event",		precache_event},
 	{"playback_event",		playback_event},
 
 	{"set_view",			set_view},

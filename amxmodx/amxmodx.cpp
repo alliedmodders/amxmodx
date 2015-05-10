@@ -2806,6 +2806,14 @@ static cell AMX_NATIVE_CALL precache_generic(AMX *amx, cell *params)
 	return PRECACHE_GENERIC((char*)STRING(ALLOC_STRING(sptemp)));
 }
 
+static cell AMX_NATIVE_CALL precache_event(AMX *amx, cell *params)
+{
+	int len;
+	char *sptemp = format_amxstring(amx, params, 2, len);
+
+	return PRECACHE_EVENT(params[1], (char*)STRING(ALLOC_STRING(sptemp)));
+}
+
 static cell AMX_NATIVE_CALL random_float(AMX *amx, cell *params) /* 2 param */
 {
 	float one = amx_ctof(params[1]);

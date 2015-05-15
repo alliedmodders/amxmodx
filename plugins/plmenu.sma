@@ -15,10 +15,6 @@
 #include <amxmisc>
 #include <fakemeta>
 
-/** skip autoloading since it's optional */
-#define AMXMODX_NOAUTOLOAD
-#include <cstrike>
-
 new g_menuPosition[MAX_PLAYERS + 1];
 new g_menuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS];
 new g_menuPlayersNum[MAX_PLAYERS + 1];
@@ -36,7 +32,6 @@ new g_clcmdMisc[MAX_CLCMDS][2];
 new g_clcmdNum;
 
 new g_coloredMenus;
-new bool:g_cstrike = false;
 
 const m_iMenu = 205;
 const m_bTeamChanged = 501;
@@ -45,24 +40,21 @@ const Menu_ChooseAppearance = 3;
 new Array:g_bantimes;
 new Array:g_slapsettings;
 
-new const g_CSTeamNames[3][] = {
+new const g_TeamNames[3][] = {
 	"TERRORIST",
 	"CT",
 	"SPECTATOR"
 };
-new const g_CSTeamNumbers[3][] = {
+new const g_TeamNumbers[3][] = {
 	"1",
 	"2",
 	"6"
 };
-new const g_CSTeamiNumbers[3] = {
+new const g_TeamiNumbers[3] = {
 	1,
 	2,
 	3
 };
-
-new g_CSPlayerCanSwitchFromSpec[MAX_PLAYERS + 1];
-new g_transferingAdmin;
 
 new allow_spectators, mp_limitteams;
 
@@ -70,12 +62,6 @@ new p_amx_tempban_maxtime;
 new Trie:g_tempBans;
 
 new g_silent[MAX_PLAYERS + 1];
-
-public plugin_natives()
-{
-	set_module_filter("module_filter");
-	set_native_filter("native_filter");
-}
 
 public plugin_init()
 {
@@ -122,19 +108,6 @@ public plugin_init()
 	get_configsdir(clcmds_ini_file, charsmax(clcmds_ini_file));
 	format(clcmds_ini_file, charsmax(clcmds_ini_file), "%s/clcmds.ini", clcmds_ini_file);
 	load_settings(clcmds_ini_file);
-
-	if (LibraryExists("cstrike", LibType_Library))
-	{
-		g_cstrike = true;
-	}
-
-	new modname[9];
-	get_modname(modname, charsmax(modname));
-	if (equal(modname, "cstrike") || equal(modname, "czero"))
-	{
-		register_event("TeamInfo", "Event_TeamInfo", "a", "2=TERRORIST", "2=CT");
-		register_event("TextMsg", "Event_TextMsg", "b", "1=4", "2=#Only_1_Team_Change");
-	}
 
 	allow_spectators = get_cvar_pointer("allow_spectators");
 	mp_limitteams = get_cvar_pointer("mp_limitteams");
@@ -201,26 +174,6 @@ public plmenu_setslapdmg()
 		ArrayPushCell(g_slapsettings, str_to_num(buff));
 	}
 	ArrayPushCell(g_slapsettings, 0); // compensate for slay
-}
-
-public module_filter(const module[])
-{
-	if (equali(module, "cstrike"))
-	{
-		return PLUGIN_HANDLED;
-	}
-
-	return PLUGIN_CONTINUE;
-}
-
-public native_filter(const name[], index, trap)
-{
-	if (!trap)
-	{
-		return PLUGIN_HANDLED;
-	}
-
-	return PLUGIN_CONTINUE;
 }
 
 /* Ban menu */
@@ -531,25 +484,7 @@ displaySlapMenu(id, pos)
 		i = g_menuPlayers[id][a];
 		get_user_name(i, name, charsmax(name));
 
-		if (g_cstrike)
-		{
-			if (cs_get_user_team(i) == CS_TEAM_T)
-			{
-				copy(team, charsmax(team), "TE");
-			}
-			else if (cs_get_user_team(i) == CS_TEAM_CT)
-			{
-				copy(team, charsmax(team), "CT");
-			}
-			else
-			{
-				get_user_team(i, team, charsmax(team));
-			}
-		}
-		else
-		{
-			get_user_team(i, team, charsmax(team));
-		}
+		get_user_team(i, team, charsmax(team));
 
 		if (!is_user_alive(i) || (access(i, ADMIN_IMMUNITY) && i != id))
 		{
@@ -753,27 +688,7 @@ public cmdKickMenu(id, level, cid)
 
 public client_putinserver(id)
 {
-	g_CSPlayerCanSwitchFromSpec[id] = false;
 	g_silent[id] = false;
-}
-
-public Event_TeamInfo()
-{
-	new id = read_data(1);
-	if (is_user_connected(id))
-	{
-		g_CSPlayerCanSwitchFromSpec[id] = true;
-	}
-}
-
-public Event_TextMsg(id) // #Only_1_Team_Change
-{
-	if (g_transferingAdmin && is_user_connected(id) && (id == g_transferingAdmin || is_user_connected(g_transferingAdmin)))
-	{
-		new name[MAX_NAME_LENGTH];
-		get_user_name(id, name, charsmax(name));
-		client_print(g_transferingAdmin, print_chat, "%L", g_transferingAdmin, "CANT_PERF_PLAYER", name);
-	}
 }
 
 public actionTeamMenu(id, key)
@@ -807,8 +722,6 @@ public actionTeamMenu(id, key)
 				return PLUGIN_HANDLED;
 			}
 
-			g_transferingAdmin = id;
-
 			new authid[32], authid2[32], name[MAX_NAME_LENGTH], name2[MAX_NAME_LENGTH];
 
 			get_user_name(player, name2, charsmax(name2));
@@ -819,9 +732,9 @@ public actionTeamMenu(id, key)
 			// This modulo math just aligns the option to the CsTeams-corresponding number
 			new destTeamSlot = (g_menuOption[id] % 3);
 
-			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_CSTeamNames[destTeamSlot]);
+			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_TeamNames[destTeamSlot]);
 
-			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_CSTeamNames[destTeamSlot]);
+			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_TeamNames[destTeamSlot]);
 
 			if (destTeamSlot == 2)
 			{
@@ -832,71 +745,50 @@ public actionTeamMenu(id, key)
 				}
 			}
 
-			if (g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
+			if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
 			{
-				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
-				{
-					new deaths = cs_get_user_deaths(player);
-					user_kill(player, 1);
-					cs_set_user_deaths(player, deaths);
-				}
-
-				cs_set_user_team(player, destTeamSlot + 1);
-
-			}
-			else
-			{
-				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
-				{
-					user_kill(player, 1);
-				}
-
-				set_pdata_bool(player, m_bTeamChanged, true);
-
-				new limit_setting;
-				if (mp_limitteams)
-				{
-					limit_setting = get_pcvar_num(mp_limitteams);
-
-					set_pcvar_num(mp_limitteams, 0);
-				}
-
-				if (destTeamSlot == 2)
-				{
-					new Float:allow_spectators_setting;
-					if (allow_spectators)
-					{
-						allow_spectators_setting = get_pcvar_float(allow_spectators);
-						if (allow_spectators_setting != 1.0)
-						{
-							set_pcvar_float(allow_spectators, 1.0);
-						}
-					}
-					engclient_cmd(player, "jointeam", g_CSTeamNumbers[destTeamSlot]);
-					if (allow_spectators && allow_spectators_setting != 1.0)
-					{
-						set_pcvar_float(allow_spectators, allow_spectators_setting);
-					}
-				}
-				else
-				{
-					engclient_cmd(player, "jointeam", g_CSTeamNumbers[destTeamSlot]);
-					engclient_cmd(player, "joinclass", "1");
-				}
-				if (mp_limitteams && limit_setting != 0)
-				{
-					set_pcvar_num(mp_limitteams, limit_setting);
-				}
-			}
-			if (g_cstrike)
-			{
-				cs_reset_user_model(player);
+				user_kill(player, 1);
 			}
 
 			set_pdata_bool(player, m_bTeamChanged, true);
 
+			new limit_setting;
+			if (mp_limitteams)
+			{
+				limit_setting = get_pcvar_num(mp_limitteams);
 
-			g_transferingAdmin = 0;
+				set_pcvar_num(mp_limitteams, 0);
+			}
+
+			if (destTeamSlot == 2)
+			{
+				new Float:allow_spectators_setting;
+				if (allow_spectators)
+				{
+					allow_spectators_setting = get_pcvar_float(allow_spectators);
+					if (allow_spectators_setting != 1.0)
+					{
+						set_pcvar_float(allow_spectators, 1.0);
+					}
+				}
+				engclient_cmd(player, "jointeam", g_TeamNumbers[destTeamSlot]);
+				if (allow_spectators && allow_spectators_setting != 1.0)
+				{
+					set_pcvar_float(allow_spectators, allow_spectators_setting);
+				}
+			}
+			else
+			{
+				engclient_cmd(player, "jointeam", g_TeamNumbers[destTeamSlot]);
+				engclient_cmd(player, "joinclass", "1");
+			}
+			if (mp_limitteams && limit_setting != 0)
+			{
+				set_pcvar_num(mp_limitteams, limit_setting);
+			}
+
+			set_pdata_bool(player, m_bTeamChanged, true);
+
 			displayTeamMenu(id, g_menuPosition[id]);
 		}
 	}
@@ -938,38 +830,14 @@ displayTeamMenu(id, pos)
 		i = g_menuPlayers[id][a];
 		get_user_name(i, name, charsmax(name));
 
-		if (g_cstrike)
-		{
-			iteam = _:cs_get_user_team(i);
+		iteam = get_user_team(i, team, charsmax(team));
 
-			if (iteam == 1)
-			{
-				copy(team, charsmax(team), "TE");
-			}
-			else if (iteam == 2)
-			{
-				copy(team, charsmax(team), "CT");
-			}
-			else if (iteam == 3)
-			{
-				copy(team, charsmax(team), "SPE");
-				// iteam = 6; // oO WTF is this ?? fixed g_CSTeamiNumbers.
-			}
-			else
-			{
-				iteam = get_user_team(i, team, charsmax(team));
-			}
-		}
-		else
-		{
-			iteam = get_user_team(i, team, charsmax(team));
-		}
 		if (!iteam)
 		{
 			iteam = 3; // fix get_user_team returning 0 on spectators
 		}
 
-		if ((iteam == g_CSTeamiNumbers[g_menuOption[id] % 3]) || (access(i, ADMIN_IMMUNITY) && i != id))
+		if ((iteam == g_TeamiNumbers[g_menuOption[id] % 3]) || (access(i, ADMIN_IMMUNITY) && i != id))
 		{
 			++b;
 
@@ -998,7 +866,7 @@ displayTeamMenu(id, pos)
 	}
 
 	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n7. %L: %L", id, "TRANSF_SILENT", id, g_silent[id] ? "YES" : "NO");
-	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "TRANSF_TO", g_CSTeamNames[g_menuOption[id] % 3]);
+	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "TRANSF_TO", g_TeamNames[g_menuOption[id] % 3]);
 
 	if (end != g_menuPlayersNum[id])
 	{

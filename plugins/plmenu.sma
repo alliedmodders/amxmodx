@@ -13,11 +13,11 @@
 
 #include <amxmodx>
 #include <amxmisc>
+#include <fakemeta>
 
 /** skip autoloading since it's optional */
 #define AMXMODX_NOAUTOLOAD
 #include <cstrike>
-#include <fakemeta>
 
 new g_menuPosition[MAX_PLAYERS + 1];
 new g_menuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS];
@@ -37,7 +37,10 @@ new g_clcmdNum;
 
 new g_coloredMenus;
 new bool:g_cstrike = false;
-new bool:g_fakemeta = false, m_iMenu, m_bTeamChanged, Menu_ChooseAppearance;
+
+const m_iMenu = 205;
+const m_bTeamChanged = 501;
+const Menu_ChooseAppearance = 3;
 
 new Array:g_bantimes;
 new Array:g_slapsettings;
@@ -124,13 +127,6 @@ public plugin_init()
 	{
 		g_cstrike = true;
 	}
-	if (LibraryExists("fakemeta", LibType_Library))
-	{
-		g_fakemeta = true;
-		m_iMenu = 205;
-		m_bTeamChanged = 501;
-		Menu_ChooseAppearance = 3;
-	}
 
 	new modname[9];
 	get_modname(modname, charsmax(modname));
@@ -209,7 +205,7 @@ public plmenu_setslapdmg()
 
 public module_filter(const module[])
 {
-	if (equali(module, "cstrike") || equali(module, "fakemeta"))
+	if (equali(module, "cstrike"))
 	{
 		return PLUGIN_HANDLED;
 	}
@@ -829,16 +825,9 @@ public actionTeamMenu(id, key)
 
 			if (destTeamSlot == 2)
 			{
-				if (g_fakemeta)
+				if (get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance)
 				{
-					if (get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance)
-					{
-						// works for both vgui and old style menus, and send menuselect could close other menus (and since get_user_menu fails to return VGUI and old style classes menus...)
-						engclient_cmd(player, "joinclass", "6");
-					}
-				}
-				else // force
-				{
+					// works for both vgui and old style menus, and send menuselect could close other menus (and since get_user_menu fails to return VGUI and old style classes menus...)
 					engclient_cmd(player, "joinclass", "6");
 				}
 			}
@@ -861,10 +850,9 @@ public actionTeamMenu(id, key)
 				{
 					user_kill(player, 1);
 				}
-				if (g_fakemeta)
-				{
-					set_pdata_bool(player, m_bTeamChanged, true);
-				}
+
+				set_pdata_bool(player, m_bTeamChanged, true);
+
 				new limit_setting;
 				if (mp_limitteams)
 				{
@@ -904,10 +892,9 @@ public actionTeamMenu(id, key)
 			{
 				cs_reset_user_model(player);
 			}
-			if (g_fakemeta)
-			{
-				set_pdata_bool(player, m_bTeamChanged, true);
-			}
+
+			set_pdata_bool(player, m_bTeamChanged, true);
+
 
 			g_transferingAdmin = 0;
 			displayTeamMenu(id, g_menuPosition[id]);

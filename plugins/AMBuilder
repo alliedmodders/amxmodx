@@ -25,6 +25,7 @@ files = [
   'pluginmenu.sma',
   'cstrike/csstats.sma',
   'cstrike/miscstats.sma',
+  'cstrike/plmenu.sma',
   'cstrike/restmenu.sma',
   'cstrike/stats_logging.sma',
   'cstrike/statsx.sma',

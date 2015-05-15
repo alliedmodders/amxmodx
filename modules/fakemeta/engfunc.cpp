@@ -105,7 +105,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		// pfnChangeLevel (is this needed?)
 	case		EngFunc_ChangeLevel:			// void )			(char* s1, char* s2);
 		temp = MF_GetAmxString(amx,params[2],0,&len);
-		temp2 = MF_GetAmxString(amx,params[3],1,&len);
+		temp2 = MF_GetAmxStringNull(amx,params[3],1,&len);
 		(*g_engfuncs.pfnChangeLevel)(temp,temp2);
 		return 1;
 		

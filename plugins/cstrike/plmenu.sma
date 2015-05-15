@@ -13,11 +13,8 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <fakemeta>
-
-/** skip autoloading since it's optional */
-#define AMXMODX_NOAUTOLOAD
 #include <cstrike>
+#include <fakemeta>
 
 new g_menuPosition[MAX_PLAYERS + 1];
 new g_menuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS];
@@ -36,7 +33,6 @@ new g_clcmdMisc[MAX_CLCMDS][2];
 new g_clcmdNum;
 
 new g_coloredMenus;
-new bool:g_cstrike = false;
 
 const m_iMenu = 205;
 const m_bTeamChanged = 501;
@@ -70,12 +66,6 @@ new p_amx_tempban_maxtime;
 new Trie:g_tempBans;
 
 new g_silent[MAX_PLAYERS + 1];
-
-public plugin_natives()
-{
-	set_module_filter("module_filter");
-	set_native_filter("native_filter");
-}
 
 public plugin_init()
 {
@@ -123,18 +113,8 @@ public plugin_init()
 	format(clcmds_ini_file, charsmax(clcmds_ini_file), "%s/clcmds.ini", clcmds_ini_file);
 	load_settings(clcmds_ini_file);
 
-	if (LibraryExists("cstrike", LibType_Library))
-	{
-		g_cstrike = true;
-	}
-
-	new modname[9];
-	get_modname(modname, charsmax(modname));
-	if (equal(modname, "cstrike") || equal(modname, "czero"))
-	{
-		register_event("TeamInfo", "Event_TeamInfo", "a", "2=TERRORIST", "2=CT");
-		register_event("TextMsg", "Event_TextMsg", "b", "1=4", "2=#Only_1_Team_Change");
-	}
+	register_event("TeamInfo", "Event_TeamInfo", "a", "2=TERRORIST", "2=CT");
+	register_event("TextMsg", "Event_TextMsg", "b", "1=4", "2=#Only_1_Team_Change");
 
 	allow_spectators = get_cvar_pointer("allow_spectators");
 	mp_limitteams = get_cvar_pointer("mp_limitteams");
@@ -201,26 +181,6 @@ public plmenu_setslapdmg()
 		ArrayPushCell(g_slapsettings, str_to_num(buff));
 	}
 	ArrayPushCell(g_slapsettings, 0); // compensate for slay
-}
-
-public module_filter(const module[])
-{
-	if (equali(module, "cstrike"))
-	{
-		return PLUGIN_HANDLED;
-	}
-
-	return PLUGIN_CONTINUE;
-}
-
-public native_filter(const name[], index, trap)
-{
-	if (!trap)
-	{
-		return PLUGIN_HANDLED;
-	}
-
-	return PLUGIN_CONTINUE;
 }
 
 /* Ban menu */
@@ -531,20 +491,13 @@ displaySlapMenu(id, pos)
 		i = g_menuPlayers[id][a];
 		get_user_name(i, name, charsmax(name));
 
-		if (g_cstrike)
+		if (cs_get_user_team(i) == CS_TEAM_T)
 		{
-			if (cs_get_user_team(i) == CS_TEAM_T)
-			{
-				copy(team, charsmax(team), "TE");
-			}
-			else if (cs_get_user_team(i) == CS_TEAM_CT)
-			{
-				copy(team, charsmax(team), "CT");
-			}
-			else
-			{
-				get_user_team(i, team, charsmax(team));
-			}
+			copy(team, charsmax(team), "TE");
+		}
+		else if (cs_get_user_team(i) == CS_TEAM_CT)
+		{
+			copy(team, charsmax(team), "CT");
 		}
 		else
 		{
@@ -832,7 +785,7 @@ public actionTeamMenu(id, key)
 				}
 			}
 
-			if (g_CSPlayerCanSwitchFromSpec[player] && g_cstrike && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
+			if (g_CSPlayerCanSwitchFromSpec[player] && (CS_TEAM_T <= cs_get_user_team(player) <= CS_TEAM_CT))
 			{
 				if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
 				{
@@ -888,10 +841,8 @@ public actionTeamMenu(id, key)
 					set_pcvar_num(mp_limitteams, limit_setting);
 				}
 			}
-			if (g_cstrike)
-			{
-				cs_reset_user_model(player);
-			}
+
+			cs_reset_user_model(player);
 
 			set_pdata_bool(player, m_bTeamChanged, true);
 
@@ -938,27 +889,20 @@ displayTeamMenu(id, pos)
 		i = g_menuPlayers[id][a];
 		get_user_name(i, name, charsmax(name));
 
-		if (g_cstrike)
-		{
-			iteam = _:cs_get_user_team(i);
+		iteam = _:cs_get_user_team(i);
 
-			if (iteam == 1)
-			{
-				copy(team, charsmax(team), "TE");
-			}
-			else if (iteam == 2)
-			{
-				copy(team, charsmax(team), "CT");
-			}
-			else if (iteam == 3)
-			{
-				copy(team, charsmax(team), "SPE");
-				// iteam = 6; // oO WTF is this ?? fixed g_CSTeamiNumbers.
-			}
-			else
-			{
-				iteam = get_user_team(i, team, charsmax(team));
-			}
+		if (iteam == 1)
+		{
+			copy(team, charsmax(team), "TE");
+		}
+		else if (iteam == 2)
+		{
+			copy(team, charsmax(team), "CT");
+		}
+		else if (iteam == 3)
+		{
+			copy(team, charsmax(team), "SPE");
+			// iteam = 6; // oO WTF is this ?? fixed g_CSTeamiNumbers.
 		}
 		else
 		{

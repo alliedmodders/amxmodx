@@ -129,6 +129,7 @@ static char *fatalmsg[] = {
 /*109*/  "invalid path: \"%s\"\n",
 /*110*/  "assertion failed: %s\n",
 /*111*/  "user error: %s\n",
+/*112*/  "specify either all dimensions or only the last dimension\n"
        };
 
 static char *warnmsg[] = {

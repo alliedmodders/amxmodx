@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+# Visual C# Express 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "installtool", "installtool.csproj", "{6D7FAAE2-55EA-4CB4-8070-5A28F4BF078E}"
 EndProject
 Global

@@ -2190,15 +2190,36 @@ static int base;
  *
  *  Global references: litidx (altered)
  */
-static void initials(int ident,int tag,cell *size,int dim[],int numdim,
-                     constvalue *enumroot)
+static void initials2(int ident,int tag,cell *size,int dim[],int numdim,
+                     constvalue *enumroot, int eq_match_override, int curlit_override)
 {
   int ctag;
   cell tablesize;
-  int curlit=litidx;
+  int curlit=(curlit_override == -1) ? litidx : curlit_override;
   int err=0;
 
-  if (!matchtoken('=')) {
+  if (eq_match_override == -1) {
+    eq_match_override = matchtoken('=');
+  }
+
+  if (numdim > 2) {
+    int d, hasEmpty = 0;
+    for (d = 0; d < numdim; d++) {
+      if (dim[d] == 0)
+        hasEmpty++;
+    }
+    /* Work around ambug 4977 where indirection vectors are computed wrong. */
+    if (hasEmpty && hasEmpty < numdim-1 && dim[numdim-1]) {
+      error(112);
+      /* This will assert with something like [2][][256] from a separate bug.
+       * To prevent this assert, automatically wipe the rest of the dims.
+       */
+      for (d = 0; d < numdim - 1; d++)
+        dim[d] = 0;
+    }
+  }
+
+  if (!eq_match_override) {
     assert(ident!=iARRAY || numdim>0);
     if (ident==iARRAY && dim[numdim-1]==0) {
       /* declared as "myvar[];" which is senseless (note: this *does* make
@@ -2248,7 +2269,7 @@ static void initials(int ident,int tag,cell *size,int dim[],int numdim,
       /* now initialize the sub-arrays */
       memset(counteddim,0,sizeof counteddim);
       initarray(ident,tag,dim,numdim,0,curlit,counteddim,&lastdim,enumroot,&errorfound);
-      /* check the specified array dimensions with the initialler counts */
+      /* check the specified array dimensions with the initializer counts */
       for (idx=0; idx<numdim-1; idx++) {
         if (dim[idx]==0) {
           dim[idx]=counteddim[idx];
@@ -2289,6 +2310,12 @@ static void initials(int ident,int tag,cell *size,int dim[],int numdim,
 
   if (*size==0)
     *size=litidx-curlit;        /* number of elements defined */
+}
+
+static void initials(int ident, int tag, cell *size, int dim[], int numdim,
+                     constvalue *enumroot)
+{
+  initials2(ident, tag, size, dim, numdim, enumroot, -1, -1);	
 }
 
 static cell initarray(int ident,int tag,int dim[],int numdim,int cur,
@@ -3699,27 +3726,46 @@ static void doarg(char *name,int ident,int offset,int tags[],int numtags,
     } while (matchtoken('['));
     ident=iREFARRAY;            /* "reference to array" (is a pointer) */
     if (matchtoken('=')) {
-      lexpush();                /* initials() needs the "=" token again */
       assert(litidx==0);        /* at the start of a function, this is reset */
       assert(numtags>0);
-      initials(ident,tags[0],&size,arg->dim,arg->numdim,enumroot);
-      assert(size>=litidx);
-      /* allocate memory to hold the initial values */
-      arg->defvalue.array.data=(cell *)malloc(litidx*sizeof(cell));
-      if (arg->defvalue.array.data!=NULL) {
-        int i;
-        memcpy(arg->defvalue.array.data,litq,litidx*sizeof(cell));
-        arg->hasdefault=TRUE;   /* argument has default value */
-        arg->defvalue.array.size=litidx;
-        arg->defvalue.array.addr=-1;
-        /* calulate size to reserve on the heap */
-        arg->defvalue.array.arraysize=1;
-        for (i=0; i<arg->numdim; i++)
-          arg->defvalue.array.arraysize*=arg->dim[i];
-        if (arg->defvalue.array.arraysize < arg->defvalue.array.size)
-          arg->defvalue.array.arraysize = arg->defvalue.array.size;
-      } /* if */
-      litidx=0;                 /* reset */
+      /* Check if there is a symbol */
+      if (matchtoken(tSYMBOL)) {
+        symbol *sym;
+        char *name;
+        cell val;
+        tokeninfo(&val,&name);
+        if ((sym=findglb(name)) == NULL) {
+          error(17, name);      /* undefined symbol */
+        } else {
+          arg->hasdefault=TRUE; /* argument as a default value */
+          memset(&arg->defvalue, 0, sizeof(arg->defvalue));
+          arg->defvalue.array.data=NULL;
+          arg->defvalue.array.addr=sym->addr;
+          arg->defvalue_tag=sym->tag;
+          if (sc_status==statWRITE && (sym->usage & uREAD)==0) {
+            markusage(sym, uREAD);
+          }
+        }
+      } else {
+        initials2(ident, tags[0], &size, arg->dim, arg->numdim, enumroot, 1, 0);
+        assert(size >= litidx);
+        /* allocate memory to hold the initial values */
+        arg->defvalue.array.data=(cell *)malloc(litidx*sizeof(cell));
+        if (arg->defvalue.array.data!=NULL) {
+          int i;
+          memcpy(arg->defvalue.array.data,litq,litidx*sizeof(cell));
+          arg->hasdefault=TRUE;   /* argument has default value */
+          arg->defvalue.array.size=litidx;
+          arg->defvalue.array.addr=-1;
+          /* calulate size to reserve on the heap */
+          arg->defvalue.array.arraysize=1;
+          for (i=0; i<arg->numdim; i++)
+            arg->defvalue.array.arraysize*=arg->dim[i];
+          if (arg->defvalue.array.arraysize < arg->defvalue.array.size)
+            arg->defvalue.array.arraysize = arg->defvalue.array.size;
+        } /* if */
+        litidx=0;                 /* reset */
+      }
     } /* if */
   } else {
     if (matchtoken('=')) {

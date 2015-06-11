@@ -118,13 +118,6 @@ void StartFrame()
 	RETURN_META(MRES_IGNORED);
 }
 
-void StartFrame_Post()
-{
-	g_pFunctionTable_Post->pfnStartFrame = NULL;
-	LIGHT_STYLE(0, glinfo.szLastLights);
-	RETURN_META(MRES_IGNORED);
-}
-
 void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int random_seed)
 {
 	unsigned int i = 0;

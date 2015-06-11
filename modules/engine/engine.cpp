@@ -300,8 +300,9 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
-	if (iEnt != -1)
+	if (iEnt != -1) {
 		CHECK_ENTITY(iEnt);
+	}
 
 	cell *cStart = MF_GetAmxAddr(amx, params[2]);
 	cell *cEnd = MF_GetAmxAddr(amx, params[3]);
@@ -370,8 +371,9 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 	
-	if (iEnt != -1)
+	if (iEnt != -1) {
 		CHECK_ENTITY(iEnt);
+	}
 
 	char *info = GETINFOKEYBUFFER((iEnt == -1) ? NULL : INDEXENT2(iEnt));
 	
@@ -546,7 +548,6 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 
 	if (FStrEq(szLights, "#OFF")) {
 		glinfo.bCheckLights = false;
-		g_pFunctionTable_Post->pfnStartFrame = NULL;
 		memset(glinfo.szLastLights, 0x0, 128);
 		LIGHT_STYLE(0, glinfo.szRealLights);
 		return 1;
@@ -556,9 +557,11 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 
 	//Reset LastLights and store custom lighting
 	memset(glinfo.szLastLights, 0x0, 128);
-	memcpy(glinfo.szLastLights, szLights, min(iLength, 127));
+	memcpy(glinfo.szLastLights, szLights, ke::Min(iLength, 127));
 
+	LightStyleDetour->DisableDetour();
 	LIGHT_STYLE(0, szLights);
+	LightStyleDetour->EnableDetour();
 
 	// These make it so that players/weaponmodels look like whatever the lighting is
 	// at. otherwise it would color players under the skybox to these values.
@@ -573,8 +576,9 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 {
 	int iEnt = params[3];
-	if (iEnt > 0)
+	if (iEnt > 0) {
 		CHECK_ENTITY(iEnt);
+	}
 
 	int iResult=0;
 	Vector vStart;
@@ -950,8 +954,9 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    cell *cAngles = MF_GetAmxAddr(amx, params[2]);
    REAL fGive = amx_ctof(params[3]);
    int iIgnoreEnt = params[4];
-   if (iIgnoreEnt != -1)
+   if (iIgnoreEnt != -1) {
 	   CHECK_ENTITY(iIgnoreEnt);
+   }
 
    cell *hitX = MF_GetAmxAddr(amx, params[5]);
    cell *hitY = MF_GetAmxAddr(amx, params[6]);

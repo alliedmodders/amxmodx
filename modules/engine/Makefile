@@ -30,7 +30,7 @@ CPP_OSX = clang
 
 LINK =
 
-INCLUDE = -I. -I$(PUBLIC_ROOT) -I$(PUBLIC_ROOT)/sdk -I$(PUBLIC_ROOT)/amtl \
+INCLUDE = -I. -I$(PUBLIC_ROOT) -I$(PUBLIC_ROOT)/sdk -I$(PUBLIC_ROOT)/memtools -I$(PUBLIC_ROOT)/memtools/CDetour -I$(PUBLIC_ROOT)/memtools/CDetour/asm -I$(PUBLIC_ROOT)/amtl \
 			  -I$(HLSDK) -I$(HLSDK)/public -I$(HLSDK)/common -I$(HLSDK)/dlls -I$(HLSDK)/engine -I$(HLSDK)/game_shared -I$(HLSDK)/pm_shared\
 			  -I$(MM_ROOT)
 
@@ -108,6 +108,9 @@ $(BIN_DIR)/%.o: %.cpp
 all:
 	mkdir -p $(BIN_DIR)
 	ln -sf $(PUBLIC_ROOT)/sdk/amxxmodule.cpp
+	ln -sf $(PUBLIC_ROOT)/memtools/MemoryUtils.cpp
+	ln -sf $(PUBLIC_ROOT)/memtools/CDetour/detours.cpp
+	ln -sf $(PUBLIC_ROOT)/memtools/CDetour/asm/asm.c
 	$(MAKE) -f $(MAKEFILE_NAME) $(PROJECT)
 
 $(PROJECT): $(OBJ_BIN)

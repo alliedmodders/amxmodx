@@ -25,6 +25,7 @@
 #include "entity_state.h"
 #include <am-vector.h>
 #include <am-string.h>
+#include "CDetour/detours.h"
 
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;
@@ -46,6 +47,8 @@ extern int StartFrameForward;
 extern int DispatchUseForward;
 extern int VexdTouchForward;
 extern int VexdServerForward;
+
+extern CDetour *LightStyleDetour;
 
 #define AMS_OFFSET 0.01
 

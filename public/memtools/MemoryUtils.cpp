@@ -28,7 +28,7 @@
  */
 
 #include "MemoryUtils.h"
-#include "amxxmodule.h"
+#include <stdio.h> // sscanf
 
 #if defined(__linux__)
 	#include <fcntl.h>
@@ -158,6 +158,13 @@ void *MemoryUtils::ResolveSymbol(void *handle, const char *symbol)
 	return GetProcAddress((HMODULE)handle, symbol);
 	
 #elif defined(__linux__)
+
+	void *addr = dlsym(handle, symbol);
+
+	if (addr)
+	{
+		return addr;
+	}
 
 	struct link_map *dlmap;
 	struct stat dlstat;

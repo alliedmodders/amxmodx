@@ -530,3 +530,29 @@ bool LibrarySystem::FileTime(const char* path, FileTimeType type, time_t* pTime)
 
 	return true;
 }
+
+bool LibrarySystem::DoesPlatformMatch(const char *platform)
+{
+	return strcmp(platform, PLATFORM_NAME) == 0;
+}
+
+bool LibrarySystem::IsPlatformCompatible(const char *platform, bool *hadPrimaryMatch)
+{
+	if (DoesPlatformMatch(platform))
+	{
+#if defined PLATFORM_COMPAT_ALT
+		*hadPrimaryMatch = true;
+#endif
+		return true;
+	}
+
+#if defined PLATFORM_COMPAT_ALT
+	/* If entry hasn't been found for the primary platform name, check for compatible alternate */
+	if (!*hadPrimaryMatch)
+	{
+		return strcmp(platform, PLATFORM_COMPAT_ALT) == 0;
+	}
+#endif
+
+	return false;
+}

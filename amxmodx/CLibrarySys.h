@@ -14,6 +14,9 @@
 #include <interface.h>  // Interface (HLSDK)
 #include <am-utility.h> // AutoPtr
 
+#define PLATFORM_WINDOWNS_NAME "windows"
+#define PLATFORM_LINUX_NAME    "linux"
+#define PLATFORM_MAC_NAME      "mac"
 #if defined(WIN32)
 #  ifndef PLATFORM_WINDOWS
 #  define PLATFORM_WINDOWS  1
@@ -25,6 +28,7 @@
 #  include <direct.h>
 #  include <io.h>
 #  define PLATFORM_LIB_EXT      "dll"
+#  define PLATFORM_NAME         PLATFORM_WINDOWNS_NAME
 #  define PLATFORM_SEP_CHAR     '\\'
 #  define PLATFORM_SEP_ALTCHAR  '/'
 #  define PLATFORM_EXTERN_C     extern "C" __declspec(dllexport)
@@ -32,9 +36,13 @@
 #  if defined(__linux__)
 #    define PLATFORM_LINUX      1
 #    define PLATFORM_LIB_EXT    "so"
+#    define PLATFORM_NAME       PLATFORM_LINUX_NAME
+#    define PLATFORM_COMPAT_ALT PLATFORM_MAC_NAME
 #  elif defined(__APPLE__)
 #    define PLATFORM_APPLE      1
 #    define PLATFORM_LIB_EXT    "dylib"
+#    define PLATFORM_NAME       PLATFORM_MAC_NAME
+#    define PLATFORM_COMPAT_ALT PLATFORM_LINUX_NAME
 #  endif
 #  ifndef PLATFORM_POSIX
 #    define PLATFORM_POSIX      1
@@ -153,6 +161,9 @@ class LibrarySystem
 
 		bool FileTime(const char* path, FileTimeType type, time_t* pTime);
 		void GetLoaderError(char* buffer, size_t maxlength);
+
+		bool DoesPlatformMatch(const char* platform);
+		bool IsPlatformCompatible(const char *platform, bool *hadPrimaryMatch);
 };
 
 extern LibrarySystem g_LibSys;

@@ -516,7 +516,21 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 
 	if (!g_LibSys.PathExists(path))
 	{
-		return false;
+		g_LibSys.PathFormat(path, sizeof(path), "%s.txt", m_File);
+
+		if (!EnterFile(path, error, maxlength))
+		{
+			return false;
+		}
+
+		build_pathname_r(path, sizeof(path), "%s/gamedata/custom/%s.txt", dataDir, m_File);
+
+		if (g_LibSys.PathExists(path))
+		{
+			g_LibSys.PathFormat(path, sizeof(path), "custom/%s.txt", m_File);
+			return EnterFile(path, error, maxlength);
+		}
+		return true;
 	}
 
 	SMCError err;

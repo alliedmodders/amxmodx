@@ -31,6 +31,7 @@
 #include "messages.h"
 #include "trie_natives.h"
 #include "CDataPack.h"
+#include "CGameConfigs.h"
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -1810,6 +1811,11 @@ int amx_Execv()
 	return AMX_ERR_NOTFOUND;
 }
 
+IGameConfigManager *MNF_GetConfigManager()
+{
+	return &ConfigManager;
+}
+
 void Module_CacheFunctions()
 {
 	func_s *pFunc;
@@ -1824,6 +1830,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("Format", MNF_Format)
 	REGISTER_FUNC("RegisterFunction", MNF_RegisterFunction);
 	REGISTER_FUNC("RegisterFunctionEx", MNF_RegisterFunctionEx);
+	REGISTER_FUNC("GetConfigManager", MNF_GetConfigManager);
 
 	// Amx scripts loading / unloading / managing
 	REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)

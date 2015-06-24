@@ -17,6 +17,11 @@ folder_list = [
     'base/addons/amxmodx',
     'base/addons/amxmodx/configs',
     'base/addons/amxmodx/data',
+    'base/addons/amxmodx/data/gamedata',
+    'base/addons/amxmodx/data/gamedata/common.games',
+    'base/addons/amxmodx/data/gamedata/common.games/entities.games',
+    'base/addons/amxmodx/data/gamedata/common.games/entities.games/cstrike',
+    'base/addons/amxmodx/data/gamedata/modules.games',
     'base/addons/amxmodx/data/lang',
     'base/addons/amxmodx/dlls',
     'base/addons/amxmodx/logs',
@@ -73,6 +78,15 @@ folder_map = {}
 for folder in folder_list:
   norm_folder = os.path.normpath(folder)
   folder_map[folder] = builder.AddFolder(norm_folder)
+
+# Do all straight-up file copies from the source tree.
+def CopyFiles(src, dest, files):
+  if not dest:
+    dest = src
+  dest_entry = folder_map[dest]
+  for source_file in files:
+    source_path = os.path.join(builder.sourcePath, src, source_file)
+    builder.AddCopy(source_path, dest_entry)
 
 # Copy core dlls.
 for dll in AMXX.binaries:
@@ -366,6 +380,136 @@ for datafile in datafiles:
     source = os.path.join(builder.sourcePath, 'plugins', 'lang', datafile),
     output_path = folder_map['base/addons/amxmodx/data/lang']
   )
+  
+  
+CopyFiles('gamedata/modules.games', 'base/addons/amxmodx/data/gamedata/modules.games',
+  [ 
+    'master.games.txt',
+    'game.cstrike.txt',
+  ]
+)
+CopyFiles('gamedata/common.games', 'base/addons/amxmodx/data/gamedata/common.games',
+  [ 
+    'master.games.txt',
+    'globalvars.engine.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/entities.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/entities.games/cstrike',
+  [ 
+    'offsets-cairtank.txt',
+    'offsets-cbaseanimating.txt',
+    'offsets-cpendulum.txt',
+    'offsets-cfuncrotating.txt',
+    'offsets-cbasebutton.txt',
+    'offsets-cenvspark.txt',
+    'offsets-cmomentaryrotbutton.txt',
+    'offsets-cmultisource.txt',
+    'offsets-cenvglobal.txt',
+    'offsets-cbaseentity.txt',
+    'offsets-cunifiedsignals.txt',
+    'offsets-csound.txt',
+    'offsets-simplestatemachine.txt',
+    'offsets-chostagemanager.txt',
+    'offsets-cgib.txt',
+    'offsets-cmomentarydoor.txt',
+    'offsets-cbasedoor.txt',
+    'offsets-cenvfunnel.txt',
+    'offsets-ctesteffect.txt',
+    'offsets-cgibshooter.txt',
+    'offsets-csprite.txt',
+    'offsets-cbombglow.txt',
+    'offsets-cglow.txt',
+    'offsets-claser.txt',
+    'offsets-clightning.txt',
+    'offsets-cbubbling.txt',
+    'offsets-cenvexplosion.txt',
+    'offsets-cpushable.txt',
+    'offsets-cbreakable.txt',
+    'offsets-cfunctankcontrols.txt',
+    'offsets-cfunctank.txt',
+    'offsets-cfunctanklaser.txt',
+    'offsets-cgrenade.txt',
+    'offsets-crecharge.txt',
+    'offsets-cwreckage.txt',
+    'offsets-cweaponcycler.txt',
+    'offsets-ccyclersprite.txt',
+    'offsets-ccycler.txt',
+    'offsets-cwallhealth.txt',
+    'offsets-cworlditem.txt',
+    'offsets-clight.txt',
+    'offsets-cgameplayerequip.txt',
+    'offsets-cgameplayerzone.txt',
+    'offsets-cgameteammaster.txt',
+    'offsets-cgametext.txt',
+    'offsets-cruleentity.txt',
+    'offsets-cmortar.txt',
+    'offsets-cfuncmortarfield.txt',
+    'offsets-cbasemonster.txt',
+    'offsets-cmapinfo.txt',
+    'offsets-cpathtrack.txt',
+    'offsets-cpathcorner.txt',
+    'offsets-cguntarget.txt',
+    'offsets-cfunctrackchange.txt',
+    'offsets-cfuncplatrot.txt',
+    'offsets-cfunctracktrain.txt',
+    'offsets-cfunctrain.txt',
+    'offsets-cbaseplattrain.txt',
+    'offsets-cplattrigger.txt',
+    'offsets-cbaseplayer.txt',
+    'offsets-crevertsaved.txt',
+    'offsets-cdeadhev.txt',
+    'offsets-cwshield.txt',
+    'offsets-cspeaker.txt',
+    'offsets-cenvsound.txt',
+    'offsets-cambientgeneric.txt',
+    'offsets-csoundent.txt',
+    'offsets-cbasetoggle.txt',
+    'offsets-cbasedelay.txt',
+    'offsets-cpointentity.txt',
+    'offsets-cfuncweaponcheck.txt',
+    'offsets-cbasegrencatch.txt',
+    'offsets-cclientfog.txt',
+    'offsets-ctriggercamera.txt',
+    'offsets-ctriggerchangetarget.txt',
+    'offsets-ctriggerendsection.txt',
+    'offsets-cchangelevel.txt',
+    'offsets-cmultimanager.txt',
+    'offsets-ctriggerrelay.txt',
+    'offsets-cfrictionmodifier.txt',
+    'offsets-cfuncvehicle.txt',
+    'offsets-carmoury.txt',
+    'offsets-cweaponbox.txt',
+    'offsets-cbaseplayeritem.txt',
+    'offsets-cbaseplayerammo.txt',
+    'offsets-cbaseplayerweapon.txt',
+    'offsets-caug.txt',
+    'offsets-cawp.txt',
+    'offsets-cdeagle.txt',
+    'offsets-celite.txt',
+    'offsets-cfiveseven.txt',
+    'offsets-cflashbang.txt',
+    'offsets-cg3sg1.txt',
+    'offsets-cglock18.txt',
+    'offsets-chegrenade.txt',
+    'offsets-cknife.txt',
+    'offsets-cm3.txt',
+    'offsets-cmac10.txt',
+    'offsets-cp228.txt',
+    'offsets-cp90.txt',
+    'offsets-cscout.txt',
+    'offsets-csmokegrenade.txt',
+    'offsets-ctmp.txt',
+    'offsets-cusp.txt',
+    'offsets-cfamas.txt',
+    'offsets-cgalil.txt',
+    'offsets-cxm1014.txt',
+    'offsets-cvoicegamemgr.txt',
+    'offsets-hostagefollowstate.txt',
+    'offsets-chostage.txt',
+    'offsets-chostageimprov.txt',
+  ]
+)
 
 # Copy license files
 licenses = [

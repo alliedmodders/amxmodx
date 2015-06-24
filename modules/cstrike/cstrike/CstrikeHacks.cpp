@@ -33,6 +33,8 @@ CDetour *AddAccountDetour    = NULL;
 
 int CurrentItemId = 0;
 StringHashMap<int> ItemAliasList;
+int TeamOffset = 0;
+int MenuOffset = 0;
 
 extern enginefuncs_t *g_pengfuncsTable;
 
@@ -121,11 +123,11 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 					/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELDGUN }
 				};
 
-				int menuId = *((int *)pEdict->pvPrivateData + OFFSET_MENU);
+				int menuId = get_pdata<int>(pEdict, MenuOffset);
+
 				if (menuId >= Menu_Buy && menuId <= Menu_BuyItem)
 				{
-					int team = *((int *)pEdict->pvPrivateData + OFFSET_TEAM);
-					switch (team)
+					switch (get_pdata<int>(pEdict, TeamOffset))
 					{
 						case TEAM_T: itemId = menuItemsTe[menuId - 4][slot]; break; // -4 because array is zero-based and Menu_Buy* constants starts from 4.
 						case TEAM_CT:itemId = menuItemsCt[menuId - 4][slot]; break;
@@ -236,30 +238,52 @@ void CtrlDetours_ClientCommand(bool set)
 {
 	if (set)
 	{
-		void *target = (void *)MDLL_ClientCommand;
+		void *base = reinterpret_cast<void *>(MDLL_ClientCommand);
 
 #if defined(WIN32)
 
-		UseBotArgs = *(int **)((unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS);
-		BotArgs = (const char **)*(const char **)((unsigned char *)target + CS_CLICMD_OFFS_BOTARGS);
+		int offset = 0;
+
+		if (MainConfig->GetOffset("UseBotArgs", &offset) && offset)
+		{
+			UseBotArgs = get_pdata<int*>(base, offset);
+		}
+
+		if (MainConfig->GetOffset("BotArgs", &offset) && offset)
+		{
+			BotArgs = get_pdata<const char**>(base, offset);
+		}
 
 #elif defined(__linux__) || defined(__APPLE__)
 
-		UseBotArgs = (int *)UTIL_FindAddressFromEntry(CS_IDENT_USEBOTARGS, CS_IDENT_HIDDEN_STATE);
-		BotArgs = (const char **)UTIL_FindAddressFromEntry(CS_IDENT_BOTARGS, CS_IDENT_HIDDEN_STATE);
+		void *address = nullptr;
 
+		if (MainConfig->GetMemSig("UseBotArgs", &address) && address)
+		{
+			UseBotArgs = reinterpret_cast<int *>(address);
+		}
+
+		if (MainConfig->GetMemSig("BotArgs", &address) && address)
+		{
+			BotArgs = reinterpret_cast<const char **>(address);
+		}
 #endif
-		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
+		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, base);
 
-		if (!ClientCommandDetour)
+		OffsetConfig->GetOffsetByClass("CBasePlayer", "m_iTeam", &TeamOffset);
+		OffsetConfig->GetOffsetByClass("CBasePlayer", "m_iMenu", &MenuOffset);
+
+		if (!ClientCommandDetour || !UseBotArgs || !BotArgs || !TeamOffset || !MenuOffset)
 		{
 			MF_Log("ClientCommand is not available - forward client_command has been disabled");
 		}
 	}
 	else
 	{
-		if (ClientCommandDetour) 
+		if (ClientCommandDetour)
+		{
 			ClientCommandDetour->Destroy();
+		}
 
 		ItemAliasList.clear();
 	}
@@ -268,7 +292,9 @@ void CtrlDetours_ClientCommand(bool set)
 void ToggleDetour_ClientCommands(bool enable)
 {
 	if (ClientCommandDetour)
+	{
 		(enable) ? ClientCommandDetour->EnableDetour() : ClientCommandDetour->DisableDetour();
+	}
 
 	if (enable)
 	{
@@ -329,13 +355,16 @@ void CtrlDetours_BuyCommands(bool set)
 {
 	if (set)
 	{
-		void *giveShieldAddress    = UTIL_FindAddressFromEntry(CS_IDENT_GIVENSHIELD  , CS_IDENT_HIDDEN_STATE);
-		void *giveNamedItemAddress = UTIL_FindAddressFromEntry(CS_IDENT_GIVENAMEDITEM, CS_IDENT_HIDDEN_STATE);
-		void *addAccountAddress    = UTIL_FindAddressFromEntry(CS_IDENT_ADDACCOUNT   , CS_IDENT_HIDDEN_STATE);
+		void *address = nullptr;
 
-		GiveShieldDetour    = DETOUR_CREATE_MEMBER_FIXED(GiveShield, giveShieldAddress);
-		GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
-		AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
+		MainConfig->GetMemSig("GiveShield", &address);
+		GiveShieldDetour = DETOUR_CREATE_MEMBER_FIXED(GiveShield, address); address = nullptr;
+
+		MainConfig->GetMemSig("GiveNamedItem", &address);
+		GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, address);  address = nullptr;
+
+		MainConfig->GetMemSig("AddAccount", &address);
+		AddAccountDetour = DETOUR_CREATE_MEMBER_FIXED(AddAccount, address);  address = nullptr;
 
 		if (!GiveShieldDetour || !GiveNamedItemDetour || !AddAccountDetour)
 		{
@@ -360,13 +389,19 @@ void CtrlDetours_BuyCommands(bool set)
 	else
 	{
 		if (GiveShieldDetour)
+		{
 			GiveShieldDetour->Destroy();
+		}
 
 		if (GiveNamedItemDetour)
+		{
 			GiveNamedItemDetour->Destroy();
+		}
 
 		if (AddAccountDetour)
+		{
 			AddAccountDetour->Destroy();
+		}
 
 		ItemAliasList.clear();
 	}
@@ -375,11 +410,17 @@ void CtrlDetours_BuyCommands(bool set)
 void ToggleDetour_BuyCommands(bool enable)
 {
 	if (GiveShieldDetour)
+	{
 		(enable) ? GiveShieldDetour->EnableDetour() : GiveShieldDetour->DisableDetour();
+	}
 
 	if (GiveNamedItemDetour)
+	{
 		(enable) ? GiveNamedItemDetour->EnableDetour() : GiveNamedItemDetour->DisableDetour();
+	}
 
 	if (AddAccountDetour)
+	{
 		(enable) ? AddAccountDetour->EnableDetour() : AddAccountDetour->DisableDetour();
+	}
 }

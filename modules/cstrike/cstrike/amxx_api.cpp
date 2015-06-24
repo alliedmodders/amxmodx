@@ -15,6 +15,7 @@
 #include "CstrikeUtils.h"
 #include "CstrikeDatas.h"
 #include "CstrikeHLTypeConversion.h"
+#include <IGameConfigs.h>
 
 extern AMX_NATIVE_INFO CstrikeNatives[];
 
@@ -30,6 +31,10 @@ void ToggleDetour_BuyCommands(bool enable);
 CreateNamedEntityFunc CS_CreateNamedEntity = nullptr;
 UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString = nullptr;
 
+IGameConfig *MainConfig;
+IGameConfig *OffsetConfig;
+IGameConfigManager *ConfigManager;
+
 int AmxxCheckGame(const char *game)
 {
 	if (strcasecmp(game, "cstrike") == 0 ||
@@ -44,23 +49,48 @@ void OnAmxxAttach()
 {
 	MF_AddNatives(CstrikeNatives);
 
-	InitializeHacks();
+	ConfigManager = MF_GetConfigManager();
 
-	// cs_create_entity()
-	CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(UTIL_FindAddressFromEntry(CS_IDENT_CREATENAMEDENTITY, CS_IDENT_HIDDEN_STATE));
+	char error[256]; 
+	error[0] = '\0';
 
-	if (CS_CreateNamedEntity <= 0)
+	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && error[0] != '\0')
+	{
+		MF_Log("Could not read module.games gamedata: %s", error);
+		return;
+	}
+
+	error[0] = '\0';
+
+	if (!ConfigManager->LoadGameConfigFile("common.games", &OffsetConfig, error, sizeof(error)) && error[0] != '\0')
+	{
+		MF_Log("Could not read common.games gamedata: %s", error);
+		return;
+	}
+
+	void *address = nullptr;
+
+	if (MainConfig->GetMemSig("CreateNamedEntity", &address) && address) // cs_create_entity()
+	{
+		CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(address);
+	}
+
+	if (MainConfig->GetMemSig("FindEntityByString", &address) && address) // cs_find_ent_by_class()
+	{
+		CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(address);
+	}
+
+	if (!CS_CreateNamedEntity)
 	{
 		MF_Log("CREATE_NAMED_ENITTY is not available - native cs_create_entity() has been disabled");
 	}
 
-	// cs_find_ent_by_class()
-	CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(UTIL_FindAddressFromEntry(CS_IDENT_UTIL_FINDENTITYBYSTRING, CS_IDENT_HIDDEN_STATE));
-	
-	if (CS_UTIL_FindEntityByString <= 0)
+	if (!CS_UTIL_FindEntityByString)
 	{
 		MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
 	}
+
+	InitializeHacks();
 }
 
 void OnPluginsLoaded()
@@ -88,5 +118,8 @@ void OnPluginsLoaded()
 
 void OnAmxxDetach()
 {
+	ConfigManager->CloseGameConfigFile(MainConfig);
+	ConfigManager->CloseGameConfigFile(OffsetConfig);
+
 	ShutdownHacks();
 }

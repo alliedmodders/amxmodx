@@ -81,6 +81,7 @@ class CGameConfig
 		char                       m_Offset[64];
 		char                       m_Game[256];
 
+		bool                       m_MatchedClasses;
 		bool                       m_ShouldBeReadingDefault;
 		bool                       m_HadGame;
 		bool                       m_MatchedGame;

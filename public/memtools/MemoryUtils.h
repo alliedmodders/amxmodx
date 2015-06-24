@@ -80,6 +80,7 @@ class MemoryUtils
 
 	public:
 		size_t DecodeHexString(unsigned char *buffer, size_t maxlength, const char *hexstr);
+		size_t Format(char *buffer, size_t maxlength, const char *fmt, ...);
 
 #if defined(__linux__) || defined(__APPLE__)
 	private:

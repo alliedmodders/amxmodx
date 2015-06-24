@@ -96,6 +96,7 @@ binary.sources = [
   '../public/memtools/CDetour/asm/asm.c',
   'CLibrarySys.cpp',
   'CGameConfigs.cpp',
+  'gameconfigs.cpp',
 ]
 
 if builder.target_platform == 'windows':

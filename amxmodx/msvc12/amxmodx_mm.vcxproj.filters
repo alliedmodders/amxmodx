@@ -288,6 +288,9 @@
     <ClCompile Include="..\..\public\memtools\MemoryUtils.cpp">
       <Filter>Memtools</Filter>
     </ClCompile>
+    <ClCompile Include="..\gameconfigs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\amx.h">
@@ -497,6 +500,12 @@
     <ClInclude Include="..\..\public\memtools\MemoryUtils.h">
       <Filter>Memtools</Filter>
     </ClInclude>
+    <ClInclude Include="..\natives_handles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\gameconfigs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\version.rc">
@@ -592,6 +601,9 @@
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\cvars.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\gameconfig.inc">
       <Filter>Pawn Includes</Filter>
     </None>
   </ItemGroup>

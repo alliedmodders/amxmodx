@@ -2377,7 +2377,7 @@ const char *	MF_GetLocalInfo				(const char *name, const char *def) { }
 int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return 0; }
 void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }
 void *			MF_MessageBlock				(int mode, int msg, int *opt) { }
-IGameConfigManager* MF_MessageBlock         () { }
+IGameConfigManager* MF_GetConfigManager     (void) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives

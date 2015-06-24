@@ -278,6 +278,7 @@
     <ClCompile Include="..\format.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
+    <ClCompile Include="..\gameconfigs.cpp" />
     <ClCompile Include="..\libraries.cpp" />
     <ClCompile Include="..\messages.cpp" />
     <ClCompile Include="..\meta_api.cpp" />
@@ -361,10 +362,12 @@
     <ClInclude Include="..\debugger.h" />
     <ClInclude Include="..\fakemeta.h" />
     <ClInclude Include="..\format.h" />
+    <ClInclude Include="..\gameconfigs.h" />
     <ClInclude Include="..\libraries.h" />
     <ClInclude Include="..\messages.h" />
     <ClInclude Include="..\modules.h" />
     <ClInclude Include="..\natives.h" />
+    <ClInclude Include="..\natives_handles.h" />
     <ClInclude Include="..\newmenus.h" />
     <ClInclude Include="..\nongpl_matches.h" />
     <ClInclude Include="..\optimizer.h" />
@@ -383,6 +386,7 @@
     <None Include="..\..\plugins\include\cellstack.inc" />
     <None Include="..\..\plugins\include\cvars.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
+    <None Include="..\..\plugins\include\gameconfig.inc" />
     <None Include="..\..\plugins\include\textparse_ini.inc" />
     <None Include="..\..\plugins\include\textparse_smc.inc" />
     <None Include="..\amxdefn.asm" />

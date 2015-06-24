@@ -14,7 +14,7 @@
 CGameConfigManager ConfigManager;
 static CGameMasterReader MasterReader;
 
-// 
+//
 // GAME CONFIG
 //
 
@@ -23,6 +23,8 @@ enum
 	PSTATE_NONE,
 	PSTATE_GAMES,
 	PSTATE_GAMEDEFS,
+	PSTATE_GAMEDEFS_CLASSES,
+	PSTATE_GAMEDEFS_CLASSES_CLASS,
 	PSTATE_GAMEDEFS_OFFSETS,
 	PSTATE_GAMEDEFS_OFFSETS_OFFSET,
 	PSTATE_GAMEDEFS_KEYS,
@@ -103,6 +105,8 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 				m_ShouldBeReadingDefault = true;
 				strncopy(m_Game, name, sizeof(m_Game));
 
+				m_Class[0] = '\0';
+				m_MatchedClasses = false;
 				m_ParseState = PSTATE_GAMEDEFS;
 			}
 			else
@@ -112,8 +116,22 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 			break;
 		}
 		case PSTATE_GAMEDEFS:
+		case PSTATE_GAMEDEFS_CLASSES_CLASS:
 		{
-			if (strcmp(name, "Offsets") == 0)
+			if (strcmp(name, "Classes") == 0)
+			{
+				if (!m_Class[0])
+				{
+					m_ParseState = PSTATE_GAMEDEFS_CLASSES;
+					m_MatchedClasses = true;
+				}
+				else
+				{
+					++m_IgnoreLevel;
+				}
+				break;
+			}
+			else if (strcmp(name, "Offsets") == 0)
 			{
 				m_ParseState = PSTATE_GAMEDEFS_OFFSETS;
 			}
@@ -149,14 +167,18 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 					break;
 				}
 
-				m_IgnoreLevel++;
+				++m_IgnoreLevel;
 			}
+			break;
+		}
+		case PSTATE_GAMEDEFS_CLASSES:
+		{
+			strncopy(m_Class, name, sizeof(m_Class));
+			m_ParseState = PSTATE_GAMEDEFS_CLASSES_CLASS;
 			break;
 		}
 		case PSTATE_GAMEDEFS_OFFSETS:
 		{
-			m_Class[0] = '\0';
-
 			strncopy(m_Offset, name, sizeof(m_Offset));
 
 			m_ParseState = PSTATE_GAMEDEFS_OFFSETS_OFFSET;
@@ -174,7 +196,7 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 		}
 		case PSTATE_GAMEDEFS_CUSTOM:
 		{
-			m_CustomLevel++;
+			++m_CustomLevel;
 			return m_CustomHandler->ReadSMC_NewSection(states, name);
 			break;
 		}
@@ -228,11 +250,7 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 	{
 		case PSTATE_GAMEDEFS_OFFSETS_OFFSET:
 		{
-			if (strcmp(key, "class") == 0)
-			{
-				strncopy(m_Class, value, sizeof(m_Class));
-			}
-			else if (g_LibSys.IsPlatformCompatible(key, &m_MatchedPlatform))
+			if (g_LibSys.IsPlatformCompatible(key, &m_MatchedPlatform))
 			{
 				if (m_Class[0])
 				{
@@ -246,7 +264,7 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 					{
 						ic->value = new OffsetClass;
 						ic->value->list.insert(m_Offset, atoi(value));
-					}			
+					}
 				}
 				else
 				{
@@ -319,7 +337,7 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 				}
 				else
 				{
-					AMXXLOG_Error("[SM] Error parsing Address \"%s\", does not support more than %d read offsets (gameconf \"%s\")", 
+					AMXXLOG_Error("[SM] Error parsing Address \"%s\", does not support more than %d read offsets (gameconf \"%s\")",
 								  m_Address, limit, m_CurrentPath);
 				}
 			}
@@ -365,6 +383,18 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 			m_ParseState = PSTATE_GAMES;
 			break;
 		}
+		case PSTATE_GAMEDEFS_CLASSES:
+		{
+			m_MatchedClasses = false;
+			m_ParseState = PSTATE_GAMEDEFS;
+			break;
+		}
+		case PSTATE_GAMEDEFS_CLASSES_CLASS:
+		{
+			m_ParseState = PSTATE_GAMEDEFS_CLASSES;
+			m_Class[0] = '\0';
+			break;
+		}
 		case PSTATE_GAMEDEFS_CUSTOM:
 		{
 			m_ParseState = PSTATE_GAMEDEFS;
@@ -372,9 +402,13 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 			break;
 		}
 		case PSTATE_GAMEDEFS_KEYS:
+		{
+			m_ParseState = m_MatchedClasses ? PSTATE_GAMEDEFS_CLASSES_CLASS : PSTATE_GAMEDEFS;
+			break;
+		}
 		case PSTATE_GAMEDEFS_OFFSETS:
 		{
-			m_ParseState = PSTATE_GAMEDEFS;
+			m_ParseState = m_MatchedClasses ? PSTATE_GAMEDEFS_CLASSES_CLASS : PSTATE_GAMEDEFS;
 			break;
 		}
 		case PSTATE_GAMEDEFS_OFFSETS_OFFSET:
@@ -389,7 +423,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 				m_IgnoreLevel = 1;
 				m_ParseState = PSTATE_GAMES;
 			}
-			else 
+			else
 			{
 				m_ParseState = PSTATE_GAMEDEFS;
 			}
@@ -397,7 +431,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 		}
 		case PSTATE_GAMEDEFS_SIGNATURES:
 		{
-			m_ParseState = PSTATE_GAMEDEFS;
+			m_ParseState = m_MatchedClasses ? PSTATE_GAMEDEFS_CLASSES_CLASS : PSTATE_GAMEDEFS;
 			break;
 		}
 		case PSTATE_GAMEDEFS_SIGNATURES_SIG:
@@ -413,7 +447,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 			{
 				addressInBase = reinterpret_cast<void*>(MDLL_Spawn);
 			}
-			else if (strcmp(TempSig.library, "engine") == 0) 
+			else if (strcmp(TempSig.library, "engine") == 0)
 			{
 				addressInBase = reinterpret_cast<void*>(gpGlobals);
 			}
@@ -442,7 +476,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 
 #elif defined PLATFORM_POSIX
 					Dl_info info;
-		
+
 					if (dladdr(addressInBase, &info) != 0)
 					{
 						void *handle = dlopen(info.dli_fname, RTLD_NOW);
@@ -457,7 +491,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 							AMXXLOG_Error("Unable to load library \"%s\" (gameconf \"%s\")", TempSig.library, m_File);
 						}
 					}
-					else 
+					else
 					{
 						AMXXLOG_Error("Unable to find library \"%s\" in memory (gameconf \"%s\")", TempSig.library, m_File);
 					}
@@ -477,7 +511,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 		}
 		case PSTATE_GAMEDEFS_ADDRESSES:
 		{
-			m_ParseState = PSTATE_GAMEDEFS;
+			m_ParseState = m_MatchedClasses ? PSTATE_GAMEDEFS_CLASSES_CLASS : PSTATE_GAMEDEFS;
 			break;
 		}
 		case PSTATE_GAMEDEFS_ADDRESSES_ADDRESS:
@@ -516,13 +550,16 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 
 	if (!g_LibSys.PathExists(path))
 	{
+#if 0
+		// Single config file without master
 		g_LibSys.PathFormat(path, sizeof(path), "%s.txt", m_File);
 
 		if (!EnterFile(path, error, maxlength))
 		{
 			return false;
 		}
-
+#endif
+		// Allow customizations of default gamedata files
 		build_pathname_r(path, sizeof(path), "%s/gamedata/custom/%s.txt", dataDir, m_File);
 
 		if (g_LibSys.PathExists(path))
@@ -605,10 +642,7 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 
 bool CGameConfig::EnterFile(const char *file, char *error, size_t maxlength)
 {
-	char path[PLATFORM_MAX_PATH];
-	build_pathname_r(path, sizeof(path), "%s/gamedata/%s", get_localinfo("amxx_datadir", "addons/amxmodx/data"), file);
-
-	strncopy(m_CurrentPath, path, sizeof(m_CurrentPath));
+	build_pathname_r(m_CurrentPath, sizeof(m_CurrentPath), "%s/gamedata/%s", get_localinfo("amxx_datadir", "addons/amxmodx/data"), file);
 
 	m_IgnoreLevel = 0;
 	m_ShouldBeReadingDefault = true;
@@ -698,7 +732,8 @@ bool CGameConfig::GetAddress(const char *key, void **retaddr)
 			*retaddr = nullptr;
 			return false;
 		}
-		address = *(reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(address) + offset));
+
+		address = reinterpret_cast<void*>(reinterpret_cast<uint8_t*>(address) + offset);
 	}
 
 	*retaddr = address;
@@ -723,7 +758,7 @@ bool CGameConfig::GetMemSig(const char *key, void **addr)
 }
 
 
-// 
+//
 // CONFIG MASTER READER
 //
 
@@ -839,7 +874,7 @@ SMCResult CGameMasterReader::ReadSMC_LeavingSection(const SMCStates *states)
 }
 
 
-// 
+//
 // CONFIG MANAGER
 //
 

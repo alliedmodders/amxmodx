@@ -32,6 +32,8 @@
 #ifndef _INCLUDE_SOURCEMOD_TEXTPARSERS_INTERFACE_H_
 #define _INCLUDE_SOURCEMOD_TEXTPARSERS_INTERFACE_H_
 
+#include <string.h> // size_t
+
 /**
  * @file ITextParsers.h
  * @brief Defines various text/file parsing functions, as well as UTF-8 support code.

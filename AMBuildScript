@@ -162,7 +162,9 @@ class AMXXConfig(object):
         else:
           cfg.cxxflags += ['-Wno-deprecated']
         cfg.cflags += ['-Wno-sometimes-uninitialized']
-
+        if cxx.version >= '3.6':
+          cfg.cxxflags += ['-Wno-inconsistent-missing-override']
+          
       if have_gcc:
         cfg.cflags += ['-Wno-parentheses']
       elif have_clang:

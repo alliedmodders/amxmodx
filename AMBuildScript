@@ -162,7 +162,7 @@ class AMXXConfig(object):
         else:
           cfg.cxxflags += ['-Wno-deprecated']
         cfg.cflags += ['-Wno-sometimes-uninitialized']
-        if cxx.version >= '3.6':
+        if builder.target_platform == 'linux' and cxx.version >= '3.6':
           cfg.cxxflags += ['-Wno-inconsistent-missing-override']
           
       if have_gcc:

@@ -1304,7 +1304,7 @@ int MNF_IsPlayerValid(int id)
 	
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
 	
-	return (pPlayer->initialized) ? 1 : 0;
+	return (pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) ? 1 : 0;
 }
 
 const char * MNF_GetPlayerName(int id)

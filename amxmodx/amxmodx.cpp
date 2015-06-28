@@ -121,7 +121,7 @@ static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params) /* 3 param *
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 			
-			if ((type == print_console  && pPlayer->initialized) || pPlayer->ingame)
+			if ((type == print_console && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) || pPlayer->ingame)
 			{
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
@@ -141,7 +141,7 @@ static cell AMX_NATIVE_CALL engclient_print(AMX *amx, cell *params) /* 3 param *
 		
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
-		if ((type == print_console  && pPlayer->initialized) || pPlayer->ingame)
+		if ((type == print_console && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) || pPlayer->ingame)
 		{
 			g_langMngr.SetDefLang(index);
 			msg = format_amxstring(amx, params, 3, len);
@@ -170,7 +170,7 @@ static cell AMX_NATIVE_CALL console_cmd(AMX *amx, cell *params) /* 2 param */
 	} else {
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
-		if (!pPlayer->IsBot() && pPlayer->initialized)
+		if (!pPlayer->IsBot() && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0))
 			CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 	}
 
@@ -754,7 +754,7 @@ static cell AMX_NATIVE_CALL is_user_hltv(AMX *amx, cell *params) /* 1 param */
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(index);
 	
-	if (!pPlayer->initialized)
+	if (!pPlayer->initialized || !(GETPLAYERUSERID(pPlayer->pEdict) > 0))
 		return 0;
 	
 	if (pPlayer->pEdict->v.flags & FL_PROXY)
@@ -1892,7 +1892,7 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-			if (!pPlayer->IsBot() && pPlayer->initialized /*&& pPlayer->ingame*/)
+			if (!pPlayer->IsBot() && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0) /*&& pPlayer->ingame*/)
 				CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 		}
 	} else {
@@ -1906,7 +1906,7 @@ static cell AMX_NATIVE_CALL client_cmd(AMX *amx, cell *params) /* 2 param */
 		
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 		
-		if (!pPlayer->IsBot() && pPlayer->initialized /*&& pPlayer->ingame*/)
+		if (!pPlayer->IsBot() && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0) /*&& pPlayer->ingame*/)
 			CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
 	}
 	
@@ -2156,7 +2156,7 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-		if (pPlayer->ingame || ((flags & 256) && pPlayer->initialized))
+		if (pPlayer->ingame || ((flags & 256) && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)))
 		{
 			if (pPlayer->IsAlive() ? (flags & 2) : (flags & 1))
 				continue;
@@ -2212,7 +2212,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 		
-		if (pPlayer->ingame || ((flags & 4096) && pPlayer->initialized))
+		if (pPlayer->ingame || ((flags & 4096) && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)))
 		{
 			if (pPlayer->IsAlive() ? (flags & 64) : (flags & 32))
 				continue;

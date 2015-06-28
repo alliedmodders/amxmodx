@@ -1304,7 +1304,7 @@ int MNF_IsPlayerValid(int id)
 	
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
 	
-	return (pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) ? 1 : 0;
+	return pPlayer->IsInitialized() ? 1 : 0;
 }
 
 const char * MNF_GetPlayerName(int id)
@@ -1444,7 +1444,7 @@ int MNF_IsPlayerConnecting(int id)
 	
 	CPlayer * pPlayer = GET_PLAYER_POINTER_I(id);
 	
-	return (!pPlayer->ingame && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) ? 1 : 0;
+	return (!pPlayer->ingame && pPlayer->IsInitialized()) ? 1 : 0;
 }
 
 int MNF_IsPlayerHLTV(int id)

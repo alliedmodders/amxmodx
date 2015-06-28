@@ -17,7 +17,7 @@ void CPlayer::Init(edict_t* e, int i)
 {
 	index = i;
 	pEdict = e;
-	initialized = false;
+	userid_when_initialized = -1;
 	ingame = false;
 	authorized = false;
 	teamIdsInitialized = false;
@@ -40,7 +40,7 @@ void CPlayer::Init(edict_t* e, int i)
 void CPlayer::Disconnect()
 {
 	ingame = false;
-	initialized = false;
+	userid_when_initialized = -1;
 	authorized = false;
 	teamIdsInitialized = false;
 
@@ -91,7 +91,7 @@ bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 	memset(flags, 0, sizeof(flags));
 	memset(weapons, 0, sizeof(weapons));
 	
-	initialized = true;
+	userid_when_initialized = GETPLAYERUSERID(pEdict);
 	authorized = false;
 
 	for (int i=0; i<=4; i++)

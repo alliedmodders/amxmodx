@@ -622,7 +622,7 @@ static cell AMX_NATIVE_CALL query_client_cvar(AMX *amx, cell *params)
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(id);
 
-	if (!(pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0)) || pPlayer->IsBot())
+	if (!pPlayer->IsInitialized() || pPlayer->IsBot())
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Player %d is either not connected or a bot", id);
 		return 0;

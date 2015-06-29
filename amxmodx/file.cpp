@@ -62,7 +62,7 @@ static cell AMX_NATIVE_CALL read_dir(AMX *amx, cell *params)
 	const char* entry = dir->GetEntryName();
 	cell* outputLen = get_amxaddr(amx, params[5]);
 
-	*outputLen = set_amxstring_utf8(amx, params[3], entry, strlen(entry), params[4] + 1);
+	*outputLen = set_amxstring_utf8(amx, params[3], entry, strlen(entry), params[4]);
 
 	return offset;
 }
@@ -103,7 +103,7 @@ static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params)
 			buffer[--length] = '\0';
 
 		cell* textLen = get_amxaddr(amx, params[5]);
-		*textLen = set_amxstring_utf8(amx, params[3], buffer, length, params[4] + 1); // + EOS
+		*textLen = set_amxstring_utf8(amx, params[3], buffer, length, params[4]);
 
 		return currentLine;
 	}
@@ -624,7 +624,7 @@ static cell AMX_NATIVE_CALL amx_fgets(AMX *amx, cell *params)
 
 	fp->ReadLine(buffer, sizeof(buffer) - 1);
 
-	return set_amxstring_utf8(amx, params[2], buffer, strlen(buffer), params[3] + 1); // + EOS
+	return set_amxstring_utf8(amx, params[2], buffer, strlen(buffer), params[3]);
 }
 
 // native fseek(file, position, start);
@@ -776,7 +776,7 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 			return 0;
 		}
 
-		set_amxstring_utf8(amx, params[2], pFirst, strlen(pFirst), params[3] + 1);
+		set_amxstring_utf8(amx, params[2], pFirst, strlen(pFirst), params[3]);
 		cell* fileType = get_amxaddr(amx, params[4]);
 
 		*fileType = g_FileSystem->FindIsDirectory(handle) ? FileType_Directory : FileType_File;
@@ -798,7 +798,7 @@ static cell AMX_NATIVE_CALL amx_open_dir(AMX *amx, cell *params)
 	}
 
 	const char* entry = dir->GetEntryName();
-	set_amxstring_utf8(amx, params[2], entry, strlen(entry), params[3] + 1);
+	set_amxstring_utf8(amx, params[2], entry, strlen(entry), params[3]);
 
 	return reinterpret_cast<cell>(new DirectoryHandle(reinterpret_cast<void*>(dir), false));
 }
@@ -861,7 +861,7 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 			*fileType = g_FileSystem->FindIsDirectory(*handle) ? FileType_Directory : FileType_File;
 		}
 
-		set_amxstring_utf8(amx, params[2], entry, strlen(entry), params[3] + 1);
+		set_amxstring_utf8(amx, params[2], entry, strlen(entry), params[3]);
 	}
 	else
 	{
@@ -887,7 +887,7 @@ static cell AMX_NATIVE_CALL amx_get_dir(AMX *amx, cell *params)
 
 		const char* entry = handle->GetEntryName();
 
-		set_amxstring_utf8(amx, params[2], entry, strlen(entry), params[3] + 1);
+		set_amxstring_utf8(amx, params[2], entry, strlen(entry), params[3]);
 	}
 
 	return 1;

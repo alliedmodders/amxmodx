@@ -240,7 +240,7 @@ static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)
 	}
 
 	cell *blk = vec->at(idx);
-	return set_amxstring_utf8(amx, params[3], blk, amxstring_len(blk), params[4] + 1); // + EOS.
+	return set_amxstring_utf8(amx, params[3], blk, amxstring_len(blk), params[4]);
 }
 
 // native ArraySetArray(Array:which, item, const any:input[], size =-1);

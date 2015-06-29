@@ -207,7 +207,7 @@ static cell AMX_NATIVE_CALL get_cvar_string(AMX *amx, cell *params)
 	const char *value = info ? info->var->string : "";
 	length = info ? strlen(value) : 0;
 
-	return set_amxstring_utf8(amx, params[2], value, length, params[3] + 1); // + EOS
+	return set_amxstring_utf8(amx, params[2], value, length, params[3]);
 }
 
 // set_cvar_flags(const cvar[], flags)
@@ -336,7 +336,7 @@ static cell AMX_NATIVE_CALL get_pcvar_string(AMX *amx, cell *params)
 		return 0;
 	}
 
-	return set_amxstring_utf8(amx, params[2], ptr->string ? ptr->string : "", ptr->string ? strlen(ptr->string) : 0, params[3] + 1); // EOS
+	return set_amxstring_utf8(amx, params[2], ptr->string ? ptr->string : "", ptr->string ? strlen(ptr->string) : 0, params[3]);
 }
 
 // get_pcvar_bounds(pcvar, CvarBounds:type, &Float:value)

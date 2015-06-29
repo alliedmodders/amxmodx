@@ -649,7 +649,7 @@ static cell AMX_NATIVE_CALL show_dhudmessage(AMX *amx, cell *params) /* 2 param 
 static cell AMX_NATIVE_CALL get_user_name(AMX *amx, cell *params) /* 3 param */
 {
 	int index = params[1];
-	int maxlen = params[3] + 1; // EOS.
+	int maxlen = params[3];
 
 	if (index < 1 || index > gpGlobals->maxClients)
 		return set_amxstring_utf8(amx, params[2], hostname->string, strlen(hostname->string), maxlen);
@@ -1640,8 +1640,8 @@ static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params) /* 7 param */
 	if (cmd == 0)
 		return 0;
 	
-	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3] + 1); // + EOS
-	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6] + 1); // + EOS
+	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3]);
+	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6]);
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
 	
@@ -1677,8 +1677,8 @@ static cell AMX_NATIVE_CALL get_clcmd(AMX *amx, cell *params) /* 7 param */
 	if (cmd == 0)
 		return 0;
 
-	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3] + 1); // + EOS
-	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6] + 1); // + EOS
+	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3]);
+	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6]);
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
 
@@ -1692,8 +1692,8 @@ static cell AMX_NATIVE_CALL get_srvcmd(AMX *amx, cell *params)
 	if (cmd == 0)
 		return 0;
 	
-	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3] + 1); // + EOS
-	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6] + 1); // + EOS
+	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3]);
+	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6]);
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
 	
@@ -2030,7 +2030,7 @@ static cell AMX_NATIVE_CALL format_time(AMX *amx, cell *params) /* 3 param */
 	char szDate[512];
 	ilen = strftime(szDate, 511, sptemp, lt);
 	
-	return set_amxstring_utf8(amx, params[1], szDate, ilen, params[2] + 1); // + EOS
+	return set_amxstring_utf8(amx, params[1], szDate, ilen, params[2]);
 
 }
 
@@ -2096,7 +2096,7 @@ static cell AMX_NATIVE_CALL read_data(AMX *amx, cell *params) /* 3 param */
 			return g_events.getArgInteger(params[1]);
 		case 3:
 			return set_amxstring_utf8(amx, params[2], g_events.getArgString(params[1]), 
-				strlen(g_events.getArgString(params[1])),*get_amxaddr(amx, params[3]) + 1); // + EOS
+				strlen(g_events.getArgString(params[1])),*get_amxaddr(amx, params[3]));
 		default:
 			cell *fCell = get_amxaddr(amx, params[2]);
 			REAL fparam = (REAL)g_events.getArgFloat(params[1]);
@@ -2300,7 +2300,7 @@ static cell AMX_NATIVE_CALL get_localinfo(AMX *amx, cell *params) /* 3 param */
 	char* sptemp = get_amxstring(amx, params[1], 0, ilen);
 	
 	char *value = LOCALINFO(sptemp);
-	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); //  + EOS
+	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3]);
 }
 
 static cell AMX_NATIVE_CALL set_localinfo(AMX *amx, cell *params) /* 2 param */
@@ -2376,13 +2376,13 @@ static cell AMX_NATIVE_CALL read_argv(AMX *amx, cell *params) /* 3 param */
 	int argc = params[1];
 
 	const char *value = g_fakecmd.notify ? (argc >= 0 && argc < 3 ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
-	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); // + EOS
+	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3]);
 }
 
 static cell AMX_NATIVE_CALL read_args(AMX *amx, cell *params) /* 2 param */
 {
 	const char* sValue = g_fakecmd.notify ? (g_fakecmd.argc > 1 ? g_fakecmd.args : g_fakecmd.argv[0]) : CMD_ARGS();
-	return set_amxstring_utf8(amx, params[1], sValue ? sValue : "", sValue ? strlen(sValue) : 0, params[2] + 1); // +EOS
+	return set_amxstring_utf8(amx, params[1], sValue ? sValue : "", sValue ? strlen(sValue) : 0, params[2]);
 }
 
 static cell AMX_NATIVE_CALL get_user_msgid(AMX *amx, cell *params) /* 1 param */
@@ -2925,7 +2925,7 @@ static cell AMX_NATIVE_CALL force_unmodified(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL read_logdata(AMX *amx, cell *params)
 {
 	const char *value = g_logevents.getLogString();
-	return set_amxstring_utf8(amx, params[1], value, strlen(value), params[2] + 1); // + EOS
+	return set_amxstring_utf8(amx, params[1], value, strlen(value), params[2]);
 }
 
 static cell AMX_NATIVE_CALL read_logargc(AMX *amx, cell *params)
@@ -2936,7 +2936,7 @@ static cell AMX_NATIVE_CALL read_logargc(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL read_logargv(AMX *amx, cell *params)
 {
 	const char *value = g_logevents.getLogArg(params[1]);
-	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3] + 1); // + EOS
+	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3]);
 }
 
 static cell AMX_NATIVE_CALL parse_loguser(AMX *amx, cell *params)
@@ -3224,9 +3224,9 @@ static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 		const char *author = info && info->author ? info->author : "unk";
 		const char *version = info && info->version ? info->version : "unk";
 
-		set_amxstring_utf8(amx, params[2], name, strlen(name), params[3]  + 1); // + EOS
-		set_amxstring_utf8(amx, params[4], author, strlen(author), params[5] + 1); // + EOS
-		set_amxstring_utf8(amx, params[6], version, strlen(version), params[7] + 1); // + EOS
+		set_amxstring_utf8(amx, params[2], name, strlen(name), params[3]);
+		set_amxstring_utf8(amx, params[4], author, strlen(author), params[5]);
+		set_amxstring_utf8(amx, params[6], version, strlen(version), params[7]);
 	}
 
 	// compatibility problem possible

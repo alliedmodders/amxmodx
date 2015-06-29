@@ -115,7 +115,7 @@ static cell AMX_NATIVE_CALL amx_geoip_country(AMX *amx, cell *params)
 		return MF_SetAmxString(amx, params[2], "error", params[3]);
 	}
 
-	return MF_SetAmxStringUTF8Char(amx, params[2], country, length, params[3] + 1);
+	return MF_SetAmxStringUTF8Char(amx, params[2], country, length, params[3]);
 }
 
 // native geoip_country_ex(const ip[], result[], len, id = -1);
@@ -127,7 +127,7 @@ static cell AMX_NATIVE_CALL amx_geoip_country_ex(AMX *amx, cell *params)
 	const char *path[] = { "country", "names", getLang(params[4]), NULL };
 	const char *country = lookupString(ip, path, &length);
 
-	return MF_SetAmxStringUTF8Char(amx, params[2], country ? country : "", length, params[3] + 1);
+	return MF_SetAmxStringUTF8Char(amx, params[2], country ? country : "", length, params[3]);
 }
 
 // native geoip_city(const ip[], result[], len, id = -1);
@@ -139,7 +139,7 @@ static cell AMX_NATIVE_CALL amx_geoip_city(AMX *amx, cell *params)
 	const char *path[] = { "city", "names", getLang(params[4]), NULL };
 	const char *city = lookupString(ip, path, &length);
 
-	return MF_SetAmxStringUTF8Char(amx, params[2], city ? city : "", length, params[3] + 1);
+	return MF_SetAmxStringUTF8Char(amx, params[2], city ? city : "", length, params[3]);
 }
 
 // native geoip_region_code(const ip[], result[], len);
@@ -185,7 +185,7 @@ static cell AMX_NATIVE_CALL amx_geoip_region_name(AMX *amx, cell *params)
 	const char *path[] = { "subdivisions", "0", "names", getLang(params[4]), NULL }; // First result.
 	const char *region = lookupString(ip, path, &length);
 
-	return MF_SetAmxStringUTF8Char(amx, params[2], region ? region : "", length, params[3] + 1);
+	return MF_SetAmxStringUTF8Char(amx, params[2], region ? region : "", length, params[3]);
 }
 
 // native geoip_timezone(const ip[], result[], len);
@@ -260,7 +260,7 @@ static cell AMX_NATIVE_CALL amx_geoip_continent_name(AMX *amx, cell *params)
 	const char *path[] = { "continent", "names", getLang(params[4]), NULL };
 	const char *continent = lookupString(ip, path, &length);
 
-	return MF_SetAmxStringUTF8Char(amx, params[2], continent ? continent : "", length, params[3] + 1);
+	return MF_SetAmxStringUTF8Char(amx, params[2], continent ? continent : "", length, params[3]);
 }
 
 

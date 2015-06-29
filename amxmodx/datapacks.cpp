@@ -143,7 +143,7 @@ static cell AMX_NATIVE_CALL ReadPackString(AMX* amx, cell* params)
 	size_t len;
 	const char *str = d->ReadString(&len);
 
-	return set_amxstring_utf8(amx, params[2], str, len, params[3] + 1); // + EOS
+	return set_amxstring_utf8(amx, params[2], str, len, params[3]);
 }
 
 static cell AMX_NATIVE_CALL ResetPack(AMX* amx, cell* params)

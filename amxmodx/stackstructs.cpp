@@ -184,7 +184,7 @@ static cell AMX_NATIVE_CALL PopStackString(AMX* amx, cell* params)
 	size_t idx = vec->size() - 1;
 	cell *blk = vec->at(idx);
 
-	int numWritten = set_amxstring_utf8(amx, params[2], blk, amxstring_len(blk), params[3] + 1);
+	int numWritten = set_amxstring_utf8(amx, params[2], blk, amxstring_len(blk), params[3]);
 	*get_amxaddr(amx, params[4]) = numWritten;
 
 	vec->remove(idx);

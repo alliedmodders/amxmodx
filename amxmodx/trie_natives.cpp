@@ -213,7 +213,7 @@ static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 		return 0;
 	}
 
-	*pSize = (cell)set_amxstring_utf8(amx, params[3], r->value.chars(), strlen(r->value.chars()), params[4] + 1); // + EOS
+	*pSize = (cell)set_amxstring_utf8(amx, params[3], r->value.chars(), strlen(r->value.chars()), params[4]);
 
 	return 1;
 }
@@ -425,7 +425,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotGetKey(AMX *amx, cell *params)
 	}
 
 	const char *str = snapshot->strings.GetString(snapshot->keys[index]);
-	return set_amxstring_utf8(amx, params[3], str, strlen(str), params[4] + 1);
+	return set_amxstring_utf8(amx, params[3], str, strlen(str), params[4]);
 }
 
 //native TrieSnapshotDestroy(&Snapshot:handle)

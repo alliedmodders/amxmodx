@@ -243,7 +243,7 @@
 // #define FN_ServerExecute						ServerExecute
 // #define FN_engClientCommand					engClientCommand
 // #define FN_ParticleEffect					ParticleEffect
-#define FN_LightStyle						LightStyle
+// #define FN_LightStyle						LightStyle
 // #define FN_DecalIndex						DecalIndex
 // #define FN_PointContents						PointContents
 // #define FN_MessageBegin						MessageBegin

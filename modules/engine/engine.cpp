@@ -55,6 +55,27 @@ static cell AMX_NATIVE_CALL register_think(AMX *amx, cell *params)
 	return p->Forward;
 }
 
+static cell AMX_NATIVE_CALL unregister_think(AMX *amx, cell *params)
+{
+	int fwd = params[1];
+	for (size_t i = 0; i < Thinks.length(); ++i)
+	{
+		EntClass *p = Thinks.at(i);
+		if (p->Forward == fwd)
+		{
+			Thinks.remove(i);
+			delete p;
+
+			if (!Thinks.length())
+				g_pFunctionTable->pfnThink = NULL;
+
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 static cell AMX_NATIVE_CALL register_impulse(AMX *amx, cell *params)
 {
 	int len;
@@ -70,6 +91,27 @@ static cell AMX_NATIVE_CALL register_impulse(AMX *amx, cell *params)
 		g_pFunctionTable->pfnCmdStart=CmdStart;
 
 	return p->Forward;
+}
+
+static cell AMX_NATIVE_CALL unregister_impulse(AMX *amx, cell *params)
+{
+	int fwd = params[1];
+	for (size_t i = 0; i < Impulses.length(); ++i)
+	{
+		Impulse *p = Impulses.at(i);
+		if (p->Forward == fwd)
+		{
+			Impulses.remove(i);
+			delete p;
+
+			if (!Impulses.length())
+				g_pFunctionTable->pfnCmdStart = NULL;
+
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
@@ -100,6 +142,27 @@ static cell AMX_NATIVE_CALL register_touch(AMX *amx, cell *params)
 		g_pFunctionTable->pfnTouch=pfnTouch;
 
 	return p->Forward;
+}
+
+static cell AMX_NATIVE_CALL unregister_touch(AMX *amx, cell *params)
+{
+	int fwd = params[1];
+	for (size_t i = 0; i < Touches.length(); ++i)
+	{
+		Touch *p = Touches.at(i);
+		if (p->Forward == fwd)
+		{
+			Touches.remove(i);
+			delete p;
+
+			if (!Touches.length())
+				g_pFunctionTable->pfnTouch = NULL;
+
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL halflife_time(AMX *amx, cell *params)
@@ -206,6 +269,7 @@ static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
+	CHECK_ENTITY(iEnt);
 
 	cell *cStart = MF_GetAmxAddr(amx, params[2]);
 	cell *cEnd = MF_GetAmxAddr(amx, params[3]);
@@ -221,14 +285,13 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
 
-	TraceResult tr;
-	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &tr);
+	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &g_tr);
 
-	vRet[0] = amx_ftoc(tr.vecPlaneNormal.x);
-	vRet[1] = amx_ftoc(tr.vecPlaneNormal.y);
-	vRet[2] = amx_ftoc(tr.vecPlaneNormal.z);
+	vRet[0] = amx_ftoc(g_tr.vecPlaneNormal.x);
+	vRet[1] = amx_ftoc(g_tr.vecPlaneNormal.y);
+	vRet[2] = amx_ftoc(g_tr.vecPlaneNormal.z);
 
-	if (tr.flFraction >= 1.0)
+	if (g_tr.flFraction >= 1.0)
 		return 0;
 
 	return 1;
@@ -237,6 +300,9 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
+	if (iEnt != -1) {
+		CHECK_ENTITY(iEnt);
+	}
 
 	cell *cStart = MF_GetAmxAddr(amx, params[2]);
 	cell *cEnd = MF_GetAmxAddr(amx, params[3]);
@@ -251,19 +317,17 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
-
-	TraceResult tr;
-
+	
 	if (iEnt == -1)
-		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &tr);
+		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &g_tr);
 	else
-		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &tr);
+		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &g_tr);
 
-	edict_t *pHit = tr.pHit;
+	edict_t *pHit = g_tr.pHit;
 
-	vRet[0] = amx_ftoc(tr.vecEndPos.x);
-	vRet[1] = amx_ftoc(tr.vecEndPos.y);
-	vRet[2] = amx_ftoc(tr.vecEndPos.z);
+	vRet[0] = amx_ftoc(g_tr.vecEndPos.x);
+	vRet[1] = amx_ftoc(g_tr.vecEndPos.y);
+	vRet[2] = amx_ftoc(g_tr.vecEndPos.z);
 
 	if (FNullEnt(pHit))
 		return 0;
@@ -303,25 +367,17 @@ static cell AMX_NATIVE_CALL get_decal_index(AMX *amx, cell *params)
 	return DECAL_INDEX(szDecal);
 }
 
-static cell AMX_NATIVE_CALL precache_event(AMX *amx, cell *params)
-{
-	int len;
-	char *szEvent = MF_FormatAmxString(amx, params, 2, &len);
-	return PRECACHE_EVENT(params[1], (char *)STRING(ALLOC_STRING(szEvent)));
-
-}
-
 static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 	
-	CHECK_ENTITY(iEnt);
+	if (iEnt != -1) {
+		CHECK_ENTITY(iEnt);
+	}
 
-	edict_t *e = INDEXENT2(iEnt);
-
-	char *info = GETINFOKEYBUFFER(e);
+	char *info = GETINFOKEYBUFFER((iEnt == -1) ? NULL : INDEXENT2(iEnt));
 	
-	return MF_SetAmxString(amx, params[2], info, params[3]);
+	return MF_SetAmxStringUTF8Char(amx, params[2], info, strlen(info), params[3]);
 }
 
 //from jghg, who says it doesn't work
@@ -346,6 +402,7 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 	int iTargetIndex = params[2];
 
 	CHECK_ENTITY(iIndex);
+	CHECK_ENTITY(iTargetIndex);
 
 	SET_VIEW(INDEXENT2(iIndex), INDEXENT2(iTargetIndex));
 
@@ -491,21 +548,20 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 
 	if (FStrEq(szLights, "#OFF")) {
 		glinfo.bCheckLights = false;
-		g_pFunctionTable_Post->pfnStartFrame = NULL;
 		memset(glinfo.szLastLights, 0x0, 128);
-		(g_engfuncs.pfnLightStyle)(0, glinfo.szRealLights);
+		LIGHT_STYLE(0, glinfo.szRealLights);
 		return 1;
 	}
 	
-	g_pFunctionTable_Post->pfnStartFrame = StartFrame_Post;
 	glinfo.bCheckLights = true;
 
-	//Reset LastLights
+	//Reset LastLights and store custom lighting
 	memset(glinfo.szLastLights, 0x0, 128);
-	//Store the previous lighting.
-	memcpy(glinfo.szLastLights, szLights, strlen(szLights));
+	memcpy(glinfo.szLastLights, szLights, ke::Min(iLength, 127));
 
-	(g_engfuncs.pfnLightStyle)(0, szLights);
+	LightStyleDetour->DisableDetour();
+	LIGHT_STYLE(0, szLights);
+	LightStyleDetour->EnableDetour();
 
 	// These make it so that players/weaponmodels look like whatever the lighting is
 	// at. otherwise it would color players under the skybox to these values.
@@ -519,26 +575,42 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 //(mahnsawce)
 static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 {
+	int iEnt = params[3];
+	if (iEnt > 0) {
+		CHECK_ENTITY(iEnt);
+	}
+
 	int iResult=0;
-	TraceResult tr;
-	Vector vPos;
+	Vector vStart;
+	Vector vEnd;
 	cell *vCell;
 
 	vCell = MF_GetAmxAddr(amx, params[1]);
 
-	vPos.x = amx_ctof(vCell[0]);
-	vPos.y = amx_ctof(vCell[1]);
-	vPos.z = amx_ctof(vCell[2]);
+	vStart.x = amx_ctof(vCell[0]);
+	vStart.y = amx_ctof(vCell[1]);
+	vStart.z = amx_ctof(vCell[2]);
 
-	TRACE_HULL(vPos,vPos, params[4], params[2], params[3] > 0 ? INDEXENT2(params[3]) : 0 , &tr);
+	if (params[0] / sizeof(cell) >= 5 && (vCell = MF_GetAmxVectorNull(amx, params[5])))
+	{
 
-	if (tr.fStartSolid) {
+		vEnd.x = amx_ctof(vCell[0]);
+		vEnd.y = amx_ctof(vCell[1]);
+		vEnd.z = amx_ctof(vCell[2]);
+	}
+	else
+		vEnd = vStart;
+
+
+	TRACE_HULL(vStart, vEnd, params[4], params[2], iEnt > 0 ? INDEXENT2(iEnt) : NULL, &g_tr);
+
+	if (g_tr.fStartSolid) {
 		iResult += 1;
 	}
-	if (tr.fAllSolid) {
+	if (g_tr.fAllSolid) {
 		iResult += 2;
 	}
-	if (!tr.fInOpen) {
+	if (!g_tr.fInOpen) {
 		iResult += 4;
 	}
 	return iResult;
@@ -564,6 +636,7 @@ static cell AMX_NATIVE_CALL playback_event(AMX *amx, cell *params)
 	int bparam1;
 	int bparam2;
 	flags = params[1];
+	CHECK_ENTITY(params[2]);
 	pInvoker=INDEXENT2(params[2]);
 	eventindex=params[3];
 	delay=amx_ctof(params[4]);
@@ -881,6 +954,10 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    cell *cAngles = MF_GetAmxAddr(amx, params[2]);
    REAL fGive = amx_ctof(params[3]);
    int iIgnoreEnt = params[4];
+   if (iIgnoreEnt != -1) {
+	   CHECK_ENTITY(iIgnoreEnt);
+   }
+
    cell *hitX = MF_GetAmxAddr(amx, params[5]);
    cell *hitY = MF_GetAmxAddr(amx, params[6]);
    cell *shortestDistance = MF_GetAmxAddr(amx, params[7]);
@@ -971,7 +1048,6 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"set_speak",			set_speak},
 	{"get_speak",			get_speak},
 
-	{"precache_event",		precache_event},
 	{"playback_event",		playback_event},
 
 	{"set_view",			set_view},
@@ -985,10 +1061,12 @@ AMX_NATIVE_INFO engine_Natives[] = {
 	{"get_usercmd",			get_usercmd},
 	{"set_usercmd",			set_usercmd},
 
-
 	{"register_impulse",	register_impulse},
 	{"register_think",		register_think},
 	{"register_touch",		register_touch},
+	{"unregister_impulse",	unregister_impulse},
+	{"unregister_think",	unregister_think},
+	{"unregister_touch",	unregister_touch},
 
 	{"eng_get_string",		get_string},
 	{"is_in_viewcone",		in_view_cone},

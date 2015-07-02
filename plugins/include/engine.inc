@@ -25,7 +25,7 @@
 #endif
 
 /**
- * Retrieves a result from the global trace handle.
+ * Retrieves a result from the global engine module trace handle.
  *
  * @note For a list of trace results available see the TR_* constants in
  *       engine_const.inc.
@@ -70,7 +70,7 @@ native traceresult(type, any:...);
  * @param impulse   Impulse to hook
  * @param function  Name of callback function
  *
- * @noreturn
+ * @return          Impulse forward id
  */
 native register_impulse(impulse, const function[]);
 
@@ -96,7 +96,7 @@ native register_impulse(impulse, const function[]);
  * @param Toucher   Entity classname touching, "*" or "" for any class
  * @param function  Name of callback function
  *
- * @noreturn
+ * @return          Touch forward id
  */
 native register_touch(const Touched[], const Toucher[], const function[]);
 
@@ -120,28 +120,36 @@ native register_touch(const Touched[], const Toucher[], const function[]);
  * @param Touched   Entity classname to hook
  * @param function  Name of callback function
  *
- * @noreturn
+ * @return 	        Think forward id
  */
 native register_think(const Classname[], const function[]);
 
 /**
- * Precaches an event file.
+ * Removes a previously registered impulse hook.
  *
- * @note The event type should always be 1.
- * @note Contrary to the other precache_* natives, this can be used outside of
- *       the plugin_precache() forward, e.g. in plugin_init() or plugin_cfg().
- *       A bug in some clients makes this necessary, as plugin_precache() is
- *       called before the mod has precached its own, default event files. This
- *       can cause the event table to be misaligned on the client, leading to
- *       visual and audio bugs that are hard to diagnose.
+ * @param registerid    Impulse forward id
  *
- * @param type  Event type
- * @param Name  Formatting rules, path to the event file
- * @param ...   Variable number of formatting parameters
- *
- * @return      Unique cache id of the event
+ * @return              1 on success, 0 if nothing was removed
  */
-native precache_event(type, const Name[], any:...);
+native unregister_impulse(registerid);
+
+/**
+ * Removes a previously registered touch hook.
+ *
+ * @param registerid    Touch forward id
+ *
+ * @return              1 on success, 0 if nothing was removed
+ */
+native unregister_touch(registerid);
+
+/**
+ * Removes a previously registered think hook.
+ *
+ * @param registerid    Think forward id
+ *
+ * @return              1 on success, 0 if nothing was removed
+ */
+native unregister_think(registerid);
 
 /**
  * Sets the engine module speak flags on a client.
@@ -299,6 +307,21 @@ native get_global_vector(variable, Float:vector[3]);
 native get_global_edict(variable);
 
 /**
+ * Returns a edict type value from the server globals.
+ *
+ * @note For a list of valid edict type entries, see the GL_* constants in
+ *       engine_const.inc under the "Edict" section.
+ * @note This native returns -1 as a safe error value if the edict retrieved is
+ *       an invalid entity. Otherwise it is identical to get_global_edict().
+ *
+ * @param variable  Entry to retrieve from
+ *
+ * @return          Value of specified entry
+ * @error           If an invalid entry is provided, an error will be thrown.
+ */
+native get_global_edict2(variable);
+
+/**
  * Sets the size of the entity bounding box, as described by the minimum and
  * maximum vectors relative to the origin.
  *
@@ -357,8 +380,8 @@ native bool:entity_intersects(entity, other);
  * @param iKey      Entry to retrieve from
  *
  * @return          Value of specified entry
- * @error           If an invalid entity index or entry is provided, an error
- *                  will be thrown.
+ * @error           If an invalid entity index is provided, an error will be
+ *                  thrown.
  */
 native entity_get_int(iIndex, iKey);
 
@@ -467,6 +490,26 @@ native entity_set_vector(iIndex, iKey, const Float:vNewVector[3]);
  *                  thrown.
  */
 native entity_get_edict(iIndex, iKey);
+
+/**
+ * Returns an edict type value from an entities entvar struct.
+ *
+ * @note For a list of valid edict type entries, see the EV_ENT_* constants in
+ *       engine_const.inc
+ * @note This native returns -1 as a safe error value if the edict retrieved
+ *       from the entvar is an invalid entity. Otherwise it is identical to
+ *       entity_get_edict().
+ *
+ * @param iIndex    Entity index
+ * @param iKey      Entry to retrieve from
+ *
+ * @return          Entity index in specified entry, -1 if the edict in the
+ *                  entvar is not a valid entity or an invalid entry was
+ *                  specified
+ * @error           If an invalid entity index is provided, an error will be
+ *                  thrown.
+ */
+native entity_get_edict2(iIndex, iKey);
 
 /**
  * Sets an edict type value in an entities entvar struct.
@@ -578,6 +621,8 @@ native create_entity(const szClassname[]);
  *
  * @return          1 if entity was sucessfully removed, 0 if an invalid entity
  *                  was provided
+ * @error           If an entity index in the range of 0 to MaxClients is
+ *                  provided, an error will be thrown.
  */
 native remove_entity(iIndex);
 
@@ -921,8 +966,8 @@ native is_visible(entity, target);
  * Fires a trace line between two origins, retrieving the end point and entity
  * hit.
  *
- * @note This native writes to the global trace handle. Additional trace results
- *       can be retrieved using traceresult().
+ * @note This native writes to the global engine module trace handle. Additional
+ *       trace results can be retrieved using traceresult().
  * @note This native returns 0 if the trace did not hit anything. As 0 is an
  *       entity index that is considered to be a valid value for a trace hit
  *       ("worldspawn"), this native can potentially return a misleading value.
@@ -941,8 +986,8 @@ native trace_line(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Float:
 /**
  * Fires a trace line between two origins, retrieving the trace normal.
  *
- * @note This native writes to the global trace handle. Additional trace results
- *       can be retrieved using traceresult().
+ * @note This native writes to the global engine module trace handle. Additional
+ *       trace results can be retrieved using traceresult().
  *
  * @param iIgnoreEnt    Entity index that trace will ignore, -1 if trace should
  *                      not ignore any entities
@@ -956,31 +1001,33 @@ native trace_line(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Float:
 native trace_normal(iIgnoreEnt, const Float:fStart[3], const Float:fEnd[3], Float:vReturn[3]);
 
 /**
- * Fires a trace hull on a specified origin.
+ * Fires a trace hull on a specified origin or between two origins.
  *
- * @note This native writes to the global trace handle. Additional trace results
- *       can be retrieved using traceresult().
+ * @note This native writes to the global engine module trace handle. Additional
+ *       trace results can be retrieved using traceresult().
  * @note For a list of valid hull types see the HULL_* constants in
  *       hlsdk_const.inc
  * @note For a list of valid ignore types see the *IGNORE_* constants in
  *       hlsdk_const.inc
  *
- * @param origin            Trace startin and end point
+ * @param origin            Trace start point (and end point if not specified)
  * @param hull              Hull type
  * @param ignoredent        Entity index that trace will ignore
  * @param ignoremonsters    Entity ignore type
+ * @param end               Trace end point, pass NULL_VECTOR to use start point
  *
  * @return                  Custom bitflag sum of relevant trace results
  *                          StartSolid (1), AllSolid (2) and InOpen (4)
  */
-native trace_hull(const Float:origin[3], hull, ignoredent = 0, ignoremonsters = 0);
+native trace_hull(const Float:origin[3], hull, ignoredent = 0, ignoremonsters = 0, const Float:end[3] = NULL_VECTOR);
 
 /**
  * Attempts to describe an obstacle by firing trace lines in a specified
  * direction, offset on the z-axis around an origin.
  *
  * @note The functionality of this native can mostly be replaced by a single
- *       hull trace. This native does not write to the global trace handle.
+ *       hull trace. This native does not write to the global engine module
+ *       trace handle.
  * @note This native is intended to examine an obstacle in front of a standing
  *       player. Start should usually be the origin of a client while angle
  *       should be its forward angle vector. 73 traces are fired, each offset by

@@ -14,6 +14,9 @@ binary.sources = [
   'entity.cpp',
   'globals.cpp',
   'forwards.cpp',
+  '../../public/memtools/MemoryUtils.cpp',
+  '../../public/memtools/CDetour/detours.cpp',
+  '../../public/memtools/CDetour/asm/asm.c',
 ]
  
 if builder.target_platform == 'windows':

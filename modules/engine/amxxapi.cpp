@@ -14,6 +14,10 @@
 #include "engine.h"
 
 BOOL CheckForPublic(const char *publicname);
+void CreateDetours();
+void DestroyDetours();
+
+CDetour *LightStyleDetour = NULL;
 
 edict_t *g_player_edicts[33];
 
@@ -57,8 +61,14 @@ void OnAmxxAttach()
 	MF_AddNatives(global_Natives);
 	memset(glinfo.szLastLights, 0x0, 128);
 	memset(glinfo.szRealLights, 0x0, 128);
-	glinfo.fNextLights = 0;
 	glinfo.bCheckLights = false;
+
+	CreateDetours();
+}
+
+void OnAmxxDetach()
+{
+	DestroyDetours();
 }
 
 void OnPluginsLoaded()
@@ -197,7 +207,6 @@ void ServerDeactivate()
 	memset(glinfo.szLastLights, 0x0, 128);
 	memset(glinfo.szRealLights, 0x0, 128);
 	glinfo.bCheckLights = false;
-	glinfo.fNextLights = 0;
 	
 	// Reset all forwarding function tables (so that forwards won't be called before plugins are initialized)
 	g_pFunctionTable->pfnAddToFullPack=NULL;
@@ -211,7 +220,6 @@ void ServerDeactivate()
 	g_pFunctionTable->pfnThink=NULL; // "pfn_think", "register_think"
 	g_pFunctionTable->pfnStartFrame=NULL; // "server_frame","ServerFrame"
 	g_pFunctionTable->pfnTouch=NULL; // "pfn_touch","vexd_pfntouch"
-	g_pFunctionTable_Post->pfnStartFrame = NULL; // "set_lights"
 
 	ClearHooks();
 
@@ -226,11 +234,26 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	RETURN_META(MRES_IGNORED);
 }
 
-void LightStyle(int style, const char *val) {
-	if (!style) {
+DETOUR_DECL_STATIC2(LightStyle, void, int, style, const char *, val) // void (*pfnLightStyle) (int style, const char* val);
+{
+	DETOUR_STATIC_CALL(LightStyle)(style, val);
+
+	if (!style && strcmp(val, glinfo.szRealLights)) {
 		memset(glinfo.szRealLights, 0x0, 128);
-		memcpy(glinfo.szRealLights, val, strlen(val));
+		memcpy(glinfo.szRealLights, val, ke::Min(strlen(val), (size_t)127));
 	}
+
+	if (glinfo.bCheckLights && strcmp(val, glinfo.szLastLights))
+		g_pFunctionTable_Post->pfnStartFrame = StartFrame_Post;
+}
+
+void StartFrame_Post()
+{
+	g_pFunctionTable_Post->pfnStartFrame = NULL;
+
+	LightStyleDetour->DisableDetour();
+	LIGHT_STYLE(0, glinfo.szLastLights);
+	LightStyleDetour->EnableDetour();
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -254,4 +277,14 @@ BOOL CheckForPublic(const char *publicname)
 	}
 
 	return FALSE; // no public found in any loaded script
+}
+
+void CreateDetours()
+{
+	LightStyleDetour = DETOUR_CREATE_STATIC_FIXED(LightStyle, (void*)(g_engfuncs.pfnLightStyle));
+}
+
+void DestroyDetours()
+{
+	LightStyleDetour->Destroy();
 }

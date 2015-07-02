@@ -54,7 +54,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\memtools;..\..\..\public\sdk;..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -98,6 +98,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\public\memtools\CDetour\asm\asm.c" />
+    <ClCompile Include="..\..\..\public\memtools\CDetour\detours.cpp" />
+    <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp" />
     <ClCompile Include="..\amxxapi.cpp" />
     <ClCompile Include="..\engine.cpp" />
     <ClCompile Include="..\entity.cpp" />
@@ -106,6 +109,10 @@
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\public\memtools\CDetour\asm\asm.h" />
+    <ClInclude Include="..\..\..\public\memtools\CDetour\detourhelpers.h" />
+    <ClInclude Include="..\..\..\public\memtools\CDetour\detours.h" />
+    <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h" />
     <ClInclude Include="..\engine.h" />
     <ClInclude Include="..\entity.h" />
     <ClInclude Include="..\gpglobals.h" />

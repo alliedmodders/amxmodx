@@ -25,6 +25,7 @@
 #include "entity_state.h"
 #include <am-vector.h>
 #include <am-string.h>
+#include "CDetour/detours.h"
 
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;
@@ -46,6 +47,8 @@ extern int StartFrameForward;
 extern int DispatchUseForward;
 extern int VexdTouchForward;
 extern int VexdServerForward;
+
+extern CDetour *LightStyleDetour;
 
 #define AMS_OFFSET 0.01
 
@@ -118,7 +121,6 @@ struct PlayerInfo {
 };
 
 struct GlobalInfo {
-	float fNextLights;
 	char szLastLights[128];
 	char szRealLights[128];
 	bool bCheckLights;
@@ -205,7 +207,7 @@ void StartFrame_Post();
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
 		return 0; \
 	} else { \
-		if (x <= gpGlobals->maxClients) { \
+		if (x > 0 && x <= gpGlobals->maxClients) { \
 			if (!MF_IsPlayerIngame(x)) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
 				return 0; \

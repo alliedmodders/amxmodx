@@ -249,6 +249,25 @@ native precache_sound(const name[]);
 native precache_generic(const szFile[]);
 
 /**
+ * Precaches an event file.
+ *
+ * @note The event type should always be 1.
+ * @note Contrary to the other precache_* natives, this can be used outside of
+ *       the plugin_precache() forward, e.g. in plugin_init() or plugin_cfg().
+ *       A bug in some clients makes this necessary, as plugin_precache() is
+ *       called before the mod has precached its own, default event files. This
+ *       can cause the event table to be misaligned on the client, leading to
+ *       visual and audio bugs that are hard to diagnose.
+ *
+ * @param type  Event type
+ * @param Name  Formatting rules, path to the event file
+ * @param ...   Variable number of formatting parameters
+ *
+ * @return      Unique cache id of the event
+ */
+native precache_event(type, const Name[], any:...);
+
+/**
  * Changes the map.
  *
  * @note  This calls the pfnChangelLevel engine function.

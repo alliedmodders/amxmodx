@@ -120,11 +120,17 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params)
 {
 	int id = params[1];
+	if (id <= gpGlobals->maxClients || id > gpGlobals->maxEntities)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d can not be removed", id);
+		return 0;
+	}
+	
 	edict_t *pEnt = INDEXENT2(id);
 
 	if (FNullEnt(pEnt))
 		return 0;
-	
+
 	REMOVE_ENTITY(pEnt);
 
 	return 1;
@@ -150,11 +156,7 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 		cell *cVal = MF_GetAmxAddr(amx, params[1]);
 		int iValue = *cVal;
 
-		if (iValue != 0 && (FNullEnt(INDEXENT2(iValue)) || iValue < 0 || iValue > gpGlobals->maxEntities)) 
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", iValue);
-			return 0;
-		}
+		CHECK_ENTITY_SIMPLE(iValue);
 
 		edict_t *pEntity = INDEXENT2(iValue);
 		KeyValueData kvd;
@@ -168,7 +170,13 @@ static cell AMX_NATIVE_CALL DispatchKeyValue(AMX *amx, cell *params)
 		kvd.fHandled = 0;
 
 		MDLL_KeyValue(pEntity, &kvd);
-	} else {
+	} else if (count == 2) {
+		if (!g_inKeyValue)
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "DispatchKeyValue() with two arguments can only be used inside of pfn_keyvalue()");
+			return 0;
+		}
+
 		int iLength;
 		char *char1 = MF_GetAmxString(amx, params[1], 0, &iLength);
 		char *char2 = MF_GetAmxString(amx, params[2], 1, &iLength);
@@ -188,20 +196,21 @@ static cell AMX_NATIVE_CALL get_keyvalue(AMX *amx, cell *params)
 	edict_t *pEntity = INDEXENT2(idx);
 	int iLength=0;
 	char *char1 = MF_GetAmxString(amx, params[2], 1, &iLength);
-	return MF_SetAmxString(amx, params[3], INFO_KEY_VALUE(INFO_KEY_BUFFER(pEntity),char1), params[4]); 
+	char *val = INFO_KEY_VALUE(INFO_KEY_BUFFER(pEntity), char1);
+	return MF_SetAmxStringUTF8Char(amx, params[3], val, strlen(val), params[4]); 
 }
 
 static cell AMX_NATIVE_CALL copy_keyvalue(AMX *amx, cell *params)
 {
 	if (!g_inKeyValue)
 		return 0;
-	
+
 	if (g_pkvd->szClassName)
-		MF_SetAmxString(amx, params[1], g_pkvd->szClassName, params[2]);
+		MF_SetAmxStringUTF8Char(amx, params[1], g_pkvd->szClassName, strlen(g_pkvd->szClassName), params[2]);
 	if (g_pkvd->szKeyName)
-		MF_SetAmxString(amx, params[3], g_pkvd->szKeyName, params[4]);
+		MF_SetAmxStringUTF8Char(amx, params[3], g_pkvd->szKeyName, strlen(g_pkvd->szKeyName), params[4]);
 	if (g_pkvd->szValue)
-		MF_SetAmxString(amx, params[5], g_pkvd->szValue, params[6]);
+		MF_SetAmxStringUTF8Char(amx, params[5], g_pkvd->szValue, strlen(g_pkvd->szValue), params[6]);
 
 	return 1;
 }
@@ -609,7 +618,6 @@ static cell AMX_NATIVE_CALL entity_get_int(AMX *amx, cell *params)
 			iRetValue = pEnt->v.deadflag;
 			break;
 		default:
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid property %d", idx);
 			return 0;
 			break;
 	}
@@ -1057,7 +1065,7 @@ static cell AMX_NATIVE_CALL entity_set_string(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL entity_get_edict2(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
 	int idx = params[2];
@@ -1103,14 +1111,24 @@ static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
 			pRet = pEnt->v.euser4;
 			break;
 		default:
-			return 0;
+			return -1;
 			break;
 	}
 
 	if (FNullEnt(pRet))
-		return 0;
+		return -1;
 
 	return ENTINDEX(pRet);
+}
+
+static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
+{
+	cell res = entity_get_edict2(amx, params);
+
+	if (res == -1)
+		res = 0;
+
+	return res;
 }
 
 static cell AMX_NATIVE_CALL entity_set_edict(AMX *amx, cell *params)
@@ -1320,6 +1338,7 @@ static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_en
 static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 {
 	int idx = params[1];
+	CHECK_ENTITY_SIMPLE(idx);
 
 	edict_t *pEnt = INDEXENT2(idx);
 	cell *cAddr = MF_GetAmxAddr(amx, params[2]);
@@ -1340,7 +1359,10 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param */
 {
-	edict_t *pEnt = INDEXENT2(params[1]);
+	int idx = params[1];
+	CHECK_ENTITY_SIMPLE(idx);
+
+	edict_t *pEnt = INDEXENT2(idx);
 
 	int len;
 	char* sValue = MF_GetAmxString(amx, params[2], 0, &len);
@@ -1476,7 +1498,7 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 {
 	int iEnt = params[1];
 	int oEnt = params[3];
-	// Check index to start searching at, 0 must be possible for iEnt.
+	CHECK_ENTITY_SIMPLE(iEnt);
 	CHECK_ENTITY_SIMPLE(oEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
@@ -1512,6 +1534,7 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 	int index = params[1];
 	const char *szModel;
 
+	CHECK_ENTITY_SIMPLE(params[4]);
 	CHECK_ENTITY(index);
 
 	edict_t* pentFind = INDEXENT2(params[4]);
@@ -1602,6 +1625,7 @@ AMX_NATIVE_INFO ent_Natives[] = {
 	{"entity_get_string",	entity_get_string},
 	{"entity_set_string",	entity_set_string},
 	{"entity_get_edict",	entity_get_edict},
+	{"entity_get_edict2",	entity_get_edict2},
 	{"entity_set_edict",	entity_set_edict},
 	{"entity_get_byte",		entity_get_byte},
 	{"entity_set_byte",		entity_set_byte},

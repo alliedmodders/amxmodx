@@ -118,20 +118,6 @@ void StartFrame()
 	RETURN_META(MRES_IGNORED);
 }
 
-void StartFrame_Post()
-{
-	if (glinfo.bCheckLights)
-	{
-		if (glinfo.fNextLights < gpGlobals->time)
-		{
-			(g_engfuncs.pfnLightStyle)(0, glinfo.szLastLights);
-			glinfo.fNextLights = gpGlobals->time + 1;
-		}
-	}
-
-	RETURN_META(MRES_IGNORED);
-}
-
 void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int random_seed)
 {
 	unsigned int i = 0;

@@ -157,7 +157,7 @@ static cell AMX_NATIVE_CALL get_global_vector(AMX *amx, cell *params) // globals
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_global_edict(AMX *amx, cell *params) // globals_get_edict(variable); = 1 param
+static cell AMX_NATIVE_CALL get_global_edict2(AMX *amx, cell *params) 
 {
 	edict_t* pReturnEntity;
 
@@ -167,14 +167,24 @@ static cell AMX_NATIVE_CALL get_global_edict(AMX *amx, cell *params) // globals_
 			break;
 		default:
 			MF_LogError(amx, AMX_ERR_NATIVE, "Undefined global_edict index %d", params[1]);
-			return 0;
+			return -1;
 	}
 
 	// Will crash if ENTINDEX() is called on bad pointer?
 	if(!FNullEnt(pReturnEntity))
 		return ENTINDEX(pReturnEntity);
 
-	return 0;
+	return -1;
+}
+
+static cell AMX_NATIVE_CALL get_global_edict(AMX *amx, cell *params) // globals_get_edict(variable); = 1 param
+{
+	cell res = get_global_edict2(amx, params);
+
+	if (res == -1)
+		res = 0;
+
+	return res;
 }
 
 AMX_NATIVE_INFO global_Natives[] = {
@@ -182,6 +192,7 @@ AMX_NATIVE_INFO global_Natives[] = {
 	{"get_global_int",		get_global_int},
 	{"get_global_string",	get_global_string},
 	{"get_global_edict",	get_global_edict},
+	{"get_global_edict2",	get_global_edict2},
 	{"get_global_vector",	get_global_vector},
 	{NULL,					NULL},
 	  ///////////////////

@@ -18,6 +18,15 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{e7f2c5c2-cba9-4712-a576-ceb676c94b36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memtools">
+      <UniqueIdentifier>{ca6abf66-eee2-4d06-813e-792d82d6e846}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memtools\CDetour">
+      <UniqueIdentifier>{59354b8c-0925-4d8b-bb2b-684f6638de6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memtools\CDetour\asm">
+      <UniqueIdentifier>{6c2c3c74-4dc3-45bf-b3a5-6224971eee69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\amxxapi.cpp">
@@ -38,6 +47,15 @@
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp">
+      <Filter>Memtools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\memtools\CDetour\detours.cpp">
+      <Filter>Memtools\CDetour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\memtools\CDetour\asm\asm.c">
+      <Filter>Memtools\CDetour\asm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\engine.h">
@@ -54,6 +72,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h">
+      <Filter>Memtools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\memtools\CDetour\detourhelpers.h">
+      <Filter>Memtools\CDetour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\memtools\CDetour\detours.h">
+      <Filter>Memtools\CDetour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\memtools\CDetour\asm\asm.h">
+      <Filter>Memtools\CDetour\asm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

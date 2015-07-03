@@ -16,7 +16,7 @@
 
 #include <IGameConfigs.h>
 
-bool UTIL_IsPlayer(AMX* amx, edict_t* pPlayer);
+bool UTIL_IsPlayer(edict_t *pPlayer);
 void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message);
 void *UTIL_FindAddressFromEntry(const char *entry, bool isHidden = false, const char *library = "mod");
 bool UTIL_CheckForPublic(const char *publicname);
@@ -169,7 +169,7 @@ class EHANDLE
 				{
 					return m_pent;
 				}
-			
+
 				return nullptr;
 			}
 
@@ -191,6 +191,37 @@ class EHANDLE
 
 			return pent;
 		};
+};
+
+class CUnifiedSignals
+{
+	public:
+
+		void Update(void)
+		{
+			m_flState = m_flSignal;
+			m_flSignal = 0;
+		}
+
+		void Signal(int flags) 
+		{
+			m_flSignal |= flags;
+		}
+
+		int GetSignal(void) 
+		{
+			return m_flSignal;
+		}
+
+		int GetState(void) 
+		{
+			return m_flState;
+		}
+
+	private:
+
+		int m_flSignal;
+		int m_flState;
 };
 
 #endif // CSTRIKE_UTILS_H

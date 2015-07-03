@@ -427,7 +427,7 @@
 // #define FN_PEntityOfEntIndex_Post			PEntityOfEntIndex_Post
 // #define FN_FindEntityByVars_Post				FindEntityByVars_Post
 // #define FN_GetModelPtr_Post					GetModelPtr_Post
-// #define FN_RegUserMsg_Post					RegUserMsg_Post
+#define FN_RegUserMsg_Post					OnRegUserMsg_Post
 // #define FN_AnimationAutomove_Post			AnimationAutomove_Post
 // #define FN_GetBonePosition_Post				GetBonePosition_Post
 // #define FN_FunctionFromName_Post				FunctionFromName_Post

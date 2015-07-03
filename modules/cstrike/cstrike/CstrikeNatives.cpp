@@ -21,8 +21,16 @@ int g_zooming[33] = {0};
 bool g_precachedknife = false;
 bool g_noknives = false;
 
-extern CreateNamedEntityFunc CS_CreateNamedEntity;
+extern CreateNamedEntityFunc       CS_CreateNamedEntity;
 extern UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
+
+extern int MessageIdMoney;
+extern int MessageIdScoreInfo;
+extern int MessageIdArmorType;
+extern int MessageIdTeamInfo;
+extern int MessageIdStatusIcon;
+extern int MessageIdScoreAttrib;
+extern int MessageIdResetHUD;
 
 // native cs_set_user_money(index, money, flash = 1);
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params)
@@ -38,7 +46,7 @@ static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params)
 
 	set_pdata<int>(pPlayer, m_iAccount, money);
 
-	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "Money", nullptr), nullptr, pPlayer);
+	MESSAGE_BEGIN(MSG_ONE, MessageIdMoney, nullptr, pPlayer);
 		WRITE_LONG(money);
 		WRITE_BYTE(flash);
 	MESSAGE_END();
@@ -86,7 +94,7 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params)
 
 	set_pdata<int>(pPlayer, m_iDeaths, deaths);
 
-	MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreInfo", nullptr));
+	MESSAGE_BEGIN(MSG_ALL, MessageIdScoreInfo);
 		WRITE_BYTE(index);
 		WRITE_SHORT(static_cast<int>(pPlayer->v.frags));
 		WRITE_SHORT(deaths);
@@ -352,7 +360,7 @@ static cell AMX_NATIVE_CALL cs_set_user_armor(AMX *amx, cell *params)
 	
 	if (type == CS_ARMOR_KEVLAR || type == CS_ARMOR_ASSAULTSUIT)
 	{
-		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "ArmorType", nullptr), nullptr, pPlayer);
+		MESSAGE_BEGIN(MSG_ONE, MessageIdArmorType, nullptr, pPlayer);
 			WRITE_BYTE(type == CS_ARMOR_ASSAULTSUIT ? 1 : 0);
 		MESSAGE_END();
 	}
@@ -428,7 +436,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params)
 			scoreattrib = (pPlayer->v.deadflag == DEAD_NO && pPlayer->v.health > 0) ? SCOREATTRIB_NOTHING : SCOREATTRIB_DEAD;
 		}
 
-		MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreAttrib", nullptr));
+		MESSAGE_BEGIN(MSG_ALL, MessageIdScoreAttrib);
 			WRITE_BYTE(index);
 			WRITE_BYTE(scoreattrib);
 		MESSAGE_END();
@@ -490,7 +498,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 		default:              sprintf(teaminfo, "TEAM_%i", team);
 	}
 
-	MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "TeamInfo", nullptr));
+	MESSAGE_BEGIN(MSG_ALL, MessageIdTeamInfo);
 		WRITE_BYTE(index);
 		WRITE_STRING(teaminfo);
 	MESSAGE_END();
@@ -567,7 +575,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params)
 	{
 		if (icon) 
 		{
-			MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", nullptr), nullptr, pPlayer);
+			MESSAGE_BEGIN(MSG_ONE, MessageIdStatusIcon, nullptr, pPlayer);
 				WRITE_BYTE(1);
 				WRITE_STRING("c4");
 				WRITE_BYTE(DEFUSER_COLOUR_R);
@@ -578,7 +586,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params)
 	}
 	else 
 	{
-		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", nullptr), nullptr, pPlayer);
+		MESSAGE_BEGIN(MSG_ONE, MessageIdStatusIcon, nullptr, pPlayer);
 			WRITE_BYTE(0);
 			WRITE_STRING("c4");
 		MESSAGE_END();
@@ -639,7 +647,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params)
 			icon = MF_GetAmxString(amx, params[6], 1, &length);
 		}
 	
-		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", nullptr), nullptr, pPlayer);
+		MESSAGE_BEGIN(MSG_ONE, MessageIdStatusIcon, nullptr, pPlayer);
 			WRITE_BYTE(params[7] == 1 ? 2 : 1);
 			WRITE_STRING(icon);
 			WRITE_BYTE(colour[0]);
@@ -649,7 +657,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params)
 	}
 	else 
 	{
-		MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "StatusIcon", nullptr), nullptr, pPlayer);
+		MESSAGE_BEGIN(MSG_ONE, MessageIdStatusIcon, nullptr, pPlayer);
 			WRITE_BYTE(0);
 			WRITE_STRING("defuser");
 		MESSAGE_END();
@@ -979,7 +987,7 @@ static cell AMX_NATIVE_CALL cs_set_user_tked(AMX *amx, cell *params)
 	{ 
 		pPlayer->v.frags -= subtract;
 
-		MESSAGE_BEGIN(MSG_ALL, GET_USER_MSG_ID(PLID, "ScoreInfo", nullptr)); 
+		MESSAGE_BEGIN(MSG_ALL, MessageIdScoreInfo);
 			WRITE_BYTE(index);
 			WRITE_SHORT(static_cast<int>(pPlayer->v.frags));
 			WRITE_SHORT(get_pdata<int>(pPlayer, m_iDeaths));
@@ -1500,8 +1508,6 @@ static cell AMX_NATIVE_CALL cs_set_c4_defusing(AMX* amx, cell* params)
 	return 1;
 }
 
-
-
 // cs_create_entity(const classname[])
 static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
 {
@@ -1612,7 +1618,7 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_create_entity",			cs_create_entity },	
 	{"cs_find_ent_by_class",		cs_find_ent_by_class},	
 
-	{nullptr,							nullptr}
+	{nullptr,						nullptr}
 };
 
 edict_s* FN_CreateNamedEntity(int classname) 
@@ -1641,7 +1647,7 @@ void FN_ServerDeactivate()
 void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) 
 {
 	// Reset player model a short while (MODELRESETTIME) after this if they are using an edited model.
-	if(msg_type == GET_USER_MSG_ID(PLID, "ResetHUD", NULL)) 
+	if(msg_type == MessageIdResetHUD) 
 	{
 		int entityIndex = ENTINDEX(ed);
 

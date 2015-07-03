@@ -14,6 +14,8 @@
 #include "amxxmodule.h"
 #include "MemoryUtils.h"
 
+extern int MessageIdTextMsg;
+
 bool UTIL_IsPlayer(edict_t *pPlayer) 
 {
 	return strcmp(STRING(pPlayer->v.classname), "player") == 0;
@@ -21,7 +23,7 @@ bool UTIL_IsPlayer(edict_t *pPlayer)
 
 void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message)
 {
-	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "TextMsg", NULL), NULL, pPlayer);
+	MESSAGE_BEGIN(MSG_ONE, MessageIdTextMsg, nullptr, pPlayer);
 		WRITE_BYTE(HUD_PRINTCENTER); // 1 = console, 2 = console, 3 = chat, 4 = center, 5 = radio
 		WRITE_STRING(message);
 	MESSAGE_END();

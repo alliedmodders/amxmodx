@@ -63,6 +63,13 @@ bool UTIL_CheckForPublic(const char *publicname);
 		} \
 	}
 
+#define CHECK_HOSTAGE(x)                                                                                                   \
+	if (strcmp(STRING(x->v.classname), "hostage_entity") != 0 && strcmp(STRING(x->v.classname), "monster_scientist") != 0) \
+	{                                                                                                                      \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(x->v.classname));            \
+		return 0;                                                                                                          \
+	}
+
 #define GETEDICT(n) \
 	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
 

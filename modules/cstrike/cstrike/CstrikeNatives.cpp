@@ -127,11 +127,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params)
 	CHECK_NONPLAYER(index);
 	edict_t *pHostage = INDEXENT(index);
 
-	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) 
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(pHostage->v.classname));
-		return 0;
-	}
+	CHECK_HOSTAGE(pHostage);
 
 	return get_pdata<int>(pHostage, m_iHostageIndex);
 }
@@ -860,11 +856,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params)
 	CHECK_NONPLAYER(index);
 	edict_t* pHostage = INDEXENT(index);
 
-	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) 
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(pHostage->v.classname));
-		return 0;
-	}
+	CHECK_HOSTAGE(pHostage);
 
 	edict_t *pEntity = get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Get();
 
@@ -887,11 +879,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params)
 		CHECK_ENTITY(target);
 	}
 
-	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) 
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(pHostage->v.classname));
-		return 0;
-	}
+	CHECK_HOSTAGE(pHostage);
 
 	get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Set(target ? GETEDICT(target) : nullptr);
 
@@ -1383,11 +1371,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_lastuse(AMX *amx, cell *params)
 	CHECK_NONPLAYER(index);
 	edict_t *pHostage = INDEXENT(index);
 
-	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) 
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(pHostage->v.classname));
-		return 0;
-	}
+	CHECK_HOSTAGE(pHostage);
    
 	return amx_ftoc(get_pdata<float>(pHostage, m_flPathAcquired));
 }
@@ -1402,11 +1386,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_lastuse(AMX *amx, cell *params)
 	CHECK_NONPLAYER(index);
 	edict_t *pHostage = INDEXENT(index);
 
-	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) 
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(pHostage->v.classname));
-		return 0;
-	}
+	CHECK_HOSTAGE(pHostage);
    
 	set_pdata<float>(pHostage, m_flPathAcquired, amx_ctof(params[2]));
 
@@ -1423,11 +1403,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_nextuse(AMX* amx, cell* params)
 	CHECK_NONPLAYER(index);
 	edict_t *pHostage = INDEXENT(index);
 
-	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) 
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(pHostage->v.classname));
-		return 0;
-	}
+	CHECK_HOSTAGE(pHostage);
    
 	return amx_ftoc(get_pdata<float>(pHostage, m_flNextChange));
 }
@@ -1442,11 +1418,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_nextuse(AMX* amx, cell* params)
 	CHECK_NONPLAYER(index);
 	edict_t *pHostage = INDEXENT(index);
 
-	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) 
-	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(pHostage->v.classname));
-		return 0;
-	}
+	CHECK_HOSTAGE(pHostage);
 
 	set_pdata<float>(pHostage, m_flNextChange, amx_ctof(params[2]));
 

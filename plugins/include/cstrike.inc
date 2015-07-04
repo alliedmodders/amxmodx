@@ -152,13 +152,14 @@ native cs_get_user_deaths(index);
  *
  * @param index         Client index
  * @param newdeaths     New value to set
+ * @param scoreboard    If true the scoreboard will be updated to reflect the new value.
  *
  * @noreturn
  * @error               If the client index is not within the range of 1 to
  *                      MaxClients, or the client is not connected, an error
  *                      will be thrown.
  */
-native cs_set_user_deaths(index, newdeaths);
+native cs_set_user_deaths(index, newdeaths, bool:scoreboard = true);
 
 /**
  * Returns index of the entity that a hostage is following.

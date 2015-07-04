@@ -80,7 +80,7 @@ static cell AMX_NATIVE_CALL cs_get_user_deaths(AMX *amx, cell *params)
 	return get_pdata<int>(pPlayer, m_iDeaths);
 }
 
-// native cs_set_user_deaths(index, newdeaths);
+// native cs_set_user_deaths(index, newdeaths, bool:scoreboard = true);
 static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params)
 {
 	GET_OFFSET("CBasePlayer", m_iDeaths);
@@ -94,13 +94,23 @@ static cell AMX_NATIVE_CALL cs_set_user_deaths(AMX *amx, cell *params)
 
 	set_pdata<int>(pPlayer, m_iDeaths, deaths);
 
-	MESSAGE_BEGIN(MSG_ALL, MessageIdScoreInfo);
-		WRITE_BYTE(index);
-		WRITE_SHORT(static_cast<int>(pPlayer->v.frags));
-		WRITE_SHORT(deaths);
-		WRITE_SHORT(0);
-		WRITE_SHORT(get_pdata<int>(pPlayer, m_iTeam));
-	MESSAGE_END();
+	bool updateScoreboard = true;
+
+	if (*params / sizeof(cell) >= 3)
+	{
+		updateScoreboard = params[3] != 0;
+	}
+
+	if (updateScoreboard)
+	{
+		MESSAGE_BEGIN(MSG_ALL, MessageIdScoreInfo);
+			WRITE_BYTE(index);
+			WRITE_SHORT(static_cast<int>(pPlayer->v.frags));
+			WRITE_SHORT(deaths);
+			WRITE_SHORT(0);
+			WRITE_SHORT(get_pdata<int>(pPlayer, m_iTeam));
+		MESSAGE_END();
+	}
 
 	*static_cast<int *>(MF_PlayerPropAddr(index, Player_Deaths)) = deaths;
 

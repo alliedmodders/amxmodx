@@ -615,7 +615,7 @@ native cs_get_user_stationary(index);
  *                      MaxClients, or the client is not connected, an error
  *                      will be thrown.
  */
-native cs_get_user_armor(index, &CsArmorType:armortype);
+native cs_get_user_armor(index, &CsArmorType:armortype = CS_ARMOR_NONE);
 
 /**
  * Sets the client's armor value the type of armor.

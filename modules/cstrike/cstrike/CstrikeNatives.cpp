@@ -915,7 +915,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params)
 	void *pImprov = get_pdata<void*>(pHostage, m_improv);
 	edict_t *pEntity = nullptr;
 
-	if (pImprov) // Specific to CS
+	if (pImprov) // Specific to CZ
 	{
 		GET_OFFSET("CHostageImprov", m_behavior);
 		GET_OFFSET("CHostageImprov", m_followState);
@@ -956,7 +956,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params)
 
 	void *pImprov = get_pdata<void*>(pHostage, m_improv);
 
-	if (pImprov) // Specific to CS
+	if (pImprov) // Specific to CZ
 	{
 		GET_OFFSET("CHostageImprov", m_behavior);
 		GET_OFFSET("CHostageImprov", m_followState);
@@ -1177,7 +1177,7 @@ static cell AMX_NATIVE_CALL cs_user_spawn(AMX *amx, cell *params)
 	return 1;
 }
 
-// native cs_get_armoury_type(index);
+// native cs_get_armoury_type(index, &count = 1);
 static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 {
 	GET_OFFSET("CArmoury", m_iItem);
@@ -1224,10 +1224,17 @@ static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 		}
 	}
 
+	if (*params / sizeof(cell) >= 2)
+	{
+		GET_OFFSET("CArmoury", m_iCount);
+
+		*MF_GetAmxAddr(amx, params[2]) = get_pdata<int>(pArmoury, m_iCount);
+	}
+
 	return weapontype_out;   
 }
 
-// native cs_set_armoury_type(index, type);
+// native cs_set_armoury_type(index, type, count = -1);
 static cell AMX_NATIVE_CALL cs_set_armoury_type(AMX *amx, cell *params)
 {
 	GET_OFFSET("CArmoury", m_iItem);
@@ -1275,6 +1282,29 @@ static cell AMX_NATIVE_CALL cs_set_armoury_type(AMX *amx, cell *params)
 	}
 
 	set_pdata<int>(pArmoury, m_iItem, weapontype);
+
+	if (*params / sizeof(cell) >= 3)
+	{
+		GET_OFFSET("CArmoury", m_iCount);
+		GET_OFFSET("CArmoury", m_iInitialCount);
+
+		int count = params[3];
+
+		if (count >= 0)
+		{
+			if (!count)
+			{
+				pArmoury->v.effects |= EF_NODRAW;
+			}
+			else
+			{
+				pArmoury->v.effects &= ~EF_NODRAW;
+			}
+
+			set_pdata<int>(pArmoury, m_iCount, count);
+			set_pdata<int>(pArmoury, m_iInitialCount, count);
+		}
+	}
 
 	return 1;
 }

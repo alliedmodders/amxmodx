@@ -811,12 +811,14 @@ native cs_user_spawn(player);
  *          CSW_SG552, CSW_AK47, CSW_P90
  *
  * @param index     Armoury entity index
+ * @param count     Optional variable to store in the number of times that an item can be retrieved  
+ *                  from the same entity before being hidden
  *
  * @return          Weapon id
  * @error           If a non-armoury entity is provided, an error will be
  *                  thrown.
  */
-native cs_get_armoury_type(index);
+native cs_get_armoury_type(index, &count = 1);
 
 /**
  * Sets the amoury entity type.
@@ -828,15 +830,19 @@ native cs_get_armoury_type(index);
  *          CSW_TMP, CSW_G3SG1, CSW_VEST, CSW_VESTHELM, CSW_FLASHBANG,
  *          CSW_SG552, CSW_AK47, CSW_P90
  * @note This does not update the entity model.
+ * @note On restart, entity is always unhidden and the count is restored (this can not be below 1).
  *
  * @param index     Armoury entity index
  * @param type      Weapon id
- *
+ * @param count     Number of times that an item can be retrieved from 
+ *                  the same entity before being hidden
+ *                  If zero, the entity is hidden
+ *                  If below zero, nothing is set
  * @noreturn
  * @error           If a non-armoury entity is provided, an error will be
  *                  thrown.
  */
-native cs_set_armoury_type(index, type);
+native cs_set_armoury_type(index, type, count = -1);
 
 /**
  * Returns the map zones the client is inside of as a bitflag value.

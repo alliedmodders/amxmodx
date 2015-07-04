@@ -189,18 +189,19 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params)
 	CHECK_NONPLAYER(index);
 	edict_t *pWeapon = INDEXENT(index);
 
-	bool draw_animation = true;
+	int draw_animation = 1;
 
 	if ((params[0] / sizeof(cell)) >= 3)
 	{
-		draw_animation = params[3] != 0;
+		draw_animation = params[3];
 	}
 
+	int weaponType  = get_pdata<int>(pWeapon, m_iId);
 	int weaponState = get_pdata<int>(pWeapon, m_iWeaponState);
 	int weaponNewState = weaponState;
 	int animation = 0;
 
-	switch (get_pdata<int>(pWeapon, m_iId))
+	switch (weaponType)
 	{
 		case CSW_M4A1:
 		{
@@ -236,9 +237,61 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params)
 	{
 		set_pdata<int>(pWeapon, m_iWeaponState, weaponNewState);
 
-		if (draw_animation && UTIL_IsPlayer(pWeapon->v.owner))
+		edict_t *pPlayer = pWeapon->v.owner;
+
+		if (draw_animation > 0 && UTIL_IsPlayer(pPlayer))
 		{
-			pWeapon->v.owner->v.weaponanim = animation;
+			int currentWeapon = *static_cast<int *>(MF_PlayerPropAddr(ENTINDEX(pPlayer), Player_CurrentWeapon));
+
+			if (currentWeapon != weaponType)
+			{
+				return 1;
+			}
+
+			pPlayer->v.weaponanim = animation;
+
+			if (draw_animation >= 2)
+			{
+				// Skip if cl_lw client cvar (client-side weapon firing prediction) is set.
+				// Technically, this should be associated to UseDecrement(), but it's true by default in game at compilation.
+				if (!ENGINE_CANSKIP(pPlayer))
+				{
+					MESSAGE_BEGIN(MSG_ONE, SVC_WEAPONANIM, nullptr, pPlayer);
+						WRITE_BYTE(animation);
+						WRITE_BYTE(pWeapon->v.body);
+					MESSAGE_END();
+				}
+
+				GET_OFFSET("CBasePlayer", m_szAnimExtention);
+				GET_OFFSET("CBasePlayerWeapon", m_flTimeWeaponIdle);
+				GET_OFFSET("CBasePlayerWeapon", m_flNextSecondaryAttack);
+				GET_OFFSET("CBasePlayerWeapon", m_flNextPrimaryAttack);
+
+				char animExt[12];
+				float time;
+
+				switch (weaponType)
+				{
+					case CSW_M4A1:
+					{
+						strcpy(animExt, "rifle");
+						time = 2.0f;
+						break;
+					}
+					case CSW_USP:
+					{
+						strcpy(animExt, "onehanded");
+						time = 3.0f;
+						break;
+					}
+				}
+
+				set_pdata<const char*>(pPlayer, m_szAnimExtention, STRING(MAKE_STRING(animExt)));
+
+				set_pdata<float>(pWeapon, m_flTimeWeaponIdle, time);
+				set_pdata<float>(pWeapon, m_flNextSecondaryAttack, time);
+				set_pdata<float>(pWeapon, m_flNextPrimaryAttack, time);
+			}
 		}
 
 		return 1;

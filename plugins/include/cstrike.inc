@@ -698,9 +698,12 @@ native cs_get_weapon_silen(index);
  * @param index             Weapon entity index
  * @param silence           If nonzero the weapon will be put into silenced
  *                          mode, otherwise the silenced mode will be removed
- * @param draw_animation    If nonzero and the weapon is currently held by a
+ * @param draw_animation    If 1 and the weapon is currently held by a
  *                          client, the appropriate weapon animation will be
  *                          played
+ *                          If 2, same as 1 but follows game behavior by playing
+ *                          the associated player's model sequence and disallowing
+ *                          firing while animation is playing.
  *
  * @return                  1 if silenced mode set successfully, 0 if entity is
  *                          not an applicable weapon

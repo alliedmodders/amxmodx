@@ -849,7 +849,8 @@ static cell AMX_NATIVE_CALL cs_reset_user_model(AMX *amx, cell *params)
 // native cs_get_hostage_foll(index);
 static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params)
 {
-	GET_OFFSET("CBaseMonster"  , m_hTargetEnt);
+	GET_OFFSET("CBaseMonster", m_hTargetEnt);
+	GET_OFFSET("CHostage"    , m_improv    );
 
 	int index = params[1];
 
@@ -858,7 +859,25 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params)
 
 	CHECK_HOSTAGE(pHostage);
 
-	edict_t *pEntity = get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Get();
+	void *pImprov = get_pdata<void*>(pHostage, m_improv);
+	edict_t *pEntity = nullptr;
+
+	if (pImprov) // Specific to CS
+	{
+		GET_OFFSET("CHostageImprov", m_behavior);
+		GET_OFFSET("CHostageImprov", m_followState);
+		GET_OFFSET("SimpleStateMachine", m_state); // +4 for virtual table pointer of IImprovEvent.
+		GET_OFFSET("HostageFollowState", m_leader);
+
+		if (get_pdata<void*>(pImprov, m_behavior + 4 + m_state) == reinterpret_cast<int8*>(pImprov) + m_followState)
+		{
+			pEntity = get_pdata<EHANDLE>(pImprov, m_followState + m_leader).Get();
+		}
+	}
+	else
+	{
+		pEntity = get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Get();
+	}
 
 	return pEntity ? ENTINDEX(pEntity) : 0;
 }
@@ -867,6 +886,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params)
 {
 	GET_OFFSET("CBaseMonster", m_hTargetEnt);
+	GET_OFFSET("CHostage"    , m_improv    );
 
 	int index  = params[1];
 	int target = params[2];
@@ -881,7 +901,36 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params)
 
 	CHECK_HOSTAGE(pHostage);
 
-	get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Set(target ? GETEDICT(target) : nullptr);
+	void *pImprov = get_pdata<void*>(pHostage, m_improv);
+
+	if (pImprov) // Specific to CS
+	{
+		GET_OFFSET("CHostageImprov", m_behavior);
+		GET_OFFSET("CHostageImprov", m_followState);
+		GET_OFFSET("CHostageImprov", m_idleState);
+		GET_OFFSET("HostageFollowState", m_leader);
+		GET_OFFSET("SimpleStateMachine", m_state);      // +4 for virtual table pointer of IImprovEvent.
+		GET_OFFSET("SimpleStateMachine", m_stateTimer); // 
+
+		if (target)
+		{
+			set_pdata<void*>(pImprov, m_behavior + 4 + m_state, reinterpret_cast<int8*>(pImprov) + m_followState);
+			set_pdata<float>(pImprov, m_behavior + 4 + m_stateTimer, gpGlobals->time);
+
+			get_pdata<EHANDLE>(pImprov, m_followState + m_leader).Set(GETEDICT(target));
+		}
+		else
+		{
+			set_pdata<void*>(pImprov, m_behavior + 4 + m_state, reinterpret_cast<int8*>(pImprov) + m_idleState);
+			set_pdata<float>(pImprov, m_behavior + 4 + m_stateTimer, gpGlobals->time);
+
+			get_pdata<EHANDLE>(pImprov, m_followState + m_leader).Set(nullptr);
+		}
+	}
+	else
+	{
+		get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Set(target ? GETEDICT(target) : nullptr);
+	}
 
 	return 1;
 }
@@ -1365,6 +1414,7 @@ static cell AMX_NATIVE_CALL cs_set_user_hostagekills(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL cs_get_hostage_lastuse(AMX *amx, cell *params)
 {
 	GET_OFFSET("CHostage", m_flPathAcquired);
+	GET_OFFSET("CHostage", m_improv);
 
 	int index = params[1];
    
@@ -1373,6 +1423,16 @@ static cell AMX_NATIVE_CALL cs_get_hostage_lastuse(AMX *amx, cell *params)
 
 	CHECK_HOSTAGE(pHostage);
    
+	void *pImprov = get_pdata<void*>(pHostage, m_improv);
+
+	if (pImprov) // Specific to CZ
+	{
+		GET_OFFSET("CHostageImprov", m_behavior);
+		GET_OFFSET("SimpleStateMachine", m_stateTimer); // +4 for virtual table pointer of IImprovEvent.
+
+		return amx_ftoc(get_pdata<float>(pImprov, m_behavior + 4 + m_stateTimer + 0)); // m_timestamp
+	}
+
 	return amx_ftoc(get_pdata<float>(pHostage, m_flPathAcquired));
 }
 
@@ -1380,6 +1440,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_lastuse(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL cs_set_hostage_lastuse(AMX *amx, cell *params)
 {
 	GET_OFFSET("CHostage", m_flPathAcquired);
+	GET_OFFSET("CHostage", m_improv);
 
 	int index = params[1];
 
@@ -1388,6 +1449,16 @@ static cell AMX_NATIVE_CALL cs_set_hostage_lastuse(AMX *amx, cell *params)
 
 	CHECK_HOSTAGE(pHostage);
    
+	void *pImprov = get_pdata<void*>(pHostage, m_improv);
+
+	if (pImprov) // Specific to CZ
+	{
+		GET_OFFSET("CHostageImprov", m_behavior);
+		GET_OFFSET("SimpleStateMachine", m_stateTimer); // +4 for virtual table pointer of IImprovEvent.
+
+		return amx_ftoc(get_pdata<float>(pImprov, m_behavior + 4 + m_stateTimer + 0)); // m_timestamp
+
+	}
 	set_pdata<float>(pHostage, m_flPathAcquired, amx_ctof(params[2]));
 
 	return 1;

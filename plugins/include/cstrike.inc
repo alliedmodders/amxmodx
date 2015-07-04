@@ -166,8 +166,6 @@ native cs_set_user_deaths(index, newdeaths, bool:scoreboard = true);
  *
  * @note Hostages can theoretically follow any entity in the game, so the
  *       returned entity index is not necessarily a client index.
- * @note This native does not work on Condition Zero, which has a different
- *       hostage AI than other versions of Counter-Strike.
  *
  * @param index     Hostage entity index
  *
@@ -182,8 +180,6 @@ native cs_get_hostage_foll(index);
  *
  * @note Hostages can theoretically follow any entity in the game, so the
  *       followedindex does not have to be a client index.
- * @note This native does not work on Condition Zero, which has a different
- *       hostage AI than other versions of Counter-Strike.
  *
  * @param index             Hostage entity index
  * @param followedindex     New entity to follow

@@ -12,11 +12,10 @@
 //
 
 #include "amxxmodule.h"
-#include "MemoryUtils.h"
 
 extern int MessageIdTextMsg;
 
-bool UTIL_IsPlayer(edict_t *pPlayer) 
+bool UTIL_IsPlayer(edict_t *pPlayer)
 {
 	return strcmp(STRING(pPlayer->v.classname), "player") == 0;
 }
@@ -36,7 +35,7 @@ bool UTIL_CheckForPublic(const char *publicname)
 	int i = 0;
 	char blah[64];
 
-	strncpy(blah, publicname, sizeof(blah)-  1);
+	strncpy(blah, publicname, sizeof(blah) - 1);
 
 	while ((amx = MF_GetScriptAmx(i++)))
 	{
@@ -46,6 +45,5 @@ bool UTIL_CheckForPublic(const char *publicname)
 		}
 	}
 
-	return false; 
+	return false;
 }
-

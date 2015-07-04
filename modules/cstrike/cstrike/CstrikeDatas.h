@@ -16,6 +16,9 @@
 
 #include "amxxmodule.h"
 
+/**
+ * Weapon Ids for use with CS_OnBuyAttempt(), CS_OnBuy().
+ */
 #define CSI_P228						CSW_P228
 #define CSI_SCOUT						CSW_SCOUT
 #define CSI_HEGRENADE					CSW_HEGRENADE
@@ -55,7 +58,9 @@
 
 #define BITS_PISTOLS					(1<<CSI_GLOCK18 | 1<<CSI_USP | 1<<CSI_P228 | 1<<CSI_DEAGLE | 1<<CSI_ELITE | 1<<CSI_FIVESEVEN)
 
-// Ids of weapons in CS
+/**
+ * Weapons Ids.
+ */
 #define CSW_P228						1
 #define CSW_SCOUT						3
 #define CSW_HEGRENADE					4
@@ -89,7 +94,9 @@
 #define CSW_VESTHELM					32 // Brand new invention!
 #define CSW_SHIELDGUN					99
 
-// These are used with armoury_entity:s.
+/**
+ * Armoury entity ids for use with cs_get/set_armoury_type().
+ */
 #define CSA_MP5NAVY						0
 #define CSA_TMP							1
 #define CSA_P90							2
@@ -110,6 +117,9 @@
 #define CSA_VESTHELM					17
 #define CSA_SMOKEGRENADE				18
 
+/**
+ * Weapon states of the following weapons: usp, elite, glock18, famas and m4a1.
+ */
 enum WeaponState
 {
 	WPNSTATE_USP_SILENCED       = (1 << 0),
@@ -120,6 +130,9 @@ enum WeaponState
 	WPNSTATE_SHIELD_DRAWN       = (1 << 5),
 };
 
+/**
+ * M4A1 animations
+ */
 enum m4a1_e
 {
 	M4A1_IDLE,
@@ -138,6 +151,9 @@ enum m4a1_e
 	M4A1_DETACH_SILENCER
 };
 
+/**
+ * USP animations
+ */
 enum usp_e
 {
 	USP_IDLE,
@@ -158,6 +174,9 @@ enum usp_e
 	USP_DETACH_SILENCER
 };
 
+/**
+ * States of gameplay zones.
+ */
 enum SignalState
 {
 	SIGNAL_BUY       = (1 << 0),
@@ -167,48 +186,48 @@ enum SignalState
 	SIGNAL_VIPSAFETY = (1 << 4),
 };
 
+/**
+ * Default team indexes.
+ */
 #define TEAM_UNASSIGNED					0
 #define TEAM_T							1
 #define TEAM_CT							2
 #define TEAM_SPECTATOR					3
 
+/**
+ * Default color of defuser HUD icon.
+ */
 #define DEFUSER_COLOUR_R				0
 #define DEFUSER_COLOUR_G				160
 #define DEFUSER_COLOUR_B				0
 
+/**
+ * Values for use with ScoreAttrib message.
+ */
 #define SCOREATTRIB_NOTHING				0
 #define SCOREATTRIB_DEAD				1
 #define SCOREATTRIB_BOMB				2 // t only
 #define SCOREATTRIB_VIP					4 // ct only
 
-#define AMD64_STATIONARY_NO				2
-#define AMD64_STATIONARY_YES			3
-
+/**
+ * Armor types for use with cs_get/Set_user_armor().
+ */
 #define CS_ARMOR_NONE					0
 #define CS_ARMOR_KEVLAR					1
 #define CS_ARMOR_ASSAULTSUIT			2
 
+/**
+ * Default FOV values.
+ */
 #define CS_FIRST_ZOOM					40
 #define CS_SECOND_AWP_ZOOM				10
 #define CS_SECOND_NONAWP_ZOOM			15
 #define CS_AUGSG552_ZOOM				55
 #define CS_NO_ZOOM						90
 
-enum CS_Internal_Models {
-	CS_DONTCHANGE = 0,
-	CS_CT_URBAN = 1,
-	CS_T_TERROR = 2,
-	CS_T_LEET = 3,
-	CS_T_ARCTIC = 4,
-	CS_CT_GSG9 = 5,
-	CS_CT_GIGN = 6,
-	CS_CT_SAS = 7,
-	CS_T_GUERILLA = 8,
-	CS_CT_VIP = 9,
-	CZ_T_MILITIA = 10,
-	CZ_CT_SPETSNAZ = 11
-};
-
+/**
+ * Zoom value for use with cs_get/set_user_zoom().
+ */
 enum
 {
 	CS_RESET_ZOOM = 0,
@@ -216,8 +235,31 @@ enum
 	CS_SET_FIRST_ZOOM,
 	CS_SET_SECOND_ZOOM,
 	CS_SET_AUGSG552_ZOOM,
+
 };
 
+/**
+ * Player's model types.
+ */
+enum CS_Internal_Models 
+{
+	CS_DONTCHANGE  = 0,
+	CS_CT_URBAN    = 1,
+	CS_T_TERROR    = 2,
+	CS_T_LEET      = 3,
+	CS_T_ARCTIC    = 4,
+	CS_CT_GSG9     = 5,
+	CS_CT_GIGN     = 6,
+	CS_CT_SAS      = 7,
+	CS_T_GUERILLA  = 8,
+	CS_CT_VIP      = 9,
+	CZ_T_MILITIA   = 10,
+	CZ_CT_SPETSNAZ = 11
+};
+
+/**
+ * Menu states.
+ */
 typedef enum
 {
 	Menu_OFF,
@@ -237,8 +279,5 @@ typedef enum
 	Menu_ClientBuy
 
 } Menu;
-
-typedef edict_t* (*CreateNamedEntityFunc)(string_t iszClassname);
-typedef void*    (*UTIL_FindEntityByStringFunc)(void* pStartEntity, const char *szKeyword, const char *szValue);
 
 #endif // CSTRIKE_DATA_H

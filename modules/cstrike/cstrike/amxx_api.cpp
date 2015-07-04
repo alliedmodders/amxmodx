@@ -14,35 +14,13 @@
 #include "amxxmodule.h"
 #include "CstrikeUtils.h"
 #include "CstrikeDatas.h"
+#include "CstrikeHacks.h"
 #include "CstrikeHLTypeConversion.h"
 #include <IGameConfigs.h>
-
-extern AMX_NATIVE_INFO CstrikeNatives[];
-
-extern int ForwardInternalCommand;
-extern int ForwardOnBuy;
-extern int ForwardOnBuyAttempt;
-
-void InitializeHacks();
-void ShutdownHacks();
-void ToggleDetour_ClientCommands(bool enable);
-void ToggleDetour_BuyCommands(bool enable);
-
-CreateNamedEntityFunc CS_CreateNamedEntity = nullptr;
-UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString = nullptr;
 
 IGameConfig *MainConfig;
 IGameConfig *OffsetConfig;
 IGameConfigManager *ConfigManager;
-
-int MessageIdArmorType;
-int MessageIdMoney;
-int MessageIdResetHUD;
-int MessageIdScoreAttrib;
-int MessageIdScoreInfo;
-int MessageIdStatusIcon;
-int MessageIdTeamInfo;
-int MessageIdTextMsg;
 
 struct UserMsg
 {
@@ -60,9 +38,8 @@ UserMsg MessagesList[] =
 	{ "StatusIcon" , &MessageIdStatusIcon  },
 	{ "TeamInfo"   , &MessageIdTeamInfo    },
 	{ "TextMsg"    , &MessageIdTextMsg     },
-	{ nullptr      , 0                     }
+	{ nullptr      , nullptr               }
 };
-
 
 int AmxxCheckGame(const char *game)
 {
@@ -80,7 +57,7 @@ void OnAmxxAttach()
 
 	ConfigManager = MF_GetConfigManager();
 
-	char error[256]; 
+	char error[256];
 	error[0] = '\0';
 
 	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && error[0] != '\0')
@@ -95,28 +72,6 @@ void OnAmxxAttach()
 	{
 		MF_Log("Could not read common.games gamedata: %s", error);
 		return;
-	}
-
-	void *address = nullptr;
-
-	if (MainConfig->GetMemSig("CreateNamedEntity", &address) && address) // cs_create_entity()
-	{
-		CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(address);
-	}
-
-	if (MainConfig->GetMemSig("FindEntityByString", &address) && address) // cs_find_ent_by_class()
-	{
-		CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(address);
-	}
-
-	if (!CS_CreateNamedEntity)
-	{
-		MF_Log("CREATE_NAMED_ENITTY is not available - native cs_create_entity() has been disabled");
-	}
-
-	if (!CS_UTIL_FindEntityByString)
-	{
-		MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
 	}
 
 	InitializeHacks();

@@ -158,6 +158,7 @@
     <ClInclude Include="..\..\..\..\public\memtools\CDetour\detours.h" />
     <ClInclude Include="..\..\..\..\public\memtools\MemoryUtils.h" />
     <ClInclude Include="..\CstrikeDatas.h" />
+    <ClInclude Include="..\CstrikeHacks.h" />
     <ClInclude Include="..\CstrikePlayer.h" />
     <ClInclude Include="..\moduleconfig.h" />
     <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h" />

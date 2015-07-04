@@ -14,23 +14,25 @@
 #include "CstrikeDatas.h"
 #include "CstrikePlayer.h"
 #include "CstrikeUtils.h"
+#include "CstrikeHacks.h"
 #include "CstrikeHLTypeConversion.h"
+#include <CDetour/detours.h>
 
 CCstrikePlayer g_players[33];
 int g_zooming[33] = {0};
 bool g_precachedknife = false;
 bool g_noknives = false;
 
-extern CreateNamedEntityFunc       CS_CreateNamedEntity;
-extern UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
+bool NoKifesMode = false;
 
-extern int MessageIdMoney;
-extern int MessageIdScoreInfo;
-extern int MessageIdArmorType;
-extern int MessageIdTeamInfo;
-extern int MessageIdStatusIcon;
-extern int MessageIdScoreAttrib;
-extern int MessageIdResetHUD;
+int MessageIdArmorType;
+int MessageIdMoney;
+int MessageIdResetHUD;
+int MessageIdScoreAttrib;
+int MessageIdScoreInfo;
+int MessageIdStatusIcon;
+int MessageIdTeamInfo;
+int MessageIdTextMsg;
 
 // native cs_set_user_money(index, money, flash = 1);
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params)
@@ -938,13 +940,13 @@ static cell AMX_NATIVE_CALL cs_get_user_hasprimary(AMX *amx, cell *params)
 // native cs_get_no_knives();
 static cell AMX_NATIVE_CALL cs_get_no_knives(AMX *amx, cell *params)
 {
-	return g_noknives ? 1 : 0;
+	return NoKifesMode ? 1 : 0;
 }
 
 // native cs_set_no_knives(noknives = 0);
 static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params)
 {
-	g_noknives = params[1] != 0;
+	NoKifesMode = params[1] != 0;
 
 	return 1;
 }

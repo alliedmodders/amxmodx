@@ -14,16 +14,9 @@
 #ifndef CSTRIKE_UTILS_H
 #define CSTRIKE_UTILS_H
 
-#include <IGameConfigs.h>
-
 bool UTIL_IsPlayer(edict_t *pPlayer);
 void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message);
-void *UTIL_FindAddressFromEntry(const char *entry, bool isHidden = false, const char *library = "mod");
 bool UTIL_CheckForPublic(const char *publicname);
-char *UTIL_StringToLower(char *str);
-
-extern IGameConfig *MainConfig;
-extern IGameConfig *OffsetConfig;
 
 #define GETINFOKEYBUFFER	(*g_engfuncs.pfnGetInfoKeyBuffer)
 #define	SETCLIENTKEYVALUE	(*g_engfuncs.pfnSetClientKeyValue)
@@ -118,39 +111,6 @@ inline void set_pdata(void *pEntity, int offset, T value, int element = 0)
 {
 	*reinterpret_cast<T*>(reinterpret_cast<int8*>(pEntity) + offset + element * sizeof(T)) = value;
 }
-
-
-inline edict_t *PrivateToEdict(const void *pdata)
-{
-	if (!pdata)
-	{
-		return NULL;
-	}
-
-	char *ptr = (char*)pdata;
-	ptr += 4;
-	entvars_t *pev = *(entvars_t **)ptr;
-
-	if (!pev)
-	{
-		return NULL;
-	}
-
-	return pev->pContainingEntity;
-};
-
-inline int PrivateToIndex(const void *pdata)
-{
-	edict_t *pEntity = PrivateToEdict(pdata);
-
-	if (!pEntity)
-	{
-		return -1;
-	}
-
-	return ENTINDEX(pEntity);
-};
-
 
 class EHANDLE
 {

@@ -33,35 +33,26 @@ new g_clcmdNum;
 
 new g_coloredMenus;
 
-const m_iMenu = 205;
-const m_bTeamChanged = 501;
-const Menu_ChooseAppearance = 3;
-
 new Array:g_bantimes;
 new Array:g_slapsettings;
-
-new const g_TeamNames[3][] = {
-	"TERRORIST",
-	"CT",
-	"SPECTATOR"
-};
-new const g_TeamNumbers[3][] = {
-	"1",
-	"2",
-	"6"
-};
-new const g_TeamiNumbers[3] = {
-	1,
-	2,
-	3
-};
-
-new allow_spectators, mp_limitteams;
 
 new p_amx_tempban_maxtime;
 new Trie:g_tempBans;
 
-new g_silent[MAX_PLAYERS + 1];
+new ModName[9];
+
+// Start of Half-Life specific vars
+
+#define MAX_TEAMNAME_LENGTH 16
+#define MAX_TEAMS 32
+#define TEAMPLAY_TEAMLISTLENGTH MAX_TEAMS*MAX_TEAMNAME_LENGTH
+new TeamNames[MAX_TEAMS+1][MAX_TEAMNAME_LENGTH+1];
+new TeamsNum;
+new TeamInfo;
+const m_iHideHUD = 296;
+new allow_spectators;
+
+// End of Half-Life specific vars
 
 public plugin_init()
 {
@@ -109,8 +100,31 @@ public plugin_init()
 	format(clcmds_ini_file, charsmax(clcmds_ini_file), "%s/clcmds.ini", clcmds_ini_file);
 	load_settings(clcmds_ini_file);
 
-	allow_spectators = get_cvar_pointer("allow_spectators");
-	mp_limitteams = get_cvar_pointer("mp_limitteams");
+	get_modname(ModName, charsmax(ModName));
+
+	if (equal(ModName, "valve"))
+	{
+		TeamInfo = get_user_msgid("TeamInfo");
+		allow_spectators = get_cvar_pointer("allow_spectators");
+
+		new mp_teamplay = get_cvar_pointer("mp_teamplay");
+		if (mp_teamplay && get_pcvar_num(mp_teamplay))
+		{
+			new mp_teamlist = get_cvar_pointer("mp_teamlist");
+			if (mp_teamlist)
+			{
+				new teamlist[TEAMPLAY_TEAMLISTLENGTH+1];
+				get_pcvar_string(mp_teamlist, teamlist, charsmax(teamlist));
+				trim(teamlist);
+
+				if (strlen(teamlist))
+				{
+					TeamsNum = explode_string(teamlist, ";", TeamNames, MAX_TEAMS, charsmax(TeamNames[]));
+				}
+			}
+		}
+		copy(TeamNames[TeamsNum++], charsmax(TeamNames[]), "SPECTATOR");
+	}
 }
 
 public plugin_cfg()
@@ -686,23 +700,13 @@ public cmdKickMenu(id, level, cid)
 
 /* Team menu */
 
-public client_putinserver(id)
-{
-	g_silent[id] = false;
-}
-
 public actionTeamMenu(id, key)
 {
 	switch (key)
 	{
-		case 6: 
-		{
-			g_silent[id] = !g_silent[id];
-			displayTeamMenu(id, g_menuPosition[id]);
-		}
 		case 7:
 		{
-			g_menuOption[id] = (g_menuOption[id] + 1) % 3;
+			g_menuOption[id] = (g_menuOption[id] + 1) % TeamsNum;
 			displayTeamMenu(id, g_menuPosition[id]);
 		}
 		case 8:
@@ -715,7 +719,7 @@ public actionTeamMenu(id, key)
 		}
 		default:
 		{
-			new player = g_menuPlayers[id][g_menuPosition[id] * 6 + key];
+			new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key];
 			if (!is_user_connected(player)) // dunno why this check hasn't be implemented in the past
 			{
 				displayTeamMenu(id, g_menuPosition[id]);
@@ -729,38 +733,14 @@ public actionTeamMenu(id, key)
 			get_user_authid(player, authid2, charsmax(authid2));
 			get_user_name(id, name, charsmax(name));
 
-			// This modulo math just aligns the option to the CsTeams-corresponding number
-			new destTeamSlot = (g_menuOption[id] % 3);
+			// This modulo math just aligns the option to the Teams-corresponding number
+			new destTeamSlot = (g_menuOption[id] % TeamsNum);
 
-			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_TeamNames[destTeamSlot]);
+			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, TeamNames[destTeamSlot]);
 
-			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_TeamNames[destTeamSlot]);
+			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, TeamNames[destTeamSlot]);
 
-			if (destTeamSlot == 2)
-			{
-				if (get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance)
-				{
-					// works for both vgui and old style menus, and send menuselect could close other menus (and since get_user_menu fails to return VGUI and old style classes menus...)
-					engclient_cmd(player, "joinclass", "6");
-				}
-			}
-
-			if (is_user_alive(player) && (!g_silent[id] || destTeamSlot == 2))
-			{
-				user_kill(player, 1);
-			}
-
-			set_pdata_bool(player, m_bTeamChanged, true);
-
-			new limit_setting;
-			if (mp_limitteams)
-			{
-				limit_setting = get_pcvar_num(mp_limitteams);
-
-				set_pcvar_num(mp_limitteams, 0);
-			}
-
-			if (destTeamSlot == 2)
+			if (destTeamSlot == TeamsNum-1)
 			{
 				new Float:allow_spectators_setting;
 				if (allow_spectators)
@@ -771,7 +751,9 @@ public actionTeamMenu(id, key)
 						set_pcvar_float(allow_spectators, 1.0);
 					}
 				}
-				engclient_cmd(player, "jointeam", g_TeamNumbers[destTeamSlot]);
+
+				engclient_cmd(player, "spectate");
+
 				if (allow_spectators && allow_spectators_setting != 1.0)
 				{
 					set_pcvar_float(allow_spectators, allow_spectators_setting);
@@ -779,15 +761,27 @@ public actionTeamMenu(id, key)
 			}
 			else
 			{
-				engclient_cmd(player, "jointeam", g_TeamNumbers[destTeamSlot]);
-				engclient_cmd(player, "joinclass", "1");
-			}
-			if (mp_limitteams && limit_setting != 0)
-			{
-				set_pcvar_num(mp_limitteams, limit_setting);
-			}
+				if (pev(player, pev_iuser1) || pev(player, pev_iuser2))
+				{
+					set_pev(player, pev_deadflag, DEAD_RESPAWNABLE);
+					dllfunc(DLLFunc_Spawn, player);
 
-			set_pdata_bool(player, m_bTeamChanged, true);
+					set_pev(player, pev_iuser1, 0);
+					set_pev(player, pev_iuser2, 0);
+
+					set_pdata_int(player, m_iHideHUD, 0);
+
+					if(TeamInfo)
+					{
+						message_begin(MSG_BROADCAST, TeamInfo);
+						write_byte(player);
+						write_string(TeamNames[destTeamSlot]);
+						message_end();
+					}
+				}
+
+				set_user_info(player, "model", TeamNames[destTeamSlot]);
+			}
 
 			displayTeamMenu(id, g_menuPosition[id]);
 		}
@@ -798,7 +792,7 @@ public actionTeamMenu(id, key)
 
 displayTeamMenu(id, pos)
 {
-	if (pos < 0)
+	if (pos < 0 || !equal(ModName, "valve"))
 	{
 		return;
 	}
@@ -809,7 +803,7 @@ displayTeamMenu(id, pos)
 	new b = 0;
 	new i, iteam;
 	new name[MAX_NAME_LENGTH], team[4];
-	new start = pos * 6;
+	new start = pos * 7;
 
 	if (start >= g_menuPlayersNum[id])
 	{
@@ -817,8 +811,8 @@ displayTeamMenu(id, pos)
 	}
 
 	new len = formatex(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TEAM_MENU", pos + 1, (g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0)));
-	new end = start + 6;
-	new keys = MENU_KEY_0|MENU_KEY_7|MENU_KEY_8;
+	new end = start + 7;
+	new keys = MENU_KEY_0|MENU_KEY_8;
 
 	if (end > g_menuPlayersNum[id])
 	{
@@ -832,12 +826,10 @@ displayTeamMenu(id, pos)
 
 		iteam = get_user_team(i, team, charsmax(team));
 
-		if (!iteam)
-		{
-			iteam = 3; // fix get_user_team returning 0 on spectators
-		}
+		//Match get_user_team values with TeamNames values
+		iteam--;
 
-		if ((iteam == g_TeamiNumbers[g_menuOption[id] % 3]) || (access(i, ADMIN_IMMUNITY) && i != id))
+		if (iteam == g_menuOption[id] % TeamsNum || (access(i, ADMIN_IMMUNITY) && i != id))
 		{
 			++b;
 
@@ -865,8 +857,7 @@ displayTeamMenu(id, pos)
 		}
 	}
 
-	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n7. %L: %L", id, "TRANSF_SILENT", id, g_silent[id] ? "YES" : "NO");
-	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "TRANSF_TO", g_TeamNames[g_menuOption[id] % 3]);
+	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n8. %L^n", id, "TRANSF_TO", TeamNames[g_menuOption[id] % TeamsNum]);
 
 	if (end != g_menuPlayersNum[id])
 	{

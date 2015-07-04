@@ -124,8 +124,8 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params)
 
 	int index = params[1];
 
-	CHECK_ENTITY(index);
-	edict_t *pHostage = GETEDICT(index);
+	CHECK_NONPLAYER(index);
+	edict_t *pHostage = INDEXENT(index);
 
 	if (strcmp(STRING(pHostage->v.classname), "hostage_entity") != 0) 
 	{

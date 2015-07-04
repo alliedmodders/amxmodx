@@ -20,8 +20,6 @@
 
 CCstrikePlayer g_players[33];
 int g_zooming[33] = {0};
-bool g_precachedknife = false;
-bool g_noknives = false;
 
 bool NoKifesMode = false;
 
@@ -946,7 +944,22 @@ static cell AMX_NATIVE_CALL cs_get_no_knives(AMX *amx, cell *params)
 // native cs_set_no_knives(noknives = 0);
 static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params)
 {
+	if (!GiveDefaultItemsDetour)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_set_no_knives() is disabled");
+		return 0;
+	}
+
 	NoKifesMode = params[1] != 0;
+
+	if (NoKifesMode)
+	{
+		GiveDefaultItemsDetour->EnableDetour();
+	}
+	else
+	{
+		GiveDefaultItemsDetour->DisableDetour();
+	}
 
 	return 1;
 }
@@ -1622,29 +1635,6 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 
 	{nullptr,						nullptr}
 };
-
-edict_s* FN_CreateNamedEntity(int classname) 
-{
-	if (g_noknives && !strcmp(STRING(classname), "weapon_knife")) 
-	{
-		if (g_precachedknife) 
-		{
-			// Knife is creating
-			RETURN_META_VALUE(MRES_SUPERCEDE, NULL);
-		}
-		// Let it create a knife first time; this seems to keep it precached properly in case anyone give_items a knife later.
-		g_precachedknife = true;
-	}
-
-	RETURN_META_VALUE(MRES_IGNORED, 0);
-}
-
-void FN_ServerDeactivate() 
-{
-	g_precachedknife = false;
-
-	RETURN_META(MRES_IGNORED);
-}
 
 void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) 
 {

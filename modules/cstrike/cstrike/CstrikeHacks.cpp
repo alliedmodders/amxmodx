@@ -14,8 +14,8 @@
 #include "CstrikeDatas.h"
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
-#include <sm_stringhashmap.h>
 #include "CstrikeHLTypeConversion.h"
+#include <sm_stringhashmap.h>
 
 void CtrlDetours_ClientCommand(bool set);
 void CtrlDetours_BuyCommands(bool set);
@@ -172,6 +172,35 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 	}
 
 	DETOUR_STATIC_CALL(C_ClientCommand)(pEdict);
+}
+
+edict_s* OnCreateNamedEntity(int classname)
+{
+	if (NoKifesMode)
+	{
+		if (!strcmp(STRING(classname), "weapon_knife"))
+		{
+			RETURN_META_VALUE(MRES_SUPERCEDE, nullptr);
+		}
+	}
+	else
+	{
+		g_pengfuncsTable->pfnCreateNamedEntity = nullptr;
+	}
+
+	RETURN_META_VALUE(MRES_IGNORED, 0);
+}
+
+DETOUR_DECL_MEMBER0(GiveDefaultItems, void)  // void CBasePlayer::GiveDefaultItems(void)
+{
+	if (NoKifesMode)
+	{
+		g_pengfuncsTable->pfnCreateNamedEntity = OnCreateNamedEntity;
+	}
+
+	DETOUR_MEMBER_CALL(GiveDefaultItems)();
+
+	g_pengfuncsTable->pfnCreateNamedEntity = nullptr;
 }
 
 DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlayer::GiveNamedItem(const char *pszName)
@@ -457,6 +486,23 @@ void CtrlDetours_Natives(bool set)
 		if (!CS_UTIL_FindEntityByString)
 		{
 			MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
+		}
+
+		if (MainConfig->GetMemSig("GiveDefaultItems", &address))
+		{
+			GiveDefaultItemsDetour = DETOUR_CREATE_MEMBER_FIXED(GiveDefaultItems, address);
+		}
+
+		if (!GiveDefaultItemsDetour)
+		{
+			MF_Log("GiveDefaultItems is not available - native cs_set_no_knives has been disabled");
+		}
+	}
+	else
+	{
+		if (GiveDefaultItemsDetour)
+		{
+			GiveDefaultItemsDetour->Destroy();
 		}
 	}
 }

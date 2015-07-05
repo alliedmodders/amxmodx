@@ -149,6 +149,7 @@
     <ClCompile Include="..\CstrikeHLTypeConversion.cpp" />
     <ClCompile Include="..\CstrikeNatives.cpp" />
     <ClCompile Include="..\CstrikePlayer.cpp" />
+    <ClCompile Include="..\CstrikeUserMessages.cpp" />
     <ClCompile Include="..\CstrikeUtils.cpp" />
     <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="..\CstrikeDatas.h" />
     <ClInclude Include="..\CstrikeHacks.h" />
     <ClInclude Include="..\CstrikePlayer.h" />
+    <ClInclude Include="..\CstrikeUserMessages.h" />
     <ClInclude Include="..\moduleconfig.h" />
     <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h" />
     <ClInclude Include="..\CstrikeUtils.h" />

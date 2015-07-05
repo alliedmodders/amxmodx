@@ -22,25 +22,6 @@ IGameConfig *MainConfig;
 IGameConfig *OffsetConfig;
 IGameConfigManager *ConfigManager;
 
-struct UserMsg
-{
-	const char* name;
-	int*        id;
-};
-
-UserMsg MessagesList[] =
-{
-	{ "ArmorType"  , &MessageIdArmorType   },
-	{ "CurWeapon"  , &MessageIdMoney       },
-	{ "ResetHUD"   , &MessageIdResetHUD    },
-	{ "ScoreAttrib", &MessageIdScoreAttrib },
-	{ "ScoreInfo"  , &MessageIdScoreInfo   },
-	{ "StatusIcon" , &MessageIdStatusIcon  },
-	{ "TeamInfo"   , &MessageIdTeamInfo    },
-	{ "TextMsg"    , &MessageIdTextMsg     },
-	{ nullptr      , nullptr               }
-};
-
 int AmxxCheckGame(const char *game)
 {
 	if (strcasecmp(game, "cstrike") == 0 ||
@@ -98,20 +79,6 @@ void OnPluginsLoaded()
 	{
 		G_OffsetHandler = new OffsetHandler;
 	}
-}
-
-int OnRegUserMsg_Post(const char *pszName, int iSize)
-{
-	for (size_t i = 0; MessagesList[i].name; ++i)
-	{
-		if (!*MessagesList[i].id && strcmp(MessagesList[i].name, pszName) == 0)
-		{
-			*MessagesList[i].id = META_RESULT_ORIG_RET(int);
-			break;
-		}
-	}
-
-	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 void OnAmxxDetach()

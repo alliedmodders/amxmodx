@@ -59,6 +59,9 @@
     <ClCompile Include="..\CstrikeHLTypeConversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CstrikeUserMessages.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CstrikePlayer.h">
@@ -89,6 +92,9 @@
       <Filter>Module SDK</Filter>
     </ClInclude>
     <ClInclude Include="..\CstrikeHacks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CstrikeUserMessages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

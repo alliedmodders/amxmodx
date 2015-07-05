@@ -23,15 +23,6 @@ void ShutdownHacks();
 void ToggleDetour_ClientCommands(bool enable);
 void ToggleDetour_BuyCommands(bool enable);
 
-extern int MessageIdArmorType;
-extern int MessageIdMoney;
-extern int MessageIdResetHUD;
-extern int MessageIdScoreAttrib;
-extern int MessageIdScoreInfo;
-extern int MessageIdStatusIcon;
-extern int MessageIdTeamInfo;
-extern int MessageIdTextMsg;
-
 extern AMX_NATIVE_INFO CstrikeNatives[];
 
 extern IGameConfig *MainConfig;

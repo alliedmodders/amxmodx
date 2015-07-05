@@ -34,4 +34,7 @@ private:
 	char model[32];
 };
 
+extern CCstrikePlayer g_players[33];
+extern int Zooming[33];
+
 #endif // !defined(INCLUDED_CCSTRIKEPLAYER)

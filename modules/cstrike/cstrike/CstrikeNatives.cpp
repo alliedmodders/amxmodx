@@ -15,22 +15,14 @@
 #include "CstrikePlayer.h"
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
+#include "CstrikeUserMessages.h"
 #include "CstrikeHLTypeConversion.h"
 #include <CDetour/detours.h>
 
 CCstrikePlayer g_players[33];
-int g_zooming[33] = {0};
+int Zooming[33];
 
 bool NoKifesMode = false;
-
-int MessageIdArmorType;
-int MessageIdMoney;
-int MessageIdResetHUD;
-int MessageIdScoreAttrib;
-int MessageIdScoreInfo;
-int MessageIdStatusIcon;
-int MessageIdTeamInfo;
-int MessageIdTextMsg;
 
 // native cs_set_user_money(index, money, flash = 1);
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params)
@@ -879,6 +871,8 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 	g_players[index].SetModel(modelName);
 	g_players[index].SetModelled(true);
 
+	EnableMessageHooks();
+
 	SETCLIENTKEYVALUE(index, GETINFOKEYBUFFER(pPlayer), "model", const_cast<char*>(g_players[index].GetModel()));
 
 	return 1;
@@ -1323,7 +1317,7 @@ static cell AMX_NATIVE_CALL cs_set_user_zoom(AMX *amx, cell *params)
 	int mode = params[3];
 	int weapon = *static_cast<int *>(MF_PlayerPropAddr(index, Player_CurrentWeapon));
 	
-	g_zooming[index] = 0;
+	Zooming[index] = 0;
 
 	if (type == CS_RESET_ZOOM)
 	{
@@ -1371,7 +1365,8 @@ static cell AMX_NATIVE_CALL cs_set_user_zoom(AMX *amx, cell *params)
 
 	if (!mode)
 	{
-		g_zooming[index] = value;
+		Zooming[index] = value;
+		EnableMessageHooks();
 	}
 
 	set_pdata<int>(pPlayer, m_iFOV, value);
@@ -1772,31 +1767,11 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{nullptr,						nullptr}
 };
 
-void MessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed) 
-{
-	// Reset player model a short while (MODELRESETTIME) after this if they are using an edited model.
-	if(msg_type == MessageIdResetHUD) 
-	{
-		int entityIndex = ENTINDEX(ed);
-
-		if (g_zooming[entityIndex])
-			g_zooming[entityIndex] = 0;
-
-		if(g_players[entityIndex].GetModelled())
-			g_players[entityIndex].SetInspectModel(true);
-			//g_players[ENTINDEX(ed)].SetTime(gpGlobals->time + MODELRESETTIME);
-	}
-
-	RETURN_META(MRES_IGNORED);
-}
-
-
-/***GetEntityAPI2******************/
 void ClientDisconnect(edict_t *pEntity) 
 {
 	int index = ENTINDEX(pEntity);
 	g_players[index].SetModelled(false);
-	g_zooming[index] = 0;
+	Zooming[index] = 0;
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -1828,18 +1803,5 @@ void PlayerPostThink(edict_t* pPlayer)
 			g_players[entityIndex].SetInspectModel(false);
 		}
 	}
-	RETURN_META(MRES_IGNORED);
-}
-
-void PlayerPreThink(edict_t *pPlayer)
-{
-	GET_OFFSET_NO_ERROR("CBasePlayer", m_iFOV);
-
-	int entityIndex = ENTINDEX(pPlayer);
-	if (g_zooming[entityIndex])
-	{
-		set_pdata<int>(pPlayer, m_iFOV, g_zooming[entityIndex]);
-	}
-
 	RETURN_META(MRES_IGNORED);
 }

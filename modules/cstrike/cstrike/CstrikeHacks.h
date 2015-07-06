@@ -17,8 +17,10 @@
 #include <amxxmodule.h>
 #include <IGameConfigs.h>
 #include <CDetour/detours.h>
+#include <engine_strucs.h>
 
 void InitializeHacks();
+void InitGlobalVars();
 void ShutdownHacks();
 void ToggleDetour_ClientCommands(bool enable);
 void ToggleDetour_BuyCommands(bool enable);
@@ -26,7 +28,7 @@ void ToggleDetour_BuyCommands(bool enable);
 extern AMX_NATIVE_INFO CstrikeNatives[];
 
 extern IGameConfig *MainConfig;
-extern IGameConfig *OffsetConfig;
+extern IGameConfig *CommonConfig;
 
 extern int ForwardInternalCommand;
 extern int ForwardOnBuy;
@@ -40,6 +42,10 @@ extern UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
 
 extern CDetour *GiveDefaultItemsDetour;
 extern enginefuncs_t *g_pengfuncsTable;
+extern DLL_FUNCTIONS *g_pFunctionTable;
 extern bool NoKifesMode;
+
+extern server_static_t *ServerStatic;
+extern double *RealTime;
 
 #endif // CSTRIKE_HACKS_H

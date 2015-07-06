@@ -42,11 +42,16 @@ StringHashMap<int> ItemAliasList;
 int TeamOffset;
 int MenuOffset;
 
+server_static_t *ServerStatic;
+double *RealTime;
+
 void InitializeHacks()
 {
 	CtrlDetours_ClientCommand(true);
 	CtrlDetours_BuyCommands(true);
 	CtrlDetours_Natives(true);
+
+	InitGlobalVars();
 }
 
 void ShutdownHacks()
@@ -301,8 +306,8 @@ void CtrlDetours_ClientCommand(bool set)
 #endif
 		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, base);
 
-		OffsetConfig->GetOffsetByClass("CBasePlayer", "m_iTeam", &TeamOffset);
-		OffsetConfig->GetOffsetByClass("CBasePlayer", "m_iMenu", &MenuOffset);
+		CommonConfig->GetOffsetByClass("CBasePlayer", "m_iTeam", &TeamOffset);
+		CommonConfig->GetOffsetByClass("CBasePlayer", "m_iMenu", &MenuOffset);
 
 		if (!ClientCommandDetour || !UseBotArgs || !BotArgs || !TeamOffset || !MenuOffset)
 		{
@@ -504,5 +509,30 @@ void CtrlDetours_Natives(bool set)
 		{
 			GiveDefaultItemsDetour->Destroy();
 		}
+	}
+}
+
+void InitGlobalVars()
+{
+	void *address = nullptr;
+
+#if defined(WIN32)
+
+	int offset = 0;
+
+	if (CommonConfig->GetOffset("svs", &offset))
+	{
+		uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + offset);
+		ServerStatic = reinterpret_cast<server_static_t*>(base - 4);
+	}
+#else
+	if (CommonConfig->GetMemSig("svs", &address))
+	{
+		ServerStatic = reinterpret_cast<server_static_t*>(address);
+	}
+#endif
+	if (CommonConfig->GetAddress("realtime", &address))
+	{
+		RealTime = reinterpret_cast<double*>(*reinterpret_cast<uintptr_t*>(address));
 	}
 }

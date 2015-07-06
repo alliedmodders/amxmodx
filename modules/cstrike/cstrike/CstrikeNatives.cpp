@@ -18,9 +18,7 @@
 #include "CstrikeUserMessages.h"
 #include "CstrikeHLTypeConversion.h"
 #include <CDetour/detours.h>
-
-CCstrikePlayer g_players[33];
-int Zooming[33];
+#include <am-vector.h>
 
 bool NoKifesMode = false;
 
@@ -536,7 +534,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 		set_pdata<int>(pPlayer, m_iModelName, model);
 	}
 
-	MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer));
+	Players[index].ResetModel(pPlayer);
 
 	char teaminfo[32];
 
@@ -863,17 +861,11 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 		return 0;
 	}
 
-	char modelName[32];
 	int length;
+	const char *newModel = MF_GetAmxString(amx, params[2], 0, &length);
 
-	strcpy(modelName, MF_GetAmxString(amx, params[2], 0, &length));
-	
-	g_players[index].SetModel(modelName);
-	g_players[index].SetModelled(true);
-
-	EnableMessageHooks();
-
-	SETCLIENTKEYVALUE(index, GETINFOKEYBUFFER(pPlayer), "model", const_cast<char*>(g_players[index].GetModel()));
+	Players[index].SetModel(newModel);
+	Players[index].UpdateModel(MF_GetPlayerEdict(index));
 
 	return 1;
 }
@@ -886,9 +878,7 @@ static cell AMX_NATIVE_CALL cs_reset_user_model(AMX *amx, cell *params)
 	CHECK_PLAYER(index);
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
 
-	g_players[index].SetModelled(false);
-
-	MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer));
+	Players[index].ResetModel(pPlayer);
 
 	return 1;
 }
@@ -1317,7 +1307,7 @@ static cell AMX_NATIVE_CALL cs_set_user_zoom(AMX *amx, cell *params)
 	int mode = params[3];
 	int weapon = *static_cast<int *>(MF_PlayerPropAddr(index, Player_CurrentWeapon));
 	
-	Zooming[index] = 0;
+	Players[index].ResetZoom();
 
 	if (type == CS_RESET_ZOOM)
 	{
@@ -1365,7 +1355,7 @@ static cell AMX_NATIVE_CALL cs_set_user_zoom(AMX *amx, cell *params)
 
 	if (!mode)
 	{
-		Zooming[index] = value;
+		Players[index].SetZoom(value);
 		EnableMessageHooks();
 	}
 
@@ -1766,42 +1756,3 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 
 	{nullptr,						nullptr}
 };
-
-void ClientDisconnect(edict_t *pEntity) 
-{
-	int index = ENTINDEX(pEntity);
-	g_players[index].SetModelled(false);
-	Zooming[index] = 0;
-
-	RETURN_META(MRES_IGNORED);
-}
-
-void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer) 
-{
-	int index = ENTINDEX(pEntity);
-
-	if(g_players[index].GetModelled() && pEntity->v.deadflag == DEAD_NO) 
-	{
-		RETURN_META(MRES_SUPERCEDE);
-	} 
-	else 
-	{
-		RETURN_META(MRES_IGNORED);
-	}
-}
-
-void PlayerPostThink(edict_t* pPlayer) 
-{
-	int entityIndex = ENTINDEX(pPlayer);
-
-	if(g_players[entityIndex].GetModelled()) 
-	{
-		if (g_players[entityIndex].GetInspectModel() && strcmp(g_players[entityIndex].GetModel(), GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model")) != 0) 
-		{
-			//LOG_CONSOLE(PLID, "%s should have model %s and currently has %s", STRING(pPlayer->v.netname), (char*)g_players[entityIndex].GetModel(), GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model"));
-			SETCLIENTKEYVALUE(entityIndex, GETINFOKEYBUFFER(pPlayer), "model", (char*)g_players[entityIndex].GetModel());
-			g_players[entityIndex].SetInspectModel(false);
-		}
-	}
-	RETURN_META(MRES_IGNORED);
-}

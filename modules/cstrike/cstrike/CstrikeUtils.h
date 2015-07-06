@@ -78,7 +78,7 @@ bool UTIL_CheckForPublic(const char *publicname);
 	static int member = -1;															\
 	if (member == -1)																\
 	{																				\
-		if (!OffsetConfig->GetOffsetByClass(classname, #member, &member) || member < 0)\
+		if (!CommonConfig->GetOffsetByClass(classname, #member, &member) || member < 0)\
 		{																			\
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid %s offset. Native %s is disabled", #member, __FUNCTION__);\
 			return 0;																\
@@ -89,7 +89,7 @@ bool UTIL_CheckForPublic(const char *publicname);
 	static int member = -1;															\
 	if (member == -1)																\
 	{																				\
-		if (!OffsetConfig->GetOffsetByClass(classname, #member, &member) || member < 0)\
+		if (!CommonConfig->GetOffsetByClass(classname, #member, &member) || member < 0)\
 		{																			\
 			return;																	\
 		}																			\

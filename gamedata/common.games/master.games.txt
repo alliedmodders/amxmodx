@@ -11,6 +11,12 @@
 
 "Game Master"
 {
+	"globalvars.engine.txt"
+	{
+		"engine"  "engine_ds"
+		"engine"  "engine_ls"
+	}
+
 	"entities.games/cstrike/offsets-cairtank.txt"
 	{
 		"game"  "cstrike"

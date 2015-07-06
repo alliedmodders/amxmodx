@@ -17,9 +17,10 @@
 #include "CstrikeHacks.h"
 #include "CstrikeHLTypeConversion.h"
 #include <IGameConfigs.h>
+#include "engine_strucs.h"
 
 IGameConfig *MainConfig;
-IGameConfig *OffsetConfig;
+IGameConfig *CommonConfig;
 IGameConfigManager *ConfigManager;
 
 int AmxxCheckGame(const char *game)
@@ -49,7 +50,7 @@ void OnAmxxAttach()
 
 	error[0] = '\0';
 
-	if (!ConfigManager->LoadGameConfigFile("common.games", &OffsetConfig, error, sizeof(error)) && error[0] != '\0')
+	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)) && error[0] != '\0')
 	{
 		MF_Log("Could not read common.games gamedata: %s", error);
 		return;
@@ -79,12 +80,17 @@ void OnPluginsLoaded()
 	{
 		G_OffsetHandler = new OffsetHandler;
 	}
+
+	// Used with model natives, enabled on demand.
+	g_pengfuncsTable->pfnSetClientKeyValue     = nullptr;
+	g_pFunctionTable->pfnClientUserInfoChanged = nullptr;
+	g_pFunctionTable->pfnStartFrame            = nullptr;
 }
 
 void OnAmxxDetach()
 {
 	ConfigManager->CloseGameConfigFile(MainConfig);
-	ConfigManager->CloseGameConfigFile(OffsetConfig);
+	ConfigManager->CloseGameConfigFile(CommonConfig);
 
 	ShutdownHacks();
 }

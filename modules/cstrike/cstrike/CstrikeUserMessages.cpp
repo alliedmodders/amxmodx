@@ -76,14 +76,15 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 			if (msg_type == MessageIdSetFOV)
 			{
 				int index = ENTINDEX(pEntity);
+				int zoom = Players[index].GetZoom();
 
-				if (Zooming[index])
+				if (zoom)
 				{
 					GET_OFFSET_NO_ERROR("CBasePlayer", m_iFOV);
 
-					if (get_pdata<int>(pEntity, m_iFOV) != Zooming[index])
+					if (get_pdata<int>(pEntity, m_iFOV) != zoom)
 					{
-						set_pdata<int>(pEntity, m_iFOV, Zooming[index]);
+						set_pdata<int>(pEntity, m_iFOV, zoom);
 
 						ShouldBlock = true;
 						ShouldBlockHLTV = true;
@@ -96,11 +97,8 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 			{
 				int index = ENTINDEX(pEntity);
 
-				if (Zooming[index])
-					Zooming[index] = 0;
-
-				if (g_players[index].GetModelled())
-					g_players[index].SetInspectModel(true);
+				if (Players[index].GetZoom())
+					Players[index].ResetZoom();
 			}
 			break;
 		}

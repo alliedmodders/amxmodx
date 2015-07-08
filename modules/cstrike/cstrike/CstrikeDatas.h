@@ -19,42 +19,42 @@
 /**
  * Weapon Ids for use with CS_OnBuyAttempt(), CS_OnBuy().
  */
-#define CSI_P228						CSW_P228
-#define CSI_SCOUT						CSW_SCOUT
-#define CSI_HEGRENADE					CSW_HEGRENADE
-#define CSI_XM1014						CSW_XM1014
-#define CSI_C4							CSW_C4
-#define CSI_MAC10						CSW_MAC10
-#define CSI_AUG							CSW_AUG
-#define CSI_SMOKEGRENADE				CSW_SMOKEGRENADE
-#define CSI_ELITE						CSW_ELITE
-#define CSI_FIVESEVEN					CSW_FIVESEVEN
-#define CSI_UMP45						CSW_UMP45
-#define CSI_SG550						CSW_SG550
-#define CSI_GALI						CSW_GALI
-#define CSI_FAMAS						CSW_FAMAS
-#define CSI_USP							CSW_USP
-#define CSI_GLOCK18						CSW_GLOCK18
-#define CSI_AWP							CSW_AWP
-#define CSI_MP5NAVY						CSW_MP5NAVY
-#define CSI_M249						CSW_M249
-#define CSI_M3							CSW_M3
-#define CSI_M4A1						CSW_M4A1
-#define CSI_TMP							CSW_TMP
-#define CSI_G3SG1						CSW_G3SG1
-#define CSI_FLASHBANG					CSW_FLASHBANG
-#define CSI_DEAGLE						CSW_DEAGLE
-#define CSI_SG552						CSW_SG552
-#define CSI_AK47						CSW_AK47
-#define CSI_KNIFE						CSW_KNIFE
-#define CSI_P90							CSW_P90
-#define CSI_SHIELDGUN					CSW_SHIELDGUN
-#define CSI_VEST						CSW_VEST		 // Custom
-#define CSI_VESTHELM					CSW_VESTHELM	 // Custom
-#define CSI_DEFUSER						33				 // Custom
-#define CSI_NVGS						34				 // Custom
-#define CSI_PRIMAMMO					36				 // Custom
-#define CSI_SECAMMO						37				 // Custom
+#define CSI_P228                CSW_P228
+#define CSI_SCOUT               CSW_SCOUT
+#define CSI_HEGRENADE           CSW_HEGRENADE
+#define CSI_XM1014              CSW_XM1014
+#define CSI_C4                  CSW_C4
+#define CSI_MAC10               CSW_MAC10
+#define CSI_AUG                 CSW_AUG
+#define CSI_SMOKEGRENADE        CSW_SMOKEGRENADE
+#define CSI_ELITE               CSW_ELITE
+#define CSI_FIVESEVEN           CSW_FIVESEVEN
+#define CSI_UMP45               CSW_UMP45
+#define CSI_SG550               CSW_SG550
+#define CSI_GALIL               CSW_GALIL
+#define CSI_FAMAS               CSW_FAMAS
+#define CSI_USP                 CSW_USP
+#define CSI_GLOCK18             CSW_GLOCK18
+#define CSI_AWP                 CSW_AWP
+#define CSI_MP5NAVY             CSW_MP5NAVY
+#define CSI_M249                CSW_M249
+#define CSI_M3                  CSW_M3
+#define CSI_M4A1                CSW_M4A1
+#define CSI_TMP                 CSW_TMP
+#define CSI_G3SG1               CSW_G3SG1
+#define CSI_FLASHBANG           CSW_FLASHBANG
+#define CSI_DEAGLE              CSW_DEAGLE
+#define CSI_SG552               CSW_SG552
+#define CSI_AK47                CSW_AK47
+#define CSI_P90                 CSW_P90
+#define CSI_SHIELDGUN           CSW_SHIELDGUN   // The real CS value, use CSI_SHELD instead.
+#define CSI_VEST                CSW_VEST        // Custom
+#define CSI_VESTHELM            CSW_VESTHELM    // Custom
+#define CSI_DEFUSER             33              // Custom
+#define CSI_NVGS                34              // Custom
+#define CSI_PRIAMMO             36              // Custom
+#define CSI_SECAMMO             37              // Custom
+#define CSI_SHIELD              38              // Custom - The value passed by the forward, more convenient for plugins.
 
 #define BITS_PISTOLS					(1<<CSI_GLOCK18 | 1<<CSI_USP | 1<<CSI_P228 | 1<<CSI_DEAGLE | 1<<CSI_ELITE | 1<<CSI_FIVESEVEN)
 
@@ -73,7 +73,7 @@
 #define CSW_FIVESEVEN					11
 #define CSW_UMP45						12
 #define CSW_SG550						13
-#define CSW_GALI						14
+#define CSW_GALIL						14
 #define CSW_FAMAS						15
 #define CSW_USP							16
 #define CSW_GLOCK18						17

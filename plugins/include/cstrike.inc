@@ -127,13 +127,14 @@ enum
 #define CSI_SG552               CSW_SG552
 #define CSI_AK47                CSW_AK47
 #define CSI_P90                 CSW_P90
-#define CSI_SHIELDGUN           CSW_SHIELDGUN
+#define CSI_SHIELDGUN           CSW_SHIELDGUN   // The real CS value, use CSI_SHELD instead.
 #define CSI_VEST                CSW_VEST        // Custom
 #define CSI_VESTHELM            CSW_VESTHELM    // Custom
 #define CSI_DEFUSER             33              // Custom
 #define CSI_NVGS                34              // Custom
 #define CSI_PRIAMMO             36              // Custom
 #define CSI_SECAMMO             37              // Custom
+#define CSI_SHIELD              38              // Custom - The value passed by the forward, more convenient for plugins.
 
 /**
  * Returns client's deaths.

@@ -110,9 +110,9 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 			{
 			    static const int menuItemsTe[][9] = 
 				{
-					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIMAMMO, CSI_SECAMMO, 0 },
+					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
 					/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_ELITE, 0, 0, 0 },
-					/* Menu_BuyRifle         */ { 0, CSI_GALI, CSI_AK47, CSI_SCOUT, CSI_SG552, CSI_AWP, CSI_G3SG1, 0, 0 },
+					/* Menu_BuyRifle         */ { 0, CSI_GALIL, CSI_AK47, CSI_SCOUT, CSI_SG552, CSI_AWP, CSI_G3SG1, 0, 0 },
 					/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
 					/* Menu_BuyShotgun       */ { 0, CSI_M3, CSI_XM1014, 0, 0, 0, 0, 0, 0 },
 					/* Menu_BuySubMachineGun */ { 0, CSI_MAC10, CSI_MP5NAVY, CSI_UMP45, CSI_P90, 0, 0, 0, 0 },
@@ -121,7 +121,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 
 				static const int menuItemsCt[][9] = 
 				{
-					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIMAMMO, CSI_SECAMMO, 0 },
+					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
 					/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_FIVESEVEN, 0, 0, 0 },
 					/* Menu_BuyRifle         */ { 0, CSI_FAMAS, CSI_SCOUT, CSI_M4A1, CSI_AUG, CSI_SG550, CSI_AWP, 0, 0 },
 					/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
@@ -353,7 +353,7 @@ void ToggleDetour_ClientCommands(bool enable)
 			{ "elites"     , CSI_ELITE      }, { "fn57"       , CSI_FIVESEVEN    },
 			{ "fiveseven"  , CSI_FIVESEVEN  }, { "ump45"      , CSI_UMP45        },
 			{ "sg550"      , CSI_SG550      }, { "krieg550"   , CSI_SG550        },
-			{ "galil"      , CSI_GALI       }, { "defender"   , CSI_GALI         },
+			{ "galil"      , CSI_GALIL      }, { "defender"   , CSI_GALIL        },
 			{ "famas"      , CSI_FAMAS      }, { "clarion"    , CSI_FAMAS        },
 			{ "usp"        , CSI_USP        }, { "km45"       , CSI_USP          },
 			{ "glock"      , CSI_GLOCK18    }, { "9x19mm"     , CSI_GLOCK18      },
@@ -370,7 +370,7 @@ void ToggleDetour_ClientCommands(bool enable)
 			{ "c90"        , CSI_P90        }, { "vest"       , CSI_VEST         },
 			{ "vesthelm"   , CSI_VESTHELM   }, { "defuser"    , CSI_DEFUSER      },
 			{ "nvgs"       , CSI_NVGS       }, { "shield"     , CSI_SHIELDGUN    },
-			{ "buyammo1"   , CSI_PRIMAMMO   }, { "primammo"   , CSI_PRIMAMMO     },
+			{ "buyammo1"   , CSI_PRIAMMO    }, { "primammo"   , CSI_PRIAMMO      },
 			{ "buyammo2"   , CSI_SECAMMO    }, { "secammo"    , CSI_SECAMMO      },
 			{ nullptr         , 0 }
 		};

@@ -107,17 +107,15 @@ public plugin_init()
 		TeamInfo = get_user_msgid("TeamInfo");
 		allow_spectators = get_cvar_pointer("allow_spectators");
 
-		new mp_teamplay = get_cvar_pointer("mp_teamplay");
-		if (mp_teamplay && get_pcvar_num(mp_teamplay))
+		if (get_cvar_num("mp_teamplay"))
 		{
 			new mp_teamlist = get_cvar_pointer("mp_teamlist");
 			if (mp_teamlist)
 			{
 				new teamlist[TEAMPLAY_TEAMLISTLENGTH+1];
-				get_pcvar_string(mp_teamlist, teamlist, charsmax(teamlist));
-				trim(teamlist);
+				new length = get_pcvar_string(mp_teamlist, teamlist, charsmax(teamlist));
 
-				if (strlen(teamlist))
+				if (length)
 				{
 					TeamsNum = explode_string(teamlist, ";", TeamNames, MAX_TEAMS, charsmax(TeamNames[]));
 				}

@@ -514,7 +514,7 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params)
 	return get_pdata<int>(pPlayer, m_iTeam);
 }
 
-// native cs_set_user_team(index, any:team, any:model = CS_DONTCHANGE);
+// native cs_set_user_team(index, any:team, any:model = CS_DONTCHANGE, bool:send_teaminfo = true);
 static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 {
 	GET_OFFSET("CBasePlayer", m_iModelName);
@@ -536,6 +536,13 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 
 	Players[index].ResetModel(pPlayer);
 
+	bool sendTeamInfo = true;
+
+	if (*params / sizeof(cell) >= 4)
+	{
+		sendTeamInfo = params[4] != 0;
+	}
+
 	char teaminfo[32];
 
 	switch (team)
@@ -547,11 +554,14 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 		default:              sprintf(teaminfo, "TEAM_%i", team);
 	}
 
-	MESSAGE_BEGIN(MSG_ALL, MessageIdTeamInfo);
-		WRITE_BYTE(index);
-		WRITE_STRING(teaminfo);
-	MESSAGE_END();
-	
+	if (sendTeamInfo)
+	{
+		MESSAGE_BEGIN(MSG_ALL, MessageIdTeamInfo);
+			WRITE_BYTE(index);
+			WRITE_STRING(teaminfo);
+		MESSAGE_END();
+	}
+
 	MF_SetPlayerTeamInfo(index, team, team <= TEAM_SPECTATOR ? teaminfo : nullptr);
 
 	return 1;

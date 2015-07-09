@@ -577,7 +577,8 @@ native cs_set_user_tked(index, tk = 1, subtract = 1);
  *
  * @return          0 if the client is not driving, 1 if driving a vehicle but
  *                  not moving, 2 to 4 if driving positive speeds, 5 if
- *                  driving at a negative speed (backing)
+ *                  driving at a negative speed (backing), see TRAIN_* constants
+ *                  in hlsdk_cons.inc
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients, or the client is not connected, an error will be
  *                  thrown.

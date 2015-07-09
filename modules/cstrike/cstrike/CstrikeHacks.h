@@ -46,6 +46,6 @@ extern DLL_FUNCTIONS *g_pFunctionTable;
 extern bool NoKifesMode;
 
 extern server_static_t *ServerStatic;
-extern double *RealTime;
+extern server_t *Server;
 
 #endif // CSTRIKE_HACKS_H

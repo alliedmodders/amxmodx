@@ -856,7 +856,7 @@ static cell AMX_NATIVE_CALL cs_get_user_model(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[2], GETCLIENTKEYVALUE(GETINFOKEYBUFFER(pPlayer), "model"), params[3]);
 }
 
-// native cs_set_user_model(index, const model[]);
+// native cs_set_user_model(index, const model[], bool:update_index = false);
 static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 {
 	int index = params[1];
@@ -874,8 +874,45 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 	int length;
 	const char *newModel = MF_GetAmxString(amx, params[2], 0, &length);
 
+	if (!*newModel)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Model can not be empty");
+		return 0;
+	}
+
 	Players[index].SetModel(newModel);
-	Players[index].UpdateModel(MF_GetPlayerEdict(index));
+	Players[index].UpdateModel(pPlayer);
+
+	if (*params / sizeof(cell) >= 3 && params[3] != 0)
+	{
+		if (!Server)
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "cs_set_user_model is disabled with update_index parameter set");
+			return 0;
+		}
+
+		GET_OFFSET("CBasePlayer", m_modelIndexPlayer);
+
+		char model[260];
+		UTIL_Format(model, sizeof(model), "models/player/%s/%s.mdl", newModel, newModel);
+
+		for (size_t i = 0; i < HL_MODEL_MAX; ++i)
+		{
+			if (Server->model_precache[i] && !strcmp(Server->model_precache[i], model))
+			{
+				if (pPlayer->v.modelindex != i)
+				{
+					SET_MODEL(pPlayer, model);
+				}
+
+				set_pdata<int>(pPlayer, m_modelIndexPlayer, i);
+				return 1;
+			}
+		}
+
+		MF_LogError(amx, AMX_ERR_NATIVE, "Model must be precached");
+		return 0;
+	}
 
 	return 1;
 }

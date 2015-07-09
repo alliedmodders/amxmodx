@@ -43,7 +43,7 @@ int TeamOffset;
 int MenuOffset;
 
 server_static_t *ServerStatic;
-double *RealTime;
+server_t *Server;
 
 void InitializeHacks()
 {
@@ -531,8 +531,13 @@ void InitGlobalVars()
 		ServerStatic = reinterpret_cast<server_static_t*>(address);
 	}
 #endif
-	if (CommonConfig->GetAddress("realtime", &address))
+	if (CommonConfig->GetAddress("sv", &address))
 	{
-		RealTime = reinterpret_cast<double*>(*reinterpret_cast<uintptr_t*>(address));
+		Server = *reinterpret_cast<server_t**>(address);
+	}
+	
+	if (!Server)
+	{
+		MF_Log("sv global variable is not available\n");
 	}
 }

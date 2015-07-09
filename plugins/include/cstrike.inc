@@ -342,16 +342,21 @@ native cs_get_user_model(index, model[], len);
  * @note This is not a one-time set. The CStrike module will remember the
  *       selected model and try to prevent attempts at changing the player
  *       model, or immediately re-apply it if necessary.
+ * @note Updating modelindex is useful for custom models which don't have 
+ *       the same structure as the default ones (hitbox, etc..). Model must 
+ *       be precached before.
  *
- * @param index     Client index
- * @param model     Model name
+ * @param index           Client index
+ * @param model           Model name
+ * @param update_index    If true, the modelindex is updated as well
  *
  * @noreturn
- * @error           If the client index is not within the range of 1 to
- *                  MaxClients, or the client is not connected, an error will be
- *                  thrown.
+ * @error                 If the client index is not within the range of 1 to
+ *                        MaxClients, the client is not connected, the provided
+ *                        model is empty, or if modeindex is updated and the 
+ *                        provided model is not precached, an error will be thrown.
  */
-native cs_set_user_model(index, const model[]);
+native cs_set_user_model(index, const model[], bool:update_index = false);
 
 /**
  * Resets the client's model.

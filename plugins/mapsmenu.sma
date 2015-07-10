@@ -574,3 +574,8 @@ load_settings(filename[])
 
 	return 1;
 }
+
+public plugin_end()
+{
+	ArrayDestroy(g_mapName)
+}

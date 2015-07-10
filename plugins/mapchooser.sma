@@ -289,4 +289,6 @@ public plugin_end()
 
 	get_mapname(current_map, charsmax(current_map))
 	set_localinfo("lastMap", current_map)
+
+	ArrayDestroy(g_mapName)
 }

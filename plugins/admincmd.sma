@@ -1332,3 +1332,9 @@ public cmdLast(id, level, cid)
 	
 	return PLUGIN_HANDLED;
 }
+
+public plugin_end()
+{
+	TrieDestroy(g_tempBans);
+	TrieDestroy(g_tXvarsFlags);
+}

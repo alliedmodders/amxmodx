@@ -117,4 +117,7 @@ public plugin_end()
 
 	num_to_str(g_Current, lastinfo, charsmax(lastinfo))
 	set_localinfo("lastinfomsg", lastinfo)
+
+	ArrayDestroy(g_Messages)
+	ArrayDestroy(g_Values)
 }

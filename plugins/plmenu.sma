@@ -1243,3 +1243,9 @@ load_settings(szFilename[])
 
 	return 1;
 }
+
+public plugin_end()
+{
+	ArrayDestroy(g_bantimes);
+	ArrayDestroy(g_slapsettings);
+}

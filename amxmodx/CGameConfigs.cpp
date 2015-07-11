@@ -8,8 +8,8 @@
 //     https://alliedmods.net/amxmodx-license
 
 #include "CGameConfigs.h"
-#include <MemoryUtils.h>
 #include <amxmodx.h>
+#include <MemoryUtils.h>
 
 CGameConfigManager ConfigManager;
 static CGameMasterReader MasterReader;

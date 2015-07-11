@@ -67,6 +67,7 @@ extern AMX_NATIVE_INFO g_DataStructNatives[];
 extern AMX_NATIVE_INFO g_StackNatives[];
 extern AMX_NATIVE_INFO g_TextParserNatives[];
 extern AMX_NATIVE_INFO g_CvarNatives[];
+extern AMX_NATIVE_INFO g_GameConfigNatives[];
 
 #if defined(_WIN32)
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)

@@ -31,6 +31,7 @@
 #include "messages.h"
 #include "trie_natives.h"
 #include "CDataPack.h"
+#include "CGameConfigs.h"
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -530,6 +531,7 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, g_StackNatives, -1);
 	amx_Register(amx, g_TextParserNatives, -1);
 	amx_Register(amx, g_CvarNatives, -1);
+	amx_Register(amx, g_GameConfigNatives, -1);
 
 	//we're not actually gonna check these here anymore
 	amx->flags |= AMX_FLAG_PRENIT;
@@ -1810,6 +1812,11 @@ int amx_Execv()
 	return AMX_ERR_NOTFOUND;
 }
 
+IGameConfigManager *MNF_GetConfigManager()
+{
+	return &ConfigManager;
+}
+
 void Module_CacheFunctions()
 {
 	func_s *pFunc;
@@ -1824,6 +1831,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("Format", MNF_Format)
 	REGISTER_FUNC("RegisterFunction", MNF_RegisterFunction);
 	REGISTER_FUNC("RegisterFunctionEx", MNF_RegisterFunctionEx);
+	REGISTER_FUNC("GetConfigManager", MNF_GetConfigManager);
 
 	// Amx scripts loading / unloading / managing
 	REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)

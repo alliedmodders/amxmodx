@@ -91,9 +91,12 @@ binary.sources = [
   'textparse.cpp',
   'CvarManager.cpp',
   'cvars.cpp',
+  '../public/memtools/MemoryUtils.cpp',
   '../public/memtools/CDetour/detours.cpp',
   '../public/memtools/CDetour/asm/asm.c',
   'CLibrarySys.cpp',
+  'CGameConfigs.cpp',
+  'gameconfigs.cpp',
 ]
 
 if builder.target_platform == 'windows':

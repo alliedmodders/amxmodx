@@ -277,9 +277,18 @@
       <Filter>Third Party\Hashing\hashers</Filter>
     </ClCompile>
     <ClCompile Include="..\CPlugin.cpp">
-    	<Filter>Source Files</Filter>
-	</ClCompile>
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\CLibrarySys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CGameConfigs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\memtools\MemoryUtils.cpp">
+      <Filter>Memtools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gameconfigs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -478,11 +487,23 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\hashing\hashers\sha256.h">
       <Filter>Third Party\Hashing\hashers</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\CFileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CLibrarySys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CGameConfigs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\memtools\MemoryUtils.h">
+      <Filter>Memtools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\natives_handles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\gameconfigs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -580,6 +601,9 @@
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\cvars.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\gameconfig.inc">
       <Filter>Pawn Includes</Filter>
     </None>
   </ItemGroup>

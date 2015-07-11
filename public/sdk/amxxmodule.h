@@ -18,6 +18,7 @@
 
 // config
 #include "moduleconfig.h"
+#include <IGameConfigs.h>
 
 #include <stddef.h> // size_t
 // metamod include files
@@ -2217,6 +2218,7 @@ typedef const char *	(*PFN_GETLOCALINFO)				(const char * /*name*/, const char *
 typedef int				(*PFN_AMX_REREGISTER)			(AMX * /*amx*/, AMX_NATIVE_INFO * /*list*/, int /*list*/);
 typedef void *			(*PFN_REGISTERFUNCTIONEX)		(void * /*pfn*/, const char * /*desc*/);
 typedef void			(*PFN_MESSAGE_BLOCK)			(int /* mode */, int /* message */, int * /* opt */);
+typedef IGameConfigManager* (*PFN_GET_CONFIG_MANAGER)   ();
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_ADD_NEW_NATIVES			g_fn_AddNewNatives;
@@ -2297,6 +2299,7 @@ extern PFN_GETLOCALINFO				g_fn_GetLocalInfo;
 extern PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 extern PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 extern PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
+extern PFN_GET_CONFIG_MANAGER		g_fn_GetConfigManager;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2374,6 +2377,7 @@ const char *	MF_GetLocalInfo				(const char *name, const char *def) { }
 int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return 0; }
 void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }
 void *			MF_MessageBlock				(int mode, int msg, int *opt) { }
+IGameConfigManager* MF_GetConfigManager     (void) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2456,6 +2460,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_AmxReRegister g_fn_AmxReRegister
 #define MF_RegisterFunctionEx g_fn_RegisterFunctionEx
 #define MF_MessageBlock g_fn_MessageBlock
+#define MF_GetConfigManager g_fn_GetConfigManager
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

@@ -27,6 +27,7 @@
 #include "CvarManager.h"
 #include "CLibrarySys.h"
 #include "CFileSystem.h"
+#include "gameconfigs.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -408,6 +409,7 @@ int	C_Spawn(edict_t *pent)
 	g_TrieSnapshotHandles.clear();
 	g_DataPackHandles.clear();
 	g_TextParsersHandles.clear();
+	GameConfigHandle.clear();
 
 	char map_pluginsfile_path[256];
 	char prefixed_map_pluginsfile[256];

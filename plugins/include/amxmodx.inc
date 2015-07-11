@@ -30,6 +30,7 @@
 #include <textparse_smc>
 #include <textparse_ini>
 #include <cvars>
+#include <gameconfig>
 
 /**
  * Called just after server activation.

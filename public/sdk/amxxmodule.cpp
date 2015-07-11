@@ -2501,6 +2501,7 @@ PFN_GETLOCALINFO			g_fn_GetLocalInfo;
 PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
+PFN_GET_CONFIG_MANAGER		g_fn_GetConfigManager;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2560,6 +2561,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("Format", g_fn_Format, PFN_FORMAT);
 	REQFUNC("RegisterFunction", g_fn_RegisterFunction, PFN_REGISTERFUNCTION);
 	REQFUNC("RegisterFunctionEx", g_fn_RegisterFunctionEx, PFN_REGISTERFUNCTIONEX);
+	REQFUNC("GetConfigManager", g_fn_GetConfigManager, PFN_GET_CONFIG_MANAGER);
 
 	// Amx scripts
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
@@ -2787,6 +2789,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_RemoveLibraries(NULL);
 	MF_OverrideNatives(NULL, NULL);
 	MF_MessageBlock(0, 0, NULL);
+	MF_GetConfigManager();
 }
 #endif
 

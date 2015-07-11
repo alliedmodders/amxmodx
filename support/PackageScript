@@ -264,6 +264,7 @@ scripting_files = [
   'include/file.inc',
   'include/float.inc',
   'include/fun.inc',
+  'include/gameconfig.inc',
   'include/geoip.inc',
   'include/lang.inc',
   'include/ns.inc',

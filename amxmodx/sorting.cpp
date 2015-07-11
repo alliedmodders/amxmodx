@@ -428,10 +428,11 @@ void sort_adt_random(CellArray *cArray)
 
 static cell AMX_NATIVE_CALL SortADTArray(AMX *amx, cell *params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 

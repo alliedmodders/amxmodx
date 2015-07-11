@@ -7,28 +7,23 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-#include <stdio.h>
-#include <stddef.h>
-#include <stdlib.h>
-
-#include "amxmodx.h"
 #include "trie_natives.h"
 
-TrieHandles<CellTrie> g_TrieHandles;
-TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;
+Handle<CellTrie> TrieHandles;
+Handle<TrieSnapshot> TrieSnapshotHandles;
 
 // native Trie:TrieCreate();
 static cell AMX_NATIVE_CALL TrieCreate(AMX *amx, cell *params)
 {
-	return static_cast<cell>(g_TrieHandles.create());
+	return static_cast<cell>(TrieHandles.create());
 }
 
 // native Trie::TrieClear(Trie:handle);
 static cell AMX_NATIVE_CALL TrieClear(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -40,9 +35,9 @@ static cell AMX_NATIVE_CALL TrieClear(AMX *amx, cell *params)
 // native TrieSetCell(Trie:handle, const key[], any:value, bool:replace = true);
 static cell AMX_NATIVE_CALL TrieSetCell(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -76,9 +71,9 @@ static cell AMX_NATIVE_CALL TrieSetCell(AMX *amx, cell *params)
 // native TrieSetString(Trie:handle, const key[], const data[], bool:replace = true);
 static cell AMX_NATIVE_CALL TrieSetString(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -113,9 +108,9 @@ static cell AMX_NATIVE_CALL TrieSetString(AMX *amx, cell *params)
 // native TrieSetArray(Trie:handle, const key[], const any:buffer[], buffsize, bool:replace = true)
 static cell AMX_NATIVE_CALL TrieSetArray(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -157,9 +152,9 @@ static cell AMX_NATIVE_CALL TrieSetArray(AMX *amx, cell *params)
 // native bool:TrieGetCell(Trie:handle, const key[], &any:value);
 static cell AMX_NATIVE_CALL TrieGetCell(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -189,9 +184,9 @@ static cell AMX_NATIVE_CALL TrieGetCell(AMX *amx, cell *params)
 // native bool:TrieGetString(Trie:handle, const key[], buff[], len, &size = 0);
 static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -221,9 +216,9 @@ static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 // native bool:TrieGetArray(Trie:handle, const key[], any:buff[], len, &size = 0);
 static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -272,9 +267,9 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 // native bool:TrieKeyExists(Trie:handle, const key[]);
 static cell AMX_NATIVE_CALL TrieKeyExists(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -289,9 +284,9 @@ static cell AMX_NATIVE_CALL TrieKeyExists(AMX *amx, cell *params)
 // native bool:TrieDeleteKey(Trie:handle, const key[]);
 static cell AMX_NATIVE_CALL TrieDeleteKey(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -317,14 +312,14 @@ static cell AMX_NATIVE_CALL TrieDestroy(AMX *amx, cell *params)
 {
 	cell *ptr = get_amxaddr(amx, params[1]);
 
-	CellTrie *t = g_TrieHandles.lookup(*ptr);
+	CellTrie *t = TrieHandles.lookup(*ptr);
 
-	if (t == NULL)
+	if (!t)
 	{
 		return 0;
 	}
 
-	if (g_TrieHandles.destroy(*ptr))
+	if (TrieHandles.destroy(*ptr))
 	{
 		*ptr = 0;
 		return 1;
@@ -336,9 +331,9 @@ static cell AMX_NATIVE_CALL TrieDestroy(AMX *amx, cell *params)
 // native TrieGetSize(Trie:handle);
 static cell AMX_NATIVE_CALL TrieGetSize(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
@@ -349,16 +344,16 @@ static cell AMX_NATIVE_CALL TrieGetSize(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL TrieSnapshotCreate(AMX *amx, cell *params)
 {
-	CellTrie *t = g_TrieHandles.lookup(params[1]);
+	CellTrie *t = TrieHandles.lookup(params[1]);
 
-	if (t == NULL)
+	if (!t)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[1]);
 		return 0;
 	}
 
-	int index = g_TrieSnapshotHandles.create();
-	TrieSnapshot *snapshot = g_TrieSnapshotHandles.lookup(index);
+	int index = TrieSnapshotHandles.create();
+	TrieSnapshot *snapshot = TrieSnapshotHandles.lookup(index);
 	snapshot->length = t->map.elements();
 	snapshot->keys = new int[snapshot->length];
 
@@ -374,9 +369,9 @@ static cell AMX_NATIVE_CALL TrieSnapshotCreate(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL TrieSnapshotLength(AMX *amx, cell *params)
 {
-	TrieSnapshot *snapshot = g_TrieSnapshotHandles.lookup(params[1]);
+	TrieSnapshot *snapshot = TrieSnapshotHandles.lookup(params[1]);
 
-	if (snapshot == NULL)
+	if (!snapshot)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid snapshot handle provided (%d)", params[1]);
 		return 0;
@@ -387,9 +382,9 @@ static cell AMX_NATIVE_CALL TrieSnapshotLength(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL TrieSnapshotKeyBufferSize(AMX *amx, cell *params)
 {
-	TrieSnapshot *snapshot = g_TrieSnapshotHandles.lookup(params[1]);
+	TrieSnapshot *snapshot = TrieSnapshotHandles.lookup(params[1]);
 
-	if (snapshot == NULL)
+	if (!snapshot)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid snapshot handle provided (%d)", params[1]);
 		return 0;
@@ -408,9 +403,9 @@ static cell AMX_NATIVE_CALL TrieSnapshotKeyBufferSize(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL TrieSnapshotGetKey(AMX *amx, cell *params)
 {
-	TrieSnapshot *snapshot = g_TrieSnapshotHandles.lookup(params[1]);
+	TrieSnapshot *snapshot = TrieSnapshotHandles.lookup(params[1]);
 
-	if (snapshot == NULL)
+	if (!snapshot)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid snapshot handle provided (%d)", params[1]);
 		return 0;
@@ -433,14 +428,14 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 {
 	cell *ptr = get_amxaddr(amx, params[1]);
 
-	TrieSnapshot *t = g_TrieSnapshotHandles.lookup(*ptr);
+	TrieSnapshot *t = TrieSnapshotHandles.lookup(*ptr);
 
-	if (t == NULL)
+	if (!t)
 	{
 		return 0;
 	}
 
-	if (g_TrieSnapshotHandles.destroy(*ptr))
+	if (TrieSnapshotHandles.destroy(*ptr))
 	{
 		*ptr = 0;
 		return 1;
@@ -451,28 +446,28 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 
 AMX_NATIVE_INFO trie_Natives[] =
 {
-	{ "TrieCreate",		TrieCreate },
-	{ "TrieClear",		TrieClear },
+	{ "TrieCreate"               ,	TrieCreate },
+	{ "TrieClear"                ,	TrieClear },
 
-	{ "TrieSetCell",	TrieSetCell },
-	{ "TrieSetString",	TrieSetString },
-	{ "TrieSetArray",	TrieSetArray },
+	{ "TrieSetCell"              ,	TrieSetCell },
+	{ "TrieSetString"            ,	TrieSetString },
+	{ "TrieSetArray"             ,	TrieSetArray },
 
-	{ "TrieGetCell",	TrieGetCell },
-	{ "TrieGetString",	TrieGetString },
-	{ "TrieGetArray",	TrieGetArray },
+	{ "TrieGetCell"              ,	TrieGetCell },
+	{ "TrieGetString"            ,	TrieGetString },
+	{ "TrieGetArray"             ,	TrieGetArray },
 
-	{ "TrieDeleteKey",	TrieDeleteKey },
-	{ "TrieKeyExists",	TrieKeyExists },
-	{ "TrieDestroy",	TrieDestroy },
-	{ "TrieGetSize",	TrieGetSize },
+	{ "TrieDeleteKey"            ,	TrieDeleteKey },
+	{ "TrieKeyExists"            ,	TrieKeyExists },
+	{ "TrieDestroy"              ,	TrieDestroy },
+	{ "TrieGetSize"              ,	TrieGetSize },
 
-	{ "TrieSnapshotCreate",			TrieSnapshotCreate },
-	{ "TrieSnapshotLength",			TrieSnapshotLength },
+	{ "TrieSnapshotCreate"       ,	TrieSnapshotCreate },
+	{ "TrieSnapshotLength"       ,	TrieSnapshotLength },
 	{ "TrieSnapshotKeyBufferSize",	TrieSnapshotKeyBufferSize },
-	{ "TrieSnapshotGetKey",			TrieSnapshotGetKey },
-	{ "TrieSnapshotDestroy",		TrieSnapshotDestroy },
+	{ "TrieSnapshotGetKey"       ,	TrieSnapshotGetKey },
+	{ "TrieSnapshotDestroy"      ,	TrieSnapshotDestroy },
 
-	{ NULL,			NULL }
+	{ nullptr                    ,	nullptr}
 };
 

@@ -14,6 +14,7 @@
 
 #include "amxmodx.h"
 #include "CTextParsers.h"
+#include "natives_handles.h"
 
 class ParseInfo :
 	public ITextListener_SMC,
@@ -131,77 +132,6 @@ public:
 	int handle;
 };
 
-template <typename T>
-class TextParserHandles
-{
-private:
-	ke::Vector<T *> m_textparsers;
-
-public:
-	TextParserHandles() { }
-	~TextParserHandles()
-	{
-		this->clear();
-	}
-
-	void clear()
-	{
-		for (size_t i = 0; i < m_textparsers.length(); i++)
-		{
-			if (m_textparsers[i] != NULL)
-			{
-				delete m_textparsers[i];
-			}
-		}
-
-		m_textparsers.clear();
-	}
-	T *lookup(int handle)
-	{
-		handle--;
-
-		if (handle < 0 || handle >= static_cast<int>(m_textparsers.length()))
-		{
-			return NULL;
-		}
-
-		return m_textparsers[handle];
-	}
-	int create()
-	{
-		for (size_t i = 0; i < m_textparsers.length(); i++)
-		{
-			if (m_textparsers[i] == NULL)
-			{
-				// reuse handle
-				m_textparsers[i] = new T;
-
-				return static_cast<int>(i)+1;
-			}
-		}
-		m_textparsers.append(new T);
-		return m_textparsers.length();
-	}
-	bool destroy(int handle)
-	{
-		handle--;
-
-		if (handle < 0 || handle >= static_cast<int>(m_textparsers.length()))
-		{
-			return false;
-		}
-
-		if (m_textparsers[handle] == NULL)
-		{
-			return false;
-		}
-		delete m_textparsers[handle];
-		m_textparsers[handle] = NULL;
-
-		return true;
-	}
-};
-
-extern TextParserHandles<ParseInfo> g_TextParsersHandles;
+extern Handle<ParseInfo> TextParsersHandles;
 
 #endif // _INCLUDE_TEXTPARSE_H_

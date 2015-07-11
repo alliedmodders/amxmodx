@@ -27,8 +27,6 @@
  * or <http://www.sourcemod.net/license.php>.
  */
 
-#include <stdlib.h>
-#include <string.h>
 #include "CDataPack.h"
 
 #define DATAPACK_INITIAL_SIZE		512

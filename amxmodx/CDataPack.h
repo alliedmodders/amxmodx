@@ -31,6 +31,7 @@
 #define _INCLUDE_SOURCEMOD_CDATAPACK_H_
 
 #include "amxmodx.h"
+#include "natives_handles.h"
 
 /**
  * @brief Contains functions for packing data abstractly to/from plugins.
@@ -174,81 +175,7 @@ private:
 	};
 };
 
-class CDataPackHandles
-{
-private:
-	CVector<CDataPack *> m_packs;
-
-public:
-	CDataPackHandles() {}
-	~CDataPackHandles()
-	{
-		this->clear();
-	}
-
-	void clear()
-	{
-		for (size_t i = 0; i < m_packs.size(); i++)
-		{
-			if (m_packs[i] != NULL)
-			{
-				delete m_packs[i];
-			}
-		}
-
-		m_packs.clear();
-	}
-
-	CDataPack *lookup(int handle)
-	{
-		handle--;
-
-		if (handle < 0 || handle >= static_cast<int>(m_packs.size()))
-		{
-			return NULL;
-		}
-
-		return m_packs[handle];
-	}
-
-	int create()
-	{
-		for (size_t i = 0; i < m_packs.size(); ++i)
-		{
-			if (m_packs[i] == NULL)
-			{
-				// reuse handle
-				m_packs[i] = new CDataPack;
-
-				return static_cast<int>(i) + 1;
-			}
-		}
-		m_packs.push_back(new CDataPack);
-		return m_packs.size();
-	}
-
-	bool destroy(int handle)
-	{
-		handle--;
-
-		if (handle < 0 || handle >= static_cast<int>(m_packs.size()))
-		{
-			return false;
-		}
-
-		if (m_packs[handle] == NULL)
-		{
-			return false;
-		}
-
-		delete m_packs[handle];
-		m_packs[handle] = NULL;
-
-		return true;
-	}
-};
-
-extern CDataPackHandles g_DataPackHandles;
+extern Handle<CDataPack> DataPackHandles;
 extern AMX_NATIVE_INFO g_DatapackNatives[];
 
 #endif //_INCLUDE_SOURCEMOD_CDATAPACK_H_

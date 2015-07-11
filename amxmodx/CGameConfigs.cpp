@@ -901,7 +901,7 @@ bool CGameConfigManager::LoadGameConfigFile(const char *file, IGameConfig **conf
 	configFromCache = new CGameConfig(file);
 	configFromCache->AddRef();
 
-	bool returnValue = returnValue = configFromCache->Reparse(error, maxlength);
+	bool returnValue = configFromCache->Reparse(error, maxlength);
 
 	m_Lookup.insert(file, configFromCache);
 	*config = configFromCache;

@@ -30,11 +30,11 @@ CForward::CForward(const char *name, ForwardExecType et, int numParams, const Fo
 			AMXForward tmp;
 			tmp.pPlugin = &(*iter);
 			tmp.func = func;
-			m_Funcs.push_back(tmp);
+			m_Funcs.append(tmp);
 		}
 	}
 
-	m_Name.assign(name);
+	m_Name = name;
 }
 
 cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
@@ -46,14 +46,14 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 	cell globRetVal = 0;
 
-	AMXForwardList::iterator iter;
-
-	for (iter = m_Funcs.begin(); iter != m_Funcs.end(); iter++)
+	for (size_t i = 0; i < m_Funcs.length(); ++i)
 	{
+		auto iter = &m_Funcs[i];
+
 		if (iter->pPlugin->isExecutable(iter->func))
 		{
 			// Get debug info
-			AMX *amx = (*iter).pPlugin->getAMX();
+			AMX *amx = iter->pPlugin->getAMX();
 			Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
 			
 			if (pDebugger)
@@ -103,7 +103,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			// exec
 			cell retVal = 0;
 #if defined BINLOG_ENABLED
-			g_BinLog.WriteOp(BinLog_CallPubFunc, (*iter).pPlugin->getId(), iter->func);
+			g_BinLog.WriteOp(BinLog_CallPubFunc, iter->pPlugin->getId(), iter->func);
 #endif
 			int err = amx_Exec(amx, &retVal, iter->func);
 			
@@ -196,7 +196,7 @@ void CSPForward::Set(int func, AMX *amx, int numParams, const ForwardParam *para
 	isFree = false;
 	name[0] = '\0';
 	amx_GetPublic(amx, func, name);
-	m_Name.assign(name);
+	m_Name = name;
 	m_ToDelete = false;
 	m_InExec = false;
 }
@@ -208,7 +208,7 @@ void CSPForward::Set(const char *funcName, AMX *amx, int numParams, const Forwar
 	memcpy((void *)m_ParamTypes, paramTypes, numParams * sizeof(ForwardParam));
 	m_HasFunc = (amx_FindPublic(amx, funcName, &m_Func) == AMX_ERR_NONE);
 	isFree = false;
-	m_Name.assign(funcName);
+	m_Name = funcName;
 	m_ToDelete = false;
 	m_InExec = false;
 }
@@ -340,7 +340,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 
 int CForwardMngr::registerForward(const char *funcName, ForwardExecType et, int numParams, const ForwardParam * paramTypes)
 {
-	int retVal = m_Forwards.size() << 1;
+	int retVal = m_Forwards.length() << 1;
 	CForward *tmp = new CForward(funcName, et, numParams, paramTypes);
 	
 	if (!tmp)
@@ -348,7 +348,7 @@ int CForwardMngr::registerForward(const char *funcName, ForwardExecType et, int 
 		return -1;				// should be invalid
 	}
 	
-	m_Forwards.push_back(tmp);
+	m_Forwards.append(tmp);
 	
 	return retVal;
 }
@@ -369,7 +369,7 @@ int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const For
 		
 		m_FreeSPForwards.pop();
 	} else {
-		retVal = (m_SPForwards.size() << 1) | 1;
+		retVal = (m_SPForwards.length() << 1) | 1;
 		pForward = new CSPForward();
 		
 		if (!pForward)
@@ -383,7 +383,7 @@ int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const For
 			delete pForward;
 		}
 					 
-		m_SPForwards.push_back(pForward);
+		m_SPForwards.append(pForward);
 	}
 	
 	return retVal;
@@ -391,7 +391,7 @@ int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const For
 
 int CForwardMngr::registerSPForward(const char *funcName, AMX *amx, int numParams, const ForwardParam *paramTypes)
 {
-	int retVal = (m_SPForwards.size() << 1) | 1;
+	int retVal = (m_SPForwards.length() << 1) | 1;
 	CSPForward *pForward;
 	
 	if (!m_FreeSPForwards.empty())
@@ -418,7 +418,7 @@ int CForwardMngr::registerSPForward(const char *funcName, AMX *amx, int numParam
 			return -1;
 		}
 		
-		m_SPForwards.push_back(pForward);
+		m_SPForwards.append(pForward);
 	}
 	
 	return retVal;
@@ -426,7 +426,7 @@ int CForwardMngr::registerSPForward(const char *funcName, AMX *amx, int numParam
 
 bool CForwardMngr::isIdValid(int id) const
 {
-	return (id >= 0) && ((id & 1) ? (static_cast<size_t>(id >> 1) < m_SPForwards.size()) : (static_cast<size_t>(id >> 1) < m_Forwards.size()));
+	return (id >= 0) && ((id & 1) ? (static_cast<size_t>(id >> 1) < m_SPForwards.length()) : (static_cast<size_t>(id >> 1) < m_Forwards.length()));
 }
 
 cell CForwardMngr::executeForwards(int id, cell *params)
@@ -484,24 +484,26 @@ ForwardParam CForwardMngr::getParamType(int id, int paramNum) const
 
 void CForwardMngr::clear()
 {
-	for (ForwardVec::iterator iter = m_Forwards.begin(); iter != m_Forwards.end(); ++iter)
+	size_t i;
+
+	for (i = 0; i < m_Forwards.length(); ++i)
 	{
-		delete *iter;
+		delete m_Forwards[i];
 	}
-	
-	SPForwardVec::iterator spIter;
-	
-	for (spIter = m_SPForwards.begin(); spIter != m_SPForwards.end(); ++spIter)
+
+	for (i = 0; i < m_SPForwards.length(); ++i)
 	{
-		delete (*spIter);
+		delete m_SPForwards[i];
 	}
 
 	m_Forwards.clear();
 	m_SPForwards.clear();
 	
 	while (!m_FreeSPForwards.empty())
+	{
 		m_FreeSPForwards.pop();
-	
+	}
+
 	m_TmpArraysNum = 0;
 }
 

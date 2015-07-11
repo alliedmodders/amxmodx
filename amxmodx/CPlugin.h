@@ -10,10 +10,10 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
-#include "CString.h"
 #include "sh_list.h"
 #include "amx.h"
 #include "amxxfile.h"
+#include <am-string.h>
 
 // *****************************************************
 // class CPluginMngr
@@ -43,11 +43,11 @@ public:
 		AMX amx;
 		void* code;
 		
-		String name;
-		String version;
-		String title;
-		String author;
-		String errorMsg;
+		ke::AString name;
+		ke::AString version;
+		ke::AString title;
+		ke::AString author;
+		ke::AString errorMsg;
 		
 		unsigned int failcounter;
 		int m_PauseFwd;
@@ -64,19 +64,19 @@ public:
 		cell* m_pNullStringOfs;
 		cell* m_pNullVectorOfs;
 	public:
-		inline const char* getName() { return name.c_str();}
-		inline const char* getVersion() { return version.c_str();}
-		inline const char* getTitle() { return title.c_str();}
-		inline const char* getAuthor() { return author.c_str();}
-		inline const char* getError() { return errorMsg.c_str();}
+		inline const char* getName() { return name.chars();}
+		inline const char* getVersion() { return version.chars();}
+		inline const char* getTitle() { return title.chars();}
+		inline const char* getAuthor() { return author.chars();}
+		inline const char* getError() { return errorMsg.chars();}
 		inline int getStatusCode() { return status; }
 		inline int getId() const { return id; }
 		inline AMX* getAMX() { return &amx; }
 		inline const AMX* getAMX() const { return &amx; }
-		inline void setTitle(const char* n) { title.assign(n); }
-		inline void setAuthor(const char* n) { author.assign(n); }
-		inline void setVersion(const char* n) { version.assign(n); }
-		inline void setError(const char* n) { errorMsg.assign(n); }
+		inline void setTitle(const char* n) { title = n; }
+		inline void setAuthor(const char* n) { author =n; }
+		inline void setVersion(const char* n) { version = n; }
+		inline void setError(const char* n) { errorMsg = n; }
 		inline bool isValid() const { return (status >= ps_paused); }
 		inline bool isPaused() const { return ((status == ps_paused) || (status == ps_stopped)); }
 		inline bool isStopped() const { return (status == ps_stopped); }
@@ -141,7 +141,7 @@ public:
 		CAmxxReader *file;
 		size_t bufsize;
 		char *buffer;
-		String path;
+		ke::AString path;
 	};
 	char *ReadIntoOrFromCache(const char *file, size_t &bufsize);
 	void InvalidateCache();
@@ -150,7 +150,7 @@ public:
 	void CALMFromFile(const char *file);
 private:
 	List<plcache_entry *> m_plcache;
-	List<String *> m_BlockList;
+	List<ke::AString *> m_BlockList;
 };
 
 #endif //PLUGIN_H

@@ -82,12 +82,12 @@ bool BinLog::Open()
 		fclose(lastlog);
 	}
 	build_pathname_r(file, sizeof(file)-1, "%s/binlogs/binlog%04d.blg", data, lastcntr);
-	m_logfile.assign(file);
+	m_logfile = file;
 
 	/**
 	* it's now safe to create the binary log
 	*/
-	FILE *fp = fopen(m_logfile.c_str(), "wb");
+	FILE *fp = fopen(m_logfile.chars(), "wb");
 	if (!fp)
 		return false;
 
@@ -119,7 +119,7 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 	if (!m_state)
 		return;
 
-	FILE *fp = fopen(m_logfile.c_str(), "ab");
+	FILE *fp = fopen(m_logfile.chars(), "ab");
 	if (!fp)
 		return;
 
@@ -131,7 +131,7 @@ void BinLog::WriteOp(BinLogOp op, int plug, ...)
 			fclose(fp);
 			Close();
 			Open();
-			fp = fopen(m_logfile.c_str(), "ab");
+			fp = fopen(m_logfile.chars(), "ab");
 			if (!fp)
 				return;
 		}

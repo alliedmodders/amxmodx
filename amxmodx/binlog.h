@@ -12,7 +12,7 @@
 
 #if defined BINLOG_ENABLED
 
-#include "CString.h"
+#include <am-string.h>
 
 #define BINLOG_MAGIC	0x414D424C
 #define BINLOG_VERSION	0x0300
@@ -80,7 +80,7 @@ public:
 private:
 	void WritePluginDB(FILE *fp);
 private:
-	String m_logfile;
+	ke::AString m_logfile;
 	bool m_state;
 };
 

@@ -55,7 +55,7 @@ void (*function)(void*);
 void (*endfunction)(void*);
 
 extern List<AUTHORIZEFUNC> g_auth_funcs;
-extern CVector<CAdminData *> DynamicAdmins;
+extern ke::Vector<CAdminData *> DynamicAdmins;
 
 CLog g_log;
 CForwardMngr g_forwards;
@@ -74,8 +74,8 @@ Grenades g_grenades;
 LogEventsMngr g_logevents;
 MenuMngr g_menucmds;
 CLangMngr g_langMngr;
-String g_log_dir;
-String g_mod_name;
+ke::AString g_log_dir;
+ke::AString g_mod_name;
 XVars g_xvars;
 
 bool g_bmod_tfc;
@@ -100,7 +100,7 @@ bool g_NewDLL_Available = false;
 #ifdef MEMORY_TEST
 	float g_next_memreport_time;
 	unsigned int g_memreport_count;
-	String g_memreport_dir;
+	ke::AString g_memreport_dir;
 	bool g_memreport_enabled;
 	#define MEMREPORT_INTERVAL 300.0f	/* 5 mins */
 #endif // MEMORY_TEST
@@ -141,21 +141,21 @@ int FF_ChangeLevel = -1;
 
 IFileSystem* g_FileSystem;
 
-bool ColoredMenus(String & ModName)
+bool ColoredMenus(const char *ModName)
 {
 	const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
 	const size_t ModsCount = sizeof(pModNames) / sizeof(const char *);
 
 	for (size_t i = 0; i < ModsCount; ++i)
 	{
-		if (ModName.compare(pModNames[i]) == 0)
+		if (strcmp(ModName, pModNames[i]) == 0)
 			return true; // this game modification currently supports colored menus	
 	}
 
 	return false; // no colored menus are supported for this game modification
 }
 
-void ParseAndOrAdd(CStack<String *> & files, const char *name)
+void ParseAndOrAdd(CStack<ke::AString *> & files, const char *name)
 {
 	if (strncmp(name, "plugins-", 8) == 0)
 	{
@@ -164,7 +164,7 @@ void ParseAndOrAdd(CStack<String *> & files, const char *name)
 		if (strcmp(&name[len-4], ".ini") == 0)
 		{
 #endif
-			String *pString = new String(name);
+			ke::AString *pString = new ke::AString(name);
 			files.push(pString);
 #if !defined WIN32
 		}
@@ -172,7 +172,7 @@ void ParseAndOrAdd(CStack<String *> & files, const char *name)
 	}
 }
 
-void BuildPluginFileList(const char *initialdir, CStack<String *> & files)
+void BuildPluginFileList(const char *initialdir, CStack<ke::AString *> & files)
 {
 	char path[255];
 #if defined WIN32
@@ -213,15 +213,15 @@ void BuildPluginFileList(const char *initialdir, CStack<String *> & files)
 //Loads a plugin list into the Plugin Cache and Load Modules cache
 void LoadExtraPluginsToPCALM(const char *initialdir)
 {
-	CStack<String *> files;
+	CStack<ke::AString *> files;
 	BuildPluginFileList(initialdir, files);
 	char path[255];
 	while (!files.empty())
 	{
-		String *pString = files.front();
+		ke::AString *pString = files.front();
 		UTIL_Format(path, sizeof(path)-1, "%s/%s", 
 			initialdir,
-			pString->c_str());
+			pString->chars());
 		g_plugins.CALMFromFile(path);
 		delete pString;
 		files.pop();
@@ -230,15 +230,15 @@ void LoadExtraPluginsToPCALM(const char *initialdir)
 
 void LoadExtraPluginsFromDir(const char *initialdir)
 {
-	CStack<String *> files;
+	CStack<ke::AString *> files;
 	char path[255];
 	BuildPluginFileList(initialdir, files);
 	while (!files.empty())
 	{
-		String *pString = files.front();
+		ke::AString *pString = files.front();
 		UTIL_Format(path, sizeof(path)-1, "%s/%s", 
 			initialdir,
-			pString->c_str());
+			pString->chars());
 		g_plugins.loadPluginsFromFile(path);
 		delete pString;
 		files.pop();
@@ -664,7 +664,7 @@ void C_ServerDeactivate()
 	RETURN_META(MRES_IGNORED);
 }
 
-extern CVector<cell *> g_hudsync;
+extern ke::Vector<cell *> g_hudsync;
 
 // After all clear whole AMX configuration
 // However leave AMX modules which are loaded only once
@@ -700,13 +700,13 @@ void C_ServerDeactivate_Post()
 	ClearMessages();
 	
 	// Flush the dynamic admins list
-	for (size_t iter=DynamicAdmins.size();iter--; )
+	for (size_t iter=DynamicAdmins.length();iter--; )
 	{
 		delete DynamicAdmins[iter];
 	}
 
 	DynamicAdmins.clear();
-	for (unsigned int i=0; i<g_hudsync.size(); i++)
+	for (unsigned int i=0; i<g_hudsync.length(); i++)
 		delete [] g_hudsync[i];
 	g_hudsync.clear();
 
@@ -733,10 +733,10 @@ void C_ServerDeactivate_Post()
 				char buffer[256];
 				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxmodx"), curTime->tm_mon + 1, curTime->tm_mday, i);
 #if defined(__linux__) || defined(__APPLE__)
-				mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
+				mkdir(build_pathname("%s", g_log_dir.chars()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
 #else
-				mkdir(build_pathname("%s", g_log_dir.c_str()));
+				mkdir(build_pathname("%s", g_log_dir.chars()));
 				if (mkdir(build_pathname(buffer)) < 0)
 #endif
 				{
@@ -752,15 +752,15 @@ void C_ServerDeactivate_Post()
 						break;
 					}
 				}
-				g_memreport_dir.assign(buffer);
+				g_memreport_dir = buffer;
 				
 				// g_memreport_dir should be valid now
 				break;
 			}
 		}
 		
-		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.c_str(), g_memreport_count));
-		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
+		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.chars(), g_memreport_count));
+		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.chars(), g_memreport_count, MEMREPORT_INTERVAL);
 		
 		g_memreport_count++;
 	}
@@ -845,7 +845,7 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 	// Emulate bot connection and putinserver
 	if (pPlayer->ingame)
 	{
-		pPlayer->name.assign(name);			//	Make sure player have name up to date
+		pPlayer->name =name;			//	Make sure player have name up to date
 	} else if (pPlayer->IsBot()) {
 		pPlayer->Connect(name, "127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
 
@@ -1092,10 +1092,10 @@ void C_StartFrame_Post(void)
 				char buffer[256];
 				sprintf(buffer, "%s/memreports/D%02d%02d%03d", get_localinfo("amxx_basedir", "addons/amxmodx"), curTime->tm_mon + 1, curTime->tm_mday, i);
 #if defined(__linux__) || defined(__APPLE__)
-				mkdir(build_pathname("%s", g_log_dir.c_str()), 0700);
+				mkdir(build_pathname("%s", g_log_dir.chars()), 0700);
 				if (mkdir(build_pathname(buffer), 0700) < 0)
 #else
-				mkdir(build_pathname("%s", g_log_dir.c_str()));
+				mkdir(build_pathname("%s", g_log_dir.chars()));
 				if (mkdir(build_pathname(buffer)) < 0)
 #endif
 				{
@@ -1111,14 +1111,14 @@ void C_StartFrame_Post(void)
 						break;
 					}
 				}
-				g_memreport_dir.assign(buffer);
+				g_memreport_dir = buffer;
 				// g_memreport_dir should be valid now
 				break;
 			}
 		}
 		
-		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.c_str(), g_memreport_count));
-		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.c_str(), g_memreport_count, MEMREPORT_INTERVAL);
+		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.chars(), g_memreport_count));
+		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.chars(), g_memreport_count, MEMREPORT_INTERVAL);
 		
 		g_memreport_count++;
 	}
@@ -1449,9 +1449,9 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		if (gameDir[i++] ==	'/')
 			a = &gameDir[i];
 	
-	g_mod_name.assign(a);
+	g_mod_name = a;
 
-	g_coloredmenus = ColoredMenus(g_mod_name); // whether or not to use colored menus
+	g_coloredmenus = ColoredMenus(g_mod_name.chars()); // whether or not to use colored menus
 
 	// ###### Print short GPL
 	print_srvconsole("\n   AMX Mod X version %s Copyright (c) 2004-2015 AMX Mod X Development Team \n"
@@ -1469,14 +1469,14 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		
 		while (a != amx_config.end())
 		{
-			SET_LOCALINFO((char*)a.key().c_str(), (char*)a.value().c_str());
+			SET_LOCALINFO((char*)a.key().chars(), (char*)a.value().chars());
 			++a;
 		}
 		amx_config.clear();
 	}
 
 	// ###### Initialize logging here
-	g_log_dir.assign(get_localinfo("amxx_logs", "addons/amxmodx/logs"));
+	g_log_dir = get_localinfo("amxx_logs", "addons/amxmodx/logs");
 
 	// ###### Now attach metamod modules
 	// This will also call modules Meta_Query and Meta_Attach functions
@@ -1652,14 +1652,14 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 {
 	memset(&meta_engfuncs, 0, sizeof(enginefuncs_t));
 
-	if (stricmp(g_mod_name.c_str(), "cstrike") == 0 || stricmp(g_mod_name.c_str(), "czero") == 0)
+	if (stricmp(g_mod_name.chars(), "cstrike") == 0 || stricmp(g_mod_name.chars(), "czero") == 0)
 	{
 		meta_engfuncs.pfnSetModel =	C_SetModel;
 		g_bmod_cstrike = true;
 	} else {
 		g_bmod_cstrike = false;
-		g_bmod_dod = !stricmp(g_mod_name.c_str(), "dod");
-		g_bmod_tfc = !stricmp(g_mod_name.c_str(), "tfc");
+		g_bmod_dod = !stricmp(g_mod_name.chars(), "dod");
+		g_bmod_tfc = !stricmp(g_mod_name.chars(), "tfc");
 	}
 
 	meta_engfuncs.pfnCmd_Argc = C_Cmd_Argc;

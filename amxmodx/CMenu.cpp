@@ -34,7 +34,7 @@ int MenuMngr::findMenuId(const char* name, AMX* amx)
 {
 	for (MenuIdEle* b = headid; b; b = b->next)
 	{
-		if ((!amx || !b->amx || amx == b->amx) && strstr(name,b->name.c_str()))
+		if ((!amx || !b->amx || amx == b->amx) && strstr(name,b->name.chars()))
 			return b->id;
 	}
 	

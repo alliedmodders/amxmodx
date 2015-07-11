@@ -42,7 +42,7 @@ template size_t atcprintf<char, cell>(char *, size_t, const cell *, AMX *, cell 
 template size_t atcprintf<cell, char>(cell *, size_t, const char *, AMX *, cell *, int *);
 template size_t atcprintf<char, char>(char *, size_t, const char *, AMX *, cell *, int *);
 
-THash<String, lang_err> BadLang_Table;
+THash<ke::AString, lang_err> BadLang_Table;
 
 static cvar_t *amx_mldebug = NULL;
 static cvar_t *amx_cl_langs = NULL;
@@ -114,10 +114,12 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 	{
 		if (debug)
 		{
-			if (status == ERR_BADLANG && (BadLang_Table.AltFindOrInsert(pLangName).last + 120.0f < gpGlobals->time))
+			ke::AString lang(pLangName);
+
+			if (status == ERR_BADLANG && (BadLang_Table.AltFindOrInsert(ke::Move(lang)).last + 120.0f < gpGlobals->time))
 			{
 				AMXXLOG_Error("[AMXX] Language \"%s\" not found", pLangName);
-				BadLang_Table.AltFindOrInsert(pLangName).last = gpGlobals->time;
+				BadLang_Table.AltFindOrInsert(ke::Move(lang)).last = gpGlobals->time;
 			}
 		}
 
@@ -704,7 +706,7 @@ reswitch:
 					}
 
 					int userid = GETPLAYERUSERID(player->pEdict);
-					UTIL_Format(buffer, sizeof(buffer), "%s<%d><%s><%s>", player->name.c_str(), userid, auth, player->team.c_str());
+					UTIL_Format(buffer, sizeof(buffer), "%s<%d><%s><%s>", player->name.chars(), userid, auth, player->team.chars());
 				}
 				else
 				{
@@ -736,7 +738,7 @@ reswitch:
 						return 0;
 					}
 
-					name = player->name.c_str();
+					name = player->name.chars();
 				}
 			
 				AddString(&buf_p, llen, name, width, prec);

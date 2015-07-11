@@ -18,7 +18,7 @@ class MenuMngr
 {
 	struct MenuIdEle
 	{
-		String name;
+		ke::AString name;
 		AMX* amx;
 		MenuIdEle* next;
 		

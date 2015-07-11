@@ -69,7 +69,7 @@ public:
 		{
 			int paramId;				// the message parameter id
 
-			String sValue;				// value (string)
+			ke::AString sValue;				// value (string)
 			float fValue;				// value (float)
 			int iValue;					// value (int)
 			int type;					// type (can be int, float, string)

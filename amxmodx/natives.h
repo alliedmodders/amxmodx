@@ -26,7 +26,7 @@
 struct regnative
 {
 	AMX *amx;
-	String name;
+	ke::AString name;
 	char *pfn;
 	int func;
 	int style;

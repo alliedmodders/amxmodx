@@ -12,7 +12,7 @@
 #include <string.h>
 #include "amxmodx.h"
 #include "CVault.h"
-#include "CFile.h"
+#include "CFileSystem.h"
 
 // *****************************************************
 // class Vault
@@ -39,7 +39,7 @@ void Vault::put(const char* k, const char* v)
 
 	if (*a)
 	{
-		(*a)->value.assign(v);
+		(*a)->value = v;
 		(*a)->number = atoi(v);
 	}
 	else
@@ -57,7 +57,7 @@ Vault::Obj** Vault::find(const char* n)
 
 	while (*a)
 	{
-		if (strcmp((*a)->key.c_str(), n) == 0)
+		if (strcmp((*a)->key.chars(), n) == 0)
 			return a;
 
 		a = &(*a)->next;
@@ -86,7 +86,7 @@ const char* Vault::get(const char* n)
 
 	if (b == 0) return "";
 
-	return b->value.c_str();
+	return b->value.chars();
 }
 
 void Vault::clear()
@@ -112,28 +112,47 @@ void Vault::remove(const char* n)
 
 void Vault::setSource(const char* n)
 {
-	path.assign(n);
+	path = n;
 }
 
 bool Vault::loadVault()
 {
-	if (path.empty()) return false;
+	if (!path.length())
+	{
+		return false;
+	}
 
 	clear();
 
-	File a(path.c_str(), "r");
+	FILE *fp = fopen(path.chars(), "r");
 
-	if (!a) return false;
-
-	const int sz = 512;
-	char value[sz + 1];
-	char key[sz + 1];
-
-	while (a >> key && a.skipWs() && a.getline(value, sz))
+	if (!fp)
 	{
-		if (isalpha(*key))
-			put(key, value);
+		return false;
 	}
+
+	char lineRead[512];
+	char key[sizeof(lineRead) + 1];
+	char value[sizeof(lineRead) + 1];
+
+	while (fgets(lineRead, sizeof(lineRead), fp))
+	{
+		UTIL_TrimLeft(lineRead);
+
+		if (!*lineRead || *lineRead == ';')
+		{
+			continue;
+		}
+
+		sscanf(lineRead, "%s%*[ \t]%[^\n]", key, value);
+
+		if (isalpha(*key))
+		{
+			put(key, value);
+		}
+	}
+
+	fclose(fp);
 
 	return true;
 
@@ -141,16 +160,26 @@ bool Vault::loadVault()
 
 bool Vault::saveVault()
 {
-	if (path.empty()) return false;
+	if (!path.length())
+	{
+		return false;
+	}
 
-	File a(path.c_str(), "w");
+	FILE *fp = fopen(path.chars(), "w");
 
-	if (!a) return false;
+	if (!fp)
+	{
+		return false;
+	}
 
-	a << "; Don't modify!" << '\n';
+	fputs("; Don't modify!\n", fp);
 
 	for (Obj* b = head; b; b = b->next)
-		a << b->key << '\t' << b->value << '\n';
+	{
+		fprintf(fp, "%s\t%s\n", b->key.chars(), b->value.chars());
+	}
+
+	fclose(fp);
 
 	return true;
 }

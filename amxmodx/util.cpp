@@ -711,3 +711,48 @@ size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...)
 		return len;
 	}
 }
+
+// From Metamod:Source
+void UTIL_TrimLeft(char *buffer)
+{
+	/* Let's think of this as our iterator */
+	char *i = buffer;
+
+	/* Make sure the buffer isn't null */
+	if (i && *i)
+	{
+		/* Add up number of whitespace characters */
+		while (isspace(static_cast<unsigned char>(*i)))
+		{
+			i++;
+		}
+
+		/* If whitespace chars in buffer then adjust string so first non-whitespace char is at start of buffer */
+		if (i != buffer)
+		{
+			memmove(buffer, i, (strlen(i) + 1) * sizeof(char));
+		}
+	}
+}
+
+void UTIL_TrimRight(char *buffer)
+{
+	/* Make sure buffer isn't null */
+	if (buffer)
+	{
+		size_t len = strlen(buffer);
+
+		/* Loop through buffer backwards while replacing whitespace chars with null chars */
+		for (size_t i = len - 1; i < len; i--)
+		{
+			if (isspace(static_cast<unsigned char>(buffer[i])))
+			{
+				buffer[i] = '\0';
+			}
+			else 
+			{
+				break;
+			}
+		}
+	}
+}

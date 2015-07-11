@@ -10,7 +10,6 @@
 #ifndef VAULT_CUSTOM_H
 #define VAULT_CUSTOM_H
 
-#include "CString.h"
 #include "CList.h"
 
 // *****************************************************
@@ -21,15 +20,15 @@ class Vault
 {
 	struct Obj
 	{
-		String key;
-		String value;
-		
+		ke::AString key;
+		ke::AString value;
+
 		int number;
 		Obj *next;
 		Obj(const char* k, const char* v);
 	} *head;
 
-	String path;
+	ke::AString path;
 
 	Obj** find(const char* n);
 
@@ -62,8 +61,8 @@ public:
 		iterator& operator++() { if (a) a = a->next; return *this; }
 		bool operator==(const iterator& b) const { return a == b.a; }
 		bool operator!=(const iterator& b) const { return !operator==(b); }
-		String& key() const { return a->key; }
-		String& value() const { return a->value; }
+		ke::AString& key() const { return a->key; }
+		ke::AString& value() const { return a->value; }
 	};
 
 	inline iterator begin() const { return iterator(head); }

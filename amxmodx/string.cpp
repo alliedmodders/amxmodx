@@ -1251,17 +1251,16 @@ static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 {
-	int len;
+	int len, newlen;
 	char *str = get_amxstring(amx, params[1], 0, len);
 
-	String toTrim;
+	UTIL_TrimLeft(str);
+	UTIL_TrimRight(str);
 
-	toTrim.assign(str);
-	toTrim.trim();
+	newlen = strlen(str);
+	len -= newlen;
 
-	len -= toTrim.size();
-
-	set_amxstring(amx, params[1], toTrim.c_str(), toTrim.size());
+	set_amxstring(amx, params[1], str, newlen);
 
 	return len;
 }

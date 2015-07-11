@@ -12,6 +12,7 @@
 
 #include "sh_tinyhash.h"
 #include "sm_stringhashmap.h"
+#include <ITextParsers.h>
 
 #define LANG_SERVER 0
 #define LANG_PLAYER -1
@@ -21,7 +22,7 @@
 
 struct sKeyDef
 {
-	String *definition;
+	ke::AutoString* definition;
 	int key;
 };
 
@@ -46,7 +47,7 @@ public:
 	~defentry()
 	{
 	}
-	String *definition;
+	ke::AString *definition;
 };
 
 struct keytbl_val
@@ -57,7 +58,7 @@ struct keytbl_val
 	int index;
 };
 
-class CLangMngr
+class CLangMngr : public ITextListener_INI
 {
 	class CLang
 	{
@@ -72,7 +73,7 @@ class CLangMngr
 		// Get the definition
 		const char *GetDef(int key, int &status);
 		// Add definitions to this language
-		void MergeDefinitions(CQueue <sKeyDef> & vec);
+		void MergeDefinitions(ke::Vector <sKeyDef> & vec);
 		// Reset this language
 		void Clear();
 
@@ -102,20 +103,25 @@ class CLangMngr
 	};
 public:
 	// Merge definitions into a language
-	void MergeDefinitions(const char *lang, CQueue <sKeyDef> &tmpVec);
+	void MergeDefinitions(const char *lang, ke::Vector <sKeyDef> &tmpVec);
+
+public: // ITextListener_INI
+	void ReadINI_ParseStart();
+	void ReadINI_ParseEnd(bool halted);
+	bool ReadINI_NewSection(const char *section, bool invalid_tokens, bool close_bracket, bool extra_tokens, unsigned int *curtok);
+	bool ReadINI_KeyValue(const char *key, const char *value, bool invalid_tokens, bool equal_token, bool quotes, unsigned int *curtok);
 
 private:
 	// strip lowercase; make lower if needed
 	static size_t strip(char *str, char *newstr, bool makelower = false);
 
-	typedef CVector<CLang*> LangVec;
-	typedef CVector<CLang*>::iterator LangVecIter;
+	typedef ke::Vector<CLang*> LangVec;
 	
 	LangVec m_Languages;
 
 	StringHashMap<time_t> FileList;
-	CVector<String *> KeyList;
-	THash<String, keytbl_val> KeyTable;
+	ke::Vector<ke::AString *> KeyList;
+	THash<ke::AString, keytbl_val> KeyTable;
 
 	// Get a lang object (construct if needed)
 	CLang * GetLang(const char *name);
@@ -133,12 +139,12 @@ public:
 	char *FormatAmxString(AMX *amx, cell *params, int parm, int &len);
 	void InvalidateCache();
 	// Get index
-	int GetKeyEntry(String &key);
+	int GetKeyEntry(ke::AString &key);
 	int GetKeyEntry(const char *key);
 	// Get key from index
 	const char *GetKey(int key);
 	// Add key
-	int AddKeyEntry(String &key);
+	int AddKeyEntry(ke::AString &key);
 	int AddKeyEntry(const char *key);
 
 	// Get the number of languages

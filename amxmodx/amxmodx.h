@@ -30,12 +30,14 @@
 #endif
 
 #include "hashing.h"
-#include "CVector.h"
 #include "CList.h"
 #include "CQueue.h"
 #include "modules.h"
-#include "CString.h"
 #include "CPlugin.h"
+#include "CLibrarySys.h"
+#include <auto-string.h>
+#include <am-string.h>
+#include <am-vector.h>
 #include "CMisc.h"
 #include "CVault.h"
 #include "CModule.h"
@@ -137,6 +139,8 @@ unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search
 char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive);
 char *UTIL_VarArgs(const char *fmt, ...);
 size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...);
+void UTIL_TrimLeft(char *buffer);
+void UTIL_TrimRight(char *buffer);
 
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t))])
@@ -144,7 +148,7 @@ size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...);
 
 struct WeaponsVault
 {
-	String fullName;
+	ke::AString fullName;
 	short int iId;
 	short int ammoSlot;
 };
@@ -174,8 +178,8 @@ extern EventsMngr g_events;
 extern Grenades g_grenades;
 extern LogEventsMngr g_logevents;
 extern CLangMngr g_langMngr;
-extern String g_log_dir;
-extern String g_mod_name;
+extern ke::AString g_log_dir;
+extern ke::AString g_mod_name;
 extern TeamIds g_teamsIds;
 extern Vault g_vault;
 extern CForwardMngr g_forwards;

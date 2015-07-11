@@ -11,7 +11,6 @@
 #include "messages.h"
 
 Message Msg;
-//CVector<int> msgHooks[256];
 RegisteredMessage msgHooks[256];
 int msgBlocks[256] = {BLOCK_NOT};
 int msgDest;
@@ -38,7 +37,7 @@ Message::Message()
 
 bool Message::Ready()
 {
-	if (!m_Params.size())
+	if (!m_Params.length())
 		return false;
 	return true;
 }
@@ -48,14 +47,14 @@ void Message::Init()
 	if (!Ready())
 	{
 		msgparam *p = new msgparam;
-		m_Params.push_back(p);
+		m_Params.append(p);
 	}
 	m_CurParam = 0;
 }
 
 Message::~Message()
 {
-	for (size_t i=0; i<m_Params.size(); i++)
+	for (size_t i=0; i<m_Params.length(); i++)
 		delete m_Params[i];
 	
 	m_Params.clear();
@@ -65,10 +64,10 @@ msgparam *Message::AdvPtr()
 {
 	msgparam *pParam = NULL;
 
-	if (++m_CurParam >= m_Params.size())
+	if (++m_CurParam >= m_Params.length())
 	{
 		pParam = new msgparam;
-		m_Params.push_back(pParam);
+		m_Params.append(pParam);
 	} else {
 		pParam = m_Params[m_CurParam];
 	}
@@ -80,7 +79,7 @@ void Message::AddParam(const char *data, msgtype type)
 {
 	msgparam *pParam = AdvPtr();
 
-	pParam->szData.assign(data);
+	pParam->szData = data;
 	pParam->type = type;
 }
 
@@ -121,7 +120,7 @@ const char *Message::GetParamString(size_t index)
 	if (index < 1 || index > m_CurParam)
 		return 0;
 
-	return m_Params[index]->szData.c_str();
+	return m_Params[index]->szData.chars();
 }
 
 int Message::GetParamInt(size_t index)
@@ -153,7 +152,7 @@ void Message::SetParam(size_t index, const char *data)
 	if (index < 1 || index > m_CurParam)
 		return;
 
-	m_Params[index]->szData.assign(data);
+	m_Params[index]->szData = data;
 }
 
 void Message::Reset()
@@ -194,7 +193,7 @@ void Message::Send()
 			WRITE_COORD(pParam->v.fData);
 			break;
 		case arg_string:
-			WRITE_STRING(pParam->szData.c_str());
+			WRITE_STRING(pParam->szData.chars());
 			break;
 		case arg_entity:
 			WRITE_ENTITY(pParam->v.iData);

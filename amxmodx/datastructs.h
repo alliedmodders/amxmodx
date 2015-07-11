@@ -10,12 +10,12 @@
 #ifndef DATASTRUCTS_H
 #define DATASTRUCTS_H
 
-#include <am-vector.h>
+#include "natives_handles.h"
 
 class CellArray
 {
 public:
-	CellArray(size_t blocksize, size_t basesize = 0) : m_Data(NULL), m_BlockSize(blocksize), m_AllocSize(0), m_BaseSize(basesize > 0 ? basesize : 8), m_Size(0)
+	CellArray(size_t blocksize, size_t basesize = 0) : m_Data(nullptr), m_BlockSize(blocksize), m_AllocSize(0), m_BaseSize(basesize > 0 ? basesize : 8), m_Size(0)
 	{
 	}
 
@@ -99,7 +99,7 @@ public:
 		/* Make sure it'll fit */
 		if (!GrowIfNeeded(1))
 		{
-			return NULL;
+			return nullptr;
 		}
 
 		/* move everything up */
@@ -185,29 +185,6 @@ private:
 	size_t m_Size;
 };
 
-extern ke::Vector<CellArray*> VectorHolder;
-
-
-inline CellArray* HandleToVector(AMX* amx, int handle)
-{
-	if (handle <= 0 || handle > (int)VectorHolder.length())
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", handle);
-
-		return NULL;
-	}
-
-	CellArray* ret = VectorHolder[handle - 1];
-
-	if (ret == NULL)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", handle);
-
-		return NULL;
-	}
-
-	return ret;
-}
-
+extern Handle<CellArray> ArrayHandles;
 
 #endif

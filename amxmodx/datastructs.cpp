@@ -11,12 +11,7 @@
 #include "datastructs.h"
 #include <am-utility.h>
 
-// Note: All handles start at 1. 0 and below are invalid handles.
-//       This way, a plugin that doesn't initialize a vector or
-//       string will not be able to modify another plugin's data
-//       on accident.
-ke::Vector<CellArray*> VectorHolder;
-
+Handle<CellArray> ArrayHandles;
 
 // Array:ArrayCreate(cellsize=1, reserved=32);
 static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
@@ -40,32 +35,17 @@ static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)
 		reserved = 0;
 	}
 
-	// Scan through the vector list to see if any are NULL.
-	// NULL means the vector was previously destroyed.
-	for (unsigned int i=0; i < VectorHolder.length(); ++i)
-	{
-		if (VectorHolder[i]==NULL)
-		{
-			VectorHolder[i] = new CellArray(cellsize, reserved);
-			return i + 1;
-		}
-	}
-
-	// None are NULL, create a new vector
-	CellArray* NewVector = new CellArray(cellsize, reserved);
-	
-	VectorHolder.append(NewVector);
-
-	return VectorHolder.length();
+	return ArrayHandles.create(cellsize, reserved);
 }
 
 // native ArrayClear(Array:which);
 static cell AMX_NATIVE_CALL ArrayClear(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -77,10 +57,11 @@ static cell AMX_NATIVE_CALL ArrayClear(AMX* amx, cell* params)
 // native ArraySize(Array:which);
 static cell AMX_NATIVE_CALL ArraySize(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -90,10 +71,11 @@ static cell AMX_NATIVE_CALL ArraySize(AMX* amx, cell* params)
 // native bool:ArrayResize(Array:which, newsize);
 static cell AMX_NATIVE_CALL ArrayResize(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -109,38 +91,25 @@ static cell AMX_NATIVE_CALL ArrayResize(AMX* amx, cell* params)
 // native Array:ArrayClone(Array:which);
 static cell AMX_NATIVE_CALL ArrayClone(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
-	CellArray *clonevec = vec->clone();
-
-	// Scan through the vector list to see if any are NULL.
-	// NULL means the vector was previously destroyed.
-	for (unsigned int i = 0; i < VectorHolder.length(); ++i)
-	{
-		if (VectorHolder[i] == NULL)
-		{
-			VectorHolder[i] = clonevec;
-			return i + 1;
-		}
-	}
-
-	VectorHolder.append(clonevec);
-
-	return VectorHolder.length();
+	return ArrayHandles.clone(vec->clone());
 }
 
 // native ArrayGetArray(Array:which, item, any:output[], size = -1);
 static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -173,10 +142,11 @@ static cell AMX_NATIVE_CALL ArrayGetArray(AMX* amx, cell* params)
 // native any:ArrayGetCell(Array:which, item, block = 0, bool:asChar = false);
 static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -224,10 +194,11 @@ static cell AMX_NATIVE_CALL ArrayGetCell(AMX* amx, cell* params)
 // native ArrayGetString(Array:which, item, output[], size);
 static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -246,10 +217,11 @@ static cell AMX_NATIVE_CALL ArrayGetString(AMX* amx, cell* params)
 // native ArraySetArray(Array:which, item, const any:input[], size =-1);
 static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -282,10 +254,11 @@ static cell AMX_NATIVE_CALL ArraySetArray(AMX* amx, cell* params)
 // native ArraySetCell(Array:which, item, any:input, block = 0, bool:asChar = false);
 static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -331,10 +304,11 @@ static cell AMX_NATIVE_CALL ArraySetCell(AMX* amx, cell* params)
 // native ArraySetString(Array:which, item, const input[]);
 static cell AMX_NATIVE_CALL ArraySetString(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -357,10 +331,11 @@ static cell AMX_NATIVE_CALL ArraySetString(AMX* amx, cell* params)
 // native ArrayPushArray(Array:which, const any:input[], size = -1);
 static cell AMX_NATIVE_CALL ArrayPushArray(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -391,10 +366,11 @@ static cell AMX_NATIVE_CALL ArrayPushArray(AMX* amx, cell* params)
 // native ArrayPushCell(Array:which, any:input);
 static cell AMX_NATIVE_CALL ArrayPushCell(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -414,10 +390,11 @@ static cell AMX_NATIVE_CALL ArrayPushCell(AMX* amx, cell* params)
 // native ArrayPushString(Array:which, const input[]);
 static cell AMX_NATIVE_CALL ArrayPushString(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -436,10 +413,11 @@ static cell AMX_NATIVE_CALL ArrayPushString(AMX* amx, cell* params)
 // native DoNotUse : ArrayGetStringHandle(Array : which, item);
 static cell AMX_NATIVE_CALL ArrayGetStringHandle(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -464,10 +442,11 @@ static cell AMX_NATIVE_CALL ArrayGetStringHandle(AMX* amx, cell* params)
 // native ArrayInsertArrayAfter(Array:which, item, const any:input[]);
 static cell AMX_NATIVE_CALL ArrayInsertArrayAfter(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -489,10 +468,11 @@ static cell AMX_NATIVE_CALL ArrayInsertArrayAfter(AMX* amx, cell* params)
 // native ArrayInsertCellAfter(Array:which, item, any:input);
 static cell AMX_NATIVE_CALL ArrayInsertCellAfter(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -512,10 +492,11 @@ static cell AMX_NATIVE_CALL ArrayInsertCellAfter(AMX* amx, cell* params)
 // native ArrayInsertStringAfter(Array:which, item, const input[]);
 static cell AMX_NATIVE_CALL ArrayInsertStringAfter(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -536,10 +517,11 @@ static cell AMX_NATIVE_CALL ArrayInsertStringAfter(AMX* amx, cell* params)
 // native ArrayInsertArrayBefore(Array:which, item, const any:input[]);
 static cell AMX_NATIVE_CALL ArrayInsertArrayBefore(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -561,10 +543,11 @@ static cell AMX_NATIVE_CALL ArrayInsertArrayBefore(AMX* amx, cell* params)
 // native ArrayInsertCellBefore(Array:which, item, const any:input);
 static cell AMX_NATIVE_CALL ArrayInsertCellBefore(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -583,10 +566,11 @@ static cell AMX_NATIVE_CALL ArrayInsertCellBefore(AMX* amx, cell* params)
 // native ArrayInsertStringBefore(Array:which, item, const input[]);
 static cell AMX_NATIVE_CALL ArrayInsertStringBefore(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -607,10 +591,11 @@ static cell AMX_NATIVE_CALL ArrayInsertStringBefore(AMX* amx, cell* params)
 // native ArraySwap(Array:which, item1, item2);
 static cell AMX_NATIVE_CALL ArraySwap(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
-	
-	if (vec == NULL)
+	CellArray* vec = ArrayHandles.lookup(params[1]);
+
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -637,10 +622,11 @@ static cell AMX_NATIVE_CALL ArraySwap(AMX* amx, cell* params)
 // native ArrayDeleteItem(Array:which, item);
 static cell AMX_NATIVE_CALL ArrayDeleteItem(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -660,25 +646,20 @@ static cell AMX_NATIVE_CALL ArrayDeleteItem(AMX* amx, cell* params)
 // native ArrayDestroy(&Array:which);
 static cell AMX_NATIVE_CALL ArrayDestroy(AMX* amx, cell* params)
 {
-	cell* handle = get_amxaddr(amx, params[1]);
+	cell *handle = get_amxaddr(amx, params[1]);
 
-	if (*handle == 0)
+	CellArray* vec = ArrayHandles.lookup(*handle);
+
+	if (!vec)
 	{
 		return 0;
 	}
 
-	CellArray* vec = HandleToVector(amx, *handle);
-
-	if (vec == NULL)
+	if (ArrayHandles.destroy(*handle))
 	{
-		return 0;
+		*handle = 0;
+		return 1;
 	}
-
-	delete vec;
-
-	VectorHolder[*handle-1] = NULL;
-
-	*handle = 0;
 
 	return 1;
 }
@@ -714,11 +695,12 @@ int SortArrayList(const void *elem1, const void *elem2)
 // native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
 static cell AMX_NATIVE_CALL ArraySort(AMX* amx, cell* params)
 {
-	int handle = params[1];
-	CellArray* vec = HandleToVector(amx, handle);
+	cell handle = params[1];
+	CellArray* vec = ArrayHandles.lookup(handle);
 
-	if (vec ==  NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", handle);
 		return 0;
 	}
 
@@ -795,11 +777,11 @@ int SortArrayListExArray(const void *elem1, const void *elem2)
 // native ArraySortEx(Array:array, const comparefunc[], data[]="", data_size=0);
 static cell AMX_NATIVE_CALL ArraySortEx(AMX* amx, cell* params)
 {
-	int handle = params[1];
-	CellArray* vec = HandleToVector(amx, handle);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -863,10 +845,11 @@ extern int amxstring_len(cell* a);
 // native ArrayFindString(Array:which, const item[]);
 static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return -1;
 	}
 
@@ -891,10 +874,11 @@ static cell AMX_NATIVE_CALL ArrayFindString(AMX* amx, cell* params)
 // native ArrayFindValue(Array:which, any:item); 
 static cell AMX_NATIVE_CALL ArrayFindValue(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return -1;
 	}
 
@@ -911,34 +895,33 @@ static cell AMX_NATIVE_CALL ArrayFindValue(AMX* amx, cell* params)
 
 AMX_NATIVE_INFO g_DataStructNatives[] = 
 {
-	{ "ArrayCreate",				ArrayCreate },
-	{ "ArrayClear",					ArrayClear },
-	{ "ArrayClone",					ArrayClone },
-	{ "ArraySize",					ArraySize },
-	{ "ArrayResize",				ArrayResize },
-	{ "ArrayGetArray",				ArrayGetArray },
-	{ "ArrayGetCell",				ArrayGetCell },
-	{ "ArrayGetString",				ArrayGetString },
-	{ "ArraySetArray",				ArraySetArray },
-	{ "ArraySetCell",				ArraySetCell },
-	{ "ArraySetString",				ArraySetString },
-	{ "ArrayPushArray",				ArrayPushArray },
-	{ "ArrayPushCell",				ArrayPushCell },
-	{ "ArrayPushString",			ArrayPushString },
-	{ "ArrayInsertArrayAfter",		ArrayInsertArrayAfter },
-	{ "ArrayInsertCellAfter",		ArrayInsertCellAfter },
-	{ "ArrayInsertStringAfter",		ArrayInsertStringAfter },
-	{ "ArrayInsertArrayBefore",		ArrayInsertArrayBefore },
-	{ "ArrayInsertCellBefore",		ArrayInsertCellBefore },
-	{ "ArrayInsertStringBefore",	ArrayInsertStringBefore },
-	{ "ArraySwap",					ArraySwap },
-	{ "ArrayDeleteItem",			ArrayDeleteItem },
-	{ "ArrayGetStringHandle",		ArrayGetStringHandle },
-	{ "ArrayDestroy",				ArrayDestroy },
-	{ "ArraySort",					ArraySort },
-	{ "ArraySortEx",				ArraySortEx },
-	{ "ArrayFindString",			ArrayFindString },
-	{ "ArrayFindValue",				ArrayFindValue },
-
-	{ NULL,							NULL }
+	{ "ArrayCreate"            , ArrayCreate },
+	{ "ArrayClear"             , ArrayClear },
+	{ "ArrayClone"             , ArrayClone },
+	{ "ArraySize"              , ArraySize },
+	{ "ArrayResize"            , ArrayResize },
+	{ "ArrayGetArray"          , ArrayGetArray },
+	{ "ArrayGetCell"           , ArrayGetCell },
+	{ "ArrayGetString"         , ArrayGetString },
+	{ "ArraySetArray"          , ArraySetArray },
+	{ "ArraySetCell"           , ArraySetCell },
+	{ "ArraySetString"         , ArraySetString },
+	{ "ArrayPushArray"         , ArrayPushArray },
+	{ "ArrayPushCell"          , ArrayPushCell },
+	{ "ArrayPushString"        , ArrayPushString },
+	{ "ArrayInsertArrayAfter"  , ArrayInsertArrayAfter },
+	{ "ArrayInsertCellAfter"   , ArrayInsertCellAfter },
+	{ "ArrayInsertStringAfter" , ArrayInsertStringAfter },
+	{ "ArrayInsertArrayBefore" , ArrayInsertArrayBefore },
+	{ "ArrayInsertCellBefore"  , ArrayInsertCellBefore },
+	{ "ArrayInsertStringBefore", ArrayInsertStringBefore },
+	{ "ArraySwap"              , ArraySwap },
+	{ "ArrayDeleteItem"        , ArrayDeleteItem },
+	{ "ArrayGetStringHandle"   , ArrayGetStringHandle },
+	{ "ArrayDestroy"           , ArrayDestroy },
+	{ "ArraySort"              , ArraySort },
+	{ "ArraySortEx"            , ArraySortEx },
+	{ "ArrayFindString"        , ArrayFindString },
+	{ "ArrayFindValue"         , ArrayFindValue },
+	{ nullptr                  , nullptr }
 };

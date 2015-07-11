@@ -13,7 +13,7 @@
 #include "amxmodx.h"
 #include <sm_stringhashmap.h>
 #include <sm_memtable.h>
-#include "CVector.h"
+#include "natives_handles.h"
 
 enum EntryType
 {
@@ -159,80 +159,8 @@ struct TrieSnapshot
 	BaseStringTable strings;
 };
 
-template <typename T>
-class TrieHandles
-{
-private:
-	CVector<T *> m_tries;
-
-public:
-	TrieHandles() { }
-	~TrieHandles()
-	{
-		this->clear();
-	}
-
-	void clear()
-	{
-		for (size_t i = 0; i < m_tries.size(); i++)
-		{
-			if (m_tries[i] != NULL)
-			{
-				delete m_tries[i];
-			}
-		}
-
-		m_tries.clear();
-	}
-	T *lookup(int handle)
-	{
-		handle--;
-
-		if (handle < 0 || handle >= static_cast<int>(m_tries.size()))
-		{
-			return NULL;
-		}
-
-		return m_tries[handle];
-	}
-	int create()
-	{
-		for (size_t i = 0; i < m_tries.size(); i++)
-		{
-			if (m_tries[i] == NULL)
-			{
-				// reuse handle
-				m_tries[i] = new T;
-
-				return static_cast<int>(i) + 1;
-			}
-		}
-		m_tries.push_back(new T);
-		return m_tries.size();
-	}
-	bool destroy(int handle)
-	{
-		handle--;
-
-		if (handle < 0 || handle >= static_cast<int>(m_tries.size()))
-		{
-			return false;
-		}
-
-		if (m_tries[handle] == NULL)
-		{
-			return false;
-		}
-		delete m_tries[handle];
-		m_tries[handle] = NULL;
-
-		return true;
-	}
-};
-
-
-extern TrieHandles<CellTrie> g_TrieHandles;
-extern TrieHandles<TrieSnapshot> g_TrieSnapshotHandles;
+extern Handle<CellTrie> TrieHandles;
+extern Handle<TrieSnapshot> TrieSnapshotHandles;
 extern AMX_NATIVE_INFO trie_Natives[];
 
 #endif

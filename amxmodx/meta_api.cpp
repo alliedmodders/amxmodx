@@ -399,16 +399,11 @@ int	C_Spawn(edict_t *pent)
 
 	FlagMan.LoadFile();
 
-	for (unsigned int i=0; i<VectorHolder.length(); i++)
-	{
-		delete VectorHolder[i];
-	};
-	VectorHolder.clear();
-
-	g_TrieHandles.clear();
-	g_TrieSnapshotHandles.clear();
-	g_DataPackHandles.clear();
-	g_TextParsersHandles.clear();
+	ArrayHandles.clear();
+	TrieHandles.clear();
+	TrieSnapshotHandles.clear();
+	DataPackHandles.clear();
+	TextParsersHandles.clear();
 	GameConfigHandle.clear();
 
 	char map_pluginsfile_path[256];
@@ -1330,7 +1325,7 @@ void C_AlertMessage(ALERT_TYPE atype, const char *szFmt, ...)
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
-    RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_IGNORED);
 }
 
 void C_ChangeLevel(const char *map, const char *what)

@@ -9,27 +9,25 @@
  *     https://alliedmods.net/amxmodx-license
  */
 
-#include "amxmodx.h"
-#include <textparse.h>
-#include <am-vector.h>
+#include "textparse.h"
 
-TextParserHandles<ParseInfo> g_TextParsersHandles;
+Handle<ParseInfo> TextParsersHandles;
 
 cell createParser()
 {
-	return g_TextParsersHandles.create();
+	return TextParsersHandles.create();
 }
 
 cell destroyParser(cell *handle)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(*handle);
+	ParseInfo *p = TextParsersHandles.lookup(*handle);
 
-	if (p == NULL)
+	if (!p)
 	{
 		return 0;
 	}
 
-	if (g_TextParsersHandles.destroy(*handle))
+	if (TextParsersHandles.destroy(*handle))
 	{
 		*handle = 0;
 		return 1;
@@ -52,16 +50,16 @@ static cell AMX_NATIVE_CALL SMC_CreateParser(AMX *amx, cell *params)
 // native SMC_SetParseStart(SMCParser:handle, const func[]);
 static cell AMX_NATIVE_CALL SMC_SetParseStart(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
 	int length = 0;
-	const char *funcName = NULL;
+	const char *funcName = nullptr;
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
@@ -80,16 +78,16 @@ static cell AMX_NATIVE_CALL SMC_SetParseStart(AMX *amx, cell *params)
 // native SMC_SetParseEnd(SMCParser:handle, const func[]);
 static cell AMX_NATIVE_CALL SMC_SetParseEnd(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
 	int length = 0;
-	const char *funcName = NULL;
+	const char *funcName = nullptr;
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
@@ -108,16 +106,16 @@ static cell AMX_NATIVE_CALL SMC_SetParseEnd(AMX *amx, cell *params)
 // native SMC_SetReaders(SMCParser:smc, const kvFunc[], const nsFunc[] = "", const esFunc[] = "");
 static cell AMX_NATIVE_CALL SMC_SetReaders(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
 	int kvLength = 0, nsLength = 0, esLength = 0;
-	const char *funcName = NULL;
+	const char *funcName = nullptr;
 
 	if ((funcName = get_amxstring(amx, params[2], 0, kvLength)) && kvLength)
 	{
@@ -146,16 +144,16 @@ static cell AMX_NATIVE_CALL SMC_SetReaders(AMX *amx, cell *params)
 // native SMC_SetRawLine(SMCParser:handle, const func[]);
 static cell AMX_NATIVE_CALL SMC_SetRawLine(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
 	}
 
 	int length = 0;
-	const char *funcName = NULL;
+	const char *funcName = nullptr;
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
@@ -174,9 +172,9 @@ static cell AMX_NATIVE_CALL SMC_SetRawLine(AMX *amx, cell *params)
 // native SMCError:SMC_ParseFile(SMCParser:handle, const file[], &line = 0, &col = 0);
 static cell AMX_NATIVE_CALL SMC_ParseFile(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
@@ -227,9 +225,9 @@ static cell AMX_NATIVE_CALL INI_CreateParser(AMX *amx, cell *params)
 // native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0);
 static cell AMX_NATIVE_CALL INI_ParseFile(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
@@ -250,16 +248,16 @@ static cell AMX_NATIVE_CALL INI_ParseFile(AMX *amx, cell *params)
 // native INI_SetParseStart(INIParser:handle, const func[]);
 static cell AMX_NATIVE_CALL INI_SetParseStart(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 
 	int length = 0;
-	const char *funcName = NULL;
+	const char *funcName = nullptr;
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
@@ -278,16 +276,16 @@ static cell AMX_NATIVE_CALL INI_SetParseStart(AMX *amx, cell *params)
 // native INI_SetParseEnd(INIParser:handle, const func[]);
 static cell AMX_NATIVE_CALL INI_SetParseEnd(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 
 	int length = 0;
-	const char *funcName = NULL;
+	const char *funcName = nullptr;
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)))
 	{
@@ -306,16 +304,16 @@ static cell AMX_NATIVE_CALL INI_SetParseEnd(AMX *amx, cell *params)
 // native INI_SetReaders(INIParser:smc, const kvFunc[], const nsFunc[] = "" );
 static cell AMX_NATIVE_CALL INI_SetReaders(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 
 	int kvLength = 0, nsLength = 0;
-	const char *funcName = NULL;
+	const char *funcName = nullptr;
 
 	if ((funcName = get_amxstring(amx, params[2], 0, kvLength)) && kvLength)
 	{
@@ -339,16 +337,16 @@ static cell AMX_NATIVE_CALL INI_SetReaders(AMX *amx, cell *params)
 // native INI_SetRawLine(INIParser:handle, const func[]);
 static cell AMX_NATIVE_CALL INI_SetRawLine(AMX *amx, cell *params)
 {
-	ParseInfo *p = g_TextParsersHandles.lookup(params[1]);
+	ParseInfo *p = TextParsersHandles.lookup(params[1]);
 
-	if (p == NULL)
+	if (!p)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid INI parse handle (%d)", params[1]);
 		return 0;
 	}
 
 	int length = 0;
-	const char *funcName = NULL;
+	const char *funcName = nullptr;
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
@@ -390,5 +388,5 @@ AMX_NATIVE_INFO g_TextParserNatives[] =
 	{ "INI_SetRawLine"    , INI_SetRawLine     },
 	{ "INI_DestroyParser" , INI_DestroyParser  },
 
-	{ NULL, NULL },
+	{ nullptr             , nullptr },
 };

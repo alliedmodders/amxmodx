@@ -6,6 +6,7 @@
 // This software is licensed under the GNU General Public License, version 3 or higher.
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
+
 #include "amxmodx.h"
 #include "datastructs.h"
 
@@ -20,32 +21,17 @@ static cell AMX_NATIVE_CALL CreateStack(AMX* amx, cell* params)
 		return -1;
 	}
 
-	// Scan through the vector list to see if any are NULL.
-	// NULL means the vector was previously destroyed.
-	for (unsigned int i = 0; i < VectorHolder.length(); ++i)
-	{
-		if (VectorHolder[i] == NULL)
-		{
-			VectorHolder[i] = new CellArray(cellsize);
-			return i + 1;
-		}
-	}
-
-	// None are NULL, create a new vector
-	CellArray* NewVector = new CellArray(cellsize);
-
-	VectorHolder.append(NewVector);
-
-	return VectorHolder.length();
+	return ArrayHandles.create(cellsize);
 }
 
 // native PushStackCell(Stack:handle, any:value);
 static cell AMX_NATIVE_CALL PushStackCell(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -65,10 +51,11 @@ static cell AMX_NATIVE_CALL PushStackCell(AMX* amx, cell* params)
 // native PushStackString(Stack:handle, const value[]);
 static cell AMX_NATIVE_CALL PushStackString(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -91,10 +78,11 @@ static cell AMX_NATIVE_CALL PushStackString(AMX* amx, cell* params)
 // native PushStackArray(Stack:handle, const any:values[], size= -1);
 static cell AMX_NATIVE_CALL PushStackArray(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -122,10 +110,11 @@ static cell AMX_NATIVE_CALL PushStackArray(AMX* amx, cell* params)
 // native bool:PopStackCell(Stack:handle, &any:value, block = 0, bool:asChar = false);
 static cell AMX_NATIVE_CALL PopStackCell(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -169,10 +158,11 @@ static cell AMX_NATIVE_CALL PopStackCell(AMX* amx, cell* params)
 // native bool:PopStackString(Stack:handle, buffer[], maxlength, &written = 0);
 static cell AMX_NATIVE_CALL PopStackString(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -195,10 +185,11 @@ static cell AMX_NATIVE_CALL PopStackString(AMX* amx, cell* params)
 // native bool:PopStackArray(Stack:handle, any:buffer[], size=-1);
 static cell AMX_NATIVE_CALL PopStackArray(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -227,10 +218,11 @@ static cell AMX_NATIVE_CALL PopStackArray(AMX* amx, cell* params)
 // native bool:IsStackEmpty(Stack:handle);
 static cell AMX_NATIVE_CALL IsStackEmpty(AMX* amx, cell* params)
 {
-	CellArray* vec = HandleToVector(amx, params[1]);
+	CellArray* vec = ArrayHandles.lookup(params[1]);
 
-	if (vec == NULL)
+	if (!vec)
 	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[1]);
 		return 0;
 	}
 
@@ -242,23 +234,18 @@ static cell AMX_NATIVE_CALL DestroyStack(AMX* amx, cell* params)
 {
 	cell *handle = get_amxaddr(amx, params[1]);
 
-	if (*handle == 0)
+	CellArray* vec = ArrayHandles.lookup(*handle);
+
+	if (!vec)
 	{
 		return 0;
 	}
 
-	CellArray *vec = HandleToVector(amx, *handle);
-
-	if (vec == NULL)
+	if (ArrayHandles.destroy(*handle))
 	{
-		return 0;
+		*handle = 0;
+		return 1;
 	}
-
-	delete vec;
-
-	VectorHolder[*handle - 1] = NULL;
-
-	*handle = 0;
 
 	return 1;
 }
@@ -274,5 +261,5 @@ AMX_NATIVE_INFO g_StackNatives[] =
 	{ "PushStackCell",   PushStackCell   },
 	{ "PushStackString", PushStackString },
 	{ "DestroyStack",    DestroyStack    },
-	{ NULL,              NULL            },
+	{ nullptr,           nullptr         },
 };

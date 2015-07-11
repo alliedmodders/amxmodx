@@ -7,7 +7,15 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
+#ifndef _NATIVES_HANDLES_H_
+#define _NATIVES_HANDLES_H_
+
 #include <am-vector.h>
+
+// Note: All handles start at 1. 0 and below are invalid handles.
+//       This way, a plugin that doesn't initialize a vector or
+//       string will not be able to modify another plugin's data
+//       on accident.
 
 template <typename T>
 class Handle
@@ -49,19 +57,37 @@ class Handle
 			return m_handles[handle];
 		}
 
-		int create()
+		template <typename... Targs>
+		int create(Targs... Fargs)
 		{
 			for (size_t i = 0; i < m_handles.length(); ++i)
 			{
 				if (!m_handles[i])
 				{
-					m_handles[i] = new T;
+					m_handles[i] = new T(Fargs...);
 
 					return static_cast<int>(i) + 1;
 				}
 			}
 
-			m_handles.append(new T);
+			m_handles.append(new T(Fargs...));
+
+			return m_handles.length();
+		}
+
+		int clone(T *data)
+		{
+			for (size_t i = 0; i < m_handles.length(); ++i)
+			{
+				if (!m_handles[i])
+				{
+					m_handles[i] = data;
+
+					return static_cast<int>(i) + 1;
+				}
+			}
+
+			m_handles.append(data);
 
 			return m_handles.length();
 		}
@@ -86,3 +112,5 @@ class Handle
 			return true;
 		}
 };
+
+#endif // _NATIVE_HANDLES_H_

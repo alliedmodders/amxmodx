@@ -269,7 +269,9 @@ static cell AMX_NATIVE_CALL PointContents(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
-	CHECK_ENTITY(iEnt);
+	if (iEnt > 0) {
+		CHECK_ENTITY(iEnt);
+	}
 
 	cell *cStart = MF_GetAmxAddr(amx, params[2]);
 	cell *cEnd = MF_GetAmxAddr(amx, params[3]);
@@ -285,7 +287,7 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
 
-	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &g_tr);
+	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, iEnt > 0 ? INDEXENT2(iEnt) : NULL, &g_tr);
 
 	vRet[0] = amx_ftoc(g_tr.vecPlaneNormal.x);
 	vRet[1] = amx_ftoc(g_tr.vecPlaneNormal.y);
@@ -300,7 +302,7 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
-	if (iEnt != -1) {
+	if (iEnt > 0) {
 		CHECK_ENTITY(iEnt);
 	}
 
@@ -318,10 +320,10 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
 	
-	if (iEnt == -1)
-		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &g_tr);
-	else
+	if (iEnt > 0)
 		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &g_tr);
+	else
+		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &g_tr);
 
 	edict_t *pHit = g_tr.pHit;
 
@@ -370,7 +372,6 @@ static cell AMX_NATIVE_CALL get_decal_index(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 {
 	int iEnt = params[1];
-	
 	if (iEnt != -1) {
 		CHECK_ENTITY(iEnt);
 	}
@@ -636,7 +637,9 @@ static cell AMX_NATIVE_CALL playback_event(AMX *amx, cell *params)
 	int bparam1;
 	int bparam2;
 	flags = params[1];
-	CHECK_ENTITY(params[2]);
+	if (params[2] > 0) {
+		CHECK_ENTITY(params[2]);
+	}
 	pInvoker=INDEXENT2(params[2]);
 	eventindex=params[3];
 	delay=amx_ctof(params[4]);
@@ -954,7 +957,7 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    cell *cAngles = MF_GetAmxAddr(amx, params[2]);
    REAL fGive = amx_ctof(params[3]);
    int iIgnoreEnt = params[4];
-   if (iIgnoreEnt != -1) {
+   if (iIgnoreEnt > 0) {
 	   CHECK_ENTITY(iIgnoreEnt);
    }
 
@@ -996,10 +999,10 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
       REAL fUseZ = fStartZ + (REAL)inum;
       Vector vStart =  Vector(fStartX, fStartY, fUseZ);
       Vector vEnd = Vector(fEndX, fEndY, fUseZ);
-      if(iIgnoreEnt == -1)
-         TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &tr);
-      else   
-         TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iIgnoreEnt), &tr); 
+      if(iIgnoreEnt > 0)
+		  TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iIgnoreEnt), &tr);
+	  else
+		  TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &tr);
       fRetX = tr.vecEndPos.x;
       fRetY = tr.vecEndPos.y;
       fRetZ = tr.vecEndPos.z;

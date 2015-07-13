@@ -1338,7 +1338,9 @@ static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_en
 static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 {
 	int idx = params[1];
-	CHECK_ENTITY_SIMPLE(idx);
+	if (idx > 0) {
+		CHECK_ENTITY_SIMPLE(idx);
+	}
 
 	edict_t *pEnt = INDEXENT2(idx);
 	cell *cAddr = MF_GetAmxAddr(amx, params[2]);
@@ -1360,7 +1362,9 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param */
 {
 	int idx = params[1];
-	CHECK_ENTITY_SIMPLE(idx);
+	if (idx > 0) {
+		CHECK_ENTITY_SIMPLE(idx);
+	}
 
 	edict_t *pEnt = INDEXENT2(idx);
 
@@ -1498,7 +1502,9 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 {
 	int iEnt = params[1];
 	int oEnt = params[3];
-	CHECK_ENTITY_SIMPLE(iEnt);
+	if (iEnt > 0) {
+		CHECK_ENTITY_SIMPLE(iEnt);
+	}
 	CHECK_ENTITY_SIMPLE(oEnt);
 
 	edict_t *pEnt = INDEXENT2(iEnt);
@@ -1534,7 +1540,10 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 	int index = params[1];
 	const char *szModel;
 
-	CHECK_ENTITY_SIMPLE(params[4]);
+	if (params[4] > 0) {
+		CHECK_ENTITY_SIMPLE(params[4]);
+	}
+
 	CHECK_ENTITY(index);
 
 	edict_t* pentFind = INDEXENT2(params[4]);

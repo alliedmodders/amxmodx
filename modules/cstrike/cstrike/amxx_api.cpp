@@ -76,7 +76,7 @@ void OnPluginsLoaded()
 	if (!UTIL_CheckForPublic("CS_OnBuyAttempt"))      { ForwardOnBuyAttempt = -1; }
 
 	// And enable/disable detours when necessary.
-	ToggleDetour_ClientCommands(ForwardInternalCommand != -1 || ForwardOnBuy != -1 || ForwardOnBuy != -1);
+	ToggleDetour_ClientCommands(ForwardInternalCommand != -1 || ForwardOnBuy != -1 || ForwardOnBuyAttempt != -1);
 	ToggleDetour_BuyCommands(ForwardOnBuy != -1);
 
 	// Search pev offset automatically.

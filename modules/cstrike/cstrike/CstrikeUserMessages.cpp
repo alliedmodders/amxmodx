@@ -41,7 +41,7 @@ UserMsg MessagesList[] =
 {
 	{ "ArmorType"  , &MessageIdArmorType   },
 	{ "HLTV"       , &MessageIdHLTV        },
-	{ "CurWeapon"  , &MessageIdMoney       },
+	{ "Money"      , &MessageIdMoney       },
 	{ "ResetHUD"   , &MessageIdResetHUD    },
 	{ "ScoreAttrib", &MessageIdScoreAttrib },
 	{ "ScoreInfo"  , &MessageIdScoreInfo   },

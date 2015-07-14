@@ -473,7 +473,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params)
 		}
 
 		set_pdata<int>(pPlayer, m_iModelName, modelName);
-		MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer));
+		Players[index].ResetModel(pPlayer);
 	}
 
 	if (updateScoreboard)
@@ -837,10 +837,11 @@ static cell AMX_NATIVE_CALL cs_set_user_nvg(AMX *amx, cell *params)
 	if (nvg && get_pdata<bool>(pPlayer, m_bHasNightVision))
 	{
 		UTIL_TextMsg_Generic(pPlayer, "#Already_Have_One");
-		return 1;
 	}
-
-	set_pdata<bool>(pPlayer, m_bHasNightVision, nvg);
+	else
+	{
+		set_pdata<bool>(pPlayer, m_bHasNightVision, nvg);
+	}
 
 	return 1;
 }
@@ -887,7 +888,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 	{
 		if (!Server)
 		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "cs_set_user_model is disabled with update_index parameter set");
+			MF_Log("cs_set_user_model is disabled with update_index parameter set");
 			return 0;
 		}
 
@@ -910,7 +911,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 			}
 		}
 
-		MF_LogError(amx, AMX_ERR_NATIVE, "Model must be precached");
+		MF_Log("Model must be precached using cs_set_user_model with update_index parameter set");
 		return 0;
 	}
 

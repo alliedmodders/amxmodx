@@ -70,7 +70,7 @@ class CPlayer
 			{
 				MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer));
 
-				PostponeModeUpdate(ENTINDEX(pPlayer) - 1);
+				PostponeModelUpdate(ENTINDEX(pPlayer) - 1);
 			}
 		}
 
@@ -89,7 +89,7 @@ class CPlayer
 
 				SETCLIENTKEYVALUE(index, infobuffer, "model", m_Model);
 
-				PostponeModeUpdate(index - 1);
+				PostponeModelUpdate(index - 1);
 			}
 		}
 
@@ -110,18 +110,24 @@ class CPlayer
 
 	private:
 
-		void PostponeModeUpdate(int index)
+		void PostponeModelUpdate(int index)
 		{
-			ServerStatic->clients[index].sendinfo = false;
-
-			ModelsUpdateQueue.append(index);
-
 			if (!g_pFunctionTable->pfnStartFrame)
 			{
 				g_pFunctionTable->pfnStartFrame = StartFrame;
 				g_pFunctionTable->pfnClientUserInfoChanged = ClientUserInfoChanged;
 				g_pengfuncsTable->pfnSetClientKeyValue = SetClientKeyValue;
 			}
+
+			if (!ServerStatic)
+			{
+				MF_Log("Postponing of model update disabled, check your gamedata files");
+				return;
+			}
+
+			ServerStatic->clients[index].sendinfo = false;
+
+			ModelsUpdateQueue.append(index);
 		}
 
 	private:

@@ -51,6 +51,18 @@ void StartFrame()
 	if (ModelsUpdateQueue.empty())
 	{
 		g_pFunctionTable->pfnStartFrame = nullptr;
+
+		for (int i = 1; i < gpGlobals->maxClients; ++i)
+		{
+			if (Players[i].HasModel())
+			{
+				RETURN_META(MRES_IGNORED);
+			}
+		}
+
+		g_pFunctionTable->pfnClientUserInfoChanged = nullptr;
+		g_pengfuncsTable->pfnSetClientKeyValue = nullptr;
+
 		RETURN_META(MRES_IGNORED);
 	}
 

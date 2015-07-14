@@ -47,7 +47,7 @@
 #define CSI_SG552               CSW_SG552
 #define CSI_AK47                CSW_AK47
 #define CSI_P90                 CSW_P90
-#define CSI_SHIELDGUN           CSW_SHIELDGUN   // The real CS value, use CSI_SHELD instead.
+#define CSI_SHIELDGUN           CSW_SHIELDGUN   // The real CS value, use CSI_SHIELD instead.
 #define CSI_VEST                CSW_VEST        // Custom
 #define CSI_VESTHELM            CSW_VESTHELM    // Custom
 #define CSI_DEFUSER             33              // Custom

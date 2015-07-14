@@ -578,7 +578,7 @@ native cs_set_user_tked(index, tk = 1, subtract = 1);
  * @return          0 if the client is not driving, 1 if driving a vehicle but
  *                  not moving, 2 to 4 if driving positive speeds, 5 if
  *                  driving at a negative speed (backing), see TRAIN_* constants
- *                  in hlsdk_cons.inc
+ *                  in hlsdk_const.inc
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients, or the client is not connected, an error will be
  *                  thrown.
@@ -1045,7 +1045,7 @@ native Float:cs_get_hostage_nextuse(index);
 native cs_set_hostage_nextuse(index, Float:value);
 
 /**
- * Returns the time the bomb will explode.
+ * Returns the game time at which the bomb will explode.
  *
  * @param index     C4 entity
  *
@@ -1056,7 +1056,7 @@ native cs_set_hostage_nextuse(index, Float:value);
 native Float:cs_get_c4_explode_time(index);
 
 /**
- * Sets the time the bomb will explode.
+ * Sets the game time at which the bomb will explode.
  *
  * @param index     C4 entity
  * @param value     New explosion time

@@ -535,6 +535,11 @@ void InitGlobalVars()
 	{
 		Server = *reinterpret_cast<server_t**>(address);
 	}
+
+	if (!ServerStatic)
+	{
+		MF_Log("svs global variable is not available\n");
+	}
 	
 	if (!Server)
 	{

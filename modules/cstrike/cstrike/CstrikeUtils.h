@@ -14,11 +14,9 @@
 #ifndef CSTRIKE_UTILS_H
 #define CSTRIKE_UTILS_H
 
-bool UTIL_IsPlayer(AMX* amx, edict_t* pPlayer);
+bool UTIL_IsPlayer(edict_t *pPlayer);
 void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message);
-void *UTIL_FindAddressFromEntry(const char *entry, bool isHidden = false, const char *library = "mod");
 bool UTIL_CheckForPublic(const char *publicname);
-char *UTIL_StringToLower(char *str);
 
 #define GETINFOKEYBUFFER	(*g_engfuncs.pfnGetInfoKeyBuffer)
 #define	SETCLIENTKEYVALUE	(*g_engfuncs.pfnSetClientKeyValue)
@@ -65,39 +63,132 @@ char *UTIL_StringToLower(char *str);
 		} \
 	}
 
+#define CHECK_HOSTAGE(x)                                                                                                   \
+	if (strcmp(STRING(x->v.classname), "hostage_entity") != 0 && strcmp(STRING(x->v.classname), "monster_scientist") != 0) \
+	{                                                                                                                      \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d (\"%s\") is not a hostage", index, STRING(x->v.classname));            \
+		return 0;                                                                                                          \
+	}
+
 #define GETEDICT(n) \
 	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))
 
 
-inline edict_t *PrivateToEdict(const void *pdata)
+#define GET_OFFSET(classname, member)												\
+	static int member = -1;															\
+	if (member == -1)																\
+	{																				\
+		if (!CommonConfig->GetOffsetByClass(classname, #member, &member) || member < 0)\
+		{																			\
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid %s offset. Native %s is disabled", #member, __FUNCTION__);\
+			return 0;																\
+		}																			\
+	}
+
+#define GET_OFFSET_NO_ERROR(classname, member)										\
+	static int member = -1;															\
+	if (member == -1)																\
+	{																				\
+		if (!CommonConfig->GetOffsetByClass(classname, #member, &member) || member < 0)\
+		{																			\
+			return;																	\
+		}																			\
+	}
+
+template <typename T>
+inline T& get_pdata(edict_t *pEntity, int offset, int element = 0)
 {
-	if (!pdata)
-	{
-		return NULL;
-	}
+	return *reinterpret_cast<T*>(reinterpret_cast<int8*>(pEntity->pvPrivateData) + offset + element * sizeof(T));
+}
 
-	char *ptr = (char*)pdata;
-	ptr += 4;
-	entvars_t *pev = *(entvars_t **)ptr;
+template <typename T>
+inline T& get_pdata(void *pEntity, int offset, int element = 0)
+{
+	return *reinterpret_cast<T*>(reinterpret_cast<int8*>(pEntity) + offset + element * sizeof(T));
+}
 
-	if (!pev)
-	{
-		return NULL;
-	}
+template <typename T>
+inline void set_pdata(edict_t *pEntity, int offset, T value, int element = 0)
+{
+	*reinterpret_cast<T*>(reinterpret_cast<int8*>(pEntity->pvPrivateData) + offset + element * sizeof(T)) = value;
+}
 
-	return pev->pContainingEntity;
+template <typename T>
+inline void set_pdata(void *pEntity, int offset, T value, int element = 0)
+{
+	*reinterpret_cast<T*>(reinterpret_cast<int8*>(pEntity) + offset + element * sizeof(T)) = value;
+}
+
+class EHANDLE
+{
+	private:
+
+		edict_t* m_pent;
+		int		 m_serialnumber;
+
+	public:
+
+		edict_t* Get(void)
+		{
+			if (!FNullEnt(m_pent))
+			{
+				if (m_pent->serialnumber == m_serialnumber)
+				{
+					return m_pent;
+				}
+
+				return nullptr;
+			}
+
+			return nullptr;
+		};
+
+		edict_t* Set(edict_t *pent)
+		{
+			if (!FNullEnt(pent))
+			{
+				m_pent = pent;
+				m_serialnumber = m_pent->serialnumber;
+			}
+			else
+			{
+				m_pent = nullptr;
+				m_serialnumber = 0;
+			}
+
+			return pent;
+		};
 };
 
-inline int PrivateToIndex(const void *pdata)
+class CUnifiedSignals
 {
-	edict_t *pEntity = PrivateToEdict(pdata);
+	public:
 
-	if (!pEntity)
-	{
-		return -1;
-	}
+		void Update(void)
+		{
+			m_flState = m_flSignal;
+			m_flSignal = 0;
+		}
 
-	return ENTINDEX(pEntity);
+		void Signal(int flags) 
+		{
+			m_flSignal |= flags;
+		}
+
+		int GetSignal(void) 
+		{
+			return m_flSignal;
+		}
+
+		int GetState(void) 
+		{
+			return m_flState;
+		}
+
+	private:
+
+		int m_flSignal;
+		int m_flState;
 };
 
 #endif // CSTRIKE_UTILS_H

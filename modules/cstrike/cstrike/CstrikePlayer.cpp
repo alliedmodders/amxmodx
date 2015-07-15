@@ -12,47 +12,61 @@
 //
 
 #include "CstrikePlayer.h"
-#include <string.h> // strcpy()
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+CPlayer Players[33];
+ke::Vector<int> ModelsUpdateQueue;
 
-CCstrikePlayer::CCstrikePlayer()
+void ClientDisconnect(edict_t *pEntity)
 {
-	modelled = false;
-	inspectModel = false;
+	int index = ENTINDEX(pEntity);
+
+	Players[index].ResetModel();
+	Players[index].ResetZoom();
+
+	RETURN_META(MRES_IGNORED);
 }
 
-bool CCstrikePlayer::GetModelled()
+void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer)
 {
-	return modelled;
+	if (pEntity->pvPrivateData)
+	{
+		Players[ENTINDEX(pEntity)].UpdateModel(pEntity);
+	}
+
+	RETURN_META(MRES_IGNORED);
 }
 
-bool CCstrikePlayer::SetModelled(bool modelledIn)
+void SetClientKeyValue(int clientIndex, char *infobuffer, const char *key, const char *value)
 {
-	if (!modelledIn)
-		SetInspectModel(false);
+	if (!strcmp(key, "model") && Players[clientIndex].HasModel(value))
+	{
+		RETURN_META(MRES_SUPERCEDE);
+	}
 
-	return modelled = modelledIn;
+	RETURN_META(MRES_IGNORED);
 }
 
-const char* CCstrikePlayer::GetModel()
+void StartFrame()
 {
-	return model;
-}
+	if (ModelsUpdateQueue.empty())
+	{
+		g_pFunctionTable->pfnStartFrame = nullptr;
 
-void CCstrikePlayer::SetModel(const char* modelIn)
-{
-	strcpy(model, modelIn);
-}
+		for (int i = 1; i < gpGlobals->maxClients; ++i)
+		{
+			if (Players[i].HasModel())
+			{
+				RETURN_META(MRES_IGNORED);
+			}
+		}
 
-bool CCstrikePlayer::GetInspectModel()
-{
-	return inspectModel;
-}
+		g_pFunctionTable->pfnClientUserInfoChanged = nullptr;
+		g_pengfuncsTable->pfnSetClientKeyValue = nullptr;
 
-void CCstrikePlayer::SetInspectModel(bool inspectModelIn)
-{
-	inspectModel = inspectModelIn;
+		RETURN_META(MRES_IGNORED);
+	}
+
+	ServerStatic->clients[ModelsUpdateQueue.popCopy()].sendinfo = true;
+
+	RETURN_META(MRES_IGNORED);
 }

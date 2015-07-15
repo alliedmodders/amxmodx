@@ -122,11 +122,11 @@
 // #define FN_ClientKill				ClientKill					/* pfnClientKill()				(wd) Player has typed "kill" */
 // #define FN_ClientPutInServer			ClientPutInServer			/* pfnClientPutInServer()		(wd) Client is entering the game */
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
-#define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
+// #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-#define FN_ServerDeactivate				ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
-#define FN_PlayerPreThink				PlayerPreThink				/* pfnPlayerPreThink() */
-#define FN_PlayerPostThink				PlayerPostThink				/* pfnPlayerPostThink() */
+// #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+// #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
+// #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
 // #define FN_ParmsChangeLevel			ParmsChangeLevel			/* pfnParmsChangeLevel() */
@@ -229,7 +229,7 @@
 // #define FN_AngleVectors						AngleVectors
 // #define FN_CreateEntity						CreateEntity
 // #define FN_RemoveEntity						RemoveEntity
-#define FN_CreateNamedEntity					CreateNamedEntity
+// #define FN_CreateNamedEntity					CreateNamedEntity
 // #define FN_MakeStatic						MakeStatic
 // #define FN_EntIsOnFloor						EntIsOnFloor
 // #define FN_DropToFloor						DropToFloor
@@ -252,7 +252,7 @@
 // #define FN_LightStyle						LightStyle
 // #define FN_DecalIndex						DecalIndex
 // #define FN_PointContents						PointContents
-#define FN_MessageBegin						MessageBegin
+// #define FN_MessageBegin						MessageBegin
 // #define FN_MessageEnd						MessageEnd
 // #define FN_WriteByte							WriteByte
 // #define FN_WriteChar							WriteChar
@@ -427,7 +427,7 @@
 // #define FN_PEntityOfEntIndex_Post			PEntityOfEntIndex_Post
 // #define FN_FindEntityByVars_Post				FindEntityByVars_Post
 // #define FN_GetModelPtr_Post					GetModelPtr_Post
-// #define FN_RegUserMsg_Post					RegUserMsg_Post
+#define FN_RegUserMsg_Post					OnRegUserMsg_Post
 // #define FN_AnimationAutomove_Post			AnimationAutomove_Post
 // #define FN_GetBonePosition_Post				GetBonePosition_Post
 // #define FN_FunctionFromName_Post				FunctionFromName_Post

@@ -35,9 +35,6 @@
     <ClCompile Include="..\CstrikePlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\amxx_api.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\public\memtools\MemoryUtils.cpp">
       <Filter>Memtools</Filter>
     </ClCompile>
@@ -57,6 +54,12 @@
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
     <ClCompile Include="..\CstrikeHLTypeConversion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CstrikeUserMessages.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CstrikeMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,6 +90,12 @@
     </ClInclude>
     <ClInclude Include="..\moduleconfig.h">
       <Filter>Module SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CstrikeHacks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CstrikeUserMessages.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,27 +11,131 @@
 // Counter-Strike Module
 //
 
-#if !defined(INCLUDED_CCSTRIKEPLAYER)
-#define INCLUDED_CCSTRIKEPLAYER
+#ifndef _CSTRIKE_PLAYER_H_
+#define _CSTRIKE_PLAYER_H_
 
-class CCstrikePlayer  
+#include <amxxmodule.h>
+#include "CstrikeUtils.h"
+#include "CstrikeHacks.h"
+#include <am-vector.h>
+
+extern ke::Vector<int> ModelsUpdateQueue;
+
+void StartFrame();
+void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer);
+void SetClientKeyValue(int clientIndex, char *infobuffer, const char *key, const char *value);
+
+class CPlayer  
 {
-public:
-	CCstrikePlayer();
+	public:
 
-	bool GetModelled();
-	bool SetModelled(bool modelledIn);
-	const char* GetModel();
-	void SetModel(const char* modelIn);
+		CPlayer()
+		{
+			ResetModel();
+			ResetZoom();
+		}
 
-	bool GetInspectModel();
-	void SetInspectModel(bool inspectModelIn);
+		bool HasModel(const char *model = nullptr)
+		{
+			if (*m_Model != '\0')
+			{
+				if (model && *model)
+				{
+					return strcmp(m_Model, model) != 0;
+				}
 
+				return true;
+			}
 
-private:
-	bool inspectModel;
-	bool modelled;
-	char model[32];
+			return false;
+		}
+
+		void SetModel(const char* modelIn)
+		{
+			if (modelIn && *modelIn)
+			{
+				strncopy(m_Model, modelIn, sizeof(m_Model));
+			}
+			else
+			{
+				ResetModel();
+			}
+		}
+
+		void ResetModel(edict_t *pPlayer = nullptr)
+		{
+			*m_Model = '\0';
+
+			if (pPlayer)
+			{
+				MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer));
+
+				PostponeModelUpdate(ENTINDEX(pPlayer) - 1);
+			}
+		}
+
+		void UpdateModel(edict_t *pPlayer)
+		{
+			if (!HasModel())
+			{
+				return;
+			}
+
+			char *infobuffer = GETINFOKEYBUFFER(pPlayer);
+
+			if (strcmp(GETCLIENTKEYVALUE(infobuffer, "model"), m_Model) != 0)
+			{
+				int index = ENTINDEX(pPlayer);
+
+				SETCLIENTKEYVALUE(index, infobuffer, "model", m_Model);
+
+				PostponeModelUpdate(index - 1);
+			}
+		}
+
+		int GetZoom()
+		{
+			return m_Zooming;
+		}
+
+		void SetZoom(int value)
+		{
+			m_Zooming = value;
+		}
+
+		void ResetZoom()
+		{
+			m_Zooming = 0;
+		}
+
+	private:
+
+		void PostponeModelUpdate(int index)
+		{
+			if (!g_pFunctionTable->pfnStartFrame)
+			{
+				g_pFunctionTable->pfnStartFrame = StartFrame;
+				g_pFunctionTable->pfnClientUserInfoChanged = ClientUserInfoChanged;
+				g_pengfuncsTable->pfnSetClientKeyValue = SetClientKeyValue;
+			}
+
+			if (!ServerStatic)
+			{
+				MF_Log("Postponing of model update disabled, check your gamedata files");
+				return;
+			}
+
+			ServerStatic->clients[index].sendinfo = false;
+
+			ModelsUpdateQueue.append(index);
+		}
+
+	private:
+
+		char m_Model[32];
+		int  m_Zooming;
 };
 
-#endif // !defined(INCLUDED_CCSTRIKEPLAYER)
+extern CPlayer Players[33];
+
+#endif // _CSTRIKE_PLAYER_H_

@@ -17,16 +17,16 @@ HL_TypeConversion  G_HL_TypeConversion;
 
 void OffsetHandler::search_pev()
 {
-	edict_t* edict = INDEXENT(0);
-	entvars_t* entvars = &edict->v;
+	edict_t *pEdict = INDEXENT(0);
+	entvars_t *pev = VARS(pEdict);
 
-	byte* private_c = (byte*)edict->pvPrivateData;
+	byte *privateData = reinterpret_cast<byte*>(pEdict->pvPrivateData);
 
 	for (int i = 0; i < 0xFFF; i++)
 	{
-		uintptr_t val = *((uintptr_t*)(private_c + i));
+		entvars_t *val = *(reinterpret_cast<entvars_t**>(privateData + i));
 
-		if (val == (uintptr_t)entvars)
+		if (val == pev)
 		{
 			this->pev = i;
 			return;
@@ -82,7 +82,8 @@ void* HL_TypeConversion::id_to_cbase(int index)
 
 entvars_t* HL_TypeConversion::id_to_entvar(int index)
 {
-	return &(INDEXENT2(index)->v);
+	edict_t *pEdict = INDEXENT2(index);
+	return pEdict ? VARS(pEdict) : nullptr;
 }
 
 entvars_t* HL_TypeConversion::cbase_to_entvar(void* cbase)
@@ -92,7 +93,7 @@ entvars_t* HL_TypeConversion::cbase_to_entvar(void* cbase)
 		return nullptr;
 	}
 
-	return *(entvars_t **)((char *)(cbase) + G_OffsetHandler->pev);
+	return *reinterpret_cast<entvars_t**>(reinterpret_cast<int8*>(cbase) + G_OffsetHandler->pev);
 }
 
 int HL_TypeConversion::cbase_to_id(void *cbase)
@@ -102,7 +103,7 @@ int HL_TypeConversion::cbase_to_id(void *cbase)
 		return -1;
 	}
 
-	entvars_t* pev = this->cbase_to_entvar(cbase);
+	entvars_t *pev = this->cbase_to_entvar(cbase);
 
 	if (!pev)
 	{

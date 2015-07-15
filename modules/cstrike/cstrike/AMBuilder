@@ -9,11 +9,12 @@ binary.compiler.defines += [
   
 binary.sources = [
   '../../../public/sdk/amxxmodule.cpp',
-  'amxx_api.cpp',
+  'CstrikeMain.cpp',
   'CstrikePlayer.cpp',
   'CstrikeNatives.cpp',
   'CstrikeHacks.cpp',
   'CstrikeUtils.cpp',
+  'CstrikeUserMessages.cpp',
   'CstrikeHLTypeConversion.cpp',
   '../../../public/memtools/MemoryUtils.cpp',
   '../../../public/memtools/CDetour/detours.cpp',

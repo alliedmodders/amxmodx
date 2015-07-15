@@ -127,13 +127,14 @@ enum
 #define CSI_SG552               CSW_SG552
 #define CSI_AK47                CSW_AK47
 #define CSI_P90                 CSW_P90
-#define CSI_SHIELDGUN           CSW_SHIELDGUN
+#define CSI_SHIELDGUN           CSW_SHIELDGUN   // The real CS value, use CSI_SHELD instead.
 #define CSI_VEST                CSW_VEST        // Custom
 #define CSI_VESTHELM            CSW_VESTHELM    // Custom
 #define CSI_DEFUSER             33              // Custom
 #define CSI_NVGS                34              // Custom
 #define CSI_PRIAMMO             36              // Custom
 #define CSI_SECAMMO             37              // Custom
+#define CSI_SHIELD              38              // Custom - The value passed by the forward, more convenient for plugins.
 
 /**
  * Returns client's deaths.
@@ -152,21 +153,20 @@ native cs_get_user_deaths(index);
  *
  * @param index         Client index
  * @param newdeaths     New value to set
+ * @param scoreboard    If true the scoreboard will be updated to reflect the new value.
  *
  * @noreturn
  * @error               If the client index is not within the range of 1 to
  *                      MaxClients, or the client is not connected, an error
  *                      will be thrown.
  */
-native cs_set_user_deaths(index, newdeaths);
+native cs_set_user_deaths(index, newdeaths, bool:scoreboard = true);
 
 /**
  * Returns index of the entity that a hostage is following.
  *
  * @note Hostages can theoretically follow any entity in the game, so the
  *       returned entity index is not necessarily a client index.
- * @note This native does not work on Condition Zero, which has a different
- *       hostage AI than other versions of Counter-Strike.
  *
  * @param index     Hostage entity index
  *
@@ -181,8 +181,6 @@ native cs_get_hostage_foll(index);
  *
  * @note Hostages can theoretically follow any entity in the game, so the
  *       followedindex does not have to be a client index.
- * @note This native does not work on Condition Zero, which has a different
- *       hostage AI than other versions of Counter-Strike.
  *
  * @param index             Hostage entity index
  * @param followedindex     New entity to follow
@@ -344,16 +342,21 @@ native cs_get_user_model(index, model[], len);
  * @note This is not a one-time set. The CStrike module will remember the
  *       selected model and try to prevent attempts at changing the player
  *       model, or immediately re-apply it if necessary.
+ * @note Updating modelindex is useful for custom models which don't have 
+ *       the same structure as the default ones (hitbox, etc..). Model must 
+ *       be precached before.
  *
- * @param index     Client index
- * @param model     Model name
+ * @param index           Client index
+ * @param model           Model name
+ * @param update_index    If true, the modelindex is updated as well
  *
  * @noreturn
- * @error           If the client index is not within the range of 1 to
- *                  MaxClients, or the client is not connected, an error will be
- *                  thrown.
+ * @error                 If the client index is not within the range of 1 to
+ *                        MaxClients, the client is not connected, the provided
+ *                        model is empty, or if modeindex is updated and the 
+ *                        provided model is not precached, an error will be thrown.
  */
-native cs_set_user_model(index, const model[]);
+native cs_set_user_model(index, const model[], bool:update_index = false);
 
 /**
  * Resets the client's model.
@@ -468,17 +471,17 @@ native cs_set_user_plant(index, plant = 1, showbombicon = 1);
  * @note For a list of valid team ids see the CsTeams enum, and for a list of
  *       valid internal model ids see the CsInternalModel enum.
  *
- * @param index     Client index
- * @param team      Team id
- * @param model     Internal model id, if CS_DONTCHANGE the game will choose the
- *                  model
+ * @param index         Client index
+ * @param team          Team id
+ * @param model         Internal model id, if CS_DONTCHANGE the game will choose the model
+ * @param send_teaminfo If true, a TeamInfo message will be sent
  *
  * @noreturn
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients, or the client is not connected, an error will be
  *                  thrown.
  */
-native cs_set_user_team(index, any:team, any:model = CS_DONTCHANGE);
+native cs_set_user_team(index, any:team, any:model = CS_DONTCHANGE, bool:send_teaminfo = true);
 
 /**
  * Returns the client's team and optionally the model id.
@@ -574,7 +577,8 @@ native cs_set_user_tked(index, tk = 1, subtract = 1);
  *
  * @return          0 if the client is not driving, 1 if driving a vehicle but
  *                  not moving, 2 to 4 if driving positive speeds, 5 if
- *                  driving at a negative speed (backing)
+ *                  driving at a negative speed (backing), see TRAIN_* constants
+ *                  in hlsdk_const.inc
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients, or the client is not connected, an error will be
  *                  thrown.
@@ -618,7 +622,7 @@ native cs_get_user_stationary(index);
  *                      MaxClients, or the client is not connected, an error
  *                      will be thrown.
  */
-native cs_get_user_armor(index, &CsArmorType:armortype);
+native cs_get_user_armor(index, &CsArmorType:armortype = CS_ARMOR_NONE);
 
 /**
  * Sets the client's armor value the type of armor.
@@ -701,9 +705,12 @@ native cs_get_weapon_silen(index);
  * @param index             Weapon entity index
  * @param silence           If nonzero the weapon will be put into silenced
  *                          mode, otherwise the silenced mode will be removed
- * @param draw_animation    If nonzero and the weapon is currently held by a
+ * @param draw_animation    If 1 and the weapon is currently held by a
  *                          client, the appropriate weapon animation will be
  *                          played
+ *                          If 2, same as 1 but follows game behavior by playing
+ *                          the associated player's model sequence and disallowing
+ *                          firing while animation is playing.
  *
  * @return                  1 if silenced mode set successfully, 0 if entity is
  *                          not an applicable weapon
@@ -811,12 +818,14 @@ native cs_user_spawn(player);
  *          CSW_SG552, CSW_AK47, CSW_P90
  *
  * @param index     Armoury entity index
+ * @param count     Optional variable to store in the number of times that an item can be retrieved  
+ *                  from the same entity before being hidden
  *
  * @return          Weapon id
  * @error           If a non-armoury entity is provided, an error will be
  *                  thrown.
  */
-native cs_get_armoury_type(index);
+native cs_get_armoury_type(index, &count = 1);
 
 /**
  * Sets the amoury entity type.
@@ -828,15 +837,19 @@ native cs_get_armoury_type(index);
  *          CSW_TMP, CSW_G3SG1, CSW_VEST, CSW_VESTHELM, CSW_FLASHBANG,
  *          CSW_SG552, CSW_AK47, CSW_P90
  * @note This does not update the entity model.
+ * @note On restart, entity is always unhidden and the count is restored (this can not be below 1).
  *
  * @param index     Armoury entity index
  * @param type      Weapon id
- *
+ * @param count     Number of times that an item can be retrieved from 
+ *                  the same entity before being hidden
+ *                  If zero, the entity is hidden
+ *                  If below zero, nothing is set
  * @noreturn
  * @error           If a non-armoury entity is provided, an error will be
  *                  thrown.
  */
-native cs_set_armoury_type(index, type);
+native cs_set_armoury_type(index, type, count = -1);
 
 /**
  * Returns the map zones the client is inside of as a bitflag value.
@@ -1032,7 +1045,7 @@ native Float:cs_get_hostage_nextuse(index);
 native cs_set_hostage_nextuse(index, Float:value);
 
 /**
- * Returns the time the bomb will explode.
+ * Returns the game time at which the bomb will explode.
  *
  * @param index     C4 entity
  *
@@ -1043,7 +1056,7 @@ native cs_set_hostage_nextuse(index, Float:value);
 native Float:cs_get_c4_explode_time(index);
 
 /**
- * Sets the time the bomb will explode.
+ * Sets the game time at which the bomb will explode.
  *
  * @param index     C4 entity
  * @param value     New explosion time

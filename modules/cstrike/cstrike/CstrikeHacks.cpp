@@ -13,43 +13,52 @@
 
 #include "CstrikeDatas.h"
 #include "CstrikeUtils.h"
-#include "CDetour/detours.h"
+#include "CstrikeHacks.h"
+#include "CstrikeHLTypeConversion.h"
 #include <sm_stringhashmap.h>
 
 void CtrlDetours_ClientCommand(bool set);
 void CtrlDetours_BuyCommands(bool set);
+void CtrlDetours_Natives(bool set);
 
 int ForwardInternalCommand = -1;
-int ForwardOnBuy = -1;
-int ForwardOnBuyAttempt = -1;
+int ForwardOnBuy           = -1;
+int ForwardOnBuyAttempt    = -1;
 
-int *UseBotArgs      = NULL;
-const char **BotArgs = NULL;
+int *UseBotArgs;
+const char **BotArgs;
 
-CDetour *ClientCommandDetour = NULL;
-CDetour *GiveShieldDetour    = NULL;
-CDetour *GiveNamedItemDetour = NULL;
-CDetour *AddAccountDetour    = NULL;
+CDetour *ClientCommandDetour;
+CDetour *GiveShieldDetour;
+CDetour *GiveNamedItemDetour;
+CDetour *AddAccountDetour;
+CDetour *GiveDefaultItemsDetour;
 
-int CurrentItemId = 0;
+CreateNamedEntityFunc       CS_CreateNamedEntity;
+UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
+
+int CurrentItemId;
 StringHashMap<int> ItemAliasList;
+int TeamOffset;
+int MenuOffset;
 
-extern enginefuncs_t *g_pengfuncsTable;
+server_static_t *ServerStatic;
+server_t *Server;
 
 void InitializeHacks()
 {
-#if defined AMD64
-	#error UNSUPPORTED
-#endif
-
 	CtrlDetours_ClientCommand(true);
 	CtrlDetours_BuyCommands(true);
+	CtrlDetours_Natives(true);
+
+	InitGlobalVars();
 }
 
 void ShutdownHacks()
 {
 	CtrlDetours_ClientCommand(false);
 	CtrlDetours_BuyCommands(false);
+	CtrlDetours_Natives(false);
 }
 
 #undef CMD_ARGV
@@ -63,7 +72,7 @@ const char *CMD_ARGV(int i)
 			return BotArgs[i];
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	return g_engfuncs.pfnCmd_Argv(i);
@@ -74,7 +83,7 @@ void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume,
 	// If shield is blocked with CS_OnBuy, we need to block the pickup sound ("items/gunpickup2.wav") 
 	// as well played right after. Why this sound is not contained in GiveShield()?
 
-	g_pengfuncsTable->pfnEmitSound = NULL;
+	g_pengfuncsTable->pfnEmitSound = nullptr;
 
 	RETURN_META(MRES_SUPERCEDE);
 }
@@ -101,9 +110,9 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 			{
 			    static const int menuItemsTe[][9] = 
 				{
-					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIMAMMO, CSI_SECAMMO, 0 },
+					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
 					/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_ELITE, 0, 0, 0 },
-					/* Menu_BuyRifle         */ { 0, CSI_GALI, CSI_AK47, CSI_SCOUT, CSI_SG552, CSI_AWP, CSI_G3SG1, 0, 0 },
+					/* Menu_BuyRifle         */ { 0, CSI_GALIL, CSI_AK47, CSI_SCOUT, CSI_SG552, CSI_AWP, CSI_G3SG1, 0, 0 },
 					/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
 					/* Menu_BuyShotgun       */ { 0, CSI_M3, CSI_XM1014, 0, 0, 0, 0, 0, 0 },
 					/* Menu_BuySubMachineGun */ { 0, CSI_MAC10, CSI_MP5NAVY, CSI_UMP45, CSI_P90, 0, 0, 0, 0 },
@@ -112,7 +121,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 
 				static const int menuItemsCt[][9] = 
 				{
-					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIMAMMO, CSI_SECAMMO, 0 },
+					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
 					/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_FIVESEVEN, 0, 0, 0 },
 					/* Menu_BuyRifle         */ { 0, CSI_FAMAS, CSI_SCOUT, CSI_M4A1, CSI_AUG, CSI_SG550, CSI_AWP, 0, 0 },
 					/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
@@ -121,11 +130,11 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 					/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELDGUN }
 				};
 
-				int menuId = *((int *)pEdict->pvPrivateData + OFFSET_MENU);
+				int menuId = get_pdata<int>(pEdict, MenuOffset);
+
 				if (menuId >= Menu_Buy && menuId <= Menu_BuyItem)
 				{
-					int team = *((int *)pEdict->pvPrivateData + OFFSET_TEAM);
-					switch (team)
+					switch (get_pdata<int>(pEdict, TeamOffset))
 					{
 						case TEAM_T: itemId = menuItemsTe[menuId - 4][slot]; break; // -4 because array is zero-based and Menu_Buy* constants starts from 4.
 						case TEAM_CT:itemId = menuItemsCt[menuId - 4][slot]; break;
@@ -170,12 +179,41 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 	DETOUR_STATIC_CALL(C_ClientCommand)(pEdict);
 }
 
+edict_s* OnCreateNamedEntity(int classname)
+{
+	if (NoKifesMode)
+	{
+		if (!strcmp(STRING(classname), "weapon_knife"))
+		{
+			RETURN_META_VALUE(MRES_SUPERCEDE, nullptr);
+		}
+	}
+	else
+	{
+		g_pengfuncsTable->pfnCreateNamedEntity = nullptr;
+	}
+
+	RETURN_META_VALUE(MRES_IGNORED, 0);
+}
+
+DETOUR_DECL_MEMBER0(GiveDefaultItems, void)  // void CBasePlayer::GiveDefaultItems(void)
+{
+	if (NoKifesMode)
+	{
+		g_pengfuncsTable->pfnCreateNamedEntity = OnCreateNamedEntity;
+	}
+
+	DETOUR_MEMBER_CALL(GiveDefaultItems)();
+
+	g_pengfuncsTable->pfnCreateNamedEntity = nullptr;
+}
+
 DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlayer::GiveNamedItem(const char *pszName)
 {
 	// If the current item id is not null, this means player has triggers a buy command.
 	if (CurrentItemId)
 	{
-		int client = PrivateToIndex(this);
+		int client = G_HL_TypeConversion.cbase_to_id(this);
 
 		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), static_cast<cell>(CurrentItemId)) > 0)
 		{
@@ -196,7 +234,7 @@ DETOUR_DECL_MEMBER1(GiveShield, void, bool, bRetire) // void CBasePlayer::GiveSh
 	// Special case for shield. Game doesn't use GiveNamedItem() to give a shield.
 	if (CurrentItemId == CSI_SHIELDGUN)
 	{
-		int client = PrivateToIndex(this);
+		int client = G_HL_TypeConversion.cbase_to_id(this);
 
 		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), CSI_SHIELDGUN) > 0)
 		{
@@ -236,30 +274,52 @@ void CtrlDetours_ClientCommand(bool set)
 {
 	if (set)
 	{
-		void *target = (void *)MDLL_ClientCommand;
+		void *base = reinterpret_cast<void *>(MDLL_ClientCommand);
 
 #if defined(WIN32)
 
-		UseBotArgs = *(int **)((unsigned char *)target + CS_CLICMD_OFFS_USEBOTARGS);
-		BotArgs = (const char **)*(const char **)((unsigned char *)target + CS_CLICMD_OFFS_BOTARGS);
+		int offset = 0;
+
+		if (MainConfig->GetOffset("UseBotArgs", &offset))
+		{
+			UseBotArgs = get_pdata<int*>(base, offset);
+		}
+
+		if (MainConfig->GetOffset("BotArgs", &offset))
+		{
+			BotArgs = get_pdata<const char**>(base, offset);
+		}
 
 #elif defined(__linux__) || defined(__APPLE__)
 
-		UseBotArgs = (int *)UTIL_FindAddressFromEntry(CS_IDENT_USEBOTARGS, CS_IDENT_HIDDEN_STATE);
-		BotArgs = (const char **)UTIL_FindAddressFromEntry(CS_IDENT_BOTARGS, CS_IDENT_HIDDEN_STATE);
+		void *address = nullptr;
 
+		if (MainConfig->GetMemSig("UseBotArgs", &address))
+		{
+			UseBotArgs = reinterpret_cast<int *>(address);
+		}
+
+		if (MainConfig->GetMemSig("BotArgs", &address))
+		{
+			BotArgs = reinterpret_cast<const char **>(address);
+		}
 #endif
-		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, target);
+		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, base);
 
-		if (!ClientCommandDetour)
+		CommonConfig->GetOffsetByClass("CBasePlayer", "m_iTeam", &TeamOffset);
+		CommonConfig->GetOffsetByClass("CBasePlayer", "m_iMenu", &MenuOffset);
+
+		if (!ClientCommandDetour || !UseBotArgs || !BotArgs || !TeamOffset || !MenuOffset)
 		{
 			MF_Log("ClientCommand is not available - forward client_command has been disabled");
 		}
 	}
 	else
 	{
-		if (ClientCommandDetour) 
+		if (ClientCommandDetour)
+		{
 			ClientCommandDetour->Destroy();
+		}
 
 		ItemAliasList.clear();
 	}
@@ -268,7 +328,9 @@ void CtrlDetours_ClientCommand(bool set)
 void ToggleDetour_ClientCommands(bool enable)
 {
 	if (ClientCommandDetour)
+	{
 		(enable) ? ClientCommandDetour->EnableDetour() : ClientCommandDetour->DisableDetour();
+	}
 
 	if (enable)
 	{
@@ -291,7 +353,7 @@ void ToggleDetour_ClientCommands(bool enable)
 			{ "elites"     , CSI_ELITE      }, { "fn57"       , CSI_FIVESEVEN    },
 			{ "fiveseven"  , CSI_FIVESEVEN  }, { "ump45"      , CSI_UMP45        },
 			{ "sg550"      , CSI_SG550      }, { "krieg550"   , CSI_SG550        },
-			{ "galil"      , CSI_GALI       }, { "defender"   , CSI_GALI         },
+			{ "galil"      , CSI_GALIL      }, { "defender"   , CSI_GALIL        },
 			{ "famas"      , CSI_FAMAS      }, { "clarion"    , CSI_FAMAS        },
 			{ "usp"        , CSI_USP        }, { "km45"       , CSI_USP          },
 			{ "glock"      , CSI_GLOCK18    }, { "9x19mm"     , CSI_GLOCK18      },
@@ -308,12 +370,12 @@ void ToggleDetour_ClientCommands(bool enable)
 			{ "c90"        , CSI_P90        }, { "vest"       , CSI_VEST         },
 			{ "vesthelm"   , CSI_VESTHELM   }, { "defuser"    , CSI_DEFUSER      },
 			{ "nvgs"       , CSI_NVGS       }, { "shield"     , CSI_SHIELDGUN    },
-			{ "buyammo1"   , CSI_PRIMAMMO   }, { "primammo"   , CSI_PRIMAMMO     },
+			{ "buyammo1"   , CSI_PRIAMMO    }, { "primammo"   , CSI_PRIAMMO      },
 			{ "buyammo2"   , CSI_SECAMMO    }, { "secammo"    , CSI_SECAMMO      },
-			{ NULL         , 0 }
+			{ nullptr         , 0 }
 		};
 
-		for (size_t i = 0; aliasToId[i].alias != NULL; ++i)
+		for (size_t i = 0; aliasToId[i].alias != nullptr; ++i)
 		{
 			ItemAliasList.insert(aliasToId[i].alias, aliasToId[i].id);
 		}
@@ -329,14 +391,23 @@ void CtrlDetours_BuyCommands(bool set)
 {
 	if (set)
 	{
-		void *giveShieldAddress    = UTIL_FindAddressFromEntry(CS_IDENT_GIVENSHIELD  , CS_IDENT_HIDDEN_STATE);
-		void *giveNamedItemAddress = UTIL_FindAddressFromEntry(CS_IDENT_GIVENAMEDITEM, CS_IDENT_HIDDEN_STATE);
-		void *addAccountAddress    = UTIL_FindAddressFromEntry(CS_IDENT_ADDACCOUNT   , CS_IDENT_HIDDEN_STATE);
+		void *address = nullptr;
 
-		GiveShieldDetour    = DETOUR_CREATE_MEMBER_FIXED(GiveShield, giveShieldAddress);
-		GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, giveNamedItemAddress);
-		AddAccountDetour    = DETOUR_CREATE_MEMBER_FIXED(AddAccount, addAccountAddress);
+		if (MainConfig->GetMemSig("GiveShield", &address))
+		{
+			GiveShieldDetour = DETOUR_CREATE_MEMBER_FIXED(GiveShield, address);
+		}
 
+		if (MainConfig->GetMemSig("GiveNamedItem", &address))
+		{
+			GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, address);
+		}
+
+		if (MainConfig->GetMemSig("AddAccount", &address))
+		{
+			AddAccountDetour = DETOUR_CREATE_MEMBER_FIXED(AddAccount, address);
+		}
+		
 		if (!GiveShieldDetour || !GiveNamedItemDetour || !AddAccountDetour)
 		{
 			if (!GiveShieldDetour)
@@ -360,13 +431,19 @@ void CtrlDetours_BuyCommands(bool set)
 	else
 	{
 		if (GiveShieldDetour)
+		{
 			GiveShieldDetour->Destroy();
+		}
 
 		if (GiveNamedItemDetour)
+		{
 			GiveNamedItemDetour->Destroy();
+		}
 
 		if (AddAccountDetour)
+		{
 			AddAccountDetour->Destroy();
+		}
 
 		ItemAliasList.clear();
 	}
@@ -375,11 +452,97 @@ void CtrlDetours_BuyCommands(bool set)
 void ToggleDetour_BuyCommands(bool enable)
 {
 	if (GiveShieldDetour)
+	{
 		(enable) ? GiveShieldDetour->EnableDetour() : GiveShieldDetour->DisableDetour();
+	}
 
 	if (GiveNamedItemDetour)
+	{
 		(enable) ? GiveNamedItemDetour->EnableDetour() : GiveNamedItemDetour->DisableDetour();
+	}
 
 	if (AddAccountDetour)
+	{
 		(enable) ? AddAccountDetour->EnableDetour() : AddAccountDetour->DisableDetour();
+	}
+}
+
+void CtrlDetours_Natives(bool set)
+{
+	if (set)
+	{
+		void *address = nullptr;
+
+		if (MainConfig->GetMemSig("CreateNamedEntity", &address)) // cs_create_entity()
+		{
+			CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(address);
+		}
+
+		if (MainConfig->GetMemSig("FindEntityByString", &address)) // cs_find_ent_by_class()
+		{
+			CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(address);
+		}
+
+		if (!CS_CreateNamedEntity)
+		{
+			MF_Log("CREATE_NAMED_ENITTY is not available - native cs_create_entity() has been disabled");
+		}
+
+		if (!CS_UTIL_FindEntityByString)
+		{
+			MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
+		}
+
+		if (MainConfig->GetMemSig("GiveDefaultItems", &address))
+		{
+			GiveDefaultItemsDetour = DETOUR_CREATE_MEMBER_FIXED(GiveDefaultItems, address);
+		}
+
+		if (!GiveDefaultItemsDetour)
+		{
+			MF_Log("GiveDefaultItems is not available - native cs_set_no_knives has been disabled");
+		}
+	}
+	else
+	{
+		if (GiveDefaultItemsDetour)
+		{
+			GiveDefaultItemsDetour->Destroy();
+		}
+	}
+}
+
+void InitGlobalVars()
+{
+	void *address = nullptr;
+
+#if defined(WIN32)
+
+	int offset = 0;
+
+	if (CommonConfig->GetOffset("svs", &offset))
+	{
+		uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + offset);
+		ServerStatic = reinterpret_cast<server_static_t*>(base - 4);
+	}
+#else
+	if (CommonConfig->GetMemSig("svs", &address))
+	{
+		ServerStatic = reinterpret_cast<server_static_t*>(address);
+	}
+#endif
+	if (CommonConfig->GetAddress("sv", &address))
+	{
+		Server = *reinterpret_cast<server_t**>(address);
+	}
+
+	if (!ServerStatic)
+	{
+		MF_Log("svs global variable is not available\n");
+	}
+	
+	if (!Server)
+	{
+		MF_Log("sv global variable is not available\n");
+	}
 }

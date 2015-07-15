@@ -14,21 +14,14 @@
 #include "amxxmodule.h"
 #include "CstrikeUtils.h"
 #include "CstrikeDatas.h"
+#include "CstrikeHacks.h"
 #include "CstrikeHLTypeConversion.h"
+#include <IGameConfigs.h>
+#include "engine_strucs.h"
 
-extern AMX_NATIVE_INFO CstrikeNatives[];
-
-extern int ForwardInternalCommand;
-extern int ForwardOnBuy;
-extern int ForwardOnBuyAttempt;
-
-void InitializeHacks();
-void ShutdownHacks();
-void ToggleDetour_ClientCommands(bool enable);
-void ToggleDetour_BuyCommands(bool enable);
-
-CreateNamedEntityFunc CS_CreateNamedEntity = nullptr;
-UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString = nullptr;
+IGameConfig *MainConfig;
+IGameConfig *CommonConfig;
+IGameConfigManager *ConfigManager;
 
 int AmxxCheckGame(const char *game)
 {
@@ -44,23 +37,26 @@ void OnAmxxAttach()
 {
 	MF_AddNatives(CstrikeNatives);
 
+	ConfigManager = MF_GetConfigManager();
+
+	char error[256];
+	error[0] = '\0';
+
+	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && error[0] != '\0')
+	{
+		MF_Log("Could not read module.games gamedata: %s", error);
+		return;
+	}
+
+	error[0] = '\0';
+
+	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)) && error[0] != '\0')
+	{
+		MF_Log("Could not read common.games gamedata: %s", error);
+		return;
+	}
+
 	InitializeHacks();
-
-	// cs_create_entity()
-	CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(UTIL_FindAddressFromEntry(CS_IDENT_CREATENAMEDENTITY, CS_IDENT_HIDDEN_STATE));
-
-	if (CS_CreateNamedEntity <= 0)
-	{
-		MF_Log("CREATE_NAMED_ENITTY is not available - native cs_create_entity() has been disabled");
-	}
-
-	// cs_find_ent_by_class()
-	CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(UTIL_FindAddressFromEntry(CS_IDENT_UTIL_FINDENTITYBYSTRING, CS_IDENT_HIDDEN_STATE));
-	
-	if (CS_UTIL_FindEntityByString <= 0)
-	{
-		MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
-	}
 }
 
 void OnPluginsLoaded()
@@ -84,9 +80,17 @@ void OnPluginsLoaded()
 	{
 		G_OffsetHandler = new OffsetHandler;
 	}
+
+	// Used with model natives, enabled on demand.
+	g_pengfuncsTable->pfnSetClientKeyValue     = nullptr;
+	g_pFunctionTable->pfnClientUserInfoChanged = nullptr;
+	g_pFunctionTable->pfnStartFrame            = nullptr;
 }
 
 void OnAmxxDetach()
 {
+	ConfigManager->CloseGameConfigFile(MainConfig);
+	ConfigManager->CloseGameConfigFile(CommonConfig);
+
 	ShutdownHacks();
 }

@@ -99,5 +99,8 @@
     <None Include="..\..\..\..\plugins\include\cstrike.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\..\..\plugins\include\cstrike_const.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
   </ItemGroup>
 </Project>

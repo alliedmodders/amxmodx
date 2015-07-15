@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\plugins\include\cstrike.inc" />
+    <None Include="..\..\..\..\plugins\include\cstrike_const.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

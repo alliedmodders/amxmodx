@@ -121,6 +121,7 @@ public stock const Float:NULL_VECTOR[3];
 /**
  * IDs of weapons in CS
  */
+#define CSW_NONE            0
 #define CSW_P228            1
 #define CSW_SCOUT           3
 #define CSW_HEGRENADE       4
@@ -154,6 +155,7 @@ public stock const Float:NULL_VECTOR[3];
 #define CSW_VEST            31  // Custom
 #define CSW_VESTHELM        32  // Custom
 #define CSW_SHIELDGUN       99
+#define CSW_ALLWEAPONS      (~(1<<CSW_VEST))
 
 /**
  * HI weapon constants
@@ -187,6 +189,7 @@ public stock const Float:NULL_VECTOR[3];
 #define HIT_RIGHTARM    5
 #define HIT_LEFTLEG     6
 #define HIT_RIGHTLEG    7
+#define HIT_SHIELD      8 // CS only
 
 /**
  * @section emit_sound() constants

@@ -27,17 +27,18 @@
  */
 enum CsInternalModel
 {
-	CS_DONTCHANGE = 0,
-	CS_CT_URBAN = 1,
-	CS_T_TERROR = 2,
-	CS_T_LEET = 3,
-	CS_T_ARCTIC = 4,
-	CS_CT_GSG9 = 5,
-	CS_CT_GIGN = 6,
-	CS_CT_SAS = 7,
-	CS_T_GUERILLA = 8,
-	CS_CT_VIP = 9,
-	CZ_T_MILITIA = 10,
+	CS_DONTCHANGE  = 0,
+	CS_UNASSIGNED  = 0,
+	CS_CT_URBAN    = 1,
+	CS_T_TERROR    = 2,
+	CS_T_LEET      = 3,
+	CS_T_ARCTIC    = 4,
+	CS_CT_GSG9     = 5,
+	CS_CT_GIGN     = 6,
+	CS_CT_SAS      = 7,
+	CS_T_GUERILLA  = 8,
+	CS_CT_VIP      = 9,
+	CZ_T_MILITIA   = 10,
 	CZ_CT_SPETSNAZ = 11,
 };
 
@@ -47,9 +48,9 @@ enum CsInternalModel
 enum CsTeams
 {
 	CS_TEAM_UNASSIGNED = 0,
-	CS_TEAM_T = 1,
-	CS_TEAM_CT = 2,
-	CS_TEAM_SPECTATOR = 3,
+	CS_TEAM_T          = 1,
+	CS_TEAM_CT         = 2,
+	CS_TEAM_SPECTATOR  = 3,
 };
 
 /**
@@ -61,8 +62,8 @@ enum CsTeams
  */
 enum CsArmorType
 {
-	CS_ARMOR_NONE = 0,      // no armor
-	CS_ARMOR_KEVLAR = 1,    // body vest only
+	CS_ARMOR_NONE     = 0,  // no armor
+	CS_ARMOR_KEVLAR   = 1,  // body vest only
 	CS_ARMOR_VESTHELM = 2,  // vest and helmet
 };
 
@@ -94,6 +95,7 @@ enum
  *       contain custom AMXX values that do not correspond to any real value in
  *       the game. The CSI_* constants should therefore be used for consistency.
  */
+#define CSI_NONE                CSW_NONE
 #define CSI_P228                CSW_P228
 #define CSI_SCOUT               CSW_SCOUT
 #define CSI_HEGRENADE           CSW_HEGRENADE
@@ -131,3 +133,215 @@ enum
 #define CSI_SECAMMO             37              // Custom
 #define CSI_SHIELD              38              // Custom - The value passed by the forward, more convenient for plugins.
 
+/**
+ * Player's movements constants.
+ */
+#define CS_PLAYER_FATAL_FALL_SPEED       1100.0
+#define CS_PLAYER_MAX_SAFE_FALL_SPEED    500.0
+#define CS_DAMAGE_FOR_FALL_SPEED         100.0 / (CS_PLAYER_FATAL_FALL_SPEED - CS_PLAYER_MAX_SAFE_FALL_SPEED)
+#define CS_PLAYER_MIN_BOUNCE_SPEED       350
+#define CS_PLAYER_FALL_PUNCH_THRESHHOLD  250.0
+
+/**
+ * Hint message flags for use with m_flDisplayHistory.
+ */
+#define CS_HINT_ROUND_STARTED     (1<<1)
+#define CS_HINT_HOSTAGE_SEEN_FAR  (1<<2)
+#define CS_HINT_HOSTAGE_SEEN_NEAR (1<<3)
+#define CS_HINT_HOSTAGE_USED      (1<<4)
+#define CS_HINT_HOSTAGE_INJURED   (1<<5)
+#define CS_HINT_HOSTAGE_KILLED    (1<<6)
+#define CS_HINT_FRIEND_SEEN       (1<<7)
+#define CS_HINT_ENEMY_SEEN        (1<<8)
+#define CS_HINT_FRIEND_INJURED    (1<<9)
+#define CS_HINT_FRIEND_KILLED     (1<<10)
+#define CS_HINT_ENEMY_KILLED      (1<<11)
+#define CS_HINT_BOMB_RETRIEVED    (1<<12)
+#define CS_HINT_AMMO_EXHAUSTED    (1<<15)
+#define CS_HINT_IN_TARGET_ZONE    (1<<16)
+#define CS_HINT_IN_RESCUE_ZONE    (1<<17)
+#define CS_HINT_IN_ESCAPE_ZONE    (1<<18)
+#define CS_HINT_IN_VIPSAFETY_ZONE (1<<19)
+#define CS_HINT_NIGHTVISION       (1<<20)
+#define CS_HINT_HOSTAGE_CTMOVE    (1<<21)
+#define	CS_HINT_SPEC_DUCK         (1<<22)
+
+/**
+ * Constants for use with m_iIgnoreGlobalChat (ignoremsg client's command)
+ */
+#define CS_IGNOREMSG_NONE  0
+#define CS_IGNOREMSG_ENEMY 1
+#define CS_IGNOREMSG_TEAM  2
+
+/**
+ * Player's gait animation constants.
+ */
+enum CsPlayerAnim
+{
+	CS_PLAYER_IDLE          = 0,
+	CS_PLAYER_WALK          = 1,
+	CS_PLAYER_JUMP          = 2,
+	CS_PLAYER_SUPERJUMP     = 3,
+	CS_PLAYER_DIE           = 4,
+	CS_PLAYER_ATTACK1       = 5,
+	CS_PLAYER_ATTACK2       = 6,
+	CS_PLAYER_FLINCH        = 7,
+	CS_PLAYER_LARGE_FLINCH  = 8,
+	CS_PLAYER_RELOAD        = 9,
+	CS_PLAYER_HOLDBOMB      = 10,
+};
+
+/**
+ * Player's menu states for use with m_iMenu.
+ */
+enum CsMenu
+{
+	CS_Menu_OFF              = 0,
+	CS_Menu_ChooseTeam       = 1,
+	CS_Menu_IGChooseTeam     = 2,
+	CS_Menu_ChooseAppearance = 3,
+	CS_Menu_Buy              = 4,
+	CS_Menu_BuyPistol        = 5,
+	CS_Menu_BuyRifle         = 6,
+	CS_Menu_BuyMachineGun    = 7,
+	CS_Menu_BuyShotgun       = 8,
+	CS_Menu_BuySubMachineGun = 9,
+	CS_Menu_BuyItem          = 10,
+	CS_Menu_Radio1           = 11,
+	CS_Menu_Radio2           = 12,
+	CS_Menu_Radio3           = 13,
+	CS_Menu_ClientBuy        = 14,
+};
+
+/**
+ * Player's join states for use with m_iJointState.
+ */
+enum CsJoinState
+{
+	CS_STATE_JOINED           = 0,
+	CS_STATE_SHOW_LTEXT       = 1,
+	CS_STATE_READING_LTEXT    = 2,
+	CS_STATE_SHOW_TEAM_SELECT = 3,
+	CS_STATE_PICKING_TEAM     = 4,
+	CS_STATE_GET_INTO_GAME    = 5,
+};
+
+/**
+ * Player's throw direction on killed for use with m_iThrowDirection.
+ */
+enum CsThrowDirection
+{
+	CS_THROW_NONE                = 0,
+	CS_THROW_FORWARD             = 1,
+	CS_THROW_BACKWARD            = 2,
+	CS_THROW_HITVEL              = 3,
+	CS_THROW_BOMB                = 4,
+	CS_THROW_GRENADE             = 5,
+	CS_THROW_HITVEL_MINUS_AIRVEL = 6,
+};
+
+/**
+ * @section Player's status bar constants.
+ */
+
+/**
+ * Constants associated with mp_playerid server cvar.
+ */
+#define CS_PLAYERID_EVERYONE 0
+#define CS_PLAYERID_TEAMONLY 1
+#define CS_PLAYERID_OFF      2
+
+/**
+ * Maximum range a status bar can be displayed.
+ */
+#define CS_MAX_ID_RANGE             2048
+#define CS_MAX_SPECTATOR_ID_RANGE   8192
+
+/**
+ * Maximum buffer length of a status bar message.
+ */
+#define CS_SBAR_STRING_SIZE         128
+
+/**
+ * Constants associated to CS_SBAR_ID_TARGETTYPE.
+ */
+#define CS_SBAR_TARGETTYPE_TEAMMATE 1
+#define CS_SBAR_TARGETTYPE_ENEMY    2
+#define CS_SBAR_TARGETTYPE_HOSTAGE  3
+
+/**
+ * Status bar states.
+ */
+enum CsStatusBar
+{
+	CS_SBAR_ID_TARGETTYPE   = 1,
+	CS_SBAR_ID_TARGETNAME   = 2,
+	CS_SBAR_ID_TARGETHEALTH = 3,
+};
+
+/**
+ * @endsection
+ */
+
+/**
+ * Weapon slot types.
+ */
+#define CS_WEAPONSLOT_PRIMARY    1
+#define CS_WEAPONSLOT_SECONDARY  2
+#define CS_WEAPONSLOT_KNIFE      3
+#define CS_WEAPONSLOT_GRENADE    4
+#define CS_WEAPONSLOT_C4         5
+
+/**
+ * Weapon class types.
+ */
+enum CsWeaponClassType
+{
+	CS_WEAPONCLASS_NONE          = 0,
+	CS_WEAPONCLASS_KNIFE         = 1,
+	CS_WEAPONCLASS_PISTOL        = 2,
+	CS_WEAPONCLASS_GRENADE       = 3,
+	CS_WEAPONCLASS_SUBMACHINEGUN = 4,
+	CS_WEAPONCLASS_SHOTGUN       = 5,
+	CS_WEAPONCLASS_MACHINEGUN    = 6,
+	CS_WEAPONCLASS_RIFLE         = 7,
+	CS_WEAPONCLASS_SNIPERRIFLE   = 8,
+};
+
+/**
+ * Weapon autobuy class types.
+ */
+enum CsAutoBuyClassType
+{
+	CS_AUTOBUYCLASS_PRIMARY     = (1<<0),
+	CS_AUTOBUYCLASS_SECONDARY   = (1<<1),
+	CS_AUTOBUYCLASS_AMMO        = (1<<2),
+	CS_AUTOBUYCLASS_ARMOR       = (1<<3),
+	CS_AUTOBUYCLASS_DEFUSER     = (1<<4),
+	CS_AUTOBUYCLASS_PISTOL      = (1<<5),
+	CS_AUTOBUYCLASS_SMG         = (1<<6),
+	CS_AUTOBUYCLASS_RIFLE       = (1<<7),
+	CS_AUTOBUYCLASS_SNIPERRIFLE = (1<<8),
+	CS_AUTOBUYCLASS_SHOTGUN     = (1<<9),
+	CS_AUTOBUYCLASS_MACHINEGUN  = (1<<10),
+	CS_AUTOBUYCLASS_GRENADE     = (1<<11),
+	CS_AUTOBUYCLASS_NIGHTVISION = (1<<12),
+	CS_AUTOBUYCLASS_SHIELD      = (1<<13),
+};
+
+/**
+ * Ammo types.
+ */
+enum CsAmmoType
+{
+	CS_AMMO_BUCKSHOT   = 0,
+	CS_AMMO_9MM        = 1,
+	CS_AMMO_556NATO    = 2,
+	CS_AMMO_556NATOBOX = 3,
+	CS_AMMO_762NATO    = 4,
+	CS_AMMO_45ACP      = 5,
+	CS_AMMO_50AE       = 6,
+	CS_AMMO_338MAGNUM  = 7,
+	CS_AMMO_57MM       = 8,
+	CS_AMMO_357SIG     = 9,
+};

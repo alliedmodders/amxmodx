@@ -13,13 +13,13 @@
 class CLog
 {
 private:
-	String m_LogFile;
+	ke::AString m_LogFile;
 	int m_LogType;
 	bool m_FoundError;
 	bool m_LoggedErrMap;
 
-	void GetLastFile(int &outMonth, int &outDay, String &outFilename);
-	void UseFile(const String &fileName);
+	void GetLastFile(int &outMonth, int &outDay, ke::AString &outFilename);
+	void UseFile(const ke::AString &fileName);
 public:
 	CLog();
 	~CLog();

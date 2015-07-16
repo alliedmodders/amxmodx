@@ -54,7 +54,7 @@ struct amxx_module_info_s
 
 class CModule 
 {
-	String m_Filename;				// Filename
+	ke::AString m_Filename;         // Filename
 	
 	bool m_Metamod;					// Using metamod?
 	bool m_Amxx;					// Using new module interface?
@@ -87,20 +87,20 @@ public:
 	inline const char* getName() const { return m_InfoNew.name; }
 	inline const amxx_module_info_s* getInfoNew() const { return &m_InfoNew; }	// new
 	inline int getStatusValue() { return m_Status; }
-	inline bool operator==(const char* fname) { return !strcmp(m_Filename.c_str(), fname); }
+	inline bool operator==(const char* fname) { return !strcmp(m_Filename.chars(), fname); }
 	inline bool isReloadable() { return ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)); }
 	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }
-	inline const char *getFilename() { return m_Filename.c_str(); }
+	inline const char *getFilename() { return m_Filename.chars(); }
 	inline bool IsMetamod() { return m_Metamod; }
 	
 	void CallPluginsLoaded();
 	void CallPluginsUnloaded();
 	void CallPluginsUnloading();
 
-	CVector<AMX_NATIVE_INFO*> m_Natives;
-	CVector<AMX_NATIVE_INFO*> m_NewNatives; // Natives for new (AMXX, not AMX) plugins only
-	CVector<size_t> m_DestroyableIndexes;
+	ke::Vector<AMX_NATIVE_INFO*> m_Natives;
+	ke::Vector<AMX_NATIVE_INFO*> m_NewNatives; // Natives for new (AMXX, not AMX) plugins only
+	ke::Vector<size_t> m_DestroyableIndexes;
 };
 
 #endif //CMODULE_H

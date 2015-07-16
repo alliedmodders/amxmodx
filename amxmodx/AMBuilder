@@ -41,7 +41,6 @@ if builder.target_platform == 'mac':
 
 binary.sources = [
   'meta_api.cpp',
-  'CFile.cpp',
   'CVault.cpp',
   'vault.cpp',
   'float.cpp',

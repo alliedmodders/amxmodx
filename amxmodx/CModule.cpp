@@ -30,7 +30,7 @@ typedef void (*PLUGINSUNLOADING_NEW)(void);
 
 CModule::CModule(const char* fname)
 {
-	m_Filename.assign(fname);
+	m_Filename = fname;
 	clear(false);
 }
 
@@ -51,7 +51,9 @@ void CModule::clear(bool clearFilename)
 	m_Status = MODULE_NONE;
 	
 	if (clearFilename)
-		m_Filename.assign("unknown");
+	{
+		m_Filename = "unknown";
+	}
 
 	// new
 	m_Amxx = false;
@@ -61,7 +63,7 @@ void CModule::clear(bool clearFilename)
 	m_InfoNew.reload = 0;
 	m_MissingFunc = NULL;
 
-	for (size_t i=0; i<m_DestroyableIndexes.size(); i++)
+	for (size_t i=0; i<m_DestroyableIndexes.length(); i++)
 	{
 		delete [] m_Natives[m_DestroyableIndexes[i]];
 	}
@@ -96,12 +98,12 @@ bool CModule::attachMetamod(const char *mmfile, PLUG_LOADTIME now)
 void CModule::rewriteNativeLists(AMX_NATIVE_INFO *list)
 {
 	AMX_NATIVE_INFO *curlist;
-	for (size_t i=0; i<m_Natives.size(); i++)
+	for (size_t i=0; i<m_Natives.length(); i++)
 	{
 		curlist = m_Natives[i];
 		bool changed = false;
 		bool found = false;
-		CVector<size_t> newlist;
+		ke::Vector<size_t> newlist;
 		for (size_t j=0; curlist[j].func != NULL; j++)
 		{
 			found = false;
@@ -118,22 +120,22 @@ void CModule::rewriteNativeLists(AMX_NATIVE_INFO *list)
 				changed = true;
 				//don't break, we have to search it all
 			} else {
-				newlist.push_back(j);
+				newlist.append(j);
 			}
 		}
 		if (changed)
 		{
 			//now build the new list
-			AMX_NATIVE_INFO *rlist = new AMX_NATIVE_INFO[newlist.size()+1];
-			for (size_t j=0; j<newlist.size(); j++)
+			AMX_NATIVE_INFO *rlist = new AMX_NATIVE_INFO[newlist.length()+1];
+			for (size_t j=0; j<newlist.length(); j++)
 			{
 				rlist[j].func = curlist[newlist[j]].func;
 				rlist[j].name = curlist[newlist[j]].name;
 			}
-			rlist[newlist.size()].func = NULL;
-			rlist[newlist.size()].name = NULL;
+			rlist[newlist.length()].func = NULL;
+			rlist[newlist.length()].name = NULL;
 			m_Natives[i] = rlist;
-			m_DestroyableIndexes.push_back(i);
+			m_DestroyableIndexes.append(i);
 		}
 	}
 }
@@ -164,7 +166,7 @@ bool CModule::attachModule()
 				m_Status = MODULE_LOADED;
 				break;
 			case AMXX_PARAM:
-				AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
+				AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") returned \"Invalid parameter\" from Attach func.", m_Filename.chars(), getVersion());
 				m_Status = MODULE_INTERROR;
 				return false;
 			case AMXX_FUNC_NOT_PRESENT:
@@ -172,7 +174,7 @@ bool CModule::attachModule()
 				m_MissingFunc = g_LastRequestedFunc;
 				return false;
 			default:
-				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.c_str(), getVersion());
+				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.chars(), getVersion());
 				m_Status = MODULE_BADLOAD;
 				return false;
 		}
@@ -195,11 +197,11 @@ bool CModule::queryModule()
 	if (m_Status != MODULE_NONE)				// don't check if already queried
 		return false;
 
-	m_Handle = DLLOAD(m_Filename.c_str());		// load file
+	m_Handle = DLLOAD(m_Filename.chars());		// load file
 	if (!m_Handle)
 	{
 #if defined(__linux__) || defined(__APPLE__)
-		AMXXLOG_Log("[AMXX] Module \"%s\" failed to load (%s)", m_Filename.c_str(), dlerror());
+		AMXXLOG_Log("[AMXX] Module \"%s\" failed to load (%s)", m_Filename.chars(), dlerror());
 #endif
 		m_Status = MODULE_BADLOAD;
 		return false;
@@ -225,7 +227,7 @@ bool CModule::queryModule()
 		switch (retVal)
 		{
 			case AMXX_PARAM:
-				AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") retured \"Invalid parameter\" from Attach func.", m_Filename.c_str(), getVersion());
+				AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") returned \"Invalid parameter\" from Attach func.", m_Filename.chars(), getVersion());
 				m_Status = MODULE_INTERROR;
 				return false;
 			case AMXX_IFVERS:
@@ -237,7 +239,7 @@ bool CModule::queryModule()
 						g_ModuleCallReason = ModuleCall_Query;
 						g_CurrentlyCalledModule = this;
 						retVal = (*queryFunc_New)(&ifVers, &m_InfoNew);
-                        g_CurrentlyCalledModule = NULL;
+						g_CurrentlyCalledModule = NULL;
 						g_ModuleCallReason = ModuleCall_NotCalled;
 						if (retVal == AMXX_OK)
 						{
@@ -263,7 +265,7 @@ bool CModule::queryModule()
 			case AMXX_OK:
 				break;
 			default:
-				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.c_str(), getVersion());
+				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.chars(), getVersion());
 				m_Status = MODULE_BADLOAD;
 				return false;
 		}
@@ -282,18 +284,18 @@ bool CModule::queryModule()
 		if (checkGame_New)
 		{
 			// This is an optional check; do not fail modules that do not have it
-			int ret = checkGame_New(g_mod_name.c_str());
+			int ret = checkGame_New(g_mod_name.chars());
 
 			if (ret != AMXX_GAME_OK)
 			{
 				switch (ret)
 				{
 				case AMXX_GAME_BAD:
-					AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") reported that it cannot load on game \"%s\"", m_Filename.c_str(), getVersion(), g_mod_name.c_str());
+					AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") reported that it cannot load on game \"%s\"", m_Filename.chars(), getVersion(), g_mod_name.chars());
 					m_Status = MODULE_BADGAME;
 					break;
 				default:
-					AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an unknown CheckGame code (value: %d)", m_Filename.c_str(), getVersion(), ret);
+					AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an unknown CheckGame code (value: %d)", m_Filename.chars(), getVersion(), ret);
 					m_Status = MODULE_BADLOAD;
 					break;
 				}

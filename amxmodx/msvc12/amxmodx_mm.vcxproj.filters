@@ -78,9 +78,6 @@
     <ClCompile Include="..\CEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\CFlagManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -317,9 +314,6 @@
     <ClInclude Include="..\CEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CFlagManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -350,16 +344,10 @@
     <ClInclude Include="..\CQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CVault.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\datastructs.h">

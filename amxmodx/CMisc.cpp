@@ -31,10 +31,10 @@ void CPlayer::Init(edict_t* e, int i)
 	menuexpire = 0.0;
 	newmenu = -1;
 
-	death_weapon.clear();
-	name.clear();
-	ip.clear();
-	team.clear();
+	death_weapon = nullptr;
+	name = nullptr;
+	ip = nullptr;
+	team = nullptr;
 }
 
 void CPlayer::Disconnect()
@@ -81,8 +81,8 @@ int CPlayer::NextHUDChannel()
 
 bool CPlayer::Connect(const char* connectname, const char* ipaddress)
 {
-	name.assign(connectname);
-	ip.assign(ipaddress);
+	name = connectname;
+	ip = ipaddress;
 	time = gpGlobals->time;
 	death_killer = 0;
 	menu = 0;
@@ -239,7 +239,7 @@ void TeamIds::registerTeam(const char* n, int s)
 	
 	while (*a)
 	{
-		if (strcmp((*a)->name.c_str(),n) == 0)
+		if (strcmp((*a)->name.chars(),n) == 0)
 		{
 			if (s != -1)
 			{
@@ -266,7 +266,7 @@ int TeamIds::findTeamId(const char* n)
 	
 	while (a)
 	{
-		if (!stricmp(a->name.c_str(), n))
+		if (!stricmp(a->name.chars(), n))
 			return a->id;
 		a = a->next;
 	}
@@ -280,7 +280,7 @@ int TeamIds::findTeamIdCase(const char* n)
 	
 	while (a)
 	{
-		if (!strcmp(a->name.c_str(), n))
+		if (!strcmp(a->name.chars(), n))
 			return a->id;
 		a = a->next;
 	}

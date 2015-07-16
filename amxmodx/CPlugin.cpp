@@ -10,7 +10,6 @@
 #include "amxmodx.h"
 #include "CPlugin.h"
 #include "CForward.h"
-#include "CFile.h"
 #include "amx.h"
 #include "natives.h"
 #include "debugger.h"
@@ -78,9 +77,9 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 	int debugFlag = 0;
 	const char *pluginsDir = get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins");
 	
-	String line;
+	char line[512];
 
-	List<String *>::iterator block_iter;
+	List<ke::AString *>::iterator block_iter;
 
 	while (!feof(fp)) 
 	{
@@ -89,10 +88,11 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 		debug[0] = '\0';
 		debugFlag = 0;
 		
-		line.clear();
-		line._fread(fp);
+		line[0] = '\0';
+		fgets(line, sizeof(line), fp);
+
 		/** quick hack */
-		char *ptr = const_cast<char *>(line.c_str());
+		char *ptr = line;
 		while (*ptr)
 		{
 			if (*ptr == ';')
@@ -102,7 +102,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 				ptr++;
 			}
 		}
-		sscanf(line.c_str(), "%s %s", pluginName, debug);
+		sscanf(line, "%s %s", pluginName, debug);
 		
 		if (!isalnum(*pluginName))
 		{
@@ -185,7 +185,7 @@ void CPluginMngr::clear()
 		pNatives = NULL;
 	}
 
-	List<String *>::iterator iter = m_BlockList.begin();
+	List<ke::AString *>::iterator iter = m_BlockList.begin();
 	while (iter != m_BlockList.end())
 	{
 		delete (*iter);
@@ -226,7 +226,7 @@ CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name)
 	
 	CPlugin*a = head;
 	
-	while (a && strncmp(a->name.c_str(), name, len))
+	while (a && strncmp(a->name.chars(), name, len))
 		a = a->next;
 	
 	return a;
@@ -238,7 +238,7 @@ void CPluginMngr::CPlugin::AddToFailCounter(unsigned int i)
 	if ((failcounter >= 3)
 		&& (status ))
 	{
-		errorMsg.assign("This plugin is non-GPL which violates AMX Mod X's license.");
+		errorMsg = "This plugin is non-GPL which violates AMX Mod X's license.";
 		status = ps_bad_load;
 	}
 }
@@ -271,9 +271,9 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int 
 	const char* unk = "unknown";
 	
 	failcounter = 0;
-	title.assign(unk);
-	author.assign(unk);
-	version.assign(unk);
+	title = unk;
+	author = unk;
+	version = unk;
 	
 	char file[256];
 	char* path = build_pathname_r(file, sizeof(file) - 1, "%s/%s", p, n);
@@ -382,7 +382,7 @@ void CPluginMngr::CPlugin::Finalize()
 			{
 				status = ps_bad_load;
 				sprintf(buffer, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
-				errorMsg.assign(buffer);
+				errorMsg = buffer;
 				amx.error = AMX_ERR_NOTFOUND;
 			} else {
 				amx_RegisterToAny(&amx, invalid_native);
@@ -390,13 +390,13 @@ void CPluginMngr::CPlugin::Finalize()
 		}
 	} else {
 		status = ps_bad_load;
-		errorMsg.assign(buffer);
+		errorMsg = buffer;
 		amx.error = AMX_ERR_NOTFOUND;
 	}
 	
 	if (old_status != status)
 	{
-		AMXXLOG_Log("[AMXX] Plugin \"%s\" failed to load: %s", name.c_str(), errorMsg.c_str());
+		AMXXLOG_Log("[AMXX] Plugin \"%s\" failed to load: %s", name.chars(), errorMsg.chars());
 	}
 }
 
@@ -484,7 +484,7 @@ char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 		return NULL;
 	}
 
-	pl->path.assign(file);
+	pl->path = file;
 
 	bufsize = pl->bufsize;
 
@@ -595,8 +595,8 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 	cell tag_id;
 	amx_NumTags(&amx, &num);
 
-	CVector<LibDecoder *> expects;
-	CVector<LibDecoder *> defaults;
+	ke::Vector<LibDecoder *> expects;
+	ke::Vector<LibDecoder *> defaults;
 	CStack<LibDecoder *> delstack;
 	for (int i=0; i<num; i++)
 	{
@@ -613,19 +613,19 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 				} else if ( (dc->cmd == LibCmd_ExpectClass) ||
 							(dc->cmd == LibCmd_ExpectLib) ) 
 				{
-					expects.push_back(dc);
+					expects.append(dc);
 				} else if (dc->cmd == LibCmd_DefaultLib) {
-					defaults.push_back(dc);
+					defaults.append(dc);
 				}
 			}
 		}
 	}
 
-	for (size_t i=0; i<expects.size(); i++)
+	for (size_t i=0; i<expects.length(); i++)
 	{
 		RunLibCommand(expects[i]);
 	}
-	for (size_t i=0; i<defaults.size(); i++)
+	for (size_t i=0; i<defaults.length(); i++)
 	{
 		RunLibCommand(defaults[i]);
 	}
@@ -655,7 +655,7 @@ void CPluginMngr::CALMFromFile(const char *file)
 	// Find now folder
 	char pluginName[256];
 	char line[256];
-	String rline;
+	char rline[256];
 
 	while (!feof(fp)) 
 	{
@@ -677,24 +677,26 @@ void CPluginMngr::CALMFromFile(const char *file)
 			}
 		}
 
-		rline.assign(line);
-		rline.trim();
+		strncopy(rline, line, sizeof(rline));
+		UTIL_TrimLeft(rline);
+		UTIL_TrimRight(rline);
+
 		pluginName[0] = '\0';
-		sscanf(rline.c_str(), "%s", pluginName);
+		sscanf(rline, "%s", pluginName);
 
 		/* HACK: see if there's a 'disabled' coming up
 		 * new block for scopying flexibility
 		 */
 		if (1)
 		{
-			const char *_ptr = rline.c_str() + strlen(pluginName);
+			const char *_ptr = rline + strlen(pluginName);
 			while (*_ptr != '\0'  && isspace(*_ptr))
 			{
 				_ptr++;
 			}
 			if ((*_ptr != '\0') && !strcmp(_ptr, "disabled"))
 			{
-				String *pString = new String(pluginName);
+				ke::AString *pString = new ke::AString(pluginName);
 				m_BlockList.push_back(pString);
 				continue;
 			}

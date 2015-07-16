@@ -35,8 +35,8 @@ CmdMngr::Command::Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const
 	char szCmd[64], szArg[64];
 	*szCmd = 0; *szArg = 0;
 	sscanf(pcmd, "%s %s", szCmd, szArg);
-	command.assign(szCmd);
-	argument.assign(szArg);
+	command = szCmd;
+	argument = szArg;
 	plugin = pplugin;
 	flags = pflags;
 	cmdtype = 0;
@@ -200,7 +200,7 @@ bool CmdMngr::registerCmdPrefix(Command* cc)
 	if (*b)
 	{
 		setCmdLink(&(*b)->list, cc, false);
-		cc->prefix = (*b)->name.size();
+		cc->prefix = (*b)->name.length();
 		return true;
 	}
 	
@@ -222,7 +222,7 @@ CmdMngr::CmdPrefix** CmdMngr::findPrefix(const char* nn)
 	
 	while (*aa)
 	{
-		if (!strncmp((*aa)->name.c_str(), nn, (*aa)->name.size()))
+		if (!strncmp((*aa)->name.chars(), nn, (*aa)->name.length()))
 			break;
 		aa = &(*aa)->next;
 	}

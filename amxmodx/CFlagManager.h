@@ -15,16 +15,15 @@
 #include <sys/stat.h>
 
 #include "sh_list.h"
-#include "CString.h"
-
 #include "amxmodx.h"
+#include "CLibrarySys.h"
 
 class CFlagEntry
 {
 private:
-	String			m_strName;			// command name ("amx_slap")
-	String			m_strFlags;			// string flags ("a","b")
-	String          m_strComment;		// comment to write ("; admincmd.amxx")
+	ke::AString		m_strName;			// command name ("amx_slap")
+	ke::AString		m_strFlags;			// string flags ("a","b")
+	ke::AString		m_strComment;		// comment to write ("; admincmd.amxx")
 	int				m_iFlags;			// bitmask flags
 	int				m_iNeedWritten;		// write this command on map change?
 	int				m_iHidden;			// set to 1 when the command is set to "!" access in
@@ -48,16 +47,17 @@ public:
 		m_iNeedWritten=i;
 	};
 
-	const String *GetName(void) const
+	const ke::AString *GetName(void) const
 	{
 		return &m_strName;
 	};
 
-	const String *GetFlags(void) const
+	const ke::AString *GetFlags(void) const
 	{
 		return &m_strFlags;
 	};
-	const String *GetComment(void) const
+
+	const ke::AString *GetComment(void) const
 	{
 		return &m_strComment;
 	};
@@ -69,7 +69,7 @@ public:
 
 	void SetName(const char *data)
 	{
-		m_strName.assign(data);
+		m_strName = data;
 	};
 	void SetFlags(const char *flags)
 	{
@@ -80,7 +80,7 @@ public:
 			return;
 		}
 
-		m_strFlags.assign(flags);
+		m_strFlags = flags;
 		m_iFlags=UTIL_ReadFlags(flags);
 	};
 	void SetFlags(const int flags)
@@ -90,11 +90,11 @@ public:
 		char FlagsString[32];
 		UTIL_GetFlags(FlagsString, flags);
 
-		m_strFlags.assign(FlagsString);
+		m_strFlags = FlagsString;
 	};
 	void SetComment(const char *comment)
 	{
-		m_strComment.assign(comment);
+		m_strComment = comment;
 	};
 	void SetHidden(int i=1)
 	{
@@ -109,7 +109,7 @@ class CFlagManager
 {
 private:
 	List<CFlagEntry *>		 m_FlagList;
-	String					 m_strConfigFile;
+	ke::AString				 m_strConfigFile;
 	struct stat				 m_Stat;
 	int						 m_iForceRead;
 	int						 m_iDisabled;
@@ -119,12 +119,12 @@ private:
 	{
 		FILE *fp;
 		
-		fp=fopen(m_strConfigFile.c_str(),"r");
+		fp = fopen(GetFile(), "r");
 
 		if (!fp)
 		{
 			// File does not exist, create the header
-			fp=fopen(m_strConfigFile.c_str(),"a");
+			fp = fopen(GetFile(), "a");
 
 			if (fp)
 			{
@@ -152,7 +152,7 @@ private:
 	{
 		struct stat TempStat;
 
-		stat(m_strConfigFile.c_str(),&TempStat);
+		stat(GetFile(), &TempStat);
 
 		// If the modified timestamp does not match the stored
 		// timestamp than we need to re-read this file.
@@ -184,7 +184,7 @@ public:
 	 */
 	void SetFile(const char *Filename="cmdaccess.ini");
 
-	const char *GetFile(void) const	{ return m_strConfigFile.c_str(); };
+	const char *GetFile(void) const	{ return m_strConfigFile.chars(); };
 	
 	/**
 	 * Parse the file, and load all entries

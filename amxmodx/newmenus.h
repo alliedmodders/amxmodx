@@ -36,38 +36,36 @@ typedef int (*MENUITEM_CALLBACK)(int, int, int);
 class BlankItem
 {
 private:
-	char *m_text;
+	ke::AString m_text;
 	bool m_num;
 public:
-	BlankItem() : m_text(NULL), m_num(false) { }
-	BlankItem(BlankItem &src) { this->copyFrom(src); } 
-	~BlankItem() { free(m_text); }
-
-	void copyFrom(BlankItem &src)
-	{
-		m_text = src.m_text;
-		m_num = src.m_num;
-		src.m_text = NULL; // stop the src from freeing the buffer
+	BlankItem() : m_num(false) 
+	{ 
 	}
-	BlankItem &operator = (const BlankItem &src) { this->copyFrom(const_cast<BlankItem&>(src)); return *this; }
+
+	BlankItem(BlankItem &&other) 
+	{
+		m_text = ke::Forward<ke::AString>(other.m_text);
+		m_num = other.m_num;
+	}
 
 	/* is this text instead of a blank */
-	bool IsText() { return m_text != NULL; }
+	bool IsText() { return m_text.chars() != nullptr; }
 
 	/* is this a blank instead of text */
-	bool IsBlank() { return m_text == NULL; }
+	bool IsBlank() { return m_text.chars() == nullptr; }
 
 	/* does this item take up a number */
 	bool EatNumber() { return m_num; }
 
 	/* the text this item is to display */
-	const char *GetDisplay() { return m_text == NULL ? "" : m_text; }
+	const char *GetDisplay() { return m_text.chars(); }
 
 	/* sets this item to use a blank */
-	void SetBlank() { free(m_text); m_text = NULL; }
+	void SetBlank() { m_text = nullptr; }
 
 	/* sets this item to display text */
-	void SetText(const char *text) { free(m_text); m_text = strdup(text);  }
+	void SetText(const char *text) { m_text = text;  }
 
 	/* sets whether or not this item takes up a line */
 	void SetEatNumber(bool val) { m_num = val; }
@@ -75,8 +73,8 @@ public:
 };
 struct menuitem
 {
-	String name;
-	String cmd;
+	ke::AString name;
+	ke::AString cmd;
 	
 	int access;
 	int handler;
@@ -85,7 +83,7 @@ struct menuitem
 	MENUITEM_CALLBACK pfn;
 	size_t id;
 
-	CVector<BlankItem> blanks;
+	ke::Vector<BlankItem> blanks;
 };
 
 typedef unsigned int menu_t;
@@ -110,13 +108,13 @@ public:
 	int PagekeyToItem(page_t page, item_t key);
 	int GetMenuMenuid();
 public:
-	CVector<menuitem * > m_Items;
-	String m_Title;
-	String m_Text;
+	ke::Vector<menuitem * > m_Items;
 
-	String m_OptNames[4];
+	ke::AString m_Title;
+	ke::AutoString m_Text;
+	ke::AString m_OptNames[4];
+	ke::AString m_ItemColor;
 
-	String m_ItemColor;
 	bool m_NeverExit;
 	bool m_ForceExit;
 	bool m_AutoColors;
@@ -132,7 +130,7 @@ public:
 void ClearMenus();
 Menu *get_menu_by_id(int id);
 
-extern CVector<Menu *> g_NewMenus;
+extern ke::Vector<Menu *> g_NewMenus;
 extern AMX_NATIVE_INFO g_NewMenuNatives[];
 
 #endif //_INCLUDE_NEWMENUS_H

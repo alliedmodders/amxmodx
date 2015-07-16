@@ -12,7 +12,6 @@
 
 #include <string.h>
 #include "amxmodx.h"
-#include "CString.h"
 
 enum LibSource
 {
@@ -28,7 +27,7 @@ enum LibType
 
 struct Library
 {
-	String name;
+	ke::AString name;
 	LibSource src;
 	LibType type;
 	void *parent;

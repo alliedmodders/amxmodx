@@ -10,23 +10,14 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include "sh_list.h"
-#include "CString.h"
-
 #include "amxmodx.h"
 
 #include "CFlagManager.h"
 
 void CFlagManager::SetFile(const char *Filename)
 {
-
-	m_strConfigFile.assign(g_mod_name.c_str());
-	m_strConfigFile.append("/");
-	m_strConfigFile.append(get_localinfo("amxx_configsdir","addons/amxmodx/configs"));
-	m_strConfigFile.append("/");
-	m_strConfigFile.append(Filename);
-
+	m_strConfigFile = build_pathname("%s/%s", get_localinfo("amxx_configsdir", "addons/amxmodx/configs"), Filename);
 
 	CreateIfNotExist();
 }
@@ -53,28 +44,25 @@ const int CFlagManager::LoadFile(const int force)
 
 	FILE *File;
 
-	File=fopen(m_strConfigFile.c_str(),"r");
+	File=fopen(GetFile(),"r");
 
 	if (!File)
 	{
-		AMXXLOG_Log("[AMXX] FlagManager: Cannot open file \"%s\" (FILE pointer null!)",m_strConfigFile.c_str());
+		AMXXLOG_Log("[AMXX] FlagManager: Cannot open file \"%s\" (FILE pointer null!)", GetFile());
 		return -1;
 	};
 
 	// Trying to copy this almost exactly as other configs are read...
-	String Line;
+	char Line[512];
+	char TempLine[512];
 
 	char Command[256];
 	char Flags[256];
 
-	String TempLine;
-	while (!feof(File))
+	
+	while (!feof(File) && fgets(Line, sizeof(Line), File))
 	{
-
-		Line._fread(File);
-
-		char *nonconst=const_cast<char *>(Line.c_str());
-
+		char *nonconst= Line;
 
 		// Strip out comments
 		while (*nonconst)
@@ -93,9 +81,9 @@ const int CFlagManager::LoadFile(const int force)
 		Flags[0]='\0';
 
 		// Extract the command
-		TempLine.assign(Line.c_str());
+		strncopy(TempLine, Line, sizeof(TempLine));
 
-		nonconst=const_cast<char *>(TempLine.c_str());
+		nonconst = TempLine;
 
 		char *start=NULL;
 		char *end=NULL;
@@ -130,7 +118,6 @@ done_with_command:
 		*end='\0';
 
 		strncpy(Command,start,sizeof(Command)-1);
-
 
 		// Now do the same thing for the flags
 		nonconst=++end;
@@ -168,11 +155,8 @@ done_with_flags:
 
 		strncpy(Flags,start,sizeof(Flags)-1);
 
-
-
 		//if (!isalnum(*Command))
-		if (*Command == '"' || 
-			*Command == '\0')
+		if (*Command == '"' || *Command == '\0')
 		{
 			continue;
 		};
@@ -182,13 +166,11 @@ done_with_flags:
 
 		AddFromFile(const_cast<const char*>(&Command[0]),&Flags[0]);
 
-		nonconst=const_cast<char *>(Line.c_str());
-		*nonconst='\0';
+		nonconst = Line;
+		*nonconst = '\0';
 	};
 
-
 	fclose(File);
-
 
 	return 1;
 }
@@ -235,7 +217,7 @@ void CFlagManager::LookupOrAdd(const char *Command, int &Flags, AMX *Plugin)
 
 	while (iter!=end)
 	{
-		if (strcmp((*iter)->GetName()->c_str(),Command)==0)
+		if (strcmp((*iter)->GetName()->chars(),Command)==0)
 		{
 			CFlagEntry *Entry=(*iter);
 
@@ -292,7 +274,7 @@ void CFlagManager::WriteCommands(void)
 	// after we write so we do not re-read next map
 	struct stat TempStat;
 
-	stat(m_strConfigFile.c_str(),&TempStat);
+	stat(GetFile(), &TempStat);
 
 
 
@@ -302,7 +284,7 @@ void CFlagManager::WriteCommands(void)
 	};
 
 
-	File=fopen(m_strConfigFile.c_str(),"a");
+	File = fopen(GetFile(), "a");
 	
 	if (!File)
 	{
@@ -318,13 +300,13 @@ void CFlagManager::WriteCommands(void)
 	{
 		if ((*iter)->NeedWritten())
 		{
-			if ((*iter)->GetComment()->size())
+			if ((*iter)->GetComment()->length())
 			{
-				fprintf(File,"\"%s\" \t\"%s\" ; %s\n",(*iter)->GetName()->c_str(),(*iter)->GetFlags()->c_str(),(*iter)->GetComment()->c_str());
+				fprintf(File,"\"%s\" \t\"%s\" ; %s\n",(*iter)->GetName()->chars(),(*iter)->GetFlags()->chars(),(*iter)->GetComment()->chars());
 			}
 			else
 			{
-				fprintf(File,"\"%s\" \t\"%s\"\n",(*iter)->GetName()->c_str(),(*iter)->GetFlags()->c_str());
+				fprintf(File,"\"%s\" \t\"%s\"\n",(*iter)->GetName()->chars(),(*iter)->GetFlags()->chars());
 			}
 			(*iter)->SetNeedWritten(0);
 		}
@@ -339,7 +321,7 @@ void CFlagManager::WriteCommands(void)
 	// next map
 	if (!NeedToRead)
 	{
-		stat(m_strConfigFile.c_str(),&TempStat);
+		stat(GetFile(), &TempStat);
 
 		m_Stat.st_mtime=TempStat.st_mtime;
 

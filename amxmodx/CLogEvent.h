@@ -41,7 +41,7 @@ public:
 		friend class CLogEvent;
 		
 		LogEventsMngr* parent;
-		String text;
+		ke::AString text;
 		
 		int logid;
 		int pos;

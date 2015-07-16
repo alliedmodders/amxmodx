@@ -13,8 +13,6 @@
 #include <extdll.h>
 #include <meta_api.h>
 #include "amx.h"
-#include "CVector.h"
-#include "CString.h"
 #include "sh_stack.h"
 
 #define MAX_MESSAGES 255
@@ -28,7 +26,7 @@
 class RegisteredMessage
 {
 private:
-	CVector<int> m_Forwards;
+	ke::Vector<int> m_Forwards;
 	CStack<int> m_InExecution;
 	bool m_Cleanup;
 
@@ -38,7 +36,7 @@ public:
 
 	void AddHook(int fwd)
 	{
-		m_Forwards.push_back(fwd);
+		m_Forwards.append(fwd);
 	}
 	bool RemoveHook(int fwd)
 	{
@@ -50,51 +48,44 @@ public:
 		{
 			this->m_Cleanup = true;
 
-			CVector<int>::iterator iter = m_Forwards.begin();
-			CVector<int>::iterator end = m_Forwards.end();
-			while (iter != end)
+			for (size_t i = 0; i < m_Forwards.length(); ++i)
 			{
-				if (*iter == fwd)
+				int& forward = m_Forwards[i];
+
+				if (forward == fwd)
 				{
-					if (*iter != -1)
+					if (forward != -1)
 					{
-						unregisterSPForward(*iter);
+						unregisterSPForward(forward);
 					}
-					*iter = -1;
+
+					forward = -1;
+
 					return true;
 				}
-				else
-				{
-					iter++;
-				}
 			}
-		
 		}
 		else
 		{
-			CVector<int>::iterator iter = m_Forwards.begin();
-			CVector<int>::iterator end = m_Forwards.end();
-			while (iter != end)
+			for (size_t i = 0; i < m_Forwards.length(); ++i)
 			{
-				if (*iter == fwd)
-				{
-					if (fwd != -1)
-					{
-						unregisterSPForward(fwd);
+				int forward = m_Forwards[i];
 
-						m_Forwards.erase(iter);
+				if (forward == fwd)
+				{
+					if (forward != -1)
+					{
+						unregisterSPForward(forward);
+
+						m_Forwards.remove(forward);
 
 						return true;
 					}
 					else
 					{
 						// -1 could be in here more than once
-						m_Forwards.erase(iter);
+						m_Forwards.remove(forward);
 					}
-				}
-				else
-				{
-					iter++;
 				}
 			}
 		}
@@ -108,7 +99,7 @@ public:
 		{
 			m_InExecution.pop();
 		}
-		for (size_t i = 0; i < m_Forwards.size(); i++)
+		for (size_t i = 0; i < m_Forwards.length(); i++)
 		{
 			int fwd = m_Forwards[i];
 
@@ -126,7 +117,7 @@ public:
 		m_InExecution.push(1);
 		cell res = 0;
 		cell thisres = 0;
-		for (size_t i = 0; i < m_Forwards.size(); i++)
+		for (size_t i = 0; i < m_Forwards.length(); i++)
 		{
 			int fwd = m_Forwards[i];
 
@@ -152,7 +143,7 @@ public:
 	}
 	bool Hooked() const
 	{
-		return m_Forwards.size() != 0;
+		return m_Forwards.length() != 0;
 	}
 };
 enum msgtype
@@ -175,7 +166,7 @@ struct msgparam
 		REAL fData;
 		int iData;
 	} v;
-	String szData;
+	ke::AString szData;
 };
 
 class Message
@@ -201,7 +192,7 @@ public:
 private:
 	msgparam *AdvPtr();
 private:
-	CVector<msgparam *> m_Params;
+	ke::Vector<msgparam *> m_Params;
 	size_t m_CurParam;
 };
 

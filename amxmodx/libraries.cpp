@@ -19,7 +19,7 @@ bool AddLibrary(const char *name, LibType type, LibSource src, void *parent)
 
 	Library *lib = new Library;
 
-	lib->name.assign(name);
+	lib->name = name;
 	lib->type = type;
 	lib->src = src;
 	lib->parent = parent;
@@ -174,7 +174,7 @@ bool FindLibrary(const char *name, LibType type)
 		lib = (*iter);
 		if (lib->type != type)
 			continue;
-		if (strcasecmp(lib->name.c_str(), name) == 0)
+		if (strcasecmp(lib->name.chars(), name) == 0)
 		{
 			return true;
 		}
@@ -206,7 +206,7 @@ LibError RunLibCommand(const LibDecoder *enc)
 			lib = (*iter);
 			if (lib->type != expect)
 				continue;
-			if (strcasecmp(lib->name.c_str(), enc->param1) == 0)
+			if (strcasecmp(lib->name.chars(), enc->param1) == 0)
 				return LibErr_None;
 		}
 		if (expect == LibType_Library)
@@ -236,7 +236,7 @@ LibError RunLibCommand(const LibDecoder *enc)
 			lib = (*iter);
 			if (lib->type != expect)
 				continue;
-			if (strcasecmp(lib->name.c_str(), enc->param1) == 0)
+			if (strcasecmp(lib->name.chars(), enc->param1) == 0)
 				return LibErr_None;
 		}
 

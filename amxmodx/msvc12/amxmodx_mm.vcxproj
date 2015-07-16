@@ -253,7 +253,6 @@
     <ClCompile Include="..\CCmd.cpp" />
     <ClCompile Include="..\CDataPack.cpp" />
     <ClCompile Include="..\CEvent.cpp" />
-    <ClCompile Include="..\CFile.cpp" />
     <ClCompile Include="..\CFlagManager.cpp" />
     <ClCompile Include="..\CForward.cpp" />
     <ClCompile Include="..\CGameConfigs.cpp" />
@@ -338,7 +337,6 @@
     <ClInclude Include="..\CCmd.h" />
     <ClInclude Include="..\CDataPack.h" />
     <ClInclude Include="..\CEvent.h" />
-    <ClInclude Include="..\CFile.h" />
     <ClInclude Include="..\CFileSystem.h" />
     <ClInclude Include="..\CFlagManager.h" />
     <ClInclude Include="..\CForward.h" />
@@ -352,12 +350,10 @@
     <ClInclude Include="..\CModule.h" />
     <ClInclude Include="..\CPlugin.h" />
     <ClInclude Include="..\CQueue.h" />
-    <ClInclude Include="..\CString.h" />
     <ClInclude Include="..\CTask.h" />
     <ClInclude Include="..\CTextParsers.h" />
     <ClInclude Include="..\CvarManager.h" />
     <ClInclude Include="..\CVault.h" />
-    <ClInclude Include="..\CVector.h" />
     <ClInclude Include="..\datastructs.h" />
     <ClInclude Include="..\debugger.h" />
     <ClInclude Include="..\fakemeta.h" />

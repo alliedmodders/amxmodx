@@ -34,7 +34,7 @@ public:
 	ke::AString ip;
 	ke::AString team;
 
-	bool initialized;
+	int userid_when_initialized;
 	bool ingame;
 	bool authorized;
 	bool vgui;
@@ -80,6 +80,11 @@ public:
 	void PutInServer();
 	
 	bool Connect(const char* connectname, const char* ipaddress);
+
+	inline bool IsInitialized()
+	{
+		return ((userid_when_initialized != -1) && (GETPLAYERUSERID(pEdict) == userid_when_initialized));
+	}
 
 	inline bool IsBot()
 	{

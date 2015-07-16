@@ -695,7 +695,7 @@ reswitch:
 						player = GET_PLAYER_POINTER_I(*addr);
 					}
 
-					if (!player || !player->initialized)
+					if (!player || !player->IsInitialized())
 					{
 						LogError(amx, AMX_ERR_NATIVE, "Client index %d is invalid", *addr);
 						return 0;
@@ -734,7 +734,7 @@ reswitch:
 						player = GET_PLAYER_POINTER_I(*addr);
 					}
 
-					if (!player || !player->initialized)
+					if (!player || !player->IsInitialized())
 					{
 						LogError(amx, AMX_ERR_NATIVE, "Client index %d is invalid", *addr);
 						return 0;

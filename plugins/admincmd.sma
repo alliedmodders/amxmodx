@@ -125,7 +125,7 @@ stock GetInfo(i, name[], namesize, auth[], authsize, ip[], ipsize, &access)
 	access = g_Access[target];
 	
 }
-public client_disconnect(id)
+public client_disconnected(id)
 {
 	if (!is_user_bot(id))
 	{

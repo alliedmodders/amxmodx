@@ -472,7 +472,7 @@ public client_putinserver(id)
 	g_connected[id] = true
 }
 
-public client_disconnect(id)
+public client_disconnected(id)
 {
 	g_connected[id] = false
 }

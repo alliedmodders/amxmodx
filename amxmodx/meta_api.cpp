@@ -28,6 +28,9 @@
 #include "CLibrarySys.h"
 #include "CFileSystem.h"
 #include "gameconfigs.h"
+#include "CGameConfigs.h"
+#include <engine_strucs.h>
+#include <CDetour/detours.h>
 
 plugin_info_t Plugin_info = 
 {
@@ -112,6 +115,8 @@ int mPlayerIndex;
 int mState;
 int g_srvindex;
 
+CDetour *DropClientDetour;
+
 cvar_t init_amxmodx_version = {"amxmodx_version", "", FCVAR_SERVER | FCVAR_SPONLY};
 cvar_t init_amxmodx_modules = {"amxmodx_modules", "", FCVAR_SPONLY};
 cvar_t init_amxmodx_debug = {"amx_debug", "1", FCVAR_SPONLY};
@@ -128,6 +133,7 @@ cvar_t* mp_timelimit = NULL;
 int FF_ClientCommand = -1;
 int FF_ClientConnect = -1;
 int FF_ClientDisconnect = -1;
+int FF_ClientDisconnected = -1;
 int FF_ClientInfoChanged = -1;
 int FF_ClientPutInServer = -1;
 int FF_PluginInit = -1;
@@ -487,6 +493,7 @@ int	C_Spawn(edict_t *pent)
 	FF_ClientCommand = registerForward("client_command", ET_STOP, FP_CELL, FP_DONE);
 	FF_ClientConnect = registerForward("client_connect", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ClientDisconnect = registerForward("client_disconnect", ET_IGNORE, FP_CELL, FP_DONE);
+	FF_ClientDisconnected = registerForward("client_disconnected", ET_IGNORE, FP_CELL, FP_CELL, FP_ARRAY, FP_CELL, FP_DONE);
 	FF_ClientInfoChanged = registerForward("client_infochanged", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ClientPutInServer = registerForward("client_putinserver", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_PluginCfg = registerForward("plugin_cfg", ET_IGNORE, FP_DONE);
@@ -648,8 +655,17 @@ void C_ServerDeactivate()
 	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
 		CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
+
 		if (pPlayer->initialized)
+		{
+			// deprecated
 			executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
+
+			if (DropClientDetour && !pPlayer->disconnecting)
+			{
+				executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
+			}
+		}
 
 		if (pPlayer->ingame)
 		{
@@ -811,16 +827,57 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 void C_ClientDisconnect(edict_t *pEntity)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+
 	if (pPlayer->initialized)
+	{
+		// deprecated
 		executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
+		
+		if (DropClientDetour && !pPlayer->disconnecting)
+		{
+			executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
+		}
+	}
 
 	if (pPlayer->ingame)
 	{
 		--g_players_num;
 	}
+
 	pPlayer->Disconnect();
 
 	RETURN_META(MRES_IGNORED);
+}
+
+// void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
+DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, const char*, format)
+{
+	char buffer[1024];
+
+	va_list ap;
+	va_start(ap, format);
+	ke::SafeVsnprintf(buffer, sizeof(buffer) - 1, format, ap);
+	va_end(ap);
+
+	CPlayer *pPlayer;
+
+	if (cl->edict)
+	{
+		pPlayer = GET_PLAYER_POINTER(cl->edict);
+
+		if (pPlayer->initialized)
+		{
+			pPlayer->disconnecting = true;
+			executeForwards(FF_ClientDisconnected, pPlayer->index, TRUE, prepareCharArray(buffer, sizeof(buffer), true), sizeof(buffer) - 1);
+		}
+	}
+
+	DETOUR_STATIC_CALL(SV_DropClient)(cl, crash, "%s", buffer);
+
+	if (cl->edict)
+	{
+		pPlayer->Disconnect();
+	}
 }
 
 void C_ClientPutInServer_Post(edict_t *pEntity)
@@ -1489,6 +1546,20 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	g_CvarManager.CreateCvarHook();
 
+	ConfigManager.OnAmxxStartup();
+
+	void *address = nullptr;
+
+	if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address))
+	{
+		DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+		DropClientDetour->EnableDetour();
+	}
+	else
+	{
+		AMXXLOG_Log("client_disconnected forward has been disabled - check your gamedata files.");
+	}
+
 	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);
 
 	return (TRUE);
@@ -1533,6 +1604,11 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 
 	ClearLibraries(LibSource_Plugin);
 	ClearLibraries(LibSource_Module);
+
+	if (DropClientDetour)
+	{
+		DropClientDetour->Destroy();
+	}
 
 	return (TRUE);
 }

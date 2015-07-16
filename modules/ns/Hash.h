@@ -164,7 +164,7 @@ public:
 		{
 			if (hashbucket->at(i) == hash)
 			{
-				if (key.compare(keybucket->at(i).chars()) == 0)
+				if (key.compare(keybucket->at(i)) == 0)
 				{
 					return &(m_DataBuckets[bucketnum].at(i));
 				}

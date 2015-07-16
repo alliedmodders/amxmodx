@@ -112,14 +112,16 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 				
 	if (def == NULL)
 	{
-		if (debug)
+		if (debug && status == ERR_BADLANG)
 		{
 			ke::AString lang(pLangName);
 
-			if (status == ERR_BADLANG && (BadLang_Table.AltFindOrInsert(ke::Move(lang)).last + 120.0f < gpGlobals->time))
+			lang_err &err = BadLang_Table.AltFindOrInsert(ke::Move(lang));
+
+			if (err.last + 120.0f < gpGlobals->time)
 			{
 				AMXXLOG_Error("[AMXX] Language \"%s\" not found", pLangName);
-				BadLang_Table.AltFindOrInsert(ke::Move(lang)).last = gpGlobals->time;
+				err.last = gpGlobals->time;
 			}
 		}
 

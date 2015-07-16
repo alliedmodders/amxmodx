@@ -25,18 +25,18 @@
 template<>
 int Compare<ke::AString>(const ke::AString &k1, const ke::AString &k2)
 {
-	return k1.compare(k2.chars());
+	return k1.compare(k2);
 }
 
 template<>
 int CompareAlt<char const *, ke::AString>(char const * const &k1, ke::AString const &k2)
 {
-	return strcmp(k1, k2.chars());
+	return k2.compare(k1);
 }
 template<>
 int CompareAlt<ke::AString, ke::AString>(ke::AString const &k1, ke::AString const &k2)
 {
-	return strcmp(k1.chars(), k2.chars());
+	return k1.compare(k2);
 }
 
 template<>

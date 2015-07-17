@@ -822,7 +822,7 @@ bool ConvertModuleName(const char *pathString, char *path)
 # if defined AMD64 || PAWN_CELL_SIZE == 64
 	length += strncopy(path + length, "_amd64", PLATFORM_MAX_PATH - length);
 # else
-	length += UTIL_Format(path + length, PLATFORM_MAX_PATH - length, "_i%d86", iDigit);
+	length += UTIL_Format(path + length, PLATFORM_MAX_PATH - length, "_i%c86", iDigit);
 # endif
 #endif
 	UTIL_Format(path + length, PLATFORM_MAX_PATH - length, ".%s", PLATFORM_LIB_EXT);

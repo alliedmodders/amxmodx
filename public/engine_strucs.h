@@ -21,6 +21,7 @@
 #define MAX_NAME               32
 #define MAX_LIGHTSTYLES        64
 #define MAX_PACKET_ENTITIES    256
+#define MAX_PATH_LENGTH        260
 
 #define MAX_LATENT             32
 #define FRAGMENT_SIZE          1400
@@ -142,7 +143,7 @@ typedef struct fragbuf_s
 	qboolean   isbuffer;                         // Is this file buffer from memory ( custom decal, etc. ).
 	qboolean   iscompressed;
 	
-	char       filename[MAX_PATH];               // Name of the file to save out on remote host
+	char       filename[MAX_PATH_LENGTH];        // Name of the file to save out on remote host
 	int        foffset;                          // Offset in file from which to read data
 	int        size;                             // Size of data to read at that offset
 
@@ -203,7 +204,7 @@ typedef struct netchan_s
 	fragbuf_t*        incomingbufs[MAX_STREAMS];      // Incoming fragments are stored here
 	qboolean          incomingready[MAX_STREAMS];     // Set to true when incoming data is ready
 
-	char              incomingfilename[MAX_PATH];     // Only referenced by the FRAG_FILE_STREAM component
+	char              incomingfilename[MAX_PATH_LENGTH];  // Only referenced by the FRAG_FILE_STREAM component
 	                                                  //  Name of file being downloaded
 	void*             tempbuffer;
 	int               tempbuffersize;

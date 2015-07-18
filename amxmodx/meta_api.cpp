@@ -1477,6 +1477,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	// ###### Initialize logging here
 	g_log_dir = get_localinfo("amxx_logs", "addons/amxmodx/logs");
+	g_log.SetLogType("amxx_logging");
 
 	// ###### Now attach metamod modules
 	// This will also call modules Meta_Query and Meta_Attach functions

@@ -26,6 +26,7 @@ public:
 	
 	void CreateNewFile();
 	void CloseFile();
+	void SetLogType(const char* localInfo);
 	void MapChange();
 	void Log(const char *fmt, ...);
 	void LogError(const char *fmt, ...);

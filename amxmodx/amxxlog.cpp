@@ -112,6 +112,19 @@ void CLog::UseFile(const ke::AString &fileName)
 	m_LogFile = build_pathname_r(file, sizeof(file) - 1, "%s/%s", g_log_dir.chars(), fileName.chars());
 }
 
+void CLog::SetLogType(const char* localInfo)
+{
+	m_LogType = atoi(get_localinfo(localInfo, "1"));
+
+	if (m_LogType < 0 || m_LogType > 3)
+	{
+		SET_LOCALINFO(localInfo, "1");
+		m_LogType = 1;
+
+		print_srvconsole("[AMXX] Invalid amxx_logging value; setting back to 1...");
+	}
+}
+
 void CLog::MapChange()
 {
 	// create dir if not existing
@@ -122,14 +135,7 @@ void CLog::MapChange()
 	mkdir(build_pathname_r(file, sizeof(file) - 1, "%s", g_log_dir.chars()));
 #endif
 
-	m_LogType = atoi(get_localinfo("amxx_logging", "1"));
-	
-	if (m_LogType < 0 || m_LogType > 3)
-	{
-		SET_LOCALINFO("amxx_logging", "1");
-		m_LogType = 1;
-		print_srvconsole("[AMXX] Invalid amxx_logging value; setting back to 1...");
-	}
+	SetLogType("amxx_logging");
 
 	m_LoggedErrMap = false;
 

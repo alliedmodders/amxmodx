@@ -18,8 +18,6 @@
 #include "CFlagManager.h"
 #include "nongpl_matches.h"
 #include "format.h"
-#include <amxmodx_version.h>
-#include "CEvent.h"
 
 extern CFlagManager FlagMan;
 ke::Vector<CAdminData *> DynamicAdmins;
@@ -1915,8 +1913,10 @@ static cell AMX_NATIVE_CALL server_cmd(AMX *amx, cell *params) /* 1 param */
 
 	cmd[len++] = '\n';
 	cmd[len] = 0;
-	
+
 	SERVER_COMMAND(cmd);
+
+	CoreCfg.CheckLegacyBufferedCommand(cmd);
 	
 	return len;
 }

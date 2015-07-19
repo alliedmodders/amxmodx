@@ -82,8 +82,7 @@ public plugin_init()
 
 	new configsDir[64]
 	get_configsdir(configsDir, charsmax(configsDir))
-	
-	server_cmd("exec %s/amxx.cfg", configsDir)	// Execute main configuration file
+
 	server_cmd("exec %s/sql.cfg", configsDir)
 
 	// Create a vector of 5 cells to store the info.
@@ -351,45 +350,6 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 	SQL_FreeHandle(info)
 #endif
 
-}
-public plugin_cfg()
-{
-	set_task(6.1, "delayed_load")
-}
-
-public delayed_load()
-{
-	new configFile[128], curMap[64], configDir[128]
-
-	get_configsdir(configDir, charsmax(configDir))
-	get_mapname(curMap, charsmax(curMap))
-
-	new i=0;
-	
-	while (curMap[i] != '_' && curMap[i++] != '^0') {/*do nothing*/}
-	
-	if (curMap[i]=='_')
-	{
-		// this map has a prefix
-		curMap[i]='^0';
-		formatex(configFile, charsmax(configFile), "%s/maps/prefix_%s.cfg", configDir, curMap);
-
-		if (file_exists(configFile))
-		{
-			server_cmd("exec %s", configFile);
-		}
-	}
-
-	get_mapname(curMap, charsmax(curMap))
-
-	
-	formatex(configFile, charsmax(configFile), "%s/maps/%s.cfg", configDir, curMap)
-
-	if (file_exists(configFile))
-	{
-		server_cmd("exec %s", configFile)
-	}
-	
 }
 
 loadSettings(szFilename[])

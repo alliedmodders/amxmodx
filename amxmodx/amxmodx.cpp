@@ -4484,6 +4484,38 @@ static cell AMX_NATIVE_CALL has_map_ent_class(AMX *amx, cell *params)
 	return len && !FNullEnt(FIND_ENTITY_BY_STRING(NULL, "classname", name));
 };
 
+static cell AMX_NATIVE_CALL AutoExecConfig(AMX *amx, cell *params)
+{
+	int length;
+	bool autocreate = params[1] != 0;
+	const char *name   = get_amxstring(amx, params[2], 0, length);
+	const char *folder = get_amxstring(amx, params[3], 1, length);
+
+	auto plugin = g_plugins.findPluginFast(amx);
+
+	if (*name == '\0')
+	{
+		char pluginName[PLATFORM_MAX_PATH];
+		strncopy(pluginName, plugin->getName(), sizeof(pluginName));
+
+		char *ptr;
+
+		if ((ptr = strstr(pluginName, ".amxx")))
+		{
+			*ptr = '\0';
+		}
+
+		static char newName[PLATFORM_MAX_PATH];
+		UTIL_Format(newName, sizeof(newName), "plugin.%s", pluginName);
+
+		name = newName;
+	}
+
+	plugin->AddConfig(autocreate, name, folder);
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
 {
 	return 1;
@@ -4677,6 +4709,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"SetGlobalTransTarget",	SetGlobalTransTarget},
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
+	{"AutoExecConfig",			AutoExecConfig},
 	{"is_rukia_a_hag",			is_rukia_a_hag},
 	{NULL,						NULL}
 };

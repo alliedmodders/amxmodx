@@ -14,6 +14,7 @@
 #include "amx.h"
 #include "amxxfile.h"
 #include <am-string.h>
+#include <am-vector.h>
 
 // *****************************************************
 // class CPluginMngr
@@ -27,6 +28,13 @@ enum
 	ps_paused,	//Plugin is temporarily paused
 	ps_stopped,	//Plugin is ... more temporarily paused
 	ps_running,	//Plugin is running
+};
+
+struct AutoConfig
+{
+	ke::AString autocfg;
+	ke::AString folder;
+	bool create;
 };
 
 class CPluginMngr
@@ -63,6 +71,7 @@ public:
 		bool m_Debug;
 		cell* m_pNullStringOfs;
 		cell* m_pNullVectorOfs;
+		ke::Vector<AutoConfig*> m_configs;
 	public:
 		inline const char* getName() { return name.chars();}
 		inline const char* getVersion() { return version.chars();}
@@ -94,6 +103,10 @@ public:
 		inline bool isDebug() const { return m_Debug; }
 		inline cell* getNullStringOfs() const { return m_pNullStringOfs; }
 		inline cell* getNullVectorOfs() const { return m_pNullVectorOfs; }
+	public:
+		void AddConfig(bool create, const char *name, const char *folder);
+		size_t GetConfigCount();
+		AutoConfig *GetConfig(size_t index);
 	}; 
 	
 private:	

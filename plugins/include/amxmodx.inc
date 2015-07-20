@@ -464,6 +464,8 @@ native console_cmd(id, const cmd[], any:...);
  * @note Due to a long-standing bug that would break compatibility with older
  *       plugins, the client id should be checked for alive/dead state if using
  *       flags "d" or "e".
+ * @note If multiple conditions are specified for a single parameter, only one
+ *       of them has to hold true for the event function to be called.
  *
  * @param event     Name of event that should be hooked
  * @param function  Name of callback function
@@ -488,12 +490,31 @@ native console_cmd(id, const cmd[], any:...);
  *                  The argument is compared to the specified value accordingly
  * @param ...       Any number of additional conditions
  *
- * @return          1 on successfully registering event
- *                  0 on failure
+ * @return          Event handle
  * @error           If an invalid event name or callback function is provided,
  *                  an error will be thrown.
  */
 native register_event(const event[], const function[], const flags[], const cond[] = "", ...);
+
+/**
+ * Enables a function hook of a game event which has been previously registered with register_event().
+ *
+ * @param handle    Value returned from register_event()
+ *
+ * @noreturn
+ * @error           If an invalid handle is provided, an error will be thrown.
+ */
+native enable_event(handle);
+
+/**
+ * Disables a function hook of a game event which has been previously registered with register_event().
+ *
+ * @param handle    Value returned from register_event()
+ *
+ * @noreturn
+ * @error           If an invalid handle is provided, an error will be thrown.
+ */
+native disable_event(handle);
 
 /**
  * Registers a function to be called on a given log event.

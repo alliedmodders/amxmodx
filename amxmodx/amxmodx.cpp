@@ -19,6 +19,7 @@
 #include "nongpl_matches.h"
 #include "format.h"
 #include <amxmodx_version.h>
+#include "CEvent.h"
 
 extern CFlagManager FlagMan;
 ke::Vector<CAdminData *> DynamicAdmins;
@@ -1722,26 +1723,28 @@ static cell AMX_NATIVE_CALL get_concmdsnum(AMX *amx, cell *params) /* 1 param */
 	return g_commands.getCmdNum(CMD_ConsoleCommand, params[1]);
 }
 
-static cell AMX_NATIVE_CALL register_event(AMX *amx, cell *params) /* 2 param */
+// native register_event(const event[], const function[], const flags[], const cond[] = "", ...);
+static cell AMX_NATIVE_CALL register_event(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin* plugin = g_plugins.findPluginFast(amx);
 
-	int len, pos, iFunction;
+	int len, eventId, forwardId;
 
-	char* sTemp = get_amxstring(amx, params[1], 0, len);
+	const char* eventName = get_amxstring(amx, params[1], 0, len);
 
-	if ((pos = g_events.getEventId(sTemp)) == 0)
+	if ((eventId = g_events.getEventId(eventName)) == 0)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid event (name \"%s\") (plugin \"%s\")", sTemp, plugin->getName());
+		LogError(amx, AMX_ERR_NATIVE, "Invalid event (name \"%s\") (plugin \"%s\")", eventName, plugin->getName());
 		return 0;
 	}
 
-	sTemp = get_amxstring(amx, params[2], 0, len);
-	iFunction = registerSPForwardByName(amx, sTemp, FP_CELL, FP_DONE);
+	const char* callback = get_amxstring(amx, params[2], 0, len);
+
+	forwardId = registerSPForwardByName(amx, callback, FP_CELL, FP_DONE);
 	
-	if (iFunction == -1)
+	if (forwardId == -1)
 	{
-		LogError(amx, AMX_ERR_NOTFOUND, "Function \"%s\" was not found", sTemp);
+		LogError(amx, AMX_ERR_NOTFOUND, "Function \"%s\" was not found", callback);
 		return 0;
 	}
 
@@ -1749,15 +1752,53 @@ static cell AMX_NATIVE_CALL register_event(AMX *amx, cell *params) /* 2 param */
 	int flags = 0;
 
 	if (numparam > 2)
+	{
 		flags = UTIL_ReadFlags(get_amxstring(amx, params[3], 0, len));
+	}
 
-	EventsMngr::ClEvent* a = g_events.registerEvent(plugin, iFunction, flags, pos);
+	int handle = g_events.registerEvent(plugin, forwardId, flags, eventId);
 
-	if (a == 0)
+	if (!handle)
+	{
 		return 0;
+	}
+
+	auto event = EventHandles.lookup(handle)->m_event;
 
 	for (int i = 4; i <= numparam; ++i)
-		a->registerFilter(get_amxstring(amx, params[i], 0, len));
+	{
+		event->registerFilter(get_amxstring(amx, params[i], 0, len));
+	}
+
+	return handle;
+}
+
+static cell AMX_NATIVE_CALL enable_event(AMX *amx, cell *params)
+{
+	auto handle = EventHandles.lookup(params[1]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid event handle %d", params[1]);
+		return 0;
+	}
+
+	handle->m_event->setForwardState(FSTATE_ACTIVE);
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL disable_event(AMX *amx, cell *params)
+{
+	auto handle = EventHandles.lookup(params[1]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid event handle: %d", params[1]);
+		return 0;
+	}
+
+	handle->m_event->setForwardState(FSTATE_STOP);
 
 	return 1;
 }
@@ -4589,6 +4630,8 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"register_concmd",			register_concmd},
 	{"register_dictionary",		register_dictionary},
 	{"register_event",			register_event},
+	{"enable_event",			enable_event},
+	{"disable_event",			disable_event},
 	{"register_logevent",		register_logevent},
 	{"register_menucmd",		register_menucmd},
 	{"register_menuid",			register_menuid},

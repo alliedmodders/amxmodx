@@ -10,6 +10,8 @@
 #ifndef __CEVENTS_H__
 #define __CEVENTS_H__
 
+#include "natives_handles.h"
+
 #define MAX_AMX_REG_MSG MAX_REG_MSGS + 16
  
 enum
@@ -23,6 +25,12 @@ enum
 // *****************************************************
 // class EventsMngr
 // *****************************************************
+
+enum ForwardState 
+{
+	FSTATE_ACTIVE, 
+	FSTATE_STOP
+};
 
 class EventsMngr
 {
@@ -63,6 +71,7 @@ public:
 		float m_Stamp;	// for 'once' flag
 
 		bool m_Done;
+		ForwardState m_State;
 		
 		// conditions
 		struct cond_t
@@ -87,6 +96,7 @@ public:
 		inline CPluginMngr::CPlugin* getPlugin();
 		inline int getFunction();
 		void registerFilter(char* filter);			// add a condition
+		void setForwardState(ForwardState value);
 	};
 
 private:
@@ -125,8 +135,8 @@ public:
 
 	// Interface
 
-	ClEvent* registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags, int msgid);
-	
+	int registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags, int msgid);
+
 	void parserInit(int msg_type, float* timer, CPlayer* pPlayer, int index);
 	void parseValue(int iValue);
 	void parseValue(float fValue);
@@ -141,5 +151,13 @@ public:
 	static int getEventId(const char* msg);
 	int getCurrentMsgType();
 };
+
+struct EventHook
+{
+	EventHook(EventsMngr::ClEvent *event) : m_event(event) {}
+	EventsMngr::ClEvent *m_event;
+};
+
+extern Handle<EventHook> EventHandles;
 
 #endif //__CEVENTS_H__

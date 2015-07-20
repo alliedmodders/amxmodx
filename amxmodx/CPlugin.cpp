@@ -754,5 +754,3 @@ void CPluginMngr::CALMFromFile(const char *file)
 
 	fclose(fp);
 }
-
-

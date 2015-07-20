@@ -255,7 +255,7 @@ void CoreConfig::ExecuteMapConfig()
 
 	char *mapPrefix;
 
-	if (mapPrefix = strtok(mapName, "_"))
+	if ((mapPrefix = strtok(mapName, "_")))
 	{
 		UTIL_Format(cfgPath, sizeof(cfgPath), "%s/%s%s/prefix_%s.cfg", g_mod_name.chars(), configsDir, MapConfigDir, mapPrefix);
 

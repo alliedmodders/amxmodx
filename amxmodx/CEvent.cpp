@@ -14,6 +14,8 @@
 // class ClEvent
 // *****************************************************
 
+Handle<EventHook> EventHandles;
+
 EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags)
 {
 	m_Plugin = plugin;
@@ -47,6 +49,7 @@ EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags)
 
 	m_Stamp = 0.0f;
 	m_Done = false;
+	m_State = FSTATE_ACTIVE;
 
 	m_Conditions = NULL;
 }
@@ -188,20 +191,31 @@ void EventsMngr::ClEvent::registerFilter(char *filter)
 		m_Conditions = tmpCond;
 }
 
-EventsMngr::ClEvent* EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags, int msgid)
+void EventsMngr::ClEvent::setForwardState(ForwardState state)
 {
-	// validate parameter
-	if (msgid < 0 || msgid >= MAX_AMX_REG_MSG)
-		return NULL;
+	m_State = state;
+}
 
-	ClEvent *event = new ClEvent(plugin, func, flags);
+
+int EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags, int msgid)
+{
+	if (msgid < 0 || msgid >= MAX_AMX_REG_MSG)
+	{
+		return 0;
+	}
+
+	auto event = new ClEvent(plugin, func, flags);
+
+	int handle = EventHandles.create(event);
 	
-	if (!event)
-		return NULL;
+	if (!handle)
+	{
+		return 0;
+	}
 
 	m_Events[msgid].put(event);
 
-	return event;
+	return handle;
 }
 
 void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int index)
@@ -454,7 +468,10 @@ void EventsMngr::executeEvents()
 		
 		(*iter).m_Stamp = (float)*m_Timer;
 
-		executeForwards((*iter).m_Func, static_cast<cell>(m_ReadVault ? m_ReadVault[0].iValue : 0));
+		if ((*iter).m_State == FSTATE_ACTIVE)
+		{
+			executeForwards((*iter).m_Func, static_cast<cell>(m_ReadVault ? m_ReadVault[0].iValue : 0));
+		}
 	}
 	
 	// Restore old read data, either resetting to default or to previous event data
@@ -530,7 +547,9 @@ void EventsMngr::clearEvents(void)
 	{
 		m_Events[i].clear();
 	}
-	
+
+	EventHandles.clear();
+
 	// delete parsevault
 	if (m_ParseVault)
 	{

@@ -3226,7 +3226,7 @@ forward OnAutoConfigsBuffered();
  *                      information from the plugin's registered cvars.
  * @param name          Name of the config file, excluding the .cfg extension.
  *                      If empty, <plugin.filename.cfg> is assumed.
- * @param folder        Folder under plugin/ to use.
+ * @param folder        Folder under plugins/ to use.
  *
  * @noreturn
  */

@@ -449,15 +449,19 @@ void CPluginMngr::CPlugin::AddConfig(bool create, const char *name, const char *
 	// Do a check for duplicates to prevent double-execution
 	for (size_t i = 0; i < m_configs.length(); ++i)
 	{
-		auto config = m_configs[i];
+		AutoConfig *config = m_configs[i];
 
-		if (config->autocfg.compare(name) == 0 && config->folder.compare(folder) == 0 && config->create == create)
+		if (config->autocfg.compare(name) == 0 && config->folder.compare(folder) == 0)
 		{
+			if (!config->create)
+			{
+				config->create = create;
+			}
 			return;
 		}
 	}
 
-	AutoConfig *c = new AutoConfig;
+	auto c = new AutoConfig;
 
 	c->autocfg = name;
 	c->folder = folder;

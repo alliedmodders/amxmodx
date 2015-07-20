@@ -71,7 +71,7 @@ public:
 		bool m_Debug;
 		cell* m_pNullStringOfs;
 		cell* m_pNullVectorOfs;
-		ke::Vector<AutoConfig*> m_configs;
+		ke::Vector<ke::AutoPtr<AutoConfig>> m_configs;
 	public:
 		inline const char* getName() { return name.chars();}
 		inline const char* getVersion() { return version.chars();}

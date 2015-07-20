@@ -185,6 +185,6 @@ private:
 	size_t m_Size;
 };
 
-extern Handle<CellArray> ArrayHandles;
+extern NativeHandle<CellArray> ArrayHandles;
 
 #endif

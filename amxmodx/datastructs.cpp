@@ -11,7 +11,7 @@
 #include "datastructs.h"
 #include <am-utility.h>
 
-Handle<CellArray> ArrayHandles;
+NativeHandle<CellArray> ArrayHandles;
 
 // Array:ArrayCreate(cellsize=1, reserved=32);
 static cell AMX_NATIVE_CALL ArrayCreate(AMX* amx, cell* params)

@@ -158,6 +158,6 @@ struct EventHook
 	EventsMngr::ClEvent *m_event;
 };
 
-extern Handle<EventHook> EventHandles;
+extern NativeHandle<EventHook> EventHandles;
 
 #endif //__CEVENTS_H__

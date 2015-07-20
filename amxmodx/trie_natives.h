@@ -159,8 +159,8 @@ struct TrieSnapshot
 	BaseStringTable strings;
 };
 
-extern Handle<CellTrie> TrieHandles;
-extern Handle<TrieSnapshot> TrieSnapshotHandles;
+extern NativeHandle<CellTrie> TrieHandles;
+extern NativeHandle<TrieSnapshot> TrieSnapshotHandles;
 extern AMX_NATIVE_INFO trie_Natives[];
 
 #endif

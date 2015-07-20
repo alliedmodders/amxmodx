@@ -9,8 +9,8 @@
 
 #include "trie_natives.h"
 
-Handle<CellTrie> TrieHandles;
-Handle<TrieSnapshot> TrieSnapshotHandles;
+NativeHandle<CellTrie> TrieHandles;
+NativeHandle<TrieSnapshot> TrieSnapshotHandles;
 
 // native Trie:TrieCreate();
 static cell AMX_NATIVE_CALL TrieCreate(AMX *amx, cell *params)

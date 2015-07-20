@@ -175,7 +175,7 @@ private:
 	};
 };
 
-extern Handle<CDataPack> DataPackHandles;
+extern NativeHandle<CDataPack> DataPackHandles;
 extern AMX_NATIVE_INFO g_DatapackNatives[];
 
 #endif //_INCLUDE_SOURCEMOD_CDATAPACK_H_

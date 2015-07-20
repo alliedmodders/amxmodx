@@ -11,7 +11,7 @@
 #include "amxmodx.h"
 #include "CGameConfigs.h"
 
-Handle<GameConfigNative> GameConfigHandle;
+NativeHandle<GameConfigNative> GameConfigHandle;
 
 // native GameConfig:LoadGameConfigFile(const file[]);
 static cell AMX_NATIVE_CALL LoadGameConfigFile(AMX *amx, cell *params)

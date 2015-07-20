@@ -132,6 +132,6 @@ public:
 	int handle;
 };
 
-extern Handle<ParseInfo> TextParsersHandles;
+extern NativeHandle<ParseInfo> TextParsersHandles;
 
 #endif // _INCLUDE_TEXTPARSE_H_

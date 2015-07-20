@@ -29,7 +29,7 @@
 
 #include "CDataPack.h"
 
-Handle<CDataPack> DataPackHandles;
+NativeHandle<CDataPack> DataPackHandles;
 
 static cell AMX_NATIVE_CALL CreateDataPack(AMX* amx, cell* params)
 {

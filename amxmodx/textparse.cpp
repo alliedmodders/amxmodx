@@ -11,7 +11,7 @@
 
 #include "textparse.h"
 
-Handle<ParseInfo> TextParsersHandles;
+NativeHandle<ParseInfo> TextParsersHandles;
 
 cell createParser()
 {

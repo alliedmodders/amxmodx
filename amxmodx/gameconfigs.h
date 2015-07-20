@@ -15,4 +15,4 @@ struct GameConfigNative
 	IGameConfig *m_config;
 };
 
-extern Handle<GameConfigNative> GameConfigHandle;
+extern NativeHandle<GameConfigNative> GameConfigHandle;

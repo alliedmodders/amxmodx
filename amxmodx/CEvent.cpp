@@ -14,7 +14,7 @@
 // class ClEvent
 // *****************************************************
 
-Handle<EventHook> EventHandles;
+NativeHandle<EventHook> EventHandles;
 
 EventsMngr::ClEvent::ClEvent(CPluginMngr::CPlugin* plugin, int func, int flags)
 {

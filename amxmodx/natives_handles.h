@@ -7,8 +7,8 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-#ifndef _NATIVES_HANDLES_H_
-#define _NATIVES_HANDLES_H_
+#ifndef _NATIVES_NATIVES_HANDLES_H_
+#define _NATIVES_NATIVES_HANDLES_H_
 
 #include <am-vector.h>
 
@@ -18,7 +18,7 @@
 //       on accident.
 
 template <typename T>
-class Handle
+class NativeHandle
 {
 	private:
 
@@ -26,8 +26,8 @@ class Handle
 
 	public:
 
-		Handle() {}
-		~Handle()
+		NativeHandle() {}
+		~NativeHandle()
 		{
 			this->clear();
 		}
@@ -113,4 +113,4 @@ class Handle
 		}
 };
 
-#endif // _NATIVE_HANDLES_H_
+#endif // _NATIVES_NATIVES_HANDLES_H_

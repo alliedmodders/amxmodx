@@ -36,7 +36,7 @@ typedef ADDRESS_FAMILY sa_family_t;
 #endif
 
 /* libmaxminddb package version from configure */
-#define PACKAGE_VERSION "1.0.4"
+#define PACKAGE_VERSION "1.1.0"
 
 #define MMDB_DATA_TYPE_EXTENDED (0)
 #define MMDB_DATA_TYPE_POINTER (1)

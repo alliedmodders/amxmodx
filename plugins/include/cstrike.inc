@@ -1026,6 +1026,43 @@ native cs_create_entity(const classname[]);
 native cs_find_ent_by_class(start_index, const classname[]);
 
 /**
+ * Returns the item id associated with an item name and its aliases.
+ *
+ * @note The item name is case sensitive an can be with or without 
+ *       weapon_ and item_ prefixes. This can be a command alias as well.
+ *       Values examples: ak47, weapon_ak47, kevlar, item_kevlar, vest, bullpup, ...
+ *
+ * @param name          Alias or classname
+ * @param classid       If item is a weapon, variable to store the associated 
+ *                      weapon class id in (CS_WEAPONCLASS_* constants)
+ *
+ * @return              Item id (CSI_* constants)
+ */
+native any:cs_get_item_id(const name[], &CsWeaponClassType:classid = CS_WEAPONCLASS_NONE);
+
+/**
+ * Returns an item name associated with a command alias.
+ *
+ * @note The alias is case sensitive.
+ * @note If not an alias to a weapon, buffer will be set with the original alias.
+ *
+ * @param alias         Alias name
+ * @param itemname      Buffer to store item name to
+ * @param maxlength     Maximum buffer size
+ *
+ * @return              True if alias is translated, false otherwise
+ */
+native bool:cs_get_translated_item_alias(const alias[], itemname[], maxlength);
+
+/**
+ * 
+ */
+stock cs_get_weapon_class(weapon_id)
+{
+	
+}
+
+/**
  * Called when CS internally fires a command to a player.
  *
  * @note This is most notably used by the rebuy/autobuy functionality,

@@ -99,5 +99,338 @@
 			}
 		}
 	}
+	
+	"#default"
+	{
+		"CommandsAliases"
+		{
+			"Common"
+			{
+				"p228"
+				{
+					"itemid"     "1"  // CSW/I_P228
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"scout"
+				{
+					"itemid"     "3"  // CSW/I_SCOUT
+					"classid"    "8"  // CS_WEAPONCLASS_SNIPERRIFLE
+				}
+				"xm1014"
+				{
+					"itemid"     "5"  // CSW/I_XM1014
+					"classid"    "5"  // CS_WEAPONCLASS_SHOTGUN
+				}
+				"mac10"
+				{
+					"itemid"     "7"  // CSW/I_MAC10
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+				"aug"
+				{
+					"itemid"     "8"  // CSW/I_AUG
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"elites"
+				{
+					"itemid"    "10"  // CSW/I_ELITE
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"fn57"
+				{
+					"itemid"    "11"  // CSW/I_FIVESEVEN
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"ump45"
+				{
+					"itemid"    "12"  // CSW/I_UMP45
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+				"sg550"
+				{
+					"itemid"    "13"  // CSW/I_SG550
+					"classid"    "8"  // CS_WEAPONCLASS_SNIPERRIFLE
+				}
+				"galil"
+				{
+					"itemid"    "14"  // CSW/I_GALIL
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"famas"
+				{
+					"itemid"    "15"  // CSW/I_FAMAS
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"usp"
+				{
+					"itemid"    "16"  // CSW/I_USP
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"glock"
+				{
+					"itemid"    "17"  // CSW/I_GLOCK18
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"awp"
+				{
+					"itemid"    "18"  // CSW/I_AWP
+					"classid"    "8"  // CS_WEAPONCLASS_SNIPERRIFLE
+				}
+				"mp5"
+				{
+					"itemid"    "19"  // CSW/I_MP5NAVY
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+				"m249"
+				{
+					"itemid"    "20"  // CSW/I_M249
+					"classid"    "6"  // CS_WEAPONCLASS_MACHINEGUN
+				}
+				"m3"
+				{
+					"itemid"    "21"  // CSW/I_M3
+					"classid"    "5"  // CS_WEAPONCLASS_SHOTGUN
+				}
+				"m4a1"
+				{
+					"itemid"    "22"  // CSW/I_M4A1
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"tmp"
+				{
+					"itemid"    "23"  // CSW/I_TMP
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+				"g3sg1"
+				{
+					"itemid"    "24"  // CSW/I_G3SG1
+					"classid"    "8"  // CS_WEAPONCLASS_SNIPERRIFLE
+				}
+				"deagle"
+				{
+					"itemid"    "26"  // CSW/I_DEAGLE
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"sg552"
+				{
+					"itemid"    "27"  // CSW/I_SG552
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"ak47"
+				{
+					"itemid"    "28"  // CSW/I_AK47
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"p90"
+				{
+					"itemid"    "30"  // CSW/I_P90
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+				"fiveseven"
+				{
+					"itemid"    "11"  // CSW/I_FIVESEVEN
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+			}
+
+			"Weapon"
+			{
+				"grenade"
+				{
+					"itemid"     "4"  // CSW/I_HEGRENADE
+					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+				}
+				"hegrenade"
+				{
+					"itemid"     "4"  // CSW/I_HEGRENADE
+					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+				}
+				"c4"
+				{
+					"itemid"     "6"  // CSW/I_C4
+					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+				}
+				"elite"
+				{
+					"itemid"    "10"  // CSW/I_ELITE
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"glock18"
+				{
+					"itemid"    "17"  // CSW/I_GLOCK18
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"mp5navy"
+				{
+					"itemid"    "19"  // CSW/I_MP5NAVY
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+				"knife"
+				{
+					"itemid"    "29"  // CSW/I_KNIFE
+					"classid"    "1"  // CS_WEAPONCLASS_KNIFE
+				}
+			}
+
+			"Buy"
+			{
+				"228compact"
+				{
+					"itemid"     "1"  // CSW/I_P228
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"autoshotgun"
+				 {
+					"itemid"     "5"  // CSW/I_XM1014
+					"classid"    "5"  // CS_WEAPONCLASS_SHOTGUN
+				}
+				"bullpup"
+				{
+					"itemid"     "8"  // CSW/I_AUG
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"sg550"
+				{
+					"itemid"    "13"  // CSW/I_SG550
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"krieg550"
+				{
+					"itemid"    "13"  // CSW/I_SG550
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"defender"
+				{
+					"itemid"    "14"  // CSW/I_GALIL
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"clarion"
+				{
+					"itemid"    "15"  // CSW/I_FAMAS
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"km45"
+				{
+					"itemid"    "16"  // CSW/I_USP
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"9x19mm"
+				{
+					"itemid"    "17"  // CSW/I_GLOCK18
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"magnum"
+				{
+					"itemid"    "18"  // CSW/I_AWP
+					"classid"    "8"  // CS_WEAPONCLASS_SNIPERRIFLE
+				}
+				"smg"
+				{
+					"itemid"    "19"  // CSW/I_MP5NAVY
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+				"12gauge"
+				 {
+					"itemid"    "21"  // CSW/I_M3
+					"classid"    "5"  // CS_WEAPONCLASS_SHOTGUN
+				}
+				"mp"
+				{
+					"itemid"    "23"  // CSW/I_TMP
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+				"d3au1"
+				{
+					"itemid"    "24"  // CSW/I_G3SG1
+					"classid"    "8"  // CS_WEAPONCLASS_SNIPERRIFLE
+				}
+				"nighthawk"
+				{
+					"itemid"    "26"  // CSW/I_DEAGLE
+					"classid"    "2"  // CS_WEAPONCLASS_PISTOL
+				}
+				"krieg552"
+				{
+					"itemid"    "27"  // CSW/I_SG552
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"cv47"
+				{
+					"itemid"    "28"  // CSW/I_AK47
+					"classid"    "7"  // CS_WEAPONCLASS_RIFLE
+				}
+				"c90"
+				{
+					"itemid"    "30"  // CSW/I_P90
+					"classid"    "4"  // CS_WEAPONCLASS_SUBMACHINEGUN
+				}
+			}
+
+			"BuyEquip"
+			{
+                "hegren"
+				{
+					"itemid"     "4"  // CSW/I_HEGRENADE
+					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+				}
+                "sgren"
+				{
+					"itemid"     "9"  // CSW/I_SMOKEGRENADE
+					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+				}
+                "flash"
+				{
+					"itemid"    "25"  // CSW/I_FLASHBANG
+					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+				}
+				"vest"
+				{
+					"itemid"    "31"  // CSW/I_VEST
+					"classname" "item_kevlar"  
+				}
+				"vesthelm"
+				{
+					"itemid"    "32"  // CSW/I_VESTHELM
+					"classname" "item_assaultsuit"
+				}
+				"defuser"
+				{
+					"itemid"    "33"  // CSI_DEFUSER
+					"classname" "item_thighpack"
+				}
+				"nvgs"
+				{
+					"itemid"    "34"  // CSI_NVGS
+
+				}
+				"shield"
+				{
+					"itemid"    "35"  // CSI_SHIELD
+					"classid"   "2"   // CS_WEAPONCLASS_PISTOL
+					"classname" "weapon_shield"
+				}
+			}
+
+			"BuyAmmo"
+			{
+				"primammo"
+				{
+					"itemid"    "36"  // CSI_PRIAMMO
+				}
+				"secammo"
+				{
+					"itemid"    "37"  // CSI_SECAMMO
+				}
+				"buyammo1"
+				{
+					"itemid"    "36"  // CSI_PRIAMMO
+				}
+				"buyammo2"
+				{
+					"itemid"    "37"  // CSI_SECAMMO
+                }
+			}
+		}
+	}
 }
 

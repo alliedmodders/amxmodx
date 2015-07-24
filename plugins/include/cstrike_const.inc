@@ -129,9 +129,10 @@ enum
 #define CSI_VESTHELM            CSW_VESTHELM    // Custom
 #define CSI_DEFUSER             33              // Custom
 #define CSI_NVGS                34              // Custom
+#define CSI_SHIELD              35              // Custom - The value passed by the forward, more convenient for plugins.
 #define CSI_PRIAMMO             36              // Custom
 #define CSI_SECAMMO             37              // Custom
-#define CSI_SHIELD              38              // Custom - The value passed by the forward, more convenient for plugins.
+#define CSI_MAX_COUNT           38
 
 /**
  * Player's movements constants.

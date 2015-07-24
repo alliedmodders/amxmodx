@@ -151,12 +151,14 @@
     <ClCompile Include="..\CstrikeUserMessages.cpp" />
     <ClCompile Include="..\CstrikeUtils.cpp" />
     <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp" />
+    <ClCompile Include="..\CstrikeItemsInfos.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\public\memtools\CDetour\asm\asm.h" />
     <ClInclude Include="..\..\..\..\public\memtools\CDetour\detourhelpers.h" />
     <ClInclude Include="..\..\..\..\public\memtools\CDetour\detours.h" />
     <ClInclude Include="..\..\..\..\public\memtools\MemoryUtils.h" />
+    <ClInclude Include="..\CstrikeItemsInfos.h" />
     <ClInclude Include="..\CstrikeDatas.h" />
     <ClInclude Include="..\CstrikeHacks.h" />
     <ClInclude Include="..\CstrikePlayer.h" />

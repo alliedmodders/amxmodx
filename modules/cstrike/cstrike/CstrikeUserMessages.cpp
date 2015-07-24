@@ -16,9 +16,14 @@
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include "CstrikePlayer.h"
+#include "CstrikeDatas.h"
+#include <am-string.h>
 
 bool ShouldBlock;
 bool ShouldBlockHLTV;
+bool RetrieveWeaponName;
+ke::AString CurrentWeaponName;
+int ArgPosition;
 
 int MessageIdArmorType;
 int MessageIdHLTV;
@@ -30,6 +35,7 @@ int MessageIdSetFOV;
 int MessageIdStatusIcon;
 int MessageIdTeamInfo;
 int MessageIdTextMsg;
+int MessageIdWeaponList;
 
 struct UserMsg
 {
@@ -49,6 +55,7 @@ UserMsg MessagesList[] =
 	{ "StatusIcon" , &MessageIdStatusIcon  },
 	{ "TeamInfo"   , &MessageIdTeamInfo    },
 	{ "TextMsg"    , &MessageIdTextMsg     },
+	{ "WeaponList" , &MessageIdWeaponList  },
 	{ nullptr      , nullptr               }
 };
 
@@ -113,6 +120,13 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 			}
 			break;
 		}
+		case MSG_INIT:
+		{
+			if (msg_type == MessageIdWeaponList)
+			{
+				RetrieveWeaponName = true;
+			}
+		}
 	}
 
 	if (ShouldBlockHLTV)
@@ -123,11 +137,25 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 	RETURN_META(MRES_IGNORED);
 }
 
-void OnWriteByte(int iValue)
+void OnWriteByte(int value)
 {
 	if (ShouldBlock) 
 	{
 		RETURN_META(MRES_SUPERCEDE);
+	}
+	else if (RetrieveWeaponName && ++ArgPosition == 7 && value >= 0 && value < MAX_WEAPONS)
+	{
+		strncopy(WeaponNameList[value], CurrentWeaponName.chars(), sizeof(WeaponNameList[value]));
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void OnWriteString(const char *value)
+{
+	if (RetrieveWeaponName)
+	{
+		CurrentWeaponName = value;
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -140,6 +168,11 @@ void OnMessageEnd(void)
 		ShouldBlock = false;
 		RETURN_META(MRES_SUPERCEDE);
 	}
+	else if (RetrieveWeaponName)
+	{
+		RetrieveWeaponName = false;
+		ArgPosition = 0;
+	}
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -150,6 +183,15 @@ void EnableMessageHooks()
 	{
 		g_pengfuncsTable->pfnMessageBegin = OnMessageBegin;
 		g_pengfuncsTable->pfnWriteByte    = OnWriteByte;
+		g_pengfuncsTable->pfnWriteString  = OnWriteString;
 		g_pengfuncsTable->pfnMessageEnd   = OnMessageEnd;
 	}
+}
+
+void DisableMessageHooks()
+{
+	g_pengfuncsTable->pfnMessageBegin = nullptr;
+	g_pengfuncsTable->pfnWriteByte    = nullptr;
+	g_pengfuncsTable->pfnWriteString  = nullptr;
+	g_pengfuncsTable->pfnMessageEnd   = nullptr;
 }

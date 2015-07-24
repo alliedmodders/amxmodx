@@ -17,6 +17,7 @@
 /**
  * Weapon Ids for use with CS_OnBuyAttempt(), CS_OnBuy().
  */
+#define CSI_NONE                CSW_NONE
 #define CSI_P228                CSW_P228
 #define CSI_SCOUT               CSW_SCOUT
 #define CSI_HEGRENADE           CSW_HEGRENADE
@@ -50,15 +51,17 @@
 #define CSI_VESTHELM            CSW_VESTHELM    // Custom
 #define CSI_DEFUSER             33              // Custom
 #define CSI_NVGS                34              // Custom
+#define CSI_SHIELD              35              // Custom - The value passed by the forward, more convenient for plugins.
 #define CSI_PRIAMMO             36              // Custom
 #define CSI_SECAMMO             37              // Custom
-#define CSI_SHIELD              38              // Custom - The value passed by the forward, more convenient for plugins.
+#define CSI_MAX_COUNT           38
 
 #define BITS_PISTOLS					(1<<CSI_GLOCK18 | 1<<CSI_USP | 1<<CSI_P228 | 1<<CSI_DEAGLE | 1<<CSI_ELITE | 1<<CSI_FIVESEVEN)
 
 /**
  * Weapons Ids.
  */
+#define CSW_NONE                        0
 #define CSW_P228						1
 #define CSW_SCOUT						3
 #define CSW_HEGRENADE					4
@@ -277,5 +280,25 @@ typedef enum
 	Menu_ClientBuy
 
 } Menu;
+
+
+/**
+ * Weapon class types.
+ */
+enum CsWeaponClassType
+{
+	CS_WEAPONCLASS_NONE          = 0,
+	CS_WEAPONCLASS_KNIFE         = 1,
+	CS_WEAPONCLASS_PISTOL        = 2,
+	CS_WEAPONCLASS_GRENADE       = 3,
+	CS_WEAPONCLASS_SUBMACHINEGUN = 4,
+	CS_WEAPONCLASS_SHOTGUN       = 5,
+	CS_WEAPONCLASS_MACHINEGUN    = 6,
+	CS_WEAPONCLASS_RIFLE         = 7,
+	CS_WEAPONCLASS_SNIPERRIFLE   = 8,
+	CS_WEAPONCLASS_MAX_COUNT     = 9,
+};
+
+extern char WeaponNameList[MAX_WEAPONS][64];
 
 #endif // CSTRIKE_DATA_H

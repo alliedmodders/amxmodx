@@ -37,6 +37,7 @@ CreateNamedEntityFunc       CS_CreateNamedEntity;
 UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
 
 int CurrentItemId;
+
 StringHashMap<int> ItemAliasList;
 TypeDescription TeamDesc;
 TypeDescription MenuDesc;
@@ -148,9 +149,11 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 		}
 		else // Handling buy via alias
 		{
-			if (ItemAliasList.retrieve(command, &itemId))
+			AliasInfo info;
+
+			if (ItemsManager.GetAliasInfosFromBuy(command, &info))
 			{
-				CurrentItemId = itemId;
+				CurrentItemId = info.itemid;
 			}
 		}
 	}
@@ -319,8 +322,6 @@ void CtrlDetours_ClientCommand(bool set)
 		{
 			ClientCommandDetour->Destroy();
 		}
-
-		ItemAliasList.clear();
 	}
 }
 
@@ -329,59 +330,6 @@ void ToggleDetour_ClientCommands(bool enable)
 	if (ClientCommandDetour)
 	{
 		(enable) ? ClientCommandDetour->EnableDetour() : ClientCommandDetour->DisableDetour();
-	}
-
-	if (enable)
-	{
-		// Build the item alias list.
-		// Used in ClientCommand to check and get fastly item id from alias name.
-		typedef struct
-		{
-			const char *alias;
-			int id;
-
-		} itemBuyAliasInfo;
-		
-		itemBuyAliasInfo aliasToId[] =
-		{
-			{ "p228"       , CSI_P228       }, { "228compact" , CSI_P228         },
-			{ "scout"      , CSI_SCOUT      }, { "hegren"     , CSI_HEGRENADE    },           
-			{ "xm1014"     , CSI_XM1014     }, { "autoshotgun", CSI_XM1014       },
-			{ "mac10"      , CSI_MAC10      }, { "aug"        , CSI_AUG          },
-			{ "bullpup"    , CSI_AUG        }, { "sgren"      , CSI_SMOKEGRENADE },
-			{ "elites"     , CSI_ELITE      }, { "fn57"       , CSI_FIVESEVEN    },
-			{ "fiveseven"  , CSI_FIVESEVEN  }, { "ump45"      , CSI_UMP45        },
-			{ "sg550"      , CSI_SG550      }, { "krieg550"   , CSI_SG550        },
-			{ "galil"      , CSI_GALIL      }, { "defender"   , CSI_GALIL        },
-			{ "famas"      , CSI_FAMAS      }, { "clarion"    , CSI_FAMAS        },
-			{ "usp"        , CSI_USP        }, { "km45"       , CSI_USP          },
-			{ "glock"      , CSI_GLOCK18    }, { "9x19mm"     , CSI_GLOCK18      },
-			{ "awp"        , CSI_AWP        }, { "magnum"     , CSI_AWP          },
-			{ "mp5"        , CSI_MP5NAVY    }, { "smg"        , CSI_MP5NAVY      },
-			{ "m249"       , CSI_M249       }, { "m3"         , CSI_M3           },
-			{ "12gauge"    , CSI_M3         }, { "m4a1"       , CSI_M4A1         },
-			{ "tmp"        , CSI_TMP        }, { "mp"         , CSI_TMP          },
-			{ "g3sg1"      , CSI_G3SG1      }, { "d3au1"      , CSI_G3SG1        },
-			{ "flash"      , CSI_FLASHBANG  }, { "deagle"     , CSI_DEAGLE       },
-			{ "nighthawk"  , CSI_DEAGLE     }, { "sg552"      , CSI_SG552        },
-			{ "krieg552"   , CSI_SG552      }, { "ak47"       , CSI_AK47         },
-			{ "cv47"       , CSI_AK47       }, { "p90"        , CSI_P90          },
-			{ "c90"        , CSI_P90        }, { "vest"       , CSI_VEST         },
-			{ "vesthelm"   , CSI_VESTHELM   }, { "defuser"    , CSI_DEFUSER      },
-			{ "nvgs"       , CSI_NVGS       }, { "shield"     , CSI_SHIELDGUN    },
-			{ "buyammo1"   , CSI_PRIAMMO    }, { "primammo"   , CSI_PRIAMMO      },
-			{ "buyammo2"   , CSI_SECAMMO    }, { "secammo"    , CSI_SECAMMO      },
-			{ nullptr         , 0 }
-		};
-
-		for (size_t i = 0; aliasToId[i].alias != nullptr; ++i)
-		{
-			ItemAliasList.insert(aliasToId[i].alias, aliasToId[i].id);
-		}
-	}
-	else
-	{
-		ItemAliasList.clear();
 	}
 }
 
@@ -443,8 +391,6 @@ void CtrlDetours_BuyCommands(bool set)
 		{
 			AddAccountDetour->Destroy();
 		}
-
-		ItemAliasList.clear();
 	}
 }
 

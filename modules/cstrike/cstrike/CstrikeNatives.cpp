@@ -20,6 +20,7 @@
 #include <amtl/am-string.h>
 
 bool NoKifesMode = false;
+char WeaponNameList[MAX_WEAPONS][64];
 
 // native cs_set_user_money(index, money, flash = 1);
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params)
@@ -1739,6 +1740,77 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
 	return 0;
 }
 
+// native any:cs_get_item_id(const name[], &CsWeaponClassType:classid = CS_WEAPONCLASS_NONE);
+static cell AMX_NATIVE_CALL cs_get_item_id(AMX* amx, cell* params)
+{
+	if (ItemsManager.HasConfigError())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_item_id() is disabled");
+		return 0;
+	}
+
+	int length;
+	char *name = MF_GetAmxString(amx, params[1], 0, &length);
+	cell *classid = MF_GetAmxAddr(amx, params[2]);
+
+	if (length)
+	{
+		AliasInfo info;
+
+		if (ItemsManager.GetAliasInfosFromName(name, &info))
+		{
+			*classid = info.classid;
+			return info.itemid;
+		}
+	}
+
+	return CSI_NONE;
+}
+
+// native bool:cs_get_translated_item_alias(const alias[], itemname[], maxlength);
+static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
+{
+	if (ItemsManager.HasConfigError())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_translated_item_alias() is disabled");
+		return 0;
+	}
+
+	int length;
+	const char *alias = MF_GetAmxString(amx, params[1], 0, &length);
+	const char *name = alias;
+	AliasInfo info;
+
+	if (length && ItemsManager.GetAliasInfos(alias, &info) && info.itemid != CSI_NONE)
+	{
+		switch (info.itemid)
+		{
+			case CSI_VEST:
+			case CSI_VESTHELM:
+			case CSI_DEFUSER:
+			case CSI_SHIELD:
+			{
+				// Special item_* defined in gamdata file as game
+				// doesn't give us really a way to know about their classname
+				// and I don't want to hard code them in module.
+				name = info.classname.chars();
+				break;
+			}
+			default:
+			{
+				// weapon_* retrieved from WeaponList messages at map change.
+				name = WeaponNameList[info.itemid];
+				break;
+			}
+		}
+	}
+
+	MF_SetAmxString(amx, params[2], alias, params[3]);
+
+	return info.itemid != CSI_NONE;
+}
+
+
 AMX_NATIVE_INFO CstrikeNatives[] = 
 {
 	{"cs_set_user_money",			cs_set_user_money},
@@ -1802,7 +1874,9 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_get_c4_defusing",			cs_get_c4_defusing},
 	{"cs_set_c4_defusing",			cs_set_c4_defusing},
 	{"cs_create_entity",			cs_create_entity },	
-	{"cs_find_ent_by_class",		cs_find_ent_by_class},	
-
+	{"cs_find_ent_by_class",		cs_find_ent_by_class},
+	{"cs_get_item_id",		        cs_get_item_id},
+	{"cs_get_translated_item_alias",cs_get_translated_item_alias},
+	{"cs_get_weapon_info",          cs_get_weapon_info},
 	{nullptr,						nullptr}
 };

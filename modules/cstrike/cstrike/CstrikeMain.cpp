@@ -41,6 +41,8 @@ void OnAmxxAttach()
 	char error[256];
 	error[0] = '\0';
 
+	ConfigManager->AddUserConfigHook("CommandsAliases", &ItemsManager);
+
 	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && error[0] != '\0')
 	{
 		MF_Log("Could not read module.games gamedata: %s", error);
@@ -83,8 +85,21 @@ void OnPluginsLoaded()
 	g_pFunctionTable->pfnStartFrame            = nullptr;
 }
 
+void OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
+{
+	// Used to catch WeaponList message at map change.
+	EnableMessageHooks();
+}
+
+void OnServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
+{
+	DisableMessageHooks();
+}
+
 void OnAmxxDetach()
 {
+	ConfigManager->RemoveUserConfigHook("CommandsAliases", &ItemsManager);
+
 	ConfigManager->CloseGameConfigFile(MainConfig);
 	ConfigManager->CloseGameConfigFile(CommonConfig);
 

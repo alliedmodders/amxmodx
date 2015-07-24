@@ -18,6 +18,7 @@
 #include <IGameConfigs.h>
 #include <CDetour/detours.h>
 #include <engine_strucs.h>
+#include "CstrikeDatas.h"
 
 void InitializeHacks();
 void InitGlobalVars();

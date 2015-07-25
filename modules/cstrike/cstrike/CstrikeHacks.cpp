@@ -36,6 +36,7 @@ CDetour *GiveDefaultItemsDetour;
 
 CreateNamedEntityFunc       CS_CreateNamedEntity;
 UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
+GetWeaponInfoFunc           GetWeaponInfo;
 
 int CurrentItemId;
 
@@ -433,6 +434,12 @@ void CtrlDetours_Natives(bool set)
 			CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(address);
 		}
 
+		if (MainConfig->GetMemSig("GetWeaponInfo", &address)) // cs_get_weapon_info()
+		{
+			GetWeaponInfo = reinterpret_cast<GetWeaponInfoFunc>(address);
+		}
+
+
 		if (!CS_CreateNamedEntity)
 		{
 			MF_Log("CREATE_NAMED_ENITTY is not available - native cs_create_entity() has been disabled");
@@ -442,6 +449,12 @@ void CtrlDetours_Natives(bool set)
 		{
 			MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
 		}
+
+		if (!GetWeaponInfo)
+		{
+			MF_Log("GetWeaponInfo is not available - native cs_get_weapon_info() has been disabled");
+		}
+
 
 		if (MainConfig->GetMemSig("GiveDefaultItems", &address))
 		{

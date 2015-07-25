@@ -62,6 +62,14 @@
 				"linux"     "@_Z23UTIL_FindEntityByStringP11CBaseEntityPKcS2_"
 				"mac"       "@_Z23UTIL_FindEntityByStringP11CBaseEntityPKcS2_"
 			}
+
+			"GetWeaponInfo" // WeaponInfoStruct *GetWeaponInfo(int id);
+			{
+				"library"   "server"
+				"windows"   "\x8B\x2A\x2A\x2A\x2A\x2A\x33\x2A\x85\x2A\x56\x74\x2A\x8B"
+				"linux"     "@_Z13GetWeaponInfoi"
+				"mac"       "@_Z13GetWeaponInfoi"
+			}
 		}
 	}
 

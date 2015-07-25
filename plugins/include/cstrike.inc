@@ -1063,6 +1063,17 @@ stock cs_get_weapon_class(weapon_id)
 }
 
 /**
+ * Returns some information about a weapon.
+ *
+ * @param weapon_id     Weapon id, see CSW_* constants
+ * @param type          Info type, see CS_WEAPONINFO_* constants
+ *
+ * @return              Weapon information value
+ * @error               If weapon_id and type are out of bound, an error will be thrown.
+ */
+native any:cs_get_weapon_info(weapon_id, CsWeaponInfo:type);
+
+/**
  * Called when CS internally fires a command to a player.
  *
  * @note This is most notably used by the rebuy/autobuy functionality,

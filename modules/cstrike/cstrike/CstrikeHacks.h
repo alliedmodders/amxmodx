@@ -38,9 +38,11 @@ extern int ForwardOnGetItemPrice;
 
 typedef edict_t* (*CreateNamedEntityFunc)(string_t iszClassname);
 typedef void*    (*UTIL_FindEntityByStringFunc)(void* pStartEntity, const char *szKeyword, const char *szValue);
+typedef WeaponInfoStruct* (*GetWeaponInfoFunc)(int id);
 
 extern CreateNamedEntityFunc       CS_CreateNamedEntity;
 extern UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
+extern GetWeaponInfoFunc           GetWeaponInfo;
 
 extern CDetour *GiveDefaultItemsDetour;
 extern enginefuncs_t *g_pengfuncsTable;

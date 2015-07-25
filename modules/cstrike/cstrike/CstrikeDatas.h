@@ -94,6 +94,7 @@
 #define CSW_VEST						31 // Brand new invention!
 #define CSW_VESTHELM					32 // Brand new invention!
 #define CSW_SHIELDGUN					99
+#define CSW_LAST_WEAPON                 CSW_P90
 
 /**
  * Armoury entity ids for use with cs_get/set_armoury_type().
@@ -297,6 +298,35 @@ enum CsWeaponClassType
 	CS_WEAPONCLASS_RIFLE         = 7,
 	CS_WEAPONCLASS_SNIPERRIFLE   = 8,
 	CS_WEAPONCLASS_MAX_COUNT     = 9,
+};
+
+/**
+ * Weapon infos.
+ */
+typedef struct
+{
+	int id;
+	int cost;
+	int clipCost;
+	int buyClipSize;
+	int gunClipSize;
+	int maxRounds;
+	int ammoType;
+	char *entityName;
+}
+WeaponInfoStruct;
+
+/**
+ * Weapon infos for use with cs_get_weapon_info().
+ */
+enum CsWeaponInfo
+{
+	CS_WEAPONINFO_COST          = 0,
+	CS_WEAPONINFO_CLIP_COST     = 1,
+	CS_WEAPONINFO_BUY_CLIP_SIZE = 2,
+	CS_WEAPONINFO_GUN_CLIP_SIZE = 3,
+	CS_WEAPONINFO_MAX_ROUNDS    = 4,
+	CS_WEAPONINFO_AMMO_TYPE     = 5,
 };
 
 extern char WeaponNameList[MAX_WEAPONS][64];

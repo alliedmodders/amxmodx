@@ -1810,6 +1810,57 @@ static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
 	return info.itemid != CSI_NONE;
 }
 
+// native cs_get_weapon_info(weapon_id, CsWeaponInfo:type);
+static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
+{
+	if (GetWeaponInfo <= 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_weapon_info() is disabled");
+		return 0;
+	}
+
+	int weapon_id = params[1];
+
+	if (weapon_id <= CSW_NONE || weapon_id == CSW_C4 || weapon_id == CSW_KNIFE || weapon_id > CSW_LAST_WEAPON)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id: %d", weapon_id);
+		return 0;
+	}
+
+	int info_type = params[2];
+
+	switch (info_type)
+	{
+		case CS_WEAPONINFO_COST:
+		{
+			return GetWeaponInfo(weapon_id)->cost;
+		}
+		case CS_WEAPONINFO_CLIP_COST:
+		{
+			return GetWeaponInfo(weapon_id)->clipCost;
+		}
+		case CS_WEAPONINFO_BUY_CLIP_SIZE:
+		{
+			return GetWeaponInfo(weapon_id)->buyClipSize;
+		}
+		case CS_WEAPONINFO_GUN_CLIP_SIZE:
+		{
+			return GetWeaponInfo(weapon_id)->gunClipSize;
+		}
+		case CS_WEAPONINFO_MAX_ROUNDS:
+		{
+			return GetWeaponInfo(weapon_id)->maxRounds;
+		}
+		case CS_WEAPONINFO_AMMO_TYPE:
+		{
+			return GetWeaponInfo(weapon_id)->ammoType;
+		}
+	}
+
+	MF_LogError(amx, AMX_ERR_NATIVE, "Invalid info type: %d", info_type);
+	return 0;
+}
+
 
 AMX_NATIVE_INFO CstrikeNatives[] = 
 {

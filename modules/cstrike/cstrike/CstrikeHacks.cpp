@@ -23,6 +23,7 @@ void CtrlDetours_Natives(bool set);
 int ForwardInternalCommand = -1;
 int ForwardOnBuy           = -1;
 int ForwardOnBuyAttempt    = -1;
+int ForwardOnGetItemPrice  = -1;
 
 int *UseBotArgs;
 const char **BotArgs;
@@ -257,6 +258,18 @@ DETOUR_DECL_MEMBER2(AddAccount, void, int, amount, bool, bTrackChange) // void C
 		if (CurrentItemId == CSI_NONE)
 		{
 			return;
+		}
+		else if (ForwardOnGetItemPrice != -1)
+		{
+			int client = G_HL_TypeConversion.cbase_to_id(this);
+
+			cell price[1]; *price = -amount;
+			cell preparedCell = MF_PrepareCellArrayA(price, sizeof(price), true);
+
+			if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnGetItemPrice, client, CurrentItemId, preparedCell) > 0)
+			{
+				amount = -*price;
+			}
 		}
 	}
 

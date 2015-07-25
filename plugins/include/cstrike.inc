@@ -1104,4 +1104,20 @@ forward CS_OnBuyAttempt(index, item);
  * @return          PLUGIN_CONTINUE to let the buy continue
  *                  PLUGIN_HANDLED to block the buy
  */
-forward CS_OnBuy(index, item);
+forward CS_OnBuy(index, item, &price);
+
+/**
+ * Called when a client purchased an item and game is about to apply item's price.
+ *
+ * @note This is called right after the user received the item and before the
+ *       money is deducted from their cash reserves.
+ * @note For a list of possible item ids see the CSI_* constants.
+ *
+ * @param index     Client index
+ * @param item      Item id
+ * @param price     Item price or buffer to store a newly price to
+ *
+ * @return          PLUGIN_CONTINUE to use the default price
+ *                  PLUGIN_HANDLED or higher to use a newly-set price
+ */
+forward CS_OnGetItemPrice(index, item, &price);

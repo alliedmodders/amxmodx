@@ -80,7 +80,7 @@ const char *CMD_ARGV(int i)
 
 void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch)
 {
-	// If shield is blocked with CS_OnBuy, we need to block the pickup sound ("items/gunpickup2.wav") 
+	// If shield is blocked with CS_OnBuy, we need to block the pickup sound ("items/gunpickup2.wav")
 	// as well played right after. Why this sound is not contained in GiveShield()?
 
 	g_pengfuncsTable->pfnEmitSound = nullptr;
@@ -91,24 +91,23 @@ void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume,
 DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientCommand(edict_t *pEntity)
 {
 	const char *command = CMD_ARGV(0);
-	
-	// A new command is triggered, reset variable, always.
-	CurrentItemId = 0;
+
+	CurrentItemId = CSI_NONE;
 
 	// Purpose is to retrieve an item id based on alias name or selected item from menu,
 	// to be used in OnBuy* forwards.
 	if ((ForwardOnBuyAttempt != -1 || ForwardOnBuy != -1) && command && *command)
 	{
-		int itemId = 0;
-		
+		int itemId = CSI_NONE;
+
 		// Handling buy via menu.
-		if (!strcmp(command, "menuselect")) 
+		if (!strcmp(command, "menuselect"))
 		{
 			int slot = atoi(CMD_ARGV(1));
 
 			if (slot > 0 && slot < 9)
 			{
-			    static const int menuItemsTe[][9] = 
+				static const int menuItemsTe[][9] =
 				{
 					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
 					/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_ELITE, 0, 0, 0 },
@@ -119,7 +118,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 					/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, 0, 0 }
 				};
 
-				static const int menuItemsCt[][9] = 
+				static const int menuItemsCt[][9] =
 				{
 					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
 					/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_FIVESEVEN, 0, 0, 0 },
@@ -170,15 +169,19 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 		}
 	}
 
-	if (ForwardOnBuyAttempt != -1 && 
-		CurrentItemId             && 
-		MF_IsPlayerAlive(client)  && 
+	if (ForwardOnBuyAttempt != -1 &&
+		CurrentItemId             &&
+		MF_IsPlayerAlive(client) &&
 		MF_ExecuteForward(ForwardOnBuyAttempt, static_cast<cell>(client), static_cast<cell>(CurrentItemId)) > 0)
 	{
 		return;
 	}
 
+	TriggeredFromCommand = CurrentItemId != CSI_NONE;
+
 	DETOUR_STATIC_CALL(C_ClientCommand)(pEdict);
+
+	TriggeredFromCommand = false;
 }
 
 edict_s* OnCreateNamedEntity(int classname)
@@ -212,63 +215,52 @@ DETOUR_DECL_MEMBER0(GiveDefaultItems, void)  // void CBasePlayer::GiveDefaultIte
 
 DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlayer::GiveNamedItem(const char *pszName)
 {
-	// If the current item id is not null, this means player has triggers a buy command.
-	if (CurrentItemId)
+	if (TriggeredFromCommand)
 	{
 		int client = TypeConversion.cbase_to_id(this);
 
 		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), static_cast<cell>(CurrentItemId)) > 0)
 		{
+			// Reset this to not call AddAccount() called right after.
+			CurrentItemId = CSI_NONE;
 			return;
 		}
 	}
 
-	// From here, forward is not blocked, resetting this
-	// to ignore code in AddAccount which is called right after.
-	CurrentItemId = 0;
-
-	// Give me my item!
 	DETOUR_MEMBER_CALL(GiveNamedItem)(pszName);
 }
 
 DETOUR_DECL_MEMBER1(GiveShield, void, bool, bRetire) // void CBasePlayer::GiveShield(bool bRetire)
 {
-	// Special case for shield. Game doesn't use GiveNamedItem() to give a shield.
-	if (CurrentItemId == CSI_SHIELDGUN)
+	if (TriggeredFromCommand && CurrentItemId == CSI_SHIELDGUN)
 	{
 		int client = TypeConversion.cbase_to_id(this);
 
 		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), CSI_SHIELDGUN) > 0)
 		{
+			// If shield blocked, we need to hook EmitSound to block pickup sound played right after.
+			g_pengfuncsTable->pfnEmitSound = OnEmitSound;
+
+			// Reset this to not call AddAccount() called right after.
+			CurrentItemId = CSI_NONE;
 			return;
 		}
 	}
 
-	// From here, forward is not blocked, resetting this
-	// to ignore code in AddAccount which is called right after.
-	CurrentItemId = 0;
-
-	// Give me my shield!
 	DETOUR_MEMBER_CALL(GiveShield)(bRetire);
 }
 
 DETOUR_DECL_MEMBER2(AddAccount, void, int, amount, bool, bTrackChange) // void CBasePlayer::AddAccount(int amount, bool bTrackChange)
 {
-	// No buy command or forward not blocked.
-	// Resuming game flow.
-	if (!CurrentItemId)
+	if (TriggeredFromCommand)
 	{
-		DETOUR_MEMBER_CALL(AddAccount)(amount, bTrackChange);
-	}
-	// Shield is blocked.
-	// We need to hook EmitSound to block pickup sound played right after.
-	else if (CurrentItemId == CSI_SHIELDGUN)
-	{
-		g_pengfuncsTable->pfnEmitSound = OnEmitSound;
+		if (CurrentItemId == CSI_NONE)
+		{
+			return;
+		}
 	}
 
-	// Let's reset this right away to avoid issues.
-	CurrentItemId = 0;
+	DETOUR_MEMBER_CALL(AddAccount)(amount, bTrackChange);
 }
 
 
@@ -354,7 +346,7 @@ void CtrlDetours_BuyCommands(bool set)
 		{
 			AddAccountDetour = DETOUR_CREATE_MEMBER_FIXED(AddAccount, address);
 		}
-		
+
 		if (!GiveShieldDetour || !GiveNamedItemDetour || !AddAccountDetour)
 		{
 			if (!GiveShieldDetour)

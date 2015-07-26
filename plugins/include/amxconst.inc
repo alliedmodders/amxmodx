@@ -155,7 +155,18 @@ public stock const Float:NULL_VECTOR[3];
 #define CSW_VEST            31  // Custom
 #define CSW_VESTHELM        32  // Custom
 #define CSW_SHIELDGUN       99
-#define CSW_ALLWEAPONS      (~(1<<CSW_VEST))
+#define CSW_LAST_WEAPON     CSW_P90
+
+stock const CSW_ALL_WEAPONS      = (~(1<<CSW_VEST));
+stock const CSW_ALL_PISTOLS      = (1<<CSW_P228  | 1<<CSW_ELITE | 1<<CSW_FIVESEVEN | 1<<CSW_USP | 1<<CSW_GLOCK18 | 1<<CSW_DEAGLE);
+stock const CSW_ALL_SHOTGUNS     = (1<<CSW_M3    | 1<<CSW_XM1014);
+stock const CSW_ALL_SMGS         = (1<<CSW_MAC10 | 1<<CSW_UMP45 | 1<<CSW_MP5NAVY | 1<<CSW_TMP  | 1<<CSW_P90);
+stock const CSW_ALL_RIFLES       = (1<<CSW_AUG   | 1<<CSW_GALIL | 1<<CSW_FAMAS   | 1<<CSW_M4A1 | 1<<CSW_AK47 | 1<<CSW_SG552);
+stock const CSW_ALL_SNIPERRIFLES = (1<<CSW_SCOUT | 1<<CSW_AWP   | 1<<CSW_G3SG1   | 1<<CSW_SG550);
+stock const CSW_ALL_MACHINEGUNS  = (1<<CSW_M249);
+stock const CSW_ALL_GRENADES     = (1<<CSW_HEGRENADE | 1<<CSW_SMOKEGRENADE | 1<<CSW_FLASHBANG);
+stock const CSW_ALL_ARMORS       = (1<<CSW_VEST | 1<<CSW_VESTHELM);
+stock const CSW_ALL_GUNS         = (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS);
 
 /**
  * HI weapon constants

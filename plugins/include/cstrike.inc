@@ -1055,14 +1055,6 @@ native any:cs_get_item_id(const name[], &CsWeaponClassType:classid = CS_WEAPONCL
 native bool:cs_get_translated_item_alias(const alias[], itemname[], maxlength);
 
 /**
- * 
- */
-stock cs_get_weapon_class(weapon_id)
-{
-	
-}
-
-/**
  * Returns some information about a weapon.
  *
  * @param weapon_id     Weapon id, see CSW_* constants
@@ -1072,6 +1064,58 @@ stock cs_get_weapon_class(weapon_id)
  * @error               If weapon_id and type are out of bound, an error will be thrown.
  */
 native any:cs_get_weapon_info(weapon_id, CsWeaponInfo:type);
+
+/**
+ * Returns a weapon class id associated with a weapon id.
+ *
+ * @param weapon_id     Weapon id (CSI_* constants)
+ *
+ * @return              Weapon class id (CS_WEAPONCLASS_* constants)
+ */
+stock CsWeaponClassType:cs_get_weapon_class(weapon_id)
+{
+	new CsWeaponClassType:type = CS_WEAPONCLASS_NONE;
+
+	if (CSI_NONE <= weapon_id <= CSI_LAST_WEAPON || weapon_id == CSI_SHIELDGUN || weapon_id == CSI_SHIELD)
+	{
+		new const bits = (1 << weapon_id);
+
+		if (bits & (1 << CSI_KNIFE))
+		{
+			type = CS_WEAPONCLASS_KNIFE;
+		}
+		else if(bits & CSI_ALL_PISTOLS || weapon_id == CSI_SHIELDGUN || weapon_id == CSI_SHIELD)
+		{
+			type = CS_WEAPONCLASS_PISTOL;
+		}
+		else if(bits & CSI_ALL_GRENADES)
+		{
+			type = CS_WEAPONCLASS_GRENADE;
+		}
+		else if(bits & CSI_ALL_SMGS)
+		{
+			type = CS_WEAPONCLASS_SUBMACHINEGUN;
+		}
+		else if(bits & CSI_ALL_SHOTGUNS)
+		{
+			type = CS_WEAPONCLASS_SHOTGUN;
+		}
+		else if(bits & CSI_ALL_MACHINEGUNS)
+		{
+			type = CS_WEAPONCLASS_MACHINEGUN;
+		}
+		else if(bits & CSI_ALL_RIFLES)
+		{
+			type = CS_WEAPONCLASS_RIFLE;
+		}
+		else if(bits & CSI_ALL_SNIPERRIFLES)
+		{
+			type = CS_WEAPONCLASS_SNIPERRIFLE;
+		}
+	}
+
+	return type;
+}
 
 /**
  * Called when CS internally fires a command to a player.

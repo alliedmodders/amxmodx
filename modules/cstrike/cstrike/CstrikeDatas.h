@@ -56,7 +56,16 @@
 #define CSI_SECAMMO             37              // Custom
 #define CSI_MAX_COUNT           38
 
-#define BITS_PISTOLS					(1<<CSI_GLOCK18 | 1<<CSI_USP | 1<<CSI_P228 | 1<<CSI_DEAGLE | 1<<CSI_ELITE | 1<<CSI_FIVESEVEN)
+#define CSI_ALL_WEAPONS         CSW_ALL_WEAPONS 
+#define CSI_ALL_PISTOLS         CSW_ALL_PISTOLS
+#define CSI_ALL_SHOTGUNS        CSW_ALL_SHOTGUNS
+#define CSI_ALL_SMGS            CSW_ALL_SMGS 
+#define CSI_ALL_RIFLES          CSW_ALL_RIFLES
+#define CSI_ALL_SNIPERRIFLES    CSW_ALL_SNIPERRIFLES
+#define CSI_ALL_MACHINEGUNS     CSW_ALL_MACHINEGUNS
+#define CSI_ALL_GRENADES        CSW_ALL_GRENADES
+#define CSI_ALL_ARMORS          CSW_ALL_ARMORS
+#define CSI_ALL_GUNS            CSW_ALL_GUNS
 
 /**
  * Weapons Ids.
@@ -95,6 +104,17 @@
 #define CSW_VESTHELM					32 // Brand new invention!
 #define CSW_SHIELDGUN					99
 #define CSW_LAST_WEAPON                 CSW_P90
+
+#define CSW_ALL_WEAPONS      (~(1 << CSW_VEST))
+#define CSW_ALL_PISTOLS      (1 << CSW_P228 | 1 << CSW_ELITE | 1 << CSW_FIVESEVEN | 1 << CSW_USP | 1 << CSW_GLOCK18 | 1 << CSW_DEAGLE)
+#define CSW_ALL_SHOTGUNS     (1 << CSW_M3 | 1 << CSW_XM1014))
+#define CSW_ALL_SMGS         (1 << CSW_MAC10 | 1 << CSW_UMP45 | 1 << CSW_MP5NAVY | 1 << CSW_TMP | 1 << CSW_P90))
+#define CSW_ALL_RIFLES       (1 << CSW_AUG | 1 << CSW_GALIL | 1 << CSW_FAMAS | 1 << CSW_M4A1 | 1 << CSW_AK47 | 1 << CSW_SG552))
+#define CSW_ALL_SNIPERRIFLES (1 << CSW_SCOUT | 1 << CSW_AWP | 1 << CSW_G3SG1 | 1 << CSW_SG550))
+#define CSW_ALL_MACHINEGUNS  (1 << CSW_M249))
+#define CSW_ALL_GRENADES     (1 << CSW_HEGRENADE | 1 << CSW_SMOKEGRENADE | 1 << CSW_FLASHBANG))
+#define CSW_ALL_ARMORS       (1 << CSW_VEST | 1 << CSW_VESTHELM)
+#define CSW_ALL_GUNS         (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS)
 
 /**
  * Armoury entity ids for use with cs_get/set_armoury_type().

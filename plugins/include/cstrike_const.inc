@@ -123,6 +123,7 @@ enum
 #define CSI_DEAGLE              CSW_DEAGLE
 #define CSI_SG552               CSW_SG552
 #define CSI_AK47                CSW_AK47
+#define CSI_KNIFE               CSW_KNIFE
 #define CSI_P90                 CSW_P90
 #define CSI_SHIELDGUN           CSW_SHIELDGUN   // The real CS value, use CSI_SHELD instead.
 #define CSI_VEST                CSW_VEST        // Custom
@@ -133,6 +134,18 @@ enum
 #define CSI_PRIAMMO             36              // Custom
 #define CSI_SECAMMO             37              // Custom
 #define CSI_MAX_COUNT           38
+#define CSI_LAST_WEAPON         CSW_LAST_WEAPON
+
+#define CSI_ALL_WEAPONS         CSW_ALL_WEAPONS 
+#define CSI_ALL_PISTOLS         CSW_ALL_PISTOLS
+#define CSI_ALL_SHOTGUNS        CSW_ALL_SHOTGUNS
+#define CSI_ALL_SMGS            CSW_ALL_SMGS 
+#define CSI_ALL_RIFLES          CSW_ALL_RIFLES
+#define CSI_ALL_SNIPERRIFLES    CSW_ALL_SNIPERRIFLES
+#define CSI_ALL_MACHINEGUNS     CSW_ALL_MACHINEGUNS
+#define CSI_ALL_GRENADES        CSW_ALL_GRENADES
+#define CSI_ALL_ARMORS          CSW_ALL_ARMORS
+#define CSI_ALL_GUNS            CSW_ALL_GUNS
 
 /**
  * Player's movements constants.

@@ -1740,6 +1740,42 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
 	return 0;
 }
 
+// cs_find_ent_by_owner(start_index, const classname[], owner)
+static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
+{
+	if (CS_UTIL_FindEntityByString <= 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_find_ent_by_owner() is disabled");
+		return 0;
+	}
+
+	int owner = params[3];
+	CHECK_ENTITY_SIMPLE(params[3]);
+
+	int length;
+	void* pEntity = G_HL_TypeConversion.id_to_cbase(params[1]);
+	const char* value = MF_GetAmxString(amx, params[2], 0, &length);
+	
+	edict_t *pOwner = GETEDICT(owner);
+
+	while ((pEntity = CS_UTIL_FindEntityByString(pEntity, "classname", value)))
+	{
+		edict_t *pev = G_HL_TypeConversion.cbase_to_edict(pEntity);
+
+		if (!FNullEnt(pev) && pev->v.owner == pOwner)
+		{
+			int index = ENTINDEX(pev);
+
+			if (index != -1)
+			{
+				return index;
+			};
+		}
+	}
+
+	return 0;
+}
+
 // native any:cs_get_item_id(const name[], &CsWeaponClassType:classid = CS_WEAPONCLASS_NONE);
 static cell AMX_NATIVE_CALL cs_get_item_id(AMX* amx, cell* params)
 {
@@ -1926,6 +1962,7 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_set_c4_defusing",			cs_set_c4_defusing},
 	{"cs_create_entity",			cs_create_entity },	
 	{"cs_find_ent_by_class",		cs_find_ent_by_class},
+	{"cs_find_ent_by_owner",        cs_find_ent_by_owner},
 	{"cs_get_item_id",		        cs_get_item_id},
 	{"cs_get_translated_item_alias",cs_get_translated_item_alias},
 	{"cs_get_weapon_info",          cs_get_weapon_info},

@@ -1026,6 +1026,26 @@ native cs_create_entity(const classname[]);
 native cs_find_ent_by_class(start_index, const classname[]);
 
 /**
+ * Finds an entity in the world using Counter-Strike's custom FindEntityByString
+ * wrapper, matching by owner.
+ *
+ * @note Unlike other mods CS keeps track of entities using a custom hashtable.
+ *       This function utilizes the hasthable and allows for considerably faster
+ *       classname lookup compared to the default FindEntityByString (used by
+ *       find_ent_by_owner() for example).
+ * @note This exclusively considers entities in the hashtable, created by the
+ *       game itself or using cs_create_entity().
+ *
+ * @param start_index   Entity index to start searching from. -1 to start from
+ *                      the first entity
+ * @param classname     Classname to search for
+ * @param owner         Entity index to search for entity's owner
+ *
+ * @return              Entity index > 0 if found, 0 otherwise
+ */
+native cs_find_ent_by_owner(start_index, const classname[], owner);
+
+/**
  * Returns the item id associated with an item name and its aliases.
  *
  * @note The item name is case sensitive an can be with or without 

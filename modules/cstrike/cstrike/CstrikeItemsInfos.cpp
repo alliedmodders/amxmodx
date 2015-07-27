@@ -11,7 +11,7 @@
 // Counter-Strike Module
 //
 
-#include "CstrikeitemsInfos.h"
+#include "CstrikeItemsInfos.h"
 
 CsItemInfo ItemsManager;
 

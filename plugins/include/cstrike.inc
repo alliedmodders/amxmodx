@@ -1096,45 +1096,84 @@ stock CsWeaponClassType:cs_get_weapon_class(weapon_id)
 {
 	new CsWeaponClassType:type = CS_WEAPONCLASS_NONE;
 
-	if (CSI_NONE <= weapon_id <= CSI_LAST_WEAPON || weapon_id == CSI_SHIELDGUN || weapon_id == CSI_SHIELD)
+	if (cs_is_valid_itemid(weapon_id, .weapon_only = true) || weapon_id == CSI_SHIELD)
 	{
-		new const bits = (1 << weapon_id);
+		switch (weapon_id)
+		{
+			case CSI_SHIELDGUN, CSI_SHIELD: 
+			{
+				type = CS_WEAPONCLASS_PISTOL;
+			}
+			case CSI_KNIFE: 
+			{
+				type = CS_WEAPONCLASS_KNIFE;
+			}
+			default:
+			{
+				new const bits = (1 << weapon_id);
 
-		if (bits & (1 << CSI_KNIFE))
-		{
-			type = CS_WEAPONCLASS_KNIFE;
-		}
-		else if(bits & CSI_ALL_PISTOLS || weapon_id == CSI_SHIELDGUN || weapon_id == CSI_SHIELD)
-		{
-			type = CS_WEAPONCLASS_PISTOL;
-		}
-		else if(bits & CSI_ALL_GRENADES)
-		{
-			type = CS_WEAPONCLASS_GRENADE;
-		}
-		else if(bits & CSI_ALL_SMGS)
-		{
-			type = CS_WEAPONCLASS_SUBMACHINEGUN;
-		}
-		else if(bits & CSI_ALL_SHOTGUNS)
-		{
-			type = CS_WEAPONCLASS_SHOTGUN;
-		}
-		else if(bits & CSI_ALL_MACHINEGUNS)
-		{
-			type = CS_WEAPONCLASS_MACHINEGUN;
-		}
-		else if(bits & CSI_ALL_RIFLES)
-		{
-			type = CS_WEAPONCLASS_RIFLE;
-		}
-		else if(bits & CSI_ALL_SNIPERRIFLES)
-		{
-			type = CS_WEAPONCLASS_SNIPERRIFLE;
+				if(bits & CSI_ALL_PISTOLS)
+				{
+					type = CS_WEAPONCLASS_PISTOL;
+				}
+				else if(bits & CSI_ALL_GRENADES)
+				{
+					type = CS_WEAPONCLASS_GRENADE;
+				}
+				else if(bits & CSI_ALL_SMGS)
+				{
+					type = CS_WEAPONCLASS_SUBMACHINEGUN;
+				}
+				else if(bits & CSI_ALL_SHOTGUNS)
+				{
+					type = CS_WEAPONCLASS_SHOTGUN;
+				}
+				else if(bits & CSI_ALL_MACHINEGUNS)
+				{
+					type = CS_WEAPONCLASS_MACHINEGUN;
+				}
+				else if(bits & CSI_ALL_RIFLES)
+				{
+					type = CS_WEAPONCLASS_RIFLE;
+				}
+				else if(bits & CSI_ALL_SNIPERRIFLES)
+				{
+					type = CS_WEAPONCLASS_SNIPERRIFLE;
+				}
+			}
 		}
 	}
 
 	return type;
+}
+
+/**
+ * Checks whether an item id is not out of bounds.
+ *
+ * @param id           Item id (CSI_* constants) 
+ * @param weapon_only  If true, only the real weapon ids will be checked,
+ *                     including shield as well 
+ *
+ * @return             True if item id is valid, false otherwise
+ */
+stock bool:cs_is_valid_itemid(id, bool:weapon_only = false)
+{
+	if (id <= CSI_NONE)
+	{
+		return false;
+	}
+
+	if (id > CSI_LAST_WEAPON && id != CSI_SHIELDGUN && weapon_only)
+	{
+		return false;
+	}
+
+	if (id >= CSI_MAX_COUNT)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 /**

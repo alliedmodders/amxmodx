@@ -20,6 +20,16 @@
 
 #include "GameManager.h"
 #include "CPlayer.h"
+#include "FastDelegate.h"
+
+using namespace fastdelegate::detail;
+
+static bool (GenericClass::*MFP_SetResearchDone)(int inMessageID, bool inState);
+
+void MPlayerFuncs_Initialize(char *base)
+{
+	set_mfp(MFP_SetResearchDone, MFP(MEMBER_SET_RESEARCH_DONE));
+};
 
 // Float:ns_get_res(Player)
 static cell AMX_NATIVE_CALL ns_get_res(AMX *amx, cell *params)
@@ -378,6 +388,9 @@ static cell AMX_NATIVE_CALL ns_remove_upgrade(AMX *amx, cell *params)
 
 	if (bfound)
 	{
+		void *pTechTree = reinterpret_cast<char*>(player->GetEdict()->pvPrivateData) + MAKE_OFFSET(COMBAT_TECHTREE);
+		(reinterpret_cast<GenericClass *>(pTechTree)->*(MFP_SetResearchDone))(params[2], false);
+
 		if (afound)
 		{
 			return 2;

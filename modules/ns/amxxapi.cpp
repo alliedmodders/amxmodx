@@ -31,6 +31,7 @@ TitleManager TitleMan;
 ParticleManager ParticleMan;
 
 void MFuncs_Initialize(char *base);
+void MPlayerFuncs_Initialize(char *base);
 
 // Native register calls here
 void AddNatives_MemberFunc();
@@ -100,5 +101,6 @@ void OnAmxxAttach()
 	DLCLOSE(DLLBase);
 
 	MFuncs_Initialize(FuncBase);
+	MPlayerFuncs_Initialize(FuncBase);
 }
 

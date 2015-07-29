@@ -529,7 +529,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 					UTIL_Format(buffer, sizeof(buffer)-1, "#. %s\n", m_OptNames[abs(MENU_BACK)].chars());
 				}
 			}
-			m_Text + m_Text + buffer;
+			m_Text = m_Text + buffer;
 	
 			if (flags & Display_Next)
 			{

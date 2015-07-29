@@ -42,63 +42,10 @@ static void (GenericClass::*MFP_WeldFinished)(float);
 // AvHGameRules *GetGameRules(void)
 static void *(*FP_GetGameRules)();
 
-
-char *FuncBase;
-
-/**
- * sizeof(void (detail::GenericClass::*fptr)())
- * is 8 in GCC.  Add an empty void * pointer at
- * the end to compensate.
- * Layout in GCC:
- * union { 
- *   void *address;      // When this is an address it will always be positive
- *   int   vtable_index; // When it is a vtable index it will always be odd = (vindex*2)+1
- * };
- * int delta;
- * -
- * Delta is the adjustment to the this pointer
- * For my implementations I will only need it to 0
- */
-#ifdef __GNUC__
-template <typename OutType>
-inline void set_mfp(OutType &out, void *in)
+void MFuncs_Initialize(char *base)
 {
-	union
-	{
-		void    *in[2];
-		OutType out;
-	} mfpu;
-
-	mfpu.in[0]=in;
-	mfpu.in[1]=NULL;
-	out=mfpu.out;
-};
-#else
-template <typename OutType>
-inline void set_mfp(OutType &out, void *in)
-{
-	out=horrible_cast<OutType>(in);
-};
-#endif
-
-void MFuncs_Initialize(void)
-{
-	char FileName[256];
-	DLHANDLE DLLBase;
-#ifdef __linux__
-	UTIL_Format(FileName,sizeof(FileName)-1,"%s/dlls/ns_i386.so",MF_GetModname());
-#else
-	UTIL_Format(FileName, sizeof(FileName)-1, "%s\\dlls\\ns.dll", MF_GetModname());
-#endif
-
-	DLLBase=DLOPEN(FileName);
-	FuncBase=(char *)DLSYM(DLLBase, MAKE_OFFSET(BASE));
-	DLCLOSE(DLLBase);
-
-#define MFP(Offs) (((void *)(((char *)FuncBase)+MAKE_OFFSET(Offs))))
-
 	set_mfp(MFP_Recycle,MFP(MEMBER_RECYCLE));
-	
+
 	set_mfp(MFP_WeldFinished,MFP(MEMBER_TRIGGER_WELDABLE));
 
 	// This is not a member function pointer, but use MFP since it

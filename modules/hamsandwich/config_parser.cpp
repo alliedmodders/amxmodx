@@ -384,5 +384,7 @@ int ReadConfig(void)
 
 	}
 
+	fclose(fp);
+
 	return 1;
 }

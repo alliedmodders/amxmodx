@@ -173,6 +173,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 				return (amx->error = AMX_ERR_NOTFOUND);
 			case CAmxxReader::Err_OldFile:
 				strcpy(error, "Plugin uses deprecated format. Update compiler");
+				return (amx->error = AMX_ERR_FORMAT);
 			default:
 				strcpy(error, "Unknown error");
 				return (amx->error = AMX_ERR_NOTFOUND);

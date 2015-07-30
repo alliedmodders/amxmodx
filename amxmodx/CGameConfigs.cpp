@@ -858,7 +858,7 @@ SMCResult CGameMasterReader::ReadSMC_LeavingSection(const SMCStates *states)
 		if ((!m_HadEngine    && !m_HadGame) ||
 			(!m_HadEngine    && m_MatchedGame) ||
 			(!m_HadGame      && m_MatchedEngine) ||
-			(m_MatchedEngine && m_MatchedEngine))
+			(m_MatchedEngine && m_MatchedGame))
 		{
 			m_FileList->append(m_CurrentPath);
 		}

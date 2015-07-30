@@ -122,11 +122,12 @@ native SMC_DestroyParser(&SMCParser:handle);
  * @param file          A string containing the file path.
  * @param line          An optional by reference cell to store the last line number read.
  * @param col           An optional by reference cell to store the last column number read.
+ * @param data          An optional handle or value to pass through to callback functions
  *
  * @return              An SMCParseError result.
  * @error               Invalid or corrupt handle.
  */
-native SMCError:SMC_ParseFile(SMCParser:handle, const file[], &line = 0, &col = 0);
+native SMCError:SMC_ParseFile(SMCParser:handle, const file[], &line = 0, &col = 0, any:data = 0);
 
 /**
  * Sets the SMC_ParseStart function of a parse handle.
@@ -136,10 +137,11 @@ native SMCError:SMC_ParseFile(SMCParser:handle, const file[], &line = 0, &col = 
  *          Called when parsing is started.
  *
  *          @param handle        Handle to an SMC Parse structure.
+ *          @param data          Handle or value passed in SMC_ParseFile
  *
  *          @noreturn
  *
- *          public OnParseStart(SMCParser:handle)
+ *          public OnParseStart(SMCParser:handle, any:data)
  *        -
  * @param handle        Handle to an SMC Parse structure.
  * @param func          A ParseStart callback.
@@ -159,10 +161,11 @@ native SMC_SetParseStart(SMCParser:handle, const func[]);
  *          @param handle        Handle to an SMC Parse structure.
  *          @param halted        True if abnormally halted, false otherwise.
  *          @param failed        True if parsing failed, false otherwise.
+ *          @param data          Handle or value passed in SMC_ParseFile
  *
  *          @noreturn
  *
- *          public OnParseEnd(SMCParser:handle, bool:halted, bool:failed)
+ *          public OnParseEnd(SMCParser:handle, bool:halted, bool:failed, any:data)
  *        -
  * @param handle        Handle to an SMC Parse structure.
  * @param func          A ParseEnd callback.
@@ -183,10 +186,11 @@ native SMC_SetParseEnd(SMCParser:handle, const func[]);
  *
  *              @param handle           Handle to an SMC Parse structure.
  *              @param name             String containing section name.
+ *              @param data             Handle or value passed in SMC_ParseFile
  *
  *              @return                 An SMCResult action to take.
  *
- *              public SMCResult:OnNewSection(SMCParser:handle, const name[])
+ *              public SMCResult:OnNewSection(SMCParser:handle, const name[], any:data)
  *
  *          KeyValue:
  *              Called when the parser finds a new key/value pair.
@@ -194,19 +198,21 @@ native SMC_SetParseEnd(SMCParser:handle, const func[]);
  *              @param handle        Handle to an SMC Parse structure.
  *              @param key           String containing key name.
  *              @param value         String containing value name.
+ *              @param data          Handle or value passed in SMC_ParseFile
  *
  *              @return              An SMCResult action to take.
  *
- *              public SMCResult:OnKeyValue(SMCParser:handle, const key[], const value[])
+ *              public SMCResult:OnKeyValue(SMCParser:handle, const key[], const value[], any:data)
  *
  *          EndSection:
  *              Called when the parser finds the end of the current section.
  *
  *              @param handle        Handle to an SMC Parse structure.
- *              
+ *              @param data          Handle or value passed in SMC_ParseFile
+ *
  *              @return              An SMCResult action to take.
  *
- *              public SMCResult:OnEndSection(SMCParser:handle)
+ *              public SMCResult:OnEndSection(SMCParser:handle, any:data)
  * -
  * @param handle        Handle to an SMC Parse structure.
  * @param kv            A KeyValue callback.
@@ -227,10 +233,11 @@ native SMC_SetReaders(SMCParser:smc, const kvFunc[], const nsFunc[] = "", const 
  *          @param handle        Handle to an SMC Parse structure.
  *          @param line          A string containing the raw line from the file.
  *          @param lineno        The line number it occurs on.
+ *          @param data          Handle or value passed in SMC_ParseFile
  *
  *          @return              An SMCResult action to take.
  *
- *          public SMCResult:SMC_RawLine(SMCParser:handle, const line[], lineno)
+ *          public SMCResult:SMC_RawLine(SMCParser:handle, const line[], lineno, any:data)
  *        -
  * @param handle        Handle to an SMC Parse structure.
  * @param func          A RawLine callback.

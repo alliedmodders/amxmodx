@@ -63,7 +63,7 @@ static cell AMX_NATIVE_CALL SMC_SetParseStart(AMX *amx, cell *params)
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
-		p->parse_start = registerSPForwardByName(amx, funcName, FP_CELL, FP_DONE);
+		p->parse_start = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (p->parse_start == -1)
@@ -91,7 +91,7 @@ static cell AMX_NATIVE_CALL SMC_SetParseEnd(AMX *amx, cell *params)
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
-		p->parse_end = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		p->parse_end = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (p->parse_end == -1)
@@ -119,17 +119,17 @@ static cell AMX_NATIVE_CALL SMC_SetReaders(AMX *amx, cell *params)
 
 	if ((funcName = get_amxstring(amx, params[2], 0, kvLength)) && kvLength)
 	{
-		p->key_value = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_STRING, FP_DONE);  
+		p->key_value = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_STRING, FP_CELL, FP_DONE);
 	}
 
 	if (kvLength && (funcName = get_amxstring(amx, params[3], 1, nsLength)) && nsLength)
 	{
-		p->new_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_DONE);
+		p->new_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_DONE);
 	}
 
 	if (kvLength && (funcName = get_amxstring(amx, params[4], 2, esLength)) && esLength)
 	{
-		p->end_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_DONE);
+		p->end_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (p->key_value == -1 || (nsLength && p->new_section == -1) || (esLength && p->end_section == -1))
@@ -157,7 +157,7 @@ static cell AMX_NATIVE_CALL SMC_SetRawLine(AMX *amx, cell *params)
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
-		p->raw_line = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_DONE);
+		p->raw_line = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (p->raw_line == -1)
@@ -169,7 +169,7 @@ static cell AMX_NATIVE_CALL SMC_SetRawLine(AMX *amx, cell *params)
 	return 1;
 }
 
-// native SMCError:SMC_ParseFile(SMCParser:handle, const file[], &line = 0, &col = 0);
+// native SMCError:SMC_ParseFile(SMCParser:handle, const file[], &line = 0, &col = 0, any:data = 0);
 static cell AMX_NATIVE_CALL SMC_ParseFile(AMX *amx, cell *params)
 {
 	ParseInfo *p = TextParsersHandles.lookup(params[1]);
@@ -178,6 +178,11 @@ static cell AMX_NATIVE_CALL SMC_ParseFile(AMX *amx, cell *params)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid SMC parse handle (%d)", params[1]);
 		return 0;
+	}
+
+	if (*params / sizeof(cell) >= 5)
+	{
+		p->data = params[5];
 	}
 
 	int length;
@@ -222,7 +227,7 @@ static cell AMX_NATIVE_CALL INI_CreateParser(AMX *amx, cell *params)
 	return createParser();
 }
 
-// native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0);
+// native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0, any:data = 0);
 static cell AMX_NATIVE_CALL INI_ParseFile(AMX *amx, cell *params)
 {
 	ParseInfo *p = TextParsersHandles.lookup(params[1]);
@@ -235,6 +240,11 @@ static cell AMX_NATIVE_CALL INI_ParseFile(AMX *amx, cell *params)
 
 	int length;
 	const char *file = build_pathname("%s", get_amxstring(amx, params[2], 0, length));
+
+	if (*params / sizeof(cell) >= 5)
+	{
+		p->data = params[5];
+	}
 
 	unsigned int line, col;
 	bool result = textparsers->ParseFile_INI(file, p, &line, &col);
@@ -261,7 +271,7 @@ static cell AMX_NATIVE_CALL INI_SetParseStart(AMX *amx, cell *params)
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
-		p->parse_start = registerSPForwardByName(amx, funcName, FP_CELL, FP_DONE);
+		p->parse_start = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (p->parse_start == -1)
@@ -289,7 +299,7 @@ static cell AMX_NATIVE_CALL INI_SetParseEnd(AMX *amx, cell *params)
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)))
 	{
-		p->parse_end = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		p->parse_end = registerSPForwardByName(amx, funcName, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (p->parse_end == -1)
@@ -317,12 +327,12 @@ static cell AMX_NATIVE_CALL INI_SetReaders(AMX *amx, cell *params)
 
 	if ((funcName = get_amxstring(amx, params[2], 0, kvLength)) && kvLength)
 	{
-		p->key_value = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		p->key_value = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (kvLength && (funcName = get_amxstring(amx, params[3], 1, nsLength)) && nsLength)
 	{
-		p->new_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+		p->new_section = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (p->key_value == -1 || (nsLength && p->new_section == -1))
@@ -350,7 +360,7 @@ static cell AMX_NATIVE_CALL INI_SetRawLine(AMX *amx, cell *params)
 
 	if ((funcName = get_amxstring(amx, params[2], 0, length)) && length)
 	{
-		p->raw_line = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_DONE);
+		p->raw_line = registerSPForwardByName(amx, funcName, FP_CELL, FP_STRING, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 	}
 
 	if (p->raw_line == -1)

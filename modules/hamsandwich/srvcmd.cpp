@@ -92,7 +92,7 @@ void HamCommand(void)
 		int count = 0;
 		for (int i=0; i<HAM_LAST_ENTRY_DONT_USE_ME_LOL; i++)
 		{
-			for (size_t j = 0; j < hooks[i].length(); ++i)
+			for (size_t j = 0; j < hooks[i].length(); ++j)
 			{
 				HookCount++;
 				ForwardCount += hooks[i].at(j)->pre.length() + hooks[i].at(j)->post.length();

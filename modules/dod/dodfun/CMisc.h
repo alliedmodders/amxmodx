@@ -280,7 +280,7 @@ class CObjective {
 public:
 	int count;
 	objinfo_t obj[12];
-	inline void Clear() { count = 0; memset(obj,0,sizeof(objinfo_s)); }
+	inline void Clear() { count = 0; memset(obj,0,sizeof(obj)); }
 	void SetKeyValue( int index, char *keyname, char *value );
 
 	void InitObj(int dest = MSG_ALL , edict_t* ed = NULL);

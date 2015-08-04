@@ -402,14 +402,27 @@ enum SortType
 	Sort_String,
 };
 
+int strcellcmp(cell *s1, cell *s2)
+{
+	for (; *s1 == *s2; s1++, s2++)
+	{
+		if (*s1 == '\0')
+		{
+			return 0;
+		}
+	}
+
+	return (*(byte *)s1 < *(byte *)s2) ? -1 : +1;
+}
+
 int sort_adtarray_strings_asc(const void *str1, const void *str2)
 {
-	return strcmp((char *) str1, (char *) str2);
+	return strcellcmp((cell *)str1, (cell *)str2);
 }
 
 int sort_adtarray_strings_desc(const void *str1, const void *str2)
 {
-	return strcmp((char *) str2, (char *) str1);
+	return strcellcmp((cell *)str2, (cell *)str1);
 }
 
 void sort_adt_random(CellArray *cArray)

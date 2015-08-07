@@ -51,3 +51,15 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CBaseDelay
+ *         CBaseAnimating
+ *             CBaseToggle
+ *                 CBaseTrigger
+ *                     CChangeLevel
+ */

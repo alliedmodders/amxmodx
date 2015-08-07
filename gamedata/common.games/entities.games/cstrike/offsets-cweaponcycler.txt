@@ -37,3 +37,15 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CBaseDelay
+ *         CBaseAnimating
+ *             CBasePlayerItem
+ *                 CBasePlayerWeapon
+ *                     CWeaponCycler
+ */

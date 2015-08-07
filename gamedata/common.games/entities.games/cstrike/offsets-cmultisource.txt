@@ -51,3 +51,12 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CPointEntity
+ *         CMultiSource
+ */

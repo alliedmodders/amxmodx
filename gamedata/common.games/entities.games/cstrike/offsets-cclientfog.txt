@@ -44,3 +44,11 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CClientFog
+ */

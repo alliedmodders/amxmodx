@@ -58,3 +58,14 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CBaseDelay
+ *         CBaseAnimating
+ *             CBaseToggle
+ *                 CWallHealth
+ */

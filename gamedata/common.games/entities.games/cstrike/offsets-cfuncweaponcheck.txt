@@ -65,3 +65,11 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CFuncWeaponCheck
+ */

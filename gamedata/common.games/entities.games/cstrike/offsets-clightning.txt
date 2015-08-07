@@ -114,3 +114,12 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CBeam
+ *         CLightning
+ */

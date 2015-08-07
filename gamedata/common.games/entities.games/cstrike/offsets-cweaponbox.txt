@@ -58,3 +58,11 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CWeaponBox
+ */

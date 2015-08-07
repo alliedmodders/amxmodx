@@ -117,7 +117,7 @@
 						"mac"       "264"
 					}
 
-					"m_pfnCallWhenMoveDone"  // void*
+					"m_pfnCallWhenMoveDone"  // (*__pfn)(CBaseToggle*)
 					{
 						"windows"   "256"
 						"linux"     "272"
@@ -147,7 +147,7 @@
 
 					"m_sMaster"  // string_t
 					{
-						"windows"   "292"
+						"windows"   "288"
 						"linux"     "308"
 						"mac"       "308"
 					}
@@ -156,3 +156,13 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CBaseDelay
+ *         CBaseAnimating
+ *             CBaseToggle
+ */

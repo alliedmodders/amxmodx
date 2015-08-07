@@ -1525,4 +1525,629 @@
 	{
 		"game"  "dod"
 	}
+
+
+	//
+	// Team Fortress Classic
+	//
+    
+	"entities.games/tfc/offsets-cbaseentity.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cambientgeneric.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-careadef.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbasedelay.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cautotrigger.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbaseanimating.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cactanimating.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cxenplight.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cxenspore.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cxensporelarge.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cxentree.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbaseplayeritem.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbaseplayerweapon.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ccrowbar.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfaxe.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfknife.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfmedikit.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-chandgrenade.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfassaultc.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfautorifle.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfflamethrower.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfgrenadelauncher.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfincendiaryc.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfnailgun.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfsupernailgun.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfrailgun.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfrpg.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfshotgun.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfsupershotgun.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfsniperrifle.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctftranq.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cweaponcycler.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbasetoggle.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbasebutton.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbasedoor.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbasemonster.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbaseplayer.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbaseturret.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cturret.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ccinemonster.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ccycler.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cdeadhev.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cenvexplosion.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cgrenade.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cairtank.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cdetpack.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cmortar.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfflamethrowerburst.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfgrenade.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfincendiarycrocket.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfnailgunnail.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfprimegrenade.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfconcussiongrenade.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfempgrenade.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfgasgrenade.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfnapalmgrenade.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfrpgrocket.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cguntarget.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-csquadmonster.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfdispenser.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfflame.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfsentrygun.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfteleporter.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctalkmonster.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctesthull.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cwreckage.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbaseplattrain.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfuncplatrot.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfunctrackchange.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfunctrain.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cchangelevel.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfuncmortarfield.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cmomentarydoor.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cmomentaryrotbutton.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cmultimanager.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-crecharge.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cscriptedsentence.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cwallhealth.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfgoalitem.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbreakable.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cpushable.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cenvfunnel.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cgibshooter.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctesteffect.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctriggercamera.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctriggerchangetarget.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctriggerrelay.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-claser.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-clightning.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cbubbling.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ccyclersprite.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cdispenserrefillthinker.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cenvspark.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfrictionmodifier.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfuncrotating.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfunctank.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfunctanklaser.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfunctankcontrols.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cfunctracktrain.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cgib.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-citem.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-citemammo.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-citemarmor.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-citemhealth.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cnodeent.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cnodeviewer.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cpendulum.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cplattrigger.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cenvglobal.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cenvsound.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cglow.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-clight.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cmultisource.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cpathcorner.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cpathtrack.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-crevertsaved.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-csprite.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-csoundent.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cspeaker.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfcaltrop.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctfspawn.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-ctelefragdeath.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cweaponbox.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"entities.games/tfc/offsets-cworlditem.txt"
+	{
+		"game"  "tfc"
+	}
 }

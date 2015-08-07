@@ -2150,4 +2150,1184 @@
 	{
 		"game"  "tfc"
 	}
+
+
+	//
+	// Half-Life: Opposing Force
+	//
+
+	"entities.games/gearbox/offsets-cbaseentity.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cambientgeneric.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbmortar.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbasedelay.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cautotrigger.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbaseanimating.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cactanimating.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cxenplight.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cxenspore.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cxensporelarge.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cxentree.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbaseplayeritem.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbaseplayerweapon.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccrossbow.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccrowbar.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdisplacer.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ceagle.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cegon.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgauss.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cglock.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgrapple.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chgun.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cknife.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cm249.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmp5.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpenguin.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpipewrench.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpython.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-crpg.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cshockrifle.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cshotgun.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csniperrifle.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csporelauncher.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csqueak.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctripmine.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cweaponcycler.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbasetoggle.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbasebutton.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbasedoor.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbasemonster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-capache.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbarnacle.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbaseplayer.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbaseturret.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cturret.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbigmomma.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbullsquid.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccinemonster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccontrollerheadball.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccontrollerzapball.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccycler.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadbarney.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadcleansuitscientist.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadgonome.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadhev.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadhfgrunt.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadhgrunt.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadhgruntally.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadhoundeye.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadislave.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadmofassassin.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadotis.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadscientist.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadshocktrooper.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdeadzombiesoldier.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cenvexplosion.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cflockingflyer.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cflockingflyerflock.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cflyingmonster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cichthyosaur.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgman.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgargantua.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgenericmonster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgrenade.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cairtank.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-capachehvr.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmortar.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmortarshell.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofblackopsapachehvr.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpenguingrenade.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-crpgrocket.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cshockbeam.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cspore.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csqueakgrenade.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctripminegrenade.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cguntarget.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chassassin.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chfgruntrepel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chgruntallyrepel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chgruntrepel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cheadcrab.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chornet.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cleech.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmofassassinrepel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmonstermaker.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cnihilanth.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cnihilanthhvr.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofallymonster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofsquadtalkmonster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chgruntally.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofmedically.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-coftorchally.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofblackopsapache.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofblackopsosprey.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofgeneworm.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofgonome.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofmedicallyrepel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofpitworm.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofpitwormup.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofshockroach.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofskeleton.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-coftorchallyrepel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cop4mortar.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cosprey.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpitdrone.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-croach.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cshocktrooperrepel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csquadmonster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cagrunt.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccontroller.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chfgrunt.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chgrunt.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-choundeye.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cislave.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmofassassin.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofbabyvoltigore.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofvoltigore.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cshocktrooper.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctalkmonster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbarney.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccleansuitscientist.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csittingcleansuitscientist.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdrillsergeant.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cotis.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-crecruit.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cscientist.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csittingscientist.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctentacle.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctesthull.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cwreckage.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-czombie.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-czombiebarney.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-czombiesoldier.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbaseplattrain.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfuncplatrot.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfunctrackchange.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfunctrain.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cspritetrain.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cchangelevel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-coftriggergenewormhit.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctriggerctfgeneric.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cblowercannon.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfuncmortarfield.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-chudicontrigger.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmomentarydoor.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmomentaryrotbutton.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmultimanager.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofnuclearbomb.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cop4mortarcontroller.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-crecharge.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cscriptedsentence.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cwallhealth.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgenericitem.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-citemctf.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cropesegment.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctfgoal.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctfgoalflag.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbreakable.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpushable.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cenvfunnel.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgibshooter.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cenvshooter.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-crope.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-celectrifiedwire.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctesteffect.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctriggercamera.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctriggerchangetarget.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctriggerplayerfreeze.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctriggerrelay.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csporeammo.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-claser.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-clightning.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbubbling.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccrossbowbolt.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ccyclersprite.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cdisplacerball.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cenvspark.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfrictionmodifier.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfuncrotating.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfunctank.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfunctanklaser.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfunctankcontrols.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cfunctracktrain.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgib.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgrappletip.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cnodeent.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cnodeviewer.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofchargedbolt.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-coffunctank.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-coffunctanklaser.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-coffunctankcontrols.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofgenewormcloud.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofgenewormspawn.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofgonomeguts.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofnuclearbombtimer.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofpitwormgibshooter.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpendulum.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpitdronespike.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cplattrigger.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cbasedmstart.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cenvglobal.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cenvsound.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cglow.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cinfobm.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-citemspawnctf.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-clight.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cmultisource.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cofinfopw.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpathcorner.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cpathtrack.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-crevertsaved.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csprite.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cropesample.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cruleentity.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgameplayerzone.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgameplayerequip.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgameteammaster.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cgametext.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csoundent.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cspeaker.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-csquidspit.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctfdetect.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-ctfspawn.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cweaponbox.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"entities.games/gearbox/offsets-cworlditem.txt"
+	{
+		"game"  "gearbox"
+	}
 }

@@ -21,6 +21,8 @@ folder_list = [
     'base/addons/amxmodx/data/gamedata/common.games',
     'base/addons/amxmodx/data/gamedata/common.games/entities.games',
     'base/addons/amxmodx/data/gamedata/common.games/entities.games/cstrike',
+    'base/addons/amxmodx/data/gamedata/common.games/hostages.games',
+    'base/addons/amxmodx/data/gamedata/common.games/hostages.games/cstrike',
     'base/addons/amxmodx/data/gamedata/modules.games',
     'base/addons/amxmodx/data/lang',
     'base/addons/amxmodx/dlls',
@@ -388,10 +390,20 @@ CopyFiles('gamedata/modules.games', 'base/addons/amxmodx/data/gamedata/modules.g
     'game.cstrike.txt',
   ]
 )
+
 CopyFiles('gamedata/common.games', 'base/addons/amxmodx/data/gamedata/common.games',
   [ 
     'master.games.txt',
     'globalvars.engine.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/hostages.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/hostages.games/cstrike',
+  [ 
+    'offsets-chostageimprov.txt',
+    'offsets-chostagemanager.txt',
+    'offsets-hostagefollowstate.txt',
+    'offsets-simplestatemachine.txt',
   ]
 )
 
@@ -409,8 +421,6 @@ CopyFiles('gamedata/common.games/entities.games/cstrike', 'base/addons/amxmodx/d
     'offsets-cbaseentity.txt',
     'offsets-cunifiedsignals.txt',
     'offsets-csound.txt',
-    'offsets-simplestatemachine.txt',
-    'offsets-chostagemanager.txt',
     'offsets-cgib.txt',
     'offsets-cmomentarydoor.txt',
     'offsets-cbasedoor.txt',
@@ -505,9 +515,7 @@ CopyFiles('gamedata/common.games/entities.games/cstrike', 'base/addons/amxmodx/d
     'offsets-cgalil.txt',
     'offsets-cxm1014.txt',
     'offsets-cvoicegamemgr.txt',
-    'offsets-hostagefollowstate.txt',
     'offsets-chostage.txt',
-    'offsets-chostageimprov.txt',
   ]
 )
 

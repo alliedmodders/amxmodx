@@ -11,11 +11,20 @@
 
 "Game Master"
 {
+	//
+	// Engine
+	//
+
 	"globalvars.engine.txt"
 	{
 		"engine"  "engine_ds"
 		"engine"  "engine_ls"
 	}
+
+
+	//
+	// Counter-Strike
+	//
 
 	"entities.games/cstrike/offsets-cbaseentity.txt"
 	{
@@ -725,5 +734,795 @@
 	{
 		"game"  "cstrike"
 		"game"  "czero"
+	}
+
+
+	//
+	// Day Of Defeat
+	//
+
+	"entities.games/dod/offsets-cbaseentity.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cambientgeneric.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbasedelay.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cautotrigger.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbaseanimating.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbaseplayeritem.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbaseplayerweapon.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbipodweapon.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-c30cal.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbar.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbren.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmg34.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmg42.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdodgrenade.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-chandgrenadeex.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cstickgrenadeex.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-chandgrenade.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cstickgrenade.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenfield.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfg42.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgarand.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgreasegun.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ck43.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ckar.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cm1carbine.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmp40.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmp44.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmeleeweapon.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cpistol.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cluger.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cwebley.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbazooka.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cpiat.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cpschreck.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cspring.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-csten.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cscopedkar.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cthompson.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cweaponcycler.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbasetoggle.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbasebutton.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbasedoor.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbasemonster.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbaseplayer.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbaseturret.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cturret.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ccinemonster.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ccontrollerheadball.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ccontrollerzapball.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ccycler.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdeadalliedgrunt.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdeadaxisgrunt.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdeadhev.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvexplosion.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgrenade.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmortar.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cguntarget.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-crat.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-croach.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-csquadmonster.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-calliedgrunt.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-caxisgrunt.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ccontroller.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctalkmonster.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-calliedbarney.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-csarge.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctesthull.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cwreckage.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbaseplattrain.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfuncplatrot.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfunctrackchange.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfunctrain.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-careacapture.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cchangelevel.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cobjectcapture.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-csandbag.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctriggerpush.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfuncmortarfield.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmomentarydoor.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmomentaryrotbutton.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cscriptedsentence.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cstatewatcher.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ccontrolpoint.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvmodel.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbreakable.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cpushable.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdodcamera.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvfunnel.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgibshooter.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cparticleshooter.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctesteffect.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctriggercamera.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctriggerchangetarget.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctriggerrelay.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctriggersetpatrol.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-claser.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-clightning.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbubbling.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ccontrolpointmaster.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ccyclersprite.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdoddetect.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdodstatmgr.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdodammobox.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdodpararoundtimer.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdodpointrelay.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdodroundtimer.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvcustomize.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvrain.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvspark.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfrictionmodifier.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfuncrotating.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfunctank.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfunctanklaser.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfunctankcontrols.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfunctracktrain.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgib.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cinfogroup.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-clocation.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmultialias.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmultimanager.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cnodeent.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cnodeviewer.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cobject.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cpendulum.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cplattrigger.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cbasedmstart.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cdodpreround.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvglobal.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvsound.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cenvstate.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cfade.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cglow.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-clight.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmessage.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cmultisource.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cpathcorner.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cpathtrack.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-crevertsaved.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cshake.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-csprite.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-crocketshooter.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cruleentity.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgameplayerzone.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgamecounterset.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgameplayerequip.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgameplayerhurt.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgameteammaster.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgameteamset.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cgametext.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cscoreevent.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-csoundent.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cspeaker.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-ctriggerlightstyle.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cweaponbox.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cweathersystem.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cworld.txt"
+	{
+		"game"  "dod"
+	}
+
+	"entities.games/dod/offsets-cworlditem.txt"
+	{
+		"game"  "dod"
 	}
 }

@@ -19,48 +19,6 @@
 			{
 				"Offsets"
 				{
-					"pSoundsWood"  // const char*[3]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pSoundsFlesh"  // const char*[6]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pSoundsGlass"  // const char*[3]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pSoundsMetal"  // const char*[3]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pSoundsConcrete"  // const char*[3]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pSpawnObjects"  // const char*[22]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
 					"m_Material"  // Materials
 					{
 						"windows"   "336"

@@ -46,13 +46,6 @@
 						"linux"     "1072"
 						"mac"       "1072"
 					}
-
-					"m_scheduleList"  // Schedule_t*[4]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
 				}
 			}
 		}

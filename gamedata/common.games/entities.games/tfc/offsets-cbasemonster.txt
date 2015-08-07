@@ -333,13 +333,6 @@
 						"linux"     "1716"
 						"mac"       "1716"
 					}
-
-					"m_scheduleList"  // Schedule_t*
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
 				}
 			}
 		}

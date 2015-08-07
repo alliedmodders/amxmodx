@@ -19,13 +19,6 @@
 			{
 				"Offsets"
 				{
-					"m_scheduleList"  // Schedule_t*[4]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
 					"m_flNextFlinch"  // float
 					{
 						"windows"   "972"
@@ -45,41 +38,6 @@
 						"windows"   "980"
 						"linux"     "1000"
 						"mac"       "1000"
-					}
-
-					"pAttackSounds"  // const char*[3]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pIdleSounds"  // const char*[5]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pAlertSounds"  // const char*[3]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pPainSounds"  // const char*[3]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pDeathSounds"  // const char*[2]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
 					}
 
 					"m_pBall"  // CSprite*[2]

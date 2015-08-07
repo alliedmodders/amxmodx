@@ -19,20 +19,6 @@
 			{
 				"Offsets"
 				{
-					"ItemInfoArray"  // ItemInfo[32]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"AmmoInfoArray"  // AmmoInfo[32]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
 					"m_pPlayer"  // CBasePlayer*
 					{
 						"windows"   "1152"

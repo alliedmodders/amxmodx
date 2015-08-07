@@ -19,20 +19,6 @@
 			{
 				"Offsets"
 				{
-					"pAttackHitSounds"  // const char*[3]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"pAttackMissSounds"  // const char*[2]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
 					"m_pTrigger"  // CXenTreeTrigger*
 					{
 						"windows"   "1156"

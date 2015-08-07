@@ -19,20 +19,6 @@
 			{
 				"Offsets"
 				{
-					"m_szFriends"  // char*[3]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
-					"g_talkWaitTime"  // float
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
 					"m_bitsSaid"  // int
 					{
 						"windows"   "916"
@@ -115,13 +101,6 @@
 						"windows"   "1032"
 						"linux"     "1052"
 						"mac"       "1052"
-					}
-
-					"m_scheduleList"  // Schedule_t*[11]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
 					}
 				}
 			}

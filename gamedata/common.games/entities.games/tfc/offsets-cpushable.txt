@@ -19,13 +19,6 @@
 			{
 				"Offsets"
 				{
-					"m_soundNames"  // char*[3]
-					{
-						"windows"   "-16"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
 					"m_lastSound"  // int
 					{
 						"windows"   "1156"

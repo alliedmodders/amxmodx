@@ -19,13 +19,6 @@
 			{
 				"Offsets"
 				{
-					"m_scheduleList"  // Schedule_t*[21]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
-					}
-
 					"m_flNextGrenadeCheck"  // float
 					{
 						"windows"   "972"
@@ -101,13 +94,6 @@
 						"windows"   "1020"
 						"linux"     "1040"
 						"mac"       "1040"
-					}
-
-					"pAxisGruntSentences"  // const char*[7]
-					{
-						"windows"   "-20"
-						"linux"     "0"
-						"mac"       "0"
 					}
 				}
 			}

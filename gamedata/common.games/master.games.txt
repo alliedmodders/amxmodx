@@ -17,391 +17,7 @@
 		"engine"  "engine_ls"
 	}
 
-	"entities.games/cstrike/offsets-cairtank.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbaseanimating.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cpendulum.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfuncrotating.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbasebutton.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cenvspark.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cmomentaryrotbutton.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cmultisource.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cenvglobal.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
 	"entities.games/cstrike/offsets-cbaseentity.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cunifiedsignals.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-csound.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-simplestatemachine.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-chostagemanager.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cgib.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cmomentarydoor.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbasedoor.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cenvfunnel.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-ctesteffect.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cgibshooter.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-csprite.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbombglow.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cglow.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-claser.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-clightning.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbubbling.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cenvexplosion.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cpushable.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbreakable.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfunctankcontrols.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfunctank.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfunctanklaser.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cgrenade.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-crecharge.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cwreckage.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cweaponcycler.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-ccyclersprite.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-ccycler.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cwallhealth.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cworlditem.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-clight.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cgameplayerequip.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cgameplayerzone.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cgameteammaster.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cgametext.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cruleentity.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cmortar.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfuncmortarfield.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbasemonster.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cmapinfo.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cpathtrack.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cpathcorner.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cguntarget.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfunctrackchange.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfuncplatrot.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfunctracktrain.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfunctrain.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbaseplattrain.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cplattrigger.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbaseplayer.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-crevertsaved.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cdeadhev.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cwshield.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cspeaker.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cenvsound.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
@@ -413,13 +29,7 @@
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-csoundent.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbasetoggle.txt"
+	"entities.games/cstrike/offsets-carmoury.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
@@ -431,85 +41,13 @@
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-cpointentity.txt"
+	"entities.games/cstrike/offsets-cautotrigger.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-cfuncweaponcheck.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cbasegrencatch.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cclientfog.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-ctriggercamera.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-ctriggerchangetarget.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-ctriggerendsection.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cchangelevel.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cmultimanager.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-ctriggerrelay.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfrictionmodifier.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cfuncvehicle.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-carmoury.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cweaponbox.txt"
+	"entities.games/cstrike/offsets-cbaseanimating.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
@@ -521,13 +59,13 @@
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-cbaseplayerammo.txt"
+	"entities.games/cstrike/offsets-cbaseplayerweapon.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-cbaseplayerweapon.txt"
+	"entities.games/cstrike/offsets-cak47.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
@@ -545,6 +83,12 @@
 		"game"  "czero"
 	}
 
+	"entities.games/cstrike/offsets-cc4.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
 	"entities.games/cstrike/offsets-cdeagle.txt"
 	{
 		"game"  "cstrike"
@@ -557,13 +101,13 @@
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-cfiveseven.txt"
+	"entities.games/cstrike/offsets-cfamas.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-cflashbang.txt"
+	"entities.games/cstrike/offsets-cfiveseven.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
@@ -581,6 +125,12 @@
 		"game"  "czero"
 	}
 
+	"entities.games/cstrike/offsets-cgalil.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
 	"entities.games/cstrike/offsets-chegrenade.txt"
 	{
 		"game"  "cstrike"
@@ -593,13 +143,31 @@
 		"game"  "czero"
 	}
 
+	"entities.games/cstrike/offsets-cm249.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
 	"entities.games/cstrike/offsets-cm3.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
 	}
 
+	"entities.games/cstrike/offsets-cm4a1.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
 	"entities.games/cstrike/offsets-cmac10.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cmp5n.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
@@ -623,6 +191,18 @@
 		"game"  "czero"
 	}
 
+	"entities.games/cstrike/offsets-csg550.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-csg552.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
 	"entities.games/cstrike/offsets-csmokegrenade.txt"
 	{
 		"game"  "cstrike"
@@ -635,19 +215,19 @@
 		"game"  "czero"
 	}
 
+	"entities.games/cstrike/offsets-cump45.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
 	"entities.games/cstrike/offsets-cusp.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-cfamas.txt"
-	{
-		"game"  "cstrike"
-		"game"  "czero"
-	}
-
-	"entities.games/cstrike/offsets-cgalil.txt"
+	"entities.games/cstrike/offsets-cweaponcycler.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
@@ -659,13 +239,85 @@
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-cvoicegamemgr.txt"
+	"entities.games/cstrike/offsets-cbasetoggle.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-hostagefollowstate.txt"
+	"entities.games/cstrike/offsets-cbasebutton.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbasedoor.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbasemonster.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbaseplayer.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbot.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-ccsbot.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-ccycler.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cdeadhev.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cenvexplosion.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cgrenade.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cairtank.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cmortar.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cguntarget.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"
@@ -677,7 +329,399 @@
 		"game"  "czero"
 	}
 
-	"entities.games/cstrike/offsets-chostageimprov.txt"
+	"entities.games/cstrike/offsets-cwreckage.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbaseplattrain.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfuncplatrot.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfunctrackchange.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfunctrain.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cchangelevel.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfuncmortarfield.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cmomentarydoor.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cmomentaryrotbutton.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cmultimanager.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-crecharge.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cwallhealth.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbreakable.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cpushable.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cenvfunnel.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cgibshooter.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-ctesteffect.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-ctriggercamera.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-ctriggerchangetarget.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-ctriggerrelay.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbasegrencatch.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-claser.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-clightning.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbubbling.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cclientfog.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-ccyclersprite.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cenvspark.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfrictionmodifier.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfuncrotating.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfunctank.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfunctanklaser.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfunctankcontrols.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfunctracktrain.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfuncvehicle.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cfuncweaponcheck.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cgib.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cpendulum.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cplattrigger.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cenvglobal.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cenvsound.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cglow.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-clight.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cmapinfo.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cmultisource.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cpathcorner.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cpathtrack.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-crevertsaved.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-csprite.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cbombglow.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cruleentity.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cgameplayerzone.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cgameplayerequip.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cgameteammaster.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cgametext.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-csoundent.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cspeaker.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cwshield.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cweaponbox.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"entities.games/cstrike/offsets-cworlditem.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"hostages.games/cstrike/offsets-chostageimprov.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+
+	"hostages.games/cstrike/offsets-chostagemanager.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"hostages.games/cstrike/offsets-hostagefollowstate.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"hostages.games/cstrike/offsets-simplestatemachine.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+
+	"others.games/cstrike/offsets-csound.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"others.games/cstrike/offsets-cunifiedsignals.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"others.games/cstrike/offsets-cvoicegamemgr.txt"
 	{
 		"game"  "cstrike"
 		"game"  "czero"

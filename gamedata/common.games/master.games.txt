@@ -3330,4 +3330,699 @@
 	{
 		"game"  "gearbox"
 	}
+
+
+ 	//
+	// Half-Life: Deathmatch
+	//
+    
+	"entities.games/valve/offsets-cbaseentity.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cambientgeneric.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbmortar.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbasedelay.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cautotrigger.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbaseanimating.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cactanimating.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cxenplight.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cxentree.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbaseplayeritem.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbaseplayerweapon.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccrossbow.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccrowbar.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cegon.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgauss.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cglock.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-chgun.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cmp5.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cpython.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-crpg.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cshotgun.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-csqueak.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctripmine.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cweaponcycler.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbasetoggle.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbasebutton.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbasedoor.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbasemonster.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-capache.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbarnacle.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbaseplayer.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbaseturret.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cturret.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbigmomma.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbullsquid.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccinemonster.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccontrollerheadball.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccontrollerzapball.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccycler.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cdeadbarney.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cdeadhev.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cdeadhgrunt.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cdeadscientist.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cenvexplosion.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cflockingflyer.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cflockingflyerflock.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cflyingmonster.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cichthyosaur.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgman.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgargantua.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgrenade.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cairtank.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-capachehvr.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cmortar.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-crpgrocket.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-csqueakgrenade.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctripminegrenade.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cguntarget.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-chassassin.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-chgruntrepel.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-chornet.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cleech.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cmonstermaker.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cnihilanth.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cnihilanthhvr.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cosprey.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-croach.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-csquadmonster.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cagrunt.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccontroller.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-chgrunt.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-choundeye.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cislave.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctalkmonster.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbarney.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cscientist.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-csittingscientist.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctentacle.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctesthull.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cwreckage.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-czombie.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbaseplattrain.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfuncplatrot.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfunctrackchange.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfunctrain.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cchangelevel.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfuncmortarfield.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cmomentarydoor.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cmomentaryrotbutton.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cmultimanager.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-crecharge.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cscriptedsentence.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cwallhealth.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbreakable.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cpushable.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cenvfunnel.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgibshooter.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctesteffect.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctriggercamera.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctriggerchangetarget.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ctriggerrelay.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-claser.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-clightning.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cbubbling.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccrossbowbolt.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-ccyclersprite.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cenvspark.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfrictionmodifier.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfuncrotating.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfunctank.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfunctanklaser.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfunctankcontrols.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cfunctracktrain.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgib.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cnodeent.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cnodeviewer.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cpendulum.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cplattrigger.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cenvglobal.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cenvsound.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cglow.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cinfobm.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-clight.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cmultisource.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cpathcorner.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cpathtrack.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-crevertsaved.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-csprite.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cruleentity.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgameplayerzone.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgameplayerequip.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgameteammaster.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cgametext.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-csoundent.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cspeaker.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-csquidspit.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cweaponbox.txt"
+	{
+		"game"  "valve"
+	}
+
+	"entities.games/valve/offsets-cworlditem.txt"
+	{
+		"game"  "valve"
+	}
 }

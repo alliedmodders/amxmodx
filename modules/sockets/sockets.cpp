@@ -81,6 +81,8 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)  /* 2 param */
         host_info = gethostbyname(hostname);
         if (host_info == NULL) {
             // an error occured, the hostname is unknown
+			// closes socket
+			closesocket(sock);
             *err = 2;  // server unknown
             return -1;
         }
@@ -96,6 +98,8 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)  /* 2 param */
     contr = connect(sock, (struct sockaddr*)&server, sizeof( server));
     if (contr < 0) {
             // If an error occured cancel
+			// closes socket
+			closesocket(sock);
             *err = 3;  //error while connecting
             return -1;
     }
@@ -103,17 +107,21 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)  /* 2 param */
     return sock;
 }
 
-// native socket_close(_socket);
+// native socket_close(&_socket);
 static cell AMX_NATIVE_CALL socket_close(AMX *amx, cell *params)  /* 2 param */
 {
     int socket = params[1];
-    //PRINT_CONSOLE("Function: Close | Socket: %i\n", socket);
-    #ifdef _WIN32 // On windows, check whether the sockets are initialized correctly
+	
+	// checks the socket
+	if (socket < 0)
+		return 0;
+	
+	// closes
     closesocket(socket);
-    #else
-    // Close the socket (linux/unix styled systems)
-    close(socket);
-    #endif
+	
+	cell * pSockIdAddr = MF_GetAmxAddr(amx, params[1]);
+	*pSockIdAddr = -1;
+
     return 0;
 }
 
@@ -122,6 +130,11 @@ static cell AMX_NATIVE_CALL socket_close(AMX *amx, cell *params)  /* 2 param */
 static cell AMX_NATIVE_CALL socket_change(AMX *amx, cell *params)  /* 2 param */
 {
     int socket = params[1];
+	
+	// checks the socket
+	if (socket < 0)
+		return 0;
+
     unsigned int timeout = params[2];
     //PRINT_CONSOLE("Function: Change | Socket: %i | Timeout: %i\n", socket, timeout);
     // We need both a timeout structure and a fdset for our filedescriptor
@@ -143,6 +156,11 @@ static cell AMX_NATIVE_CALL socket_change(AMX *amx, cell *params)  /* 2 param */
 static cell AMX_NATIVE_CALL socket_recv(AMX *amx, cell *params)  /* 2 param */
 {
     int socket = params[1];
+	
+	// checks the socket
+	if (socket < 0)
+		return -1;
+	
     int length = params[3];
     int tmp = -1;
     // First we dynamicly allocate a block of heap memory for recieving our data
@@ -178,9 +196,11 @@ static cell AMX_NATIVE_CALL socket_recv(AMX *amx, cell *params)  /* 2 param */
 // native socket_send(_socket, _data[], _length);
 static cell AMX_NATIVE_CALL socket_send(AMX *amx, cell *params)  /* 3 param */
 {
-	// We get the string from amx
-	int len;
 	int socket = params[1];
+	if (socket < 0)
+		return -1; // throws out send() error
+	
+	int len;
 	char* data = MF_GetAmxString(amx,params[2],0,&len);
 	// And send it to the socket
 	return send(socket, data, len, 0);
@@ -192,9 +212,11 @@ static size_t g_buflen = 0;
 // native socket_send2(_socket, _data[], _length);
 static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)  /* 3 param */
 {
-	// We get the string from amx
-	int len = params[3];
 	int socket = params[1];
+	if (socket < 0)
+		return -1; // send() error
+	
+	int len = params[3];
 	if ((size_t)len > g_buflen)
 	{
 		delete [] g_buffer;
@@ -225,23 +247,21 @@ AMX_NATIVE_INFO sockets_natives[] = {
 void OnAmxxAttach()
 {
 	MF_AddNatives(sockets_natives);
-    // And, if win32, we have to specially start up the winsock environment
-    #ifdef _WIN32  
-        short wVersionRequested;
-        WSADATA wsaData;
-        wVersionRequested = MAKEWORD (1, 1);
-        if (WSAStartup (wVersionRequested, &wsaData) != 0) {
-            MF_Log("Sockets Module: Error while starting up winsock environment.!");
-        }
-    #endif
-    return;
+	// And, if win32, we have to specially start up the winsock environment
+#ifdef _WIN32  
+	short wVersionRequested;
+	WSADATA wsaData;
+	wVersionRequested = MAKEWORD (1, 1);
+	if (WSAStartup (wVersionRequested, &wsaData) != 0) {
+		MF_Log("Sockets Module: Error while starting up winsock environment.!");
+	}
+#endif
 }
 
 void OnAmxxDetach()
 {
-    #ifdef _WIN32
-    WSACleanup();
-    #endif
-    delete [] g_buffer;
-    return;
+#ifdef _WIN32
+	WSACleanup();
+#endif
+	delete [] g_buffer;
 }

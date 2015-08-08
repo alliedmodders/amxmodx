@@ -45,7 +45,7 @@ native socket_open(const _hostname[], _port, _protocol = SOCKET_TCP, &_error);
 
 /* Closes a Socket */
 
-native socket_close(_socket);
+native socket_close(&_socket);
 
 /* Recieves Data to string with the given length */
 

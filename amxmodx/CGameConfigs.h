@@ -45,8 +45,8 @@ class CGameConfig
 	public: // IGameConfig
 
 		const char* GetKeyValue(const char *key);
-		bool        GetOffset(const char *key, int *value);
-		bool        GetOffsetByClass(const char *classname, const char *key, int *value);
+		bool        GetOffset(const char *key, TypeDescription *value);
+		bool        GetOffsetByClass(const char *classname, const char *key, TypeDescription *value);
 		bool        GetMemSig(const char *key, void **addr);
 		bool        GetAddress(const char *key, void **addr);
 
@@ -61,15 +61,16 @@ class CGameConfig
 
 		struct OffsetClass
 		{
-			StringHashMap<int> list;
+			StringHashMap<TypeDescription> list;
 		};
 
 		typedef StringHashMap<ke::AutoPtr<OffsetClass>> OffsetClassMap;
+		typedef StringHashMap<TypeDescription> OffsetMap;
 
 		char                       m_File[PLATFORM_MAX_PATH];
 		char                       m_CurrentPath[PLATFORM_MAX_PATH];
 
-		StringHashMap<int>         m_Offsets;
+		OffsetMap                  m_Offsets;
 		OffsetClassMap             m_OffsetsByClass;
 		StringHashMap<ke::AString> m_Keys;
 		StringHashMap<void*>       m_Sigs;
@@ -81,6 +82,7 @@ class CGameConfig
 		char                       m_Offset[64];
 		char                       m_Game[256];
 
+		bool                       m_FoundOffset;
 		bool                       m_MatchedClasses;
 		bool                       m_ShouldBeReadingDefault;
 		bool                       m_HadGame;

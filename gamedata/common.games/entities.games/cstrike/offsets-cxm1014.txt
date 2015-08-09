@@ -44,3 +44,15 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CBaseDelay
+ *         CBaseAnimating
+ *             CBasePlayerItem
+ *                 CBasePlayerWeapon
+ *                     CXM1014
+ */

@@ -72,3 +72,11 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CCyclerSprite
+ */

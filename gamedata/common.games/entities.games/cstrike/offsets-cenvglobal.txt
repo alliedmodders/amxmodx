@@ -44,3 +44,12 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CPointEntity
+ *         CEnvGlobal
+ */

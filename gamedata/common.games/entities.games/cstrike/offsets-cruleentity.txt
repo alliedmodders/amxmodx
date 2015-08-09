@@ -30,3 +30,11 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CRuleEntity
+ */

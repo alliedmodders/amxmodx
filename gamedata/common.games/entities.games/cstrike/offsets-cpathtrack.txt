@@ -58,3 +58,12 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CPointEntity
+ *         CPathTrack
+ */

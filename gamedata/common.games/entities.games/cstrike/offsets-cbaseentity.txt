@@ -40,28 +40,28 @@
 						"mac"       "12"
 					}
 
-					"m_pfnThink"  // void*
+					"m_pfnThink"  // (*__pfn)(CBaseEntity*)
 					{
 						"windows"   "16"
 						"linux"     "16"
 						"mac"       "16"
 					}
 
-					"m_pfnTouch"  // void*
+					"m_pfnTouch"  // (*__pfn)(CBaseEntity*, CBaseEntity*)
 					{
 						"windows"   "20"
 						"linux"     "24"
 						"mac"       "24"
 					}
 
-					"m_pfnUse"  // void*
+					"m_pfnUse"  // (*__pfn)(CBaseEntity*, CBaseEntity*, CBaseEntity*, USE_TYPE, float)
 					{
 						"windows"   "24"
 						"linux"     "32"
 						"mac"       "32"
 					}
 
-					"m_pfnBlocked"  // void*
+					"m_pfnBlocked"  // (*__pfn)(CBaseEntity*, CBaseEntity*)
 					{
 						"windows"   "28"
 						"linux"     "40"
@@ -254,3 +254,212 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CAmbientGeneric
+ *     CArmoury
+ *     CBaseDelay
+ *         CAutoTrigger
+ *         CBaseAnimating
+ *             CBasePlayerItem
+ *                 CBasePlayerWeapon
+ *                     CAK47
+ *                     CAUG
+ *                     CAWP
+ *                     CC4
+ *                     CDEAGLE
+ *                     CELITE
+ *                     CFamas
+ *                     CFiveSeven
+ *                     CFlashbang
+ *                     CG3SG1
+ *                     CGLOCK18
+ *                     CGalil
+ *                     CHEGrenade
+ *                     CKnife
+ *                     CM249
+ *                     CM3
+ *                     CM4A1
+ *                     CMAC10
+ *                     CMP5N
+ *                     CP228
+ *                     CP90
+ *                     CSCOUT
+ *                     CSG550
+ *                     CSG552
+ *                     CSmokeGrenade
+ *                     CTMP
+ *                     CUMP45
+ *                     CUSP
+ *                     CWeaponCycler
+ *                     CXM1014
+ *             CBaseToggle
+ *                 CBaseButton
+ *                     CRotButton
+ *                 CBaseDoor
+ *                     CRotDoor
+ *                 CBaseMonster
+ *                     CBasePlayer
+ *                         CBot
+ *                             CCSBot
+ *                     CCycler
+ *                         CCyclerProbe
+ *                         CGenericCycler
+ *                     CDeadHEV
+ *                     CEnvExplosion
+ *                     CGrenade
+ *                         CAirtank
+ *                         CMortar
+ *                     CGunTarget
+ *                     CHostage
+ *                     CWreckage
+ *                 CBasePlatTrain
+ *                     CFuncPlat
+ *                         CFuncPlatRot
+ *                             CFuncTrackChange
+ *                                 CFuncTrackAuto
+ *                     CFuncTrain
+ *                 CBaseTrigger
+ *                     CBombTarget
+ *                     CBuyZone
+ *                     CChangeLevel
+ *                     CEscapeZone
+ *                     CHostageRescue
+ *                     CLadder
+ *                     CTriggerCDAudio
+ *                     CTriggerCounter
+ *                     CTriggerEndSection
+ *                     CTriggerGravity
+ *                     CTriggerHurt
+ *                     CTriggerMonsterJump
+ *                     CTriggerMultiple
+ *                         CTriggerOnce
+ *                     CTriggerPush
+ *                     CTriggerSave
+ *                     CTriggerTeleport
+ *                     CVIP_SafetyZone
+ *                     CWeather
+ *                 CFuncIllusionary
+ *                 CFuncMortarField
+ *                 CMomentaryDoor
+ *                 CMomentaryRotButton
+ *                 CMultiManager
+ *                 CRecharge
+ *                 CWallHealth
+ *         CBreakable
+ *             CPushable
+ *         CEnvBeverage
+ *         CEnvFunnel
+ *         CFireAndDie
+ *         CGibShooter
+ *             CEnvShooter
+ *         CTestEffect
+ *         CTriggerCamera
+ *         CTriggerChangeTarget
+ *         CTriggerRelay
+ *     CBaseGrenCatch
+ *     CBasePlayerAmmo
+ *         C338MagnumAmmo
+ *         C357SIGAmmo
+ *         C45ACPAmmo
+ *         C50AEAmmo
+ *         C556NatoAmmo
+ *         C556NatoBoxAmmo
+ *         C57MMAmmo
+ *         C762NatoAmmo
+ *         C9MMAmmo
+ *         CBuckShotAmmo
+ *     CBaseSpectator
+ *     CBeam
+ *         CLaser
+ *         CLightning
+ *     CBloodSplat
+ *     CBubbling
+ *     CButtonTarget
+ *     CClientFog
+ *     CCorpse
+ *     CCyclerSprite
+ *     CDecal
+ *     CEnvSpark
+ *     CFrictionModifier
+ *     CFuncRotating
+ *     CFuncTank
+ *         CFuncTankGun
+ *         CFuncTankLaser
+ *         CFuncTankMortar
+ *         CFuncTankRocket
+ *     CFuncTankControls
+ *     CFuncTrackTrain
+ *     CFuncTrainControls
+ *     CFuncVehicle
+ *     CFuncVehicleControls
+ *     CFuncWall
+ *         CFuncConveyor
+ *         CFuncMonsterClip
+ *         CFuncWallToggle
+ *     CFuncWeaponCheck
+ *     CGib
+ *     CItem
+ *         CHealthKit
+ *         CItemAntidote
+ *         CItemAssaultSuit
+ *         CItemBattery
+ *         CItemKevlar
+ *         CItemLongJump
+ *         CItemSecurity
+ *         CItemSuit
+ *         CItemThighPack
+ *     CItemSoda
+ *     CNullEntity
+ *     CPendulum
+ *     CPlatTrigger
+ *     CPointEntity
+ *         CBaseDMStart
+ *         CBlood
+ *         CEnvGlobal
+ *         CEnvSound
+ *         CFade
+ *         CGlow
+ *         CInfoIntermission
+ *         CLight
+ *             CEnvLight
+ *         CMapInfo
+ *         CMessage
+ *         CMultiSource
+ *         CPathCorner
+ *         CPathTrack
+ *         CRevertSaved
+ *         CShake
+ *         CSprite
+ *             CBombGlow
+ *         CStripWeapons
+ *         CTargetCDAudio
+ *         CTriggerVolume
+ *     CRenderFxManager
+ *     CRuleEntity
+ *         CRuleBrushEntity
+ *             CGamePlayerZone
+ *         CRulePointEntity
+ *             CGameCounter
+ *             CGameCounterSet
+ *             CGameEnd
+ *             CGamePlayerEquip
+ *             CGamePlayerHurt
+ *             CGamePlayerTeam
+ *             CGameScore
+ *             CGameTeamMaster
+ *             CGameTeamSet
+ *             CGameText
+ *     CShower
+ *     CSoundEnt
+ *     CSpeaker
+ *     CSprayCan
+ *     CWShield
+ *     CWeaponBox
+ *     CWorld
+ *     CWorldItem
+ */

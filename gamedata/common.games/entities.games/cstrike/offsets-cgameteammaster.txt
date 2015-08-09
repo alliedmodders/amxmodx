@@ -37,3 +37,13 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CRuleEntity
+ *         CRulePointEntity
+ *             CGameTeamMaster
+ */

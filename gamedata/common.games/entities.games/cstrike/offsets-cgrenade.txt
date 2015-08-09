@@ -191,3 +191,15 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CBaseDelay
+ *         CBaseAnimating
+ *             CBaseToggle
+ *                 CBaseMonster
+ *                     CGrenade
+ */

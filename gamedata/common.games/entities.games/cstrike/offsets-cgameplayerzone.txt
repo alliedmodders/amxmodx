@@ -51,3 +51,13 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CRuleEntity
+ *         CRuleBrushEntity
+ *             CGamePlayerZone
+ */

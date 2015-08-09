@@ -30,3 +30,13 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CRuleEntity
+ *         CRulePointEntity
+ *             CGameText
+ */

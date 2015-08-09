@@ -86,3 +86,17 @@
 		}
 	}
 }
+
+
+/**
+ * Class Hierarchy
+ * -
+ * CBaseEntity
+ *     CBaseDelay
+ *         CBaseAnimating
+ *             CBaseToggle
+ *                 CBasePlatTrain
+ *                     CFuncPlat
+ *                         CFuncPlatRot
+ *                             CFuncTrackChange
+ */

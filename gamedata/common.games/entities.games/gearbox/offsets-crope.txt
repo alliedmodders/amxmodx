@@ -103,7 +103,7 @@
 						"mac"       "924"
 					}
 
-					"m_TempSys"  // RopeSampleData*[5]
+					"m_TempSys"  // class RopeSampleData*[5]
 					{
 						"windows"   "1164"
 						"linux"     "1180"
@@ -117,7 +117,7 @@
 						"mac"       "1200"
 					}
 
-					"m_Spring"  // Spring*
+					"m_Spring"  // class Spring*
 					{
 						"windows"   "1188"
 						"linux"     "1204"

@@ -138,98 +138,98 @@
 						"mac"       "2696"
 					}
 
-					"m_idleState"  // IdleState
+					"m_idleState"  // class IdleState
 					{
 						"windows"   "2684"
 						"linux"     "2704"
 						"mac"       "2704"
 					}
 
-					"m_huntState"  // HuntState
+					"m_huntState"  // class HuntState
 					{
 						"windows"   "2688"
 						"linux"     "2708"
 						"mac"       "2708"
 					}
 
-					"m_attackState"  // AttackState
+					"m_attackState"  // class AttackState
 					{
 						"windows"   "2696"
 						"linux"     "2716"
 						"mac"       "2716"
 					}
 
-					"m_investigateNoiseState"  // InvestigateNoiseState
+					"m_investigateNoiseState"  // class InvestigateNoiseState
 					{
 						"windows"   "2756"
 						"linux"     "2776"
 						"mac"       "2776"
 					}
 
-					"m_buyState"  // BuyState
+					"m_buyState"  // class BuyState
 					{
 						"windows"   "2772"
 						"linux"     "2792"
 						"mac"       "2792"
 					}
 
-					"m_moveToState"  // MoveToState
+					"m_moveToState"  // class MoveToState
 					{
 						"windows"   "2800"
 						"linux"     "2820"
 						"mac"       "2820"
 					}
 
-					"m_fetchBombState"  // FetchBombState
+					"m_fetchBombState"  // class FetchBombState
 					{
 						"windows"   "2824"
 						"linux"     "2844"
 						"mac"       "2844"
 					}
 
-					"m_plantBombState"  // PlantBombState
+					"m_plantBombState"  // class PlantBombState
 					{
 						"windows"   "2828"
 						"linux"     "2848"
 						"mac"       "2848"
 					}
 
-					"m_defuseBombState"  // DefuseBombState
+					"m_defuseBombState"  // class DefuseBombState
 					{
 						"windows"   "2832"
 						"linux"     "2852"
 						"mac"       "2852"
 					}
 
-					"m_hideState"  // HideState
+					"m_hideState"  // class HideState
 					{
 						"windows"   "2836"
 						"linux"     "2856"
 						"mac"       "2856"
 					}
 
-					"m_escapeFromBombState"  // EscapeFromBombState
+					"m_escapeFromBombState"  // class EscapeFromBombState
 					{
 						"windows"   "2900"
 						"linux"     "2920"
 						"mac"       "2920"
 					}
 
-					"m_followState"  // FollowState
+					"m_followState"  // class FollowState
 					{
 						"windows"   "2904"
 						"linux"     "2924"
 						"mac"       "2924"
 					}
 
-					"m_useEntityState"  // UseEntityState
+					"m_useEntityState"  // class UseEntityState
 					{
 						"windows"   "2980"
 						"linux"     "3000"
 						"mac"       "3000"
 					}
 
-					"m_state"  // BotState*
+					"m_state"  // class BotState*
 					{
 						"windows"   "2992"
 						"linux"     "3012"
@@ -656,7 +656,7 @@
 						"mac"       "9988"
 					}
 
-					"m_spotEncounter"  // SpotEncounter*
+					"m_spotEncounter"  // class SpotEncounter*
 					{
 						"windows"   "9976"
 						"linux"     "9996"
@@ -915,7 +915,7 @@
 						"mac"       "10953"
 					}
 
-					"m_equipTimer"  // IntervalTimer
+					"m_equipTimer"  // class IntervalTimer
 					{
 						"windows"   "10936"
 						"linux"     "10956"

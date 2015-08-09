@@ -117,7 +117,7 @@
 						"mac"       "644"
 					}
 
-					"m_pSchedule"  // Schedule_t*
+					"m_pSchedule"  // class Schedule_t*
 					{
 						"windows"   "628"
 						"linux"     "648"

@@ -19,7 +19,7 @@
 			{
 				"Offsets"
 				{
-					"m_profile"  // const BotProfile*
+					"m_profile"  // const class BotProfile*
 					{
 						"windows"   "2480"
 						"linux"     "2500"

@@ -117,7 +117,7 @@
 						"mac"       "404"
 					}
 
-					"m_pSchedule"  // Schedule_t*
+					"m_pSchedule"  // class Schedule_t*
 					{
 						"windows"   "388"
 						"linux"     "408"

@@ -19,7 +19,7 @@
 			{
 				"Offsets"
 				{
-					"m_ClassData"  // DBAreaClassData[12]
+					"m_ClassData"  // class DBAreaClassData[12]
 					{
 						"windows"   "1124"
 						"linux"     "1140"

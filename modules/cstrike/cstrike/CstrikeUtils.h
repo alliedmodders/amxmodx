@@ -77,22 +77,26 @@ bool UTIL_CheckForPublic(const char *publicname);
 #define GET_OFFSET(classname, member)												\
 	static int member = -1;															\
 	if (member == -1)																\
-	{																				\
-		if (!CommonConfig->GetOffsetByClass(classname, #member, &member) || member < 0)\
+	{                                                                               \
+		TypeDescription type;                                                       \
+		if (!CommonConfig->GetOffsetByClass(classname, #member, &type) || type.fieldOffset < 0)\
 		{																			\
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid %s offset. Native %s is disabled", #member, __FUNCTION__);\
 			return 0;																\
 		}																			\
+		member = type.fieldOffset;                                                  \
 	}
 
 #define GET_OFFSET_NO_ERROR(classname, member)										\
 	static int member = -1;															\
 	if (member == -1)																\
-	{																				\
-		if (!CommonConfig->GetOffsetByClass(classname, #member, &member) || member < 0)\
+	{                                                                               \
+		TypeDescription type;                                                       \
+		if (!CommonConfig->GetOffsetByClass(classname, #member, &type) || type.fieldOffset < 0)\
 		{																			\
-			return;																	\
+			return;																    \
 		}																			\
+		member = type.fieldOffset;                                                  \
 	}
 
 template <typename T>

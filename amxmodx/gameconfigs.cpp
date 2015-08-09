@@ -54,7 +54,7 @@ static cell AMX_NATIVE_CALL GameConfGetOffset(AMX *amx, cell *params)
 	}
 
 	int length;
-	int value;
+	TypeDescription value;
 
 	const char *key = get_amxstring(amx, params[2], 0, length);
 
@@ -63,7 +63,7 @@ static cell AMX_NATIVE_CALL GameConfGetOffset(AMX *amx, cell *params)
 		return -1;
 	}
 
-	return value;
+	return value.fieldOffset;
 }
 
 // native GameConfGetClassOffset(GameConfig:handle, const classname[], const key[]);
@@ -78,7 +78,7 @@ static cell AMX_NATIVE_CALL GameConfGetClassOffset(AMX *amx, cell *params)
 	}
 
 	int length;
-	int value;
+	TypeDescription value;
 
 	const char *classname = get_amxstring(amx, params[2], 0, length);
 	const char *key = get_amxstring(amx, params[3], 1, length);
@@ -88,7 +88,7 @@ static cell AMX_NATIVE_CALL GameConfGetClassOffset(AMX *amx, cell *params)
 		return -1;
 	}
 
-	return value;
+	return value.fieldOffset;
 }
 
 // native bool:GameConfGetKeyValue(GameConfig:handle, const key[], buffer[], maxlen);

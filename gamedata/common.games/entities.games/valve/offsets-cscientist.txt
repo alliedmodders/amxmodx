@@ -21,6 +21,8 @@
 				{
 					"m_painTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -28,6 +30,8 @@
 
 					"m_healTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
@@ -35,6 +39,8 @@
 
 					"m_fearTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "780"
 						"linux"     "800"
 						"mac"       "800"

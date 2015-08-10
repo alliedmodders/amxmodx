@@ -21,6 +21,8 @@
 				{
 					"m_fInReload"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"
@@ -28,6 +30,8 @@
 
 					"m_flNextReload"  // float
 					{
+						"type"      "time"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -35,6 +39,8 @@
 
 					"m_iShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -42,6 +48,9 @@
 
 					"m_usDoubleFire"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"
@@ -49,6 +58,9 @@
 
 					"m_usSingleFire"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "202"
 						"linux"     "218"
 						"mac"       "218"

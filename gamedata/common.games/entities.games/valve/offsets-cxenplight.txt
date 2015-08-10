@@ -21,6 +21,8 @@
 				{
 					"m_pGlow"  // CSprite*
 					{
+						"type"      "classptr"
+
 						"windows"   "116"
 						"linux"     "132"
 						"mac"       "132"

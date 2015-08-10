@@ -21,6 +21,8 @@
 				{
 					"m_iRockets"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "660"
 						"linux"     "680"
 						"mac"       "680"
@@ -28,6 +30,8 @@
 
 					"m_flForce"  // float
 					{
+						"type"      "time"
+
 						"windows"   "664"
 						"linux"     "684"
 						"mac"       "684"
@@ -35,6 +39,8 @@
 
 					"m_flNextRocket"  // float
 					{
+						"type"      "time"
+
 						"windows"   "668"
 						"linux"     "688"
 						"mac"       "688"
@@ -42,6 +48,8 @@
 
 					"m_vecTarget"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "672"
 						"linux"     "692"
 						"mac"       "692"
@@ -49,6 +57,8 @@
 
 					"m_posTarget"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "684"
 						"linux"     "704"
 						"mac"       "704"
@@ -56,6 +66,8 @@
 
 					"m_vecDesired"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "696"
 						"linux"     "716"
 						"mac"       "716"
@@ -63,6 +75,8 @@
 
 					"m_posDesired"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -70,6 +84,8 @@
 
 					"m_vecGoal"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -77,6 +93,8 @@
 
 					"m_angGun"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "732"
 						"linux"     "752"
 						"mac"       "752"
@@ -84,6 +102,8 @@
 
 					"m_flLastSeen"  // float
 					{
+						"type"      "time"
+
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
@@ -91,6 +111,8 @@
 
 					"m_flPrevSeen"  // float
 					{
+						"type"      "time"
+
 						"windows"   "748"
 						"linux"     "768"
 						"mac"       "768"
@@ -98,6 +120,8 @@
 
 					"m_iSoundState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"
@@ -105,6 +129,8 @@
 
 					"m_iSpriteTexture"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -112,6 +138,8 @@
 
 					"m_iExplode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
@@ -119,6 +147,8 @@
 
 					"m_iBodyGibs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -126,6 +156,8 @@
 
 					"m_flGoalSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -133,6 +165,8 @@
 
 					"m_iDoSmokePuff"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -140,6 +174,8 @@
 
 					"m_pBeam"  // CBeam*
 					{
+						"type"      "classptr"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"

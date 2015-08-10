@@ -21,6 +21,8 @@
 				{
 					"m_sHintType"  // short int
 					{
+						"type"      "short"
+
 						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"
@@ -28,6 +30,8 @@
 
 					"m_sHintActivity"  // short int
 					{
+						"type"      "short"
+
 						"windows"   "86"
 						"linux"     "102"
 						"mac"       "102"

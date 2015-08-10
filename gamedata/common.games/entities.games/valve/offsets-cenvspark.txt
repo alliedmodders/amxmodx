@@ -21,6 +21,8 @@
 				{
 					"m_flDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"

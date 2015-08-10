@@ -21,6 +21,8 @@
 				{
 					"m_baseSequence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "784"
 						"linux"     "804"
 						"mac"       "804"
@@ -28,6 +30,8 @@
 
 					"m_headTurn"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "788"
 						"linux"     "808"
 						"mac"       "808"
@@ -35,6 +39,8 @@
 
 					"m_flResponseDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "792"
 						"linux"     "812"
 						"mac"       "812"

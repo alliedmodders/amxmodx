@@ -21,6 +21,8 @@
 				{
 					"m_iType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"

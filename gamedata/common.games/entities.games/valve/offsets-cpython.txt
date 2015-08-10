@@ -21,6 +21,8 @@
 				{
 					"m_fInZoom"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"
@@ -28,6 +30,9 @@
 
 					"m_usFirePython"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"

@@ -21,6 +21,8 @@
 				{
 					"m_iszSentence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "240"
 						"linux"     "260"
 						"mac"       "260"
@@ -28,6 +30,8 @@
 
 					"m_iszEntity"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "244"
 						"linux"     "264"
 						"mac"       "264"
@@ -35,6 +39,8 @@
 
 					"m_flRadius"  // float
 					{
+						"type"      "time"
+
 						"windows"   "248"
 						"linux"     "268"
 						"mac"       "268"
@@ -42,6 +48,8 @@
 
 					"m_flDuration"  // float
 					{
+						"type"      "time"
+
 						"windows"   "252"
 						"linux"     "272"
 						"mac"       "272"
@@ -49,6 +57,8 @@
 
 					"m_flRepeat"  // float
 					{
+						"type"      "time"
+
 						"windows"   "256"
 						"linux"     "276"
 						"mac"       "276"
@@ -56,6 +66,8 @@
 
 					"m_flAttenuation"  // float
 					{
+						"type"      "time"
+
 						"windows"   "260"
 						"linux"     "280"
 						"mac"       "280"
@@ -63,6 +75,8 @@
 
 					"m_flVolume"  // float
 					{
+						"type"      "time"
+
 						"windows"   "264"
 						"linux"     "284"
 						"mac"       "284"
@@ -70,6 +84,8 @@
 
 					"m_active"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "268"
 						"linux"     "288"
 						"mac"       "288"
@@ -77,6 +93,8 @@
 
 					"m_iszListener"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "272"
 						"linux"     "292"
 						"mac"       "292"

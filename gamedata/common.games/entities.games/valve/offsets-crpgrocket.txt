@@ -21,6 +21,8 @@
 				{
 					"m_iTrail"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "664"
 						"linux"     "684"
 						"mac"       "684"
@@ -28,6 +30,8 @@
 
 					"m_flIgniteTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "668"
 						"linux"     "688"
 						"mac"       "688"
@@ -35,6 +39,8 @@
 
 					"m_pLauncher"  // CRpg*
 					{
+						"type"      "classptr"
+
 						"windows"   "672"
 						"linux"     "692"
 						"mac"       "692"

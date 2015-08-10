@@ -21,6 +21,8 @@
 				{
 					"m_fCanHornetAttack"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -28,6 +30,8 @@
 
 					"m_flNextHornetAttackCheck"  // float
 					{
+						"type"      "time"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -35,6 +39,8 @@
 
 					"m_flNextPainTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -42,6 +48,8 @@
 
 					"m_flNextSpeakTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -49,6 +57,8 @@
 
 					"m_flNextWordTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "732"
 						"linux"     "752"
 						"mac"       "752"
@@ -56,6 +66,8 @@
 
 					"m_iLastWord"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"

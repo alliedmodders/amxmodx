@@ -21,6 +21,8 @@
 				{
 					"m_hOwner"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "660"
 						"linux"     "680"
 						"mac"       "680"

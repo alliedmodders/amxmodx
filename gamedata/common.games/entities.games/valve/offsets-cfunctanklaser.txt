@@ -21,6 +21,8 @@
 				{
 					"m_pLaser"  // CLaser*
 					{
+						"type"      "classptr"
+
 						"windows"   "212"
 						"linux"     "228"
 						"mac"       "228"
@@ -28,6 +30,8 @@
 
 					"m_laserTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "216"
 						"linux"     "232"
 						"mac"       "232"

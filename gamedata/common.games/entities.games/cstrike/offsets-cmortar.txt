@@ -21,6 +21,8 @@
 				{
 					"m_spriteTexture"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "480"
 						"linux"     "500"
 						"mac"       "500"

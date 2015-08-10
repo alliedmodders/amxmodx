@@ -21,6 +21,8 @@
 				{
 					"m_pTank"  // CFuncTank*
 					{
+						"type"      "classptr"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"

@@ -21,6 +21,8 @@
 				{
 					"m_length"  // float
 					{
+						"type"      "time"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"
@@ -28,6 +30,8 @@
 
 					"m_altName"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"
@@ -35,6 +39,8 @@
 
 					"m_pnext"  // CPathTrack*
 					{
+						"type"      "classptr"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"
@@ -42,6 +48,8 @@
 
 					"m_pprevious"  // CPathTrack*
 					{
+						"type"      "classptr"
+
 						"windows"   "148"
 						"linux"     "164"
 						"mac"       "164"
@@ -49,6 +57,8 @@
 
 					"m_paltpath"  // CPathTrack*
 					{
+						"type"      "classptr"
+
 						"windows"   "152"
 						"linux"     "168"
 						"mac"       "168"

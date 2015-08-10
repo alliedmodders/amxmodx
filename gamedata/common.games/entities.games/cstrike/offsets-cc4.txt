@@ -21,6 +21,8 @@
 				{
 					"m_bStartedArming"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "320"
 						"linux"     "336"
 						"mac"       "336"
@@ -28,6 +30,8 @@
 
 					"m_bBombPlacedAnimation"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "321"
 						"linux"     "337"
 						"mac"       "337"
@@ -35,6 +39,8 @@
 
 					"m_fArmedTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "324"
 						"linux"     "340"
 						"mac"       "340"
@@ -42,6 +48,8 @@
 
 					"m_bHasShield"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "328"
 						"linux"     "344"
 						"mac"       "344"

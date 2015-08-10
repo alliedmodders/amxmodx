@@ -21,6 +21,8 @@
 				{
 					"m_flDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"
@@ -28,6 +30,8 @@
 
 					"m_iszKillTarget"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"

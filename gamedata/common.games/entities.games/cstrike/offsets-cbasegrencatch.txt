@@ -21,6 +21,8 @@
 				{
 					"m_NeedGrenadeType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"
@@ -28,6 +30,8 @@
 
 					"sTriggerOnGrenade"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"
@@ -35,6 +39,8 @@
 
 					"sDisableOnGrenade"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"
@@ -42,6 +48,8 @@
 
 					"m_fSmokeTouching"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "148"
 						"linux"     "164"
 						"mac"       "164"
@@ -49,6 +57,8 @@
 
 					"m_fFlashTouched"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "149"
 						"linux"     "165"
 						"mac"       "165"

@@ -21,6 +21,8 @@
 				{
 					"m_iShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "320"
 						"linux"     "336"
 						"mac"       "336"
@@ -28,6 +30,9 @@
 
 					"m_usFireELITE_LEFT"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "324"
 						"linux"     "340"
 						"mac"       "340"
@@ -35,6 +40,9 @@
 
 					"m_usFireELITE_RIGHT"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "326"
 						"linux"     "342"
 						"mac"       "342"

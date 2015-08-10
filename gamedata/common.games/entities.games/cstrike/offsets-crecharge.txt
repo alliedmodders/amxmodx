@@ -21,6 +21,8 @@
 				{
 					"m_flNextCharge"  // float
 					{
+						"type"      "time"
+
 						"windows"   "292"
 						"linux"     "312"
 						"mac"       "312"
@@ -28,6 +30,8 @@
 
 					"m_iReactivate"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "296"
 						"linux"     "316"
 						"mac"       "316"
@@ -35,6 +39,8 @@
 
 					"m_iJuice"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "300"
 						"linux"     "320"
 						"mac"       "320"
@@ -42,6 +48,8 @@
 
 					"m_iOn"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "304"
 						"linux"     "324"
 						"mac"       "324"
@@ -49,6 +57,8 @@
 
 					"m_flSoundTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "308"
 						"linux"     "328"
 						"mac"       "328"

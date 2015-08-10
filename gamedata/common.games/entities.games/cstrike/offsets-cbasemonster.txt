@@ -21,6 +21,8 @@
 				{
 					"m_Activity"  // Activity
 					{
+						"type"      "integer"
+
 						"windows"   "292"
 						"linux"     "312"
 						"mac"       "312"
@@ -28,6 +30,8 @@
 
 					"m_IdealActivity"  // Activity
 					{
+						"type"      "integer"
+
 						"windows"   "296"
 						"linux"     "316"
 						"mac"       "316"
@@ -35,6 +39,8 @@
 
 					"m_LastHitGroup"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "300"
 						"linux"     "320"
 						"mac"       "320"
@@ -42,6 +48,8 @@
 
 					"m_bitsDamageType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "304"
 						"linux"     "324"
 						"mac"       "324"
@@ -49,6 +57,10 @@
 
 					"m_rgbTimeBasedDamage"  // unsigned char[8]
 					{
+						"type"      "character"
+						"size"      "8"
+						"unsigned"  "1"
+
 						"windows"   "308"
 						"linux"     "328"
 						"mac"       "328"
@@ -56,6 +68,8 @@
 
 					"m_MonsterState"  // MONSTERSTATE
 					{
+						"type"      "integer"
+
 						"windows"   "316"
 						"linux"     "336"
 						"mac"       "336"
@@ -63,6 +77,8 @@
 
 					"m_IdealMonsterState"  // MONSTERSTATE
 					{
+						"type"      "integer"
+
 						"windows"   "320"
 						"linux"     "340"
 						"mac"       "340"
@@ -70,6 +86,8 @@
 
 					"m_afConditions"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "324"
 						"linux"     "344"
 						"mac"       "344"
@@ -77,6 +95,8 @@
 
 					"m_afMemory"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "328"
 						"linux"     "348"
 						"mac"       "348"
@@ -84,6 +104,8 @@
 
 					"m_flNextAttack"  // float
 					{
+						"type"      "time"
+
 						"windows"   "332"
 						"linux"     "352"
 						"mac"       "352"
@@ -91,6 +113,8 @@
 
 					"m_hEnemy"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "336"
 						"linux"     "356"
 						"mac"       "356"
@@ -98,6 +122,8 @@
 
 					"m_hTargetEnt"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "344"
 						"linux"     "364"
 						"mac"       "364"
@@ -105,6 +131,8 @@
 
 					"m_flFieldOfView"  // float
 					{
+						"type"      "time"
+
 						"windows"   "352"
 						"linux"     "372"
 						"mac"       "372"
@@ -112,6 +140,8 @@
 
 					"m_bloodColor"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "356"
 						"linux"     "376"
 						"mac"       "376"
@@ -119,6 +149,8 @@
 
 					"m_HackedGunPos"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "360"
 						"linux"     "380"
 						"mac"       "380"
@@ -126,6 +158,8 @@
 
 					"m_vecEnemyLKP"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "372"
 						"linux"     "392"
 						"mac"       "392"

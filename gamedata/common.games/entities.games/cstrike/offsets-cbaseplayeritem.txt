@@ -21,6 +21,8 @@
 				{
 					"m_pPlayer"  // CBasePlayer*
 					{
+						"type"      "classptr"
+
 						"windows"   "164"
 						"linux"     "180"
 						"mac"       "180"
@@ -28,6 +30,8 @@
 
 					"m_pNext"  // CBasePlayerItem*
 					{
+						"type"      "classptr"
+
 						"windows"   "168"
 						"linux"     "184"
 						"mac"       "184"
@@ -35,6 +39,8 @@
 
 					"m_iId"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "172"
 						"linux"     "188"
 						"mac"       "188"

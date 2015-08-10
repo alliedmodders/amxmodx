@@ -21,6 +21,8 @@
 				{
 					"m_Activity"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "384"
 						"linux"     "404"
 						"mac"       "404"
@@ -28,6 +30,8 @@
 
 					"m_bTouched"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "388"
 						"linux"     "408"
 						"mac"       "408"
@@ -35,6 +39,8 @@
 
 					"m_bRescueMe"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "392"
 						"linux"     "412"
 						"mac"       "412"
@@ -42,6 +48,8 @@
 
 					"m_flFlinchTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "396"
 						"linux"     "416"
 						"mac"       "416"
@@ -49,6 +57,8 @@
 
 					"m_flNextChange"  // float
 					{
+						"type"      "time"
+
 						"windows"   "400"
 						"linux"     "420"
 						"mac"       "420"
@@ -56,6 +66,8 @@
 
 					"m_flMarkPosition"  // float
 					{
+						"type"      "time"
+
 						"windows"   "404"
 						"linux"     "424"
 						"mac"       "424"
@@ -63,6 +75,8 @@
 
 					"m_iModel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "408"
 						"linux"     "428"
 						"mac"       "428"
@@ -70,6 +84,8 @@
 
 					"m_iSkin"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "412"
 						"linux"     "432"
 						"mac"       "432"
@@ -77,6 +93,8 @@
 
 					"m_flNextRadarTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "416"
 						"linux"     "436"
 						"mac"       "436"
@@ -84,6 +102,8 @@
 
 					"m_State"  // enum state
 					{
+						"type"      "integer"
+
 						"windows"   "420"
 						"linux"     "440"
 						"mac"       "440"
@@ -91,6 +111,8 @@
 
 					"m_vStart"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "424"
 						"linux"     "444"
 						"mac"       "444"
@@ -98,6 +120,8 @@
 
 					"m_vStartAngles"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "436"
 						"linux"     "456"
 						"mac"       "456"
@@ -105,6 +129,9 @@
 
 					"m_vPathToFollow"  // Vector[20]
 					{
+						"type"      "vector"
+						"size"      "20"
+
 						"windows"   "448"
 						"linux"     "468"
 						"mac"       "468"
@@ -112,6 +139,8 @@
 
 					"m_iWaypoint"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "688"
 						"linux"     "708"
 						"mac"       "708"
@@ -119,13 +148,17 @@
 
 					"m_target"  // CBasePlayer*
 					{
+						"type"      "classptr"
+
 						"windows"   "692"
 						"linux"     "712"
 						"mac"       "712"
 					}
 
-					"m_LocalNav"  // CLocalNav*
+					"m_LocalNav"  // class CLocalNav*
 					{
+						"type"      "pointer"
+
 						"windows"   "696"
 						"linux"     "716"
 						"mac"       "716"
@@ -133,6 +166,8 @@
 
 					"nTargetNode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "700"
 						"linux"     "720"
 						"mac"       "720"
@@ -140,6 +175,9 @@
 
 					"vecNodes"  // Vector[100]
 					{
+						"type"      "vector"
+						"size"      "100"
+
 						"windows"   "704"
 						"linux"     "724"
 						"mac"       "724"
@@ -147,6 +185,8 @@
 
 					"m_hStoppedTargetEnt"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1904"
 						"linux"     "1924"
 						"mac"       "1924"
@@ -154,6 +194,8 @@
 
 					"m_flNextFullThink"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1912"
 						"linux"     "1932"
 						"mac"       "1932"
@@ -161,6 +203,8 @@
 
 					"m_flPathCheckInterval"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1916"
 						"linux"     "1936"
 						"mac"       "1936"
@@ -168,6 +212,8 @@
 
 					"m_flLastPathCheck"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1920"
 						"linux"     "1940"
 						"mac"       "1940"
@@ -175,6 +221,8 @@
 
 					"m_nPathNodes"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1924"
 						"linux"     "1944"
 						"mac"       "1944"
@@ -182,6 +230,8 @@
 
 					"m_fHasPath"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1928"
 						"linux"     "1948"
 						"mac"       "1948"
@@ -189,6 +239,8 @@
 
 					"m_flPathAcquired"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1932"
 						"linux"     "1952"
 						"mac"       "1952"
@@ -196,6 +248,8 @@
 
 					"m_vOldPos"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1936"
 						"linux"     "1956"
 						"mac"       "1956"
@@ -203,6 +257,8 @@
 
 					"m_iHostageIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1948"
 						"linux"     "1968"
 						"mac"       "1968"
@@ -210,6 +266,8 @@
 
 					"m_bStuck"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1952"
 						"linux"     "1972"
 						"mac"       "1972"
@@ -217,13 +275,17 @@
 
 					"m_flStuckTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1956"
 						"linux"     "1976"
 						"mac"       "1976"
 					}
 
-					"m_improv"  // CHostageImprov*
+					"m_improv"  // class CHostageImprov*
 					{
+						"type"      "pointer"
+
 						"windows"   "1960"
 						"linux"     "1980"
 						"mac"       "1980"
@@ -231,6 +293,8 @@
 
 					"m_whichModel"  // enum ModelType
 					{
+						"type"      "integer"
+
 						"windows"   "1964"
 						"linux"     "1984"
 						"mac"       "1984"

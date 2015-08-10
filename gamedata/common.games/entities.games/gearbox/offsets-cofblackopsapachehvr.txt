@@ -21,6 +21,8 @@
 				{
 					"m_iTrail"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -28,6 +30,8 @@
 
 					"m_vecForward"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"

@@ -21,6 +21,8 @@
 				{
 					"m_flGravity"  // float
 					{
+						"type"      "time"
+
 						"windows"   "132"
 						"linux"     "148"
 						"mac"       "148"

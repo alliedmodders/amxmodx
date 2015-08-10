@@ -21,6 +21,8 @@
 				{
 					"m_state"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"

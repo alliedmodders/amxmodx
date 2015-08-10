@@ -21,6 +21,8 @@
 				{
 					"m_fGunDrawn"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "824"
 						"linux"     "844"
 						"mac"       "844"
@@ -28,6 +30,8 @@
 
 					"m_painTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "828"
 						"linux"     "848"
 						"mac"       "848"
@@ -35,6 +39,8 @@
 
 					"m_checkAttackTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "832"
 						"linux"     "852"
 						"mac"       "852"
@@ -42,6 +48,8 @@
 
 					"m_lastAttackCheck"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "836"
 						"linux"     "856"
 						"mac"       "856"
@@ -49,6 +57,8 @@
 
 					"m_iOtisBody"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "840"
 						"linux"     "860"
 						"mac"       "860"
@@ -56,6 +66,8 @@
 
 					"m_iOtisHead"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "844"
 						"linux"     "864"
 						"mac"       "864"
@@ -63,6 +75,8 @@
 
 					"m_flPlayerDamage"  // float
 					{
+						"type"      "time"
+
 						"windows"   "848"
 						"linux"     "868"
 						"mac"       "868"

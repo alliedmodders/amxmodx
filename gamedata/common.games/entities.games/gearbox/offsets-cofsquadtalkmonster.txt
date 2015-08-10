@@ -21,6 +21,8 @@
 				{
 					"m_hSquadLeader"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"
@@ -28,6 +30,9 @@
 
 					"m_hSquadMember"  // EHANDLE[4]
 					{
+						"type"      "ehandle"
+						"size"      "4"
+
 						"windows"   "828"
 						"linux"     "848"
 						"mac"       "848"
@@ -35,6 +40,8 @@
 
 					"m_afSquadSlots"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "860"
 						"linux"     "880"
 						"mac"       "880"
@@ -42,6 +49,8 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "864"
 						"linux"     "884"
 						"mac"       "884"
@@ -49,6 +58,8 @@
 
 					"m_fEnemyEluded"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "868"
 						"linux"     "888"
 						"mac"       "888"
@@ -56,6 +67,8 @@
 
 					"m_hWaitMedic"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "872"
 						"linux"     "892"
 						"mac"       "892"
@@ -63,6 +76,8 @@
 
 					"m_flMedicWaitTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "880"
 						"linux"     "900"
 						"mac"       "900"
@@ -70,6 +85,8 @@
 
 					"m_flLastHitByPlayer"  // float
 					{
+						"type"      "time"
+
 						"windows"   "884"
 						"linux"     "904"
 						"mac"       "904"
@@ -77,6 +94,8 @@
 
 					"m_iPlayerHits"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "888"
 						"linux"     "908"
 						"mac"       "908"
@@ -84,6 +103,8 @@
 
 					"m_iMySlot"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "892"
 						"linux"     "912"
 						"mac"       "912"

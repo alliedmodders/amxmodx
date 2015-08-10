@@ -21,6 +21,8 @@
 				{
 					"m_flNextGrenadeCheck"  // float
 					{
+						"type"      "time"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -28,6 +30,8 @@
 
 					"m_flNextPainTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -35,6 +39,8 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -42,6 +48,8 @@
 
 					"m_vecTossVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
@@ -49,6 +57,8 @@
 
 					"m_fThrowGrenade"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "788"
 						"linux"     "808"
 						"mac"       "808"
@@ -56,6 +66,8 @@
 
 					"m_fStanding"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "792"
 						"linux"     "812"
 						"mac"       "812"
@@ -63,6 +75,8 @@
 
 					"m_fFirstEncounter"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "796"
 						"linux"     "816"
 						"mac"       "816"
@@ -70,6 +84,8 @@
 
 					"m_cClipSize"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "800"
 						"linux"     "820"
 						"mac"       "820"
@@ -77,6 +93,8 @@
 
 					"m_flLastShot"  // float
 					{
+						"type"      "time"
+
 						"windows"   "804"
 						"linux"     "824"
 						"mac"       "824"
@@ -84,6 +102,8 @@
 
 					"m_voicePitch"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "808"
 						"linux"     "828"
 						"mac"       "828"
@@ -91,6 +111,8 @@
 
 					"m_iBrassShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "812"
 						"linux"     "832"
 						"mac"       "832"
@@ -98,6 +120,8 @@
 
 					"m_iShotgunShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "816"
 						"linux"     "836"
 						"mac"       "836"
@@ -105,6 +129,8 @@
 
 					"m_iSentence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"
@@ -112,6 +138,8 @@
 
 					"m_flLastChargeTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "824"
 						"linux"     "844"
 						"mac"       "844"
@@ -119,6 +147,8 @@
 
 					"m_flLastBlinkTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "828"
 						"linux"     "848"
 						"mac"       "848"
@@ -126,6 +156,8 @@
 
 					"m_flLastBlinkInterval"  // float
 					{
+						"type"      "time"
+
 						"windows"   "832"
 						"linux"     "852"
 						"mac"       "852"

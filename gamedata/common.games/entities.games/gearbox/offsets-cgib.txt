@@ -21,6 +21,8 @@
 				{
 					"m_bloodColor"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"m_cBloodDecals"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -35,6 +39,8 @@
 
 					"m_material"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -42,6 +48,8 @@
 
 					"m_lifeTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "108"
 						"linux"     "124"
 						"mac"       "124"

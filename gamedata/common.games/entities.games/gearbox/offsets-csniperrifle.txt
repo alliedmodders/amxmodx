@@ -21,6 +21,8 @@
 				{
 					"m_iDummy"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -28,6 +30,8 @@
 
 					"m_fInZoom"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -35,6 +39,8 @@
 
 					"m_flReloadStart"  // float
 					{
+						"type"      "time"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"
@@ -42,6 +48,8 @@
 
 					"m_iReloading"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "204"
 						"linux"     "220"
 						"mac"       "220"
@@ -49,6 +57,9 @@
 
 					"m_usSniper"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "208"
 						"linux"     "224"
 						"mac"       "224"

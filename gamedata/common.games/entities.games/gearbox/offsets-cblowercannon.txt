@@ -21,6 +21,8 @@
 				{
 					"m_flDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "252"
 						"linux"     "272"
 						"mac"       "272"
@@ -28,6 +30,8 @@
 
 					"m_iZOffset"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "256"
 						"linux"     "276"
 						"mac"       "276"
@@ -35,6 +39,8 @@
 
 					"m_iWeaponType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "260"
 						"linux"     "280"
 						"mac"       "280"
@@ -42,6 +48,8 @@
 
 					"m_iFireType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "264"
 						"linux"     "284"
 						"mac"       "284"

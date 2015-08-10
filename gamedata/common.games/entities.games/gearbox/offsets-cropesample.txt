@@ -21,6 +21,8 @@
 				{
 					"data"  // struct RopeSampleData
 					{
+						"type"      "structure"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"mMasterRope"  // CRope*
 					{
+						"type"      "classptr"
+
 						"windows"   "152"
 						"linux"     "168"
 						"mac"       "168"

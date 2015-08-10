@@ -21,6 +21,8 @@
 				{
 					"m_iGibs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -28,6 +30,8 @@
 
 					"m_iGibCapacity"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "108"
 						"linux"     "124"
 						"mac"       "124"
@@ -35,6 +39,8 @@
 
 					"m_iGibMaterial"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "112"
 						"linux"     "128"
 						"mac"       "128"
@@ -42,6 +48,8 @@
 
 					"m_iGibModelIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "116"
 						"linux"     "132"
 						"mac"       "132"
@@ -49,6 +57,8 @@
 
 					"m_flGibVelocity"  // float
 					{
+						"type"      "time"
+
 						"windows"   "120"
 						"linux"     "136"
 						"mac"       "136"
@@ -56,6 +66,8 @@
 
 					"m_flVariance"  // float
 					{
+						"type"      "time"
+
 						"windows"   "124"
 						"linux"     "140"
 						"mac"       "140"
@@ -63,6 +75,8 @@
 
 					"m_flGibLife"  // float
 					{
+						"type"      "time"
+
 						"windows"   "128"
 						"linux"     "144"
 						"mac"       "144"

@@ -21,6 +21,8 @@
 				{
 					"triggerType"  // USE_TYPE
 					{
+						"type"      "integer"
+
 						"windows"   "252"
 						"linux"     "272"
 						"mac"       "272"
@@ -28,6 +30,8 @@
 
 					"team_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "256"
 						"linux"     "276"
 						"mac"       "276"
@@ -35,6 +39,8 @@
 
 					"trigger_delay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "260"
 						"linux"     "280"
 						"mac"       "280"
@@ -42,6 +48,8 @@
 
 					"m_flTriggerDelayTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "264"
 						"linux"     "284"
 						"mac"       "284"
@@ -49,6 +57,8 @@
 
 					"score"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "268"
 						"linux"     "288"
 						"mac"       "288"
@@ -56,6 +66,8 @@
 
 					"team_score"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "272"
 						"linux"     "292"
 						"mac"       "292"

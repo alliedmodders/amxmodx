@@ -21,6 +21,8 @@
 				{
 					"bPlayBombSound"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"bBombSoundPlaying"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"

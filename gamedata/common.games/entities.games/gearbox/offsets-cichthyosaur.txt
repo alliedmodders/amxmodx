@@ -21,6 +21,8 @@
 				{
 					"m_SaveVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"
@@ -28,6 +30,8 @@
 
 					"m_idealDist"  // float
 					{
+						"type"      "time"
+
 						"windows"   "748"
 						"linux"     "768"
 						"mac"       "768"
@@ -35,6 +39,8 @@
 
 					"m_flBlink"  // float
 					{
+						"type"      "time"
+
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"
@@ -42,6 +48,8 @@
 
 					"m_flEnemyTouched"  // float
 					{
+						"type"      "time"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -49,6 +57,8 @@
 
 					"m_bOnAttack"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
@@ -56,6 +66,8 @@
 
 					"m_flMaxSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -63,6 +75,8 @@
 
 					"m_flMinSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -70,6 +84,8 @@
 
 					"m_flMaxDist"  // float
 					{
+						"type"      "time"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -77,6 +93,8 @@
 
 					"m_pBeam"  // CBeam*
 					{
+						"type"      "classptr"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
@@ -84,6 +102,8 @@
 
 					"m_flNextAlert"  // float
 					{
+						"type"      "time"
+
 						"windows"   "780"
 						"linux"     "800"
 						"mac"       "800"

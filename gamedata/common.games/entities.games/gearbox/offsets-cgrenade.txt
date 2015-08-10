@@ -21,6 +21,8 @@
 				{
 					"m_fRegisteredSound"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"

@@ -21,6 +21,8 @@
 				{
 					"d_x"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"d_y"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +39,8 @@
 
 					"m_lastupdate"  // float
 					{
+						"type"      "time"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -42,6 +48,8 @@
 
 					"m_playsound"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -49,6 +57,8 @@
 
 					"m_updated"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -56,6 +66,8 @@
 
 					"m_direction"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -63,6 +75,8 @@
 
 					"m_start"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "732"
 						"linux"     "752"
 						"mac"       "752"
@@ -70,6 +84,8 @@
 
 					"m_end"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
@@ -77,6 +93,8 @@
 
 					"m_velocity"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -84,6 +102,8 @@
 
 					"m_hmin"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
@@ -91,6 +111,8 @@
 
 					"m_hmax"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -98,6 +120,8 @@
 
 					"m_fireLast"  // float
 					{
+						"type"      "time"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -105,6 +129,8 @@
 
 					"m_maxRange"  // float
 					{
+						"type"      "time"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -112,6 +138,8 @@
 
 					"m_minRange"  // float
 					{
+						"type"      "time"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
@@ -119,6 +147,8 @@
 
 					"m_iEnemyType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "780"
 						"linux"     "800"
 						"mac"       "800"
@@ -126,6 +156,8 @@
 
 					"m_fireDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "784"
 						"linux"     "804"
 						"mac"       "804"
@@ -133,6 +165,8 @@
 
 					"m_trackDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "788"
 						"linux"     "808"
 						"mac"       "808"
@@ -140,6 +174,8 @@
 
 					"m_tracking"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "792"
 						"linux"     "812"
 						"mac"       "812"
@@ -147,6 +183,8 @@
 
 					"m_zeroYaw"  // float
 					{
+						"type"      "time"
+
 						"windows"   "796"
 						"linux"     "816"
 						"mac"       "816"
@@ -154,6 +192,8 @@
 
 					"m_vGunAngle"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "800"
 						"linux"     "820"
 						"mac"       "820"
@@ -161,6 +201,8 @@
 
 					"m_vIdealGunVector"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "812"
 						"linux"     "832"
 						"mac"       "832"
@@ -168,6 +210,8 @@
 
 					"m_vIdealGunAngle"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "824"
 						"linux"     "844"
 						"mac"       "844"

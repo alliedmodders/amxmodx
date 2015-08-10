@@ -21,6 +21,8 @@
 				{
 					"m_iSegments"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -28,6 +30,9 @@
 
 					"seg"  // CRopeSegment*[63]
 					{
+						"type"      "classptr"
+						"size"      "63"
+
 						"windows"   "108"
 						"linux"     "124"
 						"mac"       "124"
@@ -35,6 +40,9 @@
 
 					"altseg"  // CRopeSegment*[63]
 					{
+						"type"      "classptr"
+						"size"      "63"
+
 						"windows"   "360"
 						"linux"     "376"
 						"mac"       "376"
@@ -42,6 +50,8 @@
 
 					"m_bToggle"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "612"
 						"linux"     "628"
 						"mac"       "628"
@@ -49,6 +59,8 @@
 
 					"m_InitialDeltaTime"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "613"
 						"linux"     "629"
 						"mac"       "629"
@@ -56,6 +68,8 @@
 
 					"mLastTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "616"
 						"linux"     "632"
 						"mac"       "632"
@@ -63,6 +77,8 @@
 
 					"m_LastEndPos"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "620"
 						"linux"     "636"
 						"mac"       "636"
@@ -70,6 +86,8 @@
 
 					"m_Gravity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "632"
 						"linux"     "648"
 						"mac"       "648"
@@ -77,6 +95,8 @@
 
 					"m_HookConstant"  // float
 					{
+						"type"      "time"
+
 						"windows"   "644"
 						"linux"     "660"
 						"mac"       "660"
@@ -84,6 +104,8 @@
 
 					"m_SpringDampning"  // float
 					{
+						"type"      "time"
+
 						"windows"   "648"
 						"linux"     "664"
 						"mac"       "664"
@@ -91,6 +113,9 @@
 
 					"m_CurrentSys"  // CRopeSample*[64]
 					{
+						"type"      "classptr"
+						"size"      "64"
+
 						"windows"   "652"
 						"linux"     "668"
 						"mac"       "668"
@@ -98,6 +123,9 @@
 
 					"m_TargetSys"  // CRopeSample*[64]
 					{
+						"type"      "classptr"
+						"size"      "64"
+
 						"windows"   "908"
 						"linux"     "924"
 						"mac"       "924"
@@ -105,6 +133,9 @@
 
 					"m_TempSys"  // class RopeSampleData*[5]
 					{
+						"type"      "pointer"
+						"size"      "5"
+
 						"windows"   "1164"
 						"linux"     "1180"
 						"mac"       "1180"
@@ -112,6 +143,8 @@
 
 					"m_NumSamples"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1184"
 						"linux"     "1200"
 						"mac"       "1200"
@@ -119,6 +152,8 @@
 
 					"m_Spring"  // class Spring*
 					{
+						"type"      "pointer"
+
 						"windows"   "1188"
 						"linux"     "1204"
 						"mac"       "1204"
@@ -126,6 +161,8 @@
 
 					"m_SpringCnt"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1192"
 						"linux"     "1208"
 						"mac"       "1208"
@@ -133,6 +170,8 @@
 
 					"mSpringsInitialized"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "1196"
 						"linux"     "1212"
 						"mac"       "1212"
@@ -140,6 +179,8 @@
 
 					"m_BeamOffset"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1200"
 						"linux"     "1216"
 						"mac"       "1216"
@@ -147,6 +188,8 @@
 
 					"mObjectAttached"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "1204"
 						"linux"     "1220"
 						"mac"       "1220"
@@ -154,6 +197,8 @@
 
 					"mAttachedObjectsSegment"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1208"
 						"linux"     "1224"
 						"mac"       "1224"
@@ -161,6 +206,8 @@
 
 					"mAttachedObjectsOffset"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1212"
 						"linux"     "1228"
 						"mac"       "1228"
@@ -168,6 +215,8 @@
 
 					"detachTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1216"
 						"linux"     "1232"
 						"mac"       "1232"
@@ -175,6 +224,8 @@
 
 					"mBodyModel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1220"
 						"linux"     "1236"
 						"mac"       "1236"
@@ -182,6 +233,8 @@
 
 					"mEndingModel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1224"
 						"linux"     "1240"
 						"mac"       "1240"
@@ -189,6 +242,8 @@
 
 					"mDisallowPlayerAttachment"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1228"
 						"linux"     "1244"
 						"mac"       "1244"
@@ -196,6 +251,8 @@
 
 					"mMakeSound"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1232"
 						"linux"     "1248"
 						"mac"       "1248"

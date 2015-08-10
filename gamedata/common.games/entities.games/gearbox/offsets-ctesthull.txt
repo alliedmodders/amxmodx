@@ -21,6 +21,8 @@
 				{
 					"vecBadNodeOrigin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"

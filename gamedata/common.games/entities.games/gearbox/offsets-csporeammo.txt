@@ -21,6 +21,8 @@
 				{
 					"m_flRegrowTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"m_flAnimTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"

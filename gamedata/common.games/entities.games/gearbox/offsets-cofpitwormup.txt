@@ -21,6 +21,8 @@
 				{
 					"m_flNextPainSound"  // float
 					{
+						"type"      "time"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_vecTarget"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +39,8 @@
 
 					"m_posTarget"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -42,6 +48,8 @@
 
 					"m_vecDesired"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"
@@ -49,6 +57,8 @@
 
 					"m_posDesired"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "748"
 						"linux"     "768"
 						"mac"       "768"
@@ -56,6 +66,8 @@
 
 					"m_offsetBeam"  // float
 					{
+						"type"      "time"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
@@ -63,6 +75,8 @@
 
 					"m_posBeam"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -70,6 +84,8 @@
 
 					"m_vecBeam"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
@@ -77,6 +93,8 @@
 
 					"m_angleBeam"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "788"
 						"linux"     "808"
 						"mac"       "808"
@@ -84,6 +102,8 @@
 
 					"m_flBeamExpireTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "800"
 						"linux"     "820"
 						"mac"       "820"
@@ -91,6 +111,8 @@
 
 					"m_flBeamDir"  // float
 					{
+						"type"      "time"
+
 						"windows"   "804"
 						"linux"     "824"
 						"mac"       "824"
@@ -98,6 +120,8 @@
 
 					"m_flTorsoYaw"  // float
 					{
+						"type"      "time"
+
 						"windows"   "808"
 						"linux"     "828"
 						"mac"       "828"
@@ -105,6 +129,8 @@
 
 					"m_flHeadYaw"  // float
 					{
+						"type"      "time"
+
 						"windows"   "812"
 						"linux"     "832"
 						"mac"       "832"
@@ -112,6 +138,8 @@
 
 					"m_flHeadPitch"  // float
 					{
+						"type"      "time"
+
 						"windows"   "816"
 						"linux"     "836"
 						"mac"       "836"
@@ -119,6 +147,8 @@
 
 					"m_flIdealTorsoYaw"  // float
 					{
+						"type"      "time"
+
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"
@@ -126,6 +156,8 @@
 
 					"m_flIdealHeadYaw"  // float
 					{
+						"type"      "time"
+
 						"windows"   "824"
 						"linux"     "844"
 						"mac"       "844"
@@ -133,6 +165,8 @@
 
 					"m_flIdealHeadPitch"  // float
 					{
+						"type"      "time"
+
 						"windows"   "828"
 						"linux"     "848"
 						"mac"       "848"
@@ -140,6 +174,9 @@
 
 					"m_flLevels"  // float[4]
 					{
+						"type"      "time"
+						"size"      "4"
+
 						"windows"   "832"
 						"linux"     "852"
 						"mac"       "852"
@@ -147,6 +184,9 @@
 
 					"m_flTargetLevels"  // float[4]
 					{
+						"type"      "time"
+						"size"      "4"
+
 						"windows"   "848"
 						"linux"     "868"
 						"mac"       "868"
@@ -154,6 +194,8 @@
 
 					"m_flLastSeen"  // float
 					{
+						"type"      "time"
+
 						"windows"   "864"
 						"linux"     "884"
 						"mac"       "884"
@@ -161,6 +203,8 @@
 
 					"m_flPrevSeen"  // float
 					{
+						"type"      "time"
+
 						"windows"   "868"
 						"linux"     "888"
 						"mac"       "888"
@@ -168,6 +212,8 @@
 
 					"m_iLevel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "872"
 						"linux"     "892"
 						"mac"       "892"
@@ -175,6 +221,8 @@
 
 					"m_flLevelSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "876"
 						"linux"     "896"
 						"mac"       "896"
@@ -182,6 +230,8 @@
 
 					"m_pBeam"  // CBeam*
 					{
+						"type"      "classptr"
+
 						"windows"   "880"
 						"linux"     "900"
 						"mac"       "900"
@@ -189,6 +239,8 @@
 
 					"m_pSprite"  // CSprite*
 					{
+						"type"      "classptr"
+
 						"windows"   "884"
 						"linux"     "904"
 						"mac"       "904"
@@ -196,6 +248,8 @@
 
 					"m_fAttacking"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "888"
 						"linux"     "908"
 						"mac"       "908"
@@ -203,6 +257,8 @@
 
 					"m_fLockHeight"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "892"
 						"linux"     "912"
 						"mac"       "912"
@@ -210,6 +266,8 @@
 
 					"m_fLockYaw"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "896"
 						"linux"     "916"
 						"mac"       "916"
@@ -217,6 +275,8 @@
 
 					"m_iWasHit"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "900"
 						"linux"     "920"
 						"mac"       "920"
@@ -224,6 +284,8 @@
 
 					"m_flTakeHitTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "904"
 						"linux"     "924"
 						"mac"       "924"
@@ -231,6 +293,8 @@
 
 					"m_flHitTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "908"
 						"linux"     "928"
 						"mac"       "928"
@@ -238,6 +302,8 @@
 
 					"m_flNextMeleeTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "912"
 						"linux"     "932"
 						"mac"       "932"
@@ -245,6 +311,8 @@
 
 					"m_flNextRangeTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
@@ -252,6 +320,8 @@
 
 					"m_flDeathStartTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "920"
 						"linux"     "940"
 						"mac"       "940"
@@ -259,6 +329,8 @@
 
 					"m_fFirstSighting"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "924"
 						"linux"     "944"
 						"mac"       "944"
@@ -266,6 +338,8 @@
 
 					"m_fTopLevelLocked"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "928"
 						"linux"     "948"
 						"mac"       "948"
@@ -273,6 +347,8 @@
 
 					"m_flLastBlinkTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "932"
 						"linux"     "952"
 						"mac"       "952"
@@ -280,6 +356,8 @@
 
 					"m_flLastBlinkInterval"  // float
 					{
+						"type"      "time"
+
 						"windows"   "936"
 						"linux"     "956"
 						"mac"       "956"
@@ -287,6 +365,8 @@
 
 					"m_flLastEventTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "940"
 						"linux"     "960"
 						"mac"       "960"

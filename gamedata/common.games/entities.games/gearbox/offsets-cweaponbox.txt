@@ -21,6 +21,9 @@
 				{
 					"m_rgpPlayerItems"  // CBasePlayerItem*[7]
 					{
+						"type"      "classptr"
+						"size"      "7"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +31,9 @@
 
 					"m_rgiszAmmo"  // int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+
 						"windows"   "124"
 						"linux"     "140"
 						"mac"       "140"
@@ -35,6 +41,9 @@
 
 					"m_rgAmmo"  // int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+
 						"windows"   "252"
 						"linux"     "268"
 						"mac"       "268"
@@ -42,6 +51,8 @@
 
 					"m_cAmmoTypes"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "380"
 						"linux"     "396"
 						"mac"       "396"

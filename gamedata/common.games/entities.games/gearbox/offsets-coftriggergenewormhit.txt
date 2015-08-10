@@ -21,6 +21,8 @@
 				{
 					"m_flLastDamageTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "252"
 						"linux"     "272"
 						"mac"       "272"

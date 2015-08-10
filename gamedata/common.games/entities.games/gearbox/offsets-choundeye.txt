@@ -21,6 +21,8 @@
 				{
 					"m_iSpriteTexture"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -28,6 +30,8 @@
 
 					"m_fAsleep"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -35,6 +39,8 @@
 
 					"m_fDontBlink"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -42,6 +48,8 @@
 
 					"m_vecPackCenter"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"

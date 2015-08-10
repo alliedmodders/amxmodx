@@ -21,6 +21,8 @@
 				{
 					"m_flLastShot"  // float
 					{
+						"type"      "time"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_flDiviation"  // float
 					{
+						"type"      "time"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +39,8 @@
 
 					"m_flNextJump"  // float
 					{
+						"type"      "time"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -42,6 +48,8 @@
 
 					"m_vecJumpVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -49,6 +57,8 @@
 
 					"m_flNextGrenadeCheck"  // float
 					{
+						"type"      "time"
+
 						"windows"   "732"
 						"linux"     "752"
 						"mac"       "752"
@@ -56,6 +66,8 @@
 
 					"m_vecTossVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"
@@ -63,6 +75,8 @@
 
 					"m_fThrowGrenade"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "748"
 						"linux"     "768"
 						"mac"       "768"
@@ -70,6 +84,8 @@
 
 					"m_iTargetRanderamt"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"
@@ -77,6 +93,8 @@
 
 					"m_iFrustration"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -84,6 +102,8 @@
 
 					"m_iShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"

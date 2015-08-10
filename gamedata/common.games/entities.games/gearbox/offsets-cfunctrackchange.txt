@@ -21,6 +21,8 @@
 				{
 					"m_trackTop"  // CPathTrack*
 					{
+						"type"      "classptr"
+
 						"windows"   "284"
 						"linux"     "304"
 						"mac"       "304"
@@ -28,6 +30,8 @@
 
 					"m_trackBottom"  // CPathTrack*
 					{
+						"type"      "classptr"
+
 						"windows"   "288"
 						"linux"     "308"
 						"mac"       "308"
@@ -35,6 +39,8 @@
 
 					"m_train"  // CFuncTrackTrain*
 					{
+						"type"      "classptr"
+
 						"windows"   "292"
 						"linux"     "312"
 						"mac"       "312"
@@ -42,6 +48,8 @@
 
 					"m_trackTopName"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "296"
 						"linux"     "316"
 						"mac"       "316"
@@ -49,6 +57,8 @@
 
 					"m_trackBottomName"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "300"
 						"linux"     "320"
 						"mac"       "320"
@@ -56,6 +66,8 @@
 
 					"m_trainName"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "304"
 						"linux"     "324"
 						"mac"       "324"
@@ -63,6 +75,8 @@
 
 					"m_code"  // TRAIN_CODE
 					{
+						"type"      "integer"
+
 						"windows"   "308"
 						"linux"     "328"
 						"mac"       "328"
@@ -70,6 +84,8 @@
 
 					"m_targetState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "312"
 						"linux"     "332"
 						"mac"       "332"
@@ -77,6 +93,8 @@
 
 					"m_use"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "316"
 						"linux"     "336"
 						"mac"       "336"

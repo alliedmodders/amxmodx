@@ -21,6 +21,8 @@
 				{
 					"team_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"m_fState"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"

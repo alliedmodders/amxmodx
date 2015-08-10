@@ -21,6 +21,8 @@
 				{
 					"m_cFlockSize"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_flFlockRadius"  // float
 					{
+						"type"      "time"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"

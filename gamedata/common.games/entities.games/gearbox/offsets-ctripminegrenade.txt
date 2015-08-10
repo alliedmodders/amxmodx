@@ -21,6 +21,8 @@
 				{
 					"m_flPowerUp"  // float
 					{
+						"type"      "time"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -28,6 +30,8 @@
 
 					"m_vecDir"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -35,6 +39,8 @@
 
 					"m_vecEnd"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -42,6 +48,8 @@
 
 					"m_flBeamLength"  // float
 					{
+						"type"      "time"
+
 						"windows"   "740"
 						"linux"     "760"
 						"mac"       "760"
@@ -49,6 +57,8 @@
 
 					"m_hOwner"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
@@ -56,6 +66,8 @@
 
 					"m_pBeam"  // CBeam*
 					{
+						"type"      "classptr"
+
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"
@@ -63,6 +75,8 @@
 
 					"m_posOwner"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -70,6 +84,8 @@
 
 					"m_angleOwner"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -77,6 +93,8 @@
 
 					"m_pRealOwner"  // edict_t*
 					{
+						"type"      "edict"
+
 						"windows"   "780"
 						"linux"     "800"
 						"mac"       "800"

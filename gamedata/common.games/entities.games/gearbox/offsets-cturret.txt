@@ -21,6 +21,8 @@
 				{
 					"m_iStartSpin"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"

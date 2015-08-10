@@ -21,6 +21,8 @@
 				{
 					"m_flIdealVel"  // float
 					{
+						"type"      "time"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_vecIdeal"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +39,8 @@
 
 					"m_pNihilanth"  // CNihilanth*
 					{
+						"type"      "classptr"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -42,6 +48,8 @@
 
 					"m_hTouch"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -49,6 +57,8 @@
 
 					"m_nFrames"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"

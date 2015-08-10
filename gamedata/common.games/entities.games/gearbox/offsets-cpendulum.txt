@@ -21,6 +21,8 @@
 				{
 					"m_accel"  // float
 					{
+						"type"      "time"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"m_distance"  // float
 					{
+						"type"      "time"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -35,6 +39,8 @@
 
 					"m_time"  // float
 					{
+						"type"      "time"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -42,6 +48,8 @@
 
 					"m_damp"  // float
 					{
+						"type"      "time"
+
 						"windows"   "108"
 						"linux"     "124"
 						"mac"       "124"
@@ -49,6 +57,8 @@
 
 					"m_maxSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "112"
 						"linux"     "128"
 						"mac"       "128"
@@ -56,6 +66,8 @@
 
 					"m_dampSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "116"
 						"linux"     "132"
 						"mac"       "132"
@@ -63,6 +75,8 @@
 
 					"m_center"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "120"
 						"linux"     "136"
 						"mac"       "136"
@@ -70,6 +84,8 @@
 
 					"m_start"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "132"
 						"linux"     "148"
 						"mac"       "148"

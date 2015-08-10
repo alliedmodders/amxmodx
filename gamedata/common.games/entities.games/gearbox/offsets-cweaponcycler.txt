@@ -21,6 +21,8 @@
 				{
 					"m_iszModel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -28,6 +30,8 @@
 
 					"m_iModel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"

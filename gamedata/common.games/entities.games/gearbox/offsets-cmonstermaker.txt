@@ -21,6 +21,8 @@
 				{
 					"m_iszMonsterClassname"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_cNumMonsters"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +39,8 @@
 
 					"m_cLiveChildren"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -42,6 +48,8 @@
 
 					"m_iMaxLiveChildren"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -49,6 +57,8 @@
 
 					"m_flGround"  // float
 					{
+						"type"      "time"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -56,6 +66,8 @@
 
 					"m_fActive"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -63,6 +75,8 @@
 
 					"m_fFadeChildren"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "732"
 						"linux"     "752"
 						"mac"       "752"

@@ -21,6 +21,8 @@
 				{
 					"m_lastAttackCheck"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "896"
 						"linux"     "916"
 						"mac"       "916"
@@ -28,6 +30,8 @@
 
 					"m_flPlayerDamage"  // float
 					{
+						"type"      "time"
+
 						"windows"   "900"
 						"linux"     "920"
 						"mac"       "920"
@@ -35,6 +39,8 @@
 
 					"m_flNextGrenadeCheck"  // float
 					{
+						"type"      "time"
+
 						"windows"   "904"
 						"linux"     "924"
 						"mac"       "924"
@@ -42,6 +48,8 @@
 
 					"m_flNextPainTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "908"
 						"linux"     "928"
 						"mac"       "928"
@@ -49,6 +57,8 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "912"
 						"linux"     "932"
 						"mac"       "932"
@@ -56,6 +66,8 @@
 
 					"m_vecTossVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
@@ -63,6 +75,8 @@
 
 					"m_fThrowGrenade"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "928"
 						"linux"     "948"
 						"mac"       "948"
@@ -70,6 +84,8 @@
 
 					"m_fStanding"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "932"
 						"linux"     "952"
 						"mac"       "952"
@@ -77,6 +93,8 @@
 
 					"m_fFirstEncounter"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "936"
 						"linux"     "956"
 						"mac"       "956"
@@ -84,6 +102,8 @@
 
 					"m_cClipSize"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "940"
 						"linux"     "960"
 						"mac"       "960"
@@ -91,6 +111,8 @@
 
 					"m_iBrassShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "944"
 						"linux"     "964"
 						"mac"       "964"
@@ -98,6 +120,8 @@
 
 					"m_iShotgunShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "948"
 						"linux"     "968"
 						"mac"       "968"
@@ -105,6 +129,8 @@
 
 					"m_iSawShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "952"
 						"linux"     "972"
 						"mac"       "972"
@@ -112,6 +138,8 @@
 
 					"m_iSawLink"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "956"
 						"linux"     "976"
 						"mac"       "976"
@@ -119,6 +147,8 @@
 
 					"m_iSentence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "960"
 						"linux"     "980"
 						"mac"       "980"
@@ -126,6 +156,8 @@
 
 					"m_iWeaponIdx"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "964"
 						"linux"     "984"
 						"mac"       "984"
@@ -133,6 +165,8 @@
 
 					"m_iGruntHead"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "968"
 						"linux"     "988"
 						"mac"       "988"
@@ -140,6 +174,8 @@
 
 					"m_iGruntTorso"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "972"
 						"linux"     "992"
 						"mac"       "992"

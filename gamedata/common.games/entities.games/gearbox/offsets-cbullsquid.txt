@@ -30,7 +30,7 @@
 
 					"m_flLastHurtTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "712"
 						"linux"     "732"
@@ -39,7 +39,7 @@
 
 					"m_flNextSpitTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "716"
 						"linux"     "736"

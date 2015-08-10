@@ -39,7 +39,7 @@
 
 					"m_flPumpTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "144"
 						"linux"     "160"
@@ -57,7 +57,7 @@
 
 					"m_flNextPrimaryAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "152"
 						"linux"     "168"
@@ -66,7 +66,7 @@
 
 					"m_flNextSecondaryAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "156"
 						"linux"     "172"
@@ -75,7 +75,7 @@
 
 					"m_flTimeWeaponIdle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "160"
 						"linux"     "176"

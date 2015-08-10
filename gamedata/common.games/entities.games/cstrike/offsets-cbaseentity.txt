@@ -93,7 +93,7 @@
 
 					"currentammo"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "36"
 						"linux"     "52"
@@ -282,7 +282,7 @@
 
 					"m_flStartThrow"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "120"
 						"linux"     "136"
@@ -291,7 +291,7 @@
 
 					"m_flReleaseThrow"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "124"
 						"linux"     "140"

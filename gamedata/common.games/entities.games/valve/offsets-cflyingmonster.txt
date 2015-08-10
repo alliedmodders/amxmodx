@@ -30,7 +30,7 @@
 
 					"m_flightSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "672"
 						"linux"     "692"
@@ -39,7 +39,7 @@
 
 					"m_stopTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "676"
 						"linux"     "696"
@@ -48,7 +48,7 @@
 
 					"m_momentum"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "680"
 						"linux"     "700"

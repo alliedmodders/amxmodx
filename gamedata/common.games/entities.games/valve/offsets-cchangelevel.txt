@@ -50,7 +50,7 @@
 
 					"m_changeTargetDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "308"
 						"linux"     "328"

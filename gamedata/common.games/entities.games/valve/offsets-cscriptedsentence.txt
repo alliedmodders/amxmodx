@@ -39,7 +39,7 @@
 
 					"m_flRadius"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "248"
 						"linux"     "268"
@@ -48,7 +48,7 @@
 
 					"m_flDuration"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "252"
 						"linux"     "272"
@@ -57,7 +57,7 @@
 
 					"m_flRepeat"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "256"
 						"linux"     "276"
@@ -66,7 +66,7 @@
 
 					"m_flAttenuation"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "260"
 						"linux"     "280"
@@ -75,7 +75,7 @@
 
 					"m_flVolume"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "264"
 						"linux"     "284"

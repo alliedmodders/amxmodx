@@ -48,7 +48,7 @@
 
 					"m_flExplosionScale"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1712"
 						"linux"     "1732"
@@ -57,7 +57,7 @@
 
 					"m_flSmokeScale"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1716"
 						"linux"     "1736"

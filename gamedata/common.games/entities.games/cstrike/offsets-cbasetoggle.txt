@@ -30,7 +30,7 @@
 
 					"m_flActivateFinished"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "168"
 						"linux"     "184"
@@ -39,7 +39,7 @@
 
 					"m_flMoveDistance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "172"
 						"linux"     "188"
@@ -48,7 +48,7 @@
 
 					"m_flWait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "176"
 						"linux"     "192"
@@ -57,7 +57,7 @@
 
 					"m_flLip"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "180"
 						"linux"     "196"
@@ -66,7 +66,7 @@
 
 					"m_flTWidth"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "184"
 						"linux"     "200"
@@ -75,7 +75,7 @@
 
 					"m_flTLength"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "188"
 						"linux"     "204"
@@ -129,7 +129,7 @@
 
 					"m_flHeight"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "244"
 						"linux"     "260"

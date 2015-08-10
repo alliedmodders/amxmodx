@@ -67,7 +67,7 @@
 
 					"m_flSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "364"
 						"linux"     "380"

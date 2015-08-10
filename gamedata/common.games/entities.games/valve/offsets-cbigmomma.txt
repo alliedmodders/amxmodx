@@ -21,7 +21,7 @@
 				{
 					"m_nodeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "660"
 						"linux"     "680"
@@ -30,7 +30,7 @@
 
 					"m_crabTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "664"
 						"linux"     "684"
@@ -39,7 +39,7 @@
 
 					"m_mortarTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "668"
 						"linux"     "688"
@@ -48,7 +48,7 @@
 
 					"m_painSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "672"
 						"linux"     "692"

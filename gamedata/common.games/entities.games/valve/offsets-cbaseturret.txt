@@ -21,7 +21,7 @@
 				{
 					"m_flMaxSpin"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "660"
 						"linux"     "680"
@@ -93,7 +93,7 @@
 
 					"m_fTurnRate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "692"
 						"linux"     "712"
@@ -147,7 +147,7 @@
 
 					"m_flLastSight"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "724"
 						"linux"     "744"
@@ -156,7 +156,7 @@
 
 					"m_flMaxWait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "728"
 						"linux"     "748"
@@ -174,7 +174,7 @@
 
 					"m_flStartYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "736"
 						"linux"     "756"
@@ -201,7 +201,7 @@
 
 					"m_flPingTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "764"
 						"linux"     "784"
@@ -210,7 +210,7 @@
 
 					"m_flSpinUpTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "768"
 						"linux"     "788"

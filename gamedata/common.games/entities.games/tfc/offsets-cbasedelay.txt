@@ -21,7 +21,7 @@
 				{
 					"m_flDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1124"
 						"linux"     "1140"

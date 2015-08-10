@@ -30,7 +30,7 @@
 
 					"m_flIgniteTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "668"
 						"linux"     "688"

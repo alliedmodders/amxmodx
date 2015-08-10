@@ -21,7 +21,7 @@
 				{
 					"m_flSoundDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "192"
 						"linux"     "208"

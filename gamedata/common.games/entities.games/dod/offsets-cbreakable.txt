@@ -48,7 +48,7 @@
 
 					"m_angle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "348"
 						"linux"     "364"
@@ -131,7 +131,7 @@
 
 					"m_tntdelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "888"
 						"linux"     "904"

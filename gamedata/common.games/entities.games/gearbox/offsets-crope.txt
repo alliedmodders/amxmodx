@@ -68,7 +68,7 @@
 
 					"mLastTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "616"
 						"linux"     "632"
@@ -95,7 +95,7 @@
 
 					"m_HookConstant"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "644"
 						"linux"     "660"
@@ -104,7 +104,7 @@
 
 					"m_SpringDampning"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "648"
 						"linux"     "664"
@@ -206,7 +206,7 @@
 
 					"mAttachedObjectsOffset"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1212"
 						"linux"     "1228"
@@ -215,7 +215,7 @@
 
 					"detachTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1216"
 						"linux"     "1232"

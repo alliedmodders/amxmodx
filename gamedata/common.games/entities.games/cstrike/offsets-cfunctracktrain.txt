@@ -30,7 +30,7 @@
 
 					"m_length"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "140"
 						"linux"     "156"
@@ -39,7 +39,7 @@
 
 					"m_height"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "144"
 						"linux"     "160"
@@ -48,7 +48,7 @@
 
 					"m_speed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "148"
 						"linux"     "164"
@@ -57,7 +57,7 @@
 
 					"m_dir"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "152"
 						"linux"     "168"
@@ -66,7 +66,7 @@
 
 					"m_startSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "156"
 						"linux"     "172"
@@ -111,7 +111,7 @@
 
 					"m_flVolume"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "192"
 						"linux"     "208"
@@ -120,7 +120,7 @@
 
 					"m_flBank"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "196"
 						"linux"     "212"
@@ -129,7 +129,7 @@
 
 					"m_oldSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "200"
 						"linux"     "216"
@@ -138,7 +138,7 @@
 
 					"m_fTurnAngle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "204"
 						"linux"     "220"
@@ -147,7 +147,7 @@
 
 					"m_flSteeringWheelDecay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "208"
 						"linux"     "224"
@@ -156,7 +156,7 @@
 
 					"m_flAcceleratorDecay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "212"
 						"linux"     "228"

@@ -21,7 +21,7 @@
 				{
 					"m_flRadius"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "96"
 						"linux"     "112"
@@ -30,7 +30,7 @@
 
 					"m_flRoomtype"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "100"
 						"linux"     "116"

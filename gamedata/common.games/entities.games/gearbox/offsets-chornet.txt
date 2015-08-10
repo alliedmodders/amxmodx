@@ -21,7 +21,7 @@
 				{
 					"m_flStopAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "708"
 						"linux"     "728"
@@ -39,7 +39,7 @@
 
 					"m_flFlySpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "716"
 						"linux"     "736"

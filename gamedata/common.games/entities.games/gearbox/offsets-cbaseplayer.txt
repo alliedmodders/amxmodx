@@ -39,7 +39,7 @@
 
 					"m_flDisplacerSndRoomtype"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "724"
 						"linux"     "744"
@@ -93,7 +93,7 @@
 
 					"m_flStopExtraSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "748"
 						"linux"     "768"
@@ -102,7 +102,7 @@
 
 					"m_flFlashLightTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"
@@ -156,7 +156,7 @@
 
 					"m_flSndRoomtype"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "776"
 						"linux"     "796"
@@ -165,7 +165,7 @@
 
 					"m_flSndRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "780"
 						"linux"     "800"
@@ -174,7 +174,7 @@
 
 					"m_flFallVelocity"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "784"
 						"linux"     "804"
@@ -221,7 +221,7 @@
 
 					"m_fNextSuicideTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "828"
 						"linux"     "848"
@@ -230,7 +230,7 @@
 
 					"m_flTimeStepSound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "832"
 						"linux"     "852"
@@ -239,7 +239,7 @@
 
 					"m_flTimeWeaponIdle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "836"
 						"linux"     "856"
@@ -248,7 +248,7 @@
 
 					"m_flSwimTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "840"
 						"linux"     "860"
@@ -257,7 +257,7 @@
 
 					"m_flDuckTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "844"
 						"linux"     "864"
@@ -266,7 +266,7 @@
 
 					"m_flWallJumpTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "848"
 						"linux"     "868"
@@ -275,7 +275,7 @@
 
 					"m_flSuitUpdate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "852"
 						"linux"     "872"
@@ -313,7 +313,7 @@
 
 					"m_rgflSuitNoRepeatTime"  // float[32]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "32"
 
 						"windows"   "1004"
@@ -332,7 +332,7 @@
 
 					"m_tbdPrev"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1136"
 						"linux"     "1156"
@@ -341,7 +341,7 @@
 
 					"m_flgeigerRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1140"
 						"linux"     "1160"
@@ -350,7 +350,7 @@
 
 					"m_flgeigerDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1144"
 						"linux"     "1164"
@@ -468,7 +468,7 @@
 
 					"m_fDeadTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1208"
 						"linux"     "1228"
@@ -495,7 +495,7 @@
 
 					"m_tSneaking"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1220"
 						"linux"     "1240"
@@ -632,7 +632,7 @@
 
 					"m_flNextHEVCharge"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1284"
 						"linux"     "1304"
@@ -641,7 +641,7 @@
 
 					"m_flNextHealthCharge"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1288"
 						"linux"     "1308"
@@ -650,7 +650,7 @@
 
 					"m_flNextAmmoCharge"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1292"
 						"linux"     "1312"
@@ -695,7 +695,7 @@
 
 					"m_flLastShotTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1312"
 						"linux"     "1332"
@@ -776,7 +776,7 @@
 
 					"m_flLastDamageTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1340"
 						"linux"     "1360"
@@ -803,7 +803,7 @@
 
 					"m_flAccelTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1348"
 						"linux"     "1368"
@@ -812,7 +812,7 @@
 
 					"m_flBackpackTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1352"
 						"linux"     "1372"
@@ -821,7 +821,7 @@
 
 					"m_flHealthTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1356"
 						"linux"     "1376"
@@ -830,7 +830,7 @@
 
 					"m_flShieldTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1360"
 						"linux"     "1380"
@@ -839,7 +839,7 @@
 
 					"m_flJumpTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1364"
 						"linux"     "1384"
@@ -848,7 +848,7 @@
 
 					"m_flNextChatTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1368"
 						"linux"     "1388"
@@ -941,7 +941,7 @@
 
 					"m_iRespawnFrames"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1688"
 						"linux"     "1708"
@@ -977,7 +977,7 @@
 
 					"m_flNextDecalTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1704"
 						"linux"     "1724"
@@ -1015,7 +1015,7 @@
 
 					"m_flNextObserverInput"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1764"
 						"linux"     "1784"
@@ -1024,7 +1024,7 @@
 
 					"m_flStartCharge"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1768"
 						"linux"     "1788"
@@ -1033,7 +1033,7 @@
 
 					"m_flAmmoStartCharge"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1772"
 						"linux"     "1792"
@@ -1042,7 +1042,7 @@
 
 					"m_flPlayAftershock"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1776"
 						"linux"     "1796"
@@ -1051,7 +1051,7 @@
 
 					"m_flNextAmmoBurn"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1780"
 						"linux"     "1800"
@@ -1069,7 +1069,7 @@
 
 					"mLastClimbTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1788"
 						"linux"     "1808"

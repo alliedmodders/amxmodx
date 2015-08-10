@@ -39,7 +39,7 @@
 
 					"m_flNextCheck"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1708"
 						"linux"     "1728"
@@ -57,7 +57,7 @@
 
 					"m_fTurnRate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1716"
 						"linux"     "1736"

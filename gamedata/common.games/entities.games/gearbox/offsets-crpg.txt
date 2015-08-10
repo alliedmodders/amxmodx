@@ -57,7 +57,7 @@
 
 					"m_flNextEmptySound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "208"
 						"linux"     "224"

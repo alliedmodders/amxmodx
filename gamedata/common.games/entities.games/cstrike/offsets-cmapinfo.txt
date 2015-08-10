@@ -30,7 +30,7 @@
 
 					"m_flBombRadius"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "140"
 						"linux"     "156"

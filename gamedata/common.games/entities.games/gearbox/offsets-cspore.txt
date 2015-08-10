@@ -57,7 +57,7 @@
 
 					"m_flIgniteTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "728"
 						"linux"     "748"
@@ -111,7 +111,7 @@
 
 					"m_flSoundDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"

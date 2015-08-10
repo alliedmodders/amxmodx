@@ -30,7 +30,7 @@
 
 					"m_flFlockRadius"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "712"
 						"linux"     "732"

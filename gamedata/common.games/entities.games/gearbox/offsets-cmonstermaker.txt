@@ -57,7 +57,7 @@
 
 					"m_flGround"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "724"
 						"linux"     "744"

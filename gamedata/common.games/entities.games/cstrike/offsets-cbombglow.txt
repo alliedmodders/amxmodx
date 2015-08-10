@@ -21,7 +21,7 @@
 				{
 					"m_lastTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "144"
 						"linux"     "160"
@@ -30,7 +30,7 @@
 
 					"m_tmBeepPeriod"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "148"
 						"linux"     "164"

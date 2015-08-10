@@ -48,7 +48,7 @@
 
 					"m_flBigSwingStart"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "256"
 						"linux"     "272"

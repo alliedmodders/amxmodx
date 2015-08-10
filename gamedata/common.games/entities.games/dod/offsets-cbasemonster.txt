@@ -68,7 +68,7 @@
 
 					"m_flFieldOfView"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "592"
 						"linux"     "612"
@@ -77,7 +77,7 @@
 
 					"m_flWaitFinished"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "596"
 						"linux"     "616"
@@ -86,7 +86,7 @@
 
 					"m_flMoveWaitFinished"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "600"
 						"linux"     "620"
@@ -195,7 +195,7 @@
 
 					"m_moveWaitTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "772"
 						"linux"     "792"
@@ -303,7 +303,7 @@
 
 					"m_flNextAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "844"
 						"linux"     "864"
@@ -359,7 +359,7 @@
 
 					"m_flHungryTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "872"
 						"linux"     "892"
@@ -368,7 +368,7 @@
 
 					"m_flDistTooFar"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "876"
 						"linux"     "896"
@@ -377,7 +377,7 @@
 
 					"m_flDistLook"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "880"
 						"linux"     "900"

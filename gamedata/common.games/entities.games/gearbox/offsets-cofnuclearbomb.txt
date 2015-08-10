@@ -48,7 +48,7 @@
 
 					"m_flLastPush"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "264"
 						"linux"     "284"

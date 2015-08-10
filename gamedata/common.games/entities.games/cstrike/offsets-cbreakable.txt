@@ -48,7 +48,7 @@
 
 					"m_angle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "156"
 						"linux"     "172"
@@ -75,7 +75,7 @@
 
 					"m_flHealth"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "168"
 						"linux"     "184"

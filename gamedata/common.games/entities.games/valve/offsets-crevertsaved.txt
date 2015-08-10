@@ -21,7 +21,7 @@
 				{
 					"m_messageTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "84"
 						"linux"     "100"
@@ -30,7 +30,7 @@
 
 					"m_loadTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "88"
 						"linux"     "104"

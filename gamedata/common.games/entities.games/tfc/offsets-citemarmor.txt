@@ -21,7 +21,7 @@
 				{
 					"m_flArmorCount"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1128"
 						"linux"     "1144"
@@ -30,7 +30,7 @@
 
 					"m_flArmorType"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1132"
 						"linux"     "1148"

@@ -30,7 +30,7 @@
 
 					"m_painTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "776"
 						"linux"     "796"
@@ -39,7 +39,7 @@
 
 					"m_checkAttackTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "780"
 						"linux"     "800"
@@ -57,7 +57,7 @@
 
 					"m_flPlayerDamage"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "788"
 						"linux"     "808"

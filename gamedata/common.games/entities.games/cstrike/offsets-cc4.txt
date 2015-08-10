@@ -39,7 +39,7 @@
 
 					"m_fArmedTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "324"
 						"linux"     "340"

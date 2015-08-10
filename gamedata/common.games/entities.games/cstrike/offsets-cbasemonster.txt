@@ -104,7 +104,7 @@
 
 					"m_flNextAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "332"
 						"linux"     "352"
@@ -131,7 +131,7 @@
 
 					"m_flFieldOfView"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "352"
 						"linux"     "372"

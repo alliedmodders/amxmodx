@@ -21,7 +21,7 @@
 				{
 					"m_flNextAnimTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "192"
 						"linux"     "208"
@@ -30,7 +30,7 @@
 
 					"m_flRechargeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "196"
 						"linux"     "212"

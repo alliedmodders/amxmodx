@@ -21,7 +21,7 @@
 				{
 					"m_flBirthTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "708"
 						"linux"     "728"

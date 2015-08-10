@@ -84,7 +84,7 @@
 
 					"m_startTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "784"
 						"linux"     "804"
@@ -93,7 +93,7 @@
 
 					"m_dTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "788"
 						"linux"     "808"
@@ -111,7 +111,7 @@
 
 					"m_flIdealtilt"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "804"
 						"linux"     "824"
@@ -120,7 +120,7 @@
 
 					"m_flRotortilt"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "808"
 						"linux"     "828"
@@ -129,7 +129,7 @@
 
 					"m_flRightHealth"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "812"
 						"linux"     "832"
@@ -138,7 +138,7 @@
 
 					"m_flLeftHealth"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "816"
 						"linux"     "836"

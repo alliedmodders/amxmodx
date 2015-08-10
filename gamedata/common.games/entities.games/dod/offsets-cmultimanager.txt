@@ -48,7 +48,7 @@
 
 					"m_startTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "340"
 						"linux"     "356"
@@ -67,7 +67,7 @@
 
 					"m_flTargetDelay"  // float[16]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "16"
 
 						"windows"   "408"
@@ -77,7 +77,7 @@
 
 					"m_flWait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "472"
 						"linux"     "488"
@@ -86,7 +86,7 @@
 
 					"m_flMaxWait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "476"
 						"linux"     "492"
@@ -131,7 +131,7 @@
 
 					"m_rsstartTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "496"
 						"linux"     "512"
@@ -150,7 +150,7 @@
 
 					"m_rsflTargetDelay"  // float[16]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "16"
 
 						"windows"   "564"
@@ -160,7 +160,7 @@
 
 					"m_rsflWait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "628"
 						"linux"     "644"
@@ -169,7 +169,7 @@
 
 					"m_rsflMaxWait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "632"
 						"linux"     "648"

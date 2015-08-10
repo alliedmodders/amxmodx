@@ -21,7 +21,7 @@
 				{
 					"m_lastTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "96"
 						"linux"     "112"
@@ -30,7 +30,7 @@
 
 					"m_maxFrame"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "100"
 						"linux"     "116"
@@ -48,7 +48,7 @@
 
 					"m_fadeScale"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "108"
 						"linux"     "124"
@@ -57,7 +57,7 @@
 
 					"m_fadeRender"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "112"
 						"linux"     "128"
@@ -66,7 +66,7 @@
 
 					"m_damageTimer"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "116"
 						"linux"     "132"

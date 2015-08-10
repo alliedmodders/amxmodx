@@ -30,7 +30,7 @@
 
 					"m_idealDist"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "748"
 						"linux"     "768"
@@ -39,7 +39,7 @@
 
 					"m_flBlink"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"
@@ -48,7 +48,7 @@
 
 					"m_flEnemyTouched"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "756"
 						"linux"     "776"
@@ -66,7 +66,7 @@
 
 					"m_flMaxSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "764"
 						"linux"     "784"
@@ -75,7 +75,7 @@
 
 					"m_flMinSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "768"
 						"linux"     "788"
@@ -84,7 +84,7 @@
 
 					"m_flMaxDist"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "772"
 						"linux"     "792"
@@ -102,7 +102,7 @@
 
 					"m_flNextAlert"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "780"
 						"linux"     "800"

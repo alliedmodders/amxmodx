@@ -31,7 +31,7 @@
 
 					"m_combatRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2608"
 						"linux"     "2628"
@@ -76,7 +76,7 @@
 
 					"m_safeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2632"
 						"linux"     "2652"
@@ -112,7 +112,7 @@
 
 					"m_surpriseDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2648"
 						"linux"     "2668"
@@ -121,7 +121,7 @@
 
 					"m_surpriseTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2652"
 						"linux"     "2672"
@@ -148,7 +148,7 @@
 
 					"m_followTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2668"
 						"linux"     "2688"
@@ -157,7 +157,7 @@
 
 					"m_allowAutoFollowTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2672"
 						"linux"     "2692"
@@ -301,7 +301,7 @@
 
 					"m_stateTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2996"
 						"linux"     "3016"
@@ -382,7 +382,7 @@
 
 					"m_avoidTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3052"
 						"linux"     "3072"
@@ -409,7 +409,7 @@
 
 					"m_jumpCrouchTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3060"
 						"linux"     "3080"
@@ -446,7 +446,7 @@
 
 					"m_areaEnteredTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9216"
 						"linux"     "9236"
@@ -536,7 +536,7 @@
 
 					"m_pathLadderDismountTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9268"
 						"linux"     "9288"
@@ -545,7 +545,7 @@
 
 					"m_pathLadderEnd"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9272"
 						"linux"     "9292"
@@ -554,7 +554,7 @@
 
 					"m_pathLadderTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9276"
 						"linux"     "9296"
@@ -591,7 +591,7 @@
 
 					"m_hostageEscortCountTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9640"
 						"linux"     "9660"
@@ -636,7 +636,7 @@
 
 					"m_noiseTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9676"
 						"linux"     "9696"
@@ -654,7 +654,7 @@
 
 					"m_noiseCheckTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9684"
 						"linux"     "9704"
@@ -681,7 +681,7 @@
 
 					"m_lookAroundStateTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9696"
 						"linux"     "9716"
@@ -690,7 +690,7 @@
 
 					"m_lookAheadAngle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9700"
 						"linux"     "9720"
@@ -699,7 +699,7 @@
 
 					"m_forwardAngle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9704"
 						"linux"     "9724"
@@ -708,7 +708,7 @@
 
 					"m_inhibitLookAroundTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9708"
 						"linux"     "9728"
@@ -744,7 +744,7 @@
 
 					"m_lookAtSpotDuration"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9732"
 						"linux"     "9752"
@@ -753,7 +753,7 @@
 
 					"m_lookAtSpotTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9736"
 						"linux"     "9756"
@@ -762,7 +762,7 @@
 
 					"m_lookAtSpotAngleTolerance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9740"
 						"linux"     "9760"
@@ -789,7 +789,7 @@
 
 					"m_peripheralTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9752"
 						"linux"     "9772"
@@ -854,7 +854,7 @@
 
 					"m_spotCheckTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "9980"
 						"linux"     "10000"
@@ -882,7 +882,7 @@
 
 					"m_lookPitch"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10500"
 						"linux"     "10520"
@@ -891,7 +891,7 @@
 
 					"m_lookPitchVel"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10504"
 						"linux"     "10524"
@@ -900,7 +900,7 @@
 
 					"m_lookYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10508"
 						"linux"     "10528"
@@ -909,7 +909,7 @@
 
 					"m_lookYawVel"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10512"
 						"linux"     "10532"
@@ -945,7 +945,7 @@
 
 					"m_aimOffsetTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10552"
 						"linux"     "10572"
@@ -954,7 +954,7 @@
 
 					"m_aimSpreadTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10556"
 						"linux"     "10576"
@@ -1027,7 +1027,7 @@
 
 					"m_lastSawEnemyTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10608"
 						"linux"     "10628"
@@ -1036,7 +1036,7 @@
 
 					"m_firstSawEnemyTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10612"
 						"linux"     "10632"
@@ -1045,7 +1045,7 @@
 
 					"m_currentEnemyAcquireTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10616"
 						"linux"     "10636"
@@ -1054,7 +1054,7 @@
 
 					"m_enemyDeathTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10620"
 						"linux"     "10640"
@@ -1146,7 +1146,7 @@
 
 					"m_attackedTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10924"
 						"linux"     "10944"
@@ -1191,7 +1191,7 @@
 
 					"m_fireWeaponTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "10940"
 						"linux"     "10960"
@@ -1249,7 +1249,7 @@
 
 					"m_stuckTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "11188"
 						"linux"     "11208"
@@ -1276,7 +1276,7 @@
 
 					"m_wiggleTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "11208"
 						"linux"     "11228"
@@ -1285,7 +1285,7 @@
 
 					"m_stuckJumpTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "11212"
 						"linux"     "11232"
@@ -1294,7 +1294,7 @@
 
 					"m_avgVel"  // float[5]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "5"
 
 						"windows"   "11216"
@@ -1340,7 +1340,7 @@
 
 					"m_lastRadioRecievedTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "11260"
 						"linux"     "11280"
@@ -1349,7 +1349,7 @@
 
 					"m_lastRadioSentTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "11264"
 						"linux"     "11284"
@@ -1376,7 +1376,7 @@
 
 					"m_voiceFeedbackStartTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "11288"
 						"linux"     "11308"
@@ -1385,7 +1385,7 @@
 
 					"m_voiceFeedbackEndTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "11292"
 						"linux"     "11312"

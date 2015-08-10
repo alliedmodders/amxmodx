@@ -58,7 +58,7 @@
 
 					"m_useTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1784"
 						"linux"     "1804"
@@ -85,7 +85,7 @@
 
 					"m_flLastSaidSmelled"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1796"
 						"linux"     "1816"
@@ -94,7 +94,7 @@
 
 					"m_flStopTalkTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1800"
 						"linux"     "1820"

@@ -30,7 +30,7 @@
 
 					"m_flCreationTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1732"
 						"linux"     "1752"

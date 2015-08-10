@@ -21,7 +21,7 @@
 				{
 					"m_flAmmoUseTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "188"
 						"linux"     "204"
@@ -67,7 +67,7 @@
 
 					"m_shootTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "208"
 						"linux"     "224"
@@ -85,7 +85,7 @@
 
 					"m_shakeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "216"
 						"linux"     "232"

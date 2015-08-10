@@ -30,7 +30,7 @@
 
 					"m_flNextHornetAttackCheck"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "720"
 						"linux"     "740"
@@ -39,7 +39,7 @@
 
 					"m_flNextPainTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "724"
 						"linux"     "744"
@@ -48,7 +48,7 @@
 
 					"m_flNextSpeakTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "728"
 						"linux"     "748"
@@ -57,7 +57,7 @@
 
 					"m_flNextWordTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "732"
 						"linux"     "752"

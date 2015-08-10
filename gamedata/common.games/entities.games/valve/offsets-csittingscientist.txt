@@ -39,7 +39,7 @@
 
 					"m_flResponseDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "792"
 						"linux"     "812"

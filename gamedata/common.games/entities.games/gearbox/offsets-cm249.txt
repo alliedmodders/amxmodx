@@ -31,7 +31,7 @@
 
 					"m_flNextAnimTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "196"
 						"linux"     "212"
@@ -94,7 +94,7 @@
 
 					"m_flReloadStartTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "224"
 						"linux"     "240"
@@ -103,7 +103,7 @@
 
 					"m_flReloadStart"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "228"
 						"linux"     "244"

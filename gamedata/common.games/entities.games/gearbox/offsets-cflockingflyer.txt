@@ -84,7 +84,7 @@
 
 					"m_flGoalSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"
@@ -93,7 +93,7 @@
 
 					"m_flLastBlockedTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "756"
 						"linux"     "776"
@@ -102,7 +102,7 @@
 
 					"m_flFakeBlockedTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "760"
 						"linux"     "780"
@@ -111,7 +111,7 @@
 
 					"m_flAlertTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "764"
 						"linux"     "784"
@@ -120,7 +120,7 @@
 
 					"m_flFlockNextSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "768"
 						"linux"     "788"

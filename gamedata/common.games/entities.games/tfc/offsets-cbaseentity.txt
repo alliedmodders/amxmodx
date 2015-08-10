@@ -382,7 +382,7 @@
 
 					"cl_no_grenades_1"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "176"
 						"linux"     "192"
@@ -391,7 +391,7 @@
 
 					"cl_no_grenades_2"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "180"
 						"linux"     "196"
@@ -409,7 +409,7 @@
 
 					"currentammo"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "188"
 						"linux"     "204"
@@ -535,7 +535,7 @@
 
 					"armor_allowed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "244"
 						"linux"     "260"
@@ -544,7 +544,7 @@
 
 					"maxarmor"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "248"
 						"linux"     "264"
@@ -598,7 +598,7 @@
 
 					"weaponmode"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "272"
 						"linux"     "288"
@@ -607,7 +607,7 @@
 
 					"motd"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "276"
 						"linux"     "292"
@@ -616,7 +616,7 @@
 
 					"current_menu"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "280"
 						"linux"     "296"
@@ -625,7 +625,7 @@
 
 					"menu_displaytime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "284"
 						"linux"     "300"
@@ -634,7 +634,7 @@
 
 					"menu_refreshtime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "288"
 						"linux"     "304"
@@ -643,7 +643,7 @@
 
 					"m_flSafetyCheckTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "292"
 						"linux"     "308"
@@ -688,7 +688,7 @@
 
 					"respawn_time"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "312"
 						"linux"     "328"
@@ -697,7 +697,7 @@
 
 					"suicide_time"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "316"
 						"linux"     "332"
@@ -715,7 +715,7 @@
 
 					"building_wait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "328"
 						"linux"     "344"
@@ -733,7 +733,7 @@
 
 					"has_dispenser"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "340"
 						"linux"     "356"
@@ -742,7 +742,7 @@
 
 					"has_sentry"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "344"
 						"linux"     "360"
@@ -751,7 +751,7 @@
 
 					"has_entry_teleporter"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "348"
 						"linux"     "364"
@@ -760,7 +760,7 @@
 
 					"has_exit_teleporter"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "352"
 						"linux"     "368"
@@ -778,7 +778,7 @@
 
 					"current_weapon"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "360"
 						"linux"     "376"
@@ -796,7 +796,7 @@
 
 					"last_weaponmode"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "368"
 						"linux"     "384"
@@ -805,7 +805,7 @@
 
 					"reload_shotgun"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "372"
 						"linux"     "388"
@@ -814,7 +814,7 @@
 
 					"reload_super_shotgun"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "376"
 						"linux"     "392"
@@ -823,7 +823,7 @@
 
 					"reload_nailgun"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "380"
 						"linux"     "396"
@@ -832,7 +832,7 @@
 
 					"reload_super_nailgun"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "384"
 						"linux"     "400"
@@ -841,7 +841,7 @@
 
 					"reload_grenade_launcher"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "388"
 						"linux"     "404"
@@ -850,7 +850,7 @@
 
 					"reload_rocket_launcher"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "392"
 						"linux"     "408"
@@ -859,7 +859,7 @@
 
 					"reload_flamethrower"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "396"
 						"linux"     "412"
@@ -868,7 +868,7 @@
 
 					"reload_incendiary"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "400"
 						"linux"     "416"
@@ -877,7 +877,7 @@
 
 					"heat"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "404"
 						"linux"     "420"
@@ -886,7 +886,7 @@
 
 					"sniper_zoom"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "408"
 						"linux"     "424"
@@ -895,7 +895,7 @@
 
 					"immune_to_check"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "412"
 						"linux"     "428"
@@ -904,7 +904,7 @@
 
 					"last_saveme_sound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "416"
 						"linux"     "432"
@@ -922,7 +922,7 @@
 
 					"leg_damage"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "432"
 						"linux"     "448"
@@ -931,7 +931,7 @@
 
 					"cheat_level"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "436"
 						"linux"     "452"
@@ -940,7 +940,7 @@
 
 					"FlashTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "440"
 						"linux"     "456"
@@ -949,7 +949,7 @@
 
 					"nailpos"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "444"
 						"linux"     "460"
@@ -958,7 +958,7 @@
 
 					"old_leg_damage"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "448"
 						"linux"     "464"
@@ -967,7 +967,7 @@
 
 					"clientHalluc"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "452"
 						"linux"     "468"
@@ -976,7 +976,7 @@
 
 					"clientTranq"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "456"
 						"linux"     "472"
@@ -985,7 +985,7 @@
 
 					"no_active_nail_grens"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "460"
 						"linux"     "476"
@@ -994,7 +994,7 @@
 
 					"no_active_napalm_grens"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "464"
 						"linux"     "480"
@@ -1003,7 +1003,7 @@
 
 					"no_active_gas_grens"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "468"
 						"linux"     "484"
@@ -1012,7 +1012,7 @@
 
 					"numflames"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "472"
 						"linux"     "488"
@@ -1021,7 +1021,7 @@
 
 					"timecount"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "476"
 						"linux"     "492"
@@ -1066,7 +1066,7 @@
 
 					"StatusRefreshTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "500"
 						"linux"     "516"
@@ -1075,7 +1075,7 @@
 
 					"StatusBarSize"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "504"
 						"linux"     "520"
@@ -1084,7 +1084,7 @@
 
 					"StatusBarRes"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "508"
 						"linux"     "524"
@@ -1093,7 +1093,7 @@
 
 					"ScannerOn"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "512"
 						"linux"     "528"
@@ -1309,7 +1309,7 @@
 
 					"search_time"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "612"
 						"linux"     "628"
@@ -1318,7 +1318,7 @@
 
 					"t_length"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "616"
 						"linux"     "632"
@@ -1653,7 +1653,7 @@
 
 					"wait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "804"
 						"linux"     "820"
@@ -1680,7 +1680,7 @@
 
 					"drop_time"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "816"
 						"linux"     "832"
@@ -1707,7 +1707,7 @@
 
 					"attack_finished"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "836"
 						"linux"     "852"
@@ -1716,7 +1716,7 @@
 
 					"distance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "840"
 						"linux"     "856"
@@ -1734,7 +1734,7 @@
 
 					"m_flEndRoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "848"
 						"linux"     "864"
@@ -2175,7 +2175,7 @@
 
 					"delay_time"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1044"
 						"linux"     "1060"
@@ -2193,7 +2193,7 @@
 
 					"rv_s_h"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1052"
 						"linux"     "1068"
@@ -2202,7 +2202,7 @@
 
 					"rs_s_h"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1056"
 						"linux"     "1072"
@@ -2211,7 +2211,7 @@
 
 					"rv_gr"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1060"
 						"linux"     "1076"
@@ -2220,7 +2220,7 @@
 
 					"rs_gr"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1064"
 						"linux"     "1080"
@@ -2229,7 +2229,7 @@
 
 					"rv_g"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1068"
 						"linux"     "1084"
@@ -2238,7 +2238,7 @@
 
 					"rs_g"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1072"
 						"linux"     "1088"
@@ -2247,7 +2247,7 @@
 
 					"has_abbreviated"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1076"
 						"linux"     "1092"
@@ -2265,7 +2265,7 @@
 
 					"invincible_finished"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1084"
 						"linux"     "1100"
@@ -2274,7 +2274,7 @@
 
 					"invisible_finished"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1088"
 						"linux"     "1104"
@@ -2283,7 +2283,7 @@
 
 					"super_damage_finished"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1092"
 						"linux"     "1108"
@@ -2292,7 +2292,7 @@
 
 					"radsuit_finished"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1096"
 						"linux"     "1112"
@@ -2337,7 +2337,7 @@
 
 					"m_fInvincSound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1116"
 						"linux"     "1132"
@@ -2346,7 +2346,7 @@
 
 					"m_fSuperSound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1120"
 						"linux"     "1136"

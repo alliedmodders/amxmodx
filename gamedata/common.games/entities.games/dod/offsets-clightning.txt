@@ -48,7 +48,7 @@
 
 					"m_life"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "340"
 						"linux"     "356"
@@ -93,7 +93,7 @@
 
 					"m_restrike"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "360"
 						"linux"     "376"
@@ -129,7 +129,7 @@
 
 					"m_radius"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "376"
 						"linux"     "392"

@@ -30,7 +30,7 @@
 
 					"m_flNextUseTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1704"
 						"linux"     "1724"
@@ -39,7 +39,7 @@
 
 					"m_flInitialUseDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1708"
 						"linux"     "1728"
@@ -48,7 +48,7 @@
 
 					"m_flNextRefillTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1712"
 						"linux"     "1732"

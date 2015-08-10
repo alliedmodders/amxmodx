@@ -106,7 +106,7 @@
 
 					"m_rrWait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "548"
 						"linux"     "568"

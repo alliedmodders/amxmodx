@@ -21,7 +21,7 @@
 				{
 					"m_flNextPainSound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "708"
 						"linux"     "728"
@@ -66,7 +66,7 @@
 
 					"m_offsetBeam"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "760"
 						"linux"     "780"
@@ -102,7 +102,7 @@
 
 					"m_flBeamExpireTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "800"
 						"linux"     "820"
@@ -111,7 +111,7 @@
 
 					"m_flBeamDir"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "804"
 						"linux"     "824"
@@ -120,7 +120,7 @@
 
 					"m_flTorsoYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "808"
 						"linux"     "828"
@@ -129,7 +129,7 @@
 
 					"m_flHeadYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "812"
 						"linux"     "832"
@@ -138,7 +138,7 @@
 
 					"m_flHeadPitch"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "816"
 						"linux"     "836"
@@ -147,7 +147,7 @@
 
 					"m_flIdealTorsoYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "820"
 						"linux"     "840"
@@ -156,7 +156,7 @@
 
 					"m_flIdealHeadYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "824"
 						"linux"     "844"
@@ -165,7 +165,7 @@
 
 					"m_flIdealHeadPitch"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "828"
 						"linux"     "848"
@@ -174,7 +174,7 @@
 
 					"m_flLevels"  // float[4]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "4"
 
 						"windows"   "832"
@@ -184,7 +184,7 @@
 
 					"m_flTargetLevels"  // float[4]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "4"
 
 						"windows"   "848"
@@ -194,7 +194,7 @@
 
 					"m_flLastSeen"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "864"
 						"linux"     "884"
@@ -203,7 +203,7 @@
 
 					"m_flPrevSeen"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "868"
 						"linux"     "888"
@@ -221,7 +221,7 @@
 
 					"m_flLevelSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "876"
 						"linux"     "896"
@@ -284,7 +284,7 @@
 
 					"m_flTakeHitTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "904"
 						"linux"     "924"
@@ -293,7 +293,7 @@
 
 					"m_flHitTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "908"
 						"linux"     "928"
@@ -302,7 +302,7 @@
 
 					"m_flNextMeleeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "912"
 						"linux"     "932"
@@ -311,7 +311,7 @@
 
 					"m_flNextRangeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "916"
 						"linux"     "936"
@@ -320,7 +320,7 @@
 
 					"m_flDeathStartTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "920"
 						"linux"     "940"
@@ -347,7 +347,7 @@
 
 					"m_flLastBlinkTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "932"
 						"linux"     "952"
@@ -356,7 +356,7 @@
 
 					"m_flLastBlinkInterval"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "936"
 						"linux"     "956"
@@ -365,7 +365,7 @@
 
 					"m_flLastEventTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "940"
 						"linux"     "960"

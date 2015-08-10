@@ -21,7 +21,7 @@
 				{
 					"m_flNextCharge"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "292"
 						"linux"     "312"
@@ -57,7 +57,7 @@
 
 					"m_flSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "308"
 						"linux"     "328"

@@ -21,7 +21,7 @@
 				{
 					"m_flAttenuation"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "328"
 						"linux"     "344"

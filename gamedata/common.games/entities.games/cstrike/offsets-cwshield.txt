@@ -30,7 +30,7 @@
 
 					"m_flTimeToIgnoreTouches"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "144"
 						"linux"     "160"

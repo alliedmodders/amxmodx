@@ -30,7 +30,7 @@
 
 					"m_maxSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1156"
 						"linux"     "1172"
@@ -39,7 +39,7 @@
 
 					"m_soundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1160"
 						"linux"     "1176"

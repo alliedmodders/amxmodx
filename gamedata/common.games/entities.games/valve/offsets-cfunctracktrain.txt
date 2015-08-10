@@ -30,7 +30,7 @@
 
 					"m_length"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "88"
 						"linux"     "104"
@@ -39,7 +39,7 @@
 
 					"m_height"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "92"
 						"linux"     "108"
@@ -48,7 +48,7 @@
 
 					"m_speed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "96"
 						"linux"     "112"
@@ -57,7 +57,7 @@
 
 					"m_dir"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "100"
 						"linux"     "116"
@@ -66,7 +66,7 @@
 
 					"m_startSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "104"
 						"linux"     "120"
@@ -111,7 +111,7 @@
 
 					"m_flVolume"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "140"
 						"linux"     "156"
@@ -120,7 +120,7 @@
 
 					"m_flBank"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "144"
 						"linux"     "160"
@@ -129,7 +129,7 @@
 
 					"m_oldSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "148"
 						"linux"     "164"

@@ -39,7 +39,7 @@
 
 					"m_flSpread"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "248"
 						"linux"     "268"
@@ -48,7 +48,7 @@
 
 					"m_flDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "252"
 						"linux"     "272"

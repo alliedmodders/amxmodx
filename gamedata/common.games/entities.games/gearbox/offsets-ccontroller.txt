@@ -21,7 +21,7 @@
 				{
 					"m_flNextFlinch"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "764"
 						"linux"     "784"
@@ -30,7 +30,7 @@
 
 					"m_flShootTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "768"
 						"linux"     "788"
@@ -39,7 +39,7 @@
 
 					"m_flShootEnd"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "772"
 						"linux"     "792"
@@ -68,7 +68,7 @@
 
 					"m_iBallTime"  // float[2]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "2"
 
 						"windows"   "792"

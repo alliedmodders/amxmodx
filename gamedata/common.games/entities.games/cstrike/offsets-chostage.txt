@@ -48,7 +48,7 @@
 
 					"m_flFlinchTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "396"
 						"linux"     "416"
@@ -57,7 +57,7 @@
 
 					"m_flNextChange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "400"
 						"linux"     "420"
@@ -66,7 +66,7 @@
 
 					"m_flMarkPosition"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "404"
 						"linux"     "424"
@@ -93,7 +93,7 @@
 
 					"m_flNextRadarTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "416"
 						"linux"     "436"
@@ -194,7 +194,7 @@
 
 					"m_flNextFullThink"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1912"
 						"linux"     "1932"
@@ -203,7 +203,7 @@
 
 					"m_flPathCheckInterval"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1916"
 						"linux"     "1936"
@@ -212,7 +212,7 @@
 
 					"m_flLastPathCheck"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1920"
 						"linux"     "1940"
@@ -239,7 +239,7 @@
 
 					"m_flPathAcquired"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1932"
 						"linux"     "1952"
@@ -275,7 +275,7 @@
 
 					"m_flStuckTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1956"
 						"linux"     "1976"

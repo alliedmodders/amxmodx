@@ -21,7 +21,7 @@
 				{
 					"m_flFrameRate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "144"
 						"linux"     "160"
@@ -30,7 +30,7 @@
 
 					"m_flGroundSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "148"
 						"linux"     "164"
@@ -39,7 +39,7 @@
 
 					"m_flLastEventCheck"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "152"
 						"linux"     "168"

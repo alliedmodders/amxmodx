@@ -30,7 +30,7 @@
 
 					"m_flInitialUseDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1704"
 						"linux"     "1724"
@@ -75,7 +75,7 @@
 
 					"m_flMyNextThink"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1724"
 						"linux"     "1744"
@@ -84,7 +84,7 @@
 
 					"m_flDamageDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1728"
 						"linux"     "1748"

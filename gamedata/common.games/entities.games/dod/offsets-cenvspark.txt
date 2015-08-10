@@ -21,7 +21,7 @@
 				{
 					"m_rrDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "328"
 						"linux"     "344"
@@ -30,7 +30,7 @@
 
 					"m_flDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "332"
 						"linux"     "348"

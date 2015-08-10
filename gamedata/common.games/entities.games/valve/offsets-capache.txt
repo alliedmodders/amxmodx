@@ -30,7 +30,7 @@
 
 					"m_flForce"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "664"
 						"linux"     "684"
@@ -39,7 +39,7 @@
 
 					"m_flNextRocket"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "668"
 						"linux"     "688"
@@ -102,7 +102,7 @@
 
 					"m_flLastSeen"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "744"
 						"linux"     "764"
@@ -111,7 +111,7 @@
 
 					"m_flPrevSeen"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "748"
 						"linux"     "768"
@@ -156,7 +156,7 @@
 
 					"m_flGoalSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "768"
 						"linux"     "788"

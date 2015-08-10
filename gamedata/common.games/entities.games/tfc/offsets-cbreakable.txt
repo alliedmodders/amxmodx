@@ -48,7 +48,7 @@
 
 					"m_angle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1144"
 						"linux"     "1160"

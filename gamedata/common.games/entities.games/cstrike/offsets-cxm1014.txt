@@ -30,7 +30,7 @@
 
 					"m_flPumpTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "324"
 						"linux"     "340"

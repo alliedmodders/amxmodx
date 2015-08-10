@@ -49,7 +49,7 @@
 
 					"m_flBeamTime"  // float[24]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "24"
 
 						"windows"   "196"
@@ -59,7 +59,7 @@
 
 					"m_flStartTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "292"
 						"linux"     "308"

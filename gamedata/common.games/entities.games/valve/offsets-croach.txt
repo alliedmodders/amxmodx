@@ -21,7 +21,7 @@
 				{
 					"m_flLastLightLevel"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "660"
 						"linux"     "680"
@@ -30,7 +30,7 @@
 
 					"m_flNextSmellTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "664"
 						"linux"     "684"

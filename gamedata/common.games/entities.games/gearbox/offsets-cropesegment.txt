@@ -39,7 +39,7 @@
 
 					"mDefaultMass"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "132"
 						"linux"     "148"

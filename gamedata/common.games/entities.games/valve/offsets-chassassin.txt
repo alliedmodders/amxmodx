@@ -21,7 +21,7 @@
 				{
 					"m_flLastShot"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "660"
 						"linux"     "680"
@@ -30,7 +30,7 @@
 
 					"m_flDiviation"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "664"
 						"linux"     "684"
@@ -39,7 +39,7 @@
 
 					"m_flNextJump"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "668"
 						"linux"     "688"
@@ -57,7 +57,7 @@
 
 					"m_flNextGrenadeCheck"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "684"
 						"linux"     "704"

@@ -21,7 +21,7 @@
 				{
 					"m_flForce"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "660"
 						"linux"     "680"
@@ -30,7 +30,7 @@
 
 					"m_flNextPainSound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "664"
 						"linux"     "684"
@@ -93,7 +93,7 @@
 
 					"m_flMinZ"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "740"
 						"linux"     "760"
@@ -102,7 +102,7 @@
 
 					"m_flMaxZ"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "744"
 						"linux"     "764"
@@ -120,7 +120,7 @@
 
 					"m_flLastSeen"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "760"
 						"linux"     "780"
@@ -129,7 +129,7 @@
 
 					"m_flPrevSeen"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "764"
 						"linux"     "784"
@@ -193,7 +193,7 @@
 
 					"m_flAdj"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "952"
 						"linux"     "972"
@@ -271,7 +271,7 @@
 
 					"m_flShootEnd"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1344"
 						"linux"     "1364"
@@ -280,7 +280,7 @@
 
 					"m_flShootTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1348"
 						"linux"     "1368"

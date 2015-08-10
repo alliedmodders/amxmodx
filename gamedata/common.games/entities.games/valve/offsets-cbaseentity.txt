@@ -156,7 +156,7 @@
 
 					"m_flStartThrow"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "64"
 						"linux"     "80"
@@ -165,7 +165,7 @@
 
 					"m_flReleaseThrow"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "68"
 						"linux"     "84"

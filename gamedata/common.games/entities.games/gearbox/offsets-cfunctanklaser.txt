@@ -30,7 +30,7 @@
 
 					"m_laserTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "228"
 						"linux"     "244"

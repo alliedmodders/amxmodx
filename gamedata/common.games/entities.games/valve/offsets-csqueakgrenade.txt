@@ -21,7 +21,7 @@
 				{
 					"m_flDie"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "664"
 						"linux"     "684"
@@ -39,7 +39,7 @@
 
 					"m_flNextHunt"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "680"
 						"linux"     "700"
@@ -48,7 +48,7 @@
 
 					"m_flNextHit"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "684"
 						"linux"     "704"

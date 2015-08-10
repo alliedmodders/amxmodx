@@ -156,7 +156,7 @@
 
 					"m_rrRenderamt"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "104"
 						"linux"     "104"
@@ -183,7 +183,7 @@
 
 					"m_rrHealth"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "124"
 						"linux"     "124"
@@ -192,7 +192,7 @@
 
 					"m_rrFrame"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "128"
 						"linux"     "128"
@@ -201,7 +201,7 @@
 
 					"m_rrSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "132"
 						"linux"     "132"
@@ -237,7 +237,7 @@
 
 					"m_rrTakedamage"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "148"
 						"linux"     "148"
@@ -246,7 +246,7 @@
 
 					"m_rrScale"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "152"
 						"linux"     "152"
@@ -255,7 +255,7 @@
 
 					"m_rrGravity"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "156"
 						"linux"     "156"
@@ -471,7 +471,7 @@
 
 					"m_flStartThrow"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "252"
 						"linux"     "268"
@@ -480,7 +480,7 @@
 
 					"m_flReleaseThrow"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "256"
 						"linux"     "272"

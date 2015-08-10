@@ -21,7 +21,7 @@
 				{
 					"m_nodeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "708"
 						"linux"     "728"
@@ -30,7 +30,7 @@
 
 					"m_spikeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "712"
 						"linux"     "732"
@@ -39,7 +39,7 @@
 
 					"m_painSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "716"
 						"linux"     "736"
@@ -57,7 +57,7 @@
 
 					"m_slowTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "724"
 						"linux"     "744"
@@ -66,7 +66,7 @@
 
 					"m_flHeadYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "728"
 						"linux"     "748"
@@ -75,7 +75,7 @@
 
 					"m_flHeadPitch"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "732"
 						"linux"     "752"
@@ -84,7 +84,7 @@
 
 					"m_flIdealHeadYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "736"
 						"linux"     "756"
@@ -93,7 +93,7 @@
 
 					"m_flIdealHeadPitch"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "740"
 						"linux"     "760"
@@ -156,7 +156,7 @@
 
 					"m_offsetBeam"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "808"
 						"linux"     "828"
@@ -165,7 +165,7 @@
 
 					"m_flBeamExpireTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "812"
 						"linux"     "832"
@@ -174,7 +174,7 @@
 
 					"m_flBeamDir"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "816"
 						"linux"     "836"

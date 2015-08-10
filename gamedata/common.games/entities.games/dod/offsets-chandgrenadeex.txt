@@ -21,7 +21,7 @@
 				{
 					"m_flTimeToExplode"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "476"
 						"linux"     "492"

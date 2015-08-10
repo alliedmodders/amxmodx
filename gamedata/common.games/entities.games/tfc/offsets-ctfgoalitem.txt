@@ -21,7 +21,7 @@
 				{
 					"m_flDroppedAt"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1152"
 						"linux"     "1168"

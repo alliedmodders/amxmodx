@@ -30,7 +30,7 @@
 
 					"m_flFireDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "332"
 						"linux"     "348"
@@ -48,7 +48,7 @@
 
 					"m_flAimVariance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "340"
 						"linux"     "356"

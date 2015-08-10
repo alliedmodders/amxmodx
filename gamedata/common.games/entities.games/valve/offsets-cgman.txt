@@ -39,7 +39,7 @@
 
 					"m_flTalkTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "676"
 						"linux"     "696"

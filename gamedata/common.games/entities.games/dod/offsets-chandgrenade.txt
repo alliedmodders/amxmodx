@@ -48,7 +48,7 @@
 
 					"flVel"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "512"
 						"linux"     "528"

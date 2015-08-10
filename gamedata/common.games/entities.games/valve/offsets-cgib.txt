@@ -48,7 +48,7 @@
 
 					"m_lifeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "96"
 						"linux"     "112"

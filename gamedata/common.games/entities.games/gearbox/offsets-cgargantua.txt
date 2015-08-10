@@ -49,7 +49,7 @@
 
 					"m_seeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "732"
 						"linux"     "752"
@@ -58,7 +58,7 @@
 
 					"m_flameTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "736"
 						"linux"     "756"
@@ -67,7 +67,7 @@
 
 					"m_painSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "740"
 						"linux"     "760"
@@ -76,7 +76,7 @@
 
 					"m_streakTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "744"
 						"linux"     "764"
@@ -85,7 +85,7 @@
 
 					"m_flameX"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "748"
 						"linux"     "768"
@@ -94,7 +94,7 @@
 
 					"m_flameY"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"

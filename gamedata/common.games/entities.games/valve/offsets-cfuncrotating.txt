@@ -21,7 +21,7 @@
 				{
 					"m_flFanFriction"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "84"
 						"linux"     "100"
@@ -30,7 +30,7 @@
 
 					"m_flAttenuation"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "88"
 						"linux"     "104"
@@ -39,7 +39,7 @@
 
 					"m_flVolume"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "92"
 						"linux"     "108"
@@ -48,7 +48,7 @@
 
 					"m_pitch"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "96"
 						"linux"     "112"

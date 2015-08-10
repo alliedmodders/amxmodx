@@ -21,7 +21,7 @@
 				{
 					"m_flNextPainSound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "708"
 						"linux"     "728"
@@ -39,7 +39,7 @@
 
 					"m_flLastSeen"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "724"
 						"linux"     "744"
@@ -48,7 +48,7 @@
 
 					"m_flPrevSeen"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "728"
 						"linux"     "748"
@@ -75,7 +75,7 @@
 
 					"m_flTakeHitTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "740"
 						"linux"     "760"
@@ -84,7 +84,7 @@
 
 					"m_flHitTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "744"
 						"linux"     "764"
@@ -93,7 +93,7 @@
 
 					"m_flNextMeleeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "748"
 						"linux"     "768"
@@ -102,7 +102,7 @@
 
 					"m_flNextRangeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"
@@ -147,7 +147,7 @@
 
 					"m_flOrificeOpenTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "772"
 						"linux"     "792"
@@ -174,7 +174,7 @@
 
 					"m_flSpawnTrooperTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "784"
 						"linux"     "804"
@@ -201,7 +201,7 @@
 
 					"m_offsetBeam"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "796"
 						"linux"     "816"
@@ -210,7 +210,7 @@
 
 					"m_lenBeam"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "800"
 						"linux"     "820"
@@ -246,7 +246,7 @@
 
 					"m_flBeamExpireTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "840"
 						"linux"     "860"
@@ -255,7 +255,7 @@
 
 					"m_flBeamDir"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "844"
 						"linux"     "864"
@@ -273,7 +273,7 @@
 
 					"m_flSpitStartTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "852"
 						"linux"     "872"
@@ -291,7 +291,7 @@
 
 					"m_flDeathStart"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "860"
 						"linux"     "880"
@@ -309,7 +309,7 @@
 
 					"m_flMadDelayTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "868"
 						"linux"     "888"

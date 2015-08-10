@@ -39,7 +39,7 @@
 
 					"m_lastupdate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "716"
 						"linux"     "736"
@@ -120,7 +120,7 @@
 
 					"m_fireLast"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "768"
 						"linux"     "788"
@@ -129,7 +129,7 @@
 
 					"m_maxRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "772"
 						"linux"     "792"
@@ -138,7 +138,7 @@
 
 					"m_minRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "776"
 						"linux"     "796"
@@ -156,7 +156,7 @@
 
 					"m_fireDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "784"
 						"linux"     "804"
@@ -165,7 +165,7 @@
 
 					"m_trackDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "788"
 						"linux"     "808"
@@ -183,7 +183,7 @@
 
 					"m_zeroYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "796"
 						"linux"     "816"

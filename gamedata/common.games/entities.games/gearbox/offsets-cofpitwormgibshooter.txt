@@ -21,7 +21,7 @@
 				{
 					"m_flDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "96"
 						"linux"     "112"
@@ -66,7 +66,7 @@
 
 					"m_flGibVelocity"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "116"
 						"linux"     "132"
@@ -75,7 +75,7 @@
 
 					"m_flVariance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "120"
 						"linux"     "136"

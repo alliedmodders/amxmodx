@@ -30,7 +30,7 @@
 
 					"m_flNextObserverInput"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1708"
 						"linux"     "1728"
@@ -111,7 +111,7 @@
 
 					"m_flStopExtraSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1744"
 						"linux"     "1764"
@@ -120,7 +120,7 @@
 
 					"m_flFlashLightTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1748"
 						"linux"     "1768"
@@ -174,7 +174,7 @@
 
 					"m_flSndRoomtype"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1772"
 						"linux"     "1792"
@@ -183,7 +183,7 @@
 
 					"m_flSndRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1776"
 						"linux"     "1796"
@@ -192,7 +192,7 @@
 
 					"m_flFallVelocity"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1780"
 						"linux"     "1800"
@@ -239,7 +239,7 @@
 
 					"m_fNextSuicideTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1816"
 						"linux"     "1836"
@@ -248,7 +248,7 @@
 
 					"m_fDontPackItemsUntil"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1820"
 						"linux"     "1840"
@@ -257,7 +257,7 @@
 
 					"m_fNextTeamOrClassChange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1824"
 						"linux"     "1844"
@@ -266,7 +266,7 @@
 
 					"m_flTimeStepSound"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1828"
 						"linux"     "1848"
@@ -275,7 +275,7 @@
 
 					"m_flTimeWeaponIdle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1832"
 						"linux"     "1852"
@@ -284,7 +284,7 @@
 
 					"m_flSwimTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1836"
 						"linux"     "1856"
@@ -293,7 +293,7 @@
 
 					"m_flDuckTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1840"
 						"linux"     "1860"
@@ -302,7 +302,7 @@
 
 					"m_flWallJumpTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1844"
 						"linux"     "1864"
@@ -311,7 +311,7 @@
 
 					"m_flSuitUpdate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1848"
 						"linux"     "1868"
@@ -349,7 +349,7 @@
 
 					"m_rgflSuitNoRepeatTime"  // float[32]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "32"
 
 						"windows"   "2000"
@@ -368,7 +368,7 @@
 
 					"m_tbdPrev"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2132"
 						"linux"     "2152"
@@ -377,7 +377,7 @@
 
 					"m_flgeigerRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2136"
 						"linux"     "2156"
@@ -386,7 +386,7 @@
 
 					"m_flgeigerDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2140"
 						"linux"     "2160"
@@ -504,7 +504,7 @@
 
 					"m_fDeadTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2204"
 						"linux"     "2224"
@@ -540,7 +540,7 @@
 
 					"m_tSneaking"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2220"
 						"linux"     "2240"
@@ -750,7 +750,7 @@
 
 					"m_iRespawnFrames"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2588"
 						"linux"     "2608"
@@ -813,7 +813,7 @@
 
 					"m_flConcStartTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2616"
 						"linux"     "2636"
@@ -822,7 +822,7 @@
 
 					"m_flConcDuration"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2620"
 						"linux"     "2640"
@@ -849,7 +849,7 @@
 
 					"m_flNextDecalTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2632"
 						"linux"     "2652"
@@ -895,7 +895,7 @@
 
 					"m_MenuUpdateTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3160"
 						"linux"     "3180"
@@ -990,7 +990,7 @@
 
 					"m_DB_LastTimingTestTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3628"
 						"linux"     "3648"
@@ -1098,7 +1098,7 @@
 
 					"m_flFadeAmount"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3676"
 						"linux"     "3696"
@@ -1107,7 +1107,7 @@
 
 					"m_flGagTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3680"
 						"linux"     "3700"
@@ -1116,7 +1116,7 @@
 
 					"m_flLastTalkTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3684"
 						"linux"     "3704"
@@ -1134,7 +1134,7 @@
 
 					"m_flNextSBarUpdateTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3692"
 						"linux"     "3712"
@@ -1153,7 +1153,7 @@
 
 					"m_flStatusBarDisappearDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3724"
 						"linux"     "3744"
@@ -1225,7 +1225,7 @@
 
 					"m_flTeleporterEffectEndTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "3760"
 						"linux"     "3780"

@@ -21,7 +21,7 @@
 				{
 					"m_flNextActiveTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "252"
 						"linux"     "272"

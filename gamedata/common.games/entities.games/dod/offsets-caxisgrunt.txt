@@ -21,7 +21,7 @@
 				{
 					"m_flNextGrenadeCheck"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "972"
 						"linux"     "992"
@@ -30,7 +30,7 @@
 
 					"m_flNextPainTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "976"
 						"linux"     "996"
@@ -39,7 +39,7 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "980"
 						"linux"     "1000"

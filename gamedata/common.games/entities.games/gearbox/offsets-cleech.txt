@@ -21,7 +21,7 @@
 				{
 					"m_flTurning"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "708"
 						"linux"     "728"
@@ -39,7 +39,7 @@
 
 					"m_flAccelerate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "716"
 						"linux"     "736"
@@ -48,7 +48,7 @@
 
 					"m_obstacle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "720"
 						"linux"     "740"
@@ -57,7 +57,7 @@
 
 					"m_top"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "724"
 						"linux"     "744"
@@ -66,7 +66,7 @@
 
 					"m_bottom"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "728"
 						"linux"     "748"
@@ -75,7 +75,7 @@
 
 					"m_height"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "732"
 						"linux"     "752"
@@ -84,7 +84,7 @@
 
 					"m_waterTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "736"
 						"linux"     "756"
@@ -93,7 +93,7 @@
 
 					"m_sideTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "740"
 						"linux"     "760"
@@ -102,7 +102,7 @@
 
 					"m_zTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "744"
 						"linux"     "764"
@@ -111,7 +111,7 @@
 
 					"m_stateTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "748"
 						"linux"     "768"
@@ -120,7 +120,7 @@
 
 					"m_attackSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"

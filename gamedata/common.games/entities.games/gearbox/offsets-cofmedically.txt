@@ -30,7 +30,7 @@
 
 					"m_flPlayerDamage"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "900"
 						"linux"     "920"
@@ -39,7 +39,7 @@
 
 					"m_flNextGrenadeCheck"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "904"
 						"linux"     "924"
@@ -48,7 +48,7 @@
 
 					"m_flNextPainTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "908"
 						"linux"     "928"
@@ -57,7 +57,7 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "912"
 						"linux"     "932"
@@ -138,7 +138,7 @@
 
 					"m_flLastUseTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "956"
 						"linux"     "976"
@@ -174,7 +174,7 @@
 
 					"m_flFollowCheckTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "976"
 						"linux"     "996"
@@ -201,7 +201,7 @@
 
 					"m_flLastRejectAudio"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "988"
 						"linux"     "1008"
@@ -255,7 +255,7 @@
 
 					"m_flLastShot"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1012"
 						"linux"     "1032"

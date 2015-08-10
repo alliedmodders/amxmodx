@@ -39,7 +39,7 @@
 
 					"m_flEffectTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1744"
 						"linux"     "1764"
@@ -48,7 +48,7 @@
 
 					"m_flDamageTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1748"
 						"linux"     "1768"

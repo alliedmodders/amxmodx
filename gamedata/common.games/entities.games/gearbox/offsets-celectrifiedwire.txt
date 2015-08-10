@@ -112,7 +112,7 @@
 
 					"mLastSparkTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1524"
 						"linux"     "1540"

@@ -39,7 +39,7 @@
 
 					"m_flNextTouchTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "132"
 						"linux"     "148"
@@ -48,7 +48,7 @@
 
 					"m_flPickupTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "136"
 						"linux"     "152"

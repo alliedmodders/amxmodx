@@ -30,7 +30,7 @@
 
 					"m_flNextReload"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "192"
 						"linux"     "208"

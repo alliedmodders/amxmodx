@@ -21,7 +21,7 @@
 				{
 					"m_flInitialYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "660"
 						"linux"     "680"
@@ -57,7 +57,7 @@
 
 					"m_flFramerateAdj"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "676"
 						"linux"     "696"
@@ -66,7 +66,7 @@
 
 					"m_flSoundYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "680"
 						"linux"     "700"
@@ -84,7 +84,7 @@
 
 					"m_flSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "688"
 						"linux"     "708"
@@ -93,7 +93,7 @@
 
 					"m_flSoundRadius"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "692"
 						"linux"     "712"
@@ -111,7 +111,7 @@
 
 					"m_flHitTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "700"
 						"linux"     "720"
@@ -120,7 +120,7 @@
 
 					"m_flTapRadius"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "704"
 						"linux"     "724"
@@ -129,7 +129,7 @@
 
 					"m_flNextSong"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "708"
 						"linux"     "728"
@@ -138,7 +138,7 @@
 
 					"m_flMaxYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "712"
 						"linux"     "732"
@@ -165,7 +165,7 @@
 
 					"m_flPrevSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "732"
 						"linux"     "752"

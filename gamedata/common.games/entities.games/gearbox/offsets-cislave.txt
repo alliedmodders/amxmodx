@@ -49,7 +49,7 @@
 
 					"m_flNextAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "804"
 						"linux"     "824"

@@ -111,7 +111,7 @@
 
 					"m_flRadius"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "956"
 						"linux"     "976"
@@ -129,7 +129,7 @@
 
 					"m_startTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "964"
 						"linux"     "984"

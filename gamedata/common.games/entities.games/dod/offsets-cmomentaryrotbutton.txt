@@ -21,7 +21,7 @@
 				{
 					"m_rrMoveDistance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "492"
 						"linux"     "512"
@@ -48,7 +48,7 @@
 
 					"m_returnSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "504"
 						"linux"     "524"

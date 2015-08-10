@@ -21,7 +21,7 @@
 				{
 					"m_flSoundDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "192"
 						"linux"     "208"
@@ -48,7 +48,7 @@
 
 					"m_flStartTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "200"
 						"linux"     "216"
@@ -103,7 +103,7 @@
 
 					"m_flRechargeTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "236"
 						"linux"     "252"

@@ -57,7 +57,7 @@
 
 					"ResetItemsTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "344"
 						"linux"     "360"
@@ -94,7 +94,7 @@
 
 					"ChangeLevelTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "612"
 						"linux"     "628"

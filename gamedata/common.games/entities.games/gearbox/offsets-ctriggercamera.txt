@@ -57,7 +57,7 @@
 
 					"m_flWait"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "128"
 						"linux"     "144"
@@ -66,7 +66,7 @@
 
 					"m_flReturnTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "132"
 						"linux"     "148"
@@ -75,7 +75,7 @@
 
 					"m_flStopTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "136"
 						"linux"     "152"
@@ -84,7 +84,7 @@
 
 					"m_moveDistance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "140"
 						"linux"     "156"
@@ -93,7 +93,7 @@
 
 					"m_targetSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "144"
 						"linux"     "160"
@@ -102,7 +102,7 @@
 
 					"m_initialSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "148"
 						"linux"     "164"
@@ -111,7 +111,7 @@
 
 					"m_acceleration"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "152"
 						"linux"     "168"
@@ -120,7 +120,7 @@
 
 					"m_deceleration"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "156"
 						"linux"     "172"

@@ -102,7 +102,7 @@
 
 					"m_fCapDelayTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "392"
 						"linux"     "408"
@@ -111,7 +111,7 @@
 
 					"m_fNextCapTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "396"
 						"linux"     "412"

@@ -109,7 +109,7 @@
 
 					"m_lastBlockedTimestamp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "540"
 						"linux"     "560"

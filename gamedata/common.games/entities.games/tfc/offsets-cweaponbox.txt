@@ -31,7 +31,7 @@
 
 					"m_flTouchableAt"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1148"
 						"linux"     "1164"
@@ -40,7 +40,7 @@
 
 					"m_flCreationTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1152"
 						"linux"     "1168"

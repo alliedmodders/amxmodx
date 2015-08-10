@@ -30,7 +30,7 @@
 
 					"m_painTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "900"
 						"linux"     "920"
@@ -39,7 +39,7 @@
 
 					"m_checkAttackTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "904"
 						"linux"     "924"
@@ -57,7 +57,7 @@
 
 					"m_flPlayerDamage"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "912"
 						"linux"     "932"
@@ -66,7 +66,7 @@
 
 					"m_flNextGrenadeCheck"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "916"
 						"linux"     "936"
@@ -75,7 +75,7 @@
 
 					"m_flNextPainTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "920"
 						"linux"     "940"
@@ -84,7 +84,7 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "924"
 						"linux"     "944"
@@ -201,7 +201,7 @@
 
 					"m_flLastShot"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "988"
 						"linux"     "1008"

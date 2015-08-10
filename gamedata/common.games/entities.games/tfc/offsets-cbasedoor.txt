@@ -100,7 +100,7 @@
 
 					"m_fNextSoundPlay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1324"
 						"linux"     "1344"

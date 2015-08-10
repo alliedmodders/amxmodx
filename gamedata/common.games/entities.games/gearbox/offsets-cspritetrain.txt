@@ -48,7 +48,7 @@
 
 					"m_maxFrame"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "272"
 						"linux"     "292"
@@ -57,7 +57,7 @@
 
 					"m_lastTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "276"
 						"linux"     "296"
@@ -84,7 +84,7 @@
 
 					"m_nextTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "288"
 						"linux"     "308"
@@ -93,7 +93,7 @@
 
 					"m_waitTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "292"
 						"linux"     "312"

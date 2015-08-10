@@ -21,7 +21,7 @@
 				{
 					"m_accel"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "96"
 						"linux"     "112"
@@ -30,7 +30,7 @@
 
 					"m_distance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "100"
 						"linux"     "116"
@@ -39,7 +39,7 @@
 
 					"m_time"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "104"
 						"linux"     "120"
@@ -48,7 +48,7 @@
 
 					"m_damp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "108"
 						"linux"     "124"
@@ -57,7 +57,7 @@
 
 					"m_maxSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "112"
 						"linux"     "128"
@@ -66,7 +66,7 @@
 
 					"m_dampSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "116"
 						"linux"     "132"

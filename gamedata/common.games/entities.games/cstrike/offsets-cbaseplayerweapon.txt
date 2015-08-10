@@ -39,7 +39,7 @@
 
 					"m_flNextPrimaryAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "184"
 						"linux"     "200"
@@ -48,7 +48,7 @@
 
 					"m_flNextSecondaryAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "188"
 						"linux"     "204"
@@ -57,7 +57,7 @@
 
 					"m_flTimeWeaponIdle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "192"
 						"linux"     "208"
@@ -147,7 +147,7 @@
 
 					"m_fMaxSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "232"
 						"linux"     "248"
@@ -183,7 +183,7 @@
 
 					"m_flAccuracy"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "248"
 						"linux"     "264"
@@ -192,7 +192,7 @@
 
 					"m_flLastFire"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "252"
 						"linux"     "268"
@@ -228,7 +228,7 @@
 
 					"m_flGlock18Shoot"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "276"
 						"linux"     "292"
@@ -246,7 +246,7 @@
 
 					"m_flFamasShoot"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "284"
 						"linux"     "300"
@@ -264,7 +264,7 @@
 
 					"m_fBurstSpread"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "292"
 						"linux"     "308"
@@ -282,7 +282,7 @@
 
 					"m_flNextReload"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "300"
 						"linux"     "316"
@@ -291,7 +291,7 @@
 
 					"m_flDecreaseShotsFired"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "304"
 						"linux"     "320"
@@ -320,7 +320,7 @@
 
 					"m_flPrevPrimaryAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "312"
 						"linux"     "328"
@@ -329,7 +329,7 @@
 
 					"m_flLastFireTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "316"
 						"linux"     "332"

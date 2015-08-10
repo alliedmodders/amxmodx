@@ -21,7 +21,7 @@
 				{
 					"m_flIdealVel"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "660"
 						"linux"     "680"

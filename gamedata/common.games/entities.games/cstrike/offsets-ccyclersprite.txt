@@ -30,7 +30,7 @@
 
 					"m_lastTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "140"
 						"linux"     "156"
@@ -39,7 +39,7 @@
 
 					"m_maxFrame"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "144"
 						"linux"     "160"
@@ -66,7 +66,7 @@
 
 					"m_renderamt"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "156"
 						"linux"     "172"
@@ -75,7 +75,7 @@
 
 					"m_rendercolor"  // float[3]
 					{
-						"type"      "time"
+						"type"      "float"
 						"size"      "3"
 
 						"windows"   "160"

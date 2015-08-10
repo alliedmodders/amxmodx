@@ -39,7 +39,7 @@
 
 					"m_flNextPrimaryAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1172"
 						"linux"     "1188"
@@ -48,7 +48,7 @@
 
 					"m_flNextSecondaryAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1176"
 						"linux"     "1192"
@@ -57,7 +57,7 @@
 
 					"m_flTimeWeaponIdle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1180"
 						"linux"     "1196"
@@ -66,7 +66,7 @@
 
 					"m_flNextReload"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1184"
 						"linux"     "1200"
@@ -75,7 +75,7 @@
 
 					"m_flPumpTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1188"
 						"linux"     "1204"
@@ -84,7 +84,7 @@
 
 					"m_fReloadTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1192"
 						"linux"     "1208"
@@ -93,7 +93,7 @@
 
 					"m_fAimedDamage"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1196"
 						"linux"     "1212"
@@ -102,7 +102,7 @@
 
 					"m_fNextAimBonus"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1200"
 						"linux"     "1216"
@@ -201,7 +201,7 @@
 
 					"m_flPrevPrimaryAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1244"
 						"linux"     "1260"
@@ -210,7 +210,7 @@
 
 					"m_flLastFireTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1248"
 						"linux"     "1264"

@@ -39,7 +39,7 @@
 
 					"m_flReloadStart"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "200"
 						"linux"     "216"

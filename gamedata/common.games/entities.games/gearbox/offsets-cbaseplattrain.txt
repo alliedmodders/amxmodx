@@ -41,7 +41,7 @@
 
 					"m_volume"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "256"
 						"linux"     "276"

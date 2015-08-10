@@ -58,7 +58,7 @@
 
 					"m_fGivePointsTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "420"
 						"linux"     "436"
@@ -162,7 +162,7 @@
 
 					"m_flNextSpectatorUpdateTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1724"
 						"linux"     "1740"

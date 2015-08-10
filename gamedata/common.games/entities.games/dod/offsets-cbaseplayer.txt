@@ -75,7 +75,7 @@
 
 					"m_flStopExtraSoundTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "940"
 						"linux"     "960"
@@ -120,7 +120,7 @@
 
 					"m_flSndRoomtype"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "960"
 						"linux"     "980"
@@ -129,7 +129,7 @@
 
 					"m_flSndRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "964"
 						"linux"     "984"
@@ -138,7 +138,7 @@
 
 					"m_flFallVelocity"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "968"
 						"linux"     "988"
@@ -175,7 +175,7 @@
 
 					"m_fNextSuicideTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "984"
 						"linux"     "1004"
@@ -184,7 +184,7 @@
 
 					"m_flTimeWeaponIdle"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "988"
 						"linux"     "1008"
@@ -293,7 +293,7 @@
 
 					"m_fDeadTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1048"
 						"linux"     "1068"
@@ -320,7 +320,7 @@
 
 					"m_iRespawnFrames"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1060"
 						"linux"     "1080"
@@ -365,7 +365,7 @@
 
 					"m_flNextDecalTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1080"
 						"linux"     "1100"
@@ -514,7 +514,7 @@
 
 					"m_nextRunThink"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1440"
 						"linux"     "1460"
@@ -523,7 +523,7 @@
 
 					"m_flIdleTimer"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1444"
 						"linux"     "1464"
@@ -532,7 +532,7 @@
 
 					"m_inextprone"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1448"
 						"linux"     "1468"
@@ -559,7 +559,7 @@
 
 					"m_fGunDropTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1460"
 						"linux"     "1480"
@@ -595,7 +595,7 @@
 
 					"m_flNextObserverInput"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1480"
 						"linux"     "1500"
@@ -658,7 +658,7 @@
 
 					"m_fNextStamina"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1508"
 						"linux"     "1528"
@@ -694,7 +694,7 @@
 
 					"m_fSpeedFactor"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1524"
 						"linux"     "1544"
@@ -712,7 +712,7 @@
 
 					"m_flUnslowTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1532"
 						"linux"     "1552"
@@ -721,7 +721,7 @@
 
 					"m_flNextVoice"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1536"
 						"linux"     "1556"
@@ -730,7 +730,7 @@
 
 					"m_flNextHand"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1540"
 						"linux"     "1560"
@@ -758,7 +758,7 @@
 
 					"m_flNextSBarUpdateTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1564"
 						"linux"     "1584"
@@ -767,7 +767,7 @@
 
 					"m_flStatusBarDisappearDelay"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1568"
 						"linux"     "1588"
@@ -805,7 +805,7 @@
 
 					"m_flLastTalkTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1836"
 						"linux"     "1856"
@@ -931,7 +931,7 @@
 
 					"m_fHandleSignalsTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1896"
 						"linux"     "1916"
@@ -1050,7 +1050,7 @@
 
 					"m_flGaitframe"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2044"
 						"linux"     "2064"
@@ -1059,7 +1059,7 @@
 
 					"m_flGaityaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2048"
 						"linux"     "2068"
@@ -1077,7 +1077,7 @@
 
 					"m_flPitch"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2064"
 						"linux"     "2084"
@@ -1086,7 +1086,7 @@
 
 					"m_flYaw"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2068"
 						"linux"     "2088"
@@ -1095,7 +1095,7 @@
 
 					"m_flGaitMovement"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2072"
 						"linux"     "2092"
@@ -1104,7 +1104,7 @@
 
 					"m_flYawModifier"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2076"
 						"linux"     "2096"
@@ -1149,7 +1149,7 @@
 
 					"m_flNextMapMarkerTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "2096"
 						"linux"     "2116"

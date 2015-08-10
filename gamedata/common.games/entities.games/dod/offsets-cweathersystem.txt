@@ -30,7 +30,7 @@
 
 					"m_flDensity"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "332"
 						"linux"     "348"

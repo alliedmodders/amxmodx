@@ -30,7 +30,7 @@
 
 					"m_flNextAttack"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1128"
 						"linux"     "1144"
@@ -48,7 +48,7 @@
 
 					"m_yawCenter"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1144"
 						"linux"     "1160"
@@ -57,7 +57,7 @@
 
 					"m_yawRate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1148"
 						"linux"     "1164"
@@ -66,7 +66,7 @@
 
 					"m_yawRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1152"
 						"linux"     "1168"
@@ -75,7 +75,7 @@
 
 					"m_yawTolerance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1156"
 						"linux"     "1172"
@@ -84,7 +84,7 @@
 
 					"m_pitchCenter"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1160"
 						"linux"     "1176"
@@ -93,7 +93,7 @@
 
 					"m_pitchRate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1164"
 						"linux"     "1180"
@@ -102,7 +102,7 @@
 
 					"m_pitchRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1168"
 						"linux"     "1184"
@@ -111,7 +111,7 @@
 
 					"m_pitchTolerance"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1172"
 						"linux"     "1188"
@@ -120,7 +120,7 @@
 
 					"m_fireLast"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1176"
 						"linux"     "1192"
@@ -129,7 +129,7 @@
 
 					"m_fireRate"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1180"
 						"linux"     "1196"
@@ -138,7 +138,7 @@
 
 					"m_lastSightTime"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1184"
 						"linux"     "1200"
@@ -147,7 +147,7 @@
 
 					"m_persist"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1188"
 						"linux"     "1204"
@@ -156,7 +156,7 @@
 
 					"m_minRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1192"
 						"linux"     "1208"
@@ -165,7 +165,7 @@
 
 					"m_maxRange"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1196"
 						"linux"     "1212"
@@ -183,7 +183,7 @@
 
 					"m_spriteScale"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "1212"
 						"linux"     "1228"

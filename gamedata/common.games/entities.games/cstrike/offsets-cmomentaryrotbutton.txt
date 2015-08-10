@@ -39,7 +39,7 @@
 
 					"m_returnSpeed"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "300"
 						"linux"     "320"

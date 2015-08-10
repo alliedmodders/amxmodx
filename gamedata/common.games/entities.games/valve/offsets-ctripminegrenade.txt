@@ -21,7 +21,7 @@
 				{
 					"m_flPowerUp"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "664"
 						"linux"     "684"
@@ -48,7 +48,7 @@
 
 					"m_flBeamLength"  // float
 					{
-						"type"      "time"
+						"type"      "float"
 
 						"windows"   "692"
 						"linux"     "712"

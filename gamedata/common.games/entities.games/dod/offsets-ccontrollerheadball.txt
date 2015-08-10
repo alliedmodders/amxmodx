@@ -21,6 +21,8 @@
 				{
 					"m_iTrail"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
@@ -28,6 +30,8 @@
 
 					"m_flNextAttack"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "920"
 						"linux"     "940"
 						"mac"       "940"
@@ -35,6 +39,8 @@
 
 					"m_vecIdeal"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "924"
 						"linux"     "944"
 						"mac"       "944"
@@ -42,6 +48,8 @@
 
 					"m_hOwner"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "936"
 						"linux"     "956"
 						"mac"       "956"

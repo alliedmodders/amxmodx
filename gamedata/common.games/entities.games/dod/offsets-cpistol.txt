@@ -21,6 +21,8 @@
 				{
 					"m_iFireEvent"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "468"
 						"linux"     "484"
 						"mac"       "484"

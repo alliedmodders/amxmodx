@@ -21,6 +21,8 @@
 				{
 					"m_nYaw"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "492"
 						"linux"     "512"
 						"mac"       "512"
@@ -28,6 +30,8 @@
 
 					"m_nRange"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "496"
 						"linux"     "516"
 						"mac"       "516"
@@ -35,6 +39,8 @@
 
 					"m_sMaster"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "500"
 						"linux"     "520"
 						"mac"       "520"

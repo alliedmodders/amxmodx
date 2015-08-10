@@ -21,6 +21,9 @@
 				{
 					"m_bHealthValue"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "492"
 						"linux"     "512"
 						"mac"       "512"
@@ -28,6 +31,9 @@
 
 					"m_bMoveSnd"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "493"
 						"linux"     "513"
 						"mac"       "513"
@@ -35,6 +41,9 @@
 
 					"m_bStopSnd"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "494"
 						"linux"     "514"
 						"mac"       "514"
@@ -42,6 +51,8 @@
 
 					"m_ls"  // locksound_t
 					{
+						"type"      "structure"
+
 						"windows"   "496"
 						"linux"     "516"
 						"mac"       "516"
@@ -49,6 +60,9 @@
 
 					"m_bLockedSound"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "532"
 						"linux"     "552"
 						"mac"       "552"
@@ -56,6 +70,9 @@
 
 					"m_bLockedSentence"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "533"
 						"linux"     "553"
 						"mac"       "553"
@@ -63,6 +80,9 @@
 
 					"m_bUnlockedSound"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "534"
 						"linux"     "554"
 						"mac"       "554"
@@ -70,6 +90,9 @@
 
 					"m_bUnlockedSentence"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "535"
 						"linux"     "555"
 						"mac"       "555"
@@ -77,6 +100,8 @@
 
 					"TeamSpecific"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "536"
 						"linux"     "556"
 						"mac"       "556"
@@ -84,6 +109,8 @@
 
 					"m_lastBlockedTimestamp"  // float
 					{
+						"type"      "time"
+
 						"windows"   "540"
 						"linux"     "560"
 						"mac"       "560"

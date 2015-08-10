@@ -21,6 +21,8 @@
 				{
 					"m_iEnabled"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "332"
 						"linux"     "348"
 						"mac"       "348"
@@ -28,6 +30,8 @@
 
 					"m_textParms"  // hudtextparms_t
 					{
+						"type"      "structure"
+
 						"windows"   "336"
 						"linux"     "352"
 						"mac"       "352"

@@ -21,6 +21,8 @@
 				{
 					"m_iPlayerSpeed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
@@ -28,6 +30,8 @@
 
 					"random_seed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "920"
 						"linux"     "940"
 						"mac"       "940"
@@ -35,6 +39,8 @@
 
 					"m_iPlayerSound"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "924"
 						"linux"     "944"
 						"mac"       "944"
@@ -42,6 +48,8 @@
 
 					"m_iTargetVolume"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "928"
 						"linux"     "948"
 						"mac"       "948"
@@ -49,6 +57,8 @@
 
 					"m_iWeaponVolume"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "932"
 						"linux"     "952"
 						"mac"       "952"
@@ -56,6 +66,8 @@
 
 					"m_iExtraSoundTypes"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "936"
 						"linux"     "956"
 						"mac"       "956"
@@ -63,6 +75,8 @@
 
 					"m_flStopExtraSoundTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "940"
 						"linux"     "960"
 						"mac"       "960"
@@ -70,6 +84,8 @@
 
 					"m_afButtonLast"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "944"
 						"linux"     "964"
 						"mac"       "964"
@@ -77,6 +93,8 @@
 
 					"m_afButtonPressed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "948"
 						"linux"     "968"
 						"mac"       "968"
@@ -84,6 +102,8 @@
 
 					"m_afButtonReleased"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "952"
 						"linux"     "972"
 						"mac"       "972"
@@ -91,6 +111,8 @@
 
 					"m_pentSndLast"  // edict_t*
 					{
+						"type"      "edict"
+
 						"windows"   "956"
 						"linux"     "976"
 						"mac"       "976"
@@ -98,6 +120,8 @@
 
 					"m_flSndRoomtype"  // float
 					{
+						"type"      "time"
+
 						"windows"   "960"
 						"linux"     "980"
 						"mac"       "980"
@@ -105,6 +129,8 @@
 
 					"m_flSndRange"  // float
 					{
+						"type"      "time"
+
 						"windows"   "964"
 						"linux"     "984"
 						"mac"       "984"
@@ -112,6 +138,8 @@
 
 					"m_flFallVelocity"  // float
 					{
+						"type"      "time"
+
 						"windows"   "968"
 						"linux"     "988"
 						"mac"       "988"
@@ -119,6 +147,8 @@
 
 					"m_fKnownItem"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "972"
 						"linux"     "992"
 						"mac"       "992"
@@ -126,6 +156,8 @@
 
 					"m_fNewAmmo"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "976"
 						"linux"     "996"
 						"mac"       "996"
@@ -133,6 +165,9 @@
 
 					"m_afPhysicsFlags"  // unsigned int
 					{
+						"type"      "integer"
+						"unsigned"  "1"
+
 						"windows"   "980"
 						"linux"     "1000"
 						"mac"       "1000"
@@ -140,6 +175,8 @@
 
 					"m_fNextSuicideTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "984"
 						"linux"     "1004"
 						"mac"       "1004"
@@ -147,6 +184,8 @@
 
 					"m_flTimeWeaponIdle"  // float
 					{
+						"type"      "time"
+
 						"windows"   "988"
 						"linux"     "1008"
 						"mac"       "1008"
@@ -154,6 +193,9 @@
 
 					"m_szTextureName"  // char[13]
 					{
+						"type"      "string"
+						"size"      "13"
+
 						"windows"   "992"
 						"linux"     "1012"
 						"mac"       "1012"
@@ -161,6 +203,8 @@
 
 					"m_chTextureType"  // char
 					{
+						"type"      "character"
+
 						"windows"   "1005"
 						"linux"     "1025"
 						"mac"       "1025"
@@ -168,6 +212,8 @@
 
 					"m_idrowndmg"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1008"
 						"linux"     "1028"
 						"mac"       "1028"
@@ -175,6 +221,8 @@
 
 					"m_idrownrestored"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1012"
 						"linux"     "1032"
 						"mac"       "1032"
@@ -182,6 +230,8 @@
 
 					"m_bitsHUDDamage"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1016"
 						"linux"     "1036"
 						"mac"       "1036"
@@ -189,6 +239,8 @@
 
 					"m_fInitHUD"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1020"
 						"linux"     "1040"
 						"mac"       "1040"
@@ -196,6 +248,8 @@
 
 					"m_fGameHUDInitialized"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1024"
 						"linux"     "1044"
 						"mac"       "1044"
@@ -203,6 +257,8 @@
 
 					"m_iTrain"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1028"
 						"linux"     "1048"
 						"mac"       "1048"
@@ -210,6 +266,8 @@
 
 					"m_fWeapon"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1032"
 						"linux"     "1052"
 						"mac"       "1052"
@@ -217,6 +275,8 @@
 
 					"m_iJoiningState"  // enum JoinState
 					{
+						"type"      "integer"
+
 						"windows"   "1036"
 						"linux"     "1056"
 						"mac"       "1056"
@@ -224,6 +284,8 @@
 
 					"m_pTank"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1040"
 						"linux"     "1060"
 						"mac"       "1060"
@@ -231,6 +293,8 @@
 
 					"m_fDeadTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1048"
 						"linux"     "1068"
 						"mac"       "1068"
@@ -238,6 +302,8 @@
 
 					"m_iUpdateTime"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1052"
 						"linux"     "1072"
 						"mac"       "1072"
@@ -245,6 +311,8 @@
 
 					"m_iHideHUD"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1056"
 						"linux"     "1076"
 						"mac"       "1076"
@@ -252,6 +320,8 @@
 
 					"m_iRespawnFrames"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1060"
 						"linux"     "1080"
 						"mac"       "1080"
@@ -259,6 +329,8 @@
 
 					"m_iClientHealth"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1064"
 						"linux"     "1084"
 						"mac"       "1084"
@@ -266,6 +338,8 @@
 
 					"m_iClientHideHUD"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1068"
 						"linux"     "1088"
 						"mac"       "1088"
@@ -273,6 +347,8 @@
 
 					"m_iClientFOV"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1072"
 						"linux"     "1092"
 						"mac"       "1092"
@@ -280,6 +356,8 @@
 
 					"m_nCustomSprayFrames"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1076"
 						"linux"     "1096"
 						"mac"       "1096"
@@ -287,6 +365,8 @@
 
 					"m_flNextDecalTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1080"
 						"linux"     "1100"
 						"mac"       "1100"
@@ -294,6 +374,9 @@
 
 					"m_rgpPlayerItems"  // CBasePlayerItem*[6]
 					{
+						"type"      "classptr"
+						"size"      "6"
+
 						"windows"   "1084"
 						"linux"     "1104"
 						"mac"       "1104"
@@ -301,6 +384,8 @@
 
 					"m_pActiveItem"  // CBasePlayerItem*
 					{
+						"type"      "classptr"
+
 						"windows"   "1108"
 						"linux"     "1128"
 						"mac"       "1128"
@@ -308,6 +393,8 @@
 
 					"m_pClientActiveItem"  // CBasePlayerItem*
 					{
+						"type"      "classptr"
+
 						"windows"   "1112"
 						"linux"     "1132"
 						"mac"       "1132"
@@ -315,6 +402,8 @@
 
 					"m_pLastItem"  // CBasePlayerItem*
 					{
+						"type"      "classptr"
+
 						"windows"   "1116"
 						"linux"     "1136"
 						"mac"       "1136"
@@ -322,6 +411,9 @@
 
 					"m_rgAmmo"  // int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+
 						"windows"   "1120"
 						"linux"     "1140"
 						"mac"       "1140"
@@ -329,6 +421,9 @@
 
 					"m_rgAmmoLast"  // int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+
 						"windows"   "1248"
 						"linux"     "1268"
 						"mac"       "1268"
@@ -336,6 +431,9 @@
 
 					"m_rgItems"  // int[5]
 					{
+						"type"      "integer"
+						"size"      "5"
+
 						"windows"   "1376"
 						"linux"     "1396"
 						"mac"       "1396"
@@ -343,6 +441,9 @@
 
 					"m_szTeamName"  // char[16]
 					{
+						"type"      "string"
+						"size"      "16"
+
 						"windows"   "1396"
 						"linux"     "1416"
 						"mac"       "1416"
@@ -350,6 +451,8 @@
 
 					"m_irdytospawn"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1412"
 						"linux"     "1432"
 						"mac"       "1432"
@@ -357,6 +460,8 @@
 
 					"m_imissedwave"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1416"
 						"linux"     "1436"
 						"mac"       "1436"
@@ -364,6 +469,8 @@
 
 					"m_ilastteam"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1420"
 						"linux"     "1440"
 						"mac"       "1440"
@@ -371,6 +478,8 @@
 
 					"m_ijustjoined"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1424"
 						"linux"     "1444"
 						"mac"       "1444"
@@ -378,6 +487,8 @@
 
 					"m_chatMsg"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1428"
 						"linux"     "1448"
 						"mac"       "1448"
@@ -385,6 +496,8 @@
 
 					"m_deathMsg"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1432"
 						"linux"     "1452"
 						"mac"       "1452"
@@ -392,6 +505,8 @@
 
 					"m_handSignal"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1436"
 						"linux"     "1456"
 						"mac"       "1456"
@@ -399,6 +514,8 @@
 
 					"m_nextRunThink"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1440"
 						"linux"     "1460"
 						"mac"       "1460"
@@ -406,6 +523,8 @@
 
 					"m_flIdleTimer"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1444"
 						"linux"     "1464"
 						"mac"       "1464"
@@ -413,6 +532,8 @@
 
 					"m_inextprone"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1448"
 						"linux"     "1468"
 						"mac"       "1468"
@@ -420,6 +541,8 @@
 
 					"m_voteid"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1452"
 						"linux"     "1472"
 						"mac"       "1472"
@@ -427,6 +550,8 @@
 
 					"m_iFOV"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1456"
 						"linux"     "1476"
 						"mac"       "1476"
@@ -434,6 +559,8 @@
 
 					"m_fGunDropTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1460"
 						"linux"     "1480"
 						"mac"       "1480"
@@ -441,6 +568,8 @@
 
 					"m_iNextClass"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1464"
 						"linux"     "1484"
 						"mac"       "1484"
@@ -448,6 +577,8 @@
 
 					"m_bIsRandomClass"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "1468"
 						"linux"     "1488"
 						"mac"       "1488"
@@ -455,6 +586,8 @@
 
 					"m_hObserverTarget"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1472"
 						"linux"     "1492"
 						"mac"       "1492"
@@ -462,6 +595,8 @@
 
 					"m_flNextObserverInput"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1480"
 						"linux"     "1500"
 						"mac"       "1500"
@@ -469,6 +604,8 @@
 
 					"m_iObserverWeapon"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1484"
 						"linux"     "1504"
 						"mac"       "1504"
@@ -476,6 +613,8 @@
 
 					"m_iObserverLastMode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1488"
 						"linux"     "1508"
 						"mac"       "1508"
@@ -483,6 +622,8 @@
 
 					"m_bIsObserver"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1492"
 						"linux"     "1512"
 						"mac"       "1512"
@@ -490,6 +631,8 @@
 
 					"HasObject"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1496"
 						"linux"     "1516"
 						"mac"       "1516"
@@ -497,6 +640,8 @@
 
 					"m_pObject"  // CObject*
 					{
+						"type"      "classptr"
+
 						"windows"   "1500"
 						"linux"     "1520"
 						"mac"       "1520"
@@ -504,6 +649,8 @@
 
 					"m_sPlayerModel"  // char*
 					{
+						"type"      "stringptr"
+
 						"windows"   "1504"
 						"linux"     "1524"
 						"mac"       "1524"
@@ -511,6 +658,8 @@
 
 					"m_fNextStamina"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1508"
 						"linux"     "1528"
 						"mac"       "1528"
@@ -518,6 +667,8 @@
 
 					"m_nMGAmmoCount"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1512"
 						"linux"     "1532"
 						"mac"       "1532"
@@ -525,6 +676,8 @@
 
 					"m_nGenericAmmoCount"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1516"
 						"linux"     "1536"
 						"mac"       "1536"
@@ -532,6 +685,8 @@
 
 					"m_iClassSpeed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1520"
 						"linux"     "1540"
 						"mac"       "1540"
@@ -539,6 +694,8 @@
 
 					"m_fSpeedFactor"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1524"
 						"linux"     "1544"
 						"mac"       "1544"
@@ -546,6 +703,8 @@
 
 					"m_bSlowedByHit"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "1528"
 						"linux"     "1548"
 						"mac"       "1548"
@@ -553,6 +712,8 @@
 
 					"m_flUnslowTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1532"
 						"linux"     "1552"
 						"mac"       "1552"
@@ -560,6 +721,8 @@
 
 					"m_flNextVoice"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1536"
 						"linux"     "1556"
 						"mac"       "1556"
@@ -567,6 +730,8 @@
 
 					"m_flNextHand"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1540"
 						"linux"     "1560"
 						"mac"       "1560"
@@ -574,6 +739,8 @@
 
 					"lastMenuSelected"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1544"
 						"linux"     "1564"
 						"mac"       "1564"
@@ -581,6 +748,9 @@
 
 					"m_izSBarState"  // int[4]
 					{
+						"type"      "integer"
+						"size"      "4"
+
 						"windows"   "1548"
 						"linux"     "1568"
 						"mac"       "1568"
@@ -588,6 +758,8 @@
 
 					"m_flNextSBarUpdateTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1564"
 						"linux"     "1584"
 						"mac"       "1584"
@@ -595,6 +767,8 @@
 
 					"m_flStatusBarDisappearDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1568"
 						"linux"     "1588"
 						"mac"       "1588"
@@ -602,6 +776,9 @@
 
 					"m_SbarString0"  // char[128]
 					{
+						"type"      "string"
+						"size"      "128"
+
 						"windows"   "1572"
 						"linux"     "1592"
 						"mac"       "1592"
@@ -609,6 +786,9 @@
 
 					"m_SbarString1"  // char[128]
 					{
+						"type"      "string"
+						"size"      "128"
+
 						"windows"   "1700"
 						"linux"     "1720"
 						"mac"       "1720"
@@ -616,6 +796,8 @@
 
 					"m_hLastIDTarget"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1828"
 						"linux"     "1848"
 						"mac"       "1848"
@@ -623,6 +805,8 @@
 
 					"m_flLastTalkTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1836"
 						"linux"     "1856"
 						"mac"       "1856"
@@ -630,6 +814,8 @@
 
 					"i_cutScenes"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1840"
 						"linux"     "1860"
 						"mac"       "1860"
@@ -637,6 +823,8 @@
 
 					"i_seenAllieSpawnScene"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1844"
 						"linux"     "1864"
 						"mac"       "1864"
@@ -644,6 +832,8 @@
 
 					"i_seenAxisSpawnScene"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1848"
 						"linux"     "1868"
 						"mac"       "1868"
@@ -651,6 +841,8 @@
 
 					"i_seenAllieWinScene"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1852"
 						"linux"     "1872"
 						"mac"       "1872"
@@ -658,6 +850,8 @@
 
 					"i_seenAxisWinScene"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1856"
 						"linux"     "1876"
 						"mac"       "1876"
@@ -665,6 +859,8 @@
 
 					"i_seenAllieLooseScene"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1860"
 						"linux"     "1880"
 						"mac"       "1880"
@@ -672,6 +868,8 @@
 
 					"i_seenAxisLooseScene"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1864"
 						"linux"     "1884"
 						"mac"       "1884"
@@ -679,6 +877,8 @@
 
 					"i_seenAllieDrawScene"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1868"
 						"linux"     "1888"
 						"mac"       "1888"
@@ -686,13 +886,17 @@
 
 					"i_seenAxisDrawScene"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1872"
 						"linux"     "1892"
 						"mac"       "1892"
 					}
 
-					"m_signals"  // CUnifiedSignals
+					"m_signals"  // class CUnifiedSignals
 					{
+						"type"      "class"
+
 						"windows"   "1876"
 						"linux"     "1896"
 						"mac"       "1896"
@@ -700,6 +904,8 @@
 
 					"m_iCapAreaIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1884"
 						"linux"     "1904"
 						"mac"       "1904"
@@ -707,6 +913,8 @@
 
 					"m_iCapAreaIconIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1888"
 						"linux"     "1908"
 						"mac"       "1908"
@@ -714,6 +922,8 @@
 
 					"m_iObjectAreaIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1892"
 						"linux"     "1912"
 						"mac"       "1912"
@@ -721,6 +931,8 @@
 
 					"m_fHandleSignalsTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1896"
 						"linux"     "1916"
 						"mac"       "1916"
@@ -728,6 +940,8 @@
 
 					"m_iObjScore"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1900"
 						"linux"     "1920"
 						"mac"       "1920"
@@ -735,6 +949,8 @@
 
 					"m_iDeaths"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1904"
 						"linux"     "1924"
 						"mac"       "1924"
@@ -742,6 +958,8 @@
 
 					"m_iNumTKs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1908"
 						"linux"     "1928"
 						"mac"       "1928"
@@ -749,6 +967,8 @@
 
 					"m_bBazookaDeployed"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1912"
 						"linux"     "1932"
 						"mac"       "1932"
@@ -756,6 +976,8 @@
 
 					"m_iMinimap"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1916"
 						"linux"     "1936"
 						"mac"       "1936"
@@ -763,6 +985,8 @@
 
 					"m_bShowHints"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "1920"
 						"linux"     "1940"
 						"mac"       "1940"
@@ -770,13 +994,17 @@
 
 					"m_bAutoReload"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "1921"
 						"linux"     "1941"
 						"mac"       "1941"
 					}
 
-					"m_hintMessageQueue"  // CHintMessageQueue
+					"m_hintMessageQueue"  // class CHintMessageQueue
 					{
+						"type"      "class"
+
 						"windows"   "1924"
 						"linux"     "1944"
 						"mac"       "1944"
@@ -784,6 +1012,8 @@
 
 					"m_flDisplayHistory"  // long int
 					{
+						"type"      "integer"
+
 						"windows"   "1972"
 						"linux"     "1992"
 						"mac"       "1992"
@@ -791,6 +1021,9 @@
 
 					"m_szAnimExtention"  // char[32]
 					{
+						"type"      "string"
+						"size"      "32"
+
 						"windows"   "1976"
 						"linux"     "1996"
 						"mac"       "1996"
@@ -798,6 +1031,9 @@
 
 					"m_szAnimReloadExt"  // char[32]
 					{
+						"type"      "string"
+						"size"      "32"
+
 						"windows"   "2008"
 						"linux"     "2028"
 						"mac"       "2028"
@@ -805,6 +1041,8 @@
 
 					"m_iGaitsequence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2040"
 						"linux"     "2060"
 						"mac"       "2060"
@@ -812,6 +1050,8 @@
 
 					"m_flGaitframe"  // float
 					{
+						"type"      "time"
+
 						"windows"   "2044"
 						"linux"     "2064"
 						"mac"       "2064"
@@ -819,6 +1059,8 @@
 
 					"m_flGaityaw"  // float
 					{
+						"type"      "time"
+
 						"windows"   "2048"
 						"linux"     "2068"
 						"mac"       "2068"
@@ -826,6 +1068,8 @@
 
 					"m_prevgaitorigin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "2052"
 						"linux"     "2072"
 						"mac"       "2072"
@@ -833,6 +1077,8 @@
 
 					"m_flPitch"  // float
 					{
+						"type"      "time"
+
 						"windows"   "2064"
 						"linux"     "2084"
 						"mac"       "2084"
@@ -840,6 +1086,8 @@
 
 					"m_flYaw"  // float
 					{
+						"type"      "time"
+
 						"windows"   "2068"
 						"linux"     "2088"
 						"mac"       "2088"
@@ -847,6 +1095,8 @@
 
 					"m_flGaitMovement"  // float
 					{
+						"type"      "time"
+
 						"windows"   "2072"
 						"linux"     "2092"
 						"mac"       "2092"
@@ -854,6 +1104,8 @@
 
 					"m_flYawModifier"  // float
 					{
+						"type"      "time"
+
 						"windows"   "2076"
 						"linux"     "2096"
 						"mac"       "2096"
@@ -861,6 +1113,8 @@
 
 					"m_iCurrentAnimationState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2080"
 						"linux"     "2100"
 						"mac"       "2100"
@@ -868,6 +1122,8 @@
 
 					"m_iCurrentAnimationSequence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2084"
 						"linux"     "2104"
 						"mac"       "2104"
@@ -875,6 +1131,8 @@
 
 					"m_pszSavedWeaponModel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2088"
 						"linux"     "2108"
 						"mac"       "2108"
@@ -882,6 +1140,8 @@
 
 					"m_ianimupdate"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2092"
 						"linux"     "2112"
 						"mac"       "2112"
@@ -889,6 +1149,8 @@
 
 					"m_flNextMapMarkerTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "2096"
 						"linux"     "2116"
 						"mac"       "2116"
@@ -896,6 +1158,8 @@
 
 					"m_iMapMarker"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2100"
 						"linux"     "2120"
 						"mac"       "2120"
@@ -903,6 +1167,8 @@
 
 					"m_iWeapons2"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2104"
 						"linux"     "2124"
 						"mac"       "2124"

@@ -21,6 +21,8 @@
 				{
 					"m_pPlatform"  // CFuncPlat*
 					{
+						"type"      "classptr"
+
 						"windows"   "328"
 						"linux"     "344"
 						"mac"       "344"

@@ -21,6 +21,8 @@
 				{
 					"m_hPlayer"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "336"
 						"linux"     "352"
 						"mac"       "352"
@@ -28,6 +30,8 @@
 
 					"m_hTarget"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "344"
 						"linux"     "360"
 						"mac"       "360"
@@ -35,6 +39,8 @@
 
 					"m_pentPath"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "352"
 						"linux"     "368"
 						"mac"       "368"
@@ -42,6 +48,8 @@
 
 					"m_sPath"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "356"
 						"linux"     "372"
 						"mac"       "372"
@@ -49,6 +57,8 @@
 
 					"m_flWait"  // float
 					{
+						"type"      "time"
+
 						"windows"   "360"
 						"linux"     "376"
 						"mac"       "376"
@@ -56,6 +66,8 @@
 
 					"m_flReturnTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "364"
 						"linux"     "380"
 						"mac"       "380"
@@ -63,6 +75,8 @@
 
 					"m_flStopTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "368"
 						"linux"     "384"
 						"mac"       "384"
@@ -70,6 +84,8 @@
 
 					"m_moveDistance"  // float
 					{
+						"type"      "time"
+
 						"windows"   "372"
 						"linux"     "388"
 						"mac"       "388"
@@ -77,6 +93,8 @@
 
 					"m_targetSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "376"
 						"linux"     "392"
 						"mac"       "392"
@@ -84,6 +102,8 @@
 
 					"m_initialSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "380"
 						"linux"     "396"
 						"mac"       "396"
@@ -91,6 +111,8 @@
 
 					"m_acceleration"  // float
 					{
+						"type"      "time"
+
 						"windows"   "384"
 						"linux"     "400"
 						"mac"       "400"
@@ -98,6 +120,8 @@
 
 					"m_deceleration"  // float
 					{
+						"type"      "time"
+
 						"windows"   "388"
 						"linux"     "404"
 						"mac"       "404"
@@ -105,6 +129,8 @@
 
 					"m_state"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "392"
 						"linux"     "408"
 						"mac"       "408"

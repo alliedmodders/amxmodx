@@ -21,6 +21,8 @@
 				{
 					"m_flLastLightLevel"  // float
 					{
+						"type"      "time"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
@@ -28,6 +30,8 @@
 
 					"m_flNextSmellTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "920"
 						"linux"     "940"
 						"mac"       "940"
@@ -35,6 +39,8 @@
 
 					"m_fLightHacked"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "924"
 						"linux"     "944"
 						"mac"       "944"
@@ -42,6 +48,8 @@
 
 					"m_iMode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "928"
 						"linux"     "948"
 						"mac"       "948"

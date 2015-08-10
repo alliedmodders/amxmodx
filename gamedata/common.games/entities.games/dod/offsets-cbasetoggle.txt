@@ -21,6 +21,8 @@
 				{
 					"m_toggle_state"  // TOGGLE_STATE
 					{
+						"type"      "integer"
+
 						"windows"   "356"
 						"linux"     "372"
 						"mac"       "372"
@@ -28,6 +30,8 @@
 
 					"m_flActivateFinished"  // float
 					{
+						"type"      "time"
+
 						"windows"   "360"
 						"linux"     "376"
 						"mac"       "376"
@@ -35,6 +39,8 @@
 
 					"m_flMoveDistance"  // float
 					{
+						"type"      "time"
+
 						"windows"   "364"
 						"linux"     "380"
 						"mac"       "380"
@@ -42,6 +48,8 @@
 
 					"m_flWait"  // float
 					{
+						"type"      "time"
+
 						"windows"   "368"
 						"linux"     "384"
 						"mac"       "384"
@@ -49,6 +57,8 @@
 
 					"m_flLip"  // float
 					{
+						"type"      "time"
+
 						"windows"   "372"
 						"linux"     "388"
 						"mac"       "388"
@@ -56,6 +66,8 @@
 
 					"m_flTWidth"  // float
 					{
+						"type"      "time"
+
 						"windows"   "376"
 						"linux"     "392"
 						"mac"       "392"
@@ -63,6 +75,8 @@
 
 					"m_flTLength"  // float
 					{
+						"type"      "time"
+
 						"windows"   "380"
 						"linux"     "396"
 						"mac"       "396"
@@ -70,6 +84,8 @@
 
 					"m_vecPosition1"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "384"
 						"linux"     "400"
 						"mac"       "400"
@@ -77,6 +93,8 @@
 
 					"m_vecPosition2"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "396"
 						"linux"     "412"
 						"mac"       "412"
@@ -84,6 +102,8 @@
 
 					"m_vecAngle1"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "408"
 						"linux"     "424"
 						"mac"       "424"
@@ -91,6 +111,8 @@
 
 					"m_vecAngle2"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "420"
 						"linux"     "436"
 						"mac"       "436"
@@ -98,6 +120,8 @@
 
 					"m_cTriggersLeft"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "432"
 						"linux"     "448"
 						"mac"       "448"
@@ -105,6 +129,8 @@
 
 					"m_flHeight"  // float
 					{
+						"type"      "time"
+
 						"windows"   "436"
 						"linux"     "452"
 						"mac"       "452"
@@ -112,6 +138,8 @@
 
 					"m_hActivator"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "440"
 						"linux"     "456"
 						"mac"       "456"
@@ -119,6 +147,8 @@
 
 					"m_pfnCallWhenMoveDone"  // (*__pfn)(CBaseToggle*)
 					{
+						"type"      "function"
+
 						"windows"   "448"
 						"linux"     "464"
 						"mac"       "464"
@@ -126,6 +156,8 @@
 
 					"m_vecFinalDest"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "452"
 						"linux"     "472"
 						"mac"       "472"
@@ -133,6 +165,8 @@
 
 					"m_flLinearMoveSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "464"
 						"linux"     "484"
 						"mac"       "484"
@@ -140,6 +174,8 @@
 
 					"m_vecFinalAngle"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "468"
 						"linux"     "488"
 						"mac"       "488"
@@ -147,6 +183,8 @@
 
 					"m_bitsDamageInflict"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "480"
 						"linux"     "500"
 						"mac"       "500"
@@ -154,6 +192,8 @@
 
 					"m_team"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "484"
 						"linux"     "504"
 						"mac"       "504"
@@ -161,6 +201,8 @@
 
 					"m_sMaster"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "488"
 						"linux"     "508"
 						"mac"       "508"

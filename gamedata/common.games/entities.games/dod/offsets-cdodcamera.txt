@@ -21,6 +21,9 @@
 				{
 					"m_hPlayer"  // EHANDLE[32]
 					{
+						"type"      "ehandle"
+						"size"      "32"
+
 						"windows"   "336"
 						"linux"     "352"
 						"mac"       "352"
@@ -28,6 +31,8 @@
 
 					"m_hTarget"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "592"
 						"linux"     "608"
 						"mac"       "608"
@@ -35,6 +40,8 @@
 
 					"m_pentPath"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "600"
 						"linux"     "616"
 						"mac"       "616"
@@ -42,6 +49,8 @@
 
 					"m_sPath"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "604"
 						"linux"     "620"
 						"mac"       "620"
@@ -49,6 +58,8 @@
 
 					"m_teamBound"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "608"
 						"linux"     "624"
 						"mac"       "624"
@@ -56,6 +67,8 @@
 
 					"m_sTrigrStart"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "612"
 						"linux"     "628"
 						"mac"       "628"
@@ -63,6 +76,8 @@
 
 					"m_sTrigrEnd"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "616"
 						"linux"     "632"
 						"mac"       "632"
@@ -70,6 +85,8 @@
 
 					"m_iOverlay"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "620"
 						"linux"     "636"
 						"mac"       "636"
@@ -77,6 +94,8 @@
 
 					"m_iFOV"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "624"
 						"linux"     "640"
 						"mac"       "640"
@@ -84,6 +103,8 @@
 
 					"m_iSubtitle"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "628"
 						"linux"     "644"
 						"mac"       "644"
@@ -91,6 +112,8 @@
 
 					"m_iCamFade"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "632"
 						"linux"     "648"
 						"mac"       "648"
@@ -98,6 +121,8 @@
 
 					"m_flWait"  // float
 					{
+						"type"      "time"
+
 						"windows"   "636"
 						"linux"     "652"
 						"mac"       "652"
@@ -105,6 +130,8 @@
 
 					"m_flReturnTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "640"
 						"linux"     "656"
 						"mac"       "656"
@@ -112,6 +139,8 @@
 
 					"m_flStopTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "644"
 						"linux"     "660"
 						"mac"       "660"
@@ -119,6 +148,8 @@
 
 					"m_moveDistance"  // float
 					{
+						"type"      "time"
+
 						"windows"   "648"
 						"linux"     "664"
 						"mac"       "664"
@@ -126,6 +157,8 @@
 
 					"m_targetSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "652"
 						"linux"     "668"
 						"mac"       "668"
@@ -133,6 +166,8 @@
 
 					"m_initialSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "656"
 						"linux"     "672"
 						"mac"       "672"
@@ -140,6 +175,8 @@
 
 					"m_acceleration"  // float
 					{
+						"type"      "time"
+
 						"windows"   "660"
 						"linux"     "676"
 						"mac"       "676"
@@ -147,6 +184,8 @@
 
 					"m_deceleration"  // float
 					{
+						"type"      "time"
+
 						"windows"   "664"
 						"linux"     "680"
 						"mac"       "680"
@@ -154,6 +193,8 @@
 
 					"m_state"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "668"
 						"linux"     "684"
 						"mac"       "684"
@@ -161,6 +202,8 @@
 
 					"m_angles"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "672"
 						"linux"     "688"
 						"mac"       "688"
@@ -168,6 +211,8 @@
 
 					"m_origin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "684"
 						"linux"     "700"
 						"mac"       "700"

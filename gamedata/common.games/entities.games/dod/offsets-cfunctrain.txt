@@ -21,6 +21,8 @@
 				{
 					"m_pevCurrentTarget"  // entvars_t*
 					{
+						"type"      "entvars"
+
 						"windows"   "500"
 						"linux"     "520"
 						"mac"       "520"
@@ -28,6 +30,8 @@
 
 					"m_sounds"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "504"
 						"linux"     "524"
 						"mac"       "524"
@@ -35,6 +39,8 @@
 
 					"m_activated"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "508"
 						"linux"     "528"
 						"mac"       "528"
@@ -42,6 +48,8 @@
 
 					"m_iState"  // STATE
 					{
+						"type"      "integer"
+
 						"windows"   "512"
 						"linux"     "532"
 						"mac"       "532"
@@ -49,6 +57,8 @@
 
 					"m_pInitialTarget"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "516"
 						"linux"     "536"
 						"mac"       "536"
@@ -56,6 +66,8 @@
 
 					"m_bMoving"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "520"
 						"linux"     "540"
 						"mac"       "540"

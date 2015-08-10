@@ -21,6 +21,8 @@
 				{
 					"m_GamePlayRules"  // gameplay_rules_t
 					{
+						"type"      "structure"
+
 						"windows"   "328"
 						"linux"     "344"
 						"mac"       "344"
@@ -28,6 +30,8 @@
 
 					"m_iAlliesInfiniteLives"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "376"
 						"linux"     "392"
 						"mac"       "392"
@@ -35,6 +39,8 @@
 
 					"m_iAxisInfiniteLives"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "380"
 						"linux"     "396"
 						"mac"       "396"
@@ -42,6 +48,8 @@
 
 					"m_iAlliesPara"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "384"
 						"linux"     "400"
 						"mac"       "400"
@@ -49,6 +57,8 @@
 
 					"m_iAxisPara"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "388"
 						"linux"     "404"
 						"mac"       "404"
@@ -56,6 +66,8 @@
 
 					"m_iAlliesElimPoints"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "392"
 						"linux"     "408"
 						"mac"       "408"
@@ -63,6 +75,8 @@
 
 					"m_iAxisElimPoints"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "396"
 						"linux"     "412"
 						"mac"       "412"
@@ -70,6 +84,8 @@
 
 					"m_sMaster"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "400"
 						"linux"     "416"
 						"mac"       "416"

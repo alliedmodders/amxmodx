@@ -21,6 +21,9 @@
 				{
 					"m_usFireMP44"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "468"
 						"linux"     "484"
 						"mac"       "484"

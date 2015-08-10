@@ -21,6 +21,8 @@
 				{
 					"m_end"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "500"
 						"linux"     "520"
 						"mac"       "520"
@@ -28,6 +30,8 @@
 
 					"m_start"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "512"
 						"linux"     "532"
 						"mac"       "532"

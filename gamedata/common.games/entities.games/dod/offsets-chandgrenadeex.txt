@@ -21,6 +21,8 @@
 				{
 					"m_flTimeToExplode"  // float
 					{
+						"type"      "time"
+
 						"windows"   "476"
 						"linux"     "492"
 						"mac"       "492"
@@ -28,6 +30,8 @@
 
 					"m_bUnderhand"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "480"
 						"linux"     "496"
 						"mac"       "496"

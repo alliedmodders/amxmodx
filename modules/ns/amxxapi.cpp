@@ -30,7 +30,8 @@ extern BOOL iscombat;
 TitleManager TitleMan;
 ParticleManager ParticleMan;
 
-void MFuncs_Initialize(void);
+void MFuncs_Initialize(char *base);
+void MPlayerFuncs_Initialize(char *base);
 
 // Native register calls here
 void AddNatives_MemberFunc();
@@ -86,6 +87,20 @@ void OnAmxxAttach()
 	AddNatives_Structure();
 	AddNatives_General();
 
-	MFuncs_Initialize();
+	char *FuncBase;
+	char FileName[256];
+	DLHANDLE DLLBase;
+#ifdef __linux__
+	UTIL_Format(FileName, sizeof(FileName), "%s/dlls/ns_i386.so", MF_GetModname());
+#else
+	UTIL_Format(FileName, sizeof(FileName), "%s\\dlls\\ns.dll", MF_GetModname());
+#endif
+
+	DLLBase = DLOPEN(FileName);
+	FuncBase = (char *)DLSYM(DLLBase, MAKE_OFFSET(BASE));
+	DLCLOSE(DLLBase);
+
+	MFuncs_Initialize(FuncBase);
+	MPlayerFuncs_Initialize(FuncBase);
 }
 

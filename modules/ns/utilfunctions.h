@@ -233,6 +233,43 @@ inline unsigned char set_private_b(edict_t *pEntity, int offset, unsigned char v
 };
 
 
+/**
+* sizeof(void (detail::GenericClass::*fptr)())
+* is 8 in GCC.  Add an empty void * pointer at
+* the end to compensate.
+* Layout in GCC:
+* union {
+*   void *address;      // When this is an address it will always be positive
+*   int   vtable_index; // When it is a vtable index it will always be odd = (vindex*2)+1
+* };
+* int delta;
+* -
+* Delta is the adjustment to the this pointer
+* For my implementations I will only need it to 0
+*/
+#ifdef __GNUC__
+template <typename OutType>
+inline void set_mfp(OutType &out, void *in)
+{
+	union
+	{
+		void    *in[2];
+		OutType out;
+	} mfpu;
+
+	mfpu.in[0] = in;
+	mfpu.in[1] = NULL;
+	out = mfpu.out;
+};
+#else
+template <typename OutType>
+inline void set_mfp(OutType &out, void *in)
+{
+	out = horrible_cast<OutType>(in);
+};
+#endif
+
+#define MFP(Offs) (((void *)(((char *)base)+MAKE_OFFSET(Offs))))
 
 #endif // UTILFUNCTIONS_H
 

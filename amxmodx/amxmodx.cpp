@@ -1423,19 +1423,19 @@ static cell AMX_NATIVE_CALL get_plugin(AMX *amx, cell *params) /* 11 param */
 		set_amxstring(amx, params[8], a->getAuthor(), params[9]);
 		set_amxstring(amx, params[10], a->getStatus(), params[11]);
 		
+		if (params[0] / sizeof(cell) >= 12)
+		{
+			cell *jit_info = get_amxaddr(amx, params[12]);
+#if defined AMD64 || !defined JIT
+			*jit_info = 0;
+#else
+			*jit_info = a->isDebug() ? 0 : 1;
+#endif
+		}
+
 		return a->getId();
 	}
 
-	if (params[0] / sizeof(cell) >= 12)
-	{
-		cell *jit_info = get_amxaddr(amx, params[12]);
-#if defined AMD64 || !defined JIT
-		*jit_info = 0;
-#else
-		*jit_info = a->isDebug() ? 0 : 1;
-#endif
-	}
-	
 	return -1;
 }
 

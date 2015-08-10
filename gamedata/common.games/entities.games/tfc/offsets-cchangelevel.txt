@@ -21,6 +21,9 @@
 				{
 					"m_szMapName"  // char[32]
 					{
+						"type"      "string"
+						"size"      "32"
+
 						"windows"   "1280"
 						"linux"     "1300"
 						"mac"       "1300"
@@ -28,6 +31,9 @@
 
 					"m_szLandmarkName"  // char[32]
 					{
+						"type"      "string"
+						"size"      "32"
+
 						"windows"   "1312"
 						"linux"     "1332"
 						"mac"       "1332"
@@ -35,6 +41,8 @@
 
 					"m_changeTarget"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1344"
 						"linux"     "1364"
 						"mac"       "1364"
@@ -42,6 +50,8 @@
 
 					"m_changeTargetDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1348"
 						"linux"     "1368"
 						"mac"       "1368"

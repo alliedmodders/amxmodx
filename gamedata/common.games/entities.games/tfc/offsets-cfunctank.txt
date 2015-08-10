@@ -21,6 +21,8 @@
 				{
 					"m_pController"  // CBasePlayer*
 					{
+						"type"      "classptr"
+
 						"windows"   "1124"
 						"linux"     "1140"
 						"mac"       "1140"
@@ -28,6 +30,8 @@
 
 					"m_flNextAttack"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1128"
 						"linux"     "1144"
 						"mac"       "1144"
@@ -35,6 +39,8 @@
 
 					"m_vecControllerUsePos"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1132"
 						"linux"     "1148"
 						"mac"       "1148"
@@ -42,6 +48,8 @@
 
 					"m_yawCenter"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1144"
 						"linux"     "1160"
 						"mac"       "1160"
@@ -49,6 +57,8 @@
 
 					"m_yawRate"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1148"
 						"linux"     "1164"
 						"mac"       "1164"
@@ -56,6 +66,8 @@
 
 					"m_yawRange"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1152"
 						"linux"     "1168"
 						"mac"       "1168"
@@ -63,6 +75,8 @@
 
 					"m_yawTolerance"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1156"
 						"linux"     "1172"
 						"mac"       "1172"
@@ -70,6 +84,8 @@
 
 					"m_pitchCenter"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1160"
 						"linux"     "1176"
 						"mac"       "1176"
@@ -77,6 +93,8 @@
 
 					"m_pitchRate"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1164"
 						"linux"     "1180"
 						"mac"       "1180"
@@ -84,6 +102,8 @@
 
 					"m_pitchRange"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1168"
 						"linux"     "1184"
 						"mac"       "1184"
@@ -91,6 +111,8 @@
 
 					"m_pitchTolerance"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1172"
 						"linux"     "1188"
 						"mac"       "1188"
@@ -98,6 +120,8 @@
 
 					"m_fireLast"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1176"
 						"linux"     "1192"
 						"mac"       "1192"
@@ -105,6 +129,8 @@
 
 					"m_fireRate"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1180"
 						"linux"     "1196"
 						"mac"       "1196"
@@ -112,6 +138,8 @@
 
 					"m_lastSightTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1184"
 						"linux"     "1200"
 						"mac"       "1200"
@@ -119,6 +147,8 @@
 
 					"m_persist"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1188"
 						"linux"     "1204"
 						"mac"       "1204"
@@ -126,6 +156,8 @@
 
 					"m_minRange"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1192"
 						"linux"     "1208"
 						"mac"       "1208"
@@ -133,6 +165,8 @@
 
 					"m_maxRange"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1196"
 						"linux"     "1212"
 						"mac"       "1212"
@@ -140,6 +174,8 @@
 
 					"m_barrelPos"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1200"
 						"linux"     "1216"
 						"mac"       "1216"
@@ -147,6 +183,8 @@
 
 					"m_spriteScale"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1212"
 						"linux"     "1228"
 						"mac"       "1228"
@@ -154,6 +192,8 @@
 
 					"m_iszSpriteSmoke"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1216"
 						"linux"     "1232"
 						"mac"       "1232"
@@ -161,6 +201,8 @@
 
 					"m_iszSpriteFlash"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1220"
 						"linux"     "1236"
 						"mac"       "1236"
@@ -168,6 +210,8 @@
 
 					"m_bulletType"  // enum TANKBULLET
 					{
+						"type"      "integer"
+
 						"windows"   "1224"
 						"linux"     "1240"
 						"mac"       "1240"
@@ -175,6 +219,8 @@
 
 					"m_iBulletDamage"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1228"
 						"linux"     "1244"
 						"mac"       "1244"
@@ -182,6 +228,8 @@
 
 					"m_sightOrigin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1232"
 						"linux"     "1248"
 						"mac"       "1248"
@@ -189,6 +237,8 @@
 
 					"m_spread"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1244"
 						"linux"     "1260"
 						"mac"       "1260"

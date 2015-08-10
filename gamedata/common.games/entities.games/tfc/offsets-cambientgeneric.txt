@@ -21,6 +21,8 @@
 				{
 					"m_flAttenuation"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1124"
 						"linux"     "1140"
 						"mac"       "1140"
@@ -28,6 +30,8 @@
 
 					"m_dpv"  // dynpitchvol_t
 					{
+						"type"      "structure"
+
 						"windows"   "1128"
 						"linux"     "1144"
 						"mac"       "1144"
@@ -35,6 +39,8 @@
 
 					"m_fActive"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1228"
 						"linux"     "1244"
 						"mac"       "1244"
@@ -42,6 +48,8 @@
 
 					"m_fLooping"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1232"
 						"linux"     "1248"
 						"mac"       "1248"

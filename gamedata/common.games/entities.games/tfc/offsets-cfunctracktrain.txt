@@ -21,6 +21,8 @@
 				{
 					"m_ppath"  // CPathTrack*
 					{
+						"type"      "classptr"
+
 						"windows"   "1124"
 						"linux"     "1140"
 						"mac"       "1140"
@@ -28,6 +30,8 @@
 
 					"m_length"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1128"
 						"linux"     "1144"
 						"mac"       "1144"
@@ -35,6 +39,8 @@
 
 					"m_height"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1132"
 						"linux"     "1148"
 						"mac"       "1148"
@@ -42,6 +48,8 @@
 
 					"m_speed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1136"
 						"linux"     "1152"
 						"mac"       "1152"
@@ -49,6 +57,8 @@
 
 					"m_dir"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1140"
 						"linux"     "1156"
 						"mac"       "1156"
@@ -56,6 +66,8 @@
 
 					"m_startSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1144"
 						"linux"     "1160"
 						"mac"       "1160"
@@ -63,6 +75,8 @@
 
 					"m_controlMins"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1148"
 						"linux"     "1164"
 						"mac"       "1164"
@@ -70,6 +84,8 @@
 
 					"m_controlMaxs"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1160"
 						"linux"     "1176"
 						"mac"       "1176"
@@ -77,6 +93,8 @@
 
 					"m_soundPlaying"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1172"
 						"linux"     "1188"
 						"mac"       "1188"
@@ -84,6 +102,8 @@
 
 					"m_sounds"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1176"
 						"linux"     "1192"
 						"mac"       "1192"
@@ -91,6 +111,8 @@
 
 					"m_flVolume"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1180"
 						"linux"     "1196"
 						"mac"       "1196"
@@ -98,6 +120,8 @@
 
 					"m_flBank"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1184"
 						"linux"     "1200"
 						"mac"       "1200"
@@ -105,6 +129,8 @@
 
 					"m_oldSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1188"
 						"linux"     "1204"
 						"mac"       "1204"
@@ -112,6 +138,9 @@
 
 					"m_usAdjustPitch"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1192"
 						"linux"     "1208"
 						"mac"       "1208"

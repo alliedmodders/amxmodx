@@ -21,6 +21,8 @@
 				{
 					"m_vecPreviousVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1728"
 						"linux"     "1748"
 						"mac"       "1748"

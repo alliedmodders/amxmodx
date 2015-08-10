@@ -21,6 +21,8 @@
 				{
 					"m_iTrail"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1728"
 						"linux"     "1748"
 						"mac"       "1748"
@@ -28,6 +30,8 @@
 
 					"m_flCreationTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1732"
 						"linux"     "1752"
 						"mac"       "1752"

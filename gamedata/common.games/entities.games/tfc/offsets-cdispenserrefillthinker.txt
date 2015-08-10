@@ -21,6 +21,8 @@
 				{
 					"m_hDispenser"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1124"
 						"linux"     "1140"
 						"mac"       "1140"
@@ -28,6 +30,8 @@
 
 					"m_hPlayer"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1132"
 						"linux"     "1148"
 						"mac"       "1148"
@@ -35,6 +39,8 @@
 
 					"m_InitialUsePoint"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1140"
 						"linux"     "1156"
 						"mac"       "1156"

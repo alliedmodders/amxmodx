@@ -21,6 +21,9 @@
 				{
 					"m_ClassData"  // class DBAreaClassData[12]
 					{
+						"type"      "class"
+						"size"      "12"
+
 						"windows"   "1124"
 						"linux"     "1140"
 						"mac"       "1140"
@@ -28,6 +31,9 @@
 
 					"m_AreaName"  // char[32]
 					{
+						"type"      "string"
+						"size"      "32"
+
 						"windows"   "1268"
 						"linux"     "1284"
 						"mac"       "1284"
@@ -35,6 +41,8 @@
 
 					"m_pNext"  // CAreaDef*
 					{
+						"type"      "classptr"
+
 						"windows"   "1300"
 						"linux"     "1316"
 						"mac"       "1316"

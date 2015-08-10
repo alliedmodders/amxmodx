@@ -21,6 +21,8 @@
 				{
 					"m_iAnim_Deploy"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1252"
 						"linux"     "1268"
 						"mac"       "1268"
@@ -28,6 +30,8 @@
 
 					"m_iAnim_Holster"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1256"
 						"linux"     "1272"
 						"mac"       "1272"
@@ -35,6 +39,8 @@
 
 					"m_iAnim_Idle"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1260"
 						"linux"     "1276"
 						"mac"       "1276"
@@ -42,6 +48,8 @@
 
 					"m_iAnim_ReloadDown"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1264"
 						"linux"     "1280"
 						"mac"       "1280"
@@ -49,6 +57,8 @@
 
 					"m_iAnim_ReloadUp"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1268"
 						"linux"     "1284"
 						"mac"       "1284"
@@ -56,6 +66,9 @@
 
 					"m_usFireGL"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1272"
 						"linux"     "1288"
 						"mac"       "1288"

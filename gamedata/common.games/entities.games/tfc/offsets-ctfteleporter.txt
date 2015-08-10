@@ -21,6 +21,8 @@
 				{
 					"m_pPlayer"  // CBasePlayer*
 					{
+						"type"      "classptr"
+
 						"windows"   "1700"
 						"linux"     "1720"
 						"mac"       "1720"
@@ -28,6 +30,8 @@
 
 					"m_flInitialUseDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1704"
 						"linux"     "1724"
 						"mac"       "1724"
@@ -35,6 +39,8 @@
 
 					"m_iType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1708"
 						"linux"     "1728"
 						"mac"       "1728"
@@ -42,6 +48,8 @@
 
 					"m_iState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1712"
 						"linux"     "1732"
 						"mac"       "1732"
@@ -49,6 +57,8 @@
 
 					"m_iDestroyed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1716"
 						"linux"     "1736"
 						"mac"       "1736"
@@ -56,6 +66,8 @@
 
 					"m_iShardIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1720"
 						"linux"     "1740"
 						"mac"       "1740"
@@ -63,6 +75,8 @@
 
 					"m_flMyNextThink"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1724"
 						"linux"     "1744"
 						"mac"       "1744"
@@ -70,6 +84,8 @@
 
 					"m_flDamageDelay"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1728"
 						"linux"     "1748"
 						"mac"       "1748"

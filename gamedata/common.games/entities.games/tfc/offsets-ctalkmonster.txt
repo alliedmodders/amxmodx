@@ -21,6 +21,8 @@
 				{
 					"m_bitsSaid"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1700"
 						"linux"     "1720"
 						"mac"       "1720"
@@ -28,6 +30,8 @@
 
 					"m_nSpeak"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1704"
 						"linux"     "1724"
 						"mac"       "1724"
@@ -35,6 +39,8 @@
 
 					"m_voicePitch"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1708"
 						"linux"     "1728"
 						"mac"       "1728"
@@ -42,6 +48,9 @@
 
 					"m_szGrp"  // const char*[18]
 					{
+						"type"      "stringptr"
+						"size"      "18"
+
 						"windows"   "1712"
 						"linux"     "1732"
 						"mac"       "1732"
@@ -49,6 +58,8 @@
 
 					"m_useTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1784"
 						"linux"     "1804"
 						"mac"       "1804"
@@ -56,6 +67,8 @@
 
 					"m_iszUse"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1788"
 						"linux"     "1808"
 						"mac"       "1808"
@@ -63,6 +76,8 @@
 
 					"m_iszUnUse"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1792"
 						"linux"     "1812"
 						"mac"       "1812"
@@ -70,6 +85,8 @@
 
 					"m_flLastSaidSmelled"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1796"
 						"linux"     "1816"
 						"mac"       "1816"
@@ -77,6 +94,8 @@
 
 					"m_flStopTalkTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1800"
 						"linux"     "1820"
 						"mac"       "1820"
@@ -84,6 +103,8 @@
 
 					"m_hTalkTarget"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1804"
 						"linux"     "1824"
 						"mac"       "1824"

@@ -21,6 +21,8 @@
 				{
 					"m_iMagnitude"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1700"
 						"linux"     "1720"
 						"mac"       "1720"
@@ -28,6 +30,8 @@
 
 					"m_spriteScale"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1704"
 						"linux"     "1724"
 						"mac"       "1724"

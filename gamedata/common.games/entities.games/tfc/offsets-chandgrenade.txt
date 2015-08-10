@@ -21,6 +21,8 @@
 				{
 					"m_flStartThrow"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1252"
 						"linux"     "1268"
 						"mac"       "1268"
@@ -28,6 +30,8 @@
 
 					"m_flReleaseThrow"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1256"
 						"linux"     "1272"
 						"mac"       "1272"

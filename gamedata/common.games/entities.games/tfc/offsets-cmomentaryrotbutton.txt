@@ -21,6 +21,8 @@
 				{
 					"m_lastUsed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1280"
 						"linux"     "1300"
 						"mac"       "1300"
@@ -28,6 +30,8 @@
 
 					"m_direction"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1284"
 						"linux"     "1304"
 						"mac"       "1304"
@@ -35,6 +39,8 @@
 
 					"m_returnSpeed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1288"
 						"linux"     "1308"
 						"mac"       "1308"
@@ -42,6 +48,8 @@
 
 					"m_start"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1292"
 						"linux"     "1312"
 						"mac"       "1312"
@@ -49,6 +57,8 @@
 
 					"m_end"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1304"
 						"linux"     "1324"
 						"mac"       "1324"
@@ -56,6 +66,8 @@
 
 					"m_sounds"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1316"
 						"linux"     "1336"
 						"mac"       "1336"

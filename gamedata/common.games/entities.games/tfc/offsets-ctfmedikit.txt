@@ -21,6 +21,9 @@
 				{
 					"m_usNormalShot"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1384"
 						"linux"     "1400"
 						"mac"       "1400"
@@ -28,6 +31,9 @@
 
 					"m_usSuperShot"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1386"
 						"linux"     "1402"
 						"mac"       "1402"
@@ -35,6 +41,9 @@
 
 					"m_usSteamShot"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1388"
 						"linux"     "1404"
 						"mac"       "1404"

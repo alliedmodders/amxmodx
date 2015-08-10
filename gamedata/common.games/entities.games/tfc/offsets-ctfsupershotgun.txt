@@ -21,6 +21,9 @@
 				{
 					"m_usFireSuperShotgun"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1270"
 						"linux"     "1286"
 						"mac"       "1286"

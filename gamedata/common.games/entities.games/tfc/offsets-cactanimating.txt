@@ -21,6 +21,8 @@
 				{
 					"m_Activity"  // Activity
 					{
+						"type"      "integer"
+
 						"windows"   "1152"
 						"linux"     "1168"
 						"mac"       "1168"

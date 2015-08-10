@@ -21,6 +21,8 @@
 				{
 					"pev"  // entvars_t*
 					{
+						"type"      "entvars"
+
 						"windows"   "4"
 						"linux"     "4"
 						"mac"       "4"
@@ -28,6 +30,8 @@
 
 					"m_pGoalEnt"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "8"
 						"linux"     "8"
 						"mac"       "8"
@@ -35,6 +39,8 @@
 
 					"m_pLink"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "12"
 						"linux"     "12"
 						"mac"       "12"
@@ -42,6 +48,8 @@
 
 					"m_pfnThink"  // (*__pfn)(CBaseEntity*)
 					{
+						"type"      "function"
+
 						"windows"   "16"
 						"linux"     "16"
 						"mac"       "16"
@@ -49,6 +57,8 @@
 
 					"m_pfnTouch"  // (*__pfn)(CBaseEntity*, CBaseEntity*)
 					{
+						"type"      "function"
+
 						"windows"   "20"
 						"linux"     "24"
 						"mac"       "24"
@@ -56,6 +66,8 @@
 
 					"m_pfnUse"  // (*__pfn)(CBaseEntity*, CBaseEntity*, CBaseEntity*, USE_TYPE, float)
 					{
+						"type"      "function"
+
 						"windows"   "24"
 						"linux"     "32"
 						"mac"       "32"
@@ -63,6 +75,8 @@
 
 					"m_pfnBlocked"  // (*__pfn)(CBaseEntity*, CBaseEntity*)
 					{
+						"type"      "function"
+
 						"windows"   "28"
 						"linux"     "40"
 						"mac"       "40"
@@ -70,6 +84,8 @@
 
 					"nextpc"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "32"
 						"linux"     "48"
 						"mac"       "48"
@@ -77,6 +93,8 @@
 
 					"lastpc"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "36"
 						"linux"     "52"
 						"mac"       "52"
@@ -84,6 +102,8 @@
 
 					"last_impulse"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "40"
 						"linux"     "56"
 						"mac"       "56"
@@ -91,6 +111,8 @@
 
 					"armorclass"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "44"
 						"linux"     "60"
 						"mac"       "60"
@@ -98,6 +120,8 @@
 
 					"tf_items"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "48"
 						"linux"     "64"
 						"mac"       "64"
@@ -105,6 +129,8 @@
 
 					"tf_items_flags"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "52"
 						"linux"     "68"
 						"mac"       "68"
@@ -112,6 +138,8 @@
 
 					"no_grenades_1"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "56"
 						"linux"     "72"
 						"mac"       "72"
@@ -119,6 +147,8 @@
 
 					"no_grenades_2"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "60"
 						"linux"     "76"
 						"mac"       "76"
@@ -126,6 +156,8 @@
 
 					"tp_grenades_1"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "64"
 						"linux"     "80"
 						"mac"       "80"
@@ -133,6 +165,8 @@
 
 					"tp_grenades_2"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "68"
 						"linux"     "84"
 						"mac"       "84"
@@ -140,6 +174,8 @@
 
 					"m_iszGrenadeName"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "72"
 						"linux"     "88"
 						"mac"       "88"
@@ -147,6 +183,8 @@
 
 					"got_aliases"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "76"
 						"linux"     "92"
 						"mac"       "92"
@@ -154,6 +192,8 @@
 
 					"cheat_check"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "80"
 						"linux"     "96"
 						"mac"       "96"
@@ -161,6 +201,8 @@
 
 					"is_removed"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"
@@ -168,6 +210,8 @@
 
 					"is_undercover"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "88"
 						"linux"     "104"
 						"mac"       "104"
@@ -175,6 +219,8 @@
 
 					"is_building"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "92"
 						"linux"     "108"
 						"mac"       "108"
@@ -182,6 +228,8 @@
 
 					"is_detpacking"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -189,6 +237,8 @@
 
 					"is_feigning"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -196,6 +246,8 @@
 
 					"is_unableto_spy_or_teleport"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -203,6 +255,8 @@
 
 					"has_disconnected"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "108"
 						"linux"     "124"
 						"mac"       "124"
@@ -210,6 +264,8 @@
 
 					"fClientGrenadePrimed"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "112"
 						"linux"     "128"
 						"mac"       "128"
@@ -217,6 +273,8 @@
 
 					"bRemoveGrenade"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "116"
 						"linux"     "132"
 						"mac"       "132"
@@ -224,6 +282,9 @@
 
 					"m_usBuildingEvent"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "120"
 						"linux"     "136"
 						"mac"       "136"
@@ -231,6 +292,8 @@
 
 					"m_iBuildingEventState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "124"
 						"linux"     "140"
 						"mac"       "140"
@@ -238,6 +301,8 @@
 
 					"m_vOldOrigin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "128"
 						"linux"     "144"
 						"mac"       "144"
@@ -245,6 +310,8 @@
 
 					"tfstate"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"
@@ -252,6 +319,8 @@
 
 					"items"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"
@@ -259,6 +328,8 @@
 
 					"weapon"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "148"
 						"linux"     "164"
 						"mac"       "164"
@@ -266,6 +337,8 @@
 
 					"m_iPrimedGrenType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "152"
 						"linux"     "168"
 						"mac"       "168"
@@ -273,6 +346,8 @@
 
 					"observer_list"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "156"
 						"linux"     "172"
 						"mac"       "172"
@@ -280,6 +355,8 @@
 
 					"m_pOtherSection"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "160"
 						"linux"     "176"
 						"mac"       "176"
@@ -287,6 +364,8 @@
 
 					"m_iRightBound"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "168"
 						"linux"     "184"
 						"mac"       "184"
@@ -294,6 +373,8 @@
 
 					"m_iLeftBound"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "172"
 						"linux"     "188"
 						"mac"       "188"
@@ -301,6 +382,8 @@
 
 					"cl_no_grenades_1"  // float
 					{
+						"type"      "time"
+
 						"windows"   "176"
 						"linux"     "192"
 						"mac"       "192"
@@ -308,6 +391,8 @@
 
 					"cl_no_grenades_2"  // float
 					{
+						"type"      "time"
+
 						"windows"   "180"
 						"linux"     "196"
 						"mac"       "196"
@@ -315,6 +400,8 @@
 
 					"current_ammo"  // int*
 					{
+						"type"      "pointer"
+
 						"windows"   "184"
 						"linux"     "200"
 						"mac"       "200"
@@ -322,6 +409,8 @@
 
 					"currentammo"  // float
 					{
+						"type"      "time"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"
@@ -329,6 +418,8 @@
 
 					"maxammo_medikit"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -336,6 +427,8 @@
 
 					"ammo_medikit"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -343,6 +436,8 @@
 
 					"maxammo_shells"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"
@@ -350,6 +445,8 @@
 
 					"ammo_detpack"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "204"
 						"linux"     "220"
 						"mac"       "220"
@@ -357,6 +454,8 @@
 
 					"maxammo_detpack"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "208"
 						"linux"     "224"
 						"mac"       "224"
@@ -364,6 +463,8 @@
 
 					"ammo_shells"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "212"
 						"linux"     "228"
 						"mac"       "228"
@@ -371,6 +472,8 @@
 
 					"maxammo_nails"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "216"
 						"linux"     "232"
 						"mac"       "232"
@@ -378,6 +481,8 @@
 
 					"ammo_nails"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "220"
 						"linux"     "236"
 						"mac"       "236"
@@ -385,6 +490,8 @@
 
 					"maxammo_cells"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "224"
 						"linux"     "240"
 						"mac"       "240"
@@ -392,6 +499,8 @@
 
 					"ammo_cells"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "228"
 						"linux"     "244"
 						"mac"       "244"
@@ -399,6 +508,8 @@
 
 					"maxammo_rockets"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "232"
 						"linux"     "248"
 						"mac"       "248"
@@ -406,6 +517,8 @@
 
 					"ammo_rockets"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "236"
 						"linux"     "252"
 						"mac"       "252"
@@ -413,6 +526,8 @@
 
 					"items_allowed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "240"
 						"linux"     "256"
 						"mac"       "256"
@@ -420,6 +535,8 @@
 
 					"armor_allowed"  // float
 					{
+						"type"      "time"
+
 						"windows"   "244"
 						"linux"     "260"
 						"mac"       "260"
@@ -427,6 +544,8 @@
 
 					"maxarmor"  // float
 					{
+						"type"      "time"
+
 						"windows"   "248"
 						"linux"     "264"
 						"mac"       "264"
@@ -434,6 +553,8 @@
 
 					"exec_scripts"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "252"
 						"linux"     "268"
 						"mac"       "268"
@@ -441,6 +562,8 @@
 
 					"exec_map_scripts"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "256"
 						"linux"     "272"
 						"mac"       "272"
@@ -448,6 +571,8 @@
 
 					"display_class_briefing"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "260"
 						"linux"     "276"
 						"mac"       "276"
@@ -455,6 +580,8 @@
 
 					"take_screenshots"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "264"
 						"linux"     "280"
 						"mac"       "280"
@@ -462,6 +589,8 @@
 
 					"local_blood"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "268"
 						"linux"     "284"
 						"mac"       "284"
@@ -469,6 +598,8 @@
 
 					"weaponmode"  // float
 					{
+						"type"      "time"
+
 						"windows"   "272"
 						"linux"     "288"
 						"mac"       "288"
@@ -476,6 +607,8 @@
 
 					"motd"  // float
 					{
+						"type"      "time"
+
 						"windows"   "276"
 						"linux"     "292"
 						"mac"       "292"
@@ -483,6 +616,8 @@
 
 					"current_menu"  // float
 					{
+						"type"      "time"
+
 						"windows"   "280"
 						"linux"     "296"
 						"mac"       "296"
@@ -490,6 +625,8 @@
 
 					"menu_displaytime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "284"
 						"linux"     "300"
 						"mac"       "300"
@@ -497,6 +634,8 @@
 
 					"menu_refreshtime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "288"
 						"linux"     "304"
 						"mac"       "304"
@@ -504,6 +643,8 @@
 
 					"m_flSafetyCheckTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "292"
 						"linux"     "308"
 						"mac"       "308"
@@ -511,6 +652,8 @@
 
 					"team_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "296"
 						"linux"     "312"
 						"mac"       "312"
@@ -518,6 +661,8 @@
 
 					"lives"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "300"
 						"linux"     "316"
 						"mac"       "316"
@@ -525,6 +670,8 @@
 
 					"infection_team_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "304"
 						"linux"     "320"
 						"mac"       "320"
@@ -532,6 +679,8 @@
 
 					"real_frags"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "308"
 						"linux"     "324"
 						"mac"       "324"
@@ -539,6 +688,8 @@
 
 					"respawn_time"  // float
 					{
+						"type"      "time"
+
 						"windows"   "312"
 						"linux"     "328"
 						"mac"       "328"
@@ -546,6 +697,8 @@
 
 					"suicide_time"  // float
 					{
+						"type"      "time"
+
 						"windows"   "316"
 						"linux"     "332"
 						"mac"       "332"
@@ -553,6 +706,8 @@
 
 					"building"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "320"
 						"linux"     "336"
 						"mac"       "336"
@@ -560,6 +715,8 @@
 
 					"building_wait"  // float
 					{
+						"type"      "time"
+
 						"windows"   "328"
 						"linux"     "344"
 						"mac"       "344"
@@ -567,6 +724,8 @@
 
 					"real_owner"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "332"
 						"linux"     "348"
 						"mac"       "348"
@@ -574,6 +733,8 @@
 
 					"has_dispenser"  // float
 					{
+						"type"      "time"
+
 						"windows"   "340"
 						"linux"     "356"
 						"mac"       "356"
@@ -581,6 +742,8 @@
 
 					"has_sentry"  // float
 					{
+						"type"      "time"
+
 						"windows"   "344"
 						"linux"     "360"
 						"mac"       "360"
@@ -588,6 +751,8 @@
 
 					"has_entry_teleporter"  // float
 					{
+						"type"      "time"
+
 						"windows"   "348"
 						"linux"     "364"
 						"mac"       "364"
@@ -595,6 +760,8 @@
 
 					"has_exit_teleporter"  // float
 					{
+						"type"      "time"
+
 						"windows"   "352"
 						"linux"     "368"
 						"mac"       "368"
@@ -602,6 +769,8 @@
 
 					"weapons_carried"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "356"
 						"linux"     "372"
 						"mac"       "372"
@@ -609,6 +778,8 @@
 
 					"current_weapon"  // float
 					{
+						"type"      "time"
+
 						"windows"   "360"
 						"linux"     "376"
 						"mac"       "376"
@@ -616,6 +787,8 @@
 
 					"last_weapon"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "364"
 						"linux"     "380"
 						"mac"       "380"
@@ -623,6 +796,8 @@
 
 					"last_weaponmode"  // float
 					{
+						"type"      "time"
+
 						"windows"   "368"
 						"linux"     "384"
 						"mac"       "384"
@@ -630,6 +805,8 @@
 
 					"reload_shotgun"  // float
 					{
+						"type"      "time"
+
 						"windows"   "372"
 						"linux"     "388"
 						"mac"       "388"
@@ -637,6 +814,8 @@
 
 					"reload_super_shotgun"  // float
 					{
+						"type"      "time"
+
 						"windows"   "376"
 						"linux"     "392"
 						"mac"       "392"
@@ -644,6 +823,8 @@
 
 					"reload_nailgun"  // float
 					{
+						"type"      "time"
+
 						"windows"   "380"
 						"linux"     "396"
 						"mac"       "396"
@@ -651,6 +832,8 @@
 
 					"reload_super_nailgun"  // float
 					{
+						"type"      "time"
+
 						"windows"   "384"
 						"linux"     "400"
 						"mac"       "400"
@@ -658,6 +841,8 @@
 
 					"reload_grenade_launcher"  // float
 					{
+						"type"      "time"
+
 						"windows"   "388"
 						"linux"     "404"
 						"mac"       "404"
@@ -665,6 +850,8 @@
 
 					"reload_rocket_launcher"  // float
 					{
+						"type"      "time"
+
 						"windows"   "392"
 						"linux"     "408"
 						"mac"       "408"
@@ -672,6 +859,8 @@
 
 					"reload_flamethrower"  // float
 					{
+						"type"      "time"
+
 						"windows"   "396"
 						"linux"     "412"
 						"mac"       "412"
@@ -679,6 +868,8 @@
 
 					"reload_incendiary"  // float
 					{
+						"type"      "time"
+
 						"windows"   "400"
 						"linux"     "416"
 						"mac"       "416"
@@ -686,6 +877,8 @@
 
 					"heat"  // float
 					{
+						"type"      "time"
+
 						"windows"   "404"
 						"linux"     "420"
 						"mac"       "420"
@@ -693,6 +886,8 @@
 
 					"sniper_zoom"  // float
 					{
+						"type"      "time"
+
 						"windows"   "408"
 						"linux"     "424"
 						"mac"       "424"
@@ -700,6 +895,8 @@
 
 					"immune_to_check"  // float
 					{
+						"type"      "time"
+
 						"windows"   "412"
 						"linux"     "428"
 						"mac"       "428"
@@ -707,6 +904,8 @@
 
 					"last_saveme_sound"  // float
 					{
+						"type"      "time"
+
 						"windows"   "416"
 						"linux"     "432"
 						"mac"       "432"
@@ -714,6 +913,8 @@
 
 					"head_shot_vector"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "420"
 						"linux"     "436"
 						"mac"       "436"
@@ -721,6 +922,8 @@
 
 					"leg_damage"  // float
 					{
+						"type"      "time"
+
 						"windows"   "432"
 						"linux"     "448"
 						"mac"       "448"
@@ -728,6 +931,8 @@
 
 					"cheat_level"  // float
 					{
+						"type"      "time"
+
 						"windows"   "436"
 						"linux"     "452"
 						"mac"       "452"
@@ -735,6 +940,8 @@
 
 					"FlashTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "440"
 						"linux"     "456"
 						"mac"       "456"
@@ -742,6 +949,8 @@
 
 					"nailpos"  // float
 					{
+						"type"      "time"
+
 						"windows"   "444"
 						"linux"     "460"
 						"mac"       "460"
@@ -749,6 +958,8 @@
 
 					"old_leg_damage"  // float
 					{
+						"type"      "time"
+
 						"windows"   "448"
 						"linux"     "464"
 						"mac"       "464"
@@ -756,6 +967,8 @@
 
 					"clientHalluc"  // float
 					{
+						"type"      "time"
+
 						"windows"   "452"
 						"linux"     "468"
 						"mac"       "468"
@@ -763,6 +976,8 @@
 
 					"clientTranq"  // float
 					{
+						"type"      "time"
+
 						"windows"   "456"
 						"linux"     "472"
 						"mac"       "472"
@@ -770,6 +985,8 @@
 
 					"no_active_nail_grens"  // float
 					{
+						"type"      "time"
+
 						"windows"   "460"
 						"linux"     "476"
 						"mac"       "476"
@@ -777,6 +994,8 @@
 
 					"no_active_napalm_grens"  // float
 					{
+						"type"      "time"
+
 						"windows"   "464"
 						"linux"     "480"
 						"mac"       "480"
@@ -784,6 +1003,8 @@
 
 					"no_active_gas_grens"  // float
 					{
+						"type"      "time"
+
 						"windows"   "468"
 						"linux"     "484"
 						"mac"       "484"
@@ -791,6 +1012,8 @@
 
 					"numflames"  // float
 					{
+						"type"      "time"
+
 						"windows"   "472"
 						"linux"     "488"
 						"mac"       "488"
@@ -798,6 +1021,8 @@
 
 					"timecount"  // float
 					{
+						"type"      "time"
+
 						"windows"   "476"
 						"linux"     "492"
 						"mac"       "492"
@@ -805,6 +1030,8 @@
 
 					"flame_id"  // char*
 					{
+						"type"      "stringptr"
+
 						"windows"   "480"
 						"linux"     "496"
 						"mac"       "496"
@@ -812,6 +1039,8 @@
 
 					"undercover_team"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "484"
 						"linux"     "500"
 						"mac"       "500"
@@ -819,6 +1048,8 @@
 
 					"undercover_skin"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "488"
 						"linux"     "504"
 						"mac"       "504"
@@ -826,6 +1057,8 @@
 
 					"undercover_target"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "492"
 						"linux"     "508"
 						"mac"       "508"
@@ -833,6 +1066,8 @@
 
 					"StatusRefreshTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "500"
 						"linux"     "516"
 						"mac"       "516"
@@ -840,6 +1075,8 @@
 
 					"StatusBarSize"  // float
 					{
+						"type"      "time"
+
 						"windows"   "504"
 						"linux"     "520"
 						"mac"       "520"
@@ -847,6 +1084,8 @@
 
 					"StatusBarRes"  // float
 					{
+						"type"      "time"
+
 						"windows"   "508"
 						"linux"     "524"
 						"mac"       "524"
@@ -854,6 +1093,8 @@
 
 					"ScannerOn"  // float
 					{
+						"type"      "time"
+
 						"windows"   "512"
 						"linux"     "528"
 						"mac"       "528"
@@ -861,6 +1102,8 @@
 
 					"tf_id"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "516"
 						"linux"     "532"
 						"mac"       "532"
@@ -868,6 +1111,8 @@
 
 					"teamkills"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "520"
 						"linux"     "536"
 						"mac"       "536"
@@ -875,6 +1120,8 @@
 
 					"is_admin"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "524"
 						"linux"     "540"
 						"mac"       "540"
@@ -882,6 +1129,8 @@
 
 					"admin_mode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "528"
 						"linux"     "544"
 						"mac"       "544"
@@ -889,6 +1138,8 @@
 
 					"admin_use"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "532"
 						"linux"     "548"
 						"mac"       "548"
@@ -896,6 +1147,8 @@
 
 					"ip"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "540"
 						"linux"     "556"
 						"mac"       "556"
@@ -903,6 +1156,8 @@
 
 					"goal_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "544"
 						"linux"     "560"
 						"mac"       "560"
@@ -910,6 +1165,8 @@
 
 					"group_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "548"
 						"linux"     "564"
 						"mac"       "564"
@@ -917,6 +1174,8 @@
 
 					"goal_state"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "552"
 						"linux"     "568"
 						"mac"       "568"
@@ -924,6 +1183,8 @@
 
 					"owned_by"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "556"
 						"linux"     "572"
 						"mac"       "572"
@@ -931,6 +1192,8 @@
 
 					"teamcheck"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "560"
 						"linux"     "576"
 						"mac"       "576"
@@ -938,6 +1201,8 @@
 
 					"owned_by_teamcheck"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "564"
 						"linux"     "580"
 						"mac"       "580"
@@ -945,6 +1210,8 @@
 
 					"goal_activation"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "568"
 						"linux"     "584"
 						"mac"       "584"
@@ -952,6 +1219,8 @@
 
 					"goal_effects"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "572"
 						"linux"     "588"
 						"mac"       "588"
@@ -959,6 +1228,8 @@
 
 					"goal_result"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "576"
 						"linux"     "592"
 						"mac"       "592"
@@ -966,6 +1237,8 @@
 
 					"goal_group"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "580"
 						"linux"     "596"
 						"mac"       "596"
@@ -973,6 +1246,8 @@
 
 					"else_goal"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "584"
 						"linux"     "600"
 						"mac"       "600"
@@ -980,6 +1255,8 @@
 
 					"if_goal_is_active"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "588"
 						"linux"     "604"
 						"mac"       "604"
@@ -987,6 +1264,8 @@
 
 					"if_goal_is_inactive"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "592"
 						"linux"     "608"
 						"mac"       "608"
@@ -994,6 +1273,8 @@
 
 					"if_goal_is_removed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "596"
 						"linux"     "612"
 						"mac"       "612"
@@ -1001,6 +1282,8 @@
 
 					"if_group_is_active"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "600"
 						"linux"     "616"
 						"mac"       "616"
@@ -1008,6 +1291,8 @@
 
 					"if_group_is_inactive"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "604"
 						"linux"     "620"
 						"mac"       "620"
@@ -1015,6 +1300,8 @@
 
 					"if_group_is_removed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "608"
 						"linux"     "624"
 						"mac"       "624"
@@ -1022,6 +1309,8 @@
 
 					"search_time"  // float
 					{
+						"type"      "time"
+
 						"windows"   "612"
 						"linux"     "628"
 						"mac"       "628"
@@ -1029,6 +1318,8 @@
 
 					"t_length"  // float
 					{
+						"type"      "time"
+
 						"windows"   "616"
 						"linux"     "632"
 						"mac"       "632"
@@ -1036,6 +1327,8 @@
 
 					"activate_goal_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "620"
 						"linux"     "636"
 						"mac"       "636"
@@ -1043,6 +1336,8 @@
 
 					"inactivate_goal_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "624"
 						"linux"     "640"
 						"mac"       "640"
@@ -1050,6 +1345,8 @@
 
 					"remove_goal_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "628"
 						"linux"     "644"
 						"mac"       "644"
@@ -1057,6 +1354,8 @@
 
 					"restore_goal_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "632"
 						"linux"     "648"
 						"mac"       "648"
@@ -1064,6 +1363,8 @@
 
 					"activate_group_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "636"
 						"linux"     "652"
 						"mac"       "652"
@@ -1071,6 +1372,8 @@
 
 					"inactivate_group_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "640"
 						"linux"     "656"
 						"mac"       "656"
@@ -1078,6 +1381,8 @@
 
 					"remove_group_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "644"
 						"linux"     "660"
 						"mac"       "660"
@@ -1085,6 +1390,8 @@
 
 					"restore_group_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "648"
 						"linux"     "664"
 						"mac"       "664"
@@ -1092,6 +1399,8 @@
 
 					"m_bAddBonuses"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "652"
 						"linux"     "668"
 						"mac"       "668"
@@ -1099,6 +1408,8 @@
 
 					"goal_min"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "656"
 						"linux"     "672"
 						"mac"       "672"
@@ -1106,6 +1417,8 @@
 
 					"goal_max"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "668"
 						"linux"     "684"
 						"mac"       "684"
@@ -1113,6 +1426,8 @@
 
 					"replacement_model"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "680"
 						"linux"     "696"
 						"mac"       "696"
@@ -1120,6 +1435,8 @@
 
 					"replacement_model_body"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "684"
 						"linux"     "700"
 						"mac"       "700"
@@ -1127,6 +1444,8 @@
 
 					"replacement_model_skin"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "688"
 						"linux"     "704"
 						"mac"       "704"
@@ -1134,6 +1453,8 @@
 
 					"replacement_model_flags"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "692"
 						"linux"     "708"
 						"mac"       "708"
@@ -1141,6 +1462,8 @@
 
 					"has_item_from_group"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "696"
 						"linux"     "712"
 						"mac"       "712"
@@ -1148,6 +1471,8 @@
 
 					"hasnt_item_from_group"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "700"
 						"linux"     "716"
 						"mac"       "716"
@@ -1155,6 +1480,8 @@
 
 					"remove_item_group"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "704"
 						"linux"     "720"
 						"mac"       "720"
@@ -1162,6 +1489,8 @@
 
 					"return_item_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "708"
 						"linux"     "724"
 						"mac"       "724"
@@ -1169,6 +1498,8 @@
 
 					"if_item_has_moved"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "712"
 						"linux"     "728"
 						"mac"       "728"
@@ -1176,6 +1507,8 @@
 
 					"if_item_hasnt_moved"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "716"
 						"linux"     "732"
 						"mac"       "732"
@@ -1183,6 +1516,8 @@
 
 					"remove_spawnpoint"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "720"
 						"linux"     "736"
 						"mac"       "736"
@@ -1190,6 +1525,8 @@
 
 					"restore_spawnpoint"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "724"
 						"linux"     "740"
 						"mac"       "740"
@@ -1197,6 +1534,8 @@
 
 					"remove_spawngroup"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "728"
 						"linux"     "744"
 						"mac"       "744"
@@ -1204,6 +1543,8 @@
 
 					"restore_spawngroup"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "732"
 						"linux"     "748"
 						"mac"       "748"
@@ -1211,6 +1552,9 @@
 
 					"display_item_status"  // int[4]
 					{
+						"type"      "integer"
+						"size"      "4"
+
 						"windows"   "736"
 						"linux"     "752"
 						"mac"       "752"
@@ -1218,6 +1562,8 @@
 
 					"team_str_home"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "752"
 						"linux"     "768"
 						"mac"       "768"
@@ -1225,6 +1571,8 @@
 
 					"team_str_moved"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "756"
 						"linux"     "772"
 						"mac"       "772"
@@ -1232,6 +1580,8 @@
 
 					"team_str_carried"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "760"
 						"linux"     "776"
 						"mac"       "776"
@@ -1239,6 +1589,8 @@
 
 					"non_team_str_home"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "764"
 						"linux"     "780"
 						"mac"       "780"
@@ -1246,6 +1598,8 @@
 
 					"non_team_str_moved"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "768"
 						"linux"     "784"
 						"mac"       "784"
@@ -1253,6 +1607,8 @@
 
 					"non_team_str_carried"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "772"
 						"linux"     "788"
 						"mac"       "788"
@@ -1260,6 +1616,8 @@
 
 					"ex_skill_min"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "776"
 						"linux"     "792"
 						"mac"       "792"
@@ -1267,6 +1625,8 @@
 
 					"ex_skill_max"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "780"
 						"linux"     "796"
 						"mac"       "796"
@@ -1274,6 +1634,9 @@
 
 					"increase_team"  // int[4]
 					{
+						"type"      "integer"
+						"size"      "4"
+
 						"windows"   "784"
 						"linux"     "800"
 						"mac"       "800"
@@ -1281,6 +1644,8 @@
 
 					"increase_team_owned_by"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "800"
 						"linux"     "816"
 						"mac"       "816"
@@ -1288,6 +1653,8 @@
 
 					"wait"  // float
 					{
+						"type"      "time"
+
 						"windows"   "804"
 						"linux"     "820"
 						"mac"       "820"
@@ -1295,6 +1662,8 @@
 
 					"count"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "808"
 						"linux"     "824"
 						"mac"       "824"
@@ -1302,6 +1671,8 @@
 
 					"axhitme"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "812"
 						"linux"     "828"
 						"mac"       "828"
@@ -1309,6 +1680,8 @@
 
 					"drop_time"  // float
 					{
+						"type"      "time"
+
 						"windows"   "816"
 						"linux"     "832"
 						"mac"       "832"
@@ -1316,6 +1689,8 @@
 
 					"redrop_origin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "820"
 						"linux"     "836"
 						"mac"       "836"
@@ -1323,6 +1698,8 @@
 
 					"redrop_count"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "832"
 						"linux"     "848"
 						"mac"       "848"
@@ -1330,6 +1707,8 @@
 
 					"attack_finished"  // float
 					{
+						"type"      "time"
+
 						"windows"   "836"
 						"linux"     "852"
 						"mac"       "852"
@@ -1337,6 +1716,8 @@
 
 					"distance"  // float
 					{
+						"type"      "time"
+
 						"windows"   "840"
 						"linux"     "856"
 						"mac"       "856"
@@ -1344,6 +1725,8 @@
 
 					"speed_reduction"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "844"
 						"linux"     "860"
 						"mac"       "860"
@@ -1351,6 +1734,8 @@
 
 					"m_flEndRoundTime"  // float
 					{
+						"type"      "time"
+
 						"windows"   "848"
 						"linux"     "864"
 						"mac"       "864"
@@ -1358,6 +1743,8 @@
 
 					"m_iszEndRoundMsg_Team1_Win"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "852"
 						"linux"     "868"
 						"mac"       "868"
@@ -1365,6 +1752,8 @@
 
 					"m_iszEndRoundMsg_Team2_Win"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "856"
 						"linux"     "872"
 						"mac"       "872"
@@ -1372,6 +1761,8 @@
 
 					"m_iszEndRoundMsg_Team3_Win"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "860"
 						"linux"     "876"
 						"mac"       "876"
@@ -1379,6 +1770,8 @@
 
 					"m_iszEndRoundMsg_Team4_Win"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "864"
 						"linux"     "880"
 						"mac"       "880"
@@ -1386,6 +1779,8 @@
 
 					"m_iszEndRoundMsg_Team1_Lose"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "868"
 						"linux"     "884"
 						"mac"       "884"
@@ -1393,6 +1788,8 @@
 
 					"m_iszEndRoundMsg_Team2_Lose"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "872"
 						"linux"     "888"
 						"mac"       "888"
@@ -1400,6 +1797,8 @@
 
 					"m_iszEndRoundMsg_Team3_Lose"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "876"
 						"linux"     "892"
 						"mac"       "892"
@@ -1407,6 +1806,8 @@
 
 					"m_iszEndRoundMsg_Team4_Lose"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "880"
 						"linux"     "896"
 						"mac"       "896"
@@ -1414,6 +1815,8 @@
 
 					"m_iszEndRoundMsg_Team1"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "884"
 						"linux"     "900"
 						"mac"       "900"
@@ -1421,6 +1824,8 @@
 
 					"m_iszEndRoundMsg_Team2"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "888"
 						"linux"     "904"
 						"mac"       "904"
@@ -1428,6 +1833,8 @@
 
 					"m_iszEndRoundMsg_Team3"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "892"
 						"linux"     "908"
 						"mac"       "908"
@@ -1435,6 +1842,8 @@
 
 					"m_iszEndRoundMsg_Team4"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "896"
 						"linux"     "912"
 						"mac"       "912"
@@ -1442,6 +1851,8 @@
 
 					"m_iszEndRoundMsg_OwnedBy"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "900"
 						"linux"     "916"
 						"mac"       "916"
@@ -1449,6 +1860,8 @@
 
 					"m_iszEndRoundMsg_NonOwnedBy"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "904"
 						"linux"     "920"
 						"mac"       "920"
@@ -1456,6 +1869,8 @@
 
 					"killtarget"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "908"
 						"linux"     "924"
 						"mac"       "924"
@@ -1463,6 +1878,8 @@
 
 					"noise4"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "912"
 						"linux"     "928"
 						"mac"       "928"
@@ -1470,6 +1887,8 @@
 
 					"broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "916"
 						"linux"     "932"
 						"mac"       "932"
@@ -1477,6 +1896,8 @@
 
 					"team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "920"
 						"linux"     "936"
 						"mac"       "936"
@@ -1484,6 +1905,8 @@
 
 					"non_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "924"
 						"linux"     "940"
 						"mac"       "940"
@@ -1491,6 +1914,8 @@
 
 					"owners_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "928"
 						"linux"     "944"
 						"mac"       "944"
@@ -1498,6 +1923,8 @@
 
 					"non_owners_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "932"
 						"linux"     "948"
 						"mac"       "948"
@@ -1505,6 +1932,8 @@
 
 					"team_drop"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "936"
 						"linux"     "952"
 						"mac"       "952"
@@ -1512,6 +1941,8 @@
 
 					"non_team_drop"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "940"
 						"linux"     "956"
 						"mac"       "956"
@@ -1519,6 +1950,8 @@
 
 					"org_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "944"
 						"linux"     "960"
 						"mac"       "960"
@@ -1526,6 +1959,8 @@
 
 					"org_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "948"
 						"linux"     "964"
 						"mac"       "964"
@@ -1533,6 +1968,8 @@
 
 					"org_non_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "952"
 						"linux"     "968"
 						"mac"       "968"
@@ -1540,6 +1977,8 @@
 
 					"org_owners_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "956"
 						"linux"     "972"
 						"mac"       "972"
@@ -1547,6 +1986,8 @@
 
 					"org_non_owners_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "960"
 						"linux"     "976"
 						"mac"       "976"
@@ -1554,6 +1995,8 @@
 
 					"org_team_drop"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "964"
 						"linux"     "980"
 						"mac"       "980"
@@ -1561,6 +2004,8 @@
 
 					"org_non_team_drop"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "968"
 						"linux"     "984"
 						"mac"       "984"
@@ -1568,6 +2013,8 @@
 
 					"org_message"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "972"
 						"linux"     "988"
 						"mac"       "988"
@@ -1575,6 +2022,8 @@
 
 					"org_noise3"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "976"
 						"linux"     "992"
 						"mac"       "992"
@@ -1582,6 +2031,8 @@
 
 					"org_noise4"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "980"
 						"linux"     "996"
 						"mac"       "996"
@@ -1589,6 +2040,8 @@
 
 					"netname_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "984"
 						"linux"     "1000"
 						"mac"       "1000"
@@ -1596,6 +2049,8 @@
 
 					"netname_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "988"
 						"linux"     "1004"
 						"mac"       "1004"
@@ -1603,6 +2058,8 @@
 
 					"netname_non_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "992"
 						"linux"     "1008"
 						"mac"       "1008"
@@ -1610,6 +2067,8 @@
 
 					"netname_owners_team_broadcast"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "996"
 						"linux"     "1012"
 						"mac"       "1012"
@@ -1617,6 +2076,8 @@
 
 					"netname_team_drop"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1000"
 						"linux"     "1016"
 						"mac"       "1016"
@@ -1624,6 +2085,8 @@
 
 					"netname_non_team_drop"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1004"
 						"linux"     "1020"
 						"mac"       "1020"
@@ -1631,6 +2094,8 @@
 
 					"speak"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1008"
 						"linux"     "1024"
 						"mac"       "1024"
@@ -1638,6 +2103,8 @@
 
 					"AP_speak"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1012"
 						"linux"     "1028"
 						"mac"       "1028"
@@ -1645,6 +2112,8 @@
 
 					"team_speak"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1016"
 						"linux"     "1032"
 						"mac"       "1032"
@@ -1652,6 +2121,8 @@
 
 					"non_team_speak"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1020"
 						"linux"     "1036"
 						"mac"       "1036"
@@ -1659,6 +2130,8 @@
 
 					"owners_team_speak"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1024"
 						"linux"     "1040"
 						"mac"       "1040"
@@ -1666,6 +2139,8 @@
 
 					"non_owners_team_speak"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1028"
 						"linux"     "1044"
 						"mac"       "1044"
@@ -1673,6 +2148,8 @@
 
 					"deathtype"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "1032"
 						"linux"     "1048"
 						"mac"       "1048"
@@ -1680,6 +2157,8 @@
 
 					"all_active"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1036"
 						"linux"     "1052"
 						"mac"       "1052"
@@ -1687,6 +2166,8 @@
 
 					"item_list"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1040"
 						"linux"     "1056"
 						"mac"       "1056"
@@ -1694,6 +2175,8 @@
 
 					"delay_time"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1044"
 						"linux"     "1060"
 						"mac"       "1060"
@@ -1701,6 +2184,8 @@
 
 					"do_triggerwork"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1048"
 						"linux"     "1064"
 						"mac"       "1064"
@@ -1708,6 +2193,8 @@
 
 					"rv_s_h"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1052"
 						"linux"     "1068"
 						"mac"       "1068"
@@ -1715,6 +2202,8 @@
 
 					"rs_s_h"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1056"
 						"linux"     "1072"
 						"mac"       "1072"
@@ -1722,6 +2211,8 @@
 
 					"rv_gr"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1060"
 						"linux"     "1076"
 						"mac"       "1076"
@@ -1729,6 +2220,8 @@
 
 					"rs_gr"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1064"
 						"linux"     "1080"
 						"mac"       "1080"
@@ -1736,6 +2229,8 @@
 
 					"rv_g"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1068"
 						"linux"     "1084"
 						"mac"       "1084"
@@ -1743,6 +2238,8 @@
 
 					"rs_g"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1072"
 						"linux"     "1088"
 						"mac"       "1088"
@@ -1750,6 +2247,8 @@
 
 					"has_abbreviated"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1076"
 						"linux"     "1092"
 						"mac"       "1092"
@@ -1757,6 +2256,8 @@
 
 					"timer_type"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1080"
 						"linux"     "1096"
 						"mac"       "1096"
@@ -1764,6 +2265,8 @@
 
 					"invincible_finished"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1084"
 						"linux"     "1100"
 						"mac"       "1100"
@@ -1771,6 +2274,8 @@
 
 					"invisible_finished"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1088"
 						"linux"     "1104"
 						"mac"       "1104"
@@ -1778,6 +2283,8 @@
 
 					"super_damage_finished"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1092"
 						"linux"     "1108"
 						"mac"       "1108"
@@ -1785,6 +2292,8 @@
 
 					"radsuit_finished"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1096"
 						"linux"     "1112"
 						"mac"       "1112"
@@ -1792,6 +2301,8 @@
 
 					"m_bLostInvincSound"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1100"
 						"linux"     "1116"
 						"mac"       "1116"
@@ -1799,6 +2310,8 @@
 
 					"m_bLostInvisSound"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1104"
 						"linux"     "1120"
 						"mac"       "1120"
@@ -1806,6 +2319,8 @@
 
 					"m_bLostSuperSound"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1108"
 						"linux"     "1124"
 						"mac"       "1124"
@@ -1813,6 +2328,8 @@
 
 					"m_bLostRadSound"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1112"
 						"linux"     "1128"
 						"mac"       "1128"
@@ -1820,6 +2337,8 @@
 
 					"m_fInvincSound"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1116"
 						"linux"     "1132"
 						"mac"       "1132"
@@ -1827,6 +2346,8 @@
 
 					"m_fSuperSound"  // float
 					{
+						"type"      "time"
+
 						"windows"   "1120"
 						"linux"     "1136"
 						"mac"       "1136"

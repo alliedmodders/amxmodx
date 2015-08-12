@@ -324,7 +324,7 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 			}
 			else if (!strcmp(key, "size"))
 			{
-				TempType.fieldSize = ke::Min(0, atoi(value));
+				TempType.fieldSize = ke::Max<int>(0, atoi(value));
 			}
 			else if (!strcmp(key, "unsigned"))
 			{

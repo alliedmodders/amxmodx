@@ -25,6 +25,8 @@
 #include "glb.h"
 #include <am-string.h>
 #include <am-vector.h>
+#include <IGameConfigs.h>
+#include <HLTypeConversion.h>
 
 extern edict_t *g_player_edicts[33];
 
@@ -55,13 +57,14 @@ inline edict_t* INDEXENT2( int iEdictNum )
 	}
 #endif
 
-#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(INDEXENT2(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity"); return 0; }
+#define CHECK_ENTITY(x) if (x != 0 && (FNullEnt(TypeConversion.id_to_edict(x)) || x < 0 || x > gpGlobals->maxEntities)) { MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity"); return 0; }
 #define CHECK_OFFSET(x) if (x < 0) { MF_LogError(amx, AMX_ERR_NATIVE, "Invalid offset"); return 0; }
 
 extern AMX_NATIVE_INFO engfunc_natives[];
 extern AMX_NATIVE_INFO dllfunc_natives[];
 extern AMX_NATIVE_INFO forward_natives[];
 extern AMX_NATIVE_INFO pdata_natives[];
+extern AMX_NATIVE_INFO pdata_gc_natives[];
 extern AMX_NATIVE_INFO tr_Natives[];
 extern AMX_NATIVE_INFO pev_natives[];
 extern AMX_NATIVE_INFO glb_natives[];
@@ -79,6 +82,11 @@ extern enginefuncs_t *g_pengfuncsTable;
 extern enginefuncs_t *g_pengfuncsTable_Post;
 extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
 extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
+
+extern IGameConfig *CommonConfig;
+extern IGameConfigManager *ConfigManager;
+
+extern HLTypeConversion TypeConversion;
 
 #endif //_FAKEMETA_INCLUDE_H
 

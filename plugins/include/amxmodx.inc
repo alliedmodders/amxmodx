@@ -156,16 +156,28 @@ forward client_connect(id);
 forward client_authorized(id);
 
 /**
- * Called when a client is disconnecting from the server.
+ * @deprecated This function does not catch all cases.
+ */
+#pragma deprecated Use client_disconnected() instead.
+forward client_disconnect(id);
+
+/**
+ * Called when a client is disconnected from the server.
  *
+ * @note This will be called in some additional cases that client_disconnect doesn't cover, 
+ *       most notably when a client aborts the connection process. It is guaranteed to pair 
+ *       with the client_connect() forward.
  * @note By this point it is already too late to do anything that directly
  *       affects the client.
  *
- * @param id    Client index
+ * @param id         Client index
+ * @param drop       If true, client has been explicitly dropped by game
+ * @param message    If drop is true, a disconnected message or buffer to copy a new message to
+ * @param maxlen     Maximum size of buffer
  *
  * @noreturn
  */
-forward client_disconnect(id);
+forward client_disconnected(id, bool:drop, message[], maxlen);
 
 /**
  * Called when a client attempts to execute a command.

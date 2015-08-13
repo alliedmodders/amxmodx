@@ -819,7 +819,7 @@ new NumOfLeaders
 new LeaderID 
 new PScore[MAX_PLAYERS + 1] 
 
-public client_disconnect(id) { 
+public client_disconnected(id) { 
   if ( !LeadSounds || isDSMActive() ) return PLUGIN_CONTINUE
   if ( PScore[id] == LeaderScore && LeaderScore > 0 ){ 
     NumOfLeaders -- 

@@ -13,6 +13,7 @@
 
 CGameConfigManager ConfigManager;
 static CGameMasterReader MasterReader;
+IGameConfig *CommonConfig;
 
 //
 // GAME CONFIG
@@ -884,6 +885,17 @@ CGameConfigManager::CGameConfigManager()
 
 CGameConfigManager::~CGameConfigManager()
 {
+}
+
+void CGameConfigManager::OnAmxxStartup()
+{
+	char error[256] = "";
+
+	if (!LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)))
+	{
+		AMXXLOG_Log("Could not read common.games gamedata: %s", error);
+		return;
+	}
 }
 
 bool CGameConfigManager::LoadGameConfigFile(const char *file, IGameConfig **config, char *error, size_t maxlength)

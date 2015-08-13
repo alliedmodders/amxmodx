@@ -37,6 +37,7 @@ public:
 	bool initialized;
 	bool ingame;
 	bool authorized;
+	bool disconnecting;
 	bool vgui;
 	bool teamIdsInitialized;
 

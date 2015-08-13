@@ -20,6 +20,7 @@ void CPlayer::Init(edict_t* e, int i)
 	initialized = false;
 	ingame = false;
 	authorized = false;
+	disconnecting = false;
 	teamIdsInitialized = false;
 
 	current = 0;
@@ -42,6 +43,7 @@ void CPlayer::Disconnect()
 	ingame = false;
 	initialized = false;
 	authorized = false;
+	disconnecting = false;
 	teamIdsInitialized = false;
 
 	if (Menu *pMenu = get_menu_by_id(newmenu))

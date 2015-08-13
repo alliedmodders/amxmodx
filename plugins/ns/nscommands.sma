@@ -100,7 +100,7 @@ public msgScoreInfo() {
   g_Class[id]=read_data(g_ScoreInfo_Class);
   g_Team[id]=read_data(g_ScoreInfo_Team);
 }
-public client_disconnect(id) {
+public client_disconnected(id) {
   g_Class[id]=0;
   g_Team[id]=-1;
 }

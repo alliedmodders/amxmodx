@@ -400,6 +400,7 @@ CopyFiles('gamedata/modules.games', 'base/addons/amxmodx/data/gamedata/modules.g
 CopyFiles('gamedata/common.games', 'base/addons/amxmodx/data/gamedata/common.games',
   [ 
     'master.games.txt',
+    'functions.engine.txt',
     'globalvars.engine.txt',
   ]
 )

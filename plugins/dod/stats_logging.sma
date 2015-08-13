@@ -21,7 +21,7 @@ new g_pingCount[MAX_PLAYERS + 1]
 public plugin_init()
   register_plugin("Stats Logging",AMXX_VERSION_STR,"AMXX Dev Team")
 
-public client_disconnect(id) {
+public client_disconnected(id) {
   if ( is_user_bot( id ) || !is_user_connected(id) || !isDSMActive() ) return PLUGIN_CONTINUE
   remove_task( id )
   new szTeam[16],szName[MAX_NAME_LENGTH],szAuthid[32], iStats[9], iHits[8], szWeapon[16]

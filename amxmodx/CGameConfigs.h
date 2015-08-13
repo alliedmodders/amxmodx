@@ -152,6 +152,7 @@ class CGameConfigManager : public IGameConfigManager
 
 	public:
 
+		void OnAmxxStartup();
 		void RemoveCachedConfig(CGameConfig *config);
 
 	private:
@@ -164,5 +165,6 @@ class CGameConfigManager : public IGameConfigManager
 };
 
 extern CGameConfigManager ConfigManager;
+extern IGameConfig *CommonConfig;
 
 #endif // _INCLUDE_GAMECONFIG_H_

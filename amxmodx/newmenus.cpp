@@ -1018,7 +1018,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		}
 	case MPROP_NOCOLORS:
 		{
-			pMenu->m_AutoColors = *get_amxaddr(amx, params[3]) ? true : false;
+			pMenu->m_AutoColors = *get_amxaddr(amx, params[3]) ? false : true;
 			break;
 		}
 	case MPROP_PADMENU:

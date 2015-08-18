@@ -32,7 +32,7 @@
  */
 enum CsInternalModel
 {
-	CS_AUTOCHANGE = -1
+	CS_AUTOCHANGE = -1,
 	CS_DONTCHANGE = 0,
 	CS_CT_URBAN = 1,
 	CS_T_TERROR = 2,

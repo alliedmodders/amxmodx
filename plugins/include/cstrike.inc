@@ -32,7 +32,7 @@
  */
 enum CsInternalModel
 {
-	CS_AUTOCHANGE = -1,
+	CS_NORESET = -1,
 	CS_DONTCHANGE = 0,
 	CS_CT_URBAN = 1,
 	CS_T_TERROR = 2,
@@ -474,7 +474,7 @@ native cs_set_user_plant(index, plant = 1, showbombicon = 1);
  *
  * @param index         Client index
  * @param team          Team id
- * @param model         Internal model id, if CS_AUTOCHANGE the game will choose the model
+ * @param model         Internal model id, if CS_DONTCHANGE the game will choose the model
  * @param send_teaminfo If true, a TeamInfo message will be sent
  *
  * @noreturn
@@ -482,7 +482,7 @@ native cs_set_user_plant(index, plant = 1, showbombicon = 1);
  *                  MaxClients, or the client is not connected, an error will be
  *                  thrown.
  */
-native cs_set_user_team(index, any:team, any:model = CS_AUTOCHANGE, bool:send_teaminfo = true);
+native cs_set_user_team(index, any:team, any:model = CS_DONTCHANGE, bool:send_teaminfo = true);
 
 /**
  * Returns the client's team and optionally the model id.

@@ -20,7 +20,7 @@
 #if !defined AMXMODX_NOAUTOLOAD
 	#pragma loadlib cstrike
 #endif
-CS
+
 /**
  * @section Team and team model constants, used by cs_[get|set]_user_team().
  */

@@ -20,7 +20,7 @@
 #if !defined AMXMODX_NOAUTOLOAD
 	#pragma loadlib cstrike
 #endif
-
+CS
 /**
  * @section Team and team model constants, used by cs_[get|set]_user_team().
  */
@@ -475,6 +475,7 @@ native cs_set_user_plant(index, plant = 1, showbombicon = 1);
  * @param index         Client index
  * @param team          Team id
  * @param model         Internal model id, if CS_DONTCHANGE the game will choose the model
+ *			or use CS_NORESET if you dont want update the model.
  * @param send_teaminfo If true, a TeamInfo message will be sent
  *
  * @noreturn

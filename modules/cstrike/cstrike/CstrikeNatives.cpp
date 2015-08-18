@@ -514,7 +514,7 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params)
 	return get_pdata<int>(pPlayer, m_iTeam);
 }
 
-// native cs_set_user_team(index, any:team, any:model = CS_AUTOCHANGE, bool:send_teaminfo = true);
+// native cs_set_user_team(index, any:team, any:model = CS_DONTCHANGE, bool:send_teaminfo = true);
 static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 {
 	GET_OFFSET("CBasePlayer", m_iModelName);
@@ -534,7 +534,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 		set_pdata<int>(pPlayer, m_iModelName, model);
 	}
 
-	if (model != 0)
+	if (model >= 0)
 	{
 		Players[index].ResetModel(pPlayer);
 	}

@@ -534,8 +534,11 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 		set_pdata<int>(pPlayer, m_iModelName, model);
 	}
 
-	Players[index].ResetModel(pPlayer);
-
+	if (model >= 0)
+	{
+		Players[index].ResetModel(pPlayer);
+	}
+	
 	bool sendTeamInfo = true;
 
 	if (*params / sizeof(cell) >= 4)

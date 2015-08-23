@@ -32,6 +32,7 @@
  */
 enum CsInternalModel
 {
+	CS_NORESET = -1,
 	CS_DONTCHANGE = 0,
 	CS_CT_URBAN = 1,
 	CS_T_TERROR = 2,
@@ -474,6 +475,7 @@ native cs_set_user_plant(index, plant = 1, showbombicon = 1);
  * @param index         Client index
  * @param team          Team id
  * @param model         Internal model id, if CS_DONTCHANGE the game will choose the model
+ 			or if CS_NORESET the game will not update it.
  * @param send_teaminfo If true, a TeamInfo message will be sent
  *
  * @noreturn

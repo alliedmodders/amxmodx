@@ -3190,5 +3190,47 @@ native admins_flush();
  */
 native bool:has_map_ent_class(const classname[]);
 
+
+/**
+ * Called when the map has loaded, and all configs are done executing.
+ * This includes servercfgfile (server.cfg), amxx.cfg, plugin's config, and
+ * per-map config.
+ *
+ * @note This is best place to initialize plugin functions which are based on cvar data.  
+ * @note This will always be called once and only once per map.  It will be 
+ *       called few seconds after plugin_cfg().
+ *
+ * @noreturn
+ */
+forward OnConfigsExecuted();
+
+/**
+ * Called when the map has loaded, right after plugin_cfg() but any time 
+ * before OnConfigsExecuted.  It's called after amxx.cfg and  all 
+ * AutoExecConfig() exec commands have been added to the server command buffer.
+ *
+ * @note This will always be called once and only once per map.
+ *
+ * @noreturn
+ */
+forward OnAutoConfigsBuffered();
+
+/**
+ * Specifies that the given config file should be executed after plugin load.
+ * 
+ * @note OnConfigsExecuted() will not be called until the config file has executed, 
+ *       but it will be called if the execution fails.
+ *
+ * @param autoCreate    If true, and the config file does not exist, such a config
+ *                      file will be automatically created and populated with
+ *                      information from the plugin's registered cvars.
+ * @param name          Name of the config file, excluding the .cfg extension.
+ *                      If empty, <plugin.filename.cfg> is assumed.
+ * @param folder        Folder under plugins/ to use.
+ *
+ * @noreturn
+ */
+native AutoExecConfig(bool:autoCreate = true, const name[] = "", const folder[] = "");
+
 // Always keep this at the bottom of this file
 #include <message_stocks>

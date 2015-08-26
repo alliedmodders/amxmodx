@@ -442,6 +442,11 @@ size_t CvarManager::GetRegCvarsCount()
 	return m_AmxmodxCvars;
 }
 
+CvarsList* CvarManager::GetCvarsList()
+{
+	return &m_Cvars;
+}
+
 ke::AutoString convertFlagsToString(int flags)
 {
 	ke::AutoString flagsName;

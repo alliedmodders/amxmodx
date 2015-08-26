@@ -31,6 +31,7 @@
 #include "CGameConfigs.h"
 #include <engine_strucs.h>
 #include <CDetour/detours.h>
+#include "CoreConfig.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -504,6 +505,8 @@ int	C_Spawn(edict_t *pent)
 	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
 
+	CoreCfg.OnAmxxInitialized();
+
 #if defined BINLOG_ENABLED
 	if (!g_BinLog.Open())
 	{
@@ -628,6 +631,11 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 	executeForwards(FF_PluginInit);
 	executeForwards(FF_PluginCfg);
 
+	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
+	CoreCfg.ExecuteAutoConfigs();   // Execute configs created with AutoExecConfig native.
+	CoreCfg.SetMapConfigTimer(6.1); // Prepare per-map configs to be executed 6.1 seconds later.
+	                                // Original value which was used in admin.sma.
+
 	// Correct time in Counter-Strike and other mods (except DOD)
 	if (!g_bmod_dod)
 		g_game_timeleft = 0;
@@ -692,6 +700,9 @@ void C_ServerDeactivate_Post()
 	modules_callPluginsUnloading();
 	
 	detachReloadModules();
+
+	CoreCfg.Clear();
+
 	g_auth.clear();
 	g_commands.clear();
 	g_forcemodels.clear();
@@ -1186,6 +1197,8 @@ void C_StartFrame_Post(void)
 
 	g_task_time = gpGlobals->time + 0.1f;
 	g_tasksMngr.startFrame();
+
+	CoreCfg.OnMapConfigTimer();
 
 	RETURN_META(MRES_IGNORED);
 }

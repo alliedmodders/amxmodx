@@ -262,6 +262,7 @@
     <ClCompile Include="..\CMenu.cpp" />
     <ClCompile Include="..\CMisc.cpp" />
     <ClCompile Include="..\CModule.cpp" />
+    <ClCompile Include="..\CoreConfig.cpp" />
     <ClCompile Include="..\CPlugin.cpp" />
     <ClCompile Include="..\CTask.cpp" />
     <ClCompile Include="..\CTextParsers.cpp" />
@@ -348,6 +349,7 @@
     <ClInclude Include="..\CMenu.h" />
     <ClInclude Include="..\CMisc.h" />
     <ClInclude Include="..\CModule.h" />
+    <ClInclude Include="..\CoreConfig.h" />
     <ClInclude Include="..\CPlugin.h" />
     <ClInclude Include="..\CQueue.h" />
     <ClInclude Include="..\CTask.h" />

@@ -14,6 +14,7 @@
 #include "natives.h"
 #include "debugger.h"
 #include "libraries.h"
+#include <amxmodx_version.h>
 
 extern const char *no_function;
 
@@ -442,6 +443,49 @@ void CPluginMngr::CPlugin::unpausePlugin()
 		}
 	}
 }
+
+void CPluginMngr::CPlugin::AddConfig(bool create, const char *name, const char *folder)
+{
+	// Do a check for duplicates to prevent double-execution
+	for (size_t i = 0; i < m_configs.length(); ++i)
+	{
+		AutoConfig *config = m_configs[i];
+
+		if (config->autocfg.compare(name) == 0 && config->folder.compare(folder) == 0)
+		{
+			if (!config->create)
+			{
+				config->create = create;
+			}
+			return;
+		}
+	}
+
+	auto c = new AutoConfig;
+
+	c->autocfg = name;
+	c->folder = folder;
+	c->create = create;
+
+	m_configs.append(c);
+}
+
+size_t CPluginMngr::CPlugin::GetConfigCount()
+{
+	return m_configs.length();
+}
+
+AutoConfig *CPluginMngr::CPlugin::GetConfig(size_t i)
+{
+	if (i >= GetConfigCount())
+	{
+		return nullptr;
+	}
+
+	return m_configs[i];
+}
+
+
 
 char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 {

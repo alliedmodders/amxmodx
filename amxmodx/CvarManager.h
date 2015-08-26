@@ -153,6 +153,7 @@ class CvarManager
 		void          SetCvarMax(CvarInfo* info, bool set, float value, int pluginId);
 
 		size_t    GetRegCvarsCount();
+		CvarsList* GetCvarsList();
 
 		void      OnConsoleCommand();
 		void      OnPluginUnloaded();

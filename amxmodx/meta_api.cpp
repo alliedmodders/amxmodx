@@ -867,7 +867,7 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 
 	va_list ap;
 	va_start(ap, format);
-	ke::SafeVsnprintf(buffer, sizeof(buffer) - 1, format, ap);
+	ke::SafeVsprintf(buffer, sizeof(buffer) - 1, format, ap);
 	va_end(ap);
 
 	CPlayer *pPlayer;

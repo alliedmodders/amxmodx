@@ -3217,9 +3217,10 @@ forward OnAutoConfigsBuffered();
 
 /**
  * Specifies that the given config file should be executed after plugin load.
- * 
- * @note OnConfigsExecuted() will not be called until the config file has executed, 
+ *
+ * @note OnConfigsExecuted() will not be called until the config file has executed,
  *       but it will be called if the execution fails.
+ * @note The name parameter should not contain dots, otherwise file will not be executed.
  *
  * @param autoCreate    If true, and the config file does not exist, such a config
  *                      file will be automatically created and populated with

@@ -34,7 +34,6 @@ extern IGameConfig *CommonConfig;
 extern int ForwardInternalCommand;
 extern int ForwardOnBuy;
 extern int ForwardOnBuyAttempt;
-extern int ForwardOnGetItemPrice;
 
 typedef edict_t* (*CreateNamedEntityFunc)(string_t iszClassname);
 typedef void*    (*UTIL_FindEntityByStringFunc)(void* pStartEntity, const char *szKeyword, const char *szValue);

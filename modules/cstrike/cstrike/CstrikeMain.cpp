@@ -65,18 +65,16 @@ void OnPluginsLoaded()
 	ForwardInternalCommand = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
 	ForwardOnBuy           = MF_RegisterForward("CS_OnBuy"          , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 	ForwardOnBuyAttempt    = MF_RegisterForward("CS_OnBuyAttempt"   , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
-	ForwardOnGetItemPrice  = MF_RegisterForward("CS_OnGetItemPrice" , ET_STOP, FP_CELL, FP_CELL, FP_ARRAY, FP_DONE);
 
 	// Checking whether such public forwards are used in plugins.
 	// Resetting variable to -1 to avoid running unnecessary code in ClientCommand.
 	if (!UTIL_CheckForPublic("CS_InternalCommand"))   { ForwardInternalCommand = -1; }
 	if (!UTIL_CheckForPublic("CS_OnBuy"))             { ForwardOnBuy = -1; }
 	if (!UTIL_CheckForPublic("CS_OnBuyAttempt"))      { ForwardOnBuyAttempt = -1; }
-	if (!UTIL_CheckForPublic("CS_OnGetItemPrice"))    { ForwardOnGetItemPrice = -1; }
 
 	// And enable/disable detours when necessary.
-	ToggleDetour_ClientCommands(ForwardInternalCommand != -1 || ForwardOnBuy != -1 || ForwardOnBuyAttempt != -1 || ForwardOnGetItemPrice != -1);
-	ToggleDetour_BuyCommands(ForwardOnBuy != -1 || ForwardOnGetItemPrice != -1);
+	ToggleDetour_ClientCommands(ForwardInternalCommand != -1 || ForwardOnBuy != -1 || ForwardOnBuyAttempt != -1);
+	ToggleDetour_BuyCommands(ForwardOnBuy != -1);
 
 	// Search pev/vtable offset automatically.
 	TypeConversion.init();

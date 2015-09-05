@@ -1081,7 +1081,7 @@ static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params)
 {
 	if (!GiveDefaultItemsDetour)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_set_no_knives() is disabled");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_set_no_knives() is disabled. Check your amxx logs.");
 		return 0;
 	}
 
@@ -1700,7 +1700,7 @@ static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
 {
 	if (CS_CreateNamedEntity <= 0)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_create_entity() is disabled");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_create_entity() is disabled. Check your amxx logs.");
 		return 0;
 	}
 
@@ -1722,7 +1722,7 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
 {
 	if (CS_UTIL_FindEntityByString <= 0)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_find_ent_by_class() is disabled");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_find_ent_by_class() is disabled. Check your amxx logs.");
 		return 0;
 	}
 
@@ -1745,7 +1745,7 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
 {
 	if (CS_UTIL_FindEntityByString <= 0)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_find_ent_by_owner() is disabled");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_find_ent_by_owner() is disabled. Check your amxx logs.");
 		return 0;
 	}
 
@@ -1781,7 +1781,7 @@ static cell AMX_NATIVE_CALL cs_get_item_id(AMX* amx, cell* params)
 {
 	if (ItemsManager.HasConfigError())
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_item_id() is disabled");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_item_id() is disabled disabled because of missing gamedata");
 		return 0;
 	}
 
@@ -1808,7 +1808,7 @@ static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
 {
 	if (ItemsManager.HasConfigError())
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_translated_item_alias() is disabled");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_translated_item_alias() is disabled because of missing gamedata");
 		return 0;
 	}
 
@@ -1851,7 +1851,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 {
 	if (GetWeaponInfo <= 0)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_weapon_info() is disabled");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_weapon_info() is disabled. Check your amxx logs.");
 		return 0;
 	}
 

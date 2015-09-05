@@ -16,6 +16,7 @@
 
 #include "CstrikeDatas.h"
 #include <ITextParsers.h>
+#include <am-string.h>
 #include <sm_stringhashmap.h>
 
 struct AliasInfo
@@ -49,14 +50,14 @@ class CsItemInfo : public ITextListener_SMC
 		bool HasConfigError();
 
 	public:
-		
-		SMCResult ReadSMC_NewSection(const SMCStates *states, const char *name);
-		SMCResult ReadSMC_KeyValue(const SMCStates *states, const char *key, const char *value);
-		SMCResult ReadSMC_LeavingSection(const SMCStates *states);
-		void      ReadSMC_ParseEnd(bool halted, bool failed);
+
+		SMCResult ReadSMC_NewSection(const SMCStates *states, const char *name) override;
+		SMCResult ReadSMC_KeyValue(const SMCStates *states, const char *key, const char *value) override;
+		SMCResult ReadSMC_LeavingSection(const SMCStates *states) override;
+		void      ReadSMC_ParseEnd(bool halted, bool failed) override;
 
 	public:
-	
+
 		bool GetAliasInfos(const char *alias, AliasInfo *info);
 		bool GetAliasInfosFromBuy(const char *alias, AliasInfo *info);
 		bool GetAliasInfosFromName(const char *classname, AliasInfo *info);

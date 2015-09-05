@@ -12,21 +12,20 @@
 //
 
 #include "CstrikeItemsInfos.h"
+#include <amxxmodule.h>
 
 CsItemInfo ItemsManager;
 
-#define PSTATE_NONE  
 #define PSTATE_ALIASES_TYPE       0
 #define PSTATE_ALIASES_ALIAS      1
 #define PSTATE_ALIASES_ALIAS_DEFS 2
 
-CsItemInfo::CsItemInfo() 
-	: 
-	m_ParseState(0),
+CsItemInfo::CsItemInfo()
+	:
+	m_ParseState(PSTATE_ALIASES_TYPE),
 	m_List(nullptr),
 	m_ListsRetrievedFromConfig(false)
-{
-}
+{}
 
 CsItemInfo::~CsItemInfo()
 {
@@ -61,16 +60,16 @@ SMCResult CsItemInfo::ReadSMC_NewSection(const SMCStates *states, const char *na
 			{
 				m_List = &m_WeaponAliasesList;
 			}
-			else if (strstr(name, "Buy"))
+			else if (!strcmp(name, "Buy") || !strcmp(name, "BuyEquip") || !strcmp(name, "BuyAmmo"))
 			{
 				m_List = &m_BuyAliasesList;
 			}
-			else
+
+			if (m_List)
 			{
-				return SMCResult_HaltFail;
+				m_ParseState = PSTATE_ALIASES_ALIAS;
 			}
 
-			m_ParseState = PSTATE_ALIASES_ALIAS;
 			break;
 		}
 		case PSTATE_ALIASES_ALIAS:
@@ -114,10 +113,6 @@ SMCResult CsItemInfo::ReadSMC_KeyValue(const SMCStates *states, const char *key,
 			{
 				m_AliasInfo.classname = value;
 			}
-			else
-			{
-				return SMCResult_HaltFail;
-			}
 			break;
 		}
 	}
@@ -138,7 +133,7 @@ SMCResult CsItemInfo::ReadSMC_LeavingSection(const SMCStates *states)
 		{
 			m_List->replace(m_Alias.chars(), m_AliasInfo);
 			m_WeaponIdToClass[m_AliasInfo.itemid] = static_cast<CsWeaponClassType>(m_AliasInfo.classid);
-	
+
 			m_AliasInfo.clear();
 
 			m_ParseState = PSTATE_ALIASES_ALIAS;
@@ -151,13 +146,10 @@ SMCResult CsItemInfo::ReadSMC_LeavingSection(const SMCStates *states)
 
 void CsItemInfo::ReadSMC_ParseEnd(bool halted, bool failed)
 {
-	if (halted)
+	if (!halted && !failed)
 	{
-		MF_Log("Invalid or missing key in \"%s\" section. Please check your gamedata files.", m_Alias.chars());
-		return;
+		m_ListsRetrievedFromConfig = true;
 	}
-
-	m_ListsRetrievedFromConfig = true;
 }
 
 bool CsItemInfo::GetAliasInfos(const char *alias, AliasInfo *info)

@@ -38,20 +38,17 @@ void OnAmxxAttach()
 
 	ConfigManager = MF_GetConfigManager();
 
-	char error[256];
-	error[0] = '\0';
-
+	char error[256] = "";
 	ConfigManager->AddUserConfigHook("CommandsAliases", &ItemsManager);
 
-	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && error[0] != '\0')
+	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && *error)
 	{
 		MF_Log("Could not read module.games gamedata: %s", error);
 		return;
 	}
 
-	error[0] = '\0';
-
-	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)) && error[0] != '\0')
+	*error = '\0';
+	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)) && *error)
 	{
 		MF_Log("Could not read common.games gamedata: %s", error);
 		return;

@@ -17,6 +17,56 @@
 #define _cstrike_const_included
 
 /**
+ * IDs of weapons in CS
+ */
+#define CSW_NONE            0
+#define CSW_P228            1
+#define CSW_SCOUT           3
+#define CSW_HEGRENADE       4
+#define CSW_XM1014          5
+#define CSW_C4              6
+#define CSW_MAC10           7
+#define CSW_AUG             8
+#define CSW_SMOKEGRENADE    9
+#define CSW_ELITE           10
+#define CSW_FIVESEVEN       11
+#define CSW_UMP45           12
+#define CSW_SG550           13
+#define CSW_GALI            14
+#define CSW_GALIL           14
+#define CSW_FAMAS           15
+#define CSW_USP             16
+#define CSW_GLOCK18         17
+#define CSW_AWP             18
+#define CSW_MP5NAVY         19
+#define CSW_M249            20
+#define CSW_M3              21
+#define CSW_M4A1            22
+#define CSW_TMP             23
+#define CSW_G3SG1           24
+#define CSW_FLASHBANG       25
+#define CSW_DEAGLE          26
+#define CSW_SG552           27
+#define CSW_AK47            28
+#define CSW_KNIFE           29
+#define CSW_P90             30
+#define CSW_VEST            31  // Custom
+#define CSW_VESTHELM        32  // Custom
+#define CSW_SHIELDGUN       99
+#define CSW_LAST_WEAPON     CSW_P90
+
+stock const CSW_ALL_WEAPONS      = (~(1<<CSW_VEST));
+stock const CSW_ALL_PISTOLS      = (1<<CSW_P228  | 1<<CSW_ELITE | 1<<CSW_FIVESEVEN | 1<<CSW_USP | 1<<CSW_GLOCK18 | 1<<CSW_DEAGLE);
+stock const CSW_ALL_SHOTGUNS     = (1<<CSW_M3    | 1<<CSW_XM1014);
+stock const CSW_ALL_SMGS         = (1<<CSW_MAC10 | 1<<CSW_UMP45 | 1<<CSW_MP5NAVY | 1<<CSW_TMP  | 1<<CSW_P90);
+stock const CSW_ALL_RIFLES       = (1<<CSW_AUG   | 1<<CSW_GALIL | 1<<CSW_FAMAS   | 1<<CSW_M4A1 | 1<<CSW_AK47 | 1<<CSW_SG552);
+stock const CSW_ALL_SNIPERRIFLES = (1<<CSW_SCOUT | 1<<CSW_AWP   | 1<<CSW_G3SG1   | 1<<CSW_SG550);
+stock const CSW_ALL_MACHINEGUNS  = (1<<CSW_M249);
+stock const CSW_ALL_GRENADES     = (1<<CSW_HEGRENADE | 1<<CSW_SMOKEGRENADE | 1<<CSW_FLASHBANG);
+stock const CSW_ALL_ARMORS       = (1<<CSW_VEST | 1<<CSW_VESTHELM);
+stock const CSW_ALL_GUNS         = (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS);
+
+/**
  * @section Team and team model constants, used by cs_[get|set]_user_team().
  */
 

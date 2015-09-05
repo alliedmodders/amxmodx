@@ -35,7 +35,7 @@ bool g_Initialized = false;
 /* Stack stuff */
 regnative *g_pCurNative = NULL;
 AMX *g_pCaller = NULL;
-cell g_Params[CALLFUNC_MAXPARAMS];
+cell g_Params[CALLFUNC_MAXPARAMS + 1];
 int g_CurError = AMX_ERR_NONE;
 
 int amxx_DynaCallback(int idx, AMX *amx, cell *params)

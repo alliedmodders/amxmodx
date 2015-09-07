@@ -38,6 +38,7 @@ UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
 GetWeaponInfoFunc           GetWeaponInfo;
 
 int CurrentItemId;
+bool TriggeredFromCommand;
 
 StringHashMap<int> ItemAliasList;
 TypeDescription TeamDesc;
@@ -127,7 +128,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 					/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
 					/* Menu_BuyShotgun       */ { 0, CSI_M3, CSI_XM1014, 0, 0, 0, 0, 0, 0 },
 					/* Menu_BuySubMachineGun */ { 0, CSI_TMP, CSI_MP5NAVY, CSI_UMP45, CSI_P90, 0, 0, 0, 0 },
-					/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELDGUN }
+					/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELD }
 				};
 
 				int menuId = get_pdata<int>(pEdict, MenuDesc.fieldOffset);

@@ -258,7 +258,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params)
 				GET_OFFSET("CBasePlayerWeapon", m_flNextPrimaryAttack);
 
 				char animExt[12];
-				float time;
+				float time = 0.0f;
 
 				switch (weaponType)
 				{
@@ -406,7 +406,7 @@ static cell AMX_NATIVE_CALL cs_set_user_armor(AMX *amx, cell *params)
 
 	pPlayer->v.armorvalue = armor;
 	set_pdata<int>(pPlayer, m_iKevlar, type);
-	
+
 	if (type == CS_ARMOR_KEVLAR || type == CS_ARMOR_ASSAULTSUIT)
 	{
 		MESSAGE_BEGIN(MSG_ONE, MessageIdArmorType, nullptr, pPlayer);
@@ -489,7 +489,7 @@ static cell AMX_NATIVE_CALL cs_set_user_vip(AMX *amx, cell *params)
 			WRITE_BYTE(index);
 			WRITE_BYTE(scoreattrib);
 		MESSAGE_END();
-	}	
+	}
 
 	return 1;
 }
@@ -501,7 +501,7 @@ static cell AMX_NATIVE_CALL cs_get_user_team(AMX *amx, cell *params)
 	GET_OFFSET("CBasePlayer", m_iTeam);
 
 	int index = params[1];
-	
+
 	CHECK_PLAYER(index);
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
 
@@ -538,7 +538,7 @@ static cell AMX_NATIVE_CALL cs_set_user_team(AMX *amx, cell *params)
 	{
 		Players[index].ResetModel(pPlayer);
 	}
-	
+
 	bool sendTeamInfo = true;
 
 	if (*params / sizeof(cell) >= 4)
@@ -579,7 +579,7 @@ static cell AMX_NATIVE_CALL cs_get_user_inside_buyzone(AMX *amx, cell *params)
 
 	CHECK_PLAYER(index);
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
-		
+
 	if (get_pdata<CUnifiedSignals>(pPlayer, m_signals).GetState() & SIGNAL_BUY)
 	{
 		return 1;
@@ -635,7 +635,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params)
 
 	if (plant)
 	{
-		if (icon) 
+		if (icon)
 		{
 			MESSAGE_BEGIN(MSG_ONE, MessageIdStatusIcon, nullptr, pPlayer);
 				WRITE_BYTE(1);
@@ -646,7 +646,7 @@ static cell AMX_NATIVE_CALL cs_set_user_plant(AMX *amx, cell *params)
 			MESSAGE_END();
 		}
 	}
-	else 
+	else
 	{
 		MESSAGE_BEGIN(MSG_ONE, MessageIdStatusIcon, nullptr, pPlayer);
 			WRITE_BYTE(0);
@@ -685,14 +685,14 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params)
 
 	CHECK_PLAYER(index);
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
-	
+
 	set_pdata<bool>(pPlayer, m_bHasDefuser, kit);
 	pPlayer->v.body = kit ? 1 : 0;
 
 	if (kit)
 	{
 		int colour[3] = {DEFUSER_COLOUR_R, DEFUSER_COLOUR_G, DEFUSER_COLOUR_B};
-		
+
 		for (int i = 0; i < 3; i++)
 		{
 			if (params[i + 3] != -1)
@@ -708,7 +708,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params)
 			int length;
 			icon = MF_GetAmxString(amx, params[6], 1, &length);
 		}
-	
+
 		MESSAGE_BEGIN(MSG_ONE, MessageIdStatusIcon, nullptr, pPlayer);
 			WRITE_BYTE(params[7] == 1 ? 2 : 1);
 			WRITE_STRING(icon);
@@ -717,7 +717,7 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params)
 			WRITE_BYTE(colour[2]);
 		MESSAGE_END();
 	}
-	else 
+	else
 	{
 		MESSAGE_BEGIN(MSG_ONE, MessageIdStatusIcon, nullptr, pPlayer);
 			WRITE_BYTE(0);
@@ -763,7 +763,7 @@ static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params)
 			pItem = get_pdata<uintptr_t*>(pItem, m_pNext);
 		}
 	}
-		
+
 	return 0;
 }
 
@@ -804,7 +804,7 @@ static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params)
 			pItem = get_pdata<uintptr_t*>(pItem, m_pNext);
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -869,7 +869,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 	CHECK_PLAYER(index);
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
 
-	if (model == -1) 
+	if (model == -1)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid model %d", params[2]);
 		return 0;
@@ -1101,7 +1101,7 @@ static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params)
 
 // native cs_get_user_tked(index);
 static cell AMX_NATIVE_CALL cs_get_user_tked(AMX *amx, cell *params)
-{ 
+{
 	GET_OFFSET("CBasePlayer", m_bJustKilledTeammate);
 
 	int index = params[1];
@@ -1119,7 +1119,7 @@ static cell AMX_NATIVE_CALL cs_get_user_tked(AMX *amx, cell *params)
 
 // native cs_set_user_tked(index, tk = 1, subtract = 1);
 static cell AMX_NATIVE_CALL cs_set_user_tked(AMX *amx, cell *params)
-{ 
+{
 	GET_OFFSET("CBasePlayer", m_bJustKilledTeammate);
 	GET_OFFSET("CBasePlayer", m_iTeam);
 	GET_OFFSET("CBasePlayer", m_iDeaths);
@@ -1134,7 +1134,7 @@ static cell AMX_NATIVE_CALL cs_set_user_tked(AMX *amx, cell *params)
 	set_pdata<bool>(pPlayer, m_bJustKilledTeammate, tk != 0);
 
 	if (subtract > 0)
-	{ 
+	{
 		pPlayer->v.frags -= subtract;
 
 		MESSAGE_BEGIN(MSG_ALL, MessageIdScoreInfo);
@@ -1143,15 +1143,15 @@ static cell AMX_NATIVE_CALL cs_set_user_tked(AMX *amx, cell *params)
 			WRITE_SHORT(get_pdata<int>(pPlayer, m_iDeaths));
 			WRITE_SHORT(0);
 			WRITE_SHORT(get_pdata<int>(pPlayer, m_iTeam));
-		MESSAGE_END(); 
-	} 
+		MESSAGE_END();
+	}
 
-	return 1; 
+	return 1;
 }
 
 // native cs_get_user_driving(index);
 static cell AMX_NATIVE_CALL cs_get_user_driving(AMX *amx, cell *params)
-{ 
+{
 	GET_OFFSET("CBasePlayer", m_iTrain);
 
 	int index = params[1];
@@ -1163,8 +1163,8 @@ static cell AMX_NATIVE_CALL cs_get_user_driving(AMX *amx, cell *params)
 }
 
 // native cs_get_user_stationary(index);
-static cell AMX_NATIVE_CALL cs_get_user_stationary(AMX *amx, cell *params) 
-{ 
+static cell AMX_NATIVE_CALL cs_get_user_stationary(AMX *amx, cell *params)
+{
 	GET_OFFSET("CBasePlayer", m_iClientHideHUD);
 
 	int index = params[1];
@@ -1184,13 +1184,13 @@ static cell AMX_NATIVE_CALL cs_get_user_shield(AMX *amx, cell *params)
 
 	CHECK_PLAYER(index);
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
-   
+
 	if (get_pdata<bool>(pPlayer, m_bOwnsShield))
 	{
 		return 1;
 	}
 
-	return 0;   
+	return 0;
 }
 
 // native cs_user_spawn(player);
@@ -1204,7 +1204,7 @@ static cell AMX_NATIVE_CALL cs_user_spawn(AMX *amx, cell *params)
 	pPlayer->v.deadflag = DEAD_RESPAWNABLE;
 	MDLL_Think(pPlayer);
 
-	if (MF_IsPlayerBot(index) && pPlayer->v.deadflag == DEAD_RESPAWNABLE) 
+	if (MF_IsPlayerBot(index) && pPlayer->v.deadflag == DEAD_RESPAWNABLE)
 	{
 		MDLL_Spawn(pPlayer);
 	}
@@ -1222,7 +1222,7 @@ static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 	CHECK_NONPLAYER(index);
 	edict_t *pArmoury = INDEXENT(index);
 
-	if (strcmp(STRING(pArmoury->v.classname), "armoury_entity")) 
+	if (strcmp(STRING(pArmoury->v.classname), "armoury_entity"))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Not an armoury_entity! (%d)", index);
 		return 0;
@@ -1231,7 +1231,7 @@ static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 	int weapontype = get_pdata<int>(pArmoury, m_iItem);;
 	int weapontype_out = 0;
 
-	switch (weapontype) 
+	switch (weapontype)
 	{
 		case CSA_MP5NAVY:		weapontype_out = CSW_MP5NAVY;      break;
 		case CSA_TMP:			weapontype_out = CSW_TMP;          break;
@@ -1266,7 +1266,7 @@ static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 		*MF_GetAmxAddr(amx, params[2]) = get_pdata<int>(pArmoury, m_iCount);
 	}
 
-	return weapontype_out;   
+	return weapontype_out;
 }
 
 // native cs_set_armoury_type(index, type, count = -1);
@@ -1357,7 +1357,7 @@ static cell AMX_NATIVE_CALL cs_set_user_zoom(AMX *amx, cell *params)
 	int type = params[2];
 	int mode = params[3];
 	int weapon = *static_cast<int *>(MF_PlayerPropAddr(index, Player_CurrentWeapon));
-	
+
 	Players[index].ResetZoom();
 
 	if (type == CS_RESET_ZOOM)
@@ -1482,7 +1482,7 @@ static cell AMX_NATIVE_CALL cs_get_user_lastactivity(AMX *amx, cell *params)
 
 	CHECK_PLAYER(index);
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
-   
+
 	return amx_ftoc(get_pdata<float>(pPlayer, m_fLastMovement));
 }
 
@@ -1495,7 +1495,7 @@ static cell AMX_NATIVE_CALL cs_set_user_lastactivity(AMX *amx, cell *params)
 
 	CHECK_PLAYER(index);
 	edict_t *pPlayer = MF_GetPlayerEdict(index);
-   
+
 	set_pdata<float>(pPlayer, m_fLastMovement, amx_ctof(params[2]));
 
 	return 1;
@@ -1536,12 +1536,12 @@ static cell AMX_NATIVE_CALL cs_get_hostage_lastuse(AMX *amx, cell *params)
 	GET_OFFSET("CHostage", m_improv);
 
 	int index = params[1];
-   
+
 	CHECK_NONPLAYER(index);
 	edict_t *pHostage = INDEXENT(index);
 
 	CHECK_HOSTAGE(pHostage);
-   
+
 	void *pImprov = get_pdata<void*>(pHostage, m_improv);
 
 	if (pImprov) // Specific to CZ
@@ -1567,7 +1567,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_lastuse(AMX *amx, cell *params)
 	edict_t *pHostage = INDEXENT(index);
 
 	CHECK_HOSTAGE(pHostage);
-   
+ 
 	void *pImprov = get_pdata<void*>(pHostage, m_improv);
 
 	if (pImprov) // Specific to CZ
@@ -1594,7 +1594,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_nextuse(AMX* amx, cell* params)
 	edict_t *pHostage = INDEXENT(index);
 
 	CHECK_HOSTAGE(pHostage);
-   
+
 	return amx_ftoc(get_pdata<float>(pHostage, m_flNextChange));
 }
 
@@ -1755,7 +1755,7 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
 	int length;
 	void* pEntity = G_HL_TypeConversion.id_to_cbase(params[1]);
 	const char* value = MF_GetAmxString(amx, params[2], 0, &length);
-	
+
 	edict_t *pOwner = GETEDICT(owner);
 
 	while ((pEntity = CS_UTIL_FindEntityByString(pEntity, "classname", value)))
@@ -1769,7 +1769,7 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
 			if (index != -1)
 			{
 				return index;
-			};
+			}
 		}
 	}
 
@@ -1898,7 +1898,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 }
 
 
-AMX_NATIVE_INFO CstrikeNatives[] = 
+AMX_NATIVE_INFO CstrikeNatives[] =
 {
 	{"cs_set_user_money",			cs_set_user_money},
 	{"cs_get_user_money",			cs_get_user_money},

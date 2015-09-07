@@ -107,7 +107,7 @@
 			}
 		}
 	}
-	
+
 	"#default"
 	{
 		"CommandsAliases"
@@ -376,17 +376,17 @@
 
 			"BuyEquip"
 			{
-                "hegren"
+				"hegren"
 				{
 					"itemid"     "4"  // CSW/I_HEGRENADE
 					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
 				}
-                "sgren"
+				"sgren"
 				{
 					"itemid"     "9"  // CSW/I_SMOKEGRENADE
 					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
 				}
-                "flash"
+				"flash"
 				{
 					"itemid"    "25"  // CSW/I_FLASHBANG
 					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
@@ -394,7 +394,7 @@
 				"vest"
 				{
 					"itemid"    "31"  // CSW/I_VEST
-					"classname" "item_kevlar"  
+					"classname" "item_kevlar"
 				}
 				"vesthelm"
 				{
@@ -436,7 +436,7 @@
 				"buyammo2"
 				{
 					"itemid"    "37"  // CSI_SECAMMO
-                }
+				}
 			}
 		}
 	}

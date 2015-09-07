@@ -21,6 +21,8 @@
 				{
 					"m_iSprite"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"

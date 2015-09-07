@@ -21,6 +21,8 @@
 				{
 					"m_vecTravel"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "660"
 						"linux"     "680"
 						"mac"       "680"
@@ -28,6 +30,8 @@
 
 					"m_flightSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "672"
 						"linux"     "692"
 						"mac"       "692"
@@ -35,6 +39,8 @@
 
 					"m_stopTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "676"
 						"linux"     "696"
 						"mac"       "696"
@@ -42,6 +48,8 @@
 
 					"m_momentum"  // float
 					{
+						"type"      "float"
+
 						"windows"   "680"
 						"linux"     "700"
 						"mac"       "700"
@@ -49,6 +57,8 @@
 
 					"m_pFlapSound"  // const char*
 					{
+						"type"      "stringptr"
+
 						"windows"   "684"
 						"linux"     "704"
 						"mac"       "704"

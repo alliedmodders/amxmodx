@@ -21,6 +21,8 @@
 				{
 					"m_iPose"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "384"
 						"linux"     "404"
 						"mac"       "404"

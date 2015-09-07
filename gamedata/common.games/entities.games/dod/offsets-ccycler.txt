@@ -21,6 +21,8 @@
 				{
 					"m_animate"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"

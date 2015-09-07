@@ -21,6 +21,8 @@
 				{
 					"pev"  // entvars_t*
 					{
+						"type"      "entvars"
+
 						"windows"   "4"
 						"linux"     "4"
 						"mac"       "4"
@@ -28,6 +30,8 @@
 
 					"ip"  // char*
 					{
+						"type"      "stringptr"
+
 						"windows"   "8"
 						"linux"     "8"
 						"mac"       "8"
@@ -35,6 +39,8 @@
 
 					"m_pGoalEnt"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "12"
 						"linux"     "12"
 						"mac"       "12"
@@ -42,6 +48,8 @@
 
 					"m_pLink"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "16"
 						"linux"     "16"
 						"mac"       "16"
@@ -49,6 +57,8 @@
 
 					"ammo_9mm"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "52"
 						"linux"     "52"
 						"mac"       "52"
@@ -56,6 +66,8 @@
 
 					"ammo_357"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "56"
 						"linux"     "56"
 						"mac"       "56"
@@ -63,6 +75,8 @@
 
 					"ammo_bolts"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "60"
 						"linux"     "60"
 						"mac"       "60"
@@ -70,6 +84,8 @@
 
 					"ammo_buckshot"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "64"
 						"linux"     "64"
 						"mac"       "64"
@@ -77,6 +93,8 @@
 
 					"ammo_rockets"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "68"
 						"linux"     "68"
 						"mac"       "68"
@@ -84,6 +102,8 @@
 
 					"ammo_uranium"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "72"
 						"linux"     "72"
 						"mac"       "72"
@@ -91,6 +111,8 @@
 
 					"ammo_hornets"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "76"
 						"linux"     "76"
 						"mac"       "76"
@@ -98,6 +120,8 @@
 
 					"ammo_argrens"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "80"
 						"linux"     "80"
 						"mac"       "80"
@@ -105,6 +129,8 @@
 
 					"ammo_spores"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "84"
 						"linux"     "84"
 						"mac"       "84"
@@ -112,6 +138,8 @@
 
 					"ammo_762"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "88"
 						"linux"     "88"
 						"mac"       "88"
@@ -119,6 +147,8 @@
 
 					"m_flStartThrow"  // float
 					{
+						"type"      "float"
+
 						"windows"   "92"
 						"linux"     "92"
 						"mac"       "92"
@@ -126,6 +156,8 @@
 
 					"m_flReleaseThrow"  // float
 					{
+						"type"      "float"
+
 						"windows"   "96"
 						"linux"     "96"
 						"mac"       "96"
@@ -133,6 +165,8 @@
 
 					"m_chargeReady"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "100"
 						"linux"     "100"
 						"mac"       "100"
@@ -140,6 +174,8 @@
 
 					"m_fInAttack"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "104"
 						"mac"       "104"
@@ -147,6 +183,8 @@
 
 					"m_fireState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "108"
 						"linux"     "108"
 						"mac"       "108"

@@ -21,6 +21,8 @@
 				{
 					"m_hPlayer"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"
@@ -28,6 +30,8 @@
 
 					"m_hTarget"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "152"
 						"linux"     "168"
 						"mac"       "168"
@@ -35,6 +39,8 @@
 
 					"m_pentPath"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "160"
 						"linux"     "176"
 						"mac"       "176"
@@ -42,6 +48,8 @@
 
 					"m_sPath"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "164"
 						"linux"     "180"
 						"mac"       "180"
@@ -49,6 +57,8 @@
 
 					"m_flWait"  // float
 					{
+						"type"      "float"
+
 						"windows"   "168"
 						"linux"     "184"
 						"mac"       "184"
@@ -56,6 +66,8 @@
 
 					"m_flReturnTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "172"
 						"linux"     "188"
 						"mac"       "188"
@@ -63,6 +75,8 @@
 
 					"m_flStopTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "176"
 						"linux"     "192"
 						"mac"       "192"
@@ -70,6 +84,8 @@
 
 					"m_moveDistance"  // float
 					{
+						"type"      "float"
+
 						"windows"   "180"
 						"linux"     "196"
 						"mac"       "196"
@@ -77,6 +93,8 @@
 
 					"m_targetSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "184"
 						"linux"     "200"
 						"mac"       "200"
@@ -84,6 +102,8 @@
 
 					"m_initialSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"
@@ -91,6 +111,8 @@
 
 					"m_acceleration"  // float
 					{
+						"type"      "float"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -98,6 +120,8 @@
 
 					"m_deceleration"  // float
 					{
+						"type"      "float"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -105,6 +129,8 @@
 
 					"m_state"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"

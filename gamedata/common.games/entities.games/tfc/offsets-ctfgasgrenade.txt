@@ -21,6 +21,8 @@
 				{
 					"gasCharges"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1736"
 						"linux"     "1756"
 						"mac"       "1756"

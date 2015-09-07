@@ -21,6 +21,8 @@
 				{
 					"m_iszSequence_On"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "356"
 						"linux"     "372"
 						"mac"       "372"
@@ -28,6 +30,8 @@
 
 					"m_iszSequence_Off"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "360"
 						"linux"     "376"
 						"mac"       "376"
@@ -35,6 +39,8 @@
 
 					"m_iAction_On"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "364"
 						"linux"     "380"
 						"mac"       "380"
@@ -42,6 +48,8 @@
 
 					"m_iAction_Off"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "368"
 						"linux"     "384"
 						"mac"       "384"
@@ -49,6 +57,8 @@
 
 					"m_rsspawnflags"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "372"
 						"linux"     "388"
 						"mac"       "388"
@@ -56,6 +66,8 @@
 
 					"m_rsorigin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "376"
 						"linux"     "392"
 						"mac"       "392"

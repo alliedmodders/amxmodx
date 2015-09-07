@@ -21,6 +21,8 @@
 				{
 					"m_lastAttackCheck"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "896"
 						"linux"     "916"
 						"mac"       "916"
@@ -28,6 +30,8 @@
 
 					"m_flPlayerDamage"  // float
 					{
+						"type"      "float"
+
 						"windows"   "900"
 						"linux"     "920"
 						"mac"       "920"
@@ -35,6 +39,8 @@
 
 					"m_flNextGrenadeCheck"  // float
 					{
+						"type"      "float"
+
 						"windows"   "904"
 						"linux"     "924"
 						"mac"       "924"
@@ -42,6 +48,8 @@
 
 					"m_flNextPainTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "908"
 						"linux"     "928"
 						"mac"       "928"
@@ -49,6 +57,8 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "912"
 						"linux"     "932"
 						"mac"       "932"
@@ -56,6 +66,8 @@
 
 					"m_vecTossVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
@@ -63,6 +75,8 @@
 
 					"m_fThrowGrenade"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "928"
 						"linux"     "948"
 						"mac"       "948"
@@ -70,6 +84,8 @@
 
 					"m_fStanding"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "932"
 						"linux"     "952"
 						"mac"       "952"
@@ -77,6 +93,8 @@
 
 					"m_fFirstEncounter"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "936"
 						"linux"     "956"
 						"mac"       "956"
@@ -84,6 +102,8 @@
 
 					"m_cClipSize"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "940"
 						"linux"     "960"
 						"mac"       "960"
@@ -91,6 +111,8 @@
 
 					"m_iHealCharge"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "944"
 						"linux"     "964"
 						"mac"       "964"
@@ -98,6 +120,8 @@
 
 					"m_fUseHealing"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "948"
 						"linux"     "968"
 						"mac"       "968"
@@ -105,6 +129,8 @@
 
 					"m_fHealing"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "952"
 						"linux"     "972"
 						"mac"       "972"
@@ -112,6 +138,8 @@
 
 					"m_flLastUseTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "956"
 						"linux"     "976"
 						"mac"       "976"
@@ -119,6 +147,8 @@
 
 					"m_hNewTargetEnt"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "960"
 						"linux"     "980"
 						"mac"       "980"
@@ -126,6 +156,8 @@
 
 					"m_fQueueFollow"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "968"
 						"linux"     "988"
 						"mac"       "988"
@@ -133,6 +165,8 @@
 
 					"m_fHealAudioPlaying"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "972"
 						"linux"     "992"
 						"mac"       "992"
@@ -140,6 +174,8 @@
 
 					"m_flFollowCheckTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "976"
 						"linux"     "996"
 						"mac"       "996"
@@ -147,6 +183,8 @@
 
 					"m_fFollowChecking"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "980"
 						"linux"     "1000"
 						"mac"       "1000"
@@ -154,6 +192,8 @@
 
 					"m_fFollowChecked"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "984"
 						"linux"     "1004"
 						"mac"       "1004"
@@ -161,6 +201,8 @@
 
 					"m_flLastRejectAudio"  // float
 					{
+						"type"      "float"
+
 						"windows"   "988"
 						"linux"     "1008"
 						"mac"       "1008"
@@ -168,6 +210,8 @@
 
 					"m_iBlackOrWhite"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "992"
 						"linux"     "1012"
 						"mac"       "1012"
@@ -175,6 +219,8 @@
 
 					"m_fGunHolstered"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "996"
 						"linux"     "1016"
 						"mac"       "1016"
@@ -182,6 +228,8 @@
 
 					"m_fHypoHolstered"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1000"
 						"linux"     "1020"
 						"mac"       "1020"
@@ -189,6 +237,8 @@
 
 					"m_fHealActive"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1004"
 						"linux"     "1024"
 						"mac"       "1024"
@@ -196,6 +246,8 @@
 
 					"m_iWeaponIdx"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1008"
 						"linux"     "1028"
 						"mac"       "1028"
@@ -203,6 +255,8 @@
 
 					"m_flLastShot"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1012"
 						"linux"     "1032"
 						"mac"       "1032"
@@ -210,6 +264,8 @@
 
 					"m_iBrassShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1016"
 						"linux"     "1036"
 						"mac"       "1036"
@@ -217,6 +273,8 @@
 
 					"m_iSentence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1020"
 						"linux"     "1040"
 						"mac"       "1040"

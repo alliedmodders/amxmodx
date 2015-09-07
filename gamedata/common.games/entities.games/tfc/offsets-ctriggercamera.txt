@@ -21,6 +21,8 @@
 				{
 					"m_hPlayer"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1132"
 						"linux"     "1148"
 						"mac"       "1148"
@@ -28,6 +30,8 @@
 
 					"m_hTarget"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "1140"
 						"linux"     "1156"
 						"mac"       "1156"
@@ -35,6 +39,8 @@
 
 					"m_pentPath"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "1148"
 						"linux"     "1164"
 						"mac"       "1164"
@@ -42,6 +48,8 @@
 
 					"m_sPath"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1152"
 						"linux"     "1168"
 						"mac"       "1168"
@@ -49,6 +57,8 @@
 
 					"m_flWait"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1156"
 						"linux"     "1172"
 						"mac"       "1172"
@@ -56,6 +66,8 @@
 
 					"m_flReturnTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1160"
 						"linux"     "1176"
 						"mac"       "1176"
@@ -63,6 +75,8 @@
 
 					"m_flStopTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1164"
 						"linux"     "1180"
 						"mac"       "1180"
@@ -70,6 +84,8 @@
 
 					"m_moveDistance"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1168"
 						"linux"     "1184"
 						"mac"       "1184"
@@ -77,6 +93,8 @@
 
 					"m_targetSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1172"
 						"linux"     "1188"
 						"mac"       "1188"
@@ -84,6 +102,8 @@
 
 					"m_initialSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1176"
 						"linux"     "1192"
 						"mac"       "1192"
@@ -91,6 +111,8 @@
 
 					"m_acceleration"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1180"
 						"linux"     "1196"
 						"mac"       "1196"
@@ -98,6 +120,8 @@
 
 					"m_deceleration"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1184"
 						"linux"     "1200"
 						"mac"       "1200"
@@ -105,6 +129,8 @@
 
 					"m_state"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1188"
 						"linux"     "1204"
 						"mac"       "1204"

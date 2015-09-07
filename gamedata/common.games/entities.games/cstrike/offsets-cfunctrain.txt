@@ -21,6 +21,8 @@
 				{
 					"m_vStartPosition"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "300"
 						"linux"     "320"
 						"mac"       "320"
@@ -28,6 +30,8 @@
 
 					"m_pevFirstTarget"  // entvars_t*
 					{
+						"type"      "entvars"
+
 						"windows"   "312"
 						"linux"     "332"
 						"mac"       "332"
@@ -35,6 +39,8 @@
 
 					"m_pevCurrentTarget"  // entvars_t*
 					{
+						"type"      "entvars"
+
 						"windows"   "316"
 						"linux"     "336"
 						"mac"       "336"
@@ -42,6 +48,8 @@
 
 					"m_sounds"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "320"
 						"linux"     "340"
 						"mac"       "340"
@@ -49,6 +57,8 @@
 
 					"m_activated"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "324"
 						"linux"     "344"
 						"mac"       "344"

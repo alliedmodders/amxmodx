@@ -21,6 +21,9 @@
 				{
 					"m_rgEntities"  // EHANDLE[32]
 					{
+						"type"      "ehandle"
+						"size"      "32"
+
 						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"
@@ -28,6 +31,9 @@
 
 					"m_rgTriggered"  // int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+
 						"windows"   "340"
 						"linux"     "356"
 						"mac"       "356"
@@ -35,6 +41,8 @@
 
 					"m_iTotal"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "468"
 						"linux"     "484"
 						"mac"       "484"
@@ -42,6 +50,8 @@
 
 					"m_globalstate"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "472"
 						"linux"     "488"
 						"mac"       "488"

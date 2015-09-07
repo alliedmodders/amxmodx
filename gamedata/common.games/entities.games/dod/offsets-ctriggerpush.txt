@@ -21,6 +21,8 @@
 				{
 					"m_iEnabled"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "492"
 						"linux"     "512"
 						"mac"       "512"

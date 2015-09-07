@@ -34,6 +34,49 @@
 
 #include <ITextParsers.h>
 
+enum class FieldType
+{
+	FIELD_NONE,
+	FIELD_FLOAT,        // Floating point value
+	FIELD_STRINGINT,    // String ID (return from ALLOC_STRING)
+	FIELD_STRINGPTR,    // String, pointer-to-char
+	FIELD_STRING,       // String, fixed size
+	FIELD_CLASSPTR,     // Classes pointer derived of CBaseEntity
+	FIELD_CLASS,        // Arbitrary classes, direct
+	FIELD_STRUCTURE,    // Arbitrary structures, direct
+	FIELD_EHANDLE,      // Entity handle
+	FIELD_ENTVARS,      // entvars_t*
+	FIELD_EDICT,        // edict_t*
+	FIELD_VECTOR,       // Vector
+	FIELD_POINTER,      // Arbitrary data pointer
+	FIELD_INTEGER,      // Integer or enum
+	FIELD_FUNCTION,     // Class function pointer (Think, Use, etc)
+	FIELD_BOOLEAN,      // Boolean
+	FIELD_SHORT,        // 2 bytes integer
+	FIELD_CHARACTER,    // 1 byte
+};
+
+struct TypeDescription
+{
+	TypeDescription()
+	{
+		reset();
+	}
+
+	void reset()
+	{
+		fieldType     = FieldType::FIELD_NONE;
+		fieldOffset   = 0;
+		fieldSize     = 0;
+		fieldUnsigned = false;
+	}
+
+	FieldType  fieldType;
+	int        fieldOffset;
+	int        fieldSize;
+	bool       fieldUnsigned;
+};
+
 /**
  * @brief Describes a game private data config file
  */
@@ -44,20 +87,20 @@ public:
 	 * @brief Returns an offset value.
 	 *
 	 * @param key			Key to retrieve from the offset section.
-	 * @param value			Pointer to store the offset value in.
+	 * @param value			Pointer to store the TypeDescription reference in.
 	 * @return				True if found, false otherwise.
 	 */
-	virtual bool GetOffset(const char *key, int *value) = 0;
+	virtual bool GetOffset(const char *key, TypeDescription *value) = 0;
 
 	/**
 	 * @brief Returns an offset value from given class.
 	 *
 	 * @param classname		class name to match from the offset section.
 	 * @param key			Key to retrieve from the offset section.
-	 * @param value			Pointer to store the offset value in.
+	 * @param value			Pointer to store the TypeDescription reference in.
 	 * @return				True if found, false otherwise.
 	 */
-	virtual bool GetOffsetByClass(const char *classname, const char *key, int *value) = 0;
+	virtual bool GetOffsetByClass(const char *classname, const char *key, TypeDescription *value) = 0;
  
 	/**
 	 * @brief Returns the value of a key from the "Keys" section.

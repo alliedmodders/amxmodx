@@ -21,6 +21,8 @@
 				{
 					"m_fInZoom"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"
@@ -28,6 +30,9 @@
 
 					"m_usCrossbow"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -35,6 +40,9 @@
 
 					"m_usCrossbow2"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "194"
 						"linux"     "210"
 						"mac"       "210"

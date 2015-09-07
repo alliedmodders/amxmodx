@@ -21,6 +21,8 @@
 				{
 					"m_iBravery"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -28,6 +30,9 @@
 
 					"m_pBeam"  // CBeam*[8]
 					{
+						"type"      "classptr"
+						"size"      "8"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -35,6 +40,8 @@
 
 					"m_iBeams"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"
@@ -42,6 +49,8 @@
 
 					"m_flNextAttack"  // float
 					{
+						"type"      "float"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -49,6 +58,8 @@
 
 					"m_voicePitch"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
@@ -56,6 +67,8 @@
 
 					"m_hDead"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"

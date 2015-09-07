@@ -21,6 +21,8 @@
 				{
 					"m_maxFrame"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"

@@ -21,6 +21,8 @@
 				{
 					"m_lastSound"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1152"
 						"linux"     "1168"
 						"mac"       "1168"
@@ -28,6 +30,8 @@
 
 					"m_maxSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1156"
 						"linux"     "1172"
 						"mac"       "1172"
@@ -35,6 +39,8 @@
 
 					"m_soundTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1160"
 						"linux"     "1176"
 						"mac"       "1176"

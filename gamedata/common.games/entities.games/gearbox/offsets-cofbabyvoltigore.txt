@@ -21,6 +21,9 @@
 				{
 					"m_pBeam"  // CBeam*[8]
 					{
+						"type"      "classptr"
+						"size"      "8"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -28,6 +31,8 @@
 
 					"m_iBeams"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "796"
 						"linux"     "816"
 						"mac"       "816"
@@ -35,6 +40,8 @@
 
 					"m_flNextBeamAttackCheck"  // float
 					{
+						"type"      "float"
+
 						"windows"   "800"
 						"linux"     "820"
 						"mac"       "820"
@@ -42,6 +49,8 @@
 
 					"m_flNextPainTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "804"
 						"linux"     "824"
 						"mac"       "824"
@@ -49,6 +58,8 @@
 
 					"m_flNextSpeakTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "808"
 						"linux"     "828"
 						"mac"       "828"
@@ -56,6 +67,8 @@
 
 					"m_flNextWordTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "812"
 						"linux"     "832"
 						"mac"       "832"
@@ -63,6 +76,8 @@
 
 					"m_iLastWord"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "816"
 						"linux"     "836"
 						"mac"       "836"
@@ -70,6 +85,8 @@
 
 					"m_iBabyVoltigoreGibs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"
@@ -77,6 +94,8 @@
 
 					"m_fDeathCharge"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "824"
 						"linux"     "844"
 						"mac"       "844"
@@ -84,6 +103,8 @@
 
 					"m_flDeathStartTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "828"
 						"linux"     "848"
 						"mac"       "848"

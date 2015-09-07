@@ -21,6 +21,8 @@
 				{
 					"m_flForce"  // float
 					{
+						"type"      "float"
+
 						"windows"   "660"
 						"linux"     "680"
 						"mac"       "680"
@@ -28,6 +30,8 @@
 
 					"m_flNextPainSound"  // float
 					{
+						"type"      "float"
+
 						"windows"   "664"
 						"linux"     "684"
 						"mac"       "684"
@@ -35,6 +39,8 @@
 
 					"m_velocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "668"
 						"linux"     "688"
 						"mac"       "688"
@@ -42,6 +48,8 @@
 
 					"m_avelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "680"
 						"linux"     "700"
 						"mac"       "700"
@@ -49,6 +57,8 @@
 
 					"m_vecTarget"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "692"
 						"linux"     "712"
 						"mac"       "712"
@@ -56,6 +66,8 @@
 
 					"m_posTarget"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "704"
 						"linux"     "724"
 						"mac"       "724"
@@ -63,6 +75,8 @@
 
 					"m_vecDesired"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -70,6 +84,8 @@
 
 					"m_posDesired"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -77,6 +93,8 @@
 
 					"m_flMinZ"  // float
 					{
+						"type"      "float"
+
 						"windows"   "740"
 						"linux"     "760"
 						"mac"       "760"
@@ -84,6 +102,8 @@
 
 					"m_flMaxZ"  // float
 					{
+						"type"      "float"
+
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
@@ -91,6 +111,8 @@
 
 					"m_vecGoal"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "748"
 						"linux"     "768"
 						"mac"       "768"
@@ -98,6 +120,8 @@
 
 					"m_flLastSeen"  // float
 					{
+						"type"      "float"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
@@ -105,6 +129,8 @@
 
 					"m_flPrevSeen"  // float
 					{
+						"type"      "float"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -112,6 +138,8 @@
 
 					"m_irritation"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -119,6 +147,8 @@
 
 					"m_iLevel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -126,6 +156,8 @@
 
 					"m_iTeleport"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
@@ -133,6 +165,8 @@
 
 					"m_hRecharger"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "780"
 						"linux"     "800"
 						"mac"       "800"
@@ -140,6 +174,9 @@
 
 					"m_hSphere"  // EHANDLE[20]
 					{
+						"type"      "ehandle"
+						"size"      "20"
+
 						"windows"   "788"
 						"linux"     "808"
 						"mac"       "808"
@@ -147,6 +184,8 @@
 
 					"m_iActiveSpheres"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "948"
 						"linux"     "968"
 						"mac"       "968"
@@ -154,6 +193,8 @@
 
 					"m_flAdj"  // float
 					{
+						"type"      "float"
+
 						"windows"   "952"
 						"linux"     "972"
 						"mac"       "972"
@@ -161,6 +202,8 @@
 
 					"m_pBall"  // CSprite*
 					{
+						"type"      "classptr"
+
 						"windows"   "956"
 						"linux"     "976"
 						"mac"       "976"
@@ -168,6 +211,9 @@
 
 					"m_szRechargerTarget"  // char[64]
 					{
+						"type"      "string"
+						"size"      "64"
+
 						"windows"   "960"
 						"linux"     "980"
 						"mac"       "980"
@@ -175,6 +221,9 @@
 
 					"m_szDrawUse"  // char[64]
 					{
+						"type"      "string"
+						"size"      "64"
+
 						"windows"   "1024"
 						"linux"     "1044"
 						"mac"       "1044"
@@ -182,6 +231,9 @@
 
 					"m_szTeleportUse"  // char[64]
 					{
+						"type"      "string"
+						"size"      "64"
+
 						"windows"   "1088"
 						"linux"     "1108"
 						"mac"       "1108"
@@ -189,6 +241,9 @@
 
 					"m_szTeleportTouch"  // char[64]
 					{
+						"type"      "string"
+						"size"      "64"
+
 						"windows"   "1152"
 						"linux"     "1172"
 						"mac"       "1172"
@@ -196,6 +251,9 @@
 
 					"m_szDeadUse"  // char[64]
 					{
+						"type"      "string"
+						"size"      "64"
+
 						"windows"   "1216"
 						"linux"     "1236"
 						"mac"       "1236"
@@ -203,6 +261,9 @@
 
 					"m_szDeadTouch"  // char[64]
 					{
+						"type"      "string"
+						"size"      "64"
+
 						"windows"   "1280"
 						"linux"     "1300"
 						"mac"       "1300"
@@ -210,6 +271,8 @@
 
 					"m_flShootEnd"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1344"
 						"linux"     "1364"
 						"mac"       "1364"
@@ -217,6 +280,8 @@
 
 					"m_flShootTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1348"
 						"linux"     "1368"
 						"mac"       "1368"
@@ -224,6 +289,9 @@
 
 					"m_hFriend"  // EHANDLE[3]
 					{
+						"type"      "ehandle"
+						"size"      "3"
+
 						"windows"   "1352"
 						"linux"     "1372"
 						"mac"       "1372"

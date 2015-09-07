@@ -21,6 +21,9 @@
 				{
 					"m_usFireSuperNailGun"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1254"
 						"linux"     "1270"
 						"mac"       "1270"

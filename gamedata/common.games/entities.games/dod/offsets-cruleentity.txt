@@ -21,6 +21,8 @@
 				{
 					"m_iszMaster"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "328"
 						"linux"     "344"
 						"mac"       "344"

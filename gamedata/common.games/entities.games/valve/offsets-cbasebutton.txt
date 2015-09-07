@@ -21,6 +21,8 @@
 				{
 					"m_fStayPushed"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "240"
 						"linux"     "260"
 						"mac"       "260"
@@ -28,6 +30,8 @@
 
 					"m_fRotating"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "244"
 						"linux"     "264"
 						"mac"       "264"
@@ -35,6 +39,8 @@
 
 					"m_strChangeTarget"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "248"
 						"linux"     "268"
 						"mac"       "268"
@@ -42,6 +48,8 @@
 
 					"m_ls"  // locksound_t
 					{
+						"type"      "structure"
+
 						"windows"   "252"
 						"linux"     "272"
 						"mac"       "272"
@@ -49,6 +57,9 @@
 
 					"m_bLockedSound"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "288"
 						"linux"     "308"
 						"mac"       "308"
@@ -56,6 +67,9 @@
 
 					"m_bLockedSentence"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "289"
 						"linux"     "309"
 						"mac"       "309"
@@ -63,6 +77,9 @@
 
 					"m_bUnlockedSound"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "290"
 						"linux"     "310"
 						"mac"       "310"
@@ -70,6 +87,9 @@
 
 					"m_bUnlockedSentence"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "291"
 						"linux"     "311"
 						"mac"       "311"
@@ -77,6 +97,8 @@
 
 					"m_sounds"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "292"
 						"linux"     "312"
 						"mac"       "312"

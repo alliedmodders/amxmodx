@@ -21,6 +21,8 @@
 				{
 					"m_iGoalNum"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "124"
 						"linux"     "140"
 						"mac"       "140"
@@ -28,6 +30,8 @@
 
 					"m_iGoalState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "128"
 						"linux"     "144"
 						"mac"       "144"
@@ -35,6 +39,8 @@
 
 					"m_GoalMin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "132"
 						"linux"     "148"
 						"mac"       "148"
@@ -42,6 +48,8 @@
 
 					"m_GoalMax"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"

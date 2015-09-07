@@ -21,6 +21,8 @@
 				{
 					"m_lastTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"
@@ -28,6 +30,8 @@
 
 					"m_maxFrame"  // float
 					{
+						"type"      "float"
+
 						"windows"   "88"
 						"linux"     "104"
 						"mac"       "104"

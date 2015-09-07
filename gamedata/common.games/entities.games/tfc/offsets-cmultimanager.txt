@@ -21,6 +21,8 @@
 				{
 					"m_cTargets"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1280"
 						"linux"     "1300"
 						"mac"       "1300"
@@ -28,6 +30,8 @@
 
 					"m_index"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1284"
 						"linux"     "1304"
 						"mac"       "1304"
@@ -35,6 +39,8 @@
 
 					"m_startTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1288"
 						"linux"     "1308"
 						"mac"       "1308"
@@ -42,6 +48,9 @@
 
 					"m_iTargetName"  // int[16]
 					{
+						"type"      "integer"
+						"size"      "16"
+
 						"windows"   "1292"
 						"linux"     "1312"
 						"mac"       "1312"
@@ -49,6 +58,9 @@
 
 					"m_flTargetDelay"  // float[16]
 					{
+						"type"      "float"
+						"size"      "16"
+
 						"windows"   "1356"
 						"linux"     "1376"
 						"mac"       "1376"

@@ -21,6 +21,8 @@
 				{
 					"m_iszNewTarget"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "92"
 						"linux"     "108"
 						"mac"       "108"

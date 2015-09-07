@@ -21,6 +21,8 @@
 				{
 					"team_no"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "124"
 						"linux"     "140"
 						"mac"       "140"
@@ -28,6 +30,8 @@
 
 					"m_iLastTouched"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "128"
 						"linux"     "144"
 						"mac"       "144"
@@ -35,6 +39,8 @@
 
 					"m_flNextTouchTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "132"
 						"linux"     "148"
 						"mac"       "148"
@@ -42,6 +48,8 @@
 
 					"m_flPickupTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"
@@ -49,6 +57,9 @@
 
 					"m_iItemFlag"  // unsigned int
 					{
+						"type"      "integer"
+						"unsigned"  "1"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"
@@ -56,6 +67,8 @@
 
 					"m_pszItemName"  // const char*
 					{
+						"type"      "stringptr"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"

@@ -21,6 +21,8 @@
 				{
 					"heat"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1728"
 						"linux"     "1748"
 						"mac"       "1748"
@@ -28,6 +30,8 @@
 
 					"blastRadius"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1732"
 						"linux"     "1752"
 						"mac"       "1752"

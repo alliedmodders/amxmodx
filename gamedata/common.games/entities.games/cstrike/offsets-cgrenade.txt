@@ -21,6 +21,8 @@
 				{
 					"m_bStartDefuse"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "384"
 						"linux"     "404"
 						"mac"       "404"
@@ -28,6 +30,8 @@
 
 					"m_bIsC4"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "385"
 						"linux"     "405"
 						"mac"       "405"
@@ -35,6 +39,8 @@
 
 					"m_pBombDefuser"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "388"
 						"linux"     "408"
 						"mac"       "408"
@@ -42,6 +48,8 @@
 
 					"m_flDefuseCountDown"  // float
 					{
+						"type"      "float"
+
 						"windows"   "396"
 						"linux"     "416"
 						"mac"       "416"
@@ -49,6 +57,8 @@
 
 					"m_flC4Blow"  // float
 					{
+						"type"      "float"
+
 						"windows"   "400"
 						"linux"     "420"
 						"mac"       "420"
@@ -56,6 +66,8 @@
 
 					"m_flNextFreqInterval"  // float
 					{
+						"type"      "float"
+
 						"windows"   "404"
 						"linux"     "424"
 						"mac"       "424"
@@ -63,6 +75,8 @@
 
 					"m_flNextBeep"  // float
 					{
+						"type"      "float"
+
 						"windows"   "408"
 						"linux"     "428"
 						"mac"       "428"
@@ -70,6 +84,8 @@
 
 					"m_flNextFreq"  // float
 					{
+						"type"      "float"
+
 						"windows"   "412"
 						"linux"     "432"
 						"mac"       "432"
@@ -77,6 +93,8 @@
 
 					"m_sBeepName"  // char*
 					{
+						"type"      "stringptr"
+
 						"windows"   "416"
 						"linux"     "436"
 						"mac"       "436"
@@ -84,6 +102,8 @@
 
 					"m_fAttenu"  // float
 					{
+						"type"      "float"
+
 						"windows"   "420"
 						"linux"     "440"
 						"mac"       "440"
@@ -91,6 +111,8 @@
 
 					"m_flNextBlink"  // float
 					{
+						"type"      "float"
+
 						"windows"   "424"
 						"linux"     "444"
 						"mac"       "444"
@@ -98,6 +120,8 @@
 
 					"m_fNextDefuse"  // float
 					{
+						"type"      "float"
+
 						"windows"   "428"
 						"linux"     "448"
 						"mac"       "448"
@@ -105,6 +129,8 @@
 
 					"m_bJustBlew"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "432"
 						"linux"     "452"
 						"mac"       "452"
@@ -112,6 +138,8 @@
 
 					"m_iTeam"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "436"
 						"linux"     "456"
 						"mac"       "456"
@@ -119,6 +147,8 @@
 
 					"m_iCurWave"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "440"
 						"linux"     "460"
 						"mac"       "460"
@@ -126,6 +156,8 @@
 
 					"m_pentCurBombTarget"  // edict_t*
 					{
+						"type"      "edict"
+
 						"windows"   "444"
 						"linux"     "464"
 						"mac"       "464"
@@ -133,6 +165,8 @@
 
 					"m_SGSmoke"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "448"
 						"linux"     "468"
 						"mac"       "468"
@@ -140,6 +174,8 @@
 
 					"m_angle"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "452"
 						"linux"     "472"
 						"mac"       "472"
@@ -147,6 +183,9 @@
 
 					"m_usEvent"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "456"
 						"linux"     "476"
 						"mac"       "476"
@@ -154,6 +193,8 @@
 
 					"m_bLightSmoke"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "458"
 						"linux"     "478"
 						"mac"       "478"
@@ -161,6 +202,8 @@
 
 					"m_bDetonated"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "459"
 						"linux"     "479"
 						"mac"       "479"
@@ -168,6 +211,8 @@
 
 					"m_vSmokeDetonate"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "460"
 						"linux"     "480"
 						"mac"       "480"
@@ -175,6 +220,8 @@
 
 					"m_iBounceCount"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "472"
 						"linux"     "492"
 						"mac"       "492"
@@ -182,6 +229,8 @@
 
 					"m_fRegisteredSound"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "476"
 						"linux"     "496"
 						"mac"       "496"

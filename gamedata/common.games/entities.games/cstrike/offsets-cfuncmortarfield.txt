@@ -21,6 +21,8 @@
 				{
 					"m_iszXController"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "292"
 						"linux"     "312"
 						"mac"       "312"
@@ -28,6 +30,8 @@
 
 					"m_iszYController"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "296"
 						"linux"     "316"
 						"mac"       "316"
@@ -35,6 +39,8 @@
 
 					"m_flSpread"  // float
 					{
+						"type"      "float"
+
 						"windows"   "300"
 						"linux"     "320"
 						"mac"       "320"
@@ -42,6 +48,8 @@
 
 					"m_flDelay"  // float
 					{
+						"type"      "float"
+
 						"windows"   "304"
 						"linux"     "324"
 						"mac"       "324"
@@ -49,6 +57,8 @@
 
 					"m_iCount"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "308"
 						"linux"     "328"
 						"mac"       "328"
@@ -56,6 +66,8 @@
 
 					"m_fControl"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "312"
 						"linux"     "332"
 						"mac"       "332"

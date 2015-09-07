@@ -21,6 +21,8 @@
 				{
 					"m_textParms"  // hudtextparms_t
 					{
+						"type"      "structure"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"

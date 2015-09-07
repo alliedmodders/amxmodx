@@ -21,6 +21,8 @@
 				{
 					"m_nodeTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_spikeTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +39,8 @@
 
 					"m_painSoundTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -42,6 +48,8 @@
 
 					"m_slowMode"  // Activity
 					{
+						"type"      "integer"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -49,6 +57,8 @@
 
 					"m_slowTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -56,6 +66,8 @@
 
 					"m_flHeadYaw"  // float
 					{
+						"type"      "float"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -63,6 +75,8 @@
 
 					"m_flHeadPitch"  // float
 					{
+						"type"      "float"
+
 						"windows"   "732"
 						"linux"     "752"
 						"mac"       "752"
@@ -70,6 +84,8 @@
 
 					"m_flIdealHeadYaw"  // float
 					{
+						"type"      "float"
+
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"
@@ -77,6 +93,8 @@
 
 					"m_flIdealHeadPitch"  // float
 					{
+						"type"      "float"
+
 						"windows"   "740"
 						"linux"     "760"
 						"mac"       "760"
@@ -84,6 +102,8 @@
 
 					"m_posTarget"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
@@ -91,6 +111,8 @@
 
 					"m_vecTarget"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -98,6 +120,8 @@
 
 					"m_pBeam"  // CBeam*
 					{
+						"type"      "classptr"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -105,6 +129,8 @@
 
 					"m_posBeam"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -112,6 +138,8 @@
 
 					"m_vecBeam"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "784"
 						"linux"     "804"
 						"mac"       "804"
@@ -119,6 +147,8 @@
 
 					"m_angleBeam"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "796"
 						"linux"     "816"
 						"mac"       "816"
@@ -126,6 +156,8 @@
 
 					"m_offsetBeam"  // float
 					{
+						"type"      "float"
+
 						"windows"   "808"
 						"linux"     "828"
 						"mac"       "828"
@@ -133,6 +165,8 @@
 
 					"m_flBeamExpireTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "812"
 						"linux"     "832"
 						"mac"       "832"
@@ -140,6 +174,8 @@
 
 					"m_flBeamDir"  // float
 					{
+						"type"      "float"
+
 						"windows"   "816"
 						"linux"     "836"
 						"mac"       "836"
@@ -147,6 +183,8 @@
 
 					"m_NextActivity"  // Activity
 					{
+						"type"      "integer"
+
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"

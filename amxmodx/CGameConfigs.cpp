@@ -51,6 +51,8 @@ struct TempSigInfo
 
 } TempSig;
 
+TypeDescription TempType;
+
 static char ParseEngine[32];
 
 static bool DoesGameMatch(const char *value)
@@ -63,13 +65,10 @@ static bool DoesEngineMatch(const char* value)
 	return strcmp(ParseEngine, value) == 0;
 }
 
-CGameConfig::CGameConfig(const char *path)
+CGameConfig::CGameConfig(const char *path) : m_FoundOffset(false), m_CustomLevel(0), m_CustomHandler(nullptr)
 {
 	strncopy(m_File, path, sizeof(m_File));
 	strncopy(ParseEngine, IS_DEDICATED_SERVER() ? "engine_ds" : "engine_ls", sizeof(ParseEngine));
-
-	m_CustomLevel = 0;
-	m_CustomHandler = nullptr;
 }
 
 CGameConfig::~CGameConfig()
@@ -181,9 +180,11 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 		case PSTATE_GAMEDEFS_OFFSETS:
 		{
 			strncopy(m_Offset, name, sizeof(m_Offset));
+			TempType.reset();
 
 			m_ParseState = PSTATE_GAMEDEFS_OFFSETS_OFFSET;
 			m_MatchedPlatform = false;
+			m_FoundOffset = false;
 			break;
 		}
 		case PSTATE_GAMEDEFS_SIGNATURES:
@@ -251,26 +252,89 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 	{
 		case PSTATE_GAMEDEFS_OFFSETS_OFFSET:
 		{
-			if (g_LibSys.IsPlatformCompatible(key, &m_MatchedPlatform))
+			if (!strcmp(key, "type"))
 			{
-				if (m_Class[0])
-				{
-					auto ic = m_OffsetsByClass.findForAdd(m_Class);
+				auto type = FieldType::FIELD_NONE;
 
-					if (ic.found())
-					{
-						ic->value->list.replace(m_Offset, atoi(value));
-					}
-					else if (m_OffsetsByClass.add(ic, m_Class))
-					{
-						ic->value = new OffsetClass;
-						ic->value->list.insert(m_Offset, atoi(value));
-					}
-				}
-				else
+				if (!strcmp(value, "stringint"))
 				{
-					m_Offsets.replace(m_Offset, atoi(value));
+					type = FieldType::FIELD_STRINGINT;
 				}
+				else if (!strcmp(value, "stringptr"))
+				{
+					type = FieldType::FIELD_STRINGPTR;
+				}
+				else if (!strcmp(value, "string"))
+				{
+					type = FieldType::FIELD_STRING;
+				}
+				else if (!strcmp(value, "classptr"))
+				{
+					type = FieldType::FIELD_CLASSPTR;
+				}
+				else if (!strcmp(value, "class"))
+				{
+					type = FieldType::FIELD_CLASS;
+				}
+				else if (!strcmp(value, "ehandle"))
+				{
+					type = FieldType::FIELD_EHANDLE;
+				}
+				else if (!strcmp(value, "edict"))
+				{
+					type = FieldType::FIELD_EDICT;
+				}
+				else if (!strcmp(value, "entvars"))
+				{
+					type = FieldType::FIELD_ENTVARS;
+				}
+				else if (!strcmp(value, "vector"))
+				{
+					type = FieldType::FIELD_VECTOR;
+				}
+				else if (!strcmp(value, "pointer"))
+				{
+					type = FieldType::FIELD_POINTER;
+				}
+				else if (!strcmp(value, "integer"))
+				{
+					type = FieldType::FIELD_INTEGER;
+				}
+				else if (!strcmp(value, "function"))
+				{
+					type = FieldType::FIELD_FUNCTION;
+				}
+				else if (!strcmp(value, "boolean"))
+				{
+					type = FieldType::FIELD_BOOLEAN;
+				}
+				else if (!strcmp(value, "short"))
+				{
+					type = FieldType::FIELD_SHORT;
+				}
+				else if (!strcmp(value, "character"))
+				{
+					type = FieldType::FIELD_CHARACTER;
+				}
+				else if (!strcmp(value, "float"))
+				{
+					type = FieldType::FIELD_FLOAT;
+				}
+
+				TempType.fieldType = type;
+			}
+			else if (!strcmp(key, "size"))
+			{
+				TempType.fieldSize = ke::Max<int>(0, atoi(value));
+			}
+			else if (!strcmp(key, "unsigned"))
+			{
+				TempType.fieldUnsigned = !!atoi(value);
+			}
+			else if (g_LibSys.IsPlatformCompatible(key, &m_MatchedPlatform))
+			{
+				m_FoundOffset = true;
+				TempType.fieldOffset = atoi(value);
 			}
 			break;
 		}
@@ -414,6 +478,28 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 		}
 		case PSTATE_GAMEDEFS_OFFSETS_OFFSET:
 		{
+			if (m_FoundOffset)
+			{
+				if (m_Class[0])
+				{
+					auto ic = m_OffsetsByClass.findForAdd(m_Class);
+
+					if (ic.found())
+					{
+						ic->value->list.replace(m_Offset, TempType);
+					}
+					else if (m_OffsetsByClass.add(ic, m_Class))
+					{
+						ic->value = new OffsetClass;
+						ic->value->list.insert(m_Offset, TempType);
+					}
+				}
+				else
+				{
+					m_Offsets.replace(m_Offset, TempType);
+				}
+			}
+
 			m_ParseState = PSTATE_GAMEDEFS_OFFSETS;
 			break;
 		}
@@ -672,12 +758,12 @@ bool CGameConfig::EnterFile(const char *file, char *error, size_t maxlength)
 	return true;
 }
 
-bool CGameConfig::GetOffset(const char *key, int *value)
+bool CGameConfig::GetOffset(const char *key, TypeDescription *value)
 {
 	return m_Offsets.retrieve(key, value);
 }
 
-bool CGameConfig::GetOffsetByClass(const char *classname, const char *key, int *value)
+bool CGameConfig::GetOffsetByClass(const char *classname, const char *key, TypeDescription *value)
 {
 	auto r = m_OffsetsByClass.find(classname);
 

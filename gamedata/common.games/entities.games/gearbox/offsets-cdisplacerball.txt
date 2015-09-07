@@ -21,6 +21,8 @@
 				{
 					"m_iTrail"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,9 @@
 
 					"m_pBeam"  // CBeam*[24]
 					{
+						"type"      "classptr"
+						"size"      "24"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -35,6 +40,8 @@
 
 					"m_pDisplacedTarget"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -42,6 +49,8 @@
 
 					"m_iBeams"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"

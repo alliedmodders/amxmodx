@@ -39,8 +39,8 @@ UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
 
 int CurrentItemId;
 StringHashMap<int> ItemAliasList;
-int TeamOffset;
-int MenuOffset;
+TypeDescription TeamDesc;
+TypeDescription MenuDesc;
 
 server_static_t *ServerStatic;
 server_t *Server;
@@ -130,11 +130,11 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 					/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELDGUN }
 				};
 
-				int menuId = get_pdata<int>(pEdict, MenuOffset);
+				int menuId = get_pdata<int>(pEdict, MenuDesc.fieldOffset);
 
 				if (menuId >= Menu_Buy && menuId <= Menu_BuyItem)
 				{
-					switch (get_pdata<int>(pEdict, TeamOffset))
+					switch (get_pdata<int>(pEdict, TeamDesc.fieldOffset))
 					{
 						case TEAM_T: itemId = menuItemsTe[menuId - 4][slot]; break; // -4 because array is zero-based and Menu_Buy* constants starts from 4.
 						case TEAM_CT:itemId = menuItemsCt[menuId - 4][slot]; break;
@@ -278,16 +278,16 @@ void CtrlDetours_ClientCommand(bool set)
 
 #if defined(WIN32)
 
-		int offset = 0;
+		TypeDescription type;
 
-		if (MainConfig->GetOffset("UseBotArgs", &offset))
+		if (MainConfig->GetOffset("UseBotArgs", &type))
 		{
-			UseBotArgs = get_pdata<int*>(base, offset);
+			UseBotArgs = get_pdata<int*>(base, type.fieldOffset);
 		}
 
-		if (MainConfig->GetOffset("BotArgs", &offset))
+		if (MainConfig->GetOffset("BotArgs", &type))
 		{
-			BotArgs = get_pdata<const char**>(base, offset);
+			BotArgs = get_pdata<const char**>(base, type.fieldOffset);
 		}
 
 #elif defined(__linux__) || defined(__APPLE__)
@@ -306,10 +306,10 @@ void CtrlDetours_ClientCommand(bool set)
 #endif
 		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, base);
 
-		CommonConfig->GetOffsetByClass("CBasePlayer", "m_iTeam", &TeamOffset);
-		CommonConfig->GetOffsetByClass("CBasePlayer", "m_iMenu", &MenuOffset);
+		CommonConfig->GetOffsetByClass("CBasePlayer", "m_iTeam", &TeamDesc);
+		CommonConfig->GetOffsetByClass("CBasePlayer", "m_iMenu", &MenuDesc);
 
-		if (!ClientCommandDetour || !UseBotArgs || !BotArgs || !TeamOffset || !MenuOffset)
+		if (!ClientCommandDetour || !UseBotArgs || !BotArgs || !TeamDesc.fieldOffset || !MenuDesc.fieldOffset)
 		{
 			MF_Log("ClientCommand is not available - forward client_command has been disabled");
 		}
@@ -518,11 +518,11 @@ void InitGlobalVars()
 
 #if defined(WIN32)
 
-	int offset = 0;
+	TypeDescription typeDesc;
 
-	if (CommonConfig->GetOffset("svs", &offset))
+	if (CommonConfig->GetOffset("svs", &typeDesc))
 	{
-		uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + offset);
+		uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
 		ServerStatic = reinterpret_cast<server_static_t*>(base - 4);
 	}
 #else

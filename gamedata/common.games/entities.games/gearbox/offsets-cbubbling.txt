@@ -21,6 +21,8 @@
 				{
 					"m_density"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"m_frequency"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -35,6 +39,8 @@
 
 					"m_bubbleModel"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -42,6 +48,8 @@
 
 					"m_state"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "108"
 						"linux"     "124"
 						"mac"       "124"

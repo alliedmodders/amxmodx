@@ -21,6 +21,8 @@
 				{
 					"m_iShowerSparks"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,9 @@
 
 					"m_pBeam"  // CBeam*[8]
 					{
+						"type"      "classptr"
+						"size"      "8"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -35,6 +40,8 @@
 
 					"m_iBeams"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "132"
 						"linux"     "148"
 						"mac"       "148"
@@ -42,6 +49,8 @@
 
 					"m_pAttachEnt"  // CBaseAnimating*
 					{
+						"type"      "classptr"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"
@@ -49,6 +58,8 @@
 
 					"m_iAttachIdx"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"

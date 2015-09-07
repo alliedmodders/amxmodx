@@ -21,6 +21,8 @@
 				{
 					"m_lastTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "124"
 						"linux"     "140"
 						"mac"       "140"
@@ -28,6 +30,8 @@
 
 					"m_iSequence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "128"
 						"linux"     "144"
 						"mac"       "144"

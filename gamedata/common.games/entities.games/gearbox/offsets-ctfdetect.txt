@@ -21,6 +21,8 @@
 				{
 					"is_ctf"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"

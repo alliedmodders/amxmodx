@@ -21,6 +21,8 @@
 				{
 					"mIsActive"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "1236"
 						"linux"     "1252"
 						"mac"       "1252"
@@ -28,6 +30,8 @@
 
 					"mTipSparkFrequency"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1240"
 						"linux"     "1256"
 						"mac"       "1256"
@@ -35,6 +39,8 @@
 
 					"mBodySparkFrequency"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1244"
 						"linux"     "1260"
 						"mac"       "1260"
@@ -42,6 +48,8 @@
 
 					"mLightningFrequency"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1248"
 						"linux"     "1264"
 						"mac"       "1264"
@@ -49,6 +57,8 @@
 
 					"mXJoltForce"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1252"
 						"linux"     "1268"
 						"mac"       "1268"
@@ -56,6 +66,8 @@
 
 					"mYJoltForce"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1256"
 						"linux"     "1272"
 						"mac"       "1272"
@@ -63,6 +75,8 @@
 
 					"mZJoltForce"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1260"
 						"linux"     "1276"
 						"mac"       "1276"
@@ -70,6 +84,8 @@
 
 					"mNumUninsulatedSegments"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1264"
 						"linux"     "1280"
 						"mac"       "1280"
@@ -77,6 +93,9 @@
 
 					"mUninsulatedSegments"  // int[63]
 					{
+						"type"      "integer"
+						"size"      "63"
+
 						"windows"   "1268"
 						"linux"     "1284"
 						"mac"       "1284"
@@ -84,6 +103,8 @@
 
 					"mLightningSprite"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1520"
 						"linux"     "1536"
 						"mac"       "1536"
@@ -91,6 +112,8 @@
 
 					"mLastSparkTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1524"
 						"linux"     "1540"
 						"mac"       "1540"

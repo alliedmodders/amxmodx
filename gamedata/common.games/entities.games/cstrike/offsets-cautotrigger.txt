@@ -21,6 +21,8 @@
 				{
 					"m_globalstate"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"
@@ -28,6 +30,8 @@
 
 					"triggerType"  // USE_TYPE
 					{
+						"type"      "integer"
+
 						"windows"   "148"
 						"linux"     "164"
 						"mac"       "164"

@@ -21,6 +21,8 @@
 				{
 					"m_iSpriteTexture"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "660"
 						"linux"     "680"
 						"mac"       "680"

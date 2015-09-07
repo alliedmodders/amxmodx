@@ -21,6 +21,9 @@
 				{
 					"m_bMoveSnd"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "492"
 						"linux"     "512"
 						"mac"       "512"
@@ -28,6 +31,8 @@
 
 					"m_iState"  // STATE
 					{
+						"type"      "integer"
+
 						"windows"   "496"
 						"linux"     "516"
 						"mac"       "516"

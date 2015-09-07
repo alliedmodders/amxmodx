@@ -21,6 +21,8 @@
 				{
 					"m_active"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "328"
 						"linux"     "344"
 						"mac"       "344"
@@ -28,6 +30,8 @@
 
 					"m_iszStartEntity"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "332"
 						"linux"     "348"
 						"mac"       "348"
@@ -35,6 +39,8 @@
 
 					"m_iszEndEntity"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "336"
 						"linux"     "352"
 						"mac"       "352"
@@ -42,6 +48,8 @@
 
 					"m_life"  // float
 					{
+						"type"      "float"
+
 						"windows"   "340"
 						"linux"     "356"
 						"mac"       "356"
@@ -49,6 +57,8 @@
 
 					"m_boltWidth"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "344"
 						"linux"     "360"
 						"mac"       "360"
@@ -56,6 +66,8 @@
 
 					"m_noiseAmplitude"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "348"
 						"linux"     "364"
 						"mac"       "364"
@@ -63,6 +75,8 @@
 
 					"m_brightness"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "352"
 						"linux"     "368"
 						"mac"       "368"
@@ -70,6 +84,8 @@
 
 					"m_speed"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "356"
 						"linux"     "372"
 						"mac"       "372"
@@ -77,6 +93,8 @@
 
 					"m_restrike"  // float
 					{
+						"type"      "float"
+
 						"windows"   "360"
 						"linux"     "376"
 						"mac"       "376"
@@ -84,6 +102,8 @@
 
 					"m_spriteTexture"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "364"
 						"linux"     "380"
 						"mac"       "380"
@@ -91,6 +111,8 @@
 
 					"m_iszSpriteName"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "368"
 						"linux"     "384"
 						"mac"       "384"
@@ -98,6 +120,8 @@
 
 					"m_frameStart"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "372"
 						"linux"     "388"
 						"mac"       "388"
@@ -105,6 +129,8 @@
 
 					"m_radius"  // float
 					{
+						"type"      "float"
+
 						"windows"   "376"
 						"linux"     "392"
 						"mac"       "392"

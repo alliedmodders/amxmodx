@@ -21,6 +21,8 @@
 				{
 					"m_flNextFlinch"  // float
 					{
+						"type"      "float"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -28,6 +30,8 @@
 
 					"m_flShootTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -35,6 +39,8 @@
 
 					"m_flShootEnd"  // float
 					{
+						"type"      "float"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -42,6 +48,9 @@
 
 					"m_pBall"  // CSprite*[2]
 					{
+						"type"      "classptr"
+						"size"      "2"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
@@ -49,6 +58,9 @@
 
 					"m_iBall"  // int[2]
 					{
+						"type"      "integer"
+						"size"      "2"
+
 						"windows"   "784"
 						"linux"     "804"
 						"mac"       "804"
@@ -56,6 +68,9 @@
 
 					"m_iBallTime"  // float[2]
 					{
+						"type"      "float"
+						"size"      "2"
+
 						"windows"   "792"
 						"linux"     "812"
 						"mac"       "812"
@@ -63,6 +78,9 @@
 
 					"m_iBallCurrent"  // int[2]
 					{
+						"type"      "integer"
+						"size"      "2"
+
 						"windows"   "800"
 						"linux"     "820"
 						"mac"       "820"
@@ -70,6 +88,8 @@
 
 					"m_vecEstVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "808"
 						"linux"     "828"
 						"mac"       "828"
@@ -77,6 +97,8 @@
 
 					"m_velocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"
@@ -84,6 +106,8 @@
 
 					"m_fInCombat"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "832"
 						"linux"     "852"
 						"mac"       "852"

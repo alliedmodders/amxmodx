@@ -21,6 +21,10 @@
 				{
 					"m_weaponNames"  // unsigned int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+						"unsigned"  "1"
+
 						"windows"   "332"
 						"linux"     "348"
 						"mac"       "348"
@@ -28,6 +32,9 @@
 
 					"m_weaponCount"  // int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+
 						"windows"   "460"
 						"linux"     "476"
 						"mac"       "476"

@@ -21,6 +21,8 @@
 				{
 					"m_hSquadLeader"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
@@ -28,6 +30,9 @@
 
 					"m_hSquadMember"  // EHANDLE[4]
 					{
+						"type"      "ehandle"
+						"size"      "4"
+
 						"windows"   "924"
 						"linux"     "944"
 						"mac"       "944"
@@ -35,6 +40,8 @@
 
 					"m_afSquadSlots"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "956"
 						"linux"     "976"
 						"mac"       "976"
@@ -42,6 +49,8 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "960"
 						"linux"     "980"
 						"mac"       "980"
@@ -49,6 +58,8 @@
 
 					"m_fEnemyEluded"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "964"
 						"linux"     "984"
 						"mac"       "984"
@@ -56,6 +67,8 @@
 
 					"m_iMySlot"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "968"
 						"linux"     "988"
 						"mac"       "988"

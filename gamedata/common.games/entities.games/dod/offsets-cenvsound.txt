@@ -21,6 +21,8 @@
 				{
 					"m_flRadius"  // float
 					{
+						"type"      "float"
+
 						"windows"   "328"
 						"linux"     "344"
 						"mac"       "344"
@@ -28,6 +30,8 @@
 
 					"m_flRoomtype"  // float
 					{
+						"type"      "float"
+
 						"windows"   "332"
 						"linux"     "348"
 						"mac"       "348"

@@ -21,6 +21,8 @@
 				{
 					"m_frictionFraction"  // float
 					{
+						"type"      "float"
+
 						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"

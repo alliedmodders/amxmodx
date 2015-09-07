@@ -21,6 +21,9 @@
 				{
 					"drop_time"  // unsigned int
 					{
+						"type"      "integer"
+						"unsigned"  "1"
+
 						"windows"   "156"
 						"linux"     "172"
 						"mac"       "172"
@@ -28,6 +31,8 @@
 
 					"m_OriginalAngles"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "160"
 						"linux"     "176"
 						"mac"       "176"
@@ -35,6 +40,8 @@
 
 					"m_nReturnPlayer"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "172"
 						"linux"     "188"
 						"mac"       "188"
@@ -42,6 +49,8 @@
 
 					"m_flReturnTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "176"
 						"linux"     "192"
 						"mac"       "192"

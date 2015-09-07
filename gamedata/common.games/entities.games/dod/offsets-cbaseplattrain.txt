@@ -21,6 +21,9 @@
 				{
 					"m_bMoveSnd"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "492"
 						"linux"     "512"
 						"mac"       "512"
@@ -28,6 +31,9 @@
 
 					"m_bStopSnd"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "493"
 						"linux"     "513"
 						"mac"       "513"
@@ -35,6 +41,8 @@
 
 					"m_volume"  // float
 					{
+						"type"      "float"
+
 						"windows"   "496"
 						"linux"     "516"
 						"mac"       "516"

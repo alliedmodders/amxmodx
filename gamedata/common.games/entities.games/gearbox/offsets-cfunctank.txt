@@ -21,6 +21,8 @@
 				{
 					"m_pController"  // CBasePlayer*
 					{
+						"type"      "classptr"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"m_flNextAttack"  // float
 					{
+						"type"      "float"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -35,6 +39,8 @@
 
 					"m_vecControllerUsePos"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -42,6 +48,8 @@
 
 					"m_yawCenter"  // float
 					{
+						"type"      "float"
+
 						"windows"   "116"
 						"linux"     "132"
 						"mac"       "132"
@@ -49,6 +57,8 @@
 
 					"m_yawRate"  // float
 					{
+						"type"      "float"
+
 						"windows"   "120"
 						"linux"     "136"
 						"mac"       "136"
@@ -56,6 +66,8 @@
 
 					"m_yawRange"  // float
 					{
+						"type"      "float"
+
 						"windows"   "124"
 						"linux"     "140"
 						"mac"       "140"
@@ -63,6 +75,8 @@
 
 					"m_yawTolerance"  // float
 					{
+						"type"      "float"
+
 						"windows"   "128"
 						"linux"     "144"
 						"mac"       "144"
@@ -70,6 +84,8 @@
 
 					"m_pitchCenter"  // float
 					{
+						"type"      "float"
+
 						"windows"   "132"
 						"linux"     "148"
 						"mac"       "148"
@@ -77,6 +93,8 @@
 
 					"m_pitchRate"  // float
 					{
+						"type"      "float"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"
@@ -84,6 +102,8 @@
 
 					"m_pitchRange"  // float
 					{
+						"type"      "float"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"
@@ -91,6 +111,8 @@
 
 					"m_pitchTolerance"  // float
 					{
+						"type"      "float"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"
@@ -98,6 +120,8 @@
 
 					"m_fireLast"  // float
 					{
+						"type"      "float"
+
 						"windows"   "148"
 						"linux"     "164"
 						"mac"       "164"
@@ -105,6 +129,8 @@
 
 					"m_fireRate"  // float
 					{
+						"type"      "float"
+
 						"windows"   "152"
 						"linux"     "168"
 						"mac"       "168"
@@ -112,6 +138,8 @@
 
 					"m_lastSightTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "156"
 						"linux"     "172"
 						"mac"       "172"
@@ -119,6 +147,8 @@
 
 					"m_persist"  // float
 					{
+						"type"      "float"
+
 						"windows"   "160"
 						"linux"     "176"
 						"mac"       "176"
@@ -126,6 +156,8 @@
 
 					"m_minRange"  // float
 					{
+						"type"      "float"
+
 						"windows"   "164"
 						"linux"     "180"
 						"mac"       "180"
@@ -133,6 +165,8 @@
 
 					"m_maxRange"  // float
 					{
+						"type"      "float"
+
 						"windows"   "168"
 						"linux"     "184"
 						"mac"       "184"
@@ -140,6 +174,8 @@
 
 					"m_barrelPos"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "172"
 						"linux"     "188"
 						"mac"       "188"
@@ -147,6 +183,8 @@
 
 					"m_spriteScale"  // float
 					{
+						"type"      "float"
+
 						"windows"   "184"
 						"linux"     "200"
 						"mac"       "200"
@@ -154,6 +192,8 @@
 
 					"m_iszSpriteSmoke"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"
@@ -161,6 +201,8 @@
 
 					"m_iszSpriteFlash"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -168,6 +210,8 @@
 
 					"m_bulletType"  // enum TANKBULLET
 					{
+						"type"      "integer"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -175,6 +219,8 @@
 
 					"m_iBulletDamage"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"
@@ -182,6 +228,8 @@
 
 					"m_sightOrigin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "204"
 						"linux"     "220"
 						"mac"       "220"
@@ -189,6 +237,8 @@
 
 					"m_spread"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "216"
 						"linux"     "232"
 						"mac"       "232"
@@ -196,6 +246,8 @@
 
 					"m_iszMaster"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "220"
 						"linux"     "236"
 						"mac"       "236"

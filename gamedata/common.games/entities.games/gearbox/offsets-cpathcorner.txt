@@ -21,6 +21,8 @@
 				{
 					"m_flWait"  // float
 					{
+						"type"      "float"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"

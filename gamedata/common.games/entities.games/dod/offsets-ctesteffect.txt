@@ -21,6 +21,8 @@
 				{
 					"m_iLoop"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "336"
 						"linux"     "352"
 						"mac"       "352"
@@ -28,6 +30,8 @@
 
 					"m_iBeam"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "340"
 						"linux"     "356"
 						"mac"       "356"
@@ -35,6 +39,9 @@
 
 					"m_pBeam"  // CBeam*[24]
 					{
+						"type"      "classptr"
+						"size"      "24"
+
 						"windows"   "344"
 						"linux"     "360"
 						"mac"       "360"
@@ -42,6 +49,9 @@
 
 					"m_flBeamTime"  // float[24]
 					{
+						"type"      "float"
+						"size"      "24"
+
 						"windows"   "440"
 						"linux"     "456"
 						"mac"       "456"
@@ -49,6 +59,8 @@
 
 					"m_flStartTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "536"
 						"linux"     "552"
 						"mac"       "552"

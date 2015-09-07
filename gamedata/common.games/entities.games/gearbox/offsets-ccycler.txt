@@ -21,6 +21,8 @@
 				{
 					"m_animate"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_iCyclerBody"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"

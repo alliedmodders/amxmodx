@@ -21,6 +21,9 @@
 				{
 					"m_bMoveSnd"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "1280"
 						"linux"     "1300"
 						"mac"       "1300"

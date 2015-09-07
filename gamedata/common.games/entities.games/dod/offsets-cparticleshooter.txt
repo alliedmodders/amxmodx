@@ -21,6 +21,9 @@
 				{
 					"m_iGroupId"  // byte
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "336"
 						"linux"     "352"
 						"mac"       "352"
@@ -28,6 +31,8 @@
 
 					"m_iSpriteIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "340"
 						"linux"     "356"
 						"mac"       "356"
@@ -35,6 +40,8 @@
 
 					"m_vShootDir"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "344"
 						"linux"     "360"
 						"mac"       "360"
@@ -42,6 +49,8 @@
 
 					"m_iNumParticles"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "356"
 						"linux"     "372"
 						"mac"       "372"
@@ -49,6 +58,8 @@
 
 					"m_iState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "360"
 						"linux"     "376"
 						"mac"       "376"
@@ -56,6 +67,8 @@
 
 					"m_flSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "364"
 						"linux"     "380"
 						"mac"       "380"

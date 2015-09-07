@@ -21,6 +21,8 @@
 				{
 					"m_pEyeGlow"  // CSprite*
 					{
+						"type"      "classptr"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,9 @@
 
 					"m_pFlame"  // CBeam*[4]
 					{
+						"type"      "classptr"
+						"size"      "4"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +40,8 @@
 
 					"m_eyeBrightness"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -42,6 +49,8 @@
 
 					"m_seeTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "732"
 						"linux"     "752"
 						"mac"       "752"
@@ -49,6 +58,8 @@
 
 					"m_flameTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"
@@ -56,6 +67,8 @@
 
 					"m_painSoundTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "740"
 						"linux"     "760"
 						"mac"       "760"
@@ -63,6 +76,8 @@
 
 					"m_streakTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
@@ -70,6 +85,8 @@
 
 					"m_flameX"  // float
 					{
+						"type"      "float"
+
 						"windows"   "748"
 						"linux"     "768"
 						"mac"       "768"
@@ -77,6 +94,8 @@
 
 					"m_flameY"  // float
 					{
+						"type"      "float"
+
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"

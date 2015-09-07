@@ -21,6 +21,8 @@
 				{
 					"m_iBaseNode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"m_iDraw"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -35,6 +39,8 @@
 
 					"m_nVisited"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -42,6 +48,9 @@
 
 					"m_aFrom"  // int[128]
 					{
+						"type"      "integer"
+						"size"      "128"
+
 						"windows"   "108"
 						"linux"     "124"
 						"mac"       "124"
@@ -49,6 +58,9 @@
 
 					"m_aTo"  // int[128]
 					{
+						"type"      "integer"
+						"size"      "128"
+
 						"windows"   "620"
 						"linux"     "636"
 						"mac"       "636"
@@ -56,6 +68,8 @@
 
 					"m_iHull"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1132"
 						"linux"     "1148"
 						"mac"       "1148"
@@ -63,6 +77,8 @@
 
 					"m_afNodeType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1136"
 						"linux"     "1152"
 						"mac"       "1152"
@@ -70,6 +86,8 @@
 
 					"m_vecColor"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1140"
 						"linux"     "1156"
 						"mac"       "1156"

@@ -21,6 +21,8 @@
 				{
 					"m_sMaster"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "356"
 						"linux"     "372"
 						"mac"       "372"
@@ -28,6 +30,8 @@
 
 					"m_iTeam"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "360"
 						"linux"     "376"
 						"mac"       "376"
@@ -35,6 +39,8 @@
 
 					"m_iResetTime"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "364"
 						"linux"     "380"
 						"mac"       "380"
@@ -42,6 +48,8 @@
 
 					"m_iMainObjective"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "368"
 						"linux"     "384"
 						"mac"       "384"
@@ -49,6 +57,8 @@
 
 					"m_iDefaultOwner"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "372"
 						"linux"     "388"
 						"mac"       "388"
@@ -56,6 +66,8 @@
 
 					"m_iIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "376"
 						"linux"     "392"
 						"mac"       "392"
@@ -63,6 +75,8 @@
 
 					"m_iPointValue"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "380"
 						"linux"     "396"
 						"mac"       "396"
@@ -70,6 +84,8 @@
 
 					"m_iCapPoints"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "384"
 						"linux"     "400"
 						"mac"       "400"
@@ -77,6 +93,8 @@
 
 					"m_iTeamPoints"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "388"
 						"linux"     "404"
 						"mac"       "404"
@@ -84,6 +102,8 @@
 
 					"m_fCapDelayTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "392"
 						"linux"     "408"
 						"mac"       "408"
@@ -91,6 +111,8 @@
 
 					"m_fNextCapTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "396"
 						"linux"     "412"
 						"mac"       "412"
@@ -98,6 +120,9 @@
 
 					"sz_WinString"  // char[256]
 					{
+						"type"      "string"
+						"size"      "256"
+
 						"windows"   "400"
 						"linux"     "416"
 						"mac"       "416"
@@ -105,6 +130,8 @@
 
 					"m_sAlliesCapString"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "656"
 						"linux"     "672"
 						"mac"       "672"
@@ -112,6 +139,8 @@
 
 					"m_sAxisCapString"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "660"
 						"linux"     "676"
 						"mac"       "676"
@@ -119,6 +148,9 @@
 
 					"sz_AlliesTarget"  // char[256]
 					{
+						"type"      "string"
+						"size"      "256"
+
 						"windows"   "664"
 						"linux"     "680"
 						"mac"       "680"
@@ -126,6 +158,9 @@
 
 					"sz_AxisTarget"  // char[256]
 					{
+						"type"      "string"
+						"size"      "256"
+
 						"windows"   "920"
 						"linux"     "936"
 						"mac"       "936"
@@ -133,6 +168,9 @@
 
 					"sz_ResetTarget"  // char[256]
 					{
+						"type"      "string"
+						"size"      "256"
+
 						"windows"   "1176"
 						"linux"     "1192"
 						"mac"       "1192"
@@ -140,6 +178,9 @@
 
 					"sz_AlliesModel"  // char[256]
 					{
+						"type"      "string"
+						"size"      "256"
+
 						"windows"   "1432"
 						"linux"     "1448"
 						"mac"       "1448"
@@ -147,6 +188,9 @@
 
 					"sz_AxisModel"  // char[256]
 					{
+						"type"      "string"
+						"size"      "256"
+
 						"windows"   "1688"
 						"linux"     "1704"
 						"mac"       "1704"
@@ -154,6 +198,9 @@
 
 					"sz_ResetModel"  // char[256]
 					{
+						"type"      "string"
+						"size"      "256"
+
 						"windows"   "1944"
 						"linux"     "1960"
 						"mac"       "1960"
@@ -161,6 +208,8 @@
 
 					"m_iAlliesModelBodygroup"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2200"
 						"linux"     "2216"
 						"mac"       "2216"
@@ -168,6 +217,8 @@
 
 					"m_iAxisModelBodygroup"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2204"
 						"linux"     "2220"
 						"mac"       "2220"
@@ -175,6 +226,8 @@
 
 					"m_iResetModelBodygroup"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2208"
 						"linux"     "2224"
 						"mac"       "2224"
@@ -182,6 +235,8 @@
 
 					"m_iAlliesIcon"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2212"
 						"linux"     "2228"
 						"mac"       "2228"
@@ -189,6 +244,8 @@
 
 					"m_iAxisIcon"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2216"
 						"linux"     "2232"
 						"mac"       "2232"
@@ -196,6 +253,8 @@
 
 					"m_iNeutralIcon"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2220"
 						"linux"     "2236"
 						"mac"       "2236"
@@ -203,6 +262,8 @@
 
 					"m_bAlliesCantTouch"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "2224"
 						"linux"     "2240"
 						"mac"       "2240"
@@ -210,6 +271,8 @@
 
 					"m_bAxisCantTouch"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "2225"
 						"linux"     "2241"
 						"mac"       "2241"
@@ -217,6 +280,8 @@
 
 					"m_bPointVisible"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2228"
 						"linux"     "2244"
 						"mac"       "2244"
@@ -224,6 +289,8 @@
 
 					"m_iPointIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "2232"
 						"linux"     "2248"
 						"mac"       "2248"
@@ -231,6 +298,9 @@
 
 					"m_szGroup"  // char[256]
 					{
+						"type"      "string"
+						"size"      "256"
+
 						"windows"   "2236"
 						"linux"     "2252"
 						"mac"       "2252"
@@ -238,6 +308,8 @@
 
 					"m_bActive"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "2492"
 						"linux"     "2508"
 						"mac"       "2508"

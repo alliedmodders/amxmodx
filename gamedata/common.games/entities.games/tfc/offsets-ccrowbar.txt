@@ -21,6 +21,8 @@
 				{
 					"m_iSwing"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1252"
 						"linux"     "1268"
 						"mac"       "1268"
@@ -28,6 +30,8 @@
 
 					"m_trHit"  // TraceResult
 					{
+						"type"      "structure"
+
 						"windows"   "1256"
 						"linux"     "1272"
 						"mac"       "1272"

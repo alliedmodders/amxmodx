@@ -21,6 +21,8 @@
 				{
 					"m_hPlayer"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "660"
 						"linux"     "680"
 						"mac"       "680"
@@ -28,6 +30,8 @@
 
 					"m_hTalkTarget"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "668"
 						"linux"     "688"
 						"mac"       "688"
@@ -35,6 +39,8 @@
 
 					"m_flTalkTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "676"
 						"linux"     "696"
 						"mac"       "696"

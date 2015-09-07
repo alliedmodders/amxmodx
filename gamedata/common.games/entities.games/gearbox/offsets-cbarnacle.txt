@@ -21,6 +21,8 @@
 				{
 					"m_flAltitude"  // float
 					{
+						"type"      "float"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_flKillVictimTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +39,8 @@
 
 					"m_cGibs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -42,6 +48,8 @@
 
 					"m_fTongueExtended"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -49,6 +57,8 @@
 
 					"m_fLiftingPrey"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -56,6 +66,8 @@
 
 					"m_flTongueAdj"  // float
 					{
+						"type"      "float"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"

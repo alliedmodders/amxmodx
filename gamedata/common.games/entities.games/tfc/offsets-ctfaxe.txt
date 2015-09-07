@@ -21,6 +21,8 @@
 				{
 					"m_iSwing"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1312"
 						"linux"     "1328"
 						"mac"       "1328"
@@ -28,6 +30,8 @@
 
 					"m_trHit"  // TraceResult
 					{
+						"type"      "structure"
+
 						"windows"   "1316"
 						"linux"     "1332"
 						"mac"       "1332"
@@ -35,6 +39,8 @@
 
 					"m_bHullHit"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "1372"
 						"linux"     "1388"
 						"mac"       "1388"
@@ -42,6 +48,9 @@
 
 					"m_usAxe"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1376"
 						"linux"     "1392"
 						"mac"       "1392"
@@ -49,6 +58,9 @@
 
 					"m_usAxeDecal"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1378"
 						"linux"     "1394"
 						"mac"       "1394"
@@ -56,6 +68,8 @@
 
 					"classid"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1380"
 						"linux"     "1396"
 						"mac"       "1396"

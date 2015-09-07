@@ -21,6 +21,8 @@
 				{
 					"m_pSprite"  // CSprite*
 					{
+						"type"      "classptr"
+
 						"windows"   "1124"
 						"linux"     "1140"
 						"mac"       "1140"
@@ -28,6 +30,8 @@
 
 					"m_iszSpriteName"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1128"
 						"linux"     "1144"
 						"mac"       "1144"
@@ -35,6 +39,8 @@
 
 					"m_firePosition"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "1132"
 						"linux"     "1148"
 						"mac"       "1148"

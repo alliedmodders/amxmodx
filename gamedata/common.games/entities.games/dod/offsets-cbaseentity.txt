@@ -21,6 +21,8 @@
 				{
 					"pev"  // entvars_t*
 					{
+						"type"      "entvars"
+
 						"windows"   "4"
 						"linux"     "4"
 						"mac"       "4"
@@ -28,6 +30,8 @@
 
 					"m_pGoalEnt"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "8"
 						"linux"     "8"
 						"mac"       "8"
@@ -35,6 +39,8 @@
 
 					"m_pLink"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "12"
 						"linux"     "12"
 						"mac"       "12"
@@ -42,6 +48,8 @@
 
 					"m_rrOrigin"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "16"
 						"linux"     "16"
 						"mac"       "16"
@@ -49,6 +57,8 @@
 
 					"m_rrMins"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "28"
 						"linux"     "28"
 						"mac"       "28"
@@ -56,6 +66,8 @@
 
 					"m_rrMaxs"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "40"
 						"linux"     "40"
 						"mac"       "40"
@@ -63,6 +75,8 @@
 
 					"m_rrAngles"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "52"
 						"linux"     "52"
 						"mac"       "52"
@@ -70,6 +84,8 @@
 
 					"m_rrMovedir"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "64"
 						"linux"     "64"
 						"mac"       "64"
@@ -77,6 +93,8 @@
 
 					"m_rrSpawnflags"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "76"
 						"linux"     "76"
 						"mac"       "76"
@@ -84,6 +102,8 @@
 
 					"m_rrSolid"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "80"
 						"linux"     "80"
 						"mac"       "80"
@@ -91,6 +111,8 @@
 
 					"m_rrMovetype"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "84"
 						"linux"     "84"
 						"mac"       "84"
@@ -98,6 +120,8 @@
 
 					"m_rrEffects"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "88"
 						"linux"     "88"
 						"mac"       "88"
@@ -105,6 +129,8 @@
 
 					"m_rrFlags"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "92"
 						"linux"     "92"
 						"mac"       "92"
@@ -112,6 +138,8 @@
 
 					"m_rrFrags"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "96"
 						"linux"     "96"
 						"mac"       "96"
@@ -119,6 +147,8 @@
 
 					"m_rrRendermode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "100"
 						"linux"     "100"
 						"mac"       "100"
@@ -126,6 +156,8 @@
 
 					"m_rrRenderamt"  // float
 					{
+						"type"      "float"
+
 						"windows"   "104"
 						"linux"     "104"
 						"mac"       "104"
@@ -133,6 +165,8 @@
 
 					"m_rrRendercolor"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "108"
 						"linux"     "108"
 						"mac"       "108"
@@ -140,6 +174,8 @@
 
 					"m_rrRenderfx"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "120"
 						"linux"     "120"
 						"mac"       "120"
@@ -147,6 +183,8 @@
 
 					"m_rrHealth"  // float
 					{
+						"type"      "float"
+
 						"windows"   "124"
 						"linux"     "124"
 						"mac"       "124"
@@ -154,6 +192,8 @@
 
 					"m_rrFrame"  // float
 					{
+						"type"      "float"
+
 						"windows"   "128"
 						"linux"     "128"
 						"mac"       "128"
@@ -161,6 +201,8 @@
 
 					"m_rrSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "132"
 						"linux"     "132"
 						"mac"       "132"
@@ -168,6 +210,8 @@
 
 					"m_rrTarget"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "136"
 						"linux"     "136"
 						"mac"       "136"
@@ -175,6 +219,8 @@
 
 					"m_rrTargetname"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "140"
 						"linux"     "140"
 						"mac"       "140"
@@ -182,6 +228,8 @@
 
 					"m_rrNetname"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "144"
 						"linux"     "144"
 						"mac"       "144"
@@ -189,6 +237,8 @@
 
 					"m_rrTakedamage"  // float
 					{
+						"type"      "float"
+
 						"windows"   "148"
 						"linux"     "148"
 						"mac"       "148"
@@ -196,6 +246,8 @@
 
 					"m_rrScale"  // float
 					{
+						"type"      "float"
+
 						"windows"   "152"
 						"linux"     "152"
 						"mac"       "152"
@@ -203,6 +255,8 @@
 
 					"m_rrGravity"  // float
 					{
+						"type"      "float"
+
 						"windows"   "156"
 						"linux"     "156"
 						"mac"       "156"
@@ -210,6 +264,8 @@
 
 					"m_pfnThink"  // (*__pfn)(CBaseEntity*)
 					{
+						"type"      "function"
+
 						"windows"   "160"
 						"linux"     "160"
 						"mac"       "160"
@@ -217,6 +273,8 @@
 
 					"m_pfnTouch"  // (*__pfn)(CBaseEntity*, CBaseEntity*)
 					{
+						"type"      "function"
+
 						"windows"   "164"
 						"linux"     "168"
 						"mac"       "168"
@@ -224,6 +282,8 @@
 
 					"m_pfnUse"  // (*__pfn)(CBaseEntity*, CBaseEntity*, CBaseEntity*, USE_TYPE, float)
 					{
+						"type"      "function"
+
 						"windows"   "168"
 						"linux"     "176"
 						"mac"       "176"
@@ -231,6 +291,8 @@
 
 					"m_pfnBlocked"  // (*__pfn)(CBaseEntity*, CBaseEntity*)
 					{
+						"type"      "function"
+
 						"windows"   "172"
 						"linux"     "184"
 						"mac"       "184"
@@ -238,6 +300,8 @@
 
 					"has_disconnected"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "176"
 						"linux"     "192"
 						"mac"       "192"
@@ -245,6 +309,8 @@
 
 					"ammo_9mm"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "180"
 						"linux"     "196"
 						"mac"       "196"
@@ -252,6 +318,8 @@
 
 					"ammo_357"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "184"
 						"linux"     "200"
 						"mac"       "200"
@@ -259,6 +327,8 @@
 
 					"ammo_bolts"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"
@@ -266,6 +336,8 @@
 
 					"ammo_buckshot"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -273,6 +345,8 @@
 
 					"ammo_rockets"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -280,6 +354,8 @@
 
 					"ammo_uranium"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"
@@ -287,6 +363,8 @@
 
 					"ammo_hornets"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "204"
 						"linux"     "220"
 						"mac"       "220"
@@ -294,6 +372,8 @@
 
 					"ammo_argrens"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "208"
 						"linux"     "224"
 						"mac"       "224"
@@ -301,6 +381,8 @@
 
 					"ammo_12mm"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "212"
 						"linux"     "228"
 						"mac"       "228"
@@ -308,6 +390,8 @@
 
 					"ammo_16mm"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "216"
 						"linux"     "232"
 						"mac"       "232"
@@ -315,6 +399,8 @@
 
 					"ammo_22mm"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "220"
 						"linux"     "236"
 						"mac"       "236"
@@ -322,6 +408,8 @@
 
 					"ammo_44mm"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "224"
 						"linux"     "240"
 						"mac"       "240"
@@ -329,6 +417,8 @@
 
 					"ammo_55mm"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "228"
 						"linux"     "244"
 						"mac"       "244"
@@ -336,6 +426,8 @@
 
 					"ammo_66mm"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "232"
 						"linux"     "248"
 						"mac"       "248"
@@ -343,6 +435,8 @@
 
 					"ammo_agrens"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "236"
 						"linux"     "252"
 						"mac"       "252"
@@ -350,6 +444,8 @@
 
 					"ammo_agrensex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "240"
 						"linux"     "256"
 						"mac"       "256"
@@ -357,6 +453,8 @@
 
 					"ammo_ggrens"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "244"
 						"linux"     "260"
 						"mac"       "260"
@@ -364,6 +462,8 @@
 
 					"ammo_ggrensex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "248"
 						"linux"     "264"
 						"mac"       "264"
@@ -371,6 +471,8 @@
 
 					"m_flStartThrow"  // float
 					{
+						"type"      "float"
+
 						"windows"   "252"
 						"linux"     "268"
 						"mac"       "268"
@@ -378,6 +480,8 @@
 
 					"m_flReleaseThrow"  // float
 					{
+						"type"      "float"
+
 						"windows"   "256"
 						"linux"     "272"
 						"mac"       "272"
@@ -385,6 +489,8 @@
 
 					"m_chargeReady"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "260"
 						"linux"     "276"
 						"mac"       "276"
@@ -392,6 +498,8 @@
 
 					"m_fInAttack"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "264"
 						"linux"     "280"
 						"mac"       "280"
@@ -399,6 +507,8 @@
 
 					"m_fireState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "268"
 						"linux"     "284"
 						"mac"       "284"
@@ -406,6 +516,8 @@
 
 					"m_trDecalTrace"  // TraceResult
 					{
+						"type"      "structure"
+
 						"windows"   "272"
 						"linux"     "288"
 						"mac"       "288"

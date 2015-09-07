@@ -21,6 +21,8 @@
 				{
 					"m_fCanThreatDisplay"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
@@ -28,6 +30,8 @@
 
 					"m_flLastHurtTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -35,6 +39,8 @@
 
 					"m_flNextSpitTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"

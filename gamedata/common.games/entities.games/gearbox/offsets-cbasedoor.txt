@@ -21,6 +21,9 @@
 				{
 					"m_bHealthValue"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "252"
 						"linux"     "272"
 						"mac"       "272"
@@ -28,6 +31,9 @@
 
 					"m_bMoveSnd"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "253"
 						"linux"     "273"
 						"mac"       "273"
@@ -35,6 +41,9 @@
 
 					"m_bStopSnd"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "254"
 						"linux"     "274"
 						"mac"       "274"
@@ -42,6 +51,8 @@
 
 					"m_ls"  // locksound_t
 					{
+						"type"      "structure"
+
 						"windows"   "256"
 						"linux"     "276"
 						"mac"       "276"
@@ -49,6 +60,9 @@
 
 					"m_bLockedSound"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "292"
 						"linux"     "312"
 						"mac"       "312"
@@ -56,6 +70,9 @@
 
 					"m_bLockedSentence"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "293"
 						"linux"     "313"
 						"mac"       "313"
@@ -63,6 +80,9 @@
 
 					"m_bUnlockedSound"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "294"
 						"linux"     "314"
 						"mac"       "314"
@@ -70,6 +90,9 @@
 
 					"m_bUnlockedSentence"  // BYTE
 					{
+						"type"      "character"
+						"unsigned"  "1"
+
 						"windows"   "295"
 						"linux"     "315"
 						"mac"       "315"

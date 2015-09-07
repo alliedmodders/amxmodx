@@ -21,6 +21,8 @@
 				{
 					"m_pGoalEnt"  // CBaseEntity*
 					{
+						"type"      "classptr"
+
 						"windows"   "660"
 						"linux"     "680"
 						"mac"       "680"
@@ -28,6 +30,8 @@
 
 					"m_vel1"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "664"
 						"linux"     "684"
 						"mac"       "684"
@@ -35,6 +39,8 @@
 
 					"m_vel2"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "676"
 						"linux"     "696"
 						"mac"       "696"
@@ -42,6 +48,8 @@
 
 					"m_pos1"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "688"
 						"linux"     "708"
 						"mac"       "708"
@@ -49,6 +57,8 @@
 
 					"m_pos2"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "700"
 						"linux"     "720"
 						"mac"       "720"
@@ -56,6 +66,8 @@
 
 					"m_ang1"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -63,6 +75,8 @@
 
 					"m_ang2"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -70,6 +84,8 @@
 
 					"m_startTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"
@@ -77,6 +93,8 @@
 
 					"m_dTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "740"
 						"linux"     "760"
 						"mac"       "760"
@@ -84,6 +102,8 @@
 
 					"m_velocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
@@ -91,6 +111,8 @@
 
 					"m_flIdealtilt"  // float
 					{
+						"type"      "float"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -98,6 +120,8 @@
 
 					"m_flRotortilt"  // float
 					{
+						"type"      "float"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
@@ -105,6 +129,8 @@
 
 					"m_flRightHealth"  // float
 					{
+						"type"      "float"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -112,6 +138,8 @@
 
 					"m_flLeftHealth"  // float
 					{
+						"type"      "float"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
@@ -119,6 +147,8 @@
 
 					"m_iUnits"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
@@ -126,6 +156,9 @@
 
 					"m_hGrunt"  // EHANDLE[24]
 					{
+						"type"      "ehandle"
+						"size"      "24"
+
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
@@ -133,6 +166,9 @@
 
 					"m_vecOrigin"  // Vector[24]
 					{
+						"type"      "vector"
+						"size"      "24"
+
 						"windows"   "968"
 						"linux"     "988"
 						"mac"       "988"
@@ -140,6 +176,9 @@
 
 					"m_hRepel"  // EHANDLE[4]
 					{
+						"type"      "ehandle"
+						"size"      "4"
+
 						"windows"   "1256"
 						"linux"     "1276"
 						"mac"       "1276"
@@ -147,6 +186,8 @@
 
 					"m_iSoundState"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1288"
 						"linux"     "1308"
 						"mac"       "1308"
@@ -154,6 +195,8 @@
 
 					"m_iSpriteTexture"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1292"
 						"linux"     "1312"
 						"mac"       "1312"
@@ -161,6 +204,8 @@
 
 					"m_iPitch"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1296"
 						"linux"     "1316"
 						"mac"       "1316"
@@ -168,6 +213,8 @@
 
 					"m_iExplode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1300"
 						"linux"     "1320"
 						"mac"       "1320"
@@ -175,6 +222,8 @@
 
 					"m_iTailGibs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1304"
 						"linux"     "1324"
 						"mac"       "1324"
@@ -182,6 +231,8 @@
 
 					"m_iBodyGibs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1308"
 						"linux"     "1328"
 						"mac"       "1328"
@@ -189,6 +240,8 @@
 
 					"m_iEngineGibs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1312"
 						"linux"     "1332"
 						"mac"       "1332"
@@ -196,6 +249,8 @@
 
 					"m_iDoLeftSmokePuff"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1316"
 						"linux"     "1336"
 						"mac"       "1336"
@@ -203,6 +258,8 @@
 
 					"m_iDoRightSmokePuff"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1320"
 						"linux"     "1340"
 						"mac"       "1340"

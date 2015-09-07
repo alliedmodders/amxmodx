@@ -21,6 +21,9 @@
 				{
 					"m_usCreateExplosion"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "320"
 						"linux"     "336"
 						"mac"       "336"

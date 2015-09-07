@@ -21,6 +21,9 @@
 				{
 					"m_usKnife"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1384"
 						"linux"     "1400"
 						"mac"       "1400"

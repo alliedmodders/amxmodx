@@ -21,6 +21,9 @@
 				{
 					"m_rgpPlayerItems"  // CBasePlayerItem*[6]
 					{
+						"type"      "classptr"
+						"size"      "6"
+
 						"windows"   "1124"
 						"linux"     "1140"
 						"mac"       "1140"
@@ -28,6 +31,8 @@
 
 					"m_flTouchableAt"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1148"
 						"linux"     "1164"
 						"mac"       "1164"
@@ -35,6 +40,8 @@
 
 					"m_flCreationTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "1152"
 						"linux"     "1168"
 						"mac"       "1168"
@@ -42,6 +49,9 @@
 
 					"m_rgiszAmmo"  // int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+
 						"windows"   "1156"
 						"linux"     "1172"
 						"mac"       "1172"
@@ -49,6 +59,9 @@
 
 					"m_rgAmmo"  // int[32]
 					{
+						"type"      "integer"
+						"size"      "32"
+
 						"windows"   "1284"
 						"linux"     "1300"
 						"mac"       "1300"
@@ -56,6 +69,8 @@
 
 					"m_cAmmoTypes"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1412"
 						"linux"     "1428"
 						"mac"       "1428"

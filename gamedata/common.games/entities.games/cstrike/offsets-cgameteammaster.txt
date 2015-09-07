@@ -21,6 +21,8 @@
 				{
 					"m_teamIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"
@@ -28,6 +30,8 @@
 
 					"triggerType"  // USE_TYPE
 					{
+						"type"      "integer"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"

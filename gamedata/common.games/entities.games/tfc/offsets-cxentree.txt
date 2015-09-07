@@ -21,6 +21,8 @@
 				{
 					"m_pTrigger"  // CXenTreeTrigger*
 					{
+						"type"      "classptr"
+
 						"windows"   "1156"
 						"linux"     "1172"
 						"mac"       "1172"

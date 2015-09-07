@@ -21,6 +21,9 @@
 				{
 					"m_usTripFire"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"

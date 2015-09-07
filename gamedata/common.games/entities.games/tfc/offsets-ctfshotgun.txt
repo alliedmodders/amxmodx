@@ -21,6 +21,8 @@
 				{
 					"m_iShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1252"
 						"linux"     "1268"
 						"mac"       "1268"
@@ -28,6 +30,8 @@
 
 					"m_iShellsReloaded"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1256"
 						"linux"     "1272"
 						"mac"       "1272"
@@ -35,6 +39,8 @@
 
 					"m_iMaxClipSize"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "1260"
 						"linux"     "1276"
 						"mac"       "1276"
@@ -42,6 +48,9 @@
 
 					"m_usReloadShotgun"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1264"
 						"linux"     "1280"
 						"mac"       "1280"
@@ -49,6 +58,9 @@
 
 					"m_usPumpShotgun"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1266"
 						"linux"     "1282"
 						"mac"       "1282"
@@ -56,6 +68,9 @@
 
 					"m_usFireShotgun"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "1268"
 						"linux"     "1284"
 						"mac"       "1284"

@@ -21,6 +21,8 @@
 				{
 					"m_flNextFlinch"  // float
 					{
+						"type"      "float"
+
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"

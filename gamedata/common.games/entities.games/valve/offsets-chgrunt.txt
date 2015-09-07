@@ -21,6 +21,8 @@
 				{
 					"m_flNextGrenadeCheck"  // float
 					{
+						"type"      "float"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -28,6 +30,8 @@
 
 					"m_flNextPainTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -35,6 +39,8 @@
 
 					"m_flLastEnemySightTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
@@ -42,6 +48,8 @@
 
 					"m_vecTossVelocity"  // Vector
 					{
+						"type"      "vector"
+
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
@@ -49,6 +57,8 @@
 
 					"m_fThrowGrenade"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "740"
 						"linux"     "760"
 						"mac"       "760"
@@ -56,6 +66,8 @@
 
 					"m_fStanding"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
@@ -63,6 +75,8 @@
 
 					"m_fFirstEncounter"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "748"
 						"linux"     "768"
 						"mac"       "768"
@@ -70,6 +84,8 @@
 
 					"m_cClipSize"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"
@@ -77,6 +93,8 @@
 
 					"m_voicePitch"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "756"
 						"linux"     "776"
 						"mac"       "776"
@@ -84,6 +102,8 @@
 
 					"m_iBrassShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
@@ -91,6 +111,8 @@
 
 					"m_iShotgunShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "764"
 						"linux"     "784"
 						"mac"       "784"
@@ -98,6 +120,8 @@
 
 					"m_iSentence"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"

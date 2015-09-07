@@ -21,6 +21,8 @@
 				{
 					"m_flNextActiveTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "252"
 						"linux"     "272"
 						"mac"       "272"
@@ -28,6 +30,8 @@
 
 					"m_nCustomIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "256"
 						"linux"     "276"
 						"mac"       "276"
@@ -35,6 +39,8 @@
 
 					"m_iszCustomName"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "260"
 						"linux"     "280"
 						"mac"       "280"
@@ -42,6 +48,8 @@
 
 					"m_fIsActive"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "264"
 						"linux"     "284"
 						"mac"       "284"
@@ -49,6 +57,8 @@
 
 					"m_nLeft"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "268"
 						"linux"     "288"
 						"mac"       "288"
@@ -56,6 +66,8 @@
 
 					"m_nTop"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "272"
 						"linux"     "292"
 						"mac"       "292"
@@ -63,6 +75,8 @@
 
 					"m_nWidth"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "276"
 						"linux"     "296"
 						"mac"       "296"
@@ -70,6 +84,8 @@
 
 					"m_nHeight"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "280"
 						"linux"     "300"
 						"mac"       "300"

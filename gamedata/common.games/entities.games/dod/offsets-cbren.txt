@@ -21,6 +21,9 @@
 				{
 					"m_usFireBren"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "476"
 						"linux"     "492"
 						"mac"       "492"

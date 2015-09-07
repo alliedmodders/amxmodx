@@ -21,6 +21,8 @@
 				{
 					"m_hEntToIgnoreTouchesFrom"  // EHANDLE
 					{
+						"type"      "ehandle"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"
@@ -28,6 +30,8 @@
 
 					"m_flTimeToIgnoreTouches"  // float
 					{
+						"type"      "float"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"

@@ -21,6 +21,8 @@
 				{
 					"m_iszInTarget"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"
@@ -28,6 +30,8 @@
 
 					"m_iszOutTarget"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"
@@ -35,6 +39,8 @@
 
 					"m_iszInCount"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "148"
 						"linux"     "164"
 						"mac"       "164"
@@ -42,6 +48,8 @@
 
 					"m_iszOutCount"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "152"
 						"linux"     "168"
 						"mac"       "168"

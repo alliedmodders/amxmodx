@@ -21,6 +21,9 @@
 				{
 					"m_usFireM249"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -28,6 +31,8 @@
 
 					"m_flNextAnimTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -35,6 +40,8 @@
 
 					"m_iShell"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"
@@ -42,6 +49,8 @@
 
 					"m_iAlternatingEject"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "204"
 						"linux"     "220"
 						"mac"       "220"
@@ -49,6 +58,8 @@
 
 					"m_iLink"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "208"
 						"linux"     "224"
 						"mac"       "224"
@@ -56,6 +67,8 @@
 
 					"m_iSmoke"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "212"
 						"linux"     "228"
 						"mac"       "228"
@@ -63,6 +76,8 @@
 
 					"m_iFire"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "216"
 						"linux"     "232"
 						"mac"       "232"
@@ -70,6 +85,8 @@
 
 					"m_iReloading"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "220"
 						"linux"     "236"
 						"mac"       "236"
@@ -77,6 +94,8 @@
 
 					"m_flReloadStartTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "224"
 						"linux"     "240"
 						"mac"       "240"
@@ -84,6 +103,8 @@
 
 					"m_flReloadStart"  // float
 					{
+						"type"      "float"
+
 						"windows"   "228"
 						"linux"     "244"
 						"mac"       "244"

@@ -21,6 +21,8 @@
 				{
 					"g_GrenType"  // grenType
 					{
+						"type"      "integer"
+
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
@@ -28,6 +30,8 @@
 
 					"m_flClipTime"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "920"
 						"linux"     "940"
 						"mac"       "940"
@@ -35,6 +39,8 @@
 
 					"m_iOldMoveType"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "924"
 						"linux"     "944"
 						"mac"       "944"
@@ -42,6 +48,8 @@
 
 					"m_iBodyGibs"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "928"
 						"linux"     "948"
 						"mac"       "948"
@@ -49,6 +57,8 @@
 
 					"m_fRegisteredSound"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "932"
 						"linux"     "952"
 						"mac"       "952"

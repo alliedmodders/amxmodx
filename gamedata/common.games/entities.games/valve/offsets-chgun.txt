@@ -21,6 +21,8 @@
 				{
 					"m_flNextAnimTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "188"
 						"linux"     "204"
 						"mac"       "204"
@@ -28,6 +30,8 @@
 
 					"m_flRechargeTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -35,6 +39,8 @@
 
 					"m_iFirePhase"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -42,6 +48,9 @@
 
 					"m_usHornetFire"  // short unsigned int
 					{
+						"type"      "short"
+						"unsigned"  "1"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"

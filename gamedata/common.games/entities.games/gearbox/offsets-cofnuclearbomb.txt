@@ -21,6 +21,8 @@
 				{
 					"m_pTimer"  // COFNuclearBombTimer*
 					{
+						"type"      "classptr"
+
 						"windows"   "252"
 						"linux"     "272"
 						"mac"       "272"
@@ -28,6 +30,8 @@
 
 					"m_pButton"  // COFNuclearBombButton*
 					{
+						"type"      "classptr"
+
 						"windows"   "256"
 						"linux"     "276"
 						"mac"       "276"
@@ -35,6 +39,8 @@
 
 					"m_fOn"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "260"
 						"linux"     "280"
 						"mac"       "280"
@@ -42,6 +48,8 @@
 
 					"m_flLastPush"  // float
 					{
+						"type"      "float"
+
 						"windows"   "264"
 						"linux"     "284"
 						"mac"       "284"
@@ -49,6 +57,8 @@
 
 					"m_iPushCount"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "268"
 						"linux"     "288"
 						"mac"       "288"

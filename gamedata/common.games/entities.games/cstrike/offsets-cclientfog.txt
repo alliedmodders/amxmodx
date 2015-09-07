@@ -21,6 +21,8 @@
 				{
 					"m_iStartDist"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"
@@ -28,6 +30,8 @@
 
 					"m_iEndDist"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "140"
 						"linux"     "156"
 						"mac"       "156"
@@ -35,6 +39,8 @@
 
 					"m_fDensity"  // float
 					{
+						"type"      "float"
+
 						"windows"   "144"
 						"linux"     "160"
 						"mac"       "160"

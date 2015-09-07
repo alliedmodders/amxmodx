@@ -21,6 +21,8 @@
 				{
 					"m_iEnabled"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "336"
 						"linux"     "352"
 						"mac"       "352"
@@ -28,6 +30,8 @@
 
 					"m_triggerType"  // USE_TYPE
 					{
+						"type"      "integer"
+
 						"windows"   "340"
 						"linux"     "356"
 						"mac"       "356"
@@ -35,6 +39,8 @@
 
 					"m_sMaster"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "344"
 						"linux"     "360"
 						"mac"       "360"

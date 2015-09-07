@@ -21,6 +21,8 @@
 				{
 					"m_flFrameRate"  // float
 					{
+						"type"      "float"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"
@@ -28,6 +30,8 @@
 
 					"m_flGroundSpeed"  // float
 					{
+						"type"      "float"
+
 						"windows"   "108"
 						"linux"     "124"
 						"mac"       "124"
@@ -35,6 +39,8 @@
 
 					"m_flLastEventCheck"  // float
 					{
+						"type"      "float"
+
 						"windows"   "112"
 						"linux"     "128"
 						"mac"       "128"
@@ -42,6 +48,8 @@
 
 					"m_fSequenceFinished"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "116"
 						"linux"     "132"
 						"mac"       "132"
@@ -49,6 +57,8 @@
 
 					"m_fSequenceLoops"  // BOOL
 					{
+						"type"      "integer"
+
 						"windows"   "120"
 						"linux"     "136"
 						"mac"       "136"

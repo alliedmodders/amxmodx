@@ -21,6 +21,8 @@
 				{
 					"m_iTrail"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
@@ -28,6 +30,8 @@
 
 					"m_flIgniteTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
@@ -35,6 +39,8 @@
 
 					"m_velocity"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
@@ -42,6 +48,8 @@
 
 					"m_iSoundedOff"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"

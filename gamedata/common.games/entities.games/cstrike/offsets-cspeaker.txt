@@ -21,6 +21,8 @@
 				{
 					"m_preset"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "136"
 						"linux"     "152"
 						"mac"       "152"

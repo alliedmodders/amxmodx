@@ -21,6 +21,8 @@
 				{
 					"m_globalstate"  // string_t
 					{
+						"type"      "stringint"
+
 						"windows"   "96"
 						"linux"     "112"
 						"mac"       "112"
@@ -28,6 +30,8 @@
 
 					"m_triggermode"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "100"
 						"linux"     "116"
 						"mac"       "116"
@@ -35,6 +39,8 @@
 
 					"m_initialstate"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "104"
 						"linux"     "120"
 						"mac"       "120"

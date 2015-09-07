@@ -21,6 +21,8 @@
 				{
 					"m_flDamageTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "192"
 						"linux"     "208"
 						"mac"       "208"
@@ -28,6 +30,8 @@
 
 					"m_shootTime"  // float
 					{
+						"type"      "float"
+
 						"windows"   "196"
 						"linux"     "212"
 						"mac"       "212"
@@ -35,6 +39,8 @@
 
 					"m_pBeam"  // CBeam*
 					{
+						"type"      "classptr"
+
 						"windows"   "200"
 						"linux"     "216"
 						"mac"       "216"
@@ -42,6 +48,8 @@
 
 					"m_pTip"  // CGrappleTip*
 					{
+						"type"      "classptr"
+
 						"windows"   "204"
 						"linux"     "220"
 						"mac"       "220"
@@ -49,6 +57,8 @@
 
 					"m_fireState"  // enum GRAPPLE_FIRESTATE
 					{
+						"type"      "integer"
+
 						"windows"   "208"
 						"linux"     "224"
 						"mac"       "224"
@@ -56,6 +66,8 @@
 
 					"m_MomentaryStuck"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "212"
 						"linux"     "228"
 						"mac"       "228"
@@ -63,6 +75,8 @@
 
 					"m_TipIndex"  // int
 					{
+						"type"      "integer"
+
 						"windows"   "216"
 						"linux"     "232"
 						"mac"       "232"
@@ -70,6 +84,8 @@
 
 					"m_bMissed"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "220"
 						"linux"     "236"
 						"mac"       "236"
@@ -77,6 +93,8 @@
 
 					"m_bGrappling"  // bool
 					{
+						"type"      "boolean"
+
 						"windows"   "221"
 						"linux"     "237"
 						"mac"       "237"

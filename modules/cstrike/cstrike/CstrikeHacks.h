@@ -25,6 +25,7 @@ void InitGlobalVars();
 void ShutdownHacks();
 void ToggleDetour_ClientCommands(bool enable);
 void ToggleDetour_BuyCommands(bool enable);
+void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch);
 
 extern AMX_NATIVE_INFO CstrikeNatives[];
 

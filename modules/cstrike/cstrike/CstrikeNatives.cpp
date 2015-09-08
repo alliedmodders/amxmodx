@@ -1358,7 +1358,13 @@ static cell AMX_NATIVE_CALL cs_set_user_zoom(AMX *amx, cell *params)
 	int mode = params[3];
 	int weapon = *static_cast<int *>(MF_PlayerPropAddr(index, Player_CurrentWeapon));
 
-	Players[index].ResetZoom();
+	CPlayer& player = Players[index];
+
+	if (player.GetZoom())
+	{
+		DisableMessageHooks();
+		player.ResetZoom();
+	}
 
 	if (type == CS_RESET_ZOOM)
 	{
@@ -1406,7 +1412,7 @@ static cell AMX_NATIVE_CALL cs_set_user_zoom(AMX *amx, cell *params)
 
 	if (!mode)
 	{
-		Players[index].SetZoom(value);
+		player.SetZoom(value);
 		EnableMessageHooks();
 	}
 

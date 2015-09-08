@@ -93,6 +93,12 @@ void OnServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 	DisableMessageHooks();
 }
 
+void OnPluginsUnloaded()
+{
+	// Force to disable all hooks at map change.
+	DisableMessageHooks(true);
+}
+
 void OnAmxxDetach()
 {
 	ConfigManager->RemoveUserConfigHook("CommandsAliases", &ItemsManager);

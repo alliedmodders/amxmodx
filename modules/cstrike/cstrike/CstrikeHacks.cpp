@@ -40,10 +40,11 @@ GetWeaponInfoFunc           GetWeaponInfo;
 int CurrentItemId;
 bool TriggeredFromCommand;
 
-StringHashMap<int> ItemAliasList;
+// m_iTeam and m_iMenu from CBasePlayer.
 TypeDescription TeamDesc;
 TypeDescription MenuDesc;
 
+// Engine global variables.
 server_static_t *ServerStatic;
 server_t *Server;
 
@@ -80,16 +81,6 @@ const char *CMD_ARGV(int i)
 	return g_engfuncs.pfnCmd_Argv(i);
 }
 
-void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch)
-{
-	// If shield is blocked with CS_OnBuy, we need to block the pickup sound ("items/gunpickup2.wav")
-	// as well played right after. Why this sound is not contained in GiveShield()?
-
-	g_pengfuncsTable->pfnEmitSound = nullptr;
-
-	RETURN_META(MRES_SUPERCEDE);
-}
-
 DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientCommand(edict_t *pEntity)
 {
 	const char *command = CMD_ARGV(0);
@@ -97,7 +88,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 	CurrentItemId = CSI_NONE;
 
 	// Purpose is to retrieve an item id based on alias name or selected item from menu,
-	// to be used in OnBuy* forwards.
+	// to be used in CS_OnBuy* forwards.
 	if ((ForwardOnBuyAttempt != -1 || ForwardOnBuy != -1) && command && *command)
 	{
 		int itemId = CSI_NONE;
@@ -179,7 +170,40 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 		return;
 	}
 
+	// CS_OnBuy()
+	// -
+	// This forward should be called right before game gives the item.
+	// All items except shield, defuser and nvgs, games executes in the following order:
+	//   GiveNamedItem -> AddAccount
+	//   Forward is fired on GiveNamedItem.
+	// Shield only:
+	//   GiveShield -> AddAccount -> EmitSound
+	//   Forward is fired on GiveShield.
+	// Defusal kit only:
+	//   m_bHasDefuser(true) -> StatusIcon -> pev_body(1) -> AddAccount -> EmitSound -> ItemStatus
+	//   Forward is fired on StatusIcon.
+	// Nightvision only:
+	//   EmitSound -> m_bHasNightVision(true) -> AddAccount -> ItemStatus
+	//   Forward is fired on EmitSound.
+
 	TriggeredFromCommand = CurrentItemId != CSI_NONE;
+
+	if (TriggeredFromCommand)
+	{
+		if (CurrentItemId == CSI_NVGS)
+		{
+			g_pengfuncsTable->pfnEmitSound = OnEmitSound;
+		}
+		else if (CurrentItemId == CSI_DEFUSER)
+		{
+			GET_OFFSET_NO_ERROR("CBasePlayer", m_bHasDefuser);
+
+			if (!get_pdata<bool>(pEdict, m_bHasDefuser))
+			{
+				EnableMessageHooks();
+			}
+		}
+	}
 
 	DETOUR_STATIC_CALL(C_ClientCommand)(pEdict);
 
@@ -201,6 +225,69 @@ edict_s* OnCreateNamedEntity(int classname)
 	}
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
+}
+
+void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch)
+{
+	if (TriggeredFromCommand)
+	{
+		switch (CurrentItemId)
+		{
+			case CSI_NVGS:
+			{
+				auto client = ENTINDEX(entity);
+
+				if (!MF_IsPlayerAlive(client) || MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), CSI_NVGS) <= 0)
+				{
+					g_pengfuncsTable->pfnEmitSound = nullptr;
+					RETURN_META(MRES_IGNORED);
+				}
+			}
+			case CSI_DEFUSER:
+			case CSI_SHIELD:
+			{
+				g_pengfuncsTable->pfnEmitSound = nullptr;
+				RETURN_META(MRES_SUPERCEDE);
+			}
+		}
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
+bool OnMessageItemStatus(edict_t *pPlayer)
+{
+	if (TriggeredFromCommand && (CurrentItemId == CSI_DEFUSER || CurrentItemId == CSI_NVGS))
+	{
+		if (!g_pengfuncsTable->pfnEmitSound)
+		{
+			return true; // Block message
+		}
+
+		DisableMessageHooks();
+	}
+
+	return false;
+}
+
+bool OnMessageStatusIcon(edict_t *pPlayer)
+{
+	if (TriggeredFromCommand && CurrentItemId == CSI_DEFUSER)
+	{
+		auto client = ENTINDEX(pPlayer);
+
+		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), CSI_DEFUSER) > 0)
+		{
+			GET_OFFSET_NO_ERROR_RET("CBasePlayer", m_bHasDefuser);
+			set_pdata<bool>(pPlayer, m_bHasDefuser, false);
+
+			return true; // Block message
+		}
+
+		DisableMessageHooks();
+	}
+
+	return false;
 }
 
 DETOUR_DECL_MEMBER0(GiveDefaultItems, void)  // void CBasePlayer::GiveDefaultItems(void)
@@ -234,11 +321,11 @@ DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlay
 
 DETOUR_DECL_MEMBER1(GiveShield, void, bool, bRetire) // void CBasePlayer::GiveShield(bool bRetire)
 {
-	if (TriggeredFromCommand && CurrentItemId == CSI_SHIELDGUN)
+	if (TriggeredFromCommand && CurrentItemId == CSI_SHIELD)
 	{
 		int client = TypeConversion.cbase_to_id(this);
 
-		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), CSI_SHIELDGUN) > 0)
+		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), CSI_SHIELD) > 0)
 		{
 			// If shield blocked, we need to hook EmitSound to block pickup sound played right after.
 			g_pengfuncsTable->pfnEmitSound = OnEmitSound;
@@ -256,9 +343,26 @@ DETOUR_DECL_MEMBER2(AddAccount, void, int, amount, bool, bTrackChange) // void C
 {
 	if (TriggeredFromCommand)
 	{
-		if (CurrentItemId == CSI_NONE)
+		switch (CurrentItemId)
 		{
-			return;
+			case CSI_DEFUSER:
+			{
+				G_HL_TypeConversion.cbase_to_entvar(this)->body = 0;
+				g_pengfuncsTable->pfnEmitSound = OnEmitSound; // To block pickup sound.
+				EnableMessageHooks(); // To block ItemStatus
+				break;
+			}
+			case CSI_NVGS:
+			{
+				GET_OFFSET_NO_ERROR("CBasePlayer", m_bHasNightVision);
+				set_pdata<bool>(G_HL_TypeConversion.cbase_to_edict(this), m_bHasNightVision, false);
+				EnableMessageHooks(); // To block ItemStatus
+				break;
+			}
+			case CSI_NONE:
+			{
+				return;
+			}
 		}
 	}
 

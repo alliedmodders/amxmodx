@@ -16,6 +16,11 @@
 
 edict_t *g_player_edicts[33]; // Used for INDEXENT() forward.
 
+IGameConfig *CommonConfig;
+IGameConfigManager *ConfigManager;
+
+HLTypeConversion TypeConversion;
+
 void OnAmxxAttach()
 {
 	initialze_offsets();
@@ -33,6 +38,25 @@ void OnAmxxAttach()
 	g_kvd_glb.kvd.szKeyName = const_cast<char *>(g_kvd_glb.key.chars());
 	g_kvd_glb.kvd.szValue = const_cast<char *>(g_kvd_glb.val.chars());
 	g_kvd_glb.kvd.fHandled = 0;
+
+	ConfigManager = MF_GetConfigManager();
+
+	char error[256];
+	error[0] = '\0';
+
+	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)) && error[0] != '\0')
+	{
+		MF_Log("Could not read common.games gamedata: %s", error);
+		MF_Log("get/set/find_ent_data* natives have been disabled");
+		return;
+	}
+
+	MF_AddNatives(pdata_gc_natives);
+}
+
+void OnPluginsLoaded()
+{
+	TypeConversion.init();
 }
 
 extern CStack<TraceResult *> g_FreeTRs;

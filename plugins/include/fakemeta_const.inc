@@ -753,3 +753,41 @@ enum AlertType
 	at_error,
 	at_logged		// Server print to console (only in multiplayer games)
 };
+
+/**
+ * Data field types for use with find_ent_data_info().
+ */
+enum FieldType
+{
+	FIELD_NONE,
+	FIELD_FLOAT,        // Floating point value
+	FIELD_STRINGINT,    // String ID (return from ALLOC_STRING)
+	FIELD_STRINGPTR,    // String, pointer-to-char
+	FIELD_STRING,       // String, fixed size
+	FIELD_CLASSPTR,     // Classes pointer derived of CBaseEntity
+	FIELD_CLASS,        // Arbitrary classes, direct
+	FIELD_STRUCTURE,    // Arbitrary structures, direct
+	FIELD_EHANDLE,      // Entity handle
+	FIELD_ENTVARS,      // entvars_t*
+	FIELD_EDICT,        // edict_t*
+	FIELD_VECTOR,       // Vector
+	FIELD_POINTER,      // Arbitrary data pointer
+	FIELD_INTEGER,      // Integer or enum
+	FIELD_FUNCTION,     // Class function pointer (Think, Use, etc)
+	FIELD_BOOLEAN,      // Boolean
+	FIELD_SHORT,        // 2 bytes integer
+	FIELD_CHARACTER,    // 1 byte
+};
+
+/**
+ * Base data field types for use with get_ent_data_basetype().
+ */
+enum BaseFieldType
+{
+	BASEFIELD_NONE,
+	BASEFIELD_INTEGER,
+	BASEFIELD_FLOAT,
+	BASEFIELD_VECTOR,
+	BASEFIELD_ENTITY,
+	BASEFIELD_STRING,
+};

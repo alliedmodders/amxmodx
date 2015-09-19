@@ -557,11 +557,350 @@ native lookup_sequence(entity, const name[], &Float:framerate = 0.0, &bool:loops
  */
 native Float:set_controller(entity, controller, Float:value);
 
+/**
+ * Retrieves an integer value from an entity's private data based off a class
+ * and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ * @note This native is used to access the following (C++/engine) data types:
+ *       integer, boolean, short, character, pointer, structure, class,
+ *       stringint and function. Unsigned variants (if applicable) are supported
+ *       and will be converted automatically.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @return          Integer value
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native any:get_ent_data(entity, const class[], const member[], element = 0);
+
+/**
+ * Sets an integer value to an entity's private data based off a class
+ * and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ * @note This native is used to access the following (C++/engine) data types:
+ *       integer, boolean, short, character, pointer, stringint and function. 
+ *       Unsigned variants (if applicable) are supported and will be converted
+ *       automatically.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Value to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native set_ent_data(entity, const class[], const member[], any:value, element = 0);
+
+/**
+ * Retrieves a float value from an entity's private data based off a class
+ * and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @return          Float value
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native Float:get_ent_data_float(entity, const class[], const member[], element = 0);
+
+/**
+ * Sets a float value to an entity's private data based off a class
+ * and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Value to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native set_ent_data_float(entity, const class[], const member[], Float:value, element = 0);
+
+/**
+ * Retrieves a vector from an entity's private data based off a class and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Vector buffer to store data in
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native get_ent_data_vector(entity, const class[], const member[], Float:value[3], element = 0);
+
+/**
+ * Sets a vector to an entity's private data based off a class and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Vector to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native set_ent_data_vector(entity, const class[], const member[], Float:value[3], element = 0);
+
+/**
+ * Retrieves an entity index from an entity's private data based off a class
+ * and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ * @note This native is used to access the following (C++/engine) data types:
+ *       classptr, entvars, edict and ehandle.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @return          Entity index if found, -1 otherwise
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native get_ent_data_entity(entity, const class[], const member[], element = 0);
+
+/**
+ * Sets an entity index to an entity's private data based off a class
+ * and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ * @note This native is used to access the following (C++/engine) data types:
+ *       classptr, entvars, edict and ehandle.
+ * @note Pass -1 as value to act as C++ NULL.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Entity index to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If an invalid entity or value is provided, either class or member
+ *                  is empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native set_ent_data_entity(entity, const class[], const member[], value, element = 0);
+
+/**
+ * Retrieves a string from an entity's private data based off a class and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ * @note This native is used to access the following (C++/engine) data types:
+ *       string, stringptr.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Buffer to store data in
+ * @param maxlen    Maximum size of the buffer
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @return          Number of cells written to buffer
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native get_ent_data_string(entity, const class[], const member[], value[], maxlen, element = 0);
+
+/**
+ * Sets a string to an entity's private data based off a class and member name.
+ *
+ * @note Unlike the [get|set]_pdata_* natives that require compiling the class
+ *       member offset into the plugin, this native instead retrieves the
+ *       necessary offset from the AMXX gamedata files at runtime, based on the
+ *       provided class and member name.
+ * @note This native is safer than [get|set]_pdata_* as it can perform stricter
+ *       offset and typing checks.
+ * @note This native is used to access the following (C++/engine) data types:
+ *       string, stringptr.
+ *
+ * @param entity    Entity index
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     String to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @return          Number of cells written to buffer
+ * @error           If an invalid entity is provided, either class or member is
+ *                  empty, no offset is found or an invalid offset is retrieved,
+ *                  or the data type does not match, an error will be thrown.
+ */
+native set_ent_data_string(entity, const class[], const member[], const value[], element = 0);
+
+/**
+ * Retrieves the size of array of a class member.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ *
+ * @return          Size of array (in elements), otherwise 1 if member is not an array
+ * @error           If either class or member is empty, no offset is found or an invalid
+ *                  offset is retrieved, an error will be thrown.
+ */
+native get_ent_data_size(const class[], const member[]);
+
+/**
+ * Finds an offset based off a class and member name.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param type      Optional variable to store member type in (FIELD_* constants)
+ * @param arraysize Optional variable to store array size in, if member is an array
+ * @param unsigned  Optional variable to store whether member is unsigned (short and char types only)
+ *
+ * @return          Class member offset
+ * @error           If either class or member is empty, no offset is found or an invalid
+ *                  offset is retrieved, an error will be thrown.   
+ */
+native find_ent_data_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
+
+/**
+ * Returns the data field base type based off a specific field type.
+ *
+ * @note From an AMXX plugin perspective, the (C++/engine) data types can be grouped
+ *       in five base types: integer, float, vector, entity and string. This stock is
+ *       essentially for convenience and debug purpose.
+ *
+ * @param type      Class member type (FIELD_* constants)
+ * @param type_name Optional buffer to store base type name in
+ * @param maxlen    Maximum size of the buffer
+ *
+ * @return          Base field type (BASEFIELD_* constants)
+ */
+stock BaseFieldType:get_ent_data_basetype(FieldType:type, type_name[] = "", maxlen = 0)
+{
+	static baseFieldTypeNames[BaseFieldType][] =
+	{
+		"none",
+		"integer",
+		"float",
+		"vector",
+		"entity",
+		"string",
+	};
+
+	new BaseFieldType:baseType = BASEFIELD_NONE;
+
+	switch (type)
+	{
+		case FIELD_INTEGER, FIELD_STRINGINT, FIELD_SHORT  , FIELD_CHARACTER,
+			 FIELD_CLASS  , FIELD_STRUCTURE, FIELD_POINTER, FIELD_FUNCTION,
+			 FIELD_BOOLEAN:
+		{
+			baseType = BASEFIELD_INTEGER;
+		}
+		case FIELD_FLOAT:
+		{
+			baseType = BASEFIELD_FLOAT;
+		}
+		case FIELD_VECTOR:
+		{
+			baseType = BASEFIELD_VECTOR;
+		}
+		case FIELD_CLASSPTR, FIELD_ENTVARS, FIELD_EDICT, FIELD_EHANDLE:
+		{
+			baseType = BASEFIELD_ENTITY;
+		}
+		case FIELD_STRINGPTR, FIELD_STRING:
+		{
+			baseType = BASEFIELD_STRING;
+		}
+	}
+
+	if (maxlen > 0)
+	{
+		copy(type_name, maxlen, baseFieldTypeNames[baseType]);
+	}
+
+	return baseType;
+}
+
 
 enum
 {
-    Model_DefaultSize     = -2,
-    Model_CurrentSequence = -1,
+	Model_DefaultSize     = -2,
+	Model_CurrentSequence = -1,
 };
 
 /**

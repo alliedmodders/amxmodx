@@ -54,7 +54,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FAKEMETA_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -77,7 +77,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk; ..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl\include;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FAKEMETA_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -103,12 +103,14 @@
     <ClCompile Include="..\pdata.cpp" />
     <ClCompile Include="..\dllfunc.cpp" />
     <ClCompile Include="..\engfunc.cpp" />
+    <ClCompile Include="..\pdata_gc.cpp" />
     <ClCompile Include="..\pev.cpp" />
     <ClCompile Include="..\forward.cpp" />
     <ClCompile Include="..\glb.cpp" />
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\public\HLTypeConversion.h" />
     <ClInclude Include="..\fakemeta_amxx.h" />
     <ClInclude Include="..\fm_tr.h" />
     <ClInclude Include="..\dllfunc.h" />

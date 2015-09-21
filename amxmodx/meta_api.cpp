@@ -32,6 +32,7 @@
 #include <engine_strucs.h>
 #include <CDetour/detours.h>
 #include "CoreConfig.h"
+#include "logger.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -412,6 +413,7 @@ int	C_Spawn(edict_t *pent)
 	DataPackHandles.clear();
 	TextParsersHandles.clear();
 	GameConfigHandle.clear();
+	LoggerHandles.clear();
 
 	char map_pluginsfile_path[256];
 	char prefixed_map_pluginsfile[256];

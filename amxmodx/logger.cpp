@@ -4,8 +4,9 @@
 #include <am-string.h>
 
 #include "amxmodx.h"
-#include "modules.h"
 #include "CLang.h"
+#include "debugger.h"
+#include "modules.h"
 #include "logger.h"
 
 //#define SHOW_PARSER_DEBUGGING
@@ -334,8 +335,6 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 		return;
 	}
 
-	const char *function = "function";
-
 	time_t td;
 	time(&td);
 	tm* curTime = localtime(&td);
@@ -354,6 +353,14 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 	va_end(arglst);
 
 	const char* severityStr = VERBOSITY[toIndex(severity)];
+
+	Debugger *pDebugger = (Debugger*)amx->userdata[UD_DEBUGGER];
+	if (printStackTrace) {
+		amx->error = AMX_ERR_GENERAL;
+		pDebugger->SetTracedError(amx->error);
+	}
+
+	const char *function = "function";
 
 	static char pluginName[64];
 	strcpy(pluginName, plugin->getName());
@@ -410,7 +417,7 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 		build_pathname_and_mkdir_r(fullPath, sizeof fullPath - 1, "%s/%s.log", amxxLogsDir, fileName);
 	}
 
-	FILE *pF = NULL;
+	FILE *pF = nullptr;
 	pF = fopen(fullPath, "a+");
 	if (pF) {
 		fprintf(pF, formattedMessage);
@@ -424,7 +431,8 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 	print_srvconsole(formattedMessage);
 
 	if (printStackTrace) {
-		amx->userdata[UD_DEBUGGER];
+		pDebugger->DisplayTrace(nullptr);
+		amx->error = -1;
 	}
 }
 

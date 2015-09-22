@@ -140,7 +140,7 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 
 	int temp;
 #ifdef SHOW_PARSER_DEBUGGING
-	MF_PrintSrvConsole("c=%c\n", *c);
+	print_srvconsole("c=%c\n", *c);
 #endif
 	c++;
 	switch (*c) {
@@ -148,7 +148,7 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 		return false;
 	case '-':
 #ifdef SHOW_PARSER_DEBUGGING
-		MF_PrintSrvConsole("- c=%c\n", *c);
+		print_srvconsole("- c=%c\n", *c);
 #endif
 		lJustify = true;
 		c++;
@@ -158,14 +158,14 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 	case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9':
 #ifdef SHOW_PARSER_DEBUGGING
-		MF_PrintSrvConsole("# c=%c", *c);
+		print_srvconsole("# c=%c", *c);
 #endif
 		if (0 <= (temp = *c - '0') && temp <= 9) {
 			width = temp;
 			c++;
 			while (0 <= (temp = *c - '0') && temp <= 9) {
 #ifdef SHOW_PARSER_DEBUGGING
-				MF_PrintSrvConsole("\n# c=%c", *c);
+				print_srvconsole("\n# c=%c", *c);
 #endif
 				width *= 10;
 				width += temp;
@@ -174,12 +174,12 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 		}
 		else {
 #ifdef SHOW_PARSER_DEBUGGING
-			MF_PrintSrvConsole("; next");
+			print_srvconsole("; next");
 #endif
 		}
 
 #ifdef SHOW_PARSER_DEBUGGING
-		MF_PrintSrvConsole(";\n");
+		print_srvconsole(";\n");
 #endif
 
 		if (*c == '\0') {
@@ -187,19 +187,19 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 		}
 	case '.':
 #ifdef SHOW_PARSER_DEBUGGING
-		MF_PrintSrvConsole(". c=%c", *c);
+		print_srvconsole(". c=%c", *c);
 #endif
 		if (*c == '.') {
 			c++;
 			if (0 <= (temp = *c - '0') && temp <= 9) {
 #ifdef SHOW_PARSER_DEBUGGING
-				MF_PrintSrvConsole("\n# c=%c", *c);
+				print_srvconsole("\n# c=%c", *c);
 #endif
 				precision = temp;
 				c++;
 				while (0 <= (temp = *c - '0') && temp <= 9) {
 #ifdef SHOW_PARSER_DEBUGGING
-					MF_PrintSrvConsole("\n# c=%c", *c);
+					print_srvconsole("\n# c=%c", *c);
 #endif
 					precision *= 10;
 					precision += temp;
@@ -212,12 +212,12 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 		}
 		else {
 #ifdef SHOW_PARSER_DEBUGGING
-			MF_PrintSrvConsole("; next");
+			print_srvconsole("; next");
 #endif
 		}
 
 #ifdef SHOW_PARSER_DEBUGGING
-		MF_PrintSrvConsole(";\n");
+		print_srvconsole(";\n");
 #endif
 
 		if (*c == '\0') {
@@ -226,7 +226,7 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 	case 'd': case 'f': case 'i': case 'l': case 'm':
 	case 'n': case 's': case 't': case '%':
 #ifdef SHOW_PARSER_DEBUGGING
-		MF_PrintSrvConsole("s c=%c\n", *c);
+		print_srvconsole("s c=%c\n", *c);
 #endif
 		switch (*c) {
 		case 'd': case 'f': case 'i': case 'l': case 'm':
@@ -250,17 +250,17 @@ int parseLoggerString(const char *format,
 	const char *mapname) {
 
 #ifdef SHOW_LOG_STRING_BUILDER
-	MF_PrintSrvConsole("FORMAT: %s\n", format);
+	print_srvconsole("FORMAT: %s\n", format);
 #endif
 
 	int offset = 0;
-	char specifier;
-	bool lJustify;
-	int len, width, precision;
+	char specifier = ' ';
+	bool lJustify = false;
+	int len, width = -1, precision = -1;
 	const char *c = format;
 	for (; *c != '\0'; c++) {
 #ifdef SHOW_LOG_STRING_BUILDER
-		MF_PrintSrvConsole("->%s|%s\n", buffer, c);
+		print_srvconsole("->%s|%s\n", buffer, c);
 #endif
 		if (*c != '%') {
 			strncpyc(buffer + offset, *c, bufferLen - offset);
@@ -268,7 +268,8 @@ int parseLoggerString(const char *format,
 			continue;
 		}
 
-		assert(parseFormat(c, specifier, lJustify, width, precision));
+		bool result = parseFormat(c, specifier, lJustify, width, precision);
+		assert(result);
 		switch (specifier) {
 		case 'd': len = strncpys(buffer + offset, date, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
 		case 'f': len = strncpys(buffer + offset, function, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
@@ -293,7 +294,7 @@ int parseLoggerString(const char *format,
 	}
 
 #ifdef SHOW_LOG_STRING_BUILDER
-	MF_PrintSrvConsole("->%s|%s\n", buffer, c);
+	print_srvconsole("->%s|%s\n", buffer, c);
 #endif
 	strncpyc(buffer + offset, '\0', bufferLen - offset);
 	return offset;
@@ -330,8 +331,7 @@ char* build_pathname_and_mkdir_r(char *buffer, size_t maxlen, const char *fmt, .
 }
 
 void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const char* msgFormat, ...) const {
-	CPluginMngr::CPlugin *plugin = (CPluginMngr::CPlugin*)amx->userdata[UD_FINDPLUGIN];
-	if (!plugin->isDebug() && (severity < Logger::getAllVerbosity() || severity < getVerbosity())) {
+	if ((severity < Logger::getAllVerbosity() || severity < getVerbosity())) {
 		return;
 	}
 
@@ -354,14 +354,15 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 
 	const char* severityStr = VERBOSITY[toIndex(severity)];
 
-	Debugger *pDebugger = (Debugger*)amx->userdata[UD_DEBUGGER];
+	/*Debugger *pDebugger = (Debugger*)amx->userdata[UD_DEBUGGER];
 	if (printStackTrace) {
-		amx->error = AMX_ERR_GENERAL;
+		amx->error = AMX_ERR_NATIVE;
 		pDebugger->SetTracedError(amx->error);
-	}
+	}*/
 
 	const char *function = "function";
 
+	CPluginMngr::CPlugin *plugin = (CPluginMngr::CPlugin*)amx->userdata[UD_FINDPLUGIN];
 	static char pluginName[64];
 	strcpy(pluginName, plugin->getName());
 	*strrchr(pluginName, '.') = '\0';
@@ -417,7 +418,8 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 		build_pathname_and_mkdir_r(fullPath, sizeof fullPath - 1, "%s/%s.log", amxxLogsDir, fileName);
 	}
 
-	FILE *pF = nullptr;
+	print_srvconsole("PATH=%s\n", fullPath);
+	FILE *pF = NULL;
 	pF = fopen(fullPath, "a+");
 	if (pF) {
 		fprintf(pF, formattedMessage);
@@ -430,10 +432,10 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 
 	print_srvconsole(formattedMessage);
 
-	if (printStackTrace) {
-		pDebugger->DisplayTrace(nullptr);
+	/*if (printStackTrace) {
+		pDebugger->DisplayTrace(NULL);
 		amx->error = -1;
-	}
+	}*/
 }
 
 bool isValidLoggerFormat(const char *str, int &percentLoc, int &errorLoc) {

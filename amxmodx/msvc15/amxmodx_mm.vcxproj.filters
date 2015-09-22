@@ -606,6 +606,15 @@
     <None Include="..\..\plugins\include\gameconfig.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\plugins\include\logger.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\logger_const.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\logger_stocks.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Object Include="..\Jit\helpers-x86.obj">

@@ -24,19 +24,22 @@
 
 class Logger {
 private:
-	static int m_AllVerbosity;
+	static int m_MinLoggableVerbosity;
 
 public:
-	static int getAllVerbosity() {
-		return m_AllVerbosity;
+	static int getMinLoggableVerbosity() {
+		return m_MinLoggableVerbosity;
 	};
 
-	static int setAllVerbosity(int verbosity) {
+	static int setMinLoggableVerbosity(int verbosity) {
 		assert(LOG_SEVERITY_NONE <= verbosity);
-		int oldVerbosity = m_AllVerbosity;
-		m_AllVerbosity = verbosity;
+		int oldVerbosity = m_MinLoggableVerbosity;
+		m_MinLoggableVerbosity = verbosity;
 		return oldVerbosity;
 	};
+
+public:
+	static void onMapChange();
 
 private:
 	int m_Verbosity;
@@ -45,20 +48,23 @@ private:
 	ke::AString m_pDateFormat;
 	ke::AString m_pTimeFormat;
 	ke::AString m_pPathFormat;
+	ke::AString m_pTraceFormat;
 
 public:
 	Logger(int verbosity,
-				const char* nameFormat,
-				const char* messageFormat,
-				const char* dateFormat,
-				const char* timeFormat,
-				const char* pathFormat)
+				const char *nameFormat,
+				const char *messageFormat,
+				const char *dateFormat,
+				const char *timeFormat,
+				const char *pathFormat,
+				const char *traceFormat)
 			: 
 				m_pNameFormat(nameFormat),
 				m_pMessageFormat(messageFormat),
 				m_pDateFormat(dateFormat),
 				m_pTimeFormat(timeFormat),
-				m_pPathFormat(pathFormat) {
+				m_pPathFormat(pathFormat),
+				m_pTraceFormat(traceFormat) {
 		m_Verbosity = max(LOG_SEVERITY_NONE, verbosity);
 	};
 
@@ -80,6 +86,9 @@ public:
 
 	const char* getPathFormat() const;
 	void setPathFormat(const char* pathFormat);
+
+	const char* getTraceFormat() const;
+	void setTraceFormat(const char* traceFormat);
 
 	void log(AMX* amx, const int severity, const bool printStackTrace, const char* format, ...) const;
 };

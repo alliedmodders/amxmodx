@@ -11,6 +11,8 @@
 
 //#define SHOW_PARSER_DEBUGGING
 //#define SHOW_LOG_STRING_BUILDER
+//#define SHOW_LOG_PATH
+//#define SHOW_LOGGER_DETAILS
 #define INVALID_LOGGER  0
 #define ALL_LOGGERS    -1
 
@@ -41,7 +43,7 @@ int toIndex(int severity) {
 	}
 }
 
-int Logger::m_AllVerbosity = LOG_SEVERITY_LOWEST;
+int Logger::m_MinLoggableVerbosity = LOG_SEVERITY_LOWEST;
 
 int Logger::getVerbosity() const {
 	return m_Verbosity;
@@ -91,6 +93,14 @@ const char* Logger::getPathFormat() const {
 
 void Logger::setPathFormat(const char* pathFormat) {
 	m_pPathFormat = pathFormat;
+}
+
+const char* Logger::getTraceFormat() const {
+	return m_pTraceFormat.chars();
+}
+
+void Logger::setTraceFormat(const char* traceFormat) {
+	m_pTraceFormat = traceFormat;
 }
 
 int strncpys(char *destination, const char *source, int len) {
@@ -224,13 +234,15 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 			return false;
 		}
 	case 'd': case 'f': case 'i': case 'l': case 'm':
-	case 'n': case 's': case 't': case '%':
+	case 'n': case 'p': case 's': case 't': case 'v':
+	case '%':
 #ifdef SHOW_PARSER_DEBUGGING
 		print_srvconsole("s c=%c\n", *c);
 #endif
 		switch (*c) {
 		case 'd': case 'f': case 'i': case 'l': case 'm':
-		case 'n': case 's': case 't': case '%':
+		case 'n': case 'p': case 's': case 't': case 'v':
+		case '%':
 			specifier = *c;
 			return true;
 		}
@@ -245,9 +257,11 @@ int parseLoggerString(const char *format,
 	const char *message,
 	const char *time,
 	const char *severity,
+	const char *script,
 	const char *plugin,
 	const char *function,
-	const char *mapname) {
+	const char *mapname,
+	const char *line) {
 
 #ifdef SHOW_LOG_STRING_BUILDER
 	print_srvconsole("FORMAT: %s\n", format);
@@ -274,11 +288,13 @@ int parseLoggerString(const char *format,
 		case 'd': len = strncpys(buffer + offset, date, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
 		case 'f': len = strncpys(buffer + offset, function, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
 		case 'i': len = strncpys(buffer + offset, MapCounter, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'l': len = strncpys(buffer + offset, message, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+		case 'l': len = strncpys(buffer + offset, line, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
 		case 'm': len = strncpys(buffer + offset, mapname, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'n': len = strncpys(buffer + offset, plugin, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 's': len = strncpys(buffer + offset, severity, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+		case 'n': len = strncpys(buffer + offset, script, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+		case 'p': len = strncpys(buffer + offset, plugin, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+		case 's': len = strncpys(buffer + offset, message, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
 		case 't': len = strncpys(buffer + offset, time, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+		case 'v': len = strncpys(buffer + offset, severity, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
 		case '%': len = strncpyc(buffer + offset, '%', precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
 		}
 
@@ -330,8 +346,8 @@ char* build_pathname_and_mkdir_r(char *buffer, size_t maxlen, const char *fmt, .
 	return buffer;
 }
 
-void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const char* msgFormat, ...) const {
-	if ((severity < Logger::getAllVerbosity() || severity < getVerbosity())) {
+void Logger::log(AMX* amx, int severity, const bool printStackTrace, const char* msgFormat, ...) const {
+	if (severity < Logger::getMinLoggableVerbosity() || severity < getVerbosity()) {
 		return;
 	}
 
@@ -349,37 +365,46 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 
 	va_list arglst;
 	va_start(arglst, msgFormat);
-	int messageLen = ke::SafeVsprintf(message, sizeof message - 1, msgFormat, arglst);
+	ke::SafeVsprintf(message, sizeof message - 1, msgFormat, arglst);
 	va_end(arglst);
 
 	const char* severityStr = VERBOSITY[toIndex(severity)];
 
-	/*Debugger *pDebugger = (Debugger*)amx->userdata[UD_DEBUGGER];
-	if (printStackTrace) {
-		amx->error = AMX_ERR_NATIVE;
-		pDebugger->SetTracedError(amx->error);
-	}*/
-
-	const char *function = "function";
+	long lLine;
+	static char line[32];
+	const char *scriptFile = "", *function = "";
+	Debugger *pDebugger = (Debugger*)amx->userdata[UD_DEBUGGER];
+	//pDebugger->BeginExec();
+	trace_info_t *pTrace = pDebugger->GetTraceStart();
+	//amx->error = AMX_ERR_NONE;
+	//pDebugger->SetTracedError(amx->error);
+	if (pTrace) {
+		pDebugger->GetTraceInfo(pTrace, lLine, function, scriptFile);
+		int len = sprintf(line, "%ld", lLine + 1);
+		line[len] = '\0';
+	}
 
 	CPluginMngr::CPlugin *plugin = (CPluginMngr::CPlugin*)amx->userdata[UD_FINDPLUGIN];
-	static char pluginName[64];
-	strcpy(pluginName, plugin->getName());
-	*strrchr(pluginName, '.') = '\0';
+	static char pluginFile[64];
+	strcpy(pluginFile, plugin->getName());
+	*strrchr(pluginFile, '.') = '\0';
+
 	static char formattedMessage[4096];
-	int len = parseLoggerString(
+	int messageLen = parseLoggerString(
 		getMessageFormat(),
 		formattedMessage, sizeof formattedMessage - 2,
 		date,
 		message,
 		time,
 		severityStr,
-		pluginName,
+		scriptFile,
+		pluginFile,
 		function,
-		STRING(gpGlobals->mapname));
+		STRING(gpGlobals->mapname),
+		line);
 	// Special case, append newline
-	*(formattedMessage + len) = '\n';
-	*(formattedMessage + len + 1) = '\0';
+	*(formattedMessage + messageLen) = '\n';
+	*(formattedMessage + messageLen + 1) = '\0';
 
 	static char fileName[256];
 	int fileNameLen = parseLoggerString(
@@ -389,9 +414,11 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 		message,
 		time,
 		severityStr,
-		pluginName,
+		scriptFile,
+		pluginFile,
 		function,
-		STRING(gpGlobals->mapname));
+		STRING(gpGlobals->mapname),
+		line);
 
 	static char path[256];
 	int pathLen = parseLoggerString(
@@ -401,9 +428,11 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 		message,
 		time,
 		severityStr,
-		pluginName,
+		scriptFile,
+		pluginFile,
 		function,
-		STRING(gpGlobals->mapname));
+		STRING(gpGlobals->mapname),
+		line);
 
 	static const char *amxxLogsDir;
 	if (!amxxLogsDir) {
@@ -418,24 +447,51 @@ void Logger::log(AMX* amx, const int severity, const bool printStackTrace, const
 		build_pathname_and_mkdir_r(fullPath, sizeof fullPath - 1, "%s/%s.log", amxxLogsDir, fileName);
 	}
 
+#ifdef SHOW_LOG_PATH
 	print_srvconsole("PATH=%s\n", fullPath);
+#endif
 	FILE *pF = NULL;
 	pF = fopen(fullPath, "a+");
-	if (pF) {
-		fprintf(pF, formattedMessage);
-		fclose(pF);
-	}
-	else {
+	if (!pF) {
 		ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+).\n", fullPath);
-		return;
 	}
-
+	
+	fprintf(pF, formattedMessage);
 	print_srvconsole(formattedMessage);
 
-	/*if (printStackTrace) {
-		pDebugger->DisplayTrace(NULL);
-		amx->error = -1;
-	}*/
+	static char trace[256];
+	if (printStackTrace) {
+		while (pTrace) {
+			pDebugger->GetTraceInfo(pTrace, lLine, function, scriptFile);
+			int len = sprintf(line, "%ld", lLine + 1);
+			line[len] = '\0';
+
+			int traceLen = parseLoggerString(
+				getTraceFormat(),
+				trace, sizeof trace - 2,
+				date,
+				message,
+				time,
+				severityStr,
+				scriptFile,
+				pluginFile,
+				function,
+				STRING(gpGlobals->mapname),
+				line);
+			// Special case, append newline
+			*(trace + traceLen) = '\n';
+			*(trace + traceLen + 1) = '\0';
+			
+			fprintf(pF, trace);
+			print_srvconsole(trace);
+			pTrace = pDebugger->GetNextTrace(pTrace);
+		}
+	}
+
+	fclose(pF);
+
+	//amx->error = -1;
+	//pDebugger->EndExec();
 }
 
 bool isValidLoggerFormat(const char *str, int &percentLoc, int &errorLoc) {
@@ -467,7 +523,8 @@ bool isValidLoggerFormat(const char *str, int &percentLoc, int &errorLoc) {
 //		const msgFormat[] = DEFAULT_LOGGER_MSG_FORMAT,
 //		const dateFormat[] = DEFAULT_LOGGER_DATE_FORMAT,
 //		const timeFormat[] = DEFAULT_LOGGER_TIME_FORMAT,
-//		const path[] = DEFAULT_LOGGER_PATH);
+//		const path[] = DEFAULT_LOGGER_PATH,
+//		const traceFormat[] = DEFAULT_LOGGER_TRACE_FORMAT);
 static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 	int len, percentLoc, errorLoc;
 	int verbosity = params[1];
@@ -484,7 +541,7 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 	if (!isValidLoggerFormat(msgFormat, percentLoc, errorLoc)) {
 		char *error = new char[errorLoc - percentLoc + 2];
 		strncpy(error, msgFormat + percentLoc, errorLoc - percentLoc + 1);
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger name format provided: \"%s\" (position %d = \"%s\")", msgFormat, percentLoc + 1, error);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger message format provided: \"%s\" (position %d = \"%s\")", msgFormat, percentLoc + 1, error);
 		delete[] error;
 		return INVALID_LOGGER;
 	}
@@ -495,10 +552,28 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 	if (!isValidLoggerFormat(path, percentLoc, errorLoc)) {
 		char *error = new char[errorLoc - percentLoc + 2];
 		strncpy(error, path + percentLoc, errorLoc - percentLoc + 1);
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger name format provided: \"%s\" (position %d = \"%s\")", path, percentLoc + 1, error);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger path format provided: \"%s\" (position %d = \"%s\")", path, percentLoc + 1, error);
 		delete[] error;
 		return INVALID_LOGGER;
 	}
+	char* traceFormat = get_amxstring(amx, params[7], 5, len);
+	if (!isValidLoggerFormat(traceFormat, percentLoc, errorLoc)) {
+		char *error = new char[errorLoc - percentLoc + 2];
+		strncpy(error, traceFormat + percentLoc, errorLoc - percentLoc + 1);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger trace format provided: \"%s\" (position %d = \"%s\")", traceFormat, percentLoc + 1, error);
+		delete[] error;
+		return INVALID_LOGGER;
+	}
+
+#ifdef SHOW_LOGGER_DETAILS
+	print_srvconsole("Creating logger...\n");
+	print_srvconsole("  nameFormat=%s\n", nameFormat);
+	print_srvconsole("  msgFormat=%s\n", msgFormat);
+	print_srvconsole("  dateFormat=%s\n", dateFormat);
+	print_srvconsole("  timeFormat=%s\n", timeFormat);
+	print_srvconsole("  pathFormat=%s\n", path);
+	print_srvconsole("  traceFormat=%s\n", traceFormat);
+#endif
 
 	int loggerHandle = LoggerHandles.create(
 		verbosity,
@@ -506,7 +581,8 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 		msgFormat,
 		dateFormat,
 		timeFormat,
-		path);
+		path,
+		traceFormat);
 
 	Logger *logger = LoggerHandles.lookup(loggerHandle);
 	assert(logger);
@@ -534,7 +610,7 @@ static cell AMX_NATIVE_CALL LoggerDestroy(AMX* amx, cell* params) {
 // native Severity:LoggerGetVerbosity(const Logger:logger);
 static cell AMX_NATIVE_CALL LoggerGetVerbosity(AMX* amx, cell* params) {
 	if (params[1] == ALL_LOGGERS) {
-		return Logger::getAllVerbosity();
+		return Logger::getMinLoggableVerbosity();
 	}
 
 	Logger* logger = LoggerHandles.lookup(params[1]);
@@ -554,7 +630,7 @@ static cell AMX_NATIVE_CALL LoggerSetVerbosity(AMX* amx, cell* params) {
 	}
 
 	if (params[1] == ALL_LOGGERS) {
-		return Logger::setAllVerbosity(params[2]);
+		return Logger::setMinLoggableVerbosity(params[2]);
 	}
 
 	Logger* logger = LoggerHandles.lookup(params[1]);
@@ -623,7 +699,7 @@ static cell AMX_NATIVE_CALL LoggerSetMessageFormat(AMX* amx, cell* params) {
 	if (!isValidLoggerFormat(messageFormat, percentLoc, errorLoc)) {
 		char *error = new char[errorLoc - percentLoc + 2];
 		strncpy(error, messageFormat + percentLoc, errorLoc - percentLoc + 1);
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger name format provided: \"%s\" (position %d = \"%s\")", messageFormat, percentLoc + 1, error);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger message format provided: \"%s\" (position %d = \"%s\")", messageFormat, percentLoc + 1, error);
 		delete[] error;
 		return INVALID_LOGGER;
 	}
@@ -706,7 +782,7 @@ static cell AMX_NATIVE_CALL LoggerSetPathFormat(AMX* amx, cell* params) {
 	if (!isValidLoggerFormat(pathFormat, percentLoc, errorLoc)) {
 		char *error = new char[errorLoc - percentLoc + 2];
 		strncpy(error, pathFormat + percentLoc, errorLoc - percentLoc + 1);
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger name format provided: \"%s\" (position %d = \"%s\")", pathFormat, percentLoc + 1, error);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger path format provided: \"%s\" (position %d = \"%s\")", pathFormat, percentLoc + 1, error);
 		delete[] error;
 		return INVALID_LOGGER;
 	}
@@ -715,9 +791,42 @@ static cell AMX_NATIVE_CALL LoggerSetPathFormat(AMX* amx, cell* params) {
 	return 1;
 }
 
+// native LoggerGetTraceFormat(const Logger:logger, format[], const len);
+static cell AMX_NATIVE_CALL LoggerGetTraceFormat(AMX* amx, cell* params) {
+	Logger* logger = LoggerHandles.lookup(params[1]);
+	if (!logger) {
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	return 	set_amxstring(amx, params[2], logger->getTraceFormat(), params[3]);
+}
+
+// native LoggerSetTraceFormat(const Logger:logger, const format[]);
+static cell AMX_NATIVE_CALL LoggerSetTraceFormat(AMX* amx, cell* params) {
+	Logger* logger = LoggerHandles.lookup(params[1]);
+	if (!logger) {
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		return 0;
+	}
+
+	int len, percentLoc, errorLoc;
+	const char* traceFormat = get_amxstring(amx, params[2], 0, len);
+	if (!isValidLoggerFormat(traceFormat, percentLoc, errorLoc)) {
+		char *error = new char[errorLoc - percentLoc + 2];
+		strncpy(error, traceFormat + percentLoc, errorLoc - percentLoc + 1);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger trace format provided: \"%s\" (position %d = \"%s\")", traceFormat, percentLoc + 1, error);
+		delete[] error;
+		return INVALID_LOGGER;
+	}
+
+	logger->setTraceFormat(traceFormat);
+	return 1;
+}
+
 // native LoggerLog(const Logger:logger, const Severity:severity, const bool:printStackTrace, const format[], any:...);
 static cell AMX_NATIVE_CALL LoggerLog(AMX* amx, cell* params) {
-	if (params[2] < Logger::getAllVerbosity()) {
+	if (params[2] < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
@@ -735,7 +844,7 @@ static cell AMX_NATIVE_CALL LoggerLog(AMX* amx, cell* params) {
 
 // native LoggerLogError(const Logger:logger, const bool:printStackTrace = true, const format[], any:...);
 static cell AMX_NATIVE_CALL LoggerLogError(AMX* amx, cell* params) {
-	if (LOG_SEVERITY_ERROR < Logger::getAllVerbosity()) {
+	if (LOG_SEVERITY_ERROR < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
@@ -753,7 +862,7 @@ static cell AMX_NATIVE_CALL LoggerLogError(AMX* amx, cell* params) {
 
 // native LoggerLogWarn(const Logger:logger, const bool:printStackTrace = true, const format[], any:...);
 static cell AMX_NATIVE_CALL LoggerLogWarn(AMX* amx, cell* params) {
-	if (LOG_SEVERITY_WARN < Logger::getAllVerbosity()) {
+	if (LOG_SEVERITY_WARN < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
@@ -771,7 +880,7 @@ static cell AMX_NATIVE_CALL LoggerLogWarn(AMX* amx, cell* params) {
 
 // native LoggerLogInfo(const Logger:logger, const bool:printStackTrace = false, const format[], any:...);
 static cell AMX_NATIVE_CALL LoggerLogInfo(AMX* amx, cell* params) {
-	if (LOG_SEVERITY_INFO < Logger::getAllVerbosity()) {
+	if (LOG_SEVERITY_INFO < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
@@ -789,7 +898,7 @@ static cell AMX_NATIVE_CALL LoggerLogInfo(AMX* amx, cell* params) {
 
 // native LoggerLogDebug(const Logger:logger, const bool:printStackTrace = false, const format[], any:...);
 static cell AMX_NATIVE_CALL LoggerLogDebug(AMX* amx, cell* params) {
-	if (LOG_SEVERITY_DEBUG < Logger::getAllVerbosity()) {
+	if (LOG_SEVERITY_DEBUG < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
@@ -805,7 +914,7 @@ static cell AMX_NATIVE_CALL LoggerLogDebug(AMX* amx, cell* params) {
 	return 1;
 }
 
-void updateCounterTime() {
+void Logger::onMapChange() {
 	char dataFile[256];
 	const char* amxxDataDir = get_localinfo("amxx_datadir", "addons/amxmodx/data");
 	build_pathname_r(dataFile, sizeof dataFile - 1, "%s/logger.dat", amxxDataDir);
@@ -875,6 +984,9 @@ AMX_NATIVE_INFO logger_Natives[] = {
 	{ "LoggerGetPathFormat",	LoggerGetPathFormat },
 	{ "LoggerSetPathFormat",	LoggerSetPathFormat },
 
+	{ "LoggerGetTraceFormat",	LoggerGetTraceFormat },
+	{ "LoggerSetTraceFormat",	LoggerSetTraceFormat },
+
 	{ "LoggerLog",				LoggerLog },
 
 	{ "LoggerLogError",			LoggerLogError },
@@ -883,8 +995,3 @@ AMX_NATIVE_INFO logger_Natives[] = {
 	{ "LoggerLogDebug",			LoggerLogDebug },
 	{ nullptr,				nullptr }
 };
-
-void FN_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
-	updateCounterTime();
-	RETURN_META(MRES_IGNORED);
-}

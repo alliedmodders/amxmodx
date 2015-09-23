@@ -378,6 +378,7 @@ int	C_Spawn(edict_t *pent)
 	g_forwards.clear();
 
 	g_log.MapChange();
+	Logger::onMapChange();
 
 	// ###### Initialize task manager
 	g_tasksMngr.registerTimers(&gpGlobals->time, &mp_timelimit->value, &g_game_timeleft);

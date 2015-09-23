@@ -13,11 +13,12 @@
 
 native Logger:LoggerCreate(
         const Severity:verbosity = Severity_Warn,
-        const nameFormat[] = DEFAULT_LOGGER_NAME_FORMAT,
-        const msgFormat[] = DEFAULT_LOGGER_MSG_FORMAT,
-        const dateFormat[] = DEFAULT_LOGGER_DATE_FORMAT,
-        const timeFormat[] = DEFAULT_LOGGER_TIME_FORMAT,
-        const pathFormat[] = DEFAULT_LOGGER_PATH);
+        const nameFormat[]  = "%p_%d",
+        const msgFormat[]   = "[%5v] [%t] %n::%f - %s",
+        const dateFormat[]  = "%Y-%m-%d",
+        const timeFormat[]  = "%H:%M:%S",
+        const pathFormat[]  = "",
+        const traceFormat[] = "    at %n::%f : %l");
 
 native bool:LoggerDestroy(&Logger:logger);
 
@@ -38,6 +39,9 @@ native LoggerSetTimeFormat(const Logger:logger, const format[]);
 
 native LoggerGetPathFormat(const Logger:logger, format[], const len);
 native LoggerSetPathFormat(const Logger:logger, const format[]);
+
+native LoggerGetTraceFormat(const Logger:logger, format[], const len);
+native LoggerSetTraceFormat(const Logger:logger, const format[]);
 
 native LoggerLog(const Logger:logger, const Severity:severity, const bool:printStackTrace, const format[], any:...);
 

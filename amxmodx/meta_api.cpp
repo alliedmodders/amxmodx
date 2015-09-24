@@ -507,6 +507,9 @@ int	C_Spawn(edict_t *pent)
 	FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
 	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
+	
+	LoggerCreatedForward = registerForward("OnLoggerCreated", ET_IGNORE,
+			FP_CELL, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_DONE);
 
 	CoreCfg.OnAmxxInitialized();
 

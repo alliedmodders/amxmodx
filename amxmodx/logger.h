@@ -95,5 +95,6 @@ public:
 
 extern NativeHandle<Logger> LoggerHandles;
 extern AMX_NATIVE_INFO logger_Natives[];
+extern int LoggerCreatedForward;
 
 #endif // _LOGGER_H_

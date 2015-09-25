@@ -33,19 +33,20 @@ const char* VERBOSITY[] = {
 int toIndex(int severity) {
 	if (severity >= LOG_SEVERITY_ERROR) {
 		return 0;
-	}
-	else if (severity >= LOG_SEVERITY_WARN) {
+	} else if (severity >= LOG_SEVERITY_WARN) {
 		return 1;
-	}
-	else if (severity >= LOG_SEVERITY_INFO) {
+	} else if (severity >= LOG_SEVERITY_INFO) {
 		return 2;
-	}
-	else {
+	} else {
 		return 3;
 	}
 }
 
 int Logger::m_MinLoggableVerbosity = LOG_SEVERITY_LOWEST;
+
+bool Logger::isLogging() const {
+	return m_Verbosity > LOG_SEVERITY_NONE && m_MinLoggableVerbosity > LOG_SEVERITY_NONE;
+}
 
 int Logger::getVerbosity() const {
 	return m_Verbosity;
@@ -156,99 +157,97 @@ bool parseFormat(const char *&c, char &specifier, bool &lJustify, int &width, in
 #endif
 	c++;
 	switch (*c) {
-	case '\0':
-		return false;
-	case '-':
-#ifdef SHOW_PARSER_DEBUGGING
-		print_srvconsole("- c=%c\n", *c);
-#endif
-		lJustify = true;
-		c++;
-		if (*c == '\0') {
+		case '\0':
 			return false;
-		}
-	case '0': case '1': case '2': case '3': case '4':
-	case '5': case '6': case '7': case '8': case '9':
+		case '-':
 #ifdef SHOW_PARSER_DEBUGGING
-		print_srvconsole("# c=%c", *c);
+			print_srvconsole("- c=%c\n", *c);
 #endif
-		if (0 <= (temp = *c - '0') && temp <= 9) {
-			width = temp;
+			lJustify = true;
 			c++;
-			while (0 <= (temp = *c - '0') && temp <= 9) {
-#ifdef SHOW_PARSER_DEBUGGING
-				print_srvconsole("\n# c=%c", *c);
-#endif
-				width *= 10;
-				width += temp;
-				c++;
+			if (*c == '\0') {
+				return false;
 			}
-		}
-		else {
+		case '0': case '1': case '2': case '3': case '4':
+		case '5': case '6': case '7': case '8': case '9':
 #ifdef SHOW_PARSER_DEBUGGING
-			print_srvconsole("; next");
+			print_srvconsole("# c=%c", *c);
 #endif
-		}
-
-#ifdef SHOW_PARSER_DEBUGGING
-		print_srvconsole(";\n");
-#endif
-
-		if (*c == '\0') {
-			return false;
-		}
-	case '.':
-#ifdef SHOW_PARSER_DEBUGGING
-		print_srvconsole(". c=%c", *c);
-#endif
-		if (*c == '.') {
-			c++;
 			if (0 <= (temp = *c - '0') && temp <= 9) {
-#ifdef SHOW_PARSER_DEBUGGING
-				print_srvconsole("\n# c=%c", *c);
-#endif
-				precision = temp;
+				width = temp;
 				c++;
 				while (0 <= (temp = *c - '0') && temp <= 9) {
 #ifdef SHOW_PARSER_DEBUGGING
 					print_srvconsole("\n# c=%c", *c);
 #endif
-					precision *= 10;
-					precision += temp;
+					width *= 10;
+					width += temp;
 					c++;
 				}
+} else {
+#ifdef SHOW_PARSER_DEBUGGING
+				print_srvconsole("; next");
+#endif
 			}
-			else {
+
+#ifdef SHOW_PARSER_DEBUGGING
+			print_srvconsole(";\n");
+#endif
+
+			if (*c == '\0') {
 				return false;
 			}
-		}
-		else {
+		case '.':
 #ifdef SHOW_PARSER_DEBUGGING
-			print_srvconsole("; next");
+			print_srvconsole(". c=%c", *c);
 #endif
-		}
+			if (*c == '.') {
+				c++;
+				if (0 <= (temp = *c - '0') && temp <= 9) {
+#ifdef SHOW_PARSER_DEBUGGING
+					print_srvconsole("\n# c=%c", *c);
+#endif
+					precision = temp;
+					c++;
+					while (0 <= (temp = *c - '0') && temp <= 9) {
+#ifdef SHOW_PARSER_DEBUGGING
+						print_srvconsole("\n# c=%c", *c);
+#endif
+						precision *= 10;
+						precision += temp;
+						c++;
+			}
+			} else {
+					return false;
+				}
+		} else {
+#ifdef SHOW_PARSER_DEBUGGING
+				print_srvconsole("; next");
+#endif
+			}
 
 #ifdef SHOW_PARSER_DEBUGGING
-		print_srvconsole(";\n");
+			print_srvconsole(";\n");
 #endif
 
-		if (*c == '\0') {
-			return false;
-		}
-	case 'd': case 'f': case 'i': case 'l': case 'm':
-	case 'n': case 'p': case 's': case 't': case 'v':
-	case '%':
-#ifdef SHOW_PARSER_DEBUGGING
-		print_srvconsole("s c=%c\n", *c);
-#endif
-		switch (*c) {
+			if (*c == '\0') {
+				return false;
+			}
+
 		case 'd': case 'f': case 'i': case 'l': case 'm':
 		case 'n': case 'p': case 's': case 't': case 'v':
 		case '%':
-			specifier = *c;
-			return true;
-		}
-	}
+#ifdef SHOW_PARSER_DEBUGGING
+			print_srvconsole("s c=%c\n", *c);
+#endif
+			switch (*c) {
+				case 'd': case 'f': case 'i': case 'l': case 'm':
+				case 'n': case 'p': case 's': case 't': case 'v':
+				case '%':
+					specifier = *c;
+					return true;
+			}
+			}
 
 	return false;
 }
@@ -287,24 +286,23 @@ int parseLoggerString(const char *format,
 		bool result = parseFormat(c, specifier, lJustify, width, precision);
 		assert(result);
 		switch (specifier) {
-		case 'd': len = strncpys(buffer + offset, date, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'f': len = strncpys(buffer + offset, function, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'i': len = strncpys(buffer + offset, MapCounter, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'l': len = strncpys(buffer + offset, line, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'm': len = strncpys(buffer + offset, mapname, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'n': len = strncpys(buffer + offset, script, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'p': len = strncpys(buffer + offset, plugin, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 's': len = strncpys(buffer + offset, message, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 't': len = strncpys(buffer + offset, time, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case 'v': len = strncpys(buffer + offset, severity, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-		case '%': len = strncpyc(buffer + offset, '%', precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'd': len = strncpys(buffer + offset, date, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'f': len = strncpys(buffer + offset, function, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'i': len = strncpys(buffer + offset, MapCounter, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'l': len = strncpys(buffer + offset, line, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'm': len = strncpys(buffer + offset, mapname, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'n': len = strncpys(buffer + offset, script, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'p': len = strncpys(buffer + offset, plugin, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 's': len = strncpys(buffer + offset, message, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 't': len = strncpys(buffer + offset, time, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'v': len = strncpys(buffer + offset, severity, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case '%': len = strncpyc(buffer + offset, '%', precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
 		}
 
 		if (lJustify) {
 			offset += len;
 			pad(width - len, offset, buffer, bufferLen);
-		}
-		else {
+		} else {
 			shift(buffer + offset, len, width - len);
 			pad(width - len, offset, buffer, bufferLen);
 			offset += len;
@@ -331,14 +329,14 @@ char* build_pathname_and_mkdir_r(char *buffer, size_t maxlen, const char *fmt, .
 
 	while (*ptr) {
 		switch (*ptr) {
-		case ALT_SEP_CHAR:
-		case PATH_SEP_CHAR:
+			case ALT_SEP_CHAR:
+			case PATH_SEP_CHAR:
 #if defined(__linux__) || defined(__APPLE__)
-			mkdir(buffer, 0700);
+				mkdir(buffer, 0700);
 #else
-			*ptr = '\0';
-			mkdir(buffer);
-			*ptr = PATH_SEP_CHAR;
+				*ptr = '\0';
+				mkdir(buffer);
+				*ptr = PATH_SEP_CHAR;
 #endif
 		}
 
@@ -348,14 +346,15 @@ char* build_pathname_and_mkdir_r(char *buffer, size_t maxlen, const char *fmt, .
 	return buffer;
 }
 
-const char* getPluginFile(CPluginMngr::CPlugin *plugin, char *pluginFile) {
+size_t getPluginFile(CPluginMngr::CPlugin *plugin, char *pluginFile) {
 	strcpy(pluginFile, plugin->getName());
-	*strrchr(pluginFile, '.') = '\0';
-	return pluginFile;
+	size_t len = (strrchr(pluginFile, '.') - pluginFile);
+	*(pluginFile + len) = '\0';
+	return len;
 }
 
-void Logger::log(AMX* amx, int severity, const bool printStackTrace, const char* msgFormat, ...) const {
-	if (severity < Logger::getMinLoggableVerbosity() || severity < getVerbosity()) {
+void Logger::log(AMX* amx, int severity, const bool printStackTrace, const bool force, const char* msgFormat, ...) const {
+	if (!force && (severity < Logger::getMinLoggableVerbosity() || severity < getVerbosity())) {
 		return;
 	}
 
@@ -449,8 +448,7 @@ void Logger::log(AMX* amx, int severity, const bool printStackTrace, const char*
 	static char fullPath[256];
 	if (getPathFormat()[0] != '\0') {
 		build_pathname_and_mkdir_r(fullPath, sizeof fullPath - 1, "%s/%s/%s.log", amxxLogsDir, path, fileName);
-	}
-	else {
+	} else {
 		build_pathname_and_mkdir_r(fullPath, sizeof fullPath - 1, "%s/%s.log", amxxLogsDir, fileName);
 	}
 
@@ -461,8 +459,8 @@ void Logger::log(AMX* amx, int severity, const bool printStackTrace, const char*
 	pF = fopen(fullPath, "a+");
 	if (!pF) {
 		ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+).\n", fullPath);
-	}
-	
+}
+
 	fprintf(pF, formattedMessage);
 	print_srvconsole(formattedMessage);
 
@@ -488,7 +486,7 @@ void Logger::log(AMX* amx, int severity, const bool printStackTrace, const char*
 			// Special case, append newline
 			*(trace + traceLen) = '\n';
 			*(trace + traceLen + 1) = '\0';
-			
+
 			fprintf(pF, trace);
 			print_srvconsole(trace);
 			pTrace = pDebugger->GetNextTrace(pTrace);
@@ -536,8 +534,8 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 	int percentLoc, errorLoc;
 	int verbosity = params[1];
 
-	int nameFormatLen;
-	const char* nameFormat = get_amxstring(amx, params[2], 0, nameFormatLen);
+	char nameFormat[32];
+	size_t nameFormatLen = get_amxstring_r(amx, params[2], nameFormat, sizeof nameFormat - 1);
 	if (!isValidLoggerFormat(nameFormat, percentLoc, errorLoc)) {
 		char *error = new char[errorLoc - percentLoc + 2];
 		strncpy(error, nameFormat + percentLoc, errorLoc - percentLoc + 1);
@@ -546,8 +544,8 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 		return INVALID_LOGGER;
 	}
 
-	int msgFormatLen;
-	const char* msgFormat = get_amxstring(amx, params[3], 1, msgFormatLen);
+	char msgFormat[256];
+	size_t msgFormatLen = get_amxstring_r(amx, params[3], msgFormat, sizeof msgFormat - 1);
 	if (!isValidLoggerFormat(msgFormat, percentLoc, errorLoc)) {
 		char *error = new char[errorLoc - percentLoc + 2];
 		strncpy(error, msgFormat + percentLoc, errorLoc - percentLoc + 1);
@@ -556,14 +554,14 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 		return INVALID_LOGGER;
 	}
 
-	int dateFormatLen;
-	const char* dateFormat = get_amxstring(amx, params[4], 2, dateFormatLen);
+	char dateFormat[16];
+	size_t dateFormatLen = get_amxstring_r(amx, params[4], dateFormat, sizeof dateFormat - 1);
 
-	int timeFormatLen;
-	const char* timeFormat = get_amxstring(amx, params[5], 3, timeFormatLen);
+	char timeFormat[16];
+	size_t timeFormatLen = get_amxstring_r(amx, params[5], timeFormat, sizeof timeFormat - 1);
 
-	int pathFormatLen;
-	const char* pathFormat = get_amxstring(amx, params[6], 4, pathFormatLen);
+	char pathFormat[256];
+	size_t pathFormatLen = get_amxstring_r(amx, params[6], pathFormat, sizeof pathFormat - 1);
 	if (!isValidLoggerFormat(pathFormat, percentLoc, errorLoc)) {
 		char *error = new char[errorLoc - percentLoc + 2];
 		strncpy(error, pathFormat + percentLoc, errorLoc - percentLoc + 1);
@@ -572,8 +570,8 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 		return INVALID_LOGGER;
 	}
 
-	int traceFormatLen;
-	const char* traceFormat = get_amxstring(amx, params[7], 5, traceFormatLen);
+	char traceFormat[256];
+	size_t traceFormatLen = get_amxstring_r(amx, params[7], traceFormat, sizeof traceFormat - 1);
 	if (!isValidLoggerFormat(traceFormat, percentLoc, errorLoc)) {
 		char *error = new char[errorLoc - percentLoc + 2];
 		strncpy(error, traceFormat + percentLoc, errorLoc - percentLoc + 1);
@@ -603,24 +601,24 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 
 	Logger *logger = LoggerHandles.lookup(loggerId);
 	assert(logger);
-	logger->log(amx, LOG_SEVERITY_INFO, false, "Logger initialized; map: %s", STRING(gpGlobals->mapname));
+	logger->log(amx, LOG_SEVERITY_INFO, false, true, "Logger initialized; map: %s", STRING(gpGlobals->mapname));
 
 	cell loggerHandle = static_cast<cell>(loggerId);
 
 	if (LoggerCreatedForward != -1) {
 		char pluginFile[64];
 		CPluginMngr::CPlugin *plugin = (CPluginMngr::CPlugin*)amx->userdata[UD_FINDPLUGIN];
-		const char *pluginFile2 = getPluginFile(plugin, pluginFile);
+		getPluginFile(plugin, pluginFile);
 		executeForwards(LoggerCreatedForward,
-				loggerHandle,
-				static_cast<cell>(verbosity),
-				pluginFile2,
-				nameFormat,
-				msgFormat,
-				dateFormat,
-				timeFormat,
-				pathFormat,
-				traceFormat);
+			loggerHandle,
+			static_cast<cell>(verbosity),
+			pluginFile,
+			nameFormat,
+			msgFormat,
+			dateFormat,
+			timeFormat,
+			pathFormat,
+			traceFormat);
 	}
 
 	return loggerHandle;
@@ -870,11 +868,15 @@ static cell AMX_NATIVE_CALL LoggerLog(AMX* amx, cell* params) {
 		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
 		return 0;
 	}
+	
+	if (!logger->isLogging()) {
+		return 0;
+	}
 
 	int len;
 	char* buffer = format_amxstring(amx, params, 3, len);
 	int severityIndex = toIndex(params[2]);
-	logger->log(amx, params[2], severityIndex <= 1, buffer);
+	logger->log(amx, params[2], severityIndex <= 1, false, buffer);
 	return 1;
 }
 
@@ -890,9 +892,13 @@ static cell AMX_NATIVE_CALL LoggerLog2(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 4, len);
-	logger->log(amx, params[2], params[3] == 1, buffer);
+	logger->log(amx, params[2], params[3] == 1, false, buffer);
 	return 1;
 }
 
@@ -908,9 +914,13 @@ static cell AMX_NATIVE_CALL LoggerLogError(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 2, len);
-	logger->log(amx, LOG_SEVERITY_ERROR, true, buffer);
+	logger->log(amx, LOG_SEVERITY_ERROR, true, false, buffer);
 	return 1;
 }
 
@@ -926,9 +936,13 @@ static cell AMX_NATIVE_CALL LoggerLogWarn(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 2, len);
-	logger->log(amx, LOG_SEVERITY_WARN, true, buffer);
+	logger->log(amx, LOG_SEVERITY_WARN, true, false, buffer);
 	return 1;
 }
 
@@ -944,9 +958,13 @@ static cell AMX_NATIVE_CALL LoggerLogInfo(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 2, len);
-	logger->log(amx, LOG_SEVERITY_INFO, false, buffer);
+	logger->log(amx, LOG_SEVERITY_INFO, false, false, buffer);
 	return 1;
 }
 
@@ -962,9 +980,13 @@ static cell AMX_NATIVE_CALL LoggerLogDebug(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 2, len);
-	logger->log(amx, LOG_SEVERITY_DEBUG, false, buffer);
+	logger->log(amx, LOG_SEVERITY_DEBUG, false, false, buffer);
 	return 1;
 }
 
@@ -980,9 +1002,13 @@ static cell AMX_NATIVE_CALL LoggerLogError2(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 3, len);
-	logger->log(amx, LOG_SEVERITY_ERROR, params[2] == 1, buffer);
+	logger->log(amx, LOG_SEVERITY_ERROR, params[2] == 1, false, buffer);
 	return 1;
 }
 
@@ -998,9 +1024,13 @@ static cell AMX_NATIVE_CALL LoggerLogWarn2(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 3, len);
-	logger->log(amx, LOG_SEVERITY_WARN, params[2] == 1, buffer);
+	logger->log(amx, LOG_SEVERITY_WARN, params[2] == 1, false, buffer);
 	return 1;
 }
 
@@ -1016,9 +1046,13 @@ static cell AMX_NATIVE_CALL LoggerLogInfo2(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 3, len);
-	logger->log(amx, LOG_SEVERITY_INFO, params[2] == 1, buffer);
+	logger->log(amx, LOG_SEVERITY_INFO, params[2] == 1, false, buffer);
 	return 1;
 }
 
@@ -1034,9 +1068,13 @@ static cell AMX_NATIVE_CALL LoggerLogDebug2(AMX* amx, cell* params) {
 		return 0;
 	}
 
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
 	int len;
 	char* buffer = format_amxstring(amx, params, 3, len);
-	logger->log(amx, LOG_SEVERITY_DEBUG, params[2] == 1, buffer);
+	logger->log(amx, LOG_SEVERITY_DEBUG, params[2] == 1, false, buffer);
 	return 1;
 }
 
@@ -1070,8 +1108,7 @@ void Logger::onMapChange() {
 			counter = 1;
 			fprintf(pF, "%lld\n", static_cast<long long>(t3));
 			fprintf(pF, "%d", counter);
-		}
-		else {
+		} else {
 			counter++;
 			fprintf(pF, "%s", timestamp);
 			fprintf(pF, "%d", counter);

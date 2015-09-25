@@ -11,6 +11,6 @@
  * STOCKS
  ******************************************************************************/
 
-stock Severity:severity(severity) {
+stock Severity: severity(severity) {
 	return Severity:severity;
 }

@@ -65,10 +65,11 @@ public:
 				m_pTimeFormat(timeFormat),
 				m_pPathFormat(pathFormat),
 				m_pTraceFormat(traceFormat) {
-		m_Verbosity = max(LOG_SEVERITY_NONE, verbosity);
+		setVerbosity(verbosity);
 	};
 
 public:
+	bool isLogging() const;
 	int getVerbosity() const;
 	int setVerbosity(int verbosity);
 
@@ -90,7 +91,7 @@ public:
 	const char* getTraceFormat() const;
 	void setTraceFormat(const char* traceFormat);
 
-	void log(AMX* amx, const int severity, const bool printStackTrace, const char* format, ...) const;
+	void log(AMX* amx, const int severity, const bool printStackTrace, const bool force, const char* format, ...) const;
 };
 
 extern NativeHandle<Logger> LoggerHandles;

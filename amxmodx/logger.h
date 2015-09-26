@@ -1,7 +1,6 @@
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
 
-#include <am-vector.h>
 #include "natives_handles.h"
 #include "CPlugin.h"
 
@@ -12,15 +11,6 @@
 #define LOG_SEVERITY_INFO	 101
 #define LOG_SEVERITY_DEBUG	 1
 #define LOG_SEVERITY_NONE	 0
-
-#define LOG_ARG_NONE     0
-#define LOG_ARG_DATE     1
-#define LOG_ARG_FUNCTION 2
-#define LOG_ARG_MESSAGE  3
-#define LOG_ARG_MAP      4
-#define LOG_ARG_SCRIPT   5
-#define LOG_ARG_SEVERITY 6
-#define LOG_ARG_TIME     7
 
 class Logger {
 private:

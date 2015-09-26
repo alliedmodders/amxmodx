@@ -1,6 +1,8 @@
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
 
+#include <am-string.h>
+
 #include "natives_handles.h"
 #include "CPlugin.h"
 

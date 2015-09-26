@@ -1,7 +1,5 @@
 #include <time.h>
 
-#include <am-string.h>
-
 #include "amxmodx.h"
 #include "CLang.h"
 #include "debugger.h"

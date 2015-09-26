@@ -36,12 +36,12 @@ public:
 
 private:
 	int m_Verbosity;
-	ke::AString m_pNameFormat;
-	ke::AString m_pMessageFormat;
-	ke::AString m_pDateFormat;
-	ke::AString m_pTimeFormat;
-	ke::AString m_pPathFormat;
-	ke::AString m_pTraceFormat;
+	ke::AString m_NameFormat;
+	ke::AString m_MessageFormat;
+	ke::AString m_DateFormat;
+	ke::AString m_TimeFormat;
+	ke::AString m_PathFormat;
+	ke::AString m_TraceFormat;
 
 public:
 	Logger(int verbosity,
@@ -52,12 +52,12 @@ public:
 				const char *pathFormat,
 				const char *traceFormat)
 			: 
-				m_pNameFormat(nameFormat),
-				m_pMessageFormat(messageFormat),
-				m_pDateFormat(dateFormat),
-				m_pTimeFormat(timeFormat),
-				m_pPathFormat(pathFormat),
-				m_pTraceFormat(traceFormat) {
+				m_NameFormat(nameFormat),
+				m_MessageFormat(messageFormat),
+				m_DateFormat(dateFormat),
+				m_TimeFormat(timeFormat),
+				m_PathFormat(pathFormat),
+				m_TraceFormat(traceFormat) {
 		setVerbosity(verbosity);
 	};
 

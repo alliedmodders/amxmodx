@@ -53,51 +53,51 @@ int Logger::setVerbosity(int verbosity) {
 }
 
 const char* Logger::getNameFormat() const {
-	return m_pNameFormat.chars();
+	return m_NameFormat.chars();
 }
 
 void Logger::setNameFormat(const char* nameFormat) {
-	m_pNameFormat = nameFormat;
+	m_NameFormat = nameFormat;
 }
 
 const char* Logger::getMessageFormat() const {
-	return m_pMessageFormat.chars();
+	return m_MessageFormat.chars();
 }
 
 void Logger::setMessageFormat(const char* messageFormat) {
-	m_pMessageFormat = messageFormat;
+	m_MessageFormat = messageFormat;
 }
 
 const char* Logger::getDateFormat() const {
-	return m_pDateFormat.chars();
+	return m_DateFormat.chars();
 }
 
 void Logger::setDateFormat(const char* dateFormat) {
-	m_pDateFormat = dateFormat;
+	m_DateFormat = dateFormat;
 }
 
 const char* Logger::getTimeFormat() const {
-	return m_pTimeFormat.chars();
+	return m_TimeFormat.chars();
 }
 
 void Logger::setTimeFormat(const char* timeFormat) {
-	m_pTimeFormat = timeFormat;
+	m_TimeFormat = timeFormat;
 }
 
 const char* Logger::getPathFormat() const {
-	return m_pPathFormat.chars();
+	return m_PathFormat.chars();
 }
 
 void Logger::setPathFormat(const char* pathFormat) {
-	m_pPathFormat = pathFormat;
+	m_PathFormat = pathFormat;
 }
 
 const char* Logger::getTraceFormat() const {
-	return m_pTraceFormat.chars();
+	return m_TraceFormat.chars();
 }
 
 void Logger::setTraceFormat(const char* traceFormat) {
-	m_pTraceFormat = traceFormat;
+	m_TraceFormat = traceFormat;
 }
 
 int strncpys(char *destination, const char *source, int len) {

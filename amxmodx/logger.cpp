@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <time.h>
 
 #include <am-string.h>
@@ -15,8 +14,6 @@
 //#define SHOW_LOGGER_DETAILS
 #define INVALID_LOGGER  0
 #define ALL_LOGGERS    -1
-
-using namespace std;
 
 NativeHandle<Logger> LoggerHandles;
 int LoggerCreatedForward = -1;
@@ -54,7 +51,7 @@ int Logger::getVerbosity() const {
 
 int Logger::setVerbosity(int verbosity) {
 	int oldVerbosity = m_Verbosity;
-	m_Verbosity = max(LOG_SEVERITY_NONE, verbosity);
+	m_Verbosity = ke::Max(LOG_SEVERITY_NONE, verbosity);
 	return oldVerbosity;
 }
 
@@ -286,17 +283,17 @@ int parseLoggerString(const char *format,
 		bool result = parseFormat(c, specifier, lJustify, width, precision);
 		assert(result);
 		switch (specifier) {
-			case 'd': len = strncpys(buffer + offset, date, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 'f': len = strncpys(buffer + offset, function, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 'i': len = strncpys(buffer + offset, MapCounter, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 'l': len = strncpys(buffer + offset, line, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 'm': len = strncpys(buffer + offset, mapname, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 'n': len = strncpys(buffer + offset, script, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 'p': len = strncpys(buffer + offset, plugin, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 's': len = strncpys(buffer + offset, message, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 't': len = strncpys(buffer + offset, time, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case 'v': len = strncpys(buffer + offset, severity, precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
-			case '%': len = strncpyc(buffer + offset, '%', precision == -1 ? bufferLen - offset : min(bufferLen - offset, precision)); break;
+			case 'd': len = strncpys(buffer + offset, date, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 'f': len = strncpys(buffer + offset, function, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 'i': len = strncpys(buffer + offset, MapCounter, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 'l': len = strncpys(buffer + offset, line, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 'm': len = strncpys(buffer + offset, mapname, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 'n': len = strncpys(buffer + offset, script, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 'p': len = strncpys(buffer + offset, plugin, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 's': len = strncpys(buffer + offset, message, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 't': len = strncpys(buffer + offset, time, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case 'v': len = strncpys(buffer + offset, severity, precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
+			case '%': len = strncpyc(buffer + offset, '%', precision == -1 ? bufferLen - offset : ke::Min(bufferLen - offset, precision)); break;
 		}
 
 		if (lJustify) {

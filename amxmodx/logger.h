@@ -7,6 +7,9 @@
 #include "modules.h"
 #include "natives_handles.h"
 
+#define INVALID_LOGGER  0
+#define ALL_LOGGERS    -1
+
 #define LOG_SEVERITY_HIGHEST LOG_SEVERITY_ERROR
 #define LOG_SEVERITY_LOWEST  LOG_SEVERITY_DEBUG
 #define LOG_SEVERITY_ERROR	 301

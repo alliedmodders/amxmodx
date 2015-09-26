@@ -9,8 +9,6 @@
 //#define SHOW_LOG_STRING_BUILDER
 //#define SHOW_LOG_PATH
 //#define SHOW_LOGGER_DETAILS
-#define INVALID_LOGGER  0
-#define ALL_LOGGERS    -1
 
 NativeHandle<Logger> LoggerHandles;
 int LoggerCreatedForward = -1;

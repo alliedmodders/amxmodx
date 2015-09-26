@@ -3,8 +3,9 @@
 
 #include <am-string.h>
 
-#include "natives_handles.h"
 #include "CPlugin.h"
+#include "modules.h"
+#include "natives_handles.h"
 
 #define LOG_SEVERITY_HIGHEST LOG_SEVERITY_ERROR
 #define LOG_SEVERITY_LOWEST  LOG_SEVERITY_DEBUG

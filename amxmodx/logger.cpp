@@ -3,7 +3,6 @@
 #include "amxmodx.h"
 #include "CLang.h"
 #include "debugger.h"
-#include "modules.h"
 #include "logger.h"
 
 //#define SHOW_PARSER_DEBUGGING

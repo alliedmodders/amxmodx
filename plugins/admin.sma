@@ -354,57 +354,49 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 
 loadSettings(szFilename[])
 {
-	new File=fopen(szFilename,"r");
+	new File = fopen(szFilename, "r");
 	
 	if (File)
 	{
-		new Text[512];
-		new Flags[32];
-		new Access[32]
-		new AuthData[44];
-		new Password[32];
-		
+		new szString[512], szFlags[32], szAccess[32], szAuth[44], szPassword[32];
 		while (!feof(File))
 		{
-			fgets(File, Text, charsmax(Text));
+			fgets(File, szString, charsmax(szString));
 			
-			trim(Text);
+			trim(szString);
 			
-			// comment
-			if (Text[0]==';') 
+			if(!szString[0] || szString[0] == ';' || szString[0] == '/' && szString[1] == '/')
 			{
 				continue;
 			}
 			
-			Flags[0]=0;
-			Access[0]=0;
-			AuthData[0]=0;
-			Password[0]=0;
+			szFlags[0] = szAccess[0] = szAuth[0] = szPassword[0] = 0;
 			
-			// not enough parameters
-			if (parse(Text,AuthData,charsmax(AuthData),Password,charsmax(Password),Access,charsmax(Access),Flags,charsmax(Flags)) < 2)
+			if(parse(szString, szAuth, charsmax(szAuth), szPassword, charsmax(szPassword), szAccess, charsmax(szAccess), szFlags, charsmax(szFlags)) < 2)
 			{
 				continue;
 			}
 			
-			admins_push(AuthData,Password,read_flags(Access),read_flags(Flags));
+			admins_push(szAuth, szPassword, read_flags(szAccess), read_flags(szFlags));
 
 			AdminCount++;
 		}
-		
 		fclose(File);
+		if(AdminCount)
+		{
+			if (AdminCount == 1)
+			{
+				server_print("[AMXX] %L", LANG_SERVER, "LOADED_ADMIN");
+			}
+			else
+			{
+				server_print("[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", AdminCount);
+			}
+			return PLUGIN_HANDLED;
+		}
 	}
-
-	if (AdminCount == 1)
-	{
-		server_print("[AMXX] %L", LANG_SERVER, "LOADED_ADMIN");
-	}
-	else
-	{
-		server_print("[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", AdminCount);
-	}
-	
-	return 1;
+	server_print("[AMXX] %L", LANG_SERVER, "NO_ADMINS");
+	return PLUGIN_CONTINUE;
 }
 
 #if defined USING_SQL

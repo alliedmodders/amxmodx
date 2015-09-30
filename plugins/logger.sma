@@ -35,7 +35,7 @@ public plugin_init() {
 
 getBuildId() {
     new buildId[32];
-    formatex(buildId, charsmax(buildId), "%s.%s", VERSION_STRING, __DATE__);
+    formatex(buildId, charsmax(buildId), "%s [%s]", VERSION_STRING, __DATE__);
     return buildId;
 }
 

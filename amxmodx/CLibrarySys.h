@@ -12,7 +12,7 @@
 
 #include "amx.h"        // cell
 #include <interface.h>  // Interface (HLSDK)
-#include <am-utility.h> // AutoPtr
+#include <amtl/am-utility.h> // AutoPtr
 
 #define PLATFORM_WINDOWNS_NAME "windows"
 #define PLATFORM_LINUX_NAME    "linux"

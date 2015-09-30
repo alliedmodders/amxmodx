@@ -15,7 +15,7 @@
 #include "amxxmodule.h"
 #include "NVault.h"
 #include "Binary.h"
-#include <am-string.h>
+#include <amtl/am-string.h>
 
 /** 
  * :TODO: This beast calls strcpy()/new() way too much by creating new strings on the stack.

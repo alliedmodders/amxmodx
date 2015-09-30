@@ -14,7 +14,7 @@
 #ifndef _INCLUDE_TR_H
 #define _INCLUDE_TR_H
 
-#include <am-string.h>
+#include <amtl/am-string.h>
 
 extern TraceResult *gfm_tr;
 

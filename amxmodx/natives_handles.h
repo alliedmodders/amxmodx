@@ -10,7 +10,7 @@
 #ifndef _NATIVES_NATIVES_HANDLES_H_
 #define _NATIVES_NATIVES_HANDLES_H_
 
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 
 // Note: All handles start at 1. 0 and below are invalid handles.
 //       This way, a plugin that doesn't initialize a vector or

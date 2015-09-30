@@ -29,7 +29,7 @@
  * Version: $Id$
  */
 
-#include <am-moveable.h>
+#include <amtl/am-moveable.h>
 
 #ifndef _include_sourcemod_namehashset_h_
 #define _include_sourcemod_namehashset_h_
@@ -40,9 +40,9 @@
  * @brief Stores a set of uniquely named objects.
  */
 
-#include <am-allocator-policies.h>
-#include <am-hashmap.h>
-#include <am-string.h>
+#include <amtl/am-allocator-policies.h>
+#include <amtl/am-hashmap.h>
+#include <amtl/am-string.h>
 #include "sm_stringhashmap.h"
 
 //namespace SourceMod

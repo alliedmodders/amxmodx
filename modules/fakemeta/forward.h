@@ -14,7 +14,7 @@
 #ifndef _INCLUDE_FORWARD_H
 #define _INCLUDE_FORWARD_H
 
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 
 #define ENGFUNC_NUM		FM_LAST_DONT_USE_ME // 131
 

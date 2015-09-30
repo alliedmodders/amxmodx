@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <am-string.h>
+#include <amtl/am-string.h>
 #include "Hash.h"
 
 

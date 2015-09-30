@@ -17,7 +17,7 @@
 #include <amxxmodule.h>
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 
 extern ke::Vector<int> ModelsUpdateQueue;
 

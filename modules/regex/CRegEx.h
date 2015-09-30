@@ -14,8 +14,8 @@
 #ifndef _INCLUDE_CREGEX_H
 #define _INCLUDE_CREGEX_H
  
-#include <am-vector.h>
-#include <am-string.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-string.h>
 
 /**
  * Maximum number of sub-patterns, here 50 (this should be a multiple of 3).

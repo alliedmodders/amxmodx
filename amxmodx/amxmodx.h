@@ -36,8 +36,8 @@
 #include "CPlugin.h"
 #include "CLibrarySys.h"
 #include <auto-string.h>
-#include <am-string.h>
-#include <am-vector.h>
+#include <amtl/am-string.h>
+#include <amtl/am-vector.h>
 #include "CMisc.h"
 #include "CVault.h"
 #include "CModule.h"

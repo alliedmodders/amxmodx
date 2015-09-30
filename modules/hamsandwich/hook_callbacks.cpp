@@ -19,8 +19,8 @@
 #include <extdll.h>
 #include "amxxmodule.h"
 
-#include <am-vector.h>
-#include <am-string.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-string.h>
 #include <sh_stack.h>
 
 #include "hook.h"

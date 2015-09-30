@@ -11,8 +11,8 @@
 #define CVARS_H
 
 #include "amxmodx.h"
-#include <am-vector.h>
-#include <am-inlinelist.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-inlinelist.h>
 #include <sm_namehashset.h>
 
 class CDetour;

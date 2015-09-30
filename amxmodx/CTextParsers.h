@@ -33,7 +33,7 @@
 #define _INCLUDE_SOURCEMOD_TEXTPARSERS_H_
 
 #include <ITextParsers.h>
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 
 /**
 * @param void *			IN: Stream pointer

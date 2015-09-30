@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <am-string.h>
+#include <amtl/am-string.h>
 
 namespace ke {
 

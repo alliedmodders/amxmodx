@@ -14,7 +14,7 @@
 #include "amxxmodule.h"
 #include "sqlite_header.h"
 #include "threading.h"
-#include <am-string.h>
+#include <amtl/am-string.h>
 
 MainThreader g_Threader;
 ThreadWorker *g_pWorker = NULL;

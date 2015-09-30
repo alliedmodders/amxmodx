@@ -18,7 +18,7 @@
 #include "CstrikeUserMessages.h"
 #include "CstrikeHLTypeConversion.h"
 #include <CDetour/detours.h>
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 
 bool NoKifesMode = false;
 

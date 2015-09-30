@@ -23,9 +23,9 @@
 #include "entity.h"
 #include "gpglobals.h"
 #include "entity_state.h"
-#include <am-vector.h>
-#include <am-string.h>
-#include "CDetour/detours.h"
+#include <amtl/am-vector.h>
+#include <amtl/am-string.h>
+#include <CDetour/detours.h>
 
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;

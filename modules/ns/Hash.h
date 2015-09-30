@@ -14,8 +14,8 @@
 #ifndef _HASH_H_
 #define _HASH_H_
 
-#include <am-vector.h>
-#include <am-string.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-string.h>
 
 
 // Just a very simple hash map, no iteration or anything of the like (not needed)

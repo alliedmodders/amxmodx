@@ -9,7 +9,7 @@
 
 #include "amxmodx.h"
 #include "datastructs.h"
-#include <am-utility.h>
+#include <amtl/am-utility.h>
 
 NativeHandle<CellArray> ArrayHandles;
 

@@ -17,7 +17,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
-#include <am-string.h>
+#include <amtl/am-string.h>
 
 class GameManager
 {

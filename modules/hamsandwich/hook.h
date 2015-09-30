@@ -16,7 +16,7 @@
 
 #include "forward.h"
 #include "Trampolines.h"
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 
 #define ALIGN(ar) ((intptr_t)ar & ~(sysconf(_SC_PAGESIZE)-1))
 

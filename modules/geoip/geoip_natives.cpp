@@ -15,8 +15,8 @@
 #include "geoip_natives.h"
 #include "geoip_util.h"
 
-#include <am-string.h>
-#include <am-vector.h>
+#include <amtl/am-string.h>
+#include <amtl/am-vector.h>
 
 // native geoip_code2(const ip[], ccode[3]);
 // Deprecated.

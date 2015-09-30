@@ -8,7 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #include "BaseWorker.h"
-#include <am-linkedlist.h>
+#include <amtl/am-linkedlist.h>
 
 BaseWorker::BaseWorker() : 
 	m_perFrame(SM_DEFAULT_THREADS_PER_FRAME),

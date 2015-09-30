@@ -13,7 +13,7 @@
 
 #include <string.h>
 #include <sh_stack.h>
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 #include "mysql2_header.h"
 
 struct QHandle

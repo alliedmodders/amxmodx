@@ -13,8 +13,8 @@
 #include "sh_list.h"
 #include "amx.h"
 #include "amxxfile.h"
-#include <am-string.h>
-#include <am-vector.h>
+#include <amtl/am-string.h>
+#include <amtl/am-vector.h>
 
 // *****************************************************
 // class CPluginMngr

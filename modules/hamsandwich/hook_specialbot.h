@@ -15,7 +15,7 @@
 #define HOOK_SPECIALBOT_H
 
 #include "ham_utils.h"
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 #include "forward.h"
 
 class CRegisterHamParams

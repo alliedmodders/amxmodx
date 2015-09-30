@@ -12,9 +12,9 @@
 
 #include <IGameConfigs.h>
 #include "CLibrarySys.h"
-#include <am-vector.h>
-#include <am-string.h>
-#include <am-refcounting.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-string.h>
+#include <amtl/am-refcounting.h>
 #include <sm_stringhashmap.h>
 #include <sm_namehashset.h>
 

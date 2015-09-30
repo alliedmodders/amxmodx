@@ -23,8 +23,8 @@
 #ifndef ALLOCSTRING_H
 #define ALLOCSTRING_H
 
-#include <am-string.h>
-#include <am-linkedlist.h>
+#include <amtl/am-string.h>
+#include <amtl/am-linkedlist.h>
 
 class StringManager
 {

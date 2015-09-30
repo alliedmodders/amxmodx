@@ -32,7 +32,7 @@
 
 #if defined(__linux__) || defined(__APPLE__)
 	#include <stdint.h>
-	#include <am-vector.h>
+	#include <amtl/am-vector.h>
 	#include <sm_symtable.h>
 #endif
 

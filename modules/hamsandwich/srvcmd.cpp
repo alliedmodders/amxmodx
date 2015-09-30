@@ -13,7 +13,7 @@
 
 #include "amxxmodule.h"
 #include <stdarg.h>
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 #include "ham_const.h"
 #include "hooklist.h"
 #include "offsets.h"

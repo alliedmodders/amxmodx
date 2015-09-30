@@ -13,6 +13,7 @@
 #include "amx.h"        // cell
 #include <interface.h>  // Interface (HLSDK)
 #include <amtl/am-utility.h> // AutoPtr
+#include <amtl/os/am-shared-library.h>
 
 #define PLATFORM_WINDOWNS_NAME "windows"
 #define PLATFORM_LINUX_NAME    "linux"
@@ -124,8 +125,7 @@ class CLibrary
 {
 	public:
 
-		CLibrary(LibraryHandle me);
-		~CLibrary();
+		CLibrary(ke::Ref<ke::SharedLib> lib);
 
 	public:
 
@@ -134,7 +134,7 @@ class CLibrary
 
 	private:
 
-		LibraryHandle m_lib;
+		ke::Ref<ke::SharedLib> lib_;
 };
 
 class LibrarySystem

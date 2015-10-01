@@ -367,7 +367,7 @@ bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)
 	}
 
 	stamp = result.stamp;
-	UTIL_Format(buffer, len, "%s", result.value.chars());
+	ke::SafeSprintf(buffer, len, "%s", result.value.chars());
 
 	return true;
 }

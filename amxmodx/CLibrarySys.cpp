@@ -24,7 +24,7 @@ CDirectory::CDirectory(const char *path)
 #if defined PLATFORM_WINDOWS
 
 	char newpath[PLATFORM_MAX_PATH];
-	UTIL_Format(newpath, sizeof(newpath) - 1, "%s\\*.*", path);
+	ke::SafeSprintf(newpath, sizeof(newpath) - 1, "%s\\*.*", path);
 
 	m_dir = FindFirstFile(newpath, &m_fd);
 
@@ -40,7 +40,7 @@ CDirectory::CDirectory(const char *path)
 	if (IsValid())
 	{
 		m_ep = readdir(m_dir); // TODO: we need to read past "." and ".."!
-		UTIL_Format(m_origpath, sizeof(m_origpath) - 1, "%s", path);
+		ke::SafeSprintf(m_origpath, sizeof(m_origpath) - 1, "%s", path);
 	}
 	else
 	{
@@ -103,7 +103,7 @@ bool CDirectory::IsEntryDirectory()
 #elif defined PLATFORM_POSIX
 
 	char temppath[PLATFORM_MAX_PATH];
-	UTIL_Format(temppath, sizeof(temppath), "%s/%s", m_origpath, GetEntryName());
+	ke::SafeSprintf(temppath, sizeof(temppath), "%s/%s", m_origpath, GetEntryName());
 
 	return ke::file::IsDirectory(temppath);
 
@@ -119,7 +119,7 @@ bool CDirectory::IsEntryFile()
 #elif defined PLATFORM_POSIX
 
 	char temppath[PLATFORM_MAX_PATH];
-	UTIL_Format(temppath, sizeof(temppath), "%s/%s", m_origpath, GetEntryName());
+	ke::SafeSprintf(temppath, sizeof(temppath), "%s/%s", m_origpath, GetEntryName());
 
 	return ke::file::IsDirectory(temppath);
 
@@ -318,12 +318,12 @@ size_t LibrarySystem::GetFileFromPath(char* buffer, size_t maxlength, const char
 #endif
 			)
 		{
-			return UTIL_Format(buffer, maxlength, "%s", &path[i + 1]);
+			return ke::SafeSprintf(buffer, maxlength, "%s", &path[i + 1]);
 		}
 	}
 
 	/* We scanned and found no path separator */
-	return UTIL_Format(buffer, maxlength, "%s", path);
+	return ke::SafeSprintf(buffer, maxlength, "%s", path);
 }
 
 bool LibrarySystem::FileTime(const char* path, FileTimeType type, time_t* pTime)

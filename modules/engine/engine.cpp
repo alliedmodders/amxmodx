@@ -945,7 +945,7 @@ static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)
 // (jghg)
 static cell AMX_NATIVE_CALL get_string(AMX *amx, cell *params) // (string, returnstring[], length)
 {
-	UTIL_Format(g_buffer, sizeof(g_buffer)-1, "%s", STRING(params[1]));
+	ke::SafeSprintf(g_buffer, sizeof(g_buffer)-1, "%s", STRING(params[1]));
 	return MF_SetAmxString(amx, params[2], g_buffer, params[3]);
 }
 

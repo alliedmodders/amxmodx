@@ -19,6 +19,7 @@
 #include "CstrikeHLTypeConversion.h"
 #include <CDetour/detours.h>
 #include <amtl/am-vector.h>
+#include <amtl/am-string.h>
 
 bool NoKifesMode = false;
 
@@ -898,7 +899,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 		GET_OFFSET("CBasePlayer", m_modelIndexPlayer);
 
 		char model[260];
-		UTIL_Format(model, sizeof(model), "models/player/%s/%s.mdl", newModel, newModel);
+		ke::SafeSprintf(model, sizeof(model), "models/player/%s/%s.mdl", newModel, newModel);
 
 		for (size_t i = 0; i < HL_MODEL_MAX; ++i)
 		{

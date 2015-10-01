@@ -15,6 +15,7 @@
 #include "SqliteQuery.h"
 #include "SqliteDatabase.h"
 #include "SqliteResultSet.h"
+#include <amtl/am-string.h>
 
 using namespace SourceMod;
 
@@ -92,7 +93,7 @@ bool SqliteQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 	{
 		if (error && maxlength && errmsg)
 		{
-			UTIL_Format(error, maxlength, "%s", errmsg);
+			ke::SafeSprintf(error, maxlength, "%s", errmsg);
 		}
 		info->affected_rows = 0;
 		info->errorcode = err;

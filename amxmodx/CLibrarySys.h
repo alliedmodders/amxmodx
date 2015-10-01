@@ -67,15 +67,9 @@
 #define PLATFORM_MAX_PATH 260
 
 #if defined PLATFORM_WINDOWS
-
-	typedef HMODULE  LibraryHandle;
 	typedef HANDLE   DirHandle;
-
 #elif defined PLATFORM_POSIX
-
-	typedef void*    LibraryHandle;
 	typedef DIR*     DirHandle;
-
 #endif
 
 enum FileTimeType

@@ -157,7 +157,7 @@ static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
 	if (countryCode)
 	{
 		finalLength = length + 1; // + 1 for dash.
-		UTIL_Format(code, finalLength + 1, "%s-", countryCode); // + EOS.
+		ke::SafeSprintf(code, finalLength + 1, "%s-", countryCode); // + EOS.
 
 		const char *pathRegion[] = { "subdivisions", "0", "iso_code", NULL }; // First result.
 		const char *regionCode = lookupString(ip, pathRegion, &length);

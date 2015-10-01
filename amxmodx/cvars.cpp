@@ -240,7 +240,7 @@ static cell AMX_NATIVE_CALL set_cvar_float(AMX *amx, cell *params)
 
 	if (info)
 	{
-		UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
+		ke::SafeSprintf(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
 		CVAR_DIRECTSET(info->var, &CVarTempBuffer[0]);
 	}
 
@@ -258,7 +258,7 @@ static cell AMX_NATIVE_CALL set_cvar_num(AMX *amx, cell *params)
 
 	if (info)
 	{
-		UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%d", value);
+		ke::SafeSprintf(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%d", value);
 		CVAR_DIRECTSET(info->var, &CVarTempBuffer[0]);
 	}
 
@@ -444,7 +444,7 @@ static cell AMX_NATIVE_CALL set_pcvar_float(AMX *amx, cell *params)
 		return 0;
 	}
 
-	UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
+	ke::SafeSprintf(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%f", amx_ctof(params[2]));
 	CVAR_DIRECTSET(ptr, &CVarTempBuffer[0]);
 
 	return 1;
@@ -460,7 +460,7 @@ static cell AMX_NATIVE_CALL set_pcvar_num(AMX *amx, cell *params)
 		return 0;
 	}
 
-	UTIL_Format(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%d", params[2]);
+	ke::SafeSprintf(CVarTempBuffer, sizeof(CVarTempBuffer) - 1, "%d", params[2]);
 	CVAR_DIRECTSET(ptr, &CVarTempBuffer[0]);
 
 	return 1;

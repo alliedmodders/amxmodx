@@ -226,7 +226,7 @@ void LoadExtraPluginsToPCALM(const char *initialdir)
 	while (!files.empty())
 	{
 		ke::AString *pString = files.front();
-		UTIL_Format(path, sizeof(path)-1, "%s/%s", 
+		ke::SafeSprintf(path, sizeof(path)-1, "%s/%s",
 			initialdir,
 			pString->chars());
 		g_plugins.CALMFromFile(path);
@@ -243,7 +243,7 @@ void LoadExtraPluginsFromDir(const char *initialdir)
 	while (!files.empty())
 	{
 		ke::AString *pString = files.front();
-		UTIL_Format(path, sizeof(path)-1, "%s/%s", 
+		ke::SafeSprintf(path, sizeof(path)-1, "%s/%s",
 			initialdir,
 			pString->chars());
 		g_plugins.loadPluginsFromFile(path);
@@ -332,7 +332,7 @@ const char*	get_localinfo_r(const char *name, const char *def, char buffer[], si
 		SET_LOCALINFO((char*)name, (char*)(b = def));
 	}
 
-	UTIL_Format(buffer, maxlength, "%s", b);
+	ke::SafeSprintf(buffer, maxlength, "%s", b);
 
 	return buffer;
 }
@@ -425,7 +425,7 @@ int	C_Spawn(edict_t *pent)
 	LoadExtraPluginsToPCALM(configs_dir);
 	char temporaryMap[64], *tmap_ptr;
 
-	UTIL_Format(temporaryMap, sizeof(temporaryMap), "%s", STRING(gpGlobals->mapname));
+	ke::SafeSprintf(temporaryMap, sizeof(temporaryMap), "%s", STRING(gpGlobals->mapname));
 
 	prefixed_map_pluginsfile[0] = '\0';
 	if ((tmap_ptr = strchr(temporaryMap, '_')) != NULL)
@@ -433,7 +433,7 @@ int	C_Spawn(edict_t *pent)
 		// this map has a prefix
 
 		*tmap_ptr = '\0';
-		UTIL_Format(prefixed_map_pluginsfile, 
+		ke::SafeSprintf(prefixed_map_pluginsfile,
 			sizeof(prefixed_map_pluginsfile),
 			"%s/maps/plugins-%s.ini",
 			configs_dir,
@@ -441,7 +441,7 @@ int	C_Spawn(edict_t *pent)
 		g_plugins.CALMFromFile(prefixed_map_pluginsfile);
 	}
 
-	UTIL_Format(map_pluginsfile_path, 
+	ke::SafeSprintf(map_pluginsfile_path,
 		sizeof(map_pluginsfile_path),
 		"%s/maps/plugins-%s.ini",
 		configs_dir,

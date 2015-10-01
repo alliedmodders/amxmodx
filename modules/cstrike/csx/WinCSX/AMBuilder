@@ -6,7 +6,7 @@ binary = AMXX.Program(builder, 'WinCSX')
 binary.compiler.includes += [
   os.path.join(builder.currentSourcePath, 'resources'),
 ]
-binary.compiler.defines += ['_MBCS']
+binary.compiler.defines += ['_MBCS', 'HAVE_STDINT_H']
 binary.compiler.linkflags += [
   'comctl32.lib',
 ]

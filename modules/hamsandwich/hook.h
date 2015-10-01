@@ -17,6 +17,7 @@
 #include "forward.h"
 #include "Trampolines.h"
 #include <amtl/am-vector.h>
+#include <amtl/am-string.h>
 
 #define ALIGN(ar) ((intptr_t)ar & ~(sysconf(_SC_PAGESIZE)-1))
 
@@ -62,7 +63,7 @@ public:
 			size_t len=strlen(name);
 			ent=new char[len+1];
 
-			UTIL_Format(ent, len + 1, "%s", name);
+			ke::SafeSprintf(ent, len + 1, "%s", name);
 		};
 
 	~Hook()

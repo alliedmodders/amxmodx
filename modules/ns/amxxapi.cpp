@@ -23,6 +23,7 @@
 #include "ParticleManager.h"
 
 #include "AllocString.h"
+#include <amtl/am-string.h>
 
 extern int gmsgHudText2;
 extern BOOL iscombat;
@@ -91,9 +92,9 @@ void OnAmxxAttach()
 	char FileName[256];
 	DLHANDLE DLLBase;
 #ifdef __linux__
-	UTIL_Format(FileName, sizeof(FileName), "%s/dlls/ns_i386.so", MF_GetModname());
+	ke::SafeSprintf(FileName, sizeof(FileName), "%s/dlls/ns_i386.so", MF_GetModname());
 #else
-	UTIL_Format(FileName, sizeof(FileName), "%s\\dlls\\ns.dll", MF_GetModname());
+	ke::SafeSprintf(FileName, sizeof(FileName), "%s\\dlls\\ns.dll", MF_GetModname());
 #endif
 
 	DLLBase = DLOPEN(FileName);

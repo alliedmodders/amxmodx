@@ -10,22 +10,6 @@
 #include <time.h>
 #include "amxmodx.h"
 
-#if ( defined(__linux__) || defined(__APPLE__) ) && !defined _vsnprintf
-	#define _vsnprintf vsnprintf
-#endif
-
-char *UTIL_VarArgs(const char *fmt, ...)
-{
-	va_list ap;
-	static char string[4096];
-
-	va_start(ap, fmt);
-	ke::SafeVsprintf(string, sizeof(string), fmt, ap);
-	va_end(ap);
-
-	return string;
-}
-
 int UTIL_ReadFlags(const char* c) 
 {
 	int flags = 0;
@@ -351,8 +335,8 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 		g_fakecmd.argv[1] = arg1;
 		g_fakecmd.argv[2] = arg2;
 		// build argument line
-		UTIL_Format(g_fakecmd.args, 255, "%s %s", arg1, arg2);
-		// if UTIL_Format reached 255 chars limit, this will make sure there will be no access violation
+		ke::SafeSprintf(g_fakecmd.args, 255, "%s %s", arg1, arg2);
+		// if ke::SafeSprintf reached 255 chars limit, this will make sure there will be no access violation
 		g_fakecmd.args[255] = 0;
 	}
 	else if (arg1)
@@ -361,8 +345,8 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 		// store argument
 		g_fakecmd.argv[1] = arg1;
 		// build argument line
-		UTIL_Format(g_fakecmd.args, 255, "%s", arg1);
-		// if UTIL_Format reached 255 chars limit, this will make sure there will be no access violation
+		ke::SafeSprintf(g_fakecmd.args, 255, "%s", arg1);
+		// if ke::SafeSprintf reached 255 chars limit, this will make sure there will be no access violation
 		g_fakecmd.args[255] = 0;
 	}
 	else
@@ -692,16 +676,6 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 	}
 
 	return NULL;
-}
-
-size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	size_t len = ke::SafeVsprintf(buffer, maxlength, fmt, ap);
-	va_end(ap);
-
-	return len;
 }
 
 // From Metamod:Source

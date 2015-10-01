@@ -53,8 +53,8 @@ void CoreConfig::ExecuteMainConfig()
 	char path[PLATFORM_MAX_PATH];
 	char command[PLATFORM_MAX_PATH + sizeof(CommandFormat)];
 
-	UTIL_Format(path, sizeof(path), "%s/%s/%s", g_mod_name.chars(), get_localinfo("amx_configdir", "addons/amxmodx/configs"), MainConfigFile);
-	UTIL_Format(command, sizeof(command), CommandFormat, path);
+	ke::SafeSprintf(path, sizeof(path), "%s/%s/%s", g_mod_name.chars(), get_localinfo("amx_configdir", "addons/amxmodx/configs"), MainConfigFile);
+	ke::SafeSprintf(command, sizeof(command), CommandFormat, path);
 
 	SERVER_COMMAND(command);
 }
@@ -140,11 +140,11 @@ bool CoreConfig::ExecuteAutoConfig(CPluginMngr::CPlugin *plugin, AutoConfig *con
 
 	if (config->folder.length())
 	{
-		UTIL_Format(file, sizeof(file), "%s/%s%s/%s/%s.cfg", g_mod_name.chars(), configsDir, AutoConfigDir, config->folder.chars(), config->autocfg.chars());
+		ke::SafeSprintf(file, sizeof(file), "%s/%s%s/%s/%s.cfg", g_mod_name.chars(), configsDir, AutoConfigDir, config->folder.chars(), config->autocfg.chars());
 	}
 	else
 	{
-		UTIL_Format(file, sizeof(file), "%s/%s%s/%s.cfg", g_mod_name.chars(), configsDir, AutoConfigDir, config->autocfg.chars());
+		ke::SafeSprintf(file, sizeof(file), "%s/%s%s/%s.cfg", g_mod_name.chars(), configsDir, AutoConfigDir, config->autocfg.chars());
 	}
 
 	bool file_exists = g_LibSys.IsPathFile(file);
@@ -244,7 +244,7 @@ bool CoreConfig::ExecuteAutoConfig(CPluginMngr::CPlugin *plugin, AutoConfig *con
 	if (file_exists)
 	{
 		char command[PLATFORM_MAX_PATH + sizeof(CommandFormat)];
-		UTIL_Format(command, sizeof(command), CommandFormat, file);
+		ke::SafeSprintf(command, sizeof(command), CommandFormat, file);
 
 		SERVER_COMMAND(command);
 	}
@@ -266,21 +266,21 @@ void CoreConfig::ExecuteMapConfig()
 
 	if ((mapPrefix = strtok(mapName, "_")))
 	{
-		UTIL_Format(cfgPath, sizeof(cfgPath), "%s/%s%s/prefix_%s.cfg", g_mod_name.chars(), configsDir, MapConfigDir, mapPrefix);
+		ke::SafeSprintf(cfgPath, sizeof(cfgPath), "%s/%s%s/prefix_%s.cfg", g_mod_name.chars(), configsDir, MapConfigDir, mapPrefix);
 
 		if (g_LibSys.IsPathFile(cfgPath))
 		{
-			UTIL_Format(command, sizeof(command), CommandFormat, cfgPath);
+			ke::SafeSprintf(command, sizeof(command), CommandFormat, cfgPath);
 			SERVER_COMMAND(command);
 		}
 	}
 
 	strncopy(mapName, STRING(gpGlobals->mapname), sizeof(mapName));
-	UTIL_Format(cfgPath, sizeof(cfgPath), "%s/%s%s/%s.cfg", g_mod_name.chars(), configsDir, MapConfigDir, mapName);
+	ke::SafeSprintf(cfgPath, sizeof(cfgPath), "%s/%s%s/%s.cfg", g_mod_name.chars(), configsDir, MapConfigDir, mapName);
 
 	if (g_LibSys.IsPathFile(cfgPath))
 	{
-		UTIL_Format(command, sizeof(command), CommandFormat, cfgPath);
+		ke::SafeSprintf(command, sizeof(command), CommandFormat, cfgPath);
 		SERVER_COMMAND(command);
 	}
 

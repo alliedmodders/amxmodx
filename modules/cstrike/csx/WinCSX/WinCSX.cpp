@@ -179,7 +179,7 @@ void UpdateListBox(HWND hDlg) {
 		//if ((*b).getPosition() < 1) // umm... naaah!
 			//continue;
 
-		ke::SafeSprintf(tempbuffer, sizeof(tempbuffer)-1, "%s", (*b).getName());
+		ke::SafeSprintf(tempbuffer, sizeof(tempbuffer), "%s", (*b).getName());
 
 		SendMessage(      // returns LRESULT in lResult
 			listbox,      // handle to destination control
@@ -326,7 +326,7 @@ void SaveChanges(HWND hDlg) {
 	UpdateListBox(hDlg);
 
 	char buffer[256];
-	ke::SafeSprintf(buffer, sizeof(buffer)-1, "New rank of %s: %d", name, newPosition);
+	ke::SafeSprintf(buffer, sizeof(buffer), "New rank of %s: %d", name, newPosition);
 	MessageBox(hDlg, buffer, "Update succeeded", MB_OK);
 
 	// In the listbox, we need to reselect the item we just updated. Use the new name.

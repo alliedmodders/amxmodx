@@ -109,7 +109,7 @@ static void read_mirror(char *input)
 	*data='\0';
 
 	// mark down the source
-	ke::SafeSprintf(source, sizeof(source)-1, "%s", input);
+	ke::SafeSprintf(source, sizeof(source), "%s", input);
 
 	*data=old;
 
@@ -129,13 +129,13 @@ static void read_mirror(char *input)
 	old=*data;
 	*data='\0';
 
-	ke::SafeSprintf(dest, sizeof(dest)-1, "%s", data2);
+	ke::SafeSprintf(dest, sizeof(dest), "%s", data2);
 
 	*data=old;
 
 	if (strcmp(dest, CurrentModName)==0)
 	{
-		ke::SafeSprintf(CurrentModName, sizeof(CurrentModName)-1, "%s", source);
+		ke::SafeSprintf(CurrentModName, sizeof(CurrentModName), "%s", source);
 	}
 
 }
@@ -314,7 +314,7 @@ int ReadConfig(void)
 	FILE *fp=fopen(FileName,"r");
 
 
-	ke::SafeSprintf(CurrentModName, sizeof(CurrentModName)-1, "%s", MF_GetModname());
+	ke::SafeSprintf(CurrentModName, sizeof(CurrentModName), "%s", MF_GetModname());
 
 	if (!fp)
 	{

@@ -673,7 +673,7 @@ reswitch:
 				if (!def)
 				{
 					static char buf[255];
-					ke::SafeSprintf(buf, sizeof(buf) - 1, "ML_NOTFOUND: %s", key);
+					ke::SafeSprintf(buf, sizeof(buf), "ML_NOTFOUND: %s", key);
 					def = buf;
 				}
 				size_t written = atcprintf(buf_p, llen, def, amx, params, &arg);

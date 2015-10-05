@@ -26,7 +26,7 @@ void ParticleManager::ReadFile(void)
 
 	char FileName[256];
 
-	ke::SafeSprintf(FileName, sizeof(FileName)-1, "%s/ns.ps", MF_GetModname());
+	ke::SafeSprintf(FileName, sizeof(FileName), "%s/ns.ps", MF_GetModname());
 	FILE *fp=fopen(FileName,"r");
 
 	if (!fp)

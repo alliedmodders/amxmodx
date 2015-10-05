@@ -335,9 +335,7 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 		g_fakecmd.argv[1] = arg1;
 		g_fakecmd.argv[2] = arg2;
 		// build argument line
-		ke::SafeSprintf(g_fakecmd.args, 255, "%s %s", arg1, arg2);
-		// if ke::SafeSprintf reached 255 chars limit, this will make sure there will be no access violation
-		g_fakecmd.args[255] = 0;
+		ke::SafeSprintf(g_fakecmd.args, sizeof(g_fakecmd.args), "%s %s", arg1, arg2);
 	}
 	else if (arg1)
 	{								// only one argument passed
@@ -345,9 +343,7 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 		// store argument
 		g_fakecmd.argv[1] = arg1;
 		// build argument line
-		ke::SafeSprintf(g_fakecmd.args, 255, "%s", arg1);
-		// if ke::SafeSprintf reached 255 chars limit, this will make sure there will be no access violation
-		g_fakecmd.args[255] = 0;
+		ke::SafeSprintf(g_fakecmd.args, sizeof(g_fakecmd.args), "%s", arg1);
 	}
 	else
 		g_fakecmd.argc = 1;			// no argmuents -> only one command

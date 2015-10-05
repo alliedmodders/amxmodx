@@ -670,7 +670,7 @@ char* build_pathname(const char *fmt, ...)
 {
 	static char string[256];
 	int b;
-	int a = b = ke::SafeSprintf(string, 255, "%s%c", g_mod_name.chars(), PATH_SEP_CHAR);
+	int a = b = ke::SafeSprintf(string, sizeof(string), "%s%c", g_mod_name.chars(), PATH_SEP_CHAR);
 
 	va_list argptr;
 	va_start(argptr, fmt);

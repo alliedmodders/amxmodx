@@ -24,7 +24,7 @@ CDirectory::CDirectory(const char *path)
 #if defined PLATFORM_WINDOWS
 
 	char newpath[PLATFORM_MAX_PATH];
-	ke::SafeSprintf(newpath, sizeof(newpath) - 1, "%s\\*.*", path);
+	ke::SafeSprintf(newpath, sizeof(newpath), "%s\\*.*", path);
 
 	m_dir = FindFirstFile(newpath, &m_fd);
 
@@ -40,7 +40,7 @@ CDirectory::CDirectory(const char *path)
 	if (IsValid())
 	{
 		m_ep = readdir(m_dir); // TODO: we need to read past "." and ".."!
-		ke::SafeSprintf(m_origpath, sizeof(m_origpath) - 1, "%s", path);
+		ke::SafeSprintf(m_origpath, sizeof(m_origpath), "%s", path);
 	}
 	else
 	{
@@ -121,7 +121,7 @@ bool CDirectory::IsEntryFile()
 	char temppath[PLATFORM_MAX_PATH];
 	ke::SafeSprintf(temppath, sizeof(temppath), "%s/%s", m_origpath, GetEntryName());
 
-	return ke::file::IsDirectory(temppath);
+	return ke::file::IsFile(temppath);
 
 #endif
 }

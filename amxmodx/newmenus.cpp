@@ -289,7 +289,7 @@ bool Menu::Display(int player, page_t page)
 		return false;
 
 	static char buffer[2048];
-	int len = ke::SafeSprintf(buffer, sizeof(buffer)-1, "%s", str);
+	int len = ke::SafeSprintf(buffer, sizeof(buffer), "%s", str);
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
 
@@ -342,14 +342,14 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	if (items_per_page && (pages != 1))
 	{
 		if (m_AutoColors)
-			ke::SafeSprintf(buffer, sizeof(buffer)-1, "\\y%s %d/%d\n\\w\n", m_Title.chars(), page + 1, pages);
+			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s %d/%d\n\\w\n", m_Title.chars(), page + 1, pages);
 		else
-			ke::SafeSprintf(buffer, sizeof(buffer)-1, "%s %d/%d\n\n", m_Title.chars(), page + 1, pages);
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s %d/%d\n\n", m_Title.chars(), page + 1, pages);
 	} else {
 		if (m_AutoColors)
-			ke::SafeSprintf(buffer, sizeof(buffer)-1, "\\y%s\n\\w\n", m_Title.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s\n\\w\n", m_Title.chars());
 		else
-			ke::SafeSprintf(buffer, sizeof(buffer)-1, "%s\n\n", m_Title.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n\n", m_Title.chars());
 	}
 	
 	m_Text = m_Text + buffer;
@@ -446,22 +446,22 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 
 		if (pItem->isBlank)
 		{
-			ke::SafeSprintf(buffer, sizeof(buffer)-1, "%s\n", pItem->name.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n", pItem->name.chars());
 		}
 		else if (enabled)
 		{
 			if (m_AutoColors) 
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer)-1, "%s%d.\\w %s\n", m_ItemColor.chars(),option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.\\w %s\n", m_ItemColor.chars(),option_display, pItem->name.chars());
 			} else {
-				ke::SafeSprintf(buffer, sizeof(buffer)-1, "%d. %s\n", option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "%d. %s\n", option_display, pItem->name.chars());
 			}
 		} else {
 			if (m_AutoColors)
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer)-1, "\\d%d. %s\n\\w", option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "\\d%d. %s\n\\w", option_display, pItem->name.chars());
 			} else {
-				ke::SafeSprintf(buffer, sizeof(buffer)-1, "#. %s\n", pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", pItem->name.chars());
 			}
 		}
 		slots++;
@@ -504,14 +504,14 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				if (m_AutoColors)
 				{
 					ke::SafeSprintf(buffer,
-						sizeof(buffer)-1, 
+						sizeof(buffer), 
 						"%s%d. \\w%s\n", 
 						m_ItemColor.chars(), 
 						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_BACK)].chars());
 				} else {
 					ke::SafeSprintf(buffer,
-						sizeof(buffer)-1, 
+						sizeof(buffer), 
 						"%d. %s\n", 
 						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_BACK)].chars());
@@ -521,12 +521,12 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				if (m_AutoColors)
 				{
 					ke::SafeSprintf(buffer,
-						sizeof(buffer)-1,
+						sizeof(buffer),
 						"\\d%d. %s\n\\w",
 						option == 10 ? 0 : option,
 						m_OptNames[abs(MENU_BACK)].chars());
 				} else {
-					ke::SafeSprintf(buffer, sizeof(buffer)-1, "#. %s\n", m_OptNames[abs(MENU_BACK)].chars());
+					ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", m_OptNames[abs(MENU_BACK)].chars());
 				}
 			}
 			m_Text = m_Text + buffer;
@@ -537,14 +537,14 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				if (m_AutoColors)
 				{
 					ke::SafeSprintf(buffer,
-						sizeof(buffer)-1, 
+						sizeof(buffer), 
 						"%s%d. \\w%s\n", 
 						m_ItemColor.chars(), 
 						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_MORE)].chars());
 				} else {
 					ke::SafeSprintf(buffer,
-						sizeof(buffer)-1, 
+						sizeof(buffer), 
 						"%d. %s\n", 
 						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_MORE)].chars());
@@ -554,12 +554,12 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				if (m_AutoColors)
 				{
 					ke::SafeSprintf(buffer,
-						sizeof(buffer)-1,
+						sizeof(buffer),
 						"\\d%d. %s\n\\w",
 						option == 10 ? 0 : option,
 						m_OptNames[abs(MENU_MORE)].chars());
 				} else {
-					ke::SafeSprintf(buffer, sizeof(buffer)-1, "#. %s\n", m_OptNames[abs(MENU_MORE)].chars());
+					ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", m_OptNames[abs(MENU_MORE)].chars());
 				}
 			}
 			m_Text = m_Text + buffer;
@@ -579,14 +579,14 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		if (m_AutoColors)
 		{
 			ke::SafeSprintf(buffer,
-				sizeof(buffer)-1, 
+				sizeof(buffer), 
 				"%s%d. \\w%s\n", 
 				m_ItemColor.chars(), 
 				option == 10 ? 0 : option, 
 				m_OptNames[abs(MENU_EXIT)].chars());
 		} else {
 			ke::SafeSprintf(buffer,
-				sizeof(buffer)-1, 
+				sizeof(buffer), 
 				"%d. %s\n", 
 				option == 10 ? 0 : option, 
 				m_OptNames[abs(MENU_EXIT)].chars());

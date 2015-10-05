@@ -97,7 +97,7 @@ size_t AddLibrariesFromString(const char *name, LibType type, LibSource src, voi
 	char *ptr, *p, s;
 	size_t count = 0;
 
-	ke::SafeSprintf(buffer, sizeof(buffer)-1, "%s", name);
+	ke::SafeSprintf(buffer, sizeof(buffer), "%s", name);
 
 	ptr = buffer;
 	p = buffer;

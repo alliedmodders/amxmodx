@@ -226,7 +226,7 @@ void LoadExtraPluginsToPCALM(const char *initialdir)
 	while (!files.empty())
 	{
 		ke::AString *pString = files.front();
-		ke::SafeSprintf(path, sizeof(path)-1, "%s/%s",
+		ke::SafeSprintf(path, sizeof(path), "%s/%s",
 			initialdir,
 			pString->chars());
 		g_plugins.CALMFromFile(path);
@@ -243,7 +243,7 @@ void LoadExtraPluginsFromDir(const char *initialdir)
 	while (!files.empty())
 	{
 		ke::AString *pString = files.front();
-		ke::SafeSprintf(path, sizeof(path)-1, "%s/%s",
+		ke::SafeSprintf(path, sizeof(path), "%s/%s",
 			initialdir,
 			pString->chars());
 		g_plugins.loadPluginsFromFile(path);

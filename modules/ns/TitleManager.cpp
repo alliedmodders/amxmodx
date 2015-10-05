@@ -27,7 +27,7 @@ void TitleManager::LoadTitles(void)
 
 	char FileName[128];
 
-	ke::SafeSprintf(FileName, sizeof(FileName)-1, "%s/titles.txt", MF_GetModname());
+	ke::SafeSprintf(FileName, sizeof(FileName), "%s/titles.txt", MF_GetModname());
 
 	FILE *fp=fopen(FileName,"r");
 

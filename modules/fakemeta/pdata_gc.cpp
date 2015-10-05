@@ -12,7 +12,7 @@
 //
 
 #include "fakemeta_amxx.h"
-#include <am-algorithm.h>
+#include <amtl/am-algorithm.h>
 
 enum class BaseFieldType
 {

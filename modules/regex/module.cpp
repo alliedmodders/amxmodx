@@ -14,8 +14,8 @@
 #include <string.h>
 #include "pcre.h"
 #include "amxxmodule.h"
-#include <am-vector.h>
-#include <am-utility.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-utility.h>
 #include "CRegEx.h"
 #include "utils.h"
 

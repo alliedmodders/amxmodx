@@ -270,7 +270,8 @@ class AMXXConfig(object):
         
     cfg.includes += [os.path.join(builder.sourcePath, 'public')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'sdk')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl', 'include')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl')]
+    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl', 'amtl')]
     cfg.includes += [os.path.join(builder.sourcePath, 'public', 'memtools')]
     cfg.includes += [os.path.join(builder.sourcePath, 'third_party')]
     cfg.includes += [os.path.join(builder.sourcePath, 'third_party', 'hashing')]

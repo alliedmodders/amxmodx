@@ -15,8 +15,8 @@
 #include "geoip_natives.h"
 #include "geoip_util.h"
 
-#include <am-string.h>
-#include <am-vector.h>
+#include <amtl/am-string.h>
+#include <amtl/am-vector.h>
 
 // native geoip_code2(const ip[], ccode[3]);
 // Deprecated.
@@ -157,7 +157,7 @@ static cell AMX_NATIVE_CALL amx_geoip_region_code(AMX *amx, cell *params)
 	if (countryCode)
 	{
 		finalLength = length + 1; // + 1 for dash.
-		UTIL_Format(code, finalLength + 1, "%s-", countryCode); // + EOS.
+		ke::SafeSprintf(code, finalLength + 1, "%s-", countryCode); // + EOS.
 
 		const char *pathRegion[] = { "subdivisions", "0", "iso_code", NULL }; // First result.
 		const char *regionCode = lookupString(ip, pathRegion, &length);

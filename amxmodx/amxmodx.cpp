@@ -4506,7 +4506,7 @@ static cell AMX_NATIVE_CALL AutoExecConfig(AMX *amx, cell *params)
 		}
 
 		static char newName[PLATFORM_MAX_PATH];
-		UTIL_Format(newName, sizeof(newName), "plugin-%s", pluginName);
+		ke::SafeSprintf(newName, sizeof(newName), "plugin-%s", pluginName);
 
 		name = newName;
 	}

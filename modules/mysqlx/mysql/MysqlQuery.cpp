@@ -15,6 +15,7 @@
 #include "MysqlQuery.h"
 #include "MysqlDatabase.h"
 #include "MysqlResultSet.h"
+#include <amtl/am-string.h>
 
 using namespace SourceMod;
 
@@ -90,7 +91,7 @@ bool MysqlQuery::ExecuteR(QueryInfo *info, char *error, size_t maxlength)
 		info->rs = NULL;
 		if (error && maxlength)
 		{
-			UTIL_Format(error, maxlength, "%s", mysql_error(m_pDatabase->m_pMysql));
+			ke::SafeSprintf(error, maxlength, "%s", mysql_error(m_pDatabase->m_pMysql));
 		}
 	}
 	else

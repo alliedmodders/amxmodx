@@ -15,8 +15,8 @@
 #define _INCLUDE_AMXXAPI_H
 
 #include "amxxmodule.h"
-#include <am-vector.h>
-#include <am-string.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-string.h>
 #include <sm_queue.h>
 
 extern AMX_NATIVE_INFO nVault_natives[];

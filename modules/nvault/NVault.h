@@ -14,7 +14,7 @@
 #ifndef _INCLUDE_NVAULT_H
 #define _INCLUDE_NVAULT_H
 
-#include <am-linkedlist.h>
+#include <amtl/am-linkedlist.h>
 #include <sm_stringhashmap.h>
 #include "IVault.h"
 #include "Journal.h"

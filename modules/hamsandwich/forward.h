@@ -16,7 +16,7 @@
 #ifndef FORWARD_H
 #define FORWARD_H
 
-#include <am-refcounting.h>
+#include <amtl/am-refcounting.h>
 
 enum fwdstate
 {

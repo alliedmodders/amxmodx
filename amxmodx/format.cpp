@@ -673,7 +673,7 @@ reswitch:
 				if (!def)
 				{
 					static char buf[255];
-					UTIL_Format(buf, sizeof(buf) - 1, "ML_NOTFOUND: %s", key);
+					ke::SafeSprintf(buf, sizeof(buf), "ML_NOTFOUND: %s", key);
 					def = buf;
 				}
 				size_t written = atcprintf(buf_p, llen, def, amx, params, &arg);
@@ -708,11 +708,11 @@ reswitch:
 					}
 
 					int userid = GETPLAYERUSERID(player->pEdict);
-					UTIL_Format(buffer, sizeof(buffer), "%s<%d><%s><%s>", player->name.chars(), userid, auth, player->team.chars());
+					ke::SafeSprintf(buffer, sizeof(buffer), "%s<%d><%s><%s>", player->name.chars(), userid, auth, player->team.chars());
 				}
 				else
 				{
-					UTIL_Format(buffer, sizeof(buffer), "Console<0><Console><Console>");
+					ke::SafeSprintf(buffer, sizeof(buffer), "Console<0><Console><Console>");
 				}
 
 				AddString(&buf_p, llen, buffer, width, prec);

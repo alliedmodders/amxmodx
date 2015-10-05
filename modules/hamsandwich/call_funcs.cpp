@@ -18,8 +18,8 @@
 #include "hooklist.h"
 #include "forward.h"
 #include "hook.h"
-#include <am-vector.h>
-#include <am-string.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-string.h>
 
 extern ke::Vector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 

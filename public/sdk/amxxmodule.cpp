@@ -3134,24 +3134,6 @@ unsigned short FixedUnsigned16( float value, float scale )
 }
 #endif // USE_METAMOD
 
-size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	size_t len = vsnprintf(buffer, maxlength, fmt, ap);
-	va_end(ap);
-
-	if (len >= maxlength)
-	{
-		buffer[maxlength - 1] = '\0';
-		return (maxlength - 1);
-	}
-	else
-	{
-		return len;
-	}
-}
-
 template unsigned int strncopy<char, char>(char *, const char *src, size_t count);
 template unsigned int strncopy<cell, char>(cell *, const char *src, size_t count);
 template unsigned int strncopy<cell, cell>(cell *, const cell *src, size_t count);

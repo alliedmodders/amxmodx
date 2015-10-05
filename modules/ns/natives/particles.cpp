@@ -17,8 +17,8 @@
 #include "utilfunctions.h"
 #include "NEW_Util.h"
 #include "ParticleManager.h"
-#include <am-vector.h>
-#include <am-string.h>
+#include <amtl/am-vector.h>
+#include <amtl/am-string.h>
 
 #define KVI(__KEY) PSKeyValueI(__KEY,amx,params)
 #define KVF(__KEY) PSKeyValueF(__KEY,amx,params)
@@ -48,7 +48,7 @@ cell PSKeyValueI(const char *name, AMX *amx, cell *params)
 
 	char StrData[1024];
 
-	UTIL_Format(StrData, sizeof(StrData)-1, "%d", params[2]);
+	ke::SafeSprintf(StrData, sizeof(StrData), "%d", params[2]);
 
 	kvd.szClassName=const_cast<char *>(STRING(reinterpret_cast<edict_t *>(params[1])->v.classname));
 	kvd.szKeyName=name;
@@ -71,7 +71,7 @@ cell PSKeyValueF(const char *name, AMX *amx, cell *params)
 
 	char StrData[1024];
 
-	UTIL_Format(StrData, sizeof(StrData)-1, "%f", amx_ctof2(params[2]));
+	ke::SafeSprintf(StrData, sizeof(StrData), "%f", amx_ctof2(params[2]));
 
 	kvd.szClassName=const_cast<char *>(STRING(reinterpret_cast<edict_t *>(params[1])->v.classname));
 	kvd.szKeyName=name;

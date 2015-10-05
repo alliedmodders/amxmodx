@@ -36,8 +36,8 @@
 #include "CPlugin.h"
 #include "CLibrarySys.h"
 #include <auto-string.h>
-#include <am-string.h>
-#include <am-vector.h>
+#include <amtl/am-string.h>
+#include <amtl/am-vector.h>
 #include "CMisc.h"
 #include "CVault.h"
 #include "CModule.h"
@@ -139,8 +139,6 @@ template <typename D, typename S> unsigned int strncopy(D *dest, const S *src, s
 unsigned int UTIL_GetUTF8CharBytes(const char *stream);
 unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive);
 char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive);
-char *UTIL_VarArgs(const char *fmt, ...);
-size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...);
 void UTIL_TrimLeft(char *buffer);
 void UTIL_TrimRight(char *buffer);
 

@@ -16,7 +16,7 @@
 
 #include "IThreader.h"
 #include "ISQLDriver.h"
-#include <am-string.h>
+#include <amtl/am-string.h>
 #include <sh_stack.h>
 
 struct QueuedResultInfo

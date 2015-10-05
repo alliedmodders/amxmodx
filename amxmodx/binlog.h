@@ -12,7 +12,7 @@
 
 #if defined BINLOG_ENABLED
 
-#include <am-string.h>
+#include <amtl/am-string.h>
 
 #define BINLOG_MAGIC	0x414D424C
 #define BINLOG_VERSION	0x0300

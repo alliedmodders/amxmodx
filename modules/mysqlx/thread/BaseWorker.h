@@ -10,7 +10,7 @@
 #ifndef _INCLUDE_SOURCEMOD_BASEWORKER_H
 #define _INCLUDE_SOURCEMOD_BASEWORKER_H
 
-#include <am-linkedlist.h>
+#include <amtl/am-linkedlist.h>
 #include "ThreadSupport.h"
 
 #define SM_DEFAULT_THREADS_PER_FRAME	1

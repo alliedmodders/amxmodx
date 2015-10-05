@@ -15,7 +15,7 @@
 #include <extdll.h>
 
 #include "NEW_Util.h"
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 #include "forward.h"
 #include "hook.h"
 #include "ham_const.h"

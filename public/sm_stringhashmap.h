@@ -44,10 +44,10 @@
  * NameHashSet instead.
  */
 
-#include <am-allocator-policies.h>
-#include <am-hashmap.h>
-#include <am-string.h>
-#include <am-moveable.h>
+#include <amtl/am-allocator-policies.h>
+#include <amtl/am-hashmap.h>
+#include <amtl/am-string.h>
+#include <amtl/am-moveable.h>
 #include <string.h>
 
 //namespace SourceMod

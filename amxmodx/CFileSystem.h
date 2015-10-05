@@ -12,7 +12,6 @@
 
 #include <FileSystem.h> // IFileSystem, FileSystemSeek_t, FileHandle_t (HLSDK)
 #include <stdio.h>      // FILE*
-#include <am-cxx.h>     // KE_OVERRIDE
 
 extern IFileSystem* g_FileSystem;
 
@@ -38,7 +37,7 @@ class FileObject
 		virtual bool EndOfFile() = 0;
 		virtual void Close() = 0;
 
-		virtual ValveFile *AsValveFile() 
+		virtual ValveFile *AsValveFile()
 		{
 			return nullptr;
 		}
@@ -55,7 +54,7 @@ class ValveFile : public FileObject
 
 		ValveFile(FileHandle_t handle) : handle_(handle) {}
 
-		~ValveFile() 
+		~ValveFile()
 		{
 			Close();
 		}
@@ -65,10 +64,10 @@ class ValveFile : public FileObject
 			return g_FileSystem->FileExists(file);
 		}
 
-		static ValveFile* Open(const char* filename, const char* mode, const char* pathID) 
+		static ValveFile* Open(const char* filename, const char* mode, const char* pathID)
 		{
 			FileHandle_t handle = g_FileSystem->OpenFromCacheForRead(filename, mode, pathID);
-			
+
 			if (!handle)
 			{
 				return nullptr;
@@ -77,7 +76,7 @@ class ValveFile : public FileObject
 			return new ValveFile(handle);
 		}
 
-		static bool Delete(const char* filename, const char* pathID) 
+		static bool Delete(const char* filename, const char* pathID)
 		{
 			if (!Exists(filename))
 			{
@@ -94,49 +93,49 @@ class ValveFile : public FileObject
 			return true;
 		}
 
-		size_t Read(void* pOut, size_t size) KE_OVERRIDE
+		size_t Read(void* pOut, size_t size) override
 		{
 			return static_cast<size_t>(g_FileSystem->Read(pOut, size, handle_));
 		}
-		
-		char* ReadLine(char* pOut, size_t size) KE_OVERRIDE
+
+		char* ReadLine(char* pOut, size_t size) override
 		{
 			return g_FileSystem->ReadLine(pOut, size, handle_);
 		}
 
-		size_t Write(const void* pData, size_t size) KE_OVERRIDE
+		size_t Write(const void* pData, size_t size) override
 		{
 			return static_cast<size_t>(g_FileSystem->Write(pData, size, handle_));
 		}
-		
-		bool Seek(int pos, int seek_type) KE_OVERRIDE
+
+		bool Seek(int pos, int seek_type) override
 		{
 			g_FileSystem->Seek(handle_, pos, static_cast<FileSystemSeek_t>(seek_type));
 			return !HasError();
 		}
-		
-		int Tell() KE_OVERRIDE
+
+		int Tell() override
 		{
 			return g_FileSystem->Tell(handle_);
 		}
-		
-		bool HasError() KE_OVERRIDE
+
+		bool HasError() override
 		{
 			return !handle_ || !g_FileSystem->IsOk(handle_);
 		}
-		
-		int Flush() KE_OVERRIDE
+
+		int Flush() override
 		{
 			g_FileSystem->Flush(handle_);
 			return 0;
 		}
-		
-		bool EndOfFile() KE_OVERRIDE 
+
+		bool EndOfFile() override
 		{
 			return g_FileSystem->EndOfFile(handle_);
 		}
-	
-		void Close() KE_OVERRIDE 
+
+		void Close() override
 		{
 			if (handle_)
 			{
@@ -144,8 +143,8 @@ class ValveFile : public FileObject
 				handle_ = nullptr;;
 			}
 		}
-		
-		virtual ValveFile* AsValveFile() 
+
+		virtual ValveFile* AsValveFile()
 		{
 			return this;
 		}
@@ -167,12 +166,12 @@ class SystemFile : public FileObject
 
 		SystemFile(FILE* fp) : fp_(fp) {}
 
-		~SystemFile() 
+		~SystemFile()
 		{
 			Close();
 		}
 
-		static SystemFile* Open(const char* path, const char* mode) 
+		static SystemFile* Open(const char* path, const char* mode)
 		{
 			FILE* fp = fopen(path, mode);
 
@@ -184,52 +183,52 @@ class SystemFile : public FileObject
 			return new SystemFile(fp);
 		}
 
-		static bool Delete(const char* path) 
+		static bool Delete(const char* path)
 		{
 			return unlink(path) == 0;
 		}
 
-		size_t Read(void* pOut, size_t size) KE_OVERRIDE 
+		size_t Read(void* pOut, size_t size) override
 		{
 			return fread(pOut, 1, size, fp_);
 		}
-		
-		char* ReadLine(char* pOut, size_t size) KE_OVERRIDE
+
+		char* ReadLine(char* pOut, size_t size) override
 		{
 			return fgets(pOut, size, fp_);
 		}
-		
-		size_t Write(const void* pData, size_t size) KE_OVERRIDE 
+
+		size_t Write(const void* pData, size_t size) override
 		{
 			return fwrite(pData, 1, size, fp_);
 		}
-		
-		bool Seek(int pos, int seek_type) KE_OVERRIDE 
+
+		bool Seek(int pos, int seek_type) override
 		{
 			return fseek(fp_, pos, seek_type) == 0;
 		}
-		
-		int Tell() KE_OVERRIDE 
+
+		int Tell() override
 		{
 			return ftell(fp_);
 		}
-		
-		bool HasError() KE_OVERRIDE 
+
+		bool HasError() override
 		{
 			return ferror(fp_) != 0;
 		}
-		
-		int Flush() KE_OVERRIDE 
+
+		int Flush() override
 		{
 			return fflush(fp_);
 		}
-		
-		bool EndOfFile() KE_OVERRIDE
+
+		bool EndOfFile() override
 		{
 			return feof(fp_) != 0;
 		}
-		
-		void Close() KE_OVERRIDE 
+
+		void Close() override
 		{
 			if (fp_)
 			{
@@ -237,7 +236,7 @@ class SystemFile : public FileObject
 				fp_ = nullptr;
 			}
 		}
-		
+
 		virtual SystemFile* AsSystemFile()
 		{
 			return this;

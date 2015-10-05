@@ -23,8 +23,8 @@
 #include "forward.h"
 #include "fm_tr.h"
 #include "glb.h"
-#include <am-string.h>
-#include <am-vector.h>
+#include <amtl/am-string.h>
+#include <amtl/am-vector.h>
 #include <IGameConfigs.h>
 #include <HLTypeConversion.h>
 

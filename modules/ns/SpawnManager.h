@@ -14,7 +14,7 @@
 #ifndef SPAWNMANAGER_H
 #define SPAWNMANAGER_H
 
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 
 typedef struct spawndata_s
 {

@@ -15,9 +15,9 @@
 #define _INCLUDE_JOURNAL_H
 
 #include "Binary.h"
-#include <am-linkedlist.h>
+#include <amtl/am-linkedlist.h>
 #include <sm_stringhashmap.h>
-#include <am-string.h>
+#include <amtl/am-string.h>
 
 enum JOp
 {

@@ -15,6 +15,7 @@
 #include "SqliteHeaders.h"
 #include "SqliteDriver.h"
 #include "SqliteDatabase.h"
+#include <amtl/am-string.h>
 
 #if defined WIN32
 #define WINDOWS_LEAN_AND_MEAN
@@ -62,7 +63,7 @@ IDatabase *SqliteDriver::Connect(DatabaseInfo *info, int *errcode, char *error, 
 		}
 		if (error)
 		{
-			UTIL_Format(error, maxlength, "%s", sqlite3_errmsg(pSql));
+			ke::SafeSprintf(error, maxlength, "%s", sqlite3_errmsg(pSql));
 		}
 		sqlite3_close(pSql);
 		return NULL;

@@ -41,7 +41,7 @@
 #include <stdlib.h> // memalign
 #include <stdio.h>
 
-#include <am-utility.h>
+#include <amtl/am-utility.h>
 
 namespace Trampolines
 {

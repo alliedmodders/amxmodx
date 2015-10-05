@@ -14,6 +14,7 @@
 #include "amxxmodule.h"
 #include "MysqlDriver.h"
 #include "MysqlDatabase.h"
+#include <amtl/am-string.h>
 
 using namespace SourceMod;
 
@@ -47,7 +48,7 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 			*errcode = -1;
 		if (error && maxlength)
 		{
-			UTIL_Format(error, maxlength, "Initialization failed");
+			ke::SafeSprintf(error, maxlength, "Initialization failed");
 		}
 		return NULL;
 	}
@@ -89,7 +90,7 @@ IDatabase *MysqlDriver::_Connect(DatabaseInfo *info, int *errcode, char *error, 
 		}
 		if (error && maxlength)
 		{
-			UTIL_Format(error, maxlength, "%s", mysql_error(mysql));
+			ke::SafeSprintf(error, maxlength, "%s", mysql_error(mysql));
 		}
 		return NULL;
 	}

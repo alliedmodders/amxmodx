@@ -14,7 +14,7 @@
 #ifndef LOCATIONMANAGER_H
 #define LOCATIONMANAGER_H
 
-#include <am-vector.h>
+#include <amtl/am-vector.h>
 #include "GameManager.h"
 #include "TitleManager.h"
 

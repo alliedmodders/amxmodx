@@ -15,7 +15,7 @@
 #include "amxxmodule.h"
 #include "NVault.h"
 #include "Binary.h"
-#include <am-string.h>
+#include <amtl/am-string.h>
 
 /** 
  * :TODO: This beast calls strcpy()/new() way too much by creating new strings on the stack.
@@ -367,7 +367,7 @@ bool NVault::GetValue(const char *key, time_t &stamp, char buffer[], size_t len)
 	}
 
 	stamp = result.stamp;
-	UTIL_Format(buffer, len, "%s", result.value.chars());
+	ke::SafeSprintf(buffer, len, "%s", result.value.chars());
 
 	return true;
 }

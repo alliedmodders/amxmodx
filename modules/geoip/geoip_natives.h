@@ -14,8 +14,8 @@
 #ifndef _INCLUDE_GEOIPNATIVES_H
 #define _INCLUDE_GEOIPNATIVES_H
 
-#include <am-string.h>
-#include <am-vector.h>
+#include <amtl/am-string.h>
+#include <amtl/am-vector.h>
 
 extern MMDB_s HandleDB;
 extern ke::Vector<ke::AString> LangList;

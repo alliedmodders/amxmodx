@@ -21,26 +21,6 @@ static cell AMX_NATIVE_CALL copy_infokey_buffer(AMX *amx, cell *params)
 	return MF_SetAmxString(amx, params[2], infobuffer, params[3]);
 }
 
-int UTIL_stricmp(const char *s1, const char *s2)
-{
-	unsigned char c1, c2;
-
-	for (;;) {
-		c1 = *s1++;
-		c2 = *s2++;
-		
-		if (!c1 || !c2)
-			break;
- 
-		if (c1 == c2)
- 			continue;
- 			
-		if ((c1 = tolower(c1)) != (c2 = tolower(c2)))
-			break;
-	}
-	return (int)c1 - (int)c2;
-}
-
 // lookup_sequence(entid, "sequence name", &Float:framerate = 0.0, &bool:loops = false, &Float:groundspeed = 0.0);
 static cell AMX_NATIVE_CALL lookup_sequence(AMX* amx, cell* params)
 {
@@ -48,7 +28,7 @@ static cell AMX_NATIVE_CALL lookup_sequence(AMX* amx, cell* params)
 
 	CHECK_ENTITY(index);
 
-	edict_t* ent = INDEXENT(index);
+	edict_t* ent = TypeConversion.id_to_edict(index);
 
 	studiohdr_t* pstudiohdr = static_cast<studiohdr_t*>(GET_MODEL_PTR(ent));
 
@@ -67,7 +47,7 @@ static cell AMX_NATIVE_CALL lookup_sequence(AMX* amx, cell* params)
 
 	for (int i = 0; i < pstudiohdr->numseq; i++)
 	{
-		if (UTIL_stricmp( pseqdesc[i].label, label ) == 0)
+		if (stricmp( pseqdesc[i].label, label ) == 0)
 		{
 			REAL* FrameRate = reinterpret_cast<REAL*>(MF_GetAmxAddr(amx, params[3]));
 			cell* Loops = MF_GetAmxAddr(amx, params[4]);
@@ -95,7 +75,7 @@ static cell AMX_NATIVE_CALL set_controller(AMX* amx, cell* params)
 //	SetController( void *pmodel, entvars_t *pev, int iController, float flValue )
 	int entindex = params[1];
 	CHECK_ENTITY(entindex);
-	edict_t* entity = INDEXENT(entindex);
+	edict_t* entity = TypeConversion.id_to_edict(entindex);
 
 	int iController = params[2];
 
@@ -176,7 +156,7 @@ static cell AMX_NATIVE_CALL GetModelCollisionBox(AMX *amx, cell *params)
 
 	CHECK_ENTITY(entityIndex);
 
-	edict_t *pEdict = INDEXENT2(entityIndex);
+	edict_t *pEdict = TypeConversion.id_to_edict(entityIndex);
 
 	if (!FNullEnt(pEdict))
 	{
@@ -212,7 +192,7 @@ static cell AMX_NATIVE_CALL GetModelBoundingBox(AMX *amx, cell *params)
 
 	CHECK_ENTITY(entityIndex);
 
-	edict_t *pentModel = INDEXENT2(entityIndex);
+	edict_t *pentModel = TypeConversion.id_to_edict(entityIndex);
 
 	if (!FNullEnt(pentModel))
 	{
@@ -269,7 +249,7 @@ static cell AMX_NATIVE_CALL SetModelCollisionBox(AMX *amx, cell *params)
 
 	CHECK_ENTITY(entityIndex);
 
-	edict_t *pentModel = INDEXENT2(entityIndex);
+	edict_t *pentModel = TypeConversion.id_to_edict(entityIndex);
 
 	if (!FNullEnt(pentModel))
 	{
@@ -296,7 +276,7 @@ static cell AMX_NATIVE_CALL SetModelBoundingBox(AMX *amx, cell *params)
 
 	CHECK_ENTITY(entityIndex);
 
-	edict_t *pentModel = INDEXENT2(entityIndex);
+	edict_t *pentModel = TypeConversion.id_to_edict(entityIndex);
 
 	if (!FNullEnt(pentModel))
 	{

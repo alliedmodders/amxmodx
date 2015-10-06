@@ -205,13 +205,13 @@
 	edict_t* call (const char *s) \
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i), s)); \
-		RETURN_META_VALUE(mswi(lastFmRes), INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(mswi(lastFmRes), TypeConversion.id_to_edict((int)mlCellResult)); \
 	} \
 	edict_t* call##_post (const char *s) \
 	{ \
 		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), s)); \
-		RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(MRES_IGNORED, TypeConversion.id_to_edict((int)mlCellResult)); \
 	}
 #define SIMPLE_CHAR_HOOK_STRING(call) \
 	char call (char *s) \
@@ -413,38 +413,38 @@
 	edict_t* call () \
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i))); \
-		RETURN_META_VALUE(mswi(lastFmRes),INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(mswi(lastFmRes),TypeConversion.id_to_edict((int)mlCellResult)); \
 	} \
 	edict_t* call##_post () \
 	{ \
 		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i))); \
-		RETURN_META_VALUE(MRES_IGNORED,INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(MRES_IGNORED,TypeConversion.id_to_edict((int)mlCellResult)); \
 	} 
 #define SIMPLE_EDICT_HOOK_INT(call) \
 	edict_t* call (int v) \
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),(cell)v)); \
-		RETURN_META_VALUE(mswi(lastFmRes),INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(mswi(lastFmRes),TypeConversion.id_to_edict((int)mlCellResult)); \
 	} \
 	edict_t* call##_post (int v) \
 	{ \
 		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)v)); \
-		RETURN_META_VALUE(MRES_IGNORED,INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(MRES_IGNORED,TypeConversion.id_to_edict((int)mlCellResult)); \
 	} 
 
 #define SIMPLE_EDICT_HOOK_EDICT(call) \
 	edict_t* call (edict_t *e) \
 	{ \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),(cell)ENTINDEX(e))); \
-		RETURN_META_VALUE(mswi(lastFmRes),INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(mswi(lastFmRes),TypeConversion.id_to_edict((int)mlCellResult)); \
 	} \
 	edict_t* call##_post (edict_t *e) \
 	{ \
 		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),(cell)ENTINDEX(e))); \
-		RETURN_META_VALUE(MRES_IGNORED,INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(MRES_IGNORED,TypeConversion.id_to_edict((int)mlCellResult)); \
 	} 
 
 #define SIMPLE_EDICT_HOOK_EDICT_CONSTVECT_FLOAT(call) \
@@ -452,14 +452,14 @@
 	{ \
 		PREPARE_VECTOR(vec); \
 		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)ENTINDEX(ed), p_vec, fla)); \
-		RETURN_META_VALUE(mswi(lastFmRes), INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(mswi(lastFmRes), TypeConversion.id_to_edict((int)mlCellResult)); \
 	} \
 	edict_t* call##_post (edict_t *ed, const float *vec, float fla) \
 	{ \
 		PREPARE_VECTOR(vec); \
 		origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *)); \
 		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i),  (cell)ENTINDEX(ed), p_vec, fla)); \
-		RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult)); \
+		RETURN_META_VALUE(MRES_IGNORED, TypeConversion.id_to_edict((int)mlCellResult)); \
 	}
 
 

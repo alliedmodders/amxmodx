@@ -162,7 +162,7 @@ static cell AMX_NATIVE_CALL amx_pev(AMX *amx,cell *params)
 {
 	int index = params[1];
 	CHECK_ENTITY(index);
-	edict_t *pEdict = INDEXENT2(index);
+	edict_t *pEdict = TypeConversion.id_to_edict(index);
 	int iSwitch = params[2];
 
 	//onto normal cases - sanity check
@@ -347,7 +347,7 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 	// index, pevdata
 	int index = params[1];
 	CHECK_ENTITY(index);
-	edict_t *pEdict = INDEXENT2(index);
+	edict_t *pEdict = TypeConversion.id_to_edict(index);
 	int iSwitch = params[2];
 
 	//onto normal cases - sanity check
@@ -382,7 +382,7 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 		*(string_t *)EDICT_OFFS(v, offs) = value;
 	} else if ( (iSwitch > pev_edict_start && iSwitch < pev_edict_end)
 				|| (iSwitch > pev_edict2_start && iSwitch < pev_absolute_end) ) {
-		edict_t *e = INDEXENT2((int)*blah);
+		edict_t *e = TypeConversion.id_to_edict((int)*blah);
 		*(edict_t **)EDICT_OFFS(v, offs) = e;
 	} else if (iSwitch > pev_vecarray_start && iSwitch < pev_vecarray_end) {
 		vec3_t vec;
@@ -416,7 +416,7 @@ static cell AMX_NATIVE_CALL amx_set_pev_string(AMX *amx, cell *params)
 	// index, pevdata
 	int index = params[1];
 	CHECK_ENTITY(index);
-	edict_t *pEdict = INDEXENT2(index);
+	edict_t *pEdict = TypeConversion.id_to_edict(index);
 	int iSwitch = params[2];
 
 	//onto normal cases - sanity check
@@ -455,7 +455,7 @@ static cell AMX_NATIVE_CALL amx_pev_valid(AMX *amx, cell *params)
 {
 	int idx = static_cast<int>(params[1]);
 
-	edict_t *e = INDEXENT2(idx);
+	edict_t *e = TypeConversion.id_to_edict(idx);
 
 	if (FNullEnt(e))
 		return 0;
@@ -470,7 +470,7 @@ static cell AMX_NATIVE_CALL amx_pev_serial(AMX* amx, cell* params)
 	int id = static_cast<int>(params[1]);
 
 	CHECK_ENTITY(id);
-	edict_t* ent = INDEXENT(id);
+	edict_t* ent = TypeConversion.id_to_edict(id);
 
 	return ent->serialnumber;
 }

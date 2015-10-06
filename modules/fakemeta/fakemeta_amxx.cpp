@@ -14,8 +14,6 @@
 #include "fakemeta_amxx.h"
 #include "sh_stack.h"
 
-edict_t *g_player_edicts[33]; // Used for INDEXENT() forward.
-
 IGameConfig *CommonConfig;
 IGameConfigManager *ConfigManager;
 
@@ -78,15 +76,12 @@ void OnAmxxDetach()
 		delete g_FreeKVDWs.popCopy();
 }
 
-int GetHullBounds(int hullnumber, float *mins, float *maxs);
-// sawce:  Do not null out the forward for ServerActivate.  It's required for the INDEXENT() fix. (I don't think ServerActivate is planned on being forwarded anyway)
 void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
-	for(int i = 1; i <= gpGlobals->maxClients;i++) 
-		g_player_edicts[i]=pEdictList + i;
 	g_pFunctionTable_Post->pfnServerDeactivate = FMH_ServerDeactivate_Post;
 	RETURN_META(MRES_IGNORED);
 }
+
 #define RESETD(tcall) \
 	g_pFunctionTable->pfn##tcall =0; \
 	g_pFunctionTable_Post->pfn##tcall =NULL; \

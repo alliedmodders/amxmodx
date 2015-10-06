@@ -44,6 +44,8 @@ template <typename T>inline void set_pdata(edict_t *pEntity, int offset, T value
 }
 
 
+extern globalvars_t *gpGlobals;
+
 class HLTypeConversion
 {
 	public:
@@ -102,7 +104,24 @@ class HLTypeConversion
 
 		edict_t* id_to_edict(int index)
 		{
-			return static_cast<edict_t*>(m_FirstEdict + index);
+			if (index < 0 || index >= gpGlobals->maxEntities)
+			{
+				return nullptr;
+			}
+
+			if (!index)
+			{
+				return m_FirstEdict;
+			}
+
+			auto pEdict = static_cast<edict_t*>(m_FirstEdict + index);
+
+			if (pEdict && (pEdict->free || (index > gpGlobals->maxClients && !pEdict->pvPrivateData)))
+			{
+				return nullptr;
+			}
+
+			return pEdict;
 		}
 
 		entvars_t* id_to_entvars(int index)

@@ -1108,7 +1108,7 @@ void Logger::onMapChange() {
 
 		fflush(pF);
 		fclose(pF);
-		itoa(counter, MapCounter, 10);
+		ke::SafeSprintf(MapCounter, sizeof MapCounter - 1, "%d", counter);
 	} else {
 		ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+).\n", dataFile);
 		return;

@@ -37,6 +37,9 @@
     <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\public\HLTypeConversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\fun.inc">

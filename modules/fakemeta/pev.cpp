@@ -382,7 +382,7 @@ static cell AMX_NATIVE_CALL amx_set_pev(AMX *amx, cell *params)
 		*(string_t *)EDICT_OFFS(v, offs) = value;
 	} else if ( (iSwitch > pev_edict_start && iSwitch < pev_edict_end)
 				|| (iSwitch > pev_edict2_start && iSwitch < pev_absolute_end) ) {
-		edict_t *e = INDEXENT((int)*blah);
+		edict_t *e = INDEXENT2((int)*blah);
 		*(edict_t **)EDICT_OFFS(v, offs) = e;
 	} else if (iSwitch > pev_vecarray_start && iSwitch < pev_vecarray_end) {
 		vec3_t vec;
@@ -455,7 +455,7 @@ static cell AMX_NATIVE_CALL amx_pev_valid(AMX *amx, cell *params)
 {
 	int idx = static_cast<int>(params[1]);
 
-	edict_t *e = INDEXENT(idx);
+	edict_t *e = INDEXENT2(idx);
 
 	if (FNullEnt(e))
 		return 0;

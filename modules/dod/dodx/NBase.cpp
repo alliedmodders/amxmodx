@@ -577,7 +577,7 @@ static cell AMX_NATIVE_CALL dod_weaponlist(AMX *amx, cell *params) // player
 		return 0;
 	}
 	
-	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "WeaponList", NULL), NULL, INDEXENT(id));
+	MESSAGE_BEGIN(MSG_ONE, GET_USER_MSG_ID(PLID, "WeaponList", NULL), NULL, pPlayer->pEdict);
 	WRITE_BYTE(weaponlist[wpnID].grp);
 		WRITE_BYTE(totalrds);
 		WRITE_BYTE(-1);

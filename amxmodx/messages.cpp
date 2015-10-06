@@ -423,7 +423,7 @@ static cell _message_begin(AMX *amx, cell *params, bool useFloat) /* 4 param */
 			return 0;
 		}
 
-		MESSAGE_BEGIN(params[1], params[2], NULL, INDEXENT(params[4]));
+		MESSAGE_BEGIN(params[1], params[2], NULL, GETEDICT(params[4]));
 		break;
 	}
 
@@ -771,7 +771,7 @@ static cell _emessage_begin(AMX *amx, cell *params, bool useFloat)
 			return 0;
 		}
 
-		g_pEngTable->pfnMessageBegin(params[1], params[2], NULL, INDEXENT(params[4]));
+		g_pEngTable->pfnMessageBegin(params[1], params[2], NULL, GETEDICT(params[4]));
 		break;
 	}
 

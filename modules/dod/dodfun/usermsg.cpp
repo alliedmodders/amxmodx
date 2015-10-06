@@ -44,7 +44,7 @@ void Client_InitObj(void* mValue){
 		  mObjects.Clear();
 	  break;
   case 1:
-	  mObjects.obj[num].pEdict = INDEXENT(*(int*)mValue);
+	  mObjects.obj[num].pEdict = GETEDICT(*(int*)mValue);
 	  break;
   case 2:
 	  mObjects.obj[num].index = *(int*)mValue;

@@ -83,7 +83,7 @@ static cell AMX_NATIVE_CALL emit_sound(AMX *amx, cell *params) /* 7 param */
 				EMIT_SOUND_DYN2(pPlayer->pEdict, channel, szSample, vol, att, flags, pitch);
 		}
 	} else {
-		edict_t* pEdict = INDEXENT(params[1]);
+		edict_t* pEdict = GETEDICT(params[1]);
 		
 		if (!FNullEnt(pEdict))
 			EMIT_SOUND_DYN2(pEdict, channel, szSample, vol, att, flags, pitch);

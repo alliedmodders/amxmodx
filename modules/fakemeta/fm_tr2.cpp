@@ -98,7 +98,7 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 		}
 	case TR_pHit:
 		{
-			edict_t *e = INDEXENT(*ptr);
+			edict_t *e = INDEXENT2(*ptr);
 			if (!e || FNullEnt(e))
 				return 0; //TODO: return error
 			tr->pHit = e;

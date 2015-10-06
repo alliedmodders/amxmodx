@@ -145,6 +145,7 @@ void UTIL_TrimRight(char *buffer);
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t))])
 #define GET_PLAYER_POINTER_I(i) (&g_players[i])
+#define GETEDICT(n)             ((n >= 1 && n <= gpGlobals->maxClients) ? GET_PLAYER_POINTER_I(n)->pEdict : INDEXENT(n))
 
 struct WeaponsVault
 {

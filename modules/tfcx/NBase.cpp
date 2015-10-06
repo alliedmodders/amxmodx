@@ -31,7 +31,7 @@ static cell AMX_NATIVE_CALL TFC_SetModel(AMX *amx, cell *params) {
 	char *szModel = MF_GetAmxString(amx, params[2],0, &iLen);
 
 	// Get Player's edict pointer
-	edict_t* pPlayer = INDEXENT(iIndex);
+	edict_t* pPlayer = MF_GetPlayerEdict(iIndex);
 
 	// Set key on client, replacement_model is for the model we want.
 	KeyValueData pkvd;
@@ -62,7 +62,7 @@ static cell AMX_NATIVE_CALL TFC_ClearModel(AMX *amx, cell *params) {
   
 	CHECK_PLAYER(iIndex)
 
-	edict_t* pPlayer = INDEXENT(iIndex);
+	edict_t* pPlayer = MF_GetPlayerEdict(iIndex);
 	
 	if (pPlayer->pvPrivateData == NULL)
 	{

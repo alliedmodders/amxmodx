@@ -85,6 +85,9 @@
     <ClInclude Include="..\..\..\public\memtools\CDetour\asm\asm.h">
       <Filter>Memtools\CDetour\asm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\public\HLTypeConversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\engine.inc">

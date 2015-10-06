@@ -109,6 +109,7 @@
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\public\HLTypeConversion.h" />
     <ClInclude Include="..\..\..\public\memtools\CDetour\asm\asm.h" />
     <ClInclude Include="..\..\..\public\memtools\CDetour\detourhelpers.h" />
     <ClInclude Include="..\..\..\public\memtools\CDetour\detours.h" />

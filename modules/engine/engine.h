@@ -26,6 +26,7 @@
 #include <amtl/am-vector.h>
 #include <amtl/am-string.h>
 #include <CDetour/detours.h>
+#include <HLTypeConversion.h>
 
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern DLL_FUNCTIONS *g_pFunctionTable_Post;
@@ -49,6 +50,7 @@ extern int VexdTouchForward;
 extern int VexdServerForward;
 
 extern CDetour *LightStyleDetour;
+extern HLTypeConversion TypeConversion;
 
 #define AMS_OFFSET 0.01
 
@@ -168,16 +170,6 @@ int AmxStringToEngine(AMX *amx, cell param, int &len);
 edict_t *UTIL_FindEntityInSphere(edict_t *pStart, const Vector &vecCenter, float flRadius);
 
 extern int g_CameraCount;
-extern edict_t *g_player_edicts[33];
-
-inline edict_t* INDEXENT2( int iEdictNum )
-{ 
-	if (iEdictNum >= 1 && iEdictNum <= gpGlobals->maxClients)
-		return MF_GetPlayerEdict(iEdictNum);
-
-	else
-		return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); 
-}
 
 int Spawn(edict_t *pEntity);
 void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2);
@@ -196,7 +188,7 @@ void StartFrame_Post();
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
 		return 0; \
 	} else { \
-		if (x != 0 && FNullEnt(INDEXENT(x))) { \
+		if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 			return 0; \
 		} \
@@ -213,7 +205,7 @@ void StartFrame_Post();
 				return 0; \
 			} \
 		} else { \
-			if (x != 0 && FNullEnt(INDEXENT(x))) { \
+			if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 				return 0; \
 			} \

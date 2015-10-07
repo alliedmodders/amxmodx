@@ -294,6 +294,9 @@
     <ClCompile Include="..\logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\exception_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\amx.h">
@@ -506,6 +509,9 @@
     <ClInclude Include="..\logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\exception_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\version.rc">
@@ -613,6 +619,9 @@
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\logger_stocks.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\exception_handler.inc">
       <Filter>Pawn Includes</Filter>
     </None>
   </ItemGroup>

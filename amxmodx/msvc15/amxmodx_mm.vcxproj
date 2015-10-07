@@ -272,10 +272,6 @@
     <ClCompile Include="..\datapacks.cpp" />
     <ClCompile Include="..\debugger.cpp" />
     <ClCompile Include="..\emsg.cpp" />
-<<<<<<< HEAD
-=======
-    <ClCompile Include="..\exception_handler.cpp" />
->>>>>>> c65fd9719b7099b1189d57b1f3a08d81e8c0c0a0
     <ClCompile Include="..\fakemeta.cpp" />
     <ClCompile Include="..\file.cpp" />
     <ClCompile Include="..\float.cpp" />
@@ -363,10 +359,6 @@
     <ClInclude Include="..\CVault.h" />
     <ClInclude Include="..\datastructs.h" />
     <ClInclude Include="..\debugger.h" />
-<<<<<<< HEAD
-=======
-    <ClInclude Include="..\exception_handler.h" />
->>>>>>> c65fd9719b7099b1189d57b1f3a08d81e8c0c0a0
     <ClInclude Include="..\fakemeta.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\gameconfigs.h" />
@@ -394,10 +386,6 @@
     <None Include="..\..\plugins\include\cellstack.inc" />
     <None Include="..\..\plugins\include\cvars.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
-<<<<<<< HEAD
-=======
-    <None Include="..\..\plugins\include\exception_handler.inc" />
->>>>>>> c65fd9719b7099b1189d57b1f3a08d81e8c0c0a0
     <None Include="..\..\plugins\include\gameconfig.inc" />
     <None Include="..\..\plugins\include\logger.inc" />
     <None Include="..\..\plugins\include\logger_const.inc" />

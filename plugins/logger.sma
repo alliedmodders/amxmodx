@@ -77,8 +77,9 @@ public OnLoggerCreated(
     temp[0] = cvarVerbosity;
     if (cvarMap == Invalid_Trie) {
         cvarMap = TrieCreate();
-        TrieSetCell(cvarMap, temp, logger);
     }
+
+    TrieSetCell(cvarMap, temp, logger);
 
     new curValue[32];
     get_pcvar_string(cvarVerbosity, curValue, charsmax(curValue));

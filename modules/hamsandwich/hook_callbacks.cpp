@@ -47,7 +47,7 @@ extern bool gDoForwards;
 
 // Parameter value pushes
 #define MAKE_VECTOR()															\
-	int iThis=PrivateToIndex(pthis);											\
+	int iThis=TypeConversion.cbase_to_id(pthis);											\
 	ke::Vector<Data *> *__vec=new ke::Vector<Data *>;							\
 	ParamStack.push(__vec);														\
 	P_CBASE(pthis, iThis)
@@ -194,7 +194,7 @@ void Hook_Void_Entvar(Hook *hook, void *pthis, entvars_t *entvar)
 {
 	PUSH_VOID()
 
-	int iOther=EntvarToIndex(entvar);
+	int iOther= TypeConversion.entvars_to_id(entvar);
 
 	MAKE_VECTOR()
 	
@@ -222,7 +222,7 @@ void Hook_Void_Entvar(Hook *hook, void *pthis, entvars_t *entvar)
 void Hook_Void_Cbase(Hook *hook, void *pthis, void *other)
 {
 	PUSH_VOID()
-	int iOther=PrivateToIndex(other);
+	int iOther=TypeConversion.cbase_to_id(other);
 
 	MAKE_VECTOR()
 	
@@ -312,7 +312,7 @@ int Hook_Int_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2)
 void Hook_Void_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, int i1)
 {
 	PUSH_VOID()
-	int iOther=EntvarToIndex(ev1);
+	int iOther=TypeConversion.entvars_to_id(ev1);
 
 	MAKE_VECTOR()
 	
@@ -340,8 +340,8 @@ void Hook_Void_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, int i1)
 void Hook_Void_Entvar_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, entvars_t *ev2, int i1)
 {
 	PUSH_VOID()
-		int iInflictor=EntvarToIndex(ev1);
-		int iAttacker=EntvarToIndex(ev2);
+		int iInflictor=TypeConversion.entvars_to_id(ev1);
+		int iAttacker=TypeConversion.entvars_to_id(ev2);
 
 	MAKE_VECTOR()
 
@@ -374,7 +374,7 @@ int Hook_Int_Cbase(Hook *hook, void *pthis, void *cb1)
 
 	PUSH_INT()
 
-	int iOther=PrivateToIndex(cb1);
+	int iOther=TypeConversion.cbase_to_id(cb1);
 
 	MAKE_VECTOR()
 	
@@ -533,7 +533,7 @@ int Hook_Int_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
 	int origret=0;
 
 	PUSH_INT()
-	int iOther=EntvarToIndex(ev1);
+	int iOther=TypeConversion.entvars_to_id(ev1);
 
 	MAKE_VECTOR()
 	P_ENTVAR(ev1, iOther)
@@ -563,8 +563,8 @@ int Hook_Int_Entvar_Entvar_Float_Int(Hook *hook, void *pthis, entvars_t *inflict
 	int ret=0;
 	int origret=0;
 	PUSH_INT()
-	int iInflictor=EntvarToIndex(inflictor);
-	int iAttacker=EntvarToIndex(attacker);
+	int iInflictor=TypeConversion.entvars_to_id(inflictor);
+	int iAttacker=TypeConversion.entvars_to_id(attacker);
 	
 	MAKE_VECTOR()
 	P_ENTVAR(inflictor, iInflictor)
@@ -597,8 +597,8 @@ int Hook_Int_Entvar_Entvar_Float_Float_Int(Hook *hook, void *pthis, entvars_t *i
 	int ret=0;
 	int origret=0;
 	PUSH_INT()
-	int iInflictor=EntvarToIndex(inflictor);
-	int iAttacker=EntvarToIndex(attacker);
+	int iInflictor=TypeConversion.entvars_to_id(inflictor);
+	int iAttacker=TypeConversion.entvars_to_id(attacker);
 	
 	MAKE_VECTOR()
 	P_ENTVAR(inflictor, iInflictor)
@@ -698,7 +698,7 @@ void Hook_Vector_Float_Cbase_Int(Hook *hook, Vector *out, void *pthis, float f1,
 	memset(&ret, 0x0, sizeof(Vector));
 	memset(&origret, 0x0, sizeof(Vector));
 
-	int iEnt = PrivateToIndex(cb);
+	int iEnt = TypeConversion.cbase_to_id(cb);
 	
 	P_FLOAT(f1)
 	P_CBASE(cb, iEnt)
@@ -728,8 +728,8 @@ void Hook_Vector_Float_Cbase_Int(Hook *hook, Vector *out, void *pthis, float f1,
 void Hook_Void_Cbase_Cbase_Int_Float(Hook *hook, void *pthis, void *cb1, void *cb2, int i1, float f1)
 {
 	PUSH_VOID()
-	int iCaller=PrivateToIndex(cb1);
-	int iActivator=PrivateToIndex(cb2);
+	int iCaller=TypeConversion.cbase_to_id(cb1);
+	int iActivator=TypeConversion.cbase_to_id(cb2);
 	
 	MAKE_VECTOR()
 	P_CBASE(cb1, iCaller)
@@ -759,7 +759,7 @@ void Hook_Void_Cbase_Cbase_Int_Float(Hook *hook, void *pthis, void *cb1, void *c
 void Hook_Void_Entvar_Float_Vector_Trace_Int(Hook *hook, void *pthis, entvars_t *ev1, float f1, Vector v1, TraceResult *tr1, int i1)
 {
 	PUSH_VOID()
-	int iev1=EntvarToIndex(ev1);
+	int iev1=TypeConversion.entvars_to_id(ev1);
 
 	MAKE_VECTOR()
 	P_ENTVAR(ev1, iev1)
@@ -972,7 +972,7 @@ int Hook_Int_pVector(Hook *hook, void *pthis, Vector *v1)
 void Hook_Void_Entvar_Float_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1, float f2)
 {
 	PUSH_VOID()
-	cell cev1=EntvarToIndex(ev1);
+	cell cev1=TypeConversion.entvars_to_id(ev1);
 
 	MAKE_VECTOR()
 	P_ENTVAR(ev1, cev1)
@@ -1026,7 +1026,7 @@ void Hook_Void_pFloat_pFloat(Hook *hook, void *pthis, float *f1, float *f2)
 void Hook_Void_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 {
 	PUSH_VOID()
-	cell cev1=EntvarToIndex(ev1);
+	cell cev1=TypeConversion.entvars_to_id(ev1);
 
 	MAKE_VECTOR()
 	P_ENTVAR(ev1, cev1)
@@ -1160,7 +1160,7 @@ float Hook_Float_Float_Cbase(Hook* hook, void* pthis, float f1, void *cb1)
 
 	MAKE_VECTOR()
 
-	int i1 = PrivateToIndex(cb1);
+	int i1 = TypeConversion.cbase_to_id(cb1);
 
 	P_FLOAT(f1)
 	P_CBASE(cb1, i1)
@@ -1277,7 +1277,7 @@ void Hook_Vector_Float(Hook *hook, Vector *out, void *pthis, float f1)
 void Hook_Void_Float_Cbase(Hook *hook, void *pthis, float f1, void *cb)
 {
 	PUSH_VOID()
-	int iEnt =PrivateToIndex(cb);
+	int iEnt =TypeConversion.cbase_to_id(cb);
 
 	MAKE_VECTOR()
 		P_FLOAT(f1)
@@ -1440,7 +1440,7 @@ void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const ch
 	PUSH_VOID()
 
 	a = sz1;
-	int iEnt=PrivateToIndex(cb);
+	int iEnt=TypeConversion.cbase_to_id(cb);
 
 	MAKE_VECTOR()
 
@@ -1544,8 +1544,8 @@ void Hook_Void_Entvar_Entvar_Float_Int_Int(Hook *hook, void *pthis, entvars_t *i
 {
 	PUSH_VOID()
 
-	int iInflictor=EntvarToIndex(inflictor);
-	int iAttacker=EntvarToIndex(attacker);
+	int iInflictor=TypeConversion.entvars_to_id(inflictor);
+	int iAttacker=TypeConversion.entvars_to_id(attacker);
 
 	MAKE_VECTOR()
 
@@ -1578,8 +1578,8 @@ void Hook_Void_Vector_Entvar_Entvar_Float_Int_Int(Hook *hook, void *pthis, Vecto
 {
 	PUSH_VOID()
 
-	int iInflictor=EntvarToIndex(inflictor);
-	int iAttacker=EntvarToIndex(attacker);
+	int iInflictor=TypeConversion.entvars_to_id(inflictor);
+	int iAttacker=TypeConversion.entvars_to_id(attacker);
 
 	MAKE_VECTOR()
 
@@ -1682,7 +1682,7 @@ void Hook_Void_Edict(Hook *hook, void *pthis, edict_t *ed1)
 {
 	PUSH_VOID()
 
-	int id1=EdictToIndex(ed1);
+	int id1=TypeConversion.edict_to_id(ed1);
 
 	MAKE_VECTOR()
 	P_EDICT(ed1, id1)
@@ -1900,7 +1900,7 @@ void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2)
 void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
 {
 	PUSH_VOID()
-	int iEnt =PrivateToIndex(p1);
+	int iEnt =TypeConversion.cbase_to_id(p1);
 
 	MAKE_VECTOR()
 
@@ -2124,7 +2124,7 @@ int Hook_Int_pVector_pVector_Cbase_pFloat(Hook *hook, void *pthis, Vector *v1, V
 
 	PUSH_INT()
 
-	int i3=PrivateToIndex(cb);
+	int i3=TypeConversion.cbase_to_id(cb);
 
 	MAKE_VECTOR()
 	P_PTRVECTOR(v1)
@@ -2161,7 +2161,7 @@ int Hook_Int_pVector_pVector_Cbase_pFloat(Hook *hook, void *pthis, Vector *v1, V
 void Hook_Void_Cbase_pVector_Float(Hook *hook, void *pthis, void *p1, Vector *v1, float fl)
 {
 	PUSH_VOID()
-	int iEnt =PrivateToIndex(p1);
+	int iEnt =TypeConversion.cbase_to_id(p1);
 
 	MAKE_VECTOR()
 
@@ -2194,7 +2194,7 @@ int Hook_Int_pVector_pVector_Float_Cbase_pVector(Hook *hook, void *pthis, Vector
 
 	PUSH_INT()
 
-	int i4=PrivateToIndex(cb);
+	int i4=TypeConversion.cbase_to_id(cb);
 
 	MAKE_VECTOR()
 	P_PTRVECTOR(v1)
@@ -2238,7 +2238,7 @@ int Hook_Int_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1)
 
 	PUSH_INT()
 
-		int i1=PrivateToIndex(cb1);
+		int i1=TypeConversion.cbase_to_id(cb1);
 
 	MAKE_VECTOR()
 
@@ -2305,7 +2305,7 @@ int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 	int origret=0;
 
 	PUSH_INT()
-	int i1=EntvarToIndex(ev1);
+	int i1=TypeConversion.entvars_to_id(ev1);
 
 	MAKE_VECTOR()
 	P_ENTVAR(ev1, i1)
@@ -2365,8 +2365,8 @@ void Hook_Void_Entvar_Entvar_Float(Hook *hook, void *pthis, entvars_t *attacker,
 {
 	PUSH_VOID()
 
-	int iAttacker=EntvarToIndex(attacker);
-	int iInflictor=EntvarToIndex(inflictor);
+	int iAttacker=TypeConversion.entvars_to_id(attacker);
+	int iInflictor=TypeConversion.entvars_to_id(inflictor);
 
 	MAKE_VECTOR()
 
@@ -2428,7 +2428,7 @@ int Hook_Int_pVector_pVector_Float_Cbase_pVector_pVector_Bool(Hook *hook, void *
 
 	PUSH_INT()
 
-	int i4=PrivateToIndex(cb);
+	int i4=TypeConversion.cbase_to_id(cb);
 
 	MAKE_VECTOR()
 
@@ -2478,7 +2478,7 @@ int Hook_Int_Vector_Cbase(Hook *hook, void *pthis, Vector v1, void* cb)
 	int origret=0;
 	PUSH_INT()
 
-	int i4=PrivateToIndex(cb);
+	int i4=TypeConversion.cbase_to_id(cb);
 
 	MAKE_VECTOR()
 
@@ -2546,7 +2546,7 @@ int Hook_Int_Cbase_pVector(Hook *hook, void *pthis, void *cb1, Vector *v1)
 
 	PUSH_INT()
 
-	int iOther=PrivateToIndex(cb1);
+	int iOther=TypeConversion.cbase_to_id(cb1);
 
 	MAKE_VECTOR()
 
@@ -2606,7 +2606,7 @@ bool Hook_Bool_Cbase(Hook *hook, void *pthis, void *cb)
 
 	PUSH_BOOL()
 
-	int iOther=PrivateToIndex(cb);
+	int iOther=TypeConversion.cbase_to_id(cb);
 
 	MAKE_VECTOR()
 
@@ -2669,7 +2669,7 @@ bool Hook_Bool_Int(Hook *hook, void *pthis, int i1)
 void Hook_Void_Cbase_Float(Hook *hook, void *pthis, void *p1, float f1)
 {
 	PUSH_VOID()
-		int iEnt =PrivateToIndex(p1);
+		int iEnt =TypeConversion.cbase_to_id(p1);
 
 	MAKE_VECTOR()
 
@@ -2698,7 +2698,7 @@ void Hook_Void_Cbase_Float(Hook *hook, void *pthis, void *p1, float f1)
 void Hook_Void_Cbase_Bool(Hook *hook, void *pthis, void *p1, bool b1)
 {
 	PUSH_VOID()
-	int iEnt =PrivateToIndex(p1);
+	int iEnt =TypeConversion.cbase_to_id(p1);
 
 	MAKE_VECTOR()
 

@@ -641,13 +641,12 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 	char *function=MF_GetAmxString(amx, params[3], 0, NULL);
 	int entid=params[2];
 	char classname[64];
-	
+
 	// Check the entity
 
-	edict_t *Entity=INDEXENT_NEW(entid);
+	edict_t *Entity = TypeConversion.id_to_edict(entid);
 
-
-	if (Entity->pvPrivateData == NULL)
+	if (!Entity || Entity->pvPrivateData == NULL)
 	{
 
 		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for entity id \"%d\", hook for \"%s\" not active.",entid,function);
@@ -655,7 +654,6 @@ static cell AMX_NATIVE_CALL RegisterHamFromEntity(AMX *amx, cell *params)
 		return 0;
 	}
 	void **vtable=GetVTable(Entity->pvPrivateData, Offsets.GetBase());
-
 
 	if (vtable == NULL)
 	{

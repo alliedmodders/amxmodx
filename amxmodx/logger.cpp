@@ -309,7 +309,7 @@ int parseLoggerString(const char *format,
 }
 
 char* build_pathname_and_mkdir_r(char *buffer, size_t maxlen, const char *fmt, ...) {
-	ke::SafeSprintf(buffer, maxlen, "%s%c", g_mod_name.chars(), PATH_SEP_CHAR);
+	UTIL_Format(buffer, maxlen, "%s%c", g_mod_name.chars(), PATH_SEP_CHAR);
 
 	size_t len = strlen(buffer);
 	char *ptr = buffer + len;

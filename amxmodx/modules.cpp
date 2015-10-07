@@ -32,6 +32,7 @@
 #include "CDataPack.h"
 #include "CGameConfigs.h"
 #include "logger.h"
+#include "exception_handler.h"
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -534,6 +535,7 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, g_CvarNatives, -1);
 	amx_Register(amx, g_GameConfigNatives, -1);
 	amx_Register(amx, logger_Natives, -1);
+	amx_Register(amx, exception_handler_Natives, -1);
 
 	//we're not actually gonna check these here anymore
 	amx->flags |= AMX_FLAG_PRENIT;

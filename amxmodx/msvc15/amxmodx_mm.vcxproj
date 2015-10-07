@@ -272,6 +272,7 @@
     <ClCompile Include="..\datapacks.cpp" />
     <ClCompile Include="..\debugger.cpp" />
     <ClCompile Include="..\emsg.cpp" />
+    <ClCompile Include="..\exception_handler.cpp" />
     <ClCompile Include="..\fakemeta.cpp" />
     <ClCompile Include="..\file.cpp" />
     <ClCompile Include="..\float.cpp" />
@@ -359,6 +360,7 @@
     <ClInclude Include="..\CVault.h" />
     <ClInclude Include="..\datastructs.h" />
     <ClInclude Include="..\debugger.h" />
+    <ClInclude Include="..\exception_handler.h" />
     <ClInclude Include="..\fakemeta.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\gameconfigs.h" />
@@ -386,6 +388,7 @@
     <None Include="..\..\plugins\include\cellstack.inc" />
     <None Include="..\..\plugins\include\cvars.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
+    <None Include="..\..\plugins\include\exception_handler.inc" />
     <None Include="..\..\plugins\include\gameconfig.inc" />
     <None Include="..\..\plugins\include\logger.inc" />
     <None Include="..\..\plugins\include\logger_const.inc" />

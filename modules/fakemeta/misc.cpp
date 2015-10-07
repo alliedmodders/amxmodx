@@ -47,7 +47,7 @@ static cell AMX_NATIVE_CALL lookup_sequence(AMX* amx, cell* params)
 
 	for (int i = 0; i < pstudiohdr->numseq; i++)
 	{
-		if (stricmp( pseqdesc[i].label, label ) == 0)
+		if (strcasecmp( pseqdesc[i].label, label ) == 0)
 		{
 			REAL* FrameRate = reinterpret_cast<REAL*>(MF_GetAmxAddr(amx, params[3]));
 			cell* Loops = MF_GetAmxAddr(amx, params[4]);

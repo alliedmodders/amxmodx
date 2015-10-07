@@ -9,8 +9,9 @@
 #ifndef _HL_CONVERSION_TYPE_H_
 #define _HL_CONVERSION_TYPE_H_
 
-#include <stddef.h> // size_t
-#include <extdll.h> // edict_t, etc.
+#include <stddef.h>   // size_t
+#include <extdll.h>   // edict_t, etc.
+#include <sdk_util.h> // FNullEnt, INDEXENT, etc.
 
 template <typename T> static inline T& ref_pdata(void *pPrivateData, int offset, int element = 0)
 {

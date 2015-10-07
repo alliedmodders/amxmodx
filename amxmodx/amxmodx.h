@@ -52,6 +52,7 @@
 #include "CvarManager.h"
 #include "CoreConfig.h"
 #include <amxmodx_version.h>
+#include <HLTypeConversion.h>
 
 #define AMXXLOG_Log g_log.Log
 #define AMXXLOG_Error g_log.LogError
@@ -145,7 +146,6 @@ void UTIL_TrimRight(char *buffer);
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t))])
 #define GET_PLAYER_POINTER_I(i) (&g_players[i])
-#define GETEDICT(n)             ((n >= 1 && n <= gpGlobals->maxClients) ? GET_PLAYER_POINTER_I(n)->pEdict : INDEXENT(n))
 
 struct WeaponsVault
 {
@@ -369,5 +369,6 @@ enum PrintColor
 };
 
 extern enginefuncs_t *g_pEngTable;
+extern HLTypeConversion TypeConversion;
 
 #endif // AMXMODX_H

@@ -147,6 +147,7 @@ int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
 
 IFileSystem* g_FileSystem;
+HLTypeConversion TypeConversion;
 
 bool ColoredMenus(const char *ModName)
 {
@@ -517,6 +518,8 @@ int	C_Spawn(edict_t *pent)
 #endif
 
 	modules_callPluginsLoaded();
+
+	TypeConversion.init();
 
 	// ###### Call precache forward function
 	g_dontprecache = false;

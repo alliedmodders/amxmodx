@@ -16,9 +16,7 @@
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include "CstrikeUserMessages.h"
-#include "CstrikeHLTypeConversion.h"
 #include <CDetour/detours.h>
-#include <amtl/am-vector.h>
 #include <amtl/am-string.h>
 
 bool NoKifesMode = false;
@@ -999,14 +997,14 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params)
 		GET_OFFSET("CHostageImprov", m_idleState);
 		GET_OFFSET("HostageFollowState", m_leader);
 		GET_OFFSET("SimpleStateMachine", m_state);      // +4 for virtual table pointer of IImprovEvent.
-		GET_OFFSET("SimpleStateMachine", m_stateTimer); // 
+		GET_OFFSET("SimpleStateMachine", m_stateTimer); //
 
 		if (target)
 		{
 			set_pdata<void*>(pImprov, m_behavior + 4 + m_state, reinterpret_cast<int8*>(pImprov) + m_followState);
 			set_pdata<float>(pImprov, m_behavior + 4 + m_stateTimer, gpGlobals->time);
 
-			get_pdata<EHANDLE>(pImprov, m_followState + m_leader).Set(GETEDICT(target));
+			get_pdata<EHANDLE>(pImprov, m_followState + m_leader).Set(TypeConversion.id_to_edict(target));
 		}
 		else
 		{
@@ -1018,7 +1016,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params)
 	}
 	else
 	{
-		get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Set(target ? GETEDICT(target) : nullptr);
+		get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Set(target ? TypeConversion.id_to_edict(target) : nullptr);
 	}
 
 	return 1;
@@ -1728,10 +1726,10 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
 	}
 
 	int len;
-	void* pEntity = G_HL_TypeConversion.id_to_cbase(params[1]);
+	void* pEntity = TypeConversion.id_to_cbase(params[1]);
 	const char* value = MF_GetAmxString(amx, params[2], 0, &len);
 
-	int index = G_HL_TypeConversion.cbase_to_id(CS_UTIL_FindEntityByString(pEntity, "classname", value));
+	int index = TypeConversion.cbase_to_id(CS_UTIL_FindEntityByString(pEntity, "classname", value));
 
 	if (index != -1)
 	{

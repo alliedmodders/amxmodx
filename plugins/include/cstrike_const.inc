@@ -55,16 +55,16 @@
 #define CSW_SHIELDGUN       99
 #define CSW_LAST_WEAPON     CSW_P90
 
-stock const CSW_ALL_WEAPONS      = (~(1<<CSW_VEST));
-stock const CSW_ALL_PISTOLS      = (1<<CSW_P228  | 1<<CSW_ELITE | 1<<CSW_FIVESEVEN | 1<<CSW_USP | 1<<CSW_GLOCK18 | 1<<CSW_DEAGLE);
-stock const CSW_ALL_SHOTGUNS     = (1<<CSW_M3    | 1<<CSW_XM1014);
-stock const CSW_ALL_SMGS         = (1<<CSW_MAC10 | 1<<CSW_UMP45 | 1<<CSW_MP5NAVY | 1<<CSW_TMP  | 1<<CSW_P90);
-stock const CSW_ALL_RIFLES       = (1<<CSW_AUG   | 1<<CSW_GALIL | 1<<CSW_FAMAS   | 1<<CSW_M4A1 | 1<<CSW_AK47 | 1<<CSW_SG552);
-stock const CSW_ALL_SNIPERRIFLES = (1<<CSW_SCOUT | 1<<CSW_AWP   | 1<<CSW_G3SG1   | 1<<CSW_SG550);
-stock const CSW_ALL_MACHINEGUNS  = (1<<CSW_M249);
-stock const CSW_ALL_GRENADES     = (1<<CSW_HEGRENADE | 1<<CSW_SMOKEGRENADE | 1<<CSW_FLASHBANG);
-stock const CSW_ALL_ARMORS       = (1<<CSW_VEST | 1<<CSW_VESTHELM);
-stock const CSW_ALL_GUNS         = (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS);
+const CSW_ALL_WEAPONS      = (~(1<<CSW_VEST));
+const CSW_ALL_PISTOLS      = (1<<CSW_P228  | 1<<CSW_ELITE | 1<<CSW_FIVESEVEN | 1<<CSW_USP | 1<<CSW_GLOCK18 | 1<<CSW_DEAGLE);
+const CSW_ALL_SHOTGUNS     = (1<<CSW_M3    | 1<<CSW_XM1014);
+const CSW_ALL_SMGS         = (1<<CSW_MAC10 | 1<<CSW_UMP45 | 1<<CSW_MP5NAVY | 1<<CSW_TMP  | 1<<CSW_P90);
+const CSW_ALL_RIFLES       = (1<<CSW_AUG   | 1<<CSW_GALIL | 1<<CSW_FAMAS   | 1<<CSW_M4A1 | 1<<CSW_AK47 | 1<<CSW_SG552);
+const CSW_ALL_SNIPERRIFLES = (1<<CSW_SCOUT | 1<<CSW_AWP   | 1<<CSW_G3SG1   | 1<<CSW_SG550);
+const CSW_ALL_MACHINEGUNS  = (1<<CSW_M249);
+const CSW_ALL_GRENADES     = (1<<CSW_HEGRENADE | 1<<CSW_SMOKEGRENADE | 1<<CSW_FLASHBANG);
+const CSW_ALL_ARMORS       = (1<<CSW_VEST | 1<<CSW_VESTHELM);
+const CSW_ALL_GUNS         = (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS);
 
 /**
  * @section Team and team model constants, used by cs_[get|set]_user_team().
@@ -186,10 +186,10 @@ enum
 #define CSI_MAX_COUNT           38
 #define CSI_LAST_WEAPON         CSW_LAST_WEAPON
 
-#define CSI_ALL_WEAPONS         CSW_ALL_WEAPONS 
+#define CSI_ALL_WEAPONS         CSW_ALL_WEAPONS
 #define CSI_ALL_PISTOLS         CSW_ALL_PISTOLS
 #define CSI_ALL_SHOTGUNS        CSW_ALL_SHOTGUNS
-#define CSI_ALL_SMGS            CSW_ALL_SMGS 
+#define CSI_ALL_SMGS            CSW_ALL_SMGS
 #define CSI_ALL_RIFLES          CSW_ALL_RIFLES
 #define CSI_ALL_SNIPERRIFLES    CSW_ALL_SNIPERRIFLES
 #define CSI_ALL_MACHINEGUNS     CSW_ALL_MACHINEGUNS
@@ -394,7 +394,7 @@ enum CsAutoBuyClassType
 };
 
 /**
- * Ammo types.
+ * Ammo types for use with cs_get_weapon_info().
  */
 enum CsAmmoType
 {
@@ -410,6 +410,9 @@ enum CsAmmoType
 	CS_AMMO_357SIG     = 9,
 };
 
+/**
+ * Weapon info types for use with cs_get_weapon_info().
+ */
 enum CsWeaponInfo
 {
 	CS_WEAPONINFO_COST          = 0,
@@ -418,4 +421,67 @@ enum CsWeaponInfo
 	CS_WEAPONINFO_GUN_CLIP_SIZE = 3,
 	CS_WEAPONINFO_MAX_ROUNDS    = 4,
 	CS_WEAPONINFO_AMMO_TYPE     = 5,
+};
+
+/**
+ * Weapon default cost.
+ */
+enum CsWeaponCostType
+{
+	CS_AK47_PRICE      = 2500,
+	CS_AWP_PRICE       = 4750,
+	CS_DEAGLE_PRICE    = 650,
+	CS_G3SG1_PRICE     = 5000,
+	CS_SG550_PRICE     = 4200,
+	CS_GLOCK18_PRICE   = 400,
+	CS_M249_PRICE      = 5750,
+	CS_M3_PRICE        = 1700,
+	CS_M4A1_PRICE      = 3100,
+	CS_AUG_PRICE       = 3500,
+	CS_MP5NAVY_PRICE   = 1500,
+	CS_P228_PRICE      = 600,
+	CS_P90_PRICE       = 2350,
+	CS_UMP45_PRICE     = 1700,
+	CS_MAC10_PRICE     = 1400,
+	CS_SCOUT_PRICE     = 2750,
+	CS_SG552_PRICE     = 3500,
+	CS_TMP_PRICE       = 1250,
+	CS_USP_PRICE       = 500,
+	CS_ELITE_PRICE     = 800,
+	CS_FIVESEVEN_PRICE = 750,
+	CS_XM1014_PRICE    = 3000,
+	CS_GALIL_PRICE     = 2000,
+	CS_FAMAS_PRICE     = 2250,
+	CS_SHIELDGUN_PRICE = 2200
+};
+
+/**
+ * Equipment default cost.
+ */
+enum CsItemCostType
+{
+	CS_ASSAULTSUIT_PRICE  = 1000,
+	CS_FLASHBANG_PRICE    = 200,
+	CS_HEGRENADE_PRICE    = 300,
+	CS_SMOKEGRENADE_PRICE = 300,
+	CS_KEVLAR_PRICE       = 650,
+	CS_HELMET_PRICE       = 350,
+	CS_NVG_PRICE          = 1250,
+	CS_DEFUSEKIT_PRICE    = 200
+};
+
+/**
+ * Ammo default cost.
+ */
+enum CsAmmoCostType
+{
+	CS_AMMO_338MAG_PRICE   = 125,
+	CS_AMMO_357SIG_PRICE   = 50,
+	CS_AMMO_45ACP_PRICE    = 25,
+	CS_AMMO_50AE_PRICE     = 40,
+	CS_AMMO_556NATO_PRICE  = 60,
+	CS_AMMO_57MM_PRICE     = 50,
+	CS_AMMO_762NATO_PRICE  = 80,
+	CS_AMMO_9MM_PRICE      = 20,
+	CS_AMMO_BUCKSHOT_PRICE = 65
 };

@@ -14,9 +14,10 @@
 #ifndef _CSTRIKE_WEAPONS_INFOS_H_
 #define _CSTRIKE_WEAPONS_INFOS_H_
 
+#include <amxxmodule.h>
 #include "CstrikeDatas.h"
 #include <ITextParsers.h>
-#include <am-string.h>
+#include <amtl/am-string.h>
 #include <sm_stringhashmap.h>
 
 struct AliasInfo
@@ -37,12 +38,25 @@ struct AliasInfo
 	ke::AString classname;
 };
 
+enum class Equipments
+{
+	None,
+	Vest,
+	Vesthelm,
+	Flashbang,
+	HEGrenade,
+	SmokeGrenade,
+	Nvg,
+	Defuser,
+	Count
+};
+
 class CsItemInfo : public ITextListener_SMC
 {
 	public:
 
 		CsItemInfo();
-		~CsItemInfo();
+		virtual ~CsItemInfo();
 
 	public:
 
@@ -64,6 +78,8 @@ class CsItemInfo : public ITextListener_SMC
 
 		CsWeaponClassType WeaponIdToClass(int id);
 
+		int GetItemPrice(int id);
+
 	private: // Retrieved datas
 
 		typedef StringHashMap<AliasInfo> AliasMap;
@@ -81,8 +97,10 @@ class CsItemInfo : public ITextListener_SMC
 		ke::AString  m_Alias;
 		AliasInfo    m_AliasInfo;
 		bool         m_ListsRetrievedFromConfig;
+		int          m_EquipmentsPrice[static_cast<size_t>(Equipments::Count)];
 };
 
+extern char WeaponNameList[MAX_WEAPONS][64];
 extern CsItemInfo ItemsManager;
 
 #endif // _CSTRIKE_WEAPONS_INFOS_H_

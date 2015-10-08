@@ -110,6 +110,7 @@ bool UTIL_CheckForPublic(const char *publicname);
 		member = type.fieldOffset;                                                  \
 	}
 
+
 class CUnifiedSignals
 {
 	public:
@@ -120,17 +121,17 @@ class CUnifiedSignals
 			m_flSignal = 0;
 		}
 
-		void Signal(int flags) 
+		void Signal(int flags)
 		{
 			m_flSignal |= flags;
 		}
 
-		int GetSignal(void) 
+		int GetSignal(void)
 		{
 			return m_flSignal;
 		}
 
-		int GetState(void) 
+		int GetState(void)
 		{
 			return m_flState;
 		}

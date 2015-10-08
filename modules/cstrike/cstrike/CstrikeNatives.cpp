@@ -16,11 +16,11 @@
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include "CstrikeUserMessages.h"
+#include "CstrikeItemsInfos.h"
 #include <CDetour/detours.h>
 #include <amtl/am-string.h>
 
-bool NoKifesMode = false;
-char WeaponNameList[MAX_WEAPONS][64];
+bool NoKnivesMode = false;
 
 // native cs_set_user_money(index, money, flash = 1);
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params)
@@ -1073,7 +1073,7 @@ static cell AMX_NATIVE_CALL cs_get_user_hasprimary(AMX *amx, cell *params)
 // native cs_get_no_knives();
 static cell AMX_NATIVE_CALL cs_get_no_knives(AMX *amx, cell *params)
 {
-	return NoKifesMode ? 1 : 0;
+	return NoKnivesMode ? 1 : 0;
 }
 
 // native cs_set_no_knives(noknives = 0);
@@ -1085,9 +1085,9 @@ static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params)
 		return 0;
 	}
 
-	NoKifesMode = params[1] != 0;
+	NoKnivesMode = params[1] != 0;
 
-	if (NoKifesMode)
+	if (NoKnivesMode)
 	{
 		GiveDefaultItemsDetour->EnableDetour();
 	}
@@ -1756,21 +1756,21 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
 	}
 
 	int owner = params[3];
-	CHECK_ENTITY_SIMPLE(params[3]);
+	CHECK_ENTITY_SIMPLE(owner);
 
 	int length;
-	void* pEntity = G_HL_TypeConversion.id_to_cbase(params[1]);
+	void* pEntity = TypeConversion.id_to_cbase(params[1]);
 	const char* value = MF_GetAmxString(amx, params[2], 0, &length);
 
-	edict_t *pOwner = GETEDICT(owner);
+	edict_t *pOwner = TypeConversion.id_to_edict(owner);
 
 	while ((pEntity = CS_UTIL_FindEntityByString(pEntity, "classname", value)))
 	{
-		edict_t *pev = G_HL_TypeConversion.cbase_to_edict(pEntity);
+		edict_t *pev = TypeConversion.cbase_to_edict(pEntity);
 
 		if (!FNullEnt(pev) && pev->v.owner == pOwner)
 		{
-			int index = ENTINDEX(pev);
+			int index = TypeConversion.edict_to_id(pev);
 
 			if (index != -1)
 			{
@@ -1787,7 +1787,7 @@ static cell AMX_NATIVE_CALL cs_get_item_id(AMX* amx, cell* params)
 {
 	if (ItemsManager.HasConfigError())
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_item_id() is disabled disabled because of missing gamedata");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_item_id() is disabled because of corrupted or missing gamedata");
 		return 0;
 	}
 
@@ -1814,7 +1814,7 @@ static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
 {
 	if (ItemsManager.HasConfigError())
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_translated_item_alias() is disabled because of missing gamedata");
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_translated_item_alias() is disabled because of corrupted or missing gamedata");
 		return 0;
 	}
 
@@ -1966,7 +1966,7 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_set_c4_explode_time",		cs_set_c4_explode_time},
 	{"cs_get_c4_defusing",			cs_get_c4_defusing},
 	{"cs_set_c4_defusing",			cs_set_c4_defusing},
-	{"cs_create_entity",			cs_create_entity },	
+	{"cs_create_entity",			cs_create_entity },
 	{"cs_find_ent_by_class",		cs_find_ent_by_class},
 	{"cs_find_ent_by_owner",        cs_find_ent_by_owner},
 	{"cs_get_item_id",		        cs_get_item_id},

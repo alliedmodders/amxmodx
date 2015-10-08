@@ -12,9 +12,10 @@
 //
 
 #include "CstrikeItemsInfos.h"
-#include <amxxmodule.h>
+#include "CstrikeHacks.h"
 
 CsItemInfo ItemsManager;
+char WeaponNameList[MAX_WEAPONS][64];
 
 #define PSTATE_ALIASES_TYPE       0
 #define PSTATE_ALIASES_ALIAS      1
@@ -52,15 +53,15 @@ SMCResult CsItemInfo::ReadSMC_NewSection(const SMCStates *states, const char *na
 		{
 			m_List = nullptr;
 
-			if (!strcmp(name, "Common"))
+			if (!strcmp(name, "CommonAlias"))
 			{
 				m_List = &m_CommonAliasesList;
 			}
-			else if (!strcmp(name, "Weapon"))
+			else if (!strcmp(name, "WeaponAlias"))
 			{
 				m_List = &m_WeaponAliasesList;
 			}
-			else if (!strcmp(name, "Buy") || !strcmp(name, "BuyEquip") || !strcmp(name, "BuyAmmo"))
+			else if (!strcmp(name, "BuyAlias") || !strcmp(name, "BuyEquipAlias") || !strcmp(name, "BuyAmmoAlias"))
 			{
 				m_List = &m_BuyAliasesList;
 			}
@@ -112,6 +113,21 @@ SMCResult CsItemInfo::ReadSMC_KeyValue(const SMCStates *states, const char *key,
 			else if (!strcmp(key, "classname"))
 			{
 				m_AliasInfo.classname = value;
+			}
+			else if (!strcmp(key, "price"))
+			{
+				static int equipmentsList[static_cast<size_t>(Equipments::Count)] =
+				{
+					CSI_NONE, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER
+				};
+
+				for (int i = 0; i < ARRAY_LENGTH(equipmentsList); ++i)
+				{
+					if (m_AliasInfo.itemid == equipmentsList[i])
+					{
+						m_EquipmentsPrice[i] = atoi(value);
+					}
+				}
 			}
 			break;
 		}
@@ -230,4 +246,32 @@ CsWeaponClassType CsItemInfo::WeaponIdToClass(int id)
 	}
 
 	return CS_WEAPONCLASS_NONE;
+}
+
+int CsItemInfo::GetItemPrice(int itemId)
+{
+	if (itemId <= CSI_NONE || itemId > CSI_SHIELD)
+	{
+		return 0;
+	}
+
+	Equipments id = Equipments::None;
+
+	switch (itemId)
+	{
+		case CSI_VEST:         id = Equipments::Vest;         break;
+		case CSI_VESTHELM:     id = Equipments::Vesthelm;     break;
+		case CSI_HEGRENADE:    id = Equipments::HEGrenade;    break;
+		case CSI_SMOKEGRENADE: id = Equipments::SmokeGrenade; break;
+		case CSI_FLASHBANG:    id = Equipments::Flashbang;    break;
+		case CSI_NVGS:         id = Equipments::Nvg;          break;
+		case CSI_DEFUSER:      id = Equipments::Defuser;      break;
+	}
+
+	if (id != Equipments::None)
+	{
+		return m_EquipmentsPrice[static_cast<size_t>(id)];
+	}
+
+	return GetWeaponInfo(itemId == CSI_SHIELD ? CSI_SHIELDGUN : itemId)->cost;
 }

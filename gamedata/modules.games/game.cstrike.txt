@@ -15,6 +15,22 @@
 	{
 		"Signatures"
 		{
+			"CanPlayerBuy"  // bool CBasePlayer::CanPlayerBuy(bool display)
+			{
+				"library"   "server"
+				"windows"   "\x51\x53\x55\x56\x57\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xFF"
+				"linux"     "@_ZN11CBasePlayer12CanPlayerBuyEb"
+				"mac"       "@_ZN11CBasePlayer12CanPlayerBuyEb"
+			}
+
+			"CanBuyThis"  // bool CanBuyThis(CBasePlayer *pPlayer, int weaponId)
+			{
+				"library"   "server"
+				"windows"   "\x53\x8B\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x2A\x57\x8B"
+				"linux"     "@_Z10CanBuyThisP11CBasePlayeri"
+				"mac"       "@_Z10CanBuyThisP11CBasePlayeri"
+			}
+
 			"AddAccount"    // void CBasePlayer::AddAccount(int amount, bool bTrackChange)
 			{
 				"library"   "server"
@@ -70,6 +86,22 @@
 				"linux"     "@_Z13GetWeaponInfoi"
 				"mac"       "@_Z13GetWeaponInfoi"
 			}
+
+			"GetAmmoIndex" // int CBasePlayer::GetAmmoIndex(const char *psz)
+			{
+				"library"   "server"
+				"windows"   "\x56\x57\x8B\x2A\x2A\x2A\x85\x2A\x74\x2A\xBE"
+				"linux"     "@_ZN11CBasePlayer12GetAmmoIndexEPKc"
+				"mac"       "@_ZN11CBasePlayer12GetAmmoIndexEPKc"
+			}
+
+			"BuyGunAmmo" // bool BuyGunAmmo(CBasePlayer *player, CBasePlayerItem *weapon, bool bBlinkMoney)
+			{
+				"library"   "server"
+				"windows"   "\x56\x57\x8B\x2A\x2A\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F"
+				"linux"     "@_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+				"mac"       "@_Z10BuyGunAmmoR11CBasePlayerR15CBasePlayerItemb"
+			}
 		}
 	}
 
@@ -110,9 +142,9 @@
 
 	"#default"
 	{
-		"CommandsAliases"
+		"ItemInfos"
 		{
-			"Common"
+			"CommonAlias"
 			{
 				"p228"
 				{
@@ -241,7 +273,7 @@
 				}
 			}
 
-			"Weapon"
+			"WeaponAlias"
 			{
 				"grenade"
 				{
@@ -280,7 +312,7 @@
 				}
 			}
 
-			"Buy"
+			"BuyAlias"
 			{
 				"228compact"
 				{
@@ -374,52 +406,58 @@
 				}
 			}
 
-			"BuyEquip"
+			"BuyEquipAlias"
 			{
 				"hegren"
 				{
 					"itemid"     "4"  // CSW/I_HEGRENADE
 					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+					"price"      "300"
 				}
 				"sgren"
 				{
 					"itemid"     "9"  // CSW/I_SMOKEGRENADE
 					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+					"price"      "300"
 				}
 				"flash"
 				{
-					"itemid"    "25"  // CSW/I_FLASHBANG
+					"itemid"     "25" // CSW/I_FLASHBANG
 					"classid"    "3"  // CS_WEAPONCLASS_GRENADE
+					"price"      "200"
 				}
 				"vest"
 				{
-					"itemid"    "31"  // CSW/I_VEST
-					"classname" "item_kevlar"
+					"itemid"     "31"  // CSW/I_VEST
+					"classname"  "item_kevlar"
+					"price"      "650"
 				}
 				"vesthelm"
 				{
-					"itemid"    "32"  // CSW/I_VESTHELM
-					"classname" "item_assaultsuit"
+					"itemid"     "32"  // CSW/I_VESTHELM
+					"classname"  "item_assaultsuit"
+					"price"      "1000"
 				}
 				"defuser"
 				{
-					"itemid"    "33"  // CSI_DEFUSER
-					"classname" "item_thighpack"
+					"itemid"     "33"  // CSI_DEFUSER
+					"classname"  "item_thighpack"
+					"price"      "200"
 				}
 				"nvgs"
 				{
-					"itemid"    "34"  // CSI_NVGS
-
+					"itemid"     "34"  // CSI_NVGS
+					"price"      "1250"
 				}
 				"shield"
 				{
-					"itemid"    "35"  // CSI_SHIELD
-					"classid"   "2"   // CS_WEAPONCLASS_PISTOL
-					"classname" "weapon_shield"
+					"itemid"     "35"  // CSI_SHIELD
+					"classid"    "2"   // CS_WEAPONCLASS_PISTOL
+					"classname"  "weapon_shield"
 				}
 			}
 
-			"BuyAmmo"
+			"BuyAmmoAlias"
 			{
 				"primammo"
 				{

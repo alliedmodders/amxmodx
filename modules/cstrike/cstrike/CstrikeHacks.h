@@ -21,11 +21,17 @@
 #include "CstrikeDatas.h"
 
 void InitializeHacks();
+void InitFuncsAddresses();
+void InitClassMembers();
 void InitGlobalVars();
 void ShutdownHacks();
+
+void CtrlDetours_ClientCommand(bool set);
+void CtrlDetours_BuyCommands(bool set);
+void CtrlDetours_Natives(bool set);
+
 void ToggleDetour_ClientCommands(bool enable);
 void ToggleDetour_BuyCommands(bool enable);
-void OnEmitSound(edict_t *entity, int channel, const char *sample, float volume, float attenuation, int fFlags, int pitch);
 
 extern AMX_NATIVE_INFO CstrikeNatives[];
 
@@ -35,6 +41,18 @@ extern IGameConfig *CommonConfig;
 extern int ForwardInternalCommand;
 extern int ForwardOnBuy;
 extern int ForwardOnBuyAttempt;
+
+extern bool HasInternalCommandForward;
+extern bool HasOnBuyAttemptForward;
+extern bool HasOnBuyForward;
+
+extern CDetour *ClientCommandDetour;
+extern CDetour *GiveNamedItemDetour;
+extern CDetour *AddAccountDetour;
+extern CDetour *CanPlayerBuyDetour;
+extern CDetour *CanBuyThisDetour;
+extern CDetour *GiveDefaultItemsDetour;
+extern CDetour *BuyGunAmmoDetour;
 
 typedef edict_t* (*CreateNamedEntityFunc)(string_t iszClassname);
 typedef void*    (*UTIL_FindEntityByStringFunc)(void* pStartEntity, const char *szKeyword, const char *szValue);
@@ -47,9 +65,13 @@ extern GetWeaponInfoFunc           GetWeaponInfo;
 extern CDetour *GiveDefaultItemsDetour;
 extern enginefuncs_t *g_pengfuncsTable;
 extern DLL_FUNCTIONS *g_pFunctionTable;
-extern bool NoKifesMode;
+extern bool NoKnivesMode;
 
 extern server_static_t *ServerStatic;
 extern server_t *Server;
+extern void **GameRules;
+
+extern int *UseBotArgs;
+extern const char **BotArgs;
 
 #endif // CSTRIKE_HACKS_H

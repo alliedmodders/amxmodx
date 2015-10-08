@@ -55,11 +55,12 @@
 #define CSI_PRIAMMO             36              // Custom
 #define CSI_SECAMMO             37              // Custom
 #define CSI_MAX_COUNT           38
+#define CSI_LAST_WEAPON         CSW_LAST_WEAPON
 
-#define CSI_ALL_WEAPONS         CSW_ALL_WEAPONS 
+#define CSI_ALL_WEAPONS         CSW_ALL_WEAPONS
 #define CSI_ALL_PISTOLS         CSW_ALL_PISTOLS
 #define CSI_ALL_SHOTGUNS        CSW_ALL_SHOTGUNS
-#define CSI_ALL_SMGS            CSW_ALL_SMGS 
+#define CSI_ALL_SMGS            CSW_ALL_SMGS
 #define CSI_ALL_RIFLES          CSW_ALL_RIFLES
 #define CSI_ALL_SNIPERRIFLES    CSW_ALL_SNIPERRIFLES
 #define CSI_ALL_MACHINEGUNS     CSW_ALL_MACHINEGUNS
@@ -107,12 +108,12 @@
 
 #define CSW_ALL_WEAPONS      (~(1 << CSW_VEST))
 #define CSW_ALL_PISTOLS      (1 << CSW_P228 | 1 << CSW_ELITE | 1 << CSW_FIVESEVEN | 1 << CSW_USP | 1 << CSW_GLOCK18 | 1 << CSW_DEAGLE)
-#define CSW_ALL_SHOTGUNS     (1 << CSW_M3 | 1 << CSW_XM1014))
-#define CSW_ALL_SMGS         (1 << CSW_MAC10 | 1 << CSW_UMP45 | 1 << CSW_MP5NAVY | 1 << CSW_TMP | 1 << CSW_P90))
-#define CSW_ALL_RIFLES       (1 << CSW_AUG | 1 << CSW_GALIL | 1 << CSW_FAMAS | 1 << CSW_M4A1 | 1 << CSW_AK47 | 1 << CSW_SG552))
-#define CSW_ALL_SNIPERRIFLES (1 << CSW_SCOUT | 1 << CSW_AWP | 1 << CSW_G3SG1 | 1 << CSW_SG550))
-#define CSW_ALL_MACHINEGUNS  (1 << CSW_M249))
-#define CSW_ALL_GRENADES     (1 << CSW_HEGRENADE | 1 << CSW_SMOKEGRENADE | 1 << CSW_FLASHBANG))
+#define CSW_ALL_SHOTGUNS     (1 << CSW_M3 | 1 << CSW_XM1014)
+#define CSW_ALL_SMGS         (1 << CSW_MAC10 | 1 << CSW_UMP45 | 1 << CSW_MP5NAVY | 1 << CSW_TMP | 1 << CSW_P90)
+#define CSW_ALL_RIFLES       (1 << CSW_AUG | 1 << CSW_GALIL | 1 << CSW_FAMAS | 1 << CSW_M4A1 | 1 << CSW_AK47 | 1 << CSW_SG552)
+#define CSW_ALL_SNIPERRIFLES (1 << CSW_SCOUT | 1 << CSW_AWP | 1 << CSW_G3SG1 | 1 << CSW_SG550)
+#define CSW_ALL_MACHINEGUNS  (1 << CSW_M249)
+#define CSW_ALL_GRENADES     (1 << CSW_HEGRENADE | 1 << CSW_SMOKEGRENADE | 1 << CSW_FLASHBANG)
 #define CSW_ALL_ARMORS       (1 << CSW_VEST | 1 << CSW_VESTHELM)
 #define CSW_ALL_GUNS         (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS)
 
@@ -349,6 +350,51 @@ enum CsWeaponInfo
 	CS_WEAPONINFO_AMMO_TYPE     = 5,
 };
 
-extern char WeaponNameList[MAX_WEAPONS][64];
+/**
+ * Weapon default cost.
+ */
+enum WeaponCostType
+{
+	AK47_PRICE      = 2500,
+	AWP_PRICE       = 4750,
+	DEAGLE_PRICE    = 650,
+	G3SG1_PRICE     = 5000,
+	SG550_PRICE     = 4200,
+	GLOCK18_PRICE   = 400,
+	M249_PRICE      = 5750,
+	M3_PRICE        = 1700,
+	M4A1_PRICE      = 3100,
+	AUG_PRICE       = 3500,
+	MP5NAVY_PRICE   = 1500,
+	P228_PRICE      = 600,
+	P90_PRICE       = 2350,
+	UMP45_PRICE     = 1700,
+	MAC10_PRICE     = 1400,
+	SCOUT_PRICE     = 2750,
+	SG552_PRICE     = 3500,
+	TMP_PRICE       = 1250,
+	USP_PRICE       = 500,
+	ELITE_PRICE     = 800,
+	FIVESEVEN_PRICE = 750,
+	XM1014_PRICE    = 3000,
+	GALIL_PRICE     = 2000,
+	FAMAS_PRICE     = 2250,
+	SHIELDGUN_PRICE = 2200
+};
+
+/**
+ * Equipment default cost.
+ */
+enum ItemCostType
+{
+	ASSAULTSUIT_PRICE  = 1000,
+	FLASHBANG_PRICE    = 200,
+	HEGRENADE_PRICE    = 300,
+	SMOKEGRENADE_PRICE = 300,
+	KEVLAR_PRICE       = 650,
+	HELMET_PRICE       = 350,
+	NVG_PRICE          = 1250,
+	DEFUSEKIT_PRICE    = 200
+};
 
 #endif // CSTRIKE_DATA_H

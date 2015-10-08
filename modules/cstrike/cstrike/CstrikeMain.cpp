@@ -14,6 +14,8 @@
 #include "amxxmodule.h"
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
+#include "CstrikeItemsInfos.h"
+#include "CstrikeUserMessages.h"
 #include <IGameConfigs.h>
 
 IGameConfig *MainConfig;
@@ -39,7 +41,7 @@ void OnAmxxAttach()
 	ConfigManager = MF_GetConfigManager();
 
 	char error[256] = "";
-	ConfigManager->AddUserConfigHook("CommandsAliases", &ItemsManager);
+	ConfigManager->AddUserConfigHook("ItemInfos", &ItemsManager);
 
 	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && *error)
 	{
@@ -48,6 +50,7 @@ void OnAmxxAttach()
 	}
 
 	*error = '\0';
+
 	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)) && *error)
 	{
 		MF_Log("Could not read common.games gamedata: %s", error);
@@ -59,27 +62,29 @@ void OnAmxxAttach()
 
 void OnPluginsLoaded()
 {
+	TypeConversion.init();
+
 	ForwardInternalCommand = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
 	ForwardOnBuy           = MF_RegisterForward("CS_OnBuy"          , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 	ForwardOnBuyAttempt    = MF_RegisterForward("CS_OnBuyAttempt"   , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 
-	// Checking whether such public forwards are used in plugins.
-	// Resetting variable to -1 to avoid running unnecessary code in ClientCommand.
-	if (!UTIL_CheckForPublic("CS_InternalCommand"))   { ForwardInternalCommand = -1; }
-	if (!UTIL_CheckForPublic("CS_OnBuy"))             { ForwardOnBuy = -1; }
-	if (!UTIL_CheckForPublic("CS_OnBuyAttempt"))      { ForwardOnBuyAttempt = -1; }
+	if (!ClientCommandDetour) // All CS_* forwards requires ClientCommand. Unlikely to fail.
+	{
+		ToggleDetour_ClientCommands(false);
+		ToggleDetour_BuyCommands(false);
 
-	// And enable/disable detours when necessary.
-	ToggleDetour_ClientCommands(ForwardInternalCommand != -1 || ForwardOnBuy != -1 || ForwardOnBuyAttempt != -1);
-	ToggleDetour_BuyCommands(ForwardOnBuy != -1);
+		return;
+	}
 
-	// Search pev/vtable offset automatically.
-	TypeConversion.init();
+	auto haveBotDetours = UseBotArgs && BotArgs;
+	auto haveBuyDetours = BuyGunAmmoDetour && GiveNamedItemDetour && AddAccountDetour && CanPlayerBuyDetour && CanBuyThisDetour;
 
-	// Used with model natives, enabled on demand.
-	g_pengfuncsTable->pfnSetClientKeyValue     = nullptr;
-	g_pFunctionTable->pfnClientUserInfoChanged = nullptr;
-	g_pFunctionTable->pfnStartFrame            = nullptr;
+	HasInternalCommandForward = haveBotDetours && UTIL_CheckForPublic("CS_InternalCommand");
+	HasOnBuyAttemptForward    = haveBuyDetours && UTIL_CheckForPublic("CS_OnBuyAttempt");
+	HasOnBuyForward           = haveBuyDetours && UTIL_CheckForPublic("CS_OnBuy");
+
+	ToggleDetour_ClientCommands(HasInternalCommandForward || HasOnBuyAttemptForward || HasOnBuyForward);
+	ToggleDetour_BuyCommands(HasOnBuyForward);
 }
 
 void OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
@@ -95,13 +100,18 @@ void OnServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 
 void OnPluginsUnloaded()
 {
-	// Force to disable all hooks at map change.
+	// Used with model natives, enabled on demand.
+	g_pengfuncsTable->pfnSetClientKeyValue     = nullptr;
+	g_pFunctionTable->pfnClientUserInfoChanged = nullptr;
+	g_pFunctionTable->pfnStartFrame            = nullptr;
+
+	// Force to disable all event hooks at map change.
 	DisableMessageHooks(true);
 }
 
 void OnAmxxDetach()
 {
-	ConfigManager->RemoveUserConfigHook("CommandsAliases", &ItemsManager);
+	ConfigManager->RemoveUserConfigHook("ItemInfos", &ItemsManager);
 
 	ConfigManager->CloseGameConfigFile(MainConfig);
 	ConfigManager->CloseGameConfigFile(CommonConfig);

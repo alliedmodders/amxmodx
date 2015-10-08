@@ -11,13 +11,12 @@
 // Counter-Strike Module
 //
 
-#include <amxxmodule.h>
 #include "CstrikeUserMessages.h"
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include "CstrikePlayer.h"
-#include "CstrikeDatas.h"
-#include <am-string.h>
+#include "CstrikeItemsInfos.h"
+#include <amtl/am-string.h>
 
 bool ShouldBlock;
 bool ShouldBlockHLTV;
@@ -114,26 +113,6 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 				{
 					Players[index].ResetZoom();
 					DisableMessageHooks();
-				}
-			}
-			else if (msg_type == MessageIdStatusIcon)
-			{
-				if (OnMessageStatusIcon(pEntity))
-				{
-					ShouldBlock = true;
-					ShouldDisableHooks = true;
-
-					RETURN_META(MRES_SUPERCEDE);
-				}
-			}
-			else if (msg_type == MessageIdItemStatus)
-			{
-				if (OnMessageItemStatus(pEntity))
-				{
-					ShouldBlock = true;
-					ShouldDisableHooks = true;
-
-					RETURN_META(MRES_SUPERCEDE);
 				}
 			}
 			break;

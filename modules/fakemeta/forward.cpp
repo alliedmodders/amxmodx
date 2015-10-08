@@ -341,14 +341,14 @@ void MoveToOrigin_post(edict_t *ent, const float *pflGoal, float dist, int iMove
 edict_t *FindEntityByString(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue)
 {
 	FM_ENG_HANDLE(FM_FindEntityByString, (Engine[FM_FindEntityByString].at(i), (cell)ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
-	RETURN_META_VALUE(mswi(lastFmRes), INDEXENT2((int)mlCellResult));
+	RETURN_META_VALUE(mswi(lastFmRes), TypeConversion.id_to_edict((int)mlCellResult));
 }
 
 edict_t *FindEntityByString_post(edict_t *pEdictStartSearchAfter, const char *pszField, const char *pszValue)
 {
 	origCellRet = ENTINDEX(META_RESULT_ORIG_RET(edict_t *));
 	FM_ENG_HANDLE_POST(FM_FindEntityByString, (EnginePost[FM_FindEntityByString].at(i), (cell)ENTINDEX(pEdictStartSearchAfter), pszField, pszValue));
-	RETURN_META_VALUE(MRES_IGNORED, INDEXENT2((int)mlCellResult));
+	RETURN_META_VALUE(MRES_IGNORED, TypeConversion.id_to_edict((int)mlCellResult));
 }
 // pfnGetEntityIllum
 SIMPLE_INT_HOOK_EDICT(GetEntityIllum);

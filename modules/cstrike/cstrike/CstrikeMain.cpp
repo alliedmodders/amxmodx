@@ -13,15 +13,14 @@
 
 #include "amxxmodule.h"
 #include "CstrikeUtils.h"
-#include "CstrikeDatas.h"
 #include "CstrikeHacks.h"
-#include "CstrikeHLTypeConversion.h"
 #include <IGameConfigs.h>
-#include "engine_strucs.h"
 
 IGameConfig *MainConfig;
 IGameConfig *CommonConfig;
 IGameConfigManager *ConfigManager;
+
+HLTypeConversion TypeConversion;
 
 int AmxxCheckGame(const char *game)
 {
@@ -75,11 +74,8 @@ void OnPluginsLoaded()
 	ToggleDetour_ClientCommands(ForwardInternalCommand != -1 || ForwardOnBuy != -1 || ForwardOnBuyAttempt != -1);
 	ToggleDetour_BuyCommands(ForwardOnBuy != -1);
 
-	// Search pev offset automatically.
-	if (!G_OffsetHandler)
-	{
-		G_OffsetHandler = new OffsetHandler;
-	}
+	// Search pev/vtable offset automatically.
+	TypeConversion.init();
 
 	// Used with model natives, enabled on demand.
 	g_pengfuncsTable->pfnSetClientKeyValue     = nullptr;

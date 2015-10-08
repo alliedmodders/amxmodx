@@ -52,6 +52,7 @@
 #include "CvarManager.h"
 #include "CoreConfig.h"
 #include <amxmodx_version.h>
+#include <HLTypeConversion.h>
 
 #define AMXXLOG_Log g_log.Log
 #define AMXXLOG_Error g_log.LogError
@@ -368,5 +369,6 @@ enum PrintColor
 };
 
 extern enginefuncs_t *g_pEngTable;
+extern HLTypeConversion TypeConversion;
 
 #endif // AMXMODX_H

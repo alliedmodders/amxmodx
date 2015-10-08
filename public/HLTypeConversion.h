@@ -9,7 +9,9 @@
 #ifndef _HL_CONVERSION_TYPE_H_
 #define _HL_CONVERSION_TYPE_H_
 
-#include "amxxmodule.h"
+#include <stddef.h>   // size_t
+#include <extdll.h>   // edict_t, etc.
+#include <sdk_util.h> // FNullEnt, INDEXENT, etc.
 
 template <typename T> static inline T& ref_pdata(void *pPrivateData, int offset, int element = 0)
 {
@@ -43,6 +45,8 @@ template <typename T>inline void set_pdata(edict_t *pEntity, int offset, T value
 	set_pdata<T>(pEntity->pvPrivateData, offset, value, element);
 }
 
+
+extern globalvars_t *gpGlobals;
 
 class HLTypeConversion
 {
@@ -96,18 +100,35 @@ class HLTypeConversion
 
 		void* id_to_cbase(int index)
 		{
-			edict_t *pEdict = id_to_edict(index);
+			auto pEdict = id_to_edict(index);
 			return pEdict ? pEdict->pvPrivateData : nullptr;
 		}
 
 		edict_t* id_to_edict(int index)
 		{
-			return static_cast<edict_t*>(m_FirstEdict + index);
+			if (index < 0 || index >= gpGlobals->maxEntities)
+			{
+				return nullptr;
+			}
+
+			if (!index)
+			{
+				return m_FirstEdict;
+			}
+
+			auto pEdict = static_cast<edict_t*>(m_FirstEdict + index);
+
+			if (pEdict && (pEdict->free || (index > gpGlobals->maxClients && !pEdict->pvPrivateData)))
+			{
+				return nullptr;
+			}
+
+			return pEdict;
 		}
 
 		entvars_t* id_to_entvars(int index)
 		{
-			edict_t *pEdict = id_to_edict(index);
+			auto pEdict = id_to_edict(index);
 			return pEdict ? VARS(pEdict) : nullptr;
 		}
 
@@ -128,19 +149,23 @@ class HLTypeConversion
 			return entvars_to_id(cbase_to_entvar(cbase));
 		}
 
+	public:
+
+		size_t get_pev()
+		{
+			return m_PevOffset;
+		}
+
 	private:
 
 		void search_pev()
 		{
-			entvars_t *pev = VARS(m_FirstEdict);
-
-			byte *privateData = reinterpret_cast<byte*>(m_FirstEdict->pvPrivateData);
+			auto pev = VARS(m_FirstEdict);
+			auto privateData = reinterpret_cast<byte*>(m_FirstEdict->pvPrivateData);
 
 			for (size_t i = 0; i < 0xFFF; ++i)
 			{
-				entvars_t *val = *(reinterpret_cast<entvars_t**>(privateData + i));
-
-				if (val == pev)
+				if (*reinterpret_cast<entvars_t**>(privateData + i) == pev)
 				{
 					m_PevOffset = i;
 					return;

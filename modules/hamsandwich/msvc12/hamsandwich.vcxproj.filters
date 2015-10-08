@@ -30,6 +30,9 @@
       <UniqueIdentifier>{1f536280-a798-4422-847e-ed6e8df80258}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Memtools">
+      <UniqueIdentifier>{c26eb07d-14b7-49e9-9122-6b7f5a711ecf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\call_funcs.cpp">
@@ -64,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp">
+      <Filter>Memtools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,12 +106,6 @@
     <ClInclude Include="..\ham_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\NEW_Util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\offsets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\hook_specialbot.h">
       <Filter>Hooks</Filter>
     </ClInclude>
@@ -114,6 +114,12 @@
     </ClInclude>
     <ClInclude Include="..\moduleconfig.h">
       <Filter>Module SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\HLTypeConversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h">
+      <Filter>Memtools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

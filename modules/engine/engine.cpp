@@ -287,7 +287,7 @@ static cell AMX_NATIVE_CALL trace_normal(AMX *amx, cell *params)
 	Vector vStart = Vector(fStartX, fStartY, fStartZ);
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
 
-	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, iEnt > 0 ? INDEXENT2(iEnt) : NULL, &g_tr);
+	TRACE_LINE(vStart, vEnd, dont_ignore_monsters, iEnt > 0 ? TypeConversion.id_to_edict(iEnt) : NULL, &g_tr);
 
 	vRet[0] = amx_ftoc(g_tr.vecPlaneNormal.x);
 	vRet[1] = amx_ftoc(g_tr.vecPlaneNormal.y);
@@ -321,7 +321,7 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 	Vector vEnd = Vector(fEndX, fEndY, fEndZ);
 	
 	if (iEnt > 0)
-		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iEnt), &g_tr);
+		TRACE_LINE(vStart, vEnd, dont_ignore_monsters, TypeConversion.id_to_edict(iEnt), &g_tr);
 	else
 		TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &g_tr);
 
@@ -376,7 +376,7 @@ static cell AMX_NATIVE_CALL get_info_keybuffer(AMX *amx, cell *params)
 		CHECK_ENTITY(iEnt);
 	}
 
-	char *info = GETINFOKEYBUFFER((iEnt == -1) ? NULL : INDEXENT2(iEnt));
+	char *info = GETINFOKEYBUFFER((iEnt == -1) ? NULL : TypeConversion.id_to_edict(iEnt));
 	
 	return MF_SetAmxStringUTF8Char(amx, params[2], info, strlen(info), params[3]);
 }
@@ -389,7 +389,7 @@ static cell AMX_NATIVE_CALL drop_to_floor(AMX *amx, cell *params)
 
 	CHECK_ENTITY(iEnt);
 
-	edict_t *e = INDEXENT2(iEnt);
+	edict_t *e = TypeConversion.id_to_edict(iEnt);
 
 	return DROP_TO_FLOOR(e);
 }
@@ -405,7 +405,7 @@ static cell AMX_NATIVE_CALL attach_view(AMX *amx, cell *params)
 	CHECK_ENTITY(iIndex);
 	CHECK_ENTITY(iTargetIndex);
 
-	SET_VIEW(INDEXENT2(iIndex), INDEXENT2(iTargetIndex));
+	SET_VIEW(TypeConversion.id_to_edict(iIndex), TypeConversion.id_to_edict(iTargetIndex));
 
 	return 1;
 }
@@ -422,7 +422,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 		return 0;
 	}
 
-	edict_t *pPlayer = INDEXENT2(iIndex);
+	edict_t *pPlayer = TypeConversion.id_to_edict(iIndex);
 	edict_t *pNewCamera;
 
 	switch(iCameraType)
@@ -603,7 +603,7 @@ static cell AMX_NATIVE_CALL trace_hull(AMX *amx,cell *params)
 		vEnd = vStart;
 
 
-	TRACE_HULL(vStart, vEnd, params[4], params[2], iEnt > 0 ? INDEXENT2(iEnt) : NULL, &g_tr);
+	TRACE_HULL(vStart, vEnd, params[4], params[2], iEnt > 0 ? TypeConversion.id_to_edict(iEnt) : NULL, &g_tr);
 
 	if (g_tr.fStartSolid) {
 		iResult += 1;
@@ -640,7 +640,7 @@ static cell AMX_NATIVE_CALL playback_event(AMX *amx, cell *params)
 	if (params[2] > 0) {
 		CHECK_ENTITY(params[2]);
 	}
-	pInvoker=INDEXENT2(params[2]);
+	pInvoker=TypeConversion.id_to_edict(params[2]);
 	eventindex=params[3];
 	delay=amx_ctof(params[4]);
 	cell *cOrigin=MF_GetAmxAddr(amx, params[5]);
@@ -673,7 +673,7 @@ static cell AMX_NATIVE_CALL get_usercmd(AMX *amx, cell *params)
 		switch(type)
 		{
 		case usercmd_lerp_msec:
-            return g_cmd->lerp_msec;
+			return g_cmd->lerp_msec;
 		case usercmd_msec:
 			return g_cmd->msec;
 		case usercmd_lightlevel:
@@ -745,7 +745,7 @@ static cell AMX_NATIVE_CALL set_usercmd(AMX *amx, cell *params)
 		switch(type)
 		{
 		case usercmd_lerp_msec:
-            g_cmd->lerp_msec = iValue;
+			g_cmd->lerp_msec = iValue;
 			return 1;
 		case usercmd_msec:
 			g_cmd->msec = iValue;
@@ -818,8 +818,8 @@ static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 	CHECK_ENTITY(src);
 	CHECK_ENTITY(dest);
 
-	edict_t *pEntity = INDEXENT2(src);
-	edict_t *pTarget = INDEXENT2(dest);
+	edict_t *pEntity = TypeConversion.id_to_edict(src);
+	edict_t *pTarget = TypeConversion.id_to_edict(dest);
 
 	if (pTarget->v.flags & FL_NOTARGET)
 		return 0;
@@ -827,7 +827,7 @@ static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 	Vector vLooker = pEntity->v.origin + pEntity->v.view_ofs;
 	Vector vTarget = pTarget->v.origin + pTarget->v.view_ofs;
 
-    TraceResult tr;
+	TraceResult tr;
 
 	TRACE_LINE(vLooker, vTarget, FALSE, pEntity, &tr);
 
@@ -835,7 +835,7 @@ static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 		return 0;
 	else if (tr.flFraction == 1.0)
 		return 1;
-	
+
 	return 0;
 }
 
@@ -843,10 +843,10 @@ static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL in_view_cone(AMX *amx, cell *params)
 {
 	int src = params[1];
-	
+
 	CHECK_ENTITY(src);
 
-	edict_t *pEdictSrc = INDEXENT(src);
+	edict_t *pEdictSrc = TypeConversion.id_to_edict(src);
 
 	Vector vecLOS, vecForward;
 	float flDot;
@@ -968,7 +968,7 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
    cell *shortestDistHigh = MF_GetAmxAddr(amx, params[9]);
 
    if(fGive < 0.0)
-      fGive = 20.0;
+	  fGive = 20.0;
 
    REAL fStartX = amx_ctof(cStart[0]);
    REAL fStartY = amx_ctof(cStart[1]);
@@ -996,29 +996,29 @@ static cell AMX_NATIVE_CALL trace_forward(AMX *amx, cell *params)
 
    for(int inum=-36;inum<=36;inum++)
    {
-      REAL fUseZ = fStartZ + (REAL)inum;
-      Vector vStart =  Vector(fStartX, fStartY, fUseZ);
-      Vector vEnd = Vector(fEndX, fEndY, fUseZ);
-      if(iIgnoreEnt > 0)
-		  TRACE_LINE(vStart, vEnd, dont_ignore_monsters, INDEXENT2(iIgnoreEnt), &tr);
+	  REAL fUseZ = fStartZ + (REAL)inum;
+	  Vector vStart =  Vector(fStartX, fStartY, fUseZ);
+	  Vector vEnd = Vector(fEndX, fEndY, fUseZ);
+	  if(iIgnoreEnt > 0)
+		  TRACE_LINE(vStart, vEnd, dont_ignore_monsters, TypeConversion.id_to_edict(iIgnoreEnt), &tr);
 	  else
 		  TRACE_LINE(vStart, vEnd, ignore_monsters, NULL, &tr);
-      fRetX = tr.vecEndPos.x;
-      fRetY = tr.vecEndPos.y;
-      fRetZ = tr.vecEndPos.z;
-      Vector vHit = Vector(fRetX, fRetY, fRetZ);
+	  fRetX = tr.vecEndPos.x;
+	  fRetY = tr.vecEndPos.y;
+	  fRetZ = tr.vecEndPos.z;
+	  Vector vHit = Vector(fRetX, fRetY, fRetZ);
 
-      REAL fLength = (vStart - vHit).Length();
-      if(fabs(fLength - fClosestDist) < fGive)
-            fClosestHigh = fUseZ - fStartZ;
-      else if(fLength < fClosestDist)
-      {
-         fClosestDist = fLength;
-         fClosestLow = fUseZ - fStartZ;
-         fClosestHigh = fUseZ - fStartZ;
-         fClosestX = fRetX;
-         fClosestY = fRetY;
-      }
+	  REAL fLength = (vStart - vHit).Length();
+	  if(fabs(fLength - fClosestDist) < fGive)
+			fClosestHigh = fUseZ - fStartZ;
+	  else if(fLength < fClosestDist)
+	  {
+		 fClosestDist = fLength;
+		 fClosestLow = fUseZ - fStartZ;
+		 fClosestHigh = fUseZ - fStartZ;
+		 fClosestX = fRetX;
+		 fClosestY = fRetY;
+	  }
    }
    fClosestLow += 36.0;
    fClosestHigh += 36.0;

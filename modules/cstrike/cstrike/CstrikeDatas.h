@@ -14,8 +14,6 @@
 #ifndef CSTRIKE_DATA_H
 #define CSTRIKE_DATA_H
 
-#include "amxxmodule.h"
-
 /**
  * Weapon Ids for use with CS_OnBuyAttempt(), CS_OnBuy().
  */

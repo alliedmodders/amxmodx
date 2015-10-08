@@ -141,10 +141,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp" />
     <ClCompile Include="..\fun.cpp" />
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\public\HLTypeConversion.h" />
+    <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h" />
     <ClInclude Include="..\fun.h" />
     <ClInclude Include="..\moduleconfig.h" />
     <ClInclude Include="..\..\..\public\sdk\amxxmodule.h" />

@@ -5,6 +5,7 @@ binary = AMXX.MetaModule(builder, 'fun')
  
 binary.sources = [
   '../../public/sdk/amxxmodule.cpp',
+  '../../public/memtools/MemoryUtils.cpp',
   'fun.cpp',
 ]
 

@@ -28,15 +28,6 @@
 #include <IGameConfigs.h>
 #include <HLTypeConversion.h>
 
-extern edict_t *g_player_edicts[33];
-
-inline edict_t* INDEXENT2( int iEdictNum )
-{ 
-	if (iEdictNum >= 1 && iEdictNum <= gpGlobals->maxClients)
-		return MF_GetPlayerEdict(iEdictNum);
-	else
-		return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); 
-}
 #ifdef DONT_TOUCH_THIS_AGAIN_BAIL
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \
@@ -49,7 +40,7 @@ inline edict_t* INDEXENT2( int iEdictNum )
 				return 0; \
 			} \
 		} else { \
-			if (x != 0 && FNullEnt(INDEXENT(x))) { \
+			if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 				return 0; \
 			} \

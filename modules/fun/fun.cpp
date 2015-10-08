@@ -13,6 +13,7 @@
 
 #include <string.h>
 #include "fun.h"
+#include <HLTypeConversion.h>
 
 /*
 	JGHG says:
@@ -38,6 +39,11 @@
 																Note: Should be able to do: if (thenative()) and it should return false when it fails, and true when succeeds... is -1 treated as false, or is 0 a must?
 	}
 */
+
+char g_bodyhits[33][33];	// where can the guy in the first dimension hit the people in the 2nd dimension? :-)
+bool g_silent[33];			// used for set_user_footsteps()
+
+HLTypeConversion TypeConversion;
 
 // ######## Utils:
 void FUNUTIL_ResetPlayer(int index)
@@ -100,7 +106,7 @@ static cell AMX_NATIVE_CALL set_user_godmode(AMX *amx, cell *params) // set_user
 	CHECK_PLAYER(params[1]);
 
 	// Get player pointer.
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	if (params[2] == 1) {
 		// Enable godmode
@@ -123,7 +129,7 @@ static cell AMX_NATIVE_CALL get_user_godmode(AMX *amx, cell *params) // get_user
 	CHECK_PLAYER(params[1]);
 
 	// Get player pointer.
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	int godmode = 0;
 
@@ -147,7 +153,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 	CHECK_PLAYER(params[1]);
 
 	// Get player pointer.
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	// Create item entity pointer
 	edict_t	*pItemEntity;
@@ -209,9 +215,9 @@ static cell AMX_NATIVE_CALL spawn(AMX *amx, cell *params) // spawn(id) = 1 param
 	// Spawns an entity, this can be a user/player -> spawns at spawnpoints, or created entities seems to need this as a final "kick" into the game? :-)
 	// params[1] = entity to spawn
 
-    CHECK_ENTITY(params[1]);
+	CHECK_ENTITY(params[1]);
 
-	edict_t *pEnt = GETEDICT(params[1]);
+	edict_t *pEnt = TypeConversion.id_to_edict(params[1]);
 
 	MDLL_Spawn(pEnt);
 
@@ -228,7 +234,7 @@ static cell AMX_NATIVE_CALL set_user_health(AMX *amx, cell *params) // set_user_
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	// Kill if health too low.
 	if (params[2] > 0)
@@ -249,7 +255,7 @@ static cell AMX_NATIVE_CALL set_user_frags(AMX *amx, cell *params) // set_user_f
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	pPlayer->v.frags = params[2];
 
@@ -266,7 +272,7 @@ static cell AMX_NATIVE_CALL set_user_armor(AMX *amx, cell *params) // set_user_a
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	pPlayer->v.armorvalue = params[2];
 
@@ -283,7 +289,7 @@ static cell AMX_NATIVE_CALL set_user_origin(AMX *amx, cell *params) // set_user_
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	cell *newVectorCell = MF_GetAmxAddr(amx, params[2]);
 
@@ -308,7 +314,7 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params) // set_us
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	pPlayer->v.renderfx = params[2];
 	Vector newVector = Vector(float(params[3]), float(params[4]), float(params[5]));
@@ -332,7 +338,7 @@ static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_use
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	SETCLIENTMAXSPEED(pPlayer, fNewSpeed);
 	pPlayer->v.maxspeed = fNewSpeed;
@@ -349,7 +355,7 @@ static cell AMX_NATIVE_CALL get_user_maxspeed(AMX *amx, cell *params) // Float:g
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	return amx_ftoc(pPlayer->v.maxspeed);
 }
@@ -363,7 +369,7 @@ static cell AMX_NATIVE_CALL set_user_gravity(AMX *amx, cell *params) // set_user
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	pPlayer->v.gravity = amx_ctof(params[2]);
 
@@ -379,7 +385,7 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params) // Float:ge
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	return amx_ftoc(pPlayer->v.gravity); 
 }
@@ -449,7 +455,7 @@ static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	if (params[2] == 1)
 		pPlayer->v.movetype = MOVETYPE_NOCLIP;
@@ -468,7 +474,7 @@ static cell AMX_NATIVE_CALL get_user_noclip(AMX *amx, cell *params) // get_user_
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	return pPlayer->v.movetype == MOVETYPE_NOCLIP;
 }
@@ -485,9 +491,9 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 	CHECK_PLAYER(params[1]);
 
 	// Fetch player pointer
-	edict_t *pPlayer = MF_GetPlayerEdict(params[1]);
-	
-	if (params[2]) {                
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
+
+	if (params[2]) {
 		pPlayer->v.flTimeStepSound = 999;
 		g_silent[params[1]] = true;
 	}
@@ -511,12 +517,12 @@ static cell AMX_NATIVE_CALL strip_user_weapons(AMX *amx, cell *params) // index
 {
 	CHECK_PLAYER(params[1]);
 
-	edict_t* pPlayer = MF_GetPlayerEdict(params[1]);
+	edict_t* pPlayer = TypeConversion.id_to_edict(params[1]);
 
 	string_t item = MAKE_STRING("player_weaponstrip");
 	edict_t *pent = CREATE_NAMED_ENTITY(item);
-	
-	if (FNullEnt(pent)) 
+
+	if (FNullEnt(pent))
 	{
 		return 0;
 	}
@@ -632,6 +638,8 @@ void OnPluginsLoaded() {
 		// Reset all hitzones
 		FUNUTIL_ResetPlayer(i);
 	}
+
+	TypeConversion.init();
 }
 /*
 void ClientConnectFakeBot(int index)

@@ -29,16 +29,6 @@
 #define HITGROUP_RIGHTARM		5 // 32
 #define HITGROUP_LEFTLEG		6 // 64
 #define HITGROUP_RIGHTLEG		7 // 128
-// Fun-specific defines above
-
-// The stuff below might end up in a class soon
-char g_bodyhits[33][33];	// where can the guy in the first dimension hit the people in the 2nd dimension? :-)
-bool g_silent[33];			// used for set_user_footsteps()
-//int g_ResetHUD;
-bool g_ResetHUDbool;
-edict_t* g_edict;
-//bool g_bot[33];				// is user bot? <--- removed, only needed with akimbot
-// Globals above
 
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \
@@ -51,7 +41,7 @@ edict_t* g_edict;
 				return 0; \
 			} \
 		} else { \
-			if (x != 0 && FNullEnt(INDEXENT(x))) { \
+			if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 				return 0; \
 			} \
@@ -63,11 +53,8 @@ edict_t* g_edict;
 		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
 		return 0; \
 	} else { \
-		if (!MF_IsPlayerIngame(x) || FNullEnt(MF_GetPlayerEdict(x))) { \
+		if (!MF_IsPlayerIngame(x) || FNullEnt(TypeConversion.id_to_edict(x))) { \
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", x); \
 			return 0; \
 		} \
 	}
-
-#define GETEDICT(n) \
-	((n >= 1 && n <= gpGlobals->maxClients) ? MF_GetPlayerEdict(n) : INDEXENT(n))

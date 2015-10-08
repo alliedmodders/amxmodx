@@ -18,6 +18,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{2256d296-4d3f-4321-8afb-8ff5dff8053f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memtools">
+      <UniqueIdentifier>{d2522a66-df9f-49c8-9f74-ee3738ae3d98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\fun.cpp">
@@ -25,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp">
+      <Filter>Memtools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +42,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\HLTypeConversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h">
+      <Filter>Memtools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

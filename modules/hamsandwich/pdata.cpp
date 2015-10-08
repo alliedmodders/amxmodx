@@ -13,16 +13,7 @@
 
 #include "amxxmodule.h"
 #include "offsets.h"
-#include "NEW_Util.h"
 #include "ham_utils.h"
-
-inline edict_t* INDEXENT2( int iEdictNum )
-{ 
-	if (iEdictNum >= 1 && iEdictNum <= gpGlobals->maxClients)
-		return MF_GetPlayerEdict(iEdictNum);
-	else
-		return (*g_engfuncs.pfnPEntityOfEntIndex)(iEdictNum); 
-}
 
 #ifdef DONT_TOUCH_THIS_AGAIN_BAIL
 #define FM_CHECK_ENTITY(x) \
@@ -48,7 +39,7 @@ inline edict_t* INDEXENT2( int iEdictNum )
 	if (x < 0 || x > gpGlobals->maxEntities) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
 		return 0; \
-	} else if (x != 0 && FNullEnt(INDEXENT2(x))) { \
+	} else if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 		return 0; \
 	}
@@ -73,16 +64,16 @@ static cell AMX_NATIVE_CALL get_pdata_cbase_safe(AMX *amx, cell *params)
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid offset provided. (got: %d)", iOffset);
 		return 0;
 	}
-	void *ptr=*((void **)((int *)INDEXENT_NEW(index)->pvPrivateData + iOffset));
+	void *ptr = get_pdata<void*>(TypeConversion.id_to_edict(index), iOffset * 4); // *4 because macro is char-based and native is int-based.
 
-	if (ptr == 0)
+	if (!ptr)
 	{
 		return -1;
 	}
 
 	for (int i=0; i<gpGlobals->maxEntities; ++i)
 	{
-		if (ptr == INDEXENT_NEW(i)->pvPrivateData)
+		if (ptr == TypeConversion.id_to_cbase(i))
 		{
 			return i;
 		}
@@ -90,6 +81,7 @@ static cell AMX_NATIVE_CALL get_pdata_cbase_safe(AMX *amx, cell *params)
 
 	return -2;
 }
+
 static cell AMX_NATIVE_CALL get_pdata_cbase(AMX *amx, cell *params)
 {
 	int index=params[1];
@@ -110,10 +102,11 @@ static cell AMX_NATIVE_CALL get_pdata_cbase(AMX *amx, cell *params)
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid offset provided. (got: %d)", iOffset);
 		return 0;
 	}
-	void *ptr=*((void **)((int *)INDEXENT_NEW(index)->pvPrivateData + iOffset));
+	void *ptr = get_pdata<void*>(TypeConversion.id_to_edict(index), iOffset * 4);
 
-	return PrivateToIndex(ptr);
+	return TypeConversion.cbase_to_id(ptr);
 }
+
 static cell AMX_NATIVE_CALL set_pdata_cbase(AMX *amx, cell *params)
 {
 	int index=params[1];
@@ -142,11 +135,11 @@ static cell AMX_NATIVE_CALL set_pdata_cbase(AMX *amx, cell *params)
 
 	if (target == -1)
 	{
-		*((void **)((int *)INDEXENT_NEW(index)->pvPrivateData + iOffset)) = NULL;
+		set_pdata<void*>(TypeConversion.id_to_edict(index), iOffset * 4, nullptr);
 	}
 	else
 	{
-		*((void **)((int *)INDEXENT_NEW(index)->pvPrivateData + iOffset)) = INDEXENT_NEW(target)->pvPrivateData;
+		set_pdata<void*>(TypeConversion.id_to_edict(index), iOffset * 4, TypeConversion.id_to_cbase(target));
 	}
 
 	return 1;

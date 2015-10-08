@@ -100,6 +100,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp" />
     <ClCompile Include="..\call_funcs.cpp" />
     <ClCompile Include="..\hook_callbacks.cpp" />
     <ClCompile Include="..\hook_create.cpp" />
@@ -113,6 +114,8 @@
     <ClCompile Include="..\srvcmd.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\public\HLTypeConversion.h" />
+    <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h" />
     <ClInclude Include="..\call_funcs.h" />
     <ClInclude Include="..\forward.h" />
     <ClInclude Include="..\hook.h" />
@@ -127,8 +130,6 @@
     <ClInclude Include="..\DataHandler.h" />
     <ClInclude Include="..\ham_const.h" />
     <ClInclude Include="..\ham_utils.h" />
-    <ClInclude Include="..\NEW_Util.h" />
-    <ClInclude Include="..\offsets.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\ham_const.inc" />

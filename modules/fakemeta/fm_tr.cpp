@@ -25,9 +25,9 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 		MF_LogError(amx, AMX_ERR_NATIVE, "No data passed");
 		return 0;
 	}
-	
+
 	cell *ptr = MF_GetAmxAddr(amx, params[2]);
-	edict_t *e = 0;
+	edict_t *e;
 
 	switch (type)
 	{
@@ -85,7 +85,7 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 		}
 	case TR_pHit:
 		{
-			e = INDEXENT(*ptr);
+			e = TypeConversion.id_to_edict(*ptr);
 			if (!e || FNullEnt(e))
 				return 0; //TODO: return error
 			gfm_tr->pHit = e;

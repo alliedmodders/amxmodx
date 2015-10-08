@@ -14,7 +14,6 @@
 #include "amxxmodule.h"
 #include <extdll.h>
 
-#include "NEW_Util.h"
 #include <amtl/am-vector.h>
 #include "forward.h"
 #include "hook.h"
@@ -24,9 +23,9 @@
 #include <assert.h>
 #include "DataHandler.h"
 #include "hook_specialbot.h"
+#include <HLTypeConversion.h>
 
-edict_t *NEW_FirstEdict;
-bool NEW_Initialized;
+HLTypeConversion TypeConversion;
 
 extern ke::Vector<Hook*> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 extern CHamSpecialBotHandler SpecialbotHandler;
@@ -35,7 +34,6 @@ extern AMX_NATIVE_INFO RegisterNatives[];
 extern AMX_NATIVE_INFO ReturnNatives[];
 extern AMX_NATIVE_INFO pdata_natives[];
 extern AMX_NATIVE_INFO pdata_natives_safe[];
-
 
 extern hook_t hooklist[];
 
@@ -66,6 +64,7 @@ void OnAmxxAttach(void)
 	assert(strcmp(hooklist[Ham_Item_GetItemInfo].name, "item_getiteminfo") == 0);
 
 	MF_AddNatives(pdata_natives_safe);
+
 	if (ReadConfig() > 0)
 	{
 		if (Offsets.IsValid())
@@ -118,8 +117,9 @@ void OnPluginsUnloaded(void)
 
 void OnPluginsLoaded(void)
 {
-	NEW_Initialize(INDEXENT(0));
+	TypeConversion.init();
 }
+
 void OnMetaAttach(void)
 {
 	REG_SVR_COMMAND("ham", HamCommand);

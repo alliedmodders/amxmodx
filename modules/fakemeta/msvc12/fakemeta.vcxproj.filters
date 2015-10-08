@@ -33,6 +33,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{65d8835f-89cd-44ab-b2ac-83617ab4d7b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memtools">
+      <UniqueIdentifier>{e1b28b22-6fde-4e1f-a982-f37dec584571}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\fakemeta_amxx.cpp">
@@ -71,6 +74,9 @@
     <ClCompile Include="..\pdata_gc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp">
+      <Filter>Memtools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fakemeta_amxx.h">
@@ -108,6 +114,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\public\HLTypeConversion.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h">
+      <Filter>Memtools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

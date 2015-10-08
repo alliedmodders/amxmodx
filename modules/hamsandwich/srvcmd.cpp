@@ -12,31 +12,14 @@
 //
 
 #include "amxxmodule.h"
-#include <stdarg.h>
 #include <amtl/am-vector.h>
 #include "ham_const.h"
 #include "hooklist.h"
 #include "offsets.h"
-#include "forward.h"
 #include "hook.h"
-
 
 extern hook_t hooklist[];
 extern ke::Vector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
-
-void print_srvconsole(const char *fmt, ...)
-{
-	va_list argptr;
-	static char string[384];
-	va_start(argptr, fmt);
-	vsnprintf(string, sizeof(string) - 1, fmt, argptr);
-	string[sizeof(string) - 1] = '\0';
-	va_end(argptr);
-	
-	SERVER_PRINT(string);
-}
-
-
 
 void HamCommand(void)
 {
@@ -45,10 +28,11 @@ void HamCommand(void)
 	if (strcmp(cmd, "list")==0)
 	{
 		unsigned int Total=0;
-		print_srvconsole("%-24s | %10s\n","Name","Set","Value");
-		print_srvconsole("------------------------------------\n");
-		print_srvconsole("%-24s | %10d\n", "pev", Offsets.GetPev());
-		print_srvconsole("%-24s | %10d\n", "base", Offsets.GetBase());
+
+		MF_PrintSrvConsole("%-24s | %10s\n","Name","Set","Value");
+		MF_PrintSrvConsole("------------------------------------\n");
+		MF_PrintSrvConsole("%-24s | %10d\n", "pev", Offsets.GetPev());
+		MF_PrintSrvConsole("%-24s | %10d\n", "base", Offsets.GetBase());
 
 		if (Offsets.IsPevSet())
 		{
@@ -66,7 +50,7 @@ void HamCommand(void)
 
 			if (hooklist[i].isset != 0)
 			{
-				print_srvconsole("%-24s | %10d\n", hooklist[i].name, hooklist[i].vtid);
+				MF_PrintSrvConsole("%-24s | %10d\n", hooklist[i].name, hooklist[i].vtid);
 				Total++;
 				count++;
 			}
@@ -74,19 +58,19 @@ void HamCommand(void)
 			if (count >= 5)
 			{
 				count = 0;
-				print_srvconsole("------------------------------------\n");
+				MF_PrintSrvConsole("------------------------------------\n");
 
 			}
 
 
 		}
-		print_srvconsole("\n%u keys, %u set.\n\n", HAM_LAST_ENTRY_DONT_USE_ME_LOL, Total);
+		MF_PrintSrvConsole("\n%u keys, %u set.\n\n", HAM_LAST_ENTRY_DONT_USE_ME_LOL, Total);
 		return;
 	}
 	else if (strcmp(cmd, "hooks")==0)
 	{
-		print_srvconsole("%-24s | %-27s | %10s | %10s\n", "Key", "Classname", "Pre", "Post");
-		print_srvconsole("--------------------------------------------------------------------------------\n");
+		MF_PrintSrvConsole("%-24s | %-27s | %10s | %10s\n", "Key", "Classname", "Pre", "Post");
+		MF_PrintSrvConsole("--------------------------------------------------------------------------------\n");
 		unsigned int ForwardCount=0;
 		unsigned int HookCount=0;
 		int count = 0;
@@ -97,20 +81,20 @@ void HamCommand(void)
 				HookCount++;
 				ForwardCount += hooks[i].at(j)->pre.length() + hooks[i].at(j)->post.length();
 
-				print_srvconsole("%-24s | %-27s | %10d | %10d\n", hooklist[i].name, hooks[i].at(j)->ent, hooks[i].at(j)->pre.length(), hooks[i].at(j)->post.length());
+				MF_PrintSrvConsole("%-24s | %-27s | %10d | %10d\n", hooklist[i].name, hooks[i].at(j)->ent, hooks[i].at(j)->pre.length(), hooks[i].at(j)->post.length());
 				if (count >= 5)
 				{
-					print_srvconsole("--------------------------------------------------------------------------------\n");
+					MF_PrintSrvConsole("--------------------------------------------------------------------------------\n");
 				}
 			}
 		}
-		print_srvconsole("\n%u hooks, %u forwards.\n\n", HookCount, ForwardCount);
+		MF_PrintSrvConsole("\n%u hooks, %u forwards.\n\n", HookCount, ForwardCount);
 		return;
 	}
 
 	// Unknown command
-	print_srvconsole("Usage: ham < command > [ argument ]\n");
-	print_srvconsole("Commands:\n");
-	print_srvconsole("   %-22s - %s\n", "list", "list all keys and their values from the config file.");
-	print_srvconsole("   %-22s - %s\n", "hooks", "list all active hooks");
+	MF_PrintSrvConsole("Usage: ham < command > [ argument ]\n");
+	MF_PrintSrvConsole("Commands:\n");
+	MF_PrintSrvConsole("   %-22s - %s\n", "list", "list all keys and their values from the config file.");
+	MF_PrintSrvConsole("   %-22s - %s\n", "hooks", "list all active hooks");
 }

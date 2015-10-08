@@ -151,7 +151,7 @@ public:
 		{
 			return -1;
 		}
-		*(reinterpret_cast<REAL *>(m_data))=amx_ctof2(*data);
+		*(reinterpret_cast<REAL *>(m_data))=amx_ctof(*data);
 
 		return 0;
 	};
@@ -167,9 +167,9 @@ public:
 		}
 		Vector *vec=reinterpret_cast<Vector *>(m_data);
 
-		vec->x=amx_ctof2(data[0]);
-		vec->y=amx_ctof2(data[1]);
-		vec->z=amx_ctof2(data[2]);
+		vec->x=amx_ctof(data[0]);
+		vec->y=amx_ctof(data[1]);
+		vec->z=amx_ctof(data[2]);
 
 		return 0;
 	};
@@ -218,7 +218,7 @@ public:
 		}
 		if (IsType(RET_CBASE))
 		{
-			*(reinterpret_cast<void **>(m_data))=IndexToPrivate(*data);
+			*(reinterpret_cast<void **>(m_data))= TypeConversion.id_to_cbase(*data);
 			if (m_index != 0)
 			{
 				*m_index=*data;
@@ -228,7 +228,7 @@ public:
 		}
 		else if (IsType(RET_ENTVAR))
 		{
-			*(reinterpret_cast<entvars_t **>(m_data))=IndexToEntvar(*data);
+			*(reinterpret_cast<entvars_t **>(m_data))= TypeConversion.id_to_entvars(*data);
 			if (m_index != 0)
 			{
 				*m_index=*data;
@@ -238,7 +238,7 @@ public:
 		}
 		else if (IsType(RET_EDICT))
 		{
-			*(reinterpret_cast<edict_t **>(m_data)) = IndexToEdict(*data);
+			*(reinterpret_cast<edict_t **>(m_data)) = TypeConversion.id_to_edict(*data);
 			if (m_index != 0)
 			{
 				*m_index = *data;
@@ -299,7 +299,7 @@ public:
 		{
 			return -1;
 		}
-		*data=amx_ftoc2(*(reinterpret_cast<REAL *>(m_data)));
+		*data=amx_ftoc(*(reinterpret_cast<REAL *>(m_data)));
 
 		return 0;
 	};
@@ -314,9 +314,9 @@ public:
 			return -1;
 		}
 		Vector *vec=reinterpret_cast<Vector *>(m_data);
-		data[0]=amx_ftoc2(vec->x);
-		data[1]=amx_ftoc2(vec->y);
-		data[2]=amx_ftoc2(vec->z);
+		data[0]=amx_ftoc(vec->x);
+		data[1]=amx_ftoc(vec->y);
+		data[2]=amx_ftoc(vec->z);
 
 		return 0;
 	};
@@ -332,7 +332,7 @@ public:
 		}
 		const char *i=(reinterpret_cast<ke::AString *>(m_data)->chars());
 
-		while (len-- && 
+		while (len-- &&
 			  (*data++=*i++)!='\0')
 		{
 			/* nothing */
@@ -347,19 +347,19 @@ public:
 		}
 		if (IsType(RET_CBASE))
 		{
-			*data=PrivateToIndex(m_data);
+			*data= TypeConversion.cbase_to_id(m_data);
 
 			return 0;
 		}
 		else if (IsType(RET_ENTVAR))
 		{
-			*data=EntvarToIndex(reinterpret_cast<entvars_t *>(m_data));
+			*data= TypeConversion.entvars_to_id(reinterpret_cast<entvars_t *>(m_data));
 
 			return 0;
 		}
 		else if (IsType(RET_EDICT))
 		{
-			*data = EdictToIndex(reinterpret_cast<edict_t *>(m_data));
+			*data = TypeConversion.edict_to_id(reinterpret_cast<edict_t *>(m_data));
 
 			return 0;
 		}

@@ -18,8 +18,7 @@ void CreateDetours();
 void DestroyDetours();
 
 CDetour *LightStyleDetour = NULL;
-
-edict_t *g_player_edicts[33];
+HLTypeConversion TypeConversion;
 
 int AmxStringToEngine(AMX *amx, cell param, int &len)
 {
@@ -73,6 +72,8 @@ void OnAmxxDetach()
 
 void OnPluginsLoaded()
 {
+	TypeConversion.init();
+
 	g_CameraCount=0;
 	pfnThinkForward = MF_RegisterForward("pfn_think", ET_STOP, FP_CELL, FP_DONE);  // done
 	PlayerPreThinkForward = MF_RegisterForward("client_PreThink", ET_STOP, FP_CELL, FP_DONE); // done
@@ -176,7 +177,7 @@ void ClientDisconnect(edict_t *pEntity)
 {
 	int id = ENTINDEX(pEntity);
 
-	if (plinfo[ENTINDEX(pEntity)].iViewType != CAMERA_NONE) // Verify that they were originally in a modified view
+	if (plinfo[id].iViewType != CAMERA_NONE) // Verify that they were originally in a modified view
 	{
 		g_CameraCount--;
 		if (g_CameraCount < 0)
@@ -222,14 +223,6 @@ void ServerDeactivate()
 	g_pFunctionTable->pfnTouch=NULL; // "pfn_touch","vexd_pfntouch"
 
 	ClearHooks();
-
-	RETURN_META(MRES_IGNORED);
-}
-
-void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
-{
-	for(int f = 1; f <= gpGlobals->maxClients;f++) 
-		g_player_edicts[f]=pEdictList + f;
 
 	RETURN_META(MRES_IGNORED);
 }

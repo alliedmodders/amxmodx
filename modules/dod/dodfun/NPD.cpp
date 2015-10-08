@@ -662,7 +662,7 @@ static cell AMX_NATIVE_CALL objectives_reinit(AMX *amx, cell *params){ // index
 		MF_LogError(amx, AMX_ERR_NATIVE, "Index out of range (%d)", player);
 		return 0;
 	}
-	mObjects.InitObj( player == 0 ? MSG_ALL:MSG_ONE, player == 0 ? NULL:INDEXENT(player) ); 
+	mObjects.InitObj( player == 0 ? MSG_ALL:MSG_ONE, player == 0 ? NULL: GETEDICT(player) );
 
 	return 1;
 }

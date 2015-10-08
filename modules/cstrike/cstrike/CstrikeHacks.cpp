@@ -14,7 +14,6 @@
 #include "CstrikeDatas.h"
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
-#include "CstrikeHLTypeConversion.h"
 #include <sm_stringhashmap.h>
 
 void CtrlDetours_ClientCommand(bool set);
@@ -213,7 +212,7 @@ DETOUR_DECL_MEMBER1(GiveNamedItem, void, const char*, pszName) // void CBasePlay
 	// If the current item id is not null, this means player has triggers a buy command.
 	if (CurrentItemId)
 	{
-		int client = G_HL_TypeConversion.cbase_to_id(this);
+		int client = TypeConversion.cbase_to_id(this);
 
 		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), static_cast<cell>(CurrentItemId)) > 0)
 		{
@@ -234,7 +233,7 @@ DETOUR_DECL_MEMBER1(GiveShield, void, bool, bRetire) // void CBasePlayer::GiveSh
 	// Special case for shield. Game doesn't use GiveNamedItem() to give a shield.
 	if (CurrentItemId == CSI_SHIELDGUN)
 	{
-		int client = G_HL_TypeConversion.cbase_to_id(this);
+		int client = TypeConversion.cbase_to_id(this);
 
 		if (MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuy, static_cast<cell>(client), CSI_SHIELDGUN) > 0)
 		{

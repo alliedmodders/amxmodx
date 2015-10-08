@@ -63,7 +63,7 @@ static cell AMX_NATIVE_CALL VelocityByAim(AMX *amx, cell *params)
 			}
 			pEnt = GET_PLAYER_POINTER_I(iEnt)->pEdict;
 		} else {
-			pEnt = INDEXENT(iEnt);
+			pEnt = TypeConversion.id_to_edict(iEnt);
 		}
 	}
 

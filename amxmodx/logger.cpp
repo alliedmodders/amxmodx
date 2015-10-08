@@ -373,6 +373,16 @@ void Logger::log(AMX* amx, int severity, const bool printStackTrace, const bool 
 	static char line[32];
 	const char *scriptFile = "", *function = "";
 	Debugger *pDebugger = (Debugger*)amx->userdata[UD_DEBUGGER];
+	if (!pDebugger) {
+		LogError(amx, AMX_ERR_DEBUG, "Debug mode not enabled by plugin!");
+		return;
+		/*amx->flags |= AMX_FLAG_DEBUG;
+		amx->flags &= (~AMX_FLAG_JITC);
+		amx_SetDebugHook(amx, &Debugger::DebugHook);
+
+		pDebugger = new Debugger(amx, pDbg);
+		amx->userdata[UD_DEBUGGER] = pDebugger;*/
+	}
 	//pDebugger->BeginExec();
 	trace_info_t *pTrace = pDebugger->GetTraceStart();
 	//amx->error = AMX_ERR_NONE;

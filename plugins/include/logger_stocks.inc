@@ -11,50 +11,50 @@
  * STOCKS
  ******************************************************************************/
 
-stock Severity: severity(severity) {
-	return Severity:severity;
+stock Severity: toSeverity(severity) {
+	return Severity:(severity);
 }
 
 stock Severity: operator=(oper) {
-	return severity(oper);
+	return toSeverity(oper);
 }
 
 stock bool: operator==(Severity: oper1, oper2) {
-	return oper1 == severity(oper2);
+	return oper1 == toSeverity(oper2);
 }
 
 stock bool: operator!=(Severity: oper1, oper2) {
-	return oper1 != severity(oper2);
+	return oper1 != toSeverity(oper2);
 }
 
 stock bool: operator>(Severity:oper1, oper2) {
-	return oper1 > severity(oper2);
+	return oper1 > toSeverity(oper2);
 }
 
 stock bool: operator>(oper1, Severity:oper2) {
-	return severity(oper1) > oper2;
+	return toSeverity(oper1) > oper2;
 }
 
 stock bool: operator>=(Severity:oper1, oper2) {
-	return oper1 >= severity(oper2);
+	return oper1 >= toSeverity(oper2);
 }
 
 stock bool: operator>=(oper1, Severity:oper2) {
-	return severity(oper1) >= oper2;
+	return toSeverity(oper1) >= oper2;
 }
 
 stock bool: operator<(Severity:oper1, oper2) {
-	return oper1 < severity(oper2);
+	return oper1 < toSeverity(oper2);
 }
 
 stock bool: operator<(oper1, Severity:oper2) {
-	return severity(oper1) < oper2;
+	return toSeverity(oper1) < oper2;
 }
 
 stock bool: operator<=(Severity:oper1, oper2) {
-	return oper1 <= severity(oper2);
+	return oper1 <= toSeverity(oper2);
 }
 
 stock bool: operator<=(oper1, Severity:oper2) {
-	return severity(oper1) <= oper2;
+	return toSeverity(oper1) <= oper2;
 }

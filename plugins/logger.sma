@@ -21,8 +21,8 @@ public plugin_init() {
             .name = "logger_min_verbosity",
             .string = defaultValue,
             .flags = FCVAR_NONE,
-            .description = "Controls the minimum severity a message must have in \
-                    order to be logged across all loggers",
+            .description = "Controls the minimum severity a message must have \
+                    in order to be logged across all loggers",
             .has_min = true,
             .min_val = float(any:Severity_None),
             .has_max = false);

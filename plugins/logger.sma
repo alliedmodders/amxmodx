@@ -29,7 +29,7 @@ public plugin_init() {
     
     new curValue[32];
     get_pcvar_string(g_MinVerbosityCvar, curValue, charsmax(curValue));
-    LoggerSetVerbosity(All_Loggers, severity(str_to_num(curValue)));
+    LoggerSetVerbosity(All_Loggers, toSeverity(str_to_num(curValue)));
     hook_cvar_change(g_MinVerbosityCvar, "onMinVerbosityCvarChanged");
 }
 
@@ -41,7 +41,7 @@ getBuildId() {
 
 public onMinVerbosityCvarChanged(pcvar, const old_value[], const new_value[]) {
     assert pcvar == g_MinVerbosityCvar;
-    LoggerSetVerbosity(All_Loggers, severity(str_to_num(new_value)));
+    LoggerSetVerbosity(All_Loggers, toSeverity(str_to_num(new_value)));
 }
 
 public OnLoggerCreated(
@@ -83,7 +83,7 @@ public OnLoggerCreated(
 
     new curValue[32];
     get_pcvar_string(cvarVerbosity, curValue, charsmax(curValue));
-    LoggerSetVerbosity(logger, severity(str_to_num(curValue)));
+    onVerbosityCvarChanged(cvarVerbosity, NULL_STRING, curValue);
     hook_cvar_change(cvarVerbosity, "onVerbosityCvarChanged");
 }
 
@@ -94,5 +94,5 @@ public onVerbosityCvarChanged(pcvar, const old_value[], const new_value[]) {
     new Logger: logger;
     assert TrieGetCell(cvarMap, temp, logger);
     assert logger > Invalid_Logger;
-    LoggerSetVerbosity(logger, severity(str_to_num(new_value)));
+    LoggerSetVerbosity(logger, toSeverity(str_to_num(new_value)));
 }

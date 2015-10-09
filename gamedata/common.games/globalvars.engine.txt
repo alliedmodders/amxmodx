@@ -40,6 +40,18 @@
 					"read"       "2"
 				}
 			}
+
+			"g_pGameRules"
+			{
+				"signature"  "g_pGameRules"
+				
+				"windows"
+				{
+					"read"       "2"
+				}
+				
+				"read"  "0"
+			}
 		}
 
 		"Signatures"
@@ -65,6 +77,14 @@
 				"windows"   "\xDC\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x56" // SV_CheckTimeouts()
 				"linux"     "@realtime"
 				"mac"       "@realtime"
+			}
+
+			"g_pGameRules" // CGameRules *g_pGameRules
+			{
+				"library"   "server"
+				"windows"   "\x8B\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xFF\x2A\x2A\xA1" // StartFrame()
+				"linux"     "@g_pGameRules"
+				"mac"       "@g_pGameRules"
 			}
 		}
 	}

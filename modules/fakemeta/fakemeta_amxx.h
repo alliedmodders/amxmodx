@@ -75,9 +75,11 @@ extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
 extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
 
 extern IGameConfig *CommonConfig;
+extern IGameConfig *GamerulesConfig;
 extern IGameConfigManager *ConfigManager;
 
 extern HLTypeConversion TypeConversion;
+extern void *GameRulesAddress;
 
 #endif //_FAKEMETA_INCLUDE_H
 

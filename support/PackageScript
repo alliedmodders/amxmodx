@@ -29,6 +29,12 @@ folder_list = [
     'base/addons/amxmodx/data/gamedata/common.games/hostages.games/cstrike',
     'base/addons/amxmodx/data/gamedata/common.games/others.games',
     'base/addons/amxmodx/data/gamedata/common.games/others.games/cstrike',
+    'base/addons/amxmodx/data/gamedata/common.games/gamerules.games',
+    'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/cstrike',
+    'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/dod',
+    'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/tfc',
+    'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/gearbox',
+    'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/valve',
     'base/addons/amxmodx/data/gamedata/modules.games',
     'base/addons/amxmodx/data/lang',
     'base/addons/amxmodx/dlls',
@@ -1209,6 +1215,45 @@ CopyFiles('gamedata/common.games/entities.games/valve', 'base/addons/amxmodx/dat
     'offsets-cxenplight.txt',
     'offsets-cxentree.txt',
     'offsets-czombie.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/gamerules.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/cstrike',
+  [ 
+    'offsets-cgamerules.txt',
+    'offsets-chalflifemultiplay.txt',
+    'offsets-chalflifetraining.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/gamerules.games/dod', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/dod',
+  [ 
+    'offsets-cdodteamplay.txt',
+    'offsets-cspdodrules.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/gamerules.games/gearbox', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/gearbox',
+  [ 
+    'offsets-chalflifecoopplay.txt',
+    'offsets-chalflifectfplay.txt',
+    'offsets-chalflifemultiplay.txt',
+    'offsets-chalflifeteamplay.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/gamerules.games/tfc', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/tfc',
+  [ 
+    'offsets-chalflifemultiplay.txt',
+    'offsets-chalflifeteamplay.txt',
+    'offsets-cteamfortress.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/gamerules.games/valve', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/valve',
+  [ 
+    'offsets-chalflifemultiplay.txt',
+    'offsets-chalflifeteamplay.txt',
   ]
 )
 

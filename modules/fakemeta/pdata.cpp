@@ -58,7 +58,7 @@ static cell AMX_NATIVE_CALL set_pdata_int(AMX *amx, cell *params)
 		iOffset += params[5];
 #endif
 	int iValue=params[3];
-	set_pdata<int>(TypeConversion.id_to_edict(index), iOffset, iValue);
+	set_pdata<int>(TypeConversion.id_to_edict(index), iOffset * 4, iValue); // *4 because macro is char-based, while native is int-based
 	return 1;
 }
 
@@ -80,7 +80,7 @@ static cell AMX_NATIVE_CALL get_pdata_int(AMX *amx, cell *params)
 		iOffset += params[4];
 #endif
 
-	return get_pdata<int>(TypeConversion.id_to_edict(index), iOffset);
+	return get_pdata<int>(TypeConversion.id_to_edict(index), iOffset * 4); // *4 because macro is char-based, while native is int-based
 }
 
 // Float
@@ -103,7 +103,7 @@ static cell AMX_NATIVE_CALL set_pdata_float(AMX *amx, cell *params)
 #endif
 
 	float fValue=amx_ctof(params[3]);
-	set_pdata<float>(TypeConversion.id_to_edict(index), iOffset, fValue);
+	set_pdata<float>(TypeConversion.id_to_edict(index), iOffset * 4, fValue); // *4 because macro is char-based, while native is int-based
 	return 1;
 }
 static cell AMX_NATIVE_CALL get_pdata_float(AMX *amx, cell *params)
@@ -124,7 +124,7 @@ static cell AMX_NATIVE_CALL get_pdata_float(AMX *amx, cell *params)
 		iOffset += params[4];
 #endif
 
-	return amx_ftoc(get_pdata<float>(TypeConversion.id_to_edict(index), iOffset));
+	return amx_ftoc(get_pdata<float>(TypeConversion.id_to_edict(index), iOffset * 4)); // *4 because macro is char-based, while native is int-based
 }
 
 static cell AMX_NATIVE_CALL get_pdata_string(AMX *amx, cell *params)

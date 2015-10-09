@@ -556,6 +556,189 @@ static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 }
 
 
+
+// native any:get_gamerules_int(const class[], const member[], element = 0);
+static cell AMX_NATIVE_CALL get_gamerules_int(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Integer, GAMERULES);
+
+	int element = params[3];
+	CHECK_ELEMENT(element);
+
+	return GetData(GameRulesAddress, data, element);
+}
+
+// native set_gamerules_int(const class[], const member[], any:value, element = 0);
+static cell AMX_NATIVE_CALL set_gamerules_int(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Integer, GAMERULES);
+
+	int element = params[4];
+	CHECK_ELEMENT(element);
+
+	if (data.fieldType == FieldType::FIELD_STRUCTURE || data.fieldType == FieldType::FIELD_CLASS)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Setting directly to a class or structure address is not available");
+		return 0;
+	}
+
+	SetData(GameRulesAddress, data, params[3], element);
+
+	return 0;
+}
+
+
+// native Float:get_gamerules_float(const class[], const member[], element = 0);
+static cell AMX_NATIVE_CALL get_gamerules_float(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Float, GAMERULES);
+
+	int element = params[3];
+	CHECK_ELEMENT(element);
+
+	return GetDataFloat(GameRulesAddress, data, element);
+}
+
+// native set_gamerules_float(const class[], const member[], Float:value, element = 0);
+static cell AMX_NATIVE_CALL set_gamerules_float(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Float, GAMERULES);
+
+	int element = params[4];
+	CHECK_ELEMENT(element);
+
+	SetDataFloat(GameRulesAddress, data, amx_ctof(params[3]), element);
+
+	return 1;
+}
+
+
+// native get_gamerules_vector(const class[], const member[], Float:value[3], element = 0);
+static cell AMX_NATIVE_CALL get_gamerules_vector(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Vector, GAMERULES);
+
+	int element = params[4];
+	CHECK_ELEMENT(element);
+
+	GetDataVector(GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
+
+	return 1;
+}
+
+// native set_gamerules_vector(const class[], const member[], Float:value[3], element = 0);
+static cell AMX_NATIVE_CALL set_gamerules_vector(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Vector, GAMERULES);
+
+	int element = params[4];
+	CHECK_ELEMENT(element);
+
+	GetDataVector(GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
+
+	return 1;
+}
+
+
+// native get_gamerules_entity(const class[], const member[], element = 0);
+static cell AMX_NATIVE_CALL get_gamerules_entity(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Entity, GAMERULES);
+
+	int element = params[3];
+	CHECK_ELEMENT(element);
+
+	return GetDataEntity(GameRulesAddress, data, element);
+}
+
+// native set_gamerules_entity(const class[], const member[], value, element = 0);
+static cell AMX_NATIVE_CALL set_gamerules_entity(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	int value = params[3];
+
+	if (value != -1)
+	{
+		CHECK_ENTITY(value);
+	}
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Entity, GAMERULES);
+
+	int element = params[4];
+	CHECK_ELEMENT(element);
+
+	SetDataEntity(GameRulesAddress, data, params[3], element);
+
+	return 0;
+}
+
+
+// native get_gamerules_string(const class[], const member[], value[], maxlen, element = 0);
+static cell AMX_NATIVE_CALL get_gamerules_string(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::String, GAMERULES);
+
+	int element = params[5];
+	CHECK_ELEMENT(element);
+
+	auto buffer = params[3];
+	auto maxlen = params[4];
+
+	auto string = GetDataString(GameRulesAddress, data, element);
+
+	if (data.fieldSize)
+	{
+		maxlen = ke::Min(maxlen, data.fieldSize);
+	}
+
+	return MF_SetAmxStringUTF8Char(amx, buffer, string ? string : "", string ? strlen(string) : 0, maxlen);
+}
+
+// native set_gamerules_string(const class[], const member[], const value[], element = 0);
+static cell AMX_NATIVE_CALL set_gamerules_string(AMX *amx, cell *params)
+{
+	CHECK_GAMERULES();
+
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::String, GAMERULES);
+
+	int element = params[4];
+	CHECK_ELEMENT(element);
+
+	int length;
+	const char *value = MF_GetAmxString(amx, params[3], 0, &length);
+
+	return SetDataString(GameRulesAddress, data, value, length, element);
+}
+
+
+
 // native get_ent_data_size(const class[], const member[]);
 static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
 {
@@ -581,20 +764,27 @@ static cell AMX_NATIVE_CALL find_ent_data_info(AMX *amx, cell *params)
 
 AMX_NATIVE_INFO pdata_gc_natives[] =
 {
-	{ "get_ent_data"       , get_ent_data        },
-	{ "set_ent_data"       , set_ent_data        },
+	{ "get_ent_data"        , get_ent_data         },
+	{ "set_ent_data"        , set_ent_data         },
+	{ "get_ent_data_float"  , get_ent_data_float   },
+	{ "set_ent_data_float"  , set_ent_data_float   },
+	{ "get_ent_data_vector" , get_ent_data_vector  },
+	{ "set_ent_data_vector" , set_ent_data_vector  },
+	{ "get_ent_data_entity" , get_ent_data_entity  },
+	{ "set_ent_data_entity" , set_ent_data_entity  },
+	{ "get_ent_data_string" , get_ent_data_string  },
+	{ "set_ent_data_string" , set_ent_data_string  },
 
-	{ "get_ent_data_float" , get_ent_data_float  },
-	{ "set_ent_data_float" , set_ent_data_float  },
-
-	{ "get_ent_data_vector", get_ent_data_vector },
-	{ "set_ent_data_vector", set_ent_data_vector },
-
-	{ "get_ent_data_entity", get_ent_data_entity },
-	{ "set_ent_data_entity", set_ent_data_entity },
-
-	{ "get_ent_data_string", get_ent_data_string },
-	{ "set_ent_data_string", set_ent_data_string },
+	{ "get_gamerules_int"   , get_gamerules_int    },
+	{ "set_gamerules_int"   , set_gamerules_int    },
+	{ "get_gamerules_float" , get_gamerules_float  },
+	{ "set_gamerules_float" , set_gamerules_float  },
+	{ "get_gamerules_vector", get_gamerules_vector },
+	{ "set_gamerules_vector", set_gamerules_vector },
+	{ "get_gamerules_entity", get_gamerules_entity },
+	{ "set_gamerules_entity", set_gamerules_entity },
+	{ "get_gamerules_string", get_gamerules_string },
+	{ "set_gamerules_string", set_gamerules_string },
 
 	{ "get_ent_data_size"  , get_ent_data_size   },
 	{ "find_ent_data_info" , find_ent_data_info  },

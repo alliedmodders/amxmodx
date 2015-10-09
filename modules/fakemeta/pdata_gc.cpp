@@ -739,18 +739,22 @@ static cell AMX_NATIVE_CALL set_gamerules_string(AMX *amx, cell *params)
 
 
 
-// native get_ent_data_size(const class[], const member[]);
-static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
+// native get_member_size(const class[], const member[]);
+static cell AMX_NATIVE_CALL get_member_size(AMX *amx, cell *params)
 {
+	CHECK_GAMERULES();
+
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(0, data, BaseFieldType::None, ALL);
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ALL);
 
 	return data.fieldSize;
 }
 
-// native find_ent_data_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
-static cell AMX_NATIVE_CALL find_ent_data_info(AMX *amx, cell *params)
+// native find_member_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
+static cell AMX_NATIVE_CALL find_member_info(AMX *amx, cell *params)
 {
+	CHECK_GAMERULES();
+
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ALL);
 
@@ -786,8 +790,8 @@ AMX_NATIVE_INFO pdata_gc_natives[] =
 	{ "get_gamerules_string", get_gamerules_string },
 	{ "set_gamerules_string", set_gamerules_string },
 
-	{ "get_ent_data_size"  , get_ent_data_size   },
-	{ "find_ent_data_info" , find_ent_data_info  },
+	{ "get_member_size"     , get_member_size      },
+	{ "find_member_info"    , find_member_info     },
 
 	{ nullptr              , nullptr      }
 };

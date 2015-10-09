@@ -995,7 +995,7 @@ native set_gamerules_string(const class[], const member[], const value[], elemen
  * @error           If either class or member is empty, no offset is found or an invalid
  *                  offset is retrieved, an error will be thrown.
  */
-native get_ent_data_size(const class[], const member[]);
+native get_member_size(const class[], const member[]);
 
 /**
  * Finds an offset based off a class and member name.
@@ -1008,9 +1008,9 @@ native get_ent_data_size(const class[], const member[]);
  *
  * @return          Class member offset
  * @error           If either class or member is empty, no offset is found or an invalid
- *                  offset is retrieved, an error will be thrown.   
+ *                  offset is retrieved, an error will be thrown.
  */
-native find_ent_data_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
+native find_member_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
 
 /**
  * Returns the data field base type based off a specific field type.
@@ -1025,9 +1025,9 @@ native find_ent_data_info(const class[], const member[], &FieldType:type = FIELD
  *
  * @return          Base field type (BASEFIELD_* constants)
  */
-stock BaseFieldType:get_ent_data_basetype(FieldType:type, type_name[] = "", maxlen = 0)
+stock BaseFieldType:get_field_basetype(FieldType:type, type_name[] = "", maxlen = 0)
 {
-	static baseFieldTypeNames[BaseFieldType][] =
+	static const baseFieldTypeNames[BaseFieldType][] =
 	{
 		"none",
 		"integer",

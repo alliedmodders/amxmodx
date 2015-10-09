@@ -112,6 +112,232 @@ static BaseFieldType GetBaseDataType(TypeDescription &data)
 		return 0;                                                                          \
 	}
 
+
+cell GetData(void *pObject, TypeDescription &data, int element)
+{
+	switch (data.fieldType)
+	{
+		case FieldType::FIELD_INTEGER:
+		case FieldType::FIELD_STRINGINT:
+		{
+			return get_pdata<int32>(pObject, data.fieldOffset, element);
+		}
+		case FieldType::FIELD_CLASS:
+		case FieldType::FIELD_STRUCTURE:
+		{
+			return get_pdata_direct<cell>(pObject, data.fieldOffset);
+		}
+		case FieldType::FIELD_POINTER:
+		case FieldType::FIELD_FUNCTION:
+		{
+			return reinterpret_cast<cell>(get_pdata<void*>(pObject, data.fieldOffset, element));
+		}
+		case FieldType::FIELD_SHORT:
+		{
+			if (data.fieldUnsigned)
+			{
+				return get_pdata<uint16>(pObject, data.fieldOffset, element);
+			}
+			else
+			{
+				return get_pdata<int16>(pObject, data.fieldOffset, element);
+			}
+		}
+		case FieldType::FIELD_CHARACTER:
+		{
+			if (data.fieldUnsigned)
+			{
+				return get_pdata<uint8>(pObject, data.fieldOffset, element);
+			}
+			else
+			{
+				return get_pdata<int8>(pObject, data.fieldOffset, element);
+			}
+		}
+		case FieldType::FIELD_BOOLEAN:
+		{
+			return get_pdata<bool>(pObject, data.fieldOffset, element) ? 1 : 0;
+		}
+	}
+
+	return 0;
+}
+
+void SetData(void *pObject, TypeDescription &data, cell value, int element)
+{
+	switch (data.fieldType)
+	{
+		case FieldType::FIELD_INTEGER:
+		case FieldType::FIELD_STRINGINT:
+		{
+			set_pdata<int32>(pObject, data.fieldOffset, static_cast<int32>(value), element);
+			break;
+		}
+		case FieldType::FIELD_POINTER:
+		case FieldType::FIELD_FUNCTION:
+		{
+			set_pdata<void*>(pObject, data.fieldOffset, reinterpret_cast<void*>(value), element);
+			break;
+		}
+		case FieldType::FIELD_SHORT:
+		{
+			if (data.fieldUnsigned)
+			{
+				set_pdata<uint16>(pObject, data.fieldOffset, static_cast<uint16>(value), element);
+			}
+			else
+			{
+				set_pdata<int16>(pObject, data.fieldOffset, static_cast<uint16>(value), element);
+			}
+			break;
+		}
+		case FieldType::FIELD_CHARACTER:
+		{
+			if (data.fieldUnsigned)
+			{
+				set_pdata<uint8>(pObject, data.fieldOffset, static_cast<uint8>(value), element);
+			}
+			else
+			{
+				set_pdata<int8>(pObject, data.fieldOffset, static_cast<uint8>(value), element);
+			}
+			break;
+		}
+		case FieldType::FIELD_BOOLEAN:
+		{
+			set_pdata<bool>(pObject, data.fieldOffset, value != 0, element);
+			break;
+		}
+	}
+}
+
+cell GetDataFloat(void *pObject, TypeDescription &data, int element)
+{
+	return amx_ftoc(get_pdata<float>(pObject, data.fieldOffset, element));
+}
+
+void SetDataFloat(void *pObject, TypeDescription &data, float value, int element)
+{
+	set_pdata<float>(pObject, data.fieldOffset, value, element);
+}
+
+void GetDataVector(void *pObject, TypeDescription &data, cell *pVector, int element)
+{
+	auto vector = get_pdata<Vector>(pObject, data.fieldOffset, element);
+
+	pVector[0] = amx_ftoc(vector.x);
+	pVector[1] = amx_ftoc(vector.y);
+	pVector[2] = amx_ftoc(vector.z);
+}
+
+void SetDataVector(void *pObject, TypeDescription &data, cell *pVector, int element)
+{
+	Vector vector(amx_ctof(pVector[0]), amx_ctof(pVector[1]), amx_ctof(pVector[2]));
+
+	set_pdata<Vector>(pObject, data.fieldOffset, vector, element);
+}
+
+cell GetDataEntity(void *pObject, TypeDescription &data, int element)
+{
+	switch (data.fieldType)
+	{
+		case FieldType::FIELD_CLASSPTR:
+		{
+			return TypeConversion.cbase_to_id(get_pdata<void*>(pObject, data.fieldOffset, element));
+		}
+		case FieldType::FIELD_ENTVARS:
+		{
+			return TypeConversion.entvars_to_id(get_pdata<entvars_t*>(pObject, data.fieldOffset, element));
+		}
+		case FieldType::FIELD_EDICT:
+		{
+			return TypeConversion.edict_to_id(get_pdata<edict_t*>(pObject, data.fieldOffset, element));
+		}
+		case FieldType::FIELD_EHANDLE:
+		{
+			return TypeConversion.edict_to_id(get_pdata<EHANDLE>(pObject, data.fieldOffset, element).Get());
+		}
+	}
+
+	return 0;
+}
+
+void SetDataEntity(void *pObject, TypeDescription &data, int value, int element)
+{
+	switch (data.fieldType)
+	{
+		case FieldType::FIELD_CLASSPTR:
+		{
+			set_pdata<void*>(pObject, data.fieldOffset, value != -1 ? TypeConversion.id_to_cbase(value) : nullptr, element);
+			break;
+		}
+		case FieldType::FIELD_ENTVARS:
+		{
+			set_pdata<entvars_t*>(pObject, data.fieldOffset, value != -1 ? TypeConversion.id_to_entvars(value) : nullptr, element);
+			break;
+		}
+		case FieldType::FIELD_EDICT:
+		{
+			set_pdata<edict_t*>(pObject, data.fieldOffset, value != -1 ? TypeConversion.id_to_edict(value) : nullptr, element);
+			break;
+		}
+		case FieldType::FIELD_EHANDLE:
+		{
+			get_pdata<EHANDLE>(pObject, data.fieldOffset, element).Set(value != -1 ? TypeConversion.id_to_edict(value) : nullptr);
+			break;
+		}
+	}
+}
+
+char* GetDataString(void *pObject, TypeDescription &data, int element)
+{
+	switch (data.fieldType)
+	{
+		case FieldType::FIELD_STRING:
+		{
+			return get_pdata_direct<char*>(pObject, data.fieldOffset, element, data.fieldSize);
+		}
+		case FieldType::FIELD_STRINGPTR:
+		{
+			return get_pdata<char*>(pObject, data.fieldOffset, element);
+		}
+	}
+
+	return nullptr;
+}
+
+cell SetDataString(void *pObject, TypeDescription &data, const char *value, int maxlen, int element)
+{
+	switch (data.fieldType)
+	{
+		case FieldType::FIELD_STRING:
+		{
+			auto buffer = get_pdata_direct<char*>(pObject, data.fieldOffset);
+			return strncopy(buffer, value, ke::Min<int>(maxlen + 1, data.fieldSize));
+		}
+		case FieldType::FIELD_STRINGPTR:
+		{
+			auto buffer = get_pdata<char*>(pObject, data.fieldOffset, element);
+
+			if (!buffer || maxlen > static_cast<int>(strlen(buffer)))
+			{
+				if (buffer)
+				{
+					free(buffer);
+				}
+
+				buffer = reinterpret_cast<char*>(malloc(maxlen + 1));
+				set_pdata<char*>(pObject, data.fieldOffset, buffer, element);
+			}
+
+			return strncopy(buffer, value, maxlen + 1);
+		}
+	}
+
+	return 0;
+}
+
+
 // native any:get_ent_data(entity, const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_ent_data(AMX *amx, cell *params)
 {

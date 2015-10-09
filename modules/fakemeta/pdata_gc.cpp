@@ -372,59 +372,12 @@ static cell AMX_NATIVE_CALL get_ent_data(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Integer);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Integer, ENTITY);
 
 	int element = params[4];
 	CHECK_ELEMENT(element);
 
-	auto pEntity = TypeConversion.id_to_edict(entity);
-
-	switch (data.fieldType)
-	{
-		case FieldType::FIELD_INTEGER:
-		case FieldType::FIELD_STRINGINT:
-		{
-			return get_pdata<int32>(pEntity, data.fieldOffset, element);
-		}
-		case FieldType::FIELD_CLASS:
-		case FieldType::FIELD_STRUCTURE:
-		{
-			return reinterpret_cast<cell>(reinterpret_cast<int8*>(pEntity->pvPrivateData) + data.fieldOffset);
-		}
-		case FieldType::FIELD_POINTER:
-		case FieldType::FIELD_FUNCTION:
-		{
-			return reinterpret_cast<cell>(get_pdata<void*>(pEntity, data.fieldOffset, element));
-		}
-		case FieldType::FIELD_SHORT:
-		{
-			if (data.fieldUnsigned)
-			{
-				return get_pdata<uint16>(pEntity, data.fieldOffset, element);
-			}
-			else
-			{
-				return get_pdata<int16>(pEntity, data.fieldOffset, element);
-			}
-		}
-		case FieldType::FIELD_CHARACTER:
-		{
-			if (data.fieldUnsigned)
-			{
-				return get_pdata<uint8>(pEntity, data.fieldOffset, element);
-			}
-			else
-			{
-				return get_pdata<int8>(pEntity, data.fieldOffset, element);
-			}
-		}
-		case FieldType::FIELD_BOOLEAN:
-		{
-			return get_pdata<bool>(pEntity, data.fieldOffset, element) ? 1 : 0;
-		}
-	}
-
-	return 0;
+	return GetData(TypeConversion.id_to_edict(entity)->pvPrivateData, data, element);
 }
 
 // native set_ent_data(entity, const class[], const member[], any:value, element = 0);
@@ -434,66 +387,20 @@ static cell AMX_NATIVE_CALL set_ent_data(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Integer);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Integer, ENTITY);
 
 	int element = params[5];
 	CHECK_ELEMENT(element);
 
-	auto pEntity = TypeConversion.id_to_edict(entity);
-	auto value = params[4];
-
-	switch (data.fieldType)
+	if (data.fieldType == FieldType::FIELD_STRUCTURE || data.fieldType == FieldType::FIELD_CLASS)
 	{
-		case FieldType::FIELD_INTEGER:
-		case FieldType::FIELD_STRINGINT:
-		{
-			set_pdata<int32>(pEntity, data.fieldOffset, static_cast<int32>(value), element);
-			break;
-		}
-		case FieldType::FIELD_CLASS:
-		case FieldType::FIELD_STRUCTURE:
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Setting directly to a class or structure address is not available");
-			return 0;
-		}
-		case FieldType::FIELD_POINTER:
-		case FieldType::FIELD_FUNCTION:
-		{
-			set_pdata<void*>(pEntity, data.fieldOffset, reinterpret_cast<void*>(value), element);
-			break;
-		}
-		case FieldType::FIELD_SHORT:
-		{
-			if (data.fieldUnsigned)
-			{
-				set_pdata<uint16>(pEntity, data.fieldOffset, static_cast<uint16>(value), element);
-			}
-			else
-			{
-				set_pdata<int16>(pEntity, data.fieldOffset, static_cast<uint16>(value), element);
-			}
-			break;
-		}
-		case FieldType::FIELD_CHARACTER:
-		{
-			if (data.fieldUnsigned)
-			{
-				set_pdata<uint8>(pEntity, data.fieldOffset, static_cast<uint8>(value), element);
-			}
-			else
-			{
-				set_pdata<int8>(pEntity, data.fieldOffset, static_cast<uint8>(value), element);
-			}
-			break;
-		}
-		case FieldType::FIELD_BOOLEAN:
-		{
-			set_pdata<bool>(pEntity, data.fieldOffset, value != 0, element);
-			break;
-		}
+		MF_LogError(amx, AMX_ERR_NATIVE, "Setting directly to a class or structure address is not available");
+		return 0;
 	}
 
-	return 0;
+	SetData(TypeConversion.id_to_edict(entity)->pvPrivateData, data, params[4], element);
+
+	return 1;
 }
 
 
@@ -504,12 +411,12 @@ static cell AMX_NATIVE_CALL get_ent_data_float(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Float);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Float, ENTITY);
 
 	int element = params[4];
 	CHECK_ELEMENT(element);
 
-	return amx_ftoc(get_pdata<float>(TypeConversion.id_to_edict(entity), data.fieldOffset, element));
+	return GetDataFloat(TypeConversion.id_to_edict(entity)->pvPrivateData, data, element);
 }
 
 // native set_ent_data_float(entity, const classname[], const member[], Float:value, element = 0);
@@ -519,12 +426,12 @@ static cell AMX_NATIVE_CALL set_ent_data_float(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Float);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Float, ENTITY);
 
 	int element = params[5];
 	CHECK_ELEMENT(element);
 
-	set_pdata<float>(TypeConversion.id_to_edict(entity), data.fieldOffset, amx_ctof(params[4]), element);
+	SetDataFloat(TypeConversion.id_to_edict(entity)->pvPrivateData, data, amx_ctof(params[4]), element);
 
 	return 1;
 }
@@ -537,17 +444,12 @@ static cell AMX_NATIVE_CALL get_ent_data_vector(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Vector);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Vector, ENTITY);
 
 	int element = params[5];
 	CHECK_ELEMENT(element);
 
-	auto refvec = MF_GetAmxAddr(amx, params[4]);
-	auto vector = get_pdata<Vector>(TypeConversion.id_to_edict(entity), data.fieldOffset, element);
-
-	refvec[0] = amx_ftoc(vector.x);
-	refvec[1] = amx_ftoc(vector.y);
-	refvec[2] = amx_ftoc(vector.z);
+	GetDataVector(TypeConversion.id_to_edict(entity)->pvPrivateData, data, MF_GetAmxAddr(amx, params[4]), element);
 
 	return 1;
 }
@@ -559,15 +461,12 @@ static cell AMX_NATIVE_CALL set_ent_data_vector(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Vector);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Vector, ENTITY);
 
 	int element = params[5];
 	CHECK_ELEMENT(element);
 
-	auto refvec = MF_GetAmxAddr(amx, params[4]);
-	Vector vector(amx_ctof(refvec[0]), amx_ctof(refvec[1]), amx_ctof(refvec[2]));
-
-	set_pdata<Vector>(TypeConversion.id_to_edict(entity), data.fieldOffset, vector, element);
+	SetDataVector(TypeConversion.id_to_edict(entity)->pvPrivateData, data, MF_GetAmxAddr(amx, params[4]), element);
 
 	return 1;
 }
@@ -580,41 +479,19 @@ static cell AMX_NATIVE_CALL get_ent_data_entity(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Entity);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Entity, ENTITY);
 
 	int element = params[4];
 	CHECK_ELEMENT(element);
 
-	auto pEntity = TypeConversion.id_to_edict(entity);
-
-	switch (data.fieldType)
-	{
-		case FieldType::FIELD_CLASSPTR:
-		{
-			return TypeConversion.cbase_to_id(get_pdata<void*>(pEntity, data.fieldOffset, element));
-		}
-		case FieldType::FIELD_ENTVARS:
-		{
-			return TypeConversion.entvars_to_id(get_pdata<entvars_t*>(pEntity, data.fieldOffset, element));
-		}
-		case FieldType::FIELD_EDICT:
-		{
-			return TypeConversion.edict_to_id(get_pdata<edict_t*>(pEntity, data.fieldOffset, element));
-		}
-		case FieldType::FIELD_EHANDLE:
-		{
-			return TypeConversion.edict_to_id(get_pdata<EHANDLE>(pEntity, data.fieldOffset, element).Get());
-		}
-	}
-
-	return 0;
+	return GetDataEntity(TypeConversion.id_to_edict(entity)->pvPrivateData, data, element);
 }
 
 // native set_ent_data_entity(entity, const class[], const member[], value, element = 0);
 static cell AMX_NATIVE_CALL set_ent_data_entity(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	int value  = params[4];
+	int value = params[4];
 
 	CHECK_ENTITY(entity);
 
@@ -624,38 +501,14 @@ static cell AMX_NATIVE_CALL set_ent_data_entity(AMX *amx, cell *params)
 	}
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Entity);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Entity, ENTITY);
 
 	int element = params[5];
 	CHECK_ELEMENT(element);
 
-	auto pEntity = TypeConversion.id_to_edict(entity);
+	SetDataEntity(TypeConversion.id_to_edict(entity)->pvPrivateData, data, value, element);
 
-	switch (data.fieldType)
-	{
-		case FieldType::FIELD_CLASSPTR:
-		{
-			set_pdata<void*>(pEntity, data.fieldOffset, value != -1 ? TypeConversion.id_to_cbase(value) : nullptr, element);
-			break;
-		}
-		case FieldType::FIELD_ENTVARS:
-		{
-			set_pdata<entvars_t*>(pEntity, data.fieldOffset, value != -1 ? TypeConversion.id_to_entvars(value) : nullptr, element);
-			break;
-		}
-		case FieldType::FIELD_EDICT:
-		{
-			set_pdata<edict_t*>(pEntity, data.fieldOffset, value != -1 ? TypeConversion.id_to_edict(value) : nullptr, element);
-			break;
-		}
-		case FieldType::FIELD_EHANDLE:
-		{
-			get_pdata<EHANDLE>(pEntity, data.fieldOffset, element).Set(value != -1 ? TypeConversion.id_to_edict(value) : nullptr);
-			break;
-		}
-	}
-
-	return 0;
+	return 1;
 }
 
 
@@ -666,34 +519,22 @@ static cell AMX_NATIVE_CALL get_ent_data_string(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::String);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::String, ENTITY);
 
 	int element = params[6];
 	CHECK_ELEMENT(element);
 
-	auto pEntity = TypeConversion.id_to_edict(entity);
+	auto buffer = params[4];
+	auto maxlen = params[5];
 
-	cell buffer = params[4];
-	int  maxlen = params[5];
+	auto string = GetDataString(TypeConversion.id_to_edict(entity)->pvPrivateData, data, element);
 
-	switch (data.fieldType)
+	if (data.fieldSize)
 	{
-		case FieldType::FIELD_STRING:
-		{
-			maxlen = ke::Min<int>(maxlen, static_cast<int>(data.fieldSize));
-			char *string = get_pdata_direct<char*>(pEntity, data.fieldOffset, element, data.fieldSize);
-
-			return MF_SetAmxStringUTF8Char(amx, buffer, string ? string : "", string ? strlen(string) : 0, maxlen);
-		}
-		case FieldType::FIELD_STRINGPTR:
-		{
-			char *string = get_pdata<char*>(pEntity, data.fieldOffset, element);
-
-			return MF_SetAmxStringUTF8Char(amx, buffer, string ? string : "", string ? strlen(string) : 0, maxlen);
-		}
+		maxlen = ke::Min(maxlen, data.fieldSize);
 	}
 
-	return 0;
+	return MF_SetAmxStringUTF8Char(amx, buffer, string ? string : "", string ? strlen(string) : 0, maxlen);
 }
 
 // native set_ent_data_string(entity, const class[], const member[], const value[], element = 0);
@@ -703,43 +544,15 @@ static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::String);
+	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::String, ENTITY);
 
 	int element = params[5];
 	CHECK_ELEMENT(element);
 
-	auto pEntity = TypeConversion.id_to_edict(entity);
-
 	int length;
 	const char *value = MF_GetAmxString(amx, params[4], 0, &length);
 
-	switch (data.fieldType)
-	{
-		case FieldType::FIELD_STRING:
-		{
-			auto buffer = reinterpret_cast<char*>(pEntity->pvPrivateData) + data.fieldOffset;
-			return strncopy(buffer, value, ke::Min<int>(length + 1, data.fieldSize));
-		}
-		case FieldType::FIELD_STRINGPTR:
-		{
-			auto buffer = get_pdata<char*>(pEntity, data.fieldOffset, element);
-
-			if (!buffer || length > static_cast<int>(strlen(buffer)))
-			{
-				if (buffer)
-				{
-					free(buffer);
-				}
-
-				buffer = reinterpret_cast<char*>(malloc(length + 1));
-				set_pdata<char*>(pEntity, data.fieldOffset, buffer, element);
-			}
-
-			return strncopy(buffer, value, length + 1);
-		}
-	}
-
-	return 0;
+	return SetDataString(TypeConversion.id_to_edict(entity)->pvPrivateData, data, value, length, element);
 }
 
 
@@ -747,7 +560,7 @@ static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
 {
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(0, data, BaseFieldType::None);
+	GET_TYPE_DESCRIPTION(0, data, BaseFieldType::None, ALL);
 
 	return data.fieldSize;
 }
@@ -756,7 +569,7 @@ static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL find_ent_data_info(AMX *amx, cell *params)
 {
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None);
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ALL);
 
 	*MF_GetAmxAddr(amx, params[3]) = static_cast<cell>(data.fieldType);
 	*MF_GetAmxAddr(amx, params[4]) = ke::Max<int>(0, data.fieldSize);

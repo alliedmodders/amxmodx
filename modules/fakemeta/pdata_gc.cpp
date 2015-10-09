@@ -75,20 +75,40 @@ static BaseFieldType GetBaseDataType(TypeDescription &data)
 	return BaseFieldType::None;
 }
 
-#define GET_TYPE_DESCRIPTION(position, data, baseType)                                     \
+
+#define GET_TYPE_DESCRIPTION(position, data, baseType, list)  \
+	GET_TYPE_DESCRIPTION_START(position, data, baseType)      \
+	CHECK_##list##_OFFSET(className, memberName, data)        \
+	CHECK_ERROR(className, memberName)                        \
+	GET_TYPE_DESCRIPTION_END(memberName, data, baseType)
+
+#define GET_TYPE_DESCRIPTION_START(position, data, baseType)                               \
 	int classLength, memberLength;                                                         \
-	const char *className  = MF_GetAmxString(amx, params[position], 0, &classLength);  \
+	const char *className  = MF_GetAmxString(amx, params[position], 0, &classLength);      \
 	const char *memberName = MF_GetAmxString(amx, params[position + 1], 1, &memberLength); \
 	if (!classLength || !memberLength)                                                     \
 	{                                                                                      \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Either class (\"%s\") or member (\"%s\") is empty", className, memberName); \
 		return 0;                                                                          \
-	}                                                                                      \
-	else if (!CommonConfig->GetOffsetByClass(className, memberName, &data))                \
-	{                                                                                      \
+	}
+
+#define CHECK_ENTITY_OFFSET(className, memberName, data)                         \
+	else if (!CommonConfig->GetOffsetByClass(className, memberName, &data))
+
+#define CHECK_GAMERULES_OFFSET(className, memberName, data)                      \
+	else if (!GamerulesConfig->GetOffsetByClass(className, memberName, &data))
+
+#define CHECK_ALL_OFFSET(className, memberName, data)                            \
+	else if (!CommonConfig->GetOffsetByClass(className, memberName, &data) &&    \
+			 !GamerulesConfig->GetOffsetByClass(className, memberName, &data))
+
+#define CHECK_ERROR(className, memberName)                                       \
+	{                                                                            \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Could not find class \"%s\" and/or member \"%s\" in gamedata", className, memberName); \
-		return 0;                                                                          \
-	}                                                                                      \
+		return 0;                                                                \
+	}
+
+#define GET_TYPE_DESCRIPTION_END(memberName, data, baseType) \
 	else if (data.fieldOffset < 0)                                                         \
 	{                                                                                      \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid offset %d retrieved from \"%s\" member", data.fieldOffset, memberName); \
@@ -109,6 +129,13 @@ static BaseFieldType GetBaseDataType(TypeDescription &data)
 	else if (element > 0 && !data.fieldSize)                                               \
 	{                                                                                      \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Member \"%s\" is not an array. Element %d is invalid.", memberName, element);\
+		return 0;                                                                          \
+	}
+
+#define CHECK_GAMERULES()                                                                  \
+	if (!GameRulesAddress)                                                                 \
+	{                                                                                      \
+		MF_LogError(amx, AMX_ERR_NATIVE, "%s is disabled. Check your AMXX log.", __FUNCTION__);  \
 		return 0;                                                                          \
 	}
 

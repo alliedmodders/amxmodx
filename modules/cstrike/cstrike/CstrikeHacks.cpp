@@ -524,22 +524,28 @@ void InitGlobalVars()
 		uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
 		ServerStatic = reinterpret_cast<server_static_t*>(base - 4);
 	}
+
+	if (CommonConfig->GetAddress("sv", &address))
+	{
+		Server = *reinterpret_cast<server_t**>(address);
+	}
 #else
 	if (CommonConfig->GetMemSig("svs", &address))
 	{
 		ServerStatic = reinterpret_cast<server_static_t*>(address);
 	}
-#endif
-	if (CommonConfig->GetAddress("sv", &address))
+
+	if (CommonConfig->GetMemSig("sv", &address))
 	{
-		Server = *reinterpret_cast<server_t**>(address);
+		Server = reinterpret_cast<server_t*>(address);
 	}
+#endif
 
 	if (!ServerStatic)
 	{
 		MF_Log("svs global variable is not available\n");
 	}
-	
+
 	if (!Server)
 	{
 		MF_Log("sv global variable is not available\n");

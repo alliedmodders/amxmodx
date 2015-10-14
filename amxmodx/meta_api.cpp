@@ -32,6 +32,7 @@
 #include <engine_strucs.h>
 #include <CDetour/detours.h>
 #include "CoreConfig.h"
+#include "logger.h"
 
 plugin_info_t Plugin_info = 
 {
@@ -378,6 +379,7 @@ int	C_Spawn(edict_t *pent)
 	g_forwards.clear();
 
 	g_log.MapChange();
+	Logger::onMapChange();
 
 	// ###### Initialize task manager
 	g_tasksMngr.registerTimers(&gpGlobals->time, &mp_timelimit->value, &g_game_timeleft);
@@ -413,6 +415,7 @@ int	C_Spawn(edict_t *pent)
 	DataPackHandles.clear();
 	TextParsersHandles.clear();
 	GameConfigHandle.clear();
+	LoggerHandles.clear();
 
 	char map_pluginsfile_path[256];
 	char prefixed_map_pluginsfile[256];
@@ -505,6 +508,9 @@ int	C_Spawn(edict_t *pent)
 	FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
 	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
+	
+	LoggerCreatedForward = registerForward("OnLoggerCreated", ET_IGNORE,
+			FP_CELL, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_DONE);
 
 	CoreCfg.OnAmxxInitialized();
 

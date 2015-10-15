@@ -1566,7 +1566,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	void *address = nullptr;
 
-	if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address))
+	if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
 	{
 		DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
 		DropClientDetour->EnableDetour();

@@ -543,11 +543,11 @@ void InitGlobalVars()
 
 	if (!ServerStatic)
 	{
-		MF_Log("svs global variable is not available\n");
+		MF_Log("svs global variable is not available");
 	}
 
 	if (!Server)
 	{
-		MF_Log("sv global variable is not available\n");
+		MF_Log("sv global variable is not available");
 	}
 }

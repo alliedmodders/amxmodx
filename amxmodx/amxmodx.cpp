@@ -566,7 +566,7 @@ static cell AMX_NATIVE_CALL set_dhudmessage(AMX *amx, cell *params) /* 10 param 
 	g_hudset.b1 = static_cast<byte>(params[3]);
 	g_hudset.x = amx_ctof(params[4]);
 	g_hudset.y = amx_ctof(params[5]);
-	g_hudset.effect = params[6];;
+	g_hudset.effect = params[6];
 	g_hudset.fxTime = amx_ctof(params[7]);
 	g_hudset.holdTime = amx_ctof(params[8]);
 	g_hudset.fadeinTime = amx_ctof(params[9]);
@@ -4359,7 +4359,7 @@ static cell AMX_NATIVE_CALL GetLangTransKey(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL admins_push(AMX *amx, cell *params)
 {
 	// admins_push("SteamID","password",access,flags);
-	CAdminData *TempData=new CAdminData;;
+	CAdminData *TempData=new CAdminData;
 
 	TempData->SetAuthID(get_amxaddr(amx,params[1]));
 	TempData->SetPass(get_amxaddr(amx,params[2]));

@@ -14,6 +14,7 @@ binary.sources = [
   'engfunc.cpp',
   'fakemeta_amxx.cpp',
   'pdata.cpp',
+  'pdata_entities.cpp',
   'pdata_gc.cpp',
   'forward.cpp',
   'fm_tr.cpp',

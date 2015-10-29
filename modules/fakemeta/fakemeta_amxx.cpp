@@ -64,6 +64,7 @@ void OnAmxxAttach()
 		return;
 	}
 
+	MF_AddNatives(pdata_entities_natives);
 	MF_AddNatives(pdata_gc_natives);
 }
 

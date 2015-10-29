@@ -55,6 +55,7 @@ extern AMX_NATIVE_INFO engfunc_natives[];
 extern AMX_NATIVE_INFO dllfunc_natives[];
 extern AMX_NATIVE_INFO forward_natives[];
 extern AMX_NATIVE_INFO pdata_natives[];
+extern AMX_NATIVE_INFO pdata_entities_natives[];
 extern AMX_NATIVE_INFO pdata_gc_natives[];
 extern AMX_NATIVE_INFO tr_Natives[];
 extern AMX_NATIVE_INFO pev_natives[];

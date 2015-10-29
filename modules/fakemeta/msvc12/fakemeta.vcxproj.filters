@@ -77,6 +77,9 @@
     <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp">
       <Filter>Memtools</Filter>
     </ClCompile>
+    <ClCompile Include="..\pdata_entities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fakemeta_amxx.h">

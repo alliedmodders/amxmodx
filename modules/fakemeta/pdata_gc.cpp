@@ -269,6 +269,30 @@ static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 }
 
 
+// native get_ent_data_size(const class[], const member[]);
+static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
+{
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ENTITY);
+
+	return data.fieldSize;
+}
+
+// native find_ent_data_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
+static cell AMX_NATIVE_CALL find_ent_data_info(AMX *amx, cell *params)
+{
+	TypeDescription data;
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ENTITY);
+
+	*MF_GetAmxAddr(amx, params[3]) = static_cast<cell>(data.fieldType);
+	*MF_GetAmxAddr(amx, params[4]) = ke::Max<int>(0, data.fieldSize);
+	*MF_GetAmxAddr(amx, params[5]) = data.fieldUnsigned != 0;
+
+	return data.fieldOffset;
+}
+
+
+
 
 // native any:get_gamerules_int(const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_gamerules_int(AMX *amx, cell *params)
@@ -451,25 +475,24 @@ static cell AMX_NATIVE_CALL set_gamerules_string(AMX *amx, cell *params)
 }
 
 
-
-// native get_member_size(const class[], const member[]);
-static cell AMX_NATIVE_CALL get_member_size(AMX *amx, cell *params)
+// native get_gamerules_size(const class[], const member[]);
+static cell AMX_NATIVE_CALL get_gamerules_size(AMX *amx, cell *params)
 {
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ALL);
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, GAMERULES);
 
 	return data.fieldSize;
 }
 
-// native find_member_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
-static cell AMX_NATIVE_CALL find_member_info(AMX *amx, cell *params)
+// native find_gamerules_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
+static cell AMX_NATIVE_CALL find_gamerules_info(AMX *amx, cell *params)
 {
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ALL);
+	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, GAMERULES);
 
 	*MF_GetAmxAddr(amx, params[3]) = static_cast<cell>(data.fieldType);
 	*MF_GetAmxAddr(amx, params[4]) = ke::Max<int>(0, data.fieldSize);
@@ -491,6 +514,8 @@ AMX_NATIVE_INFO pdata_gc_natives[] =
 	{ "set_ent_data_entity" , set_ent_data_entity  },
 	{ "get_ent_data_string" , get_ent_data_string  },
 	{ "set_ent_data_string" , set_ent_data_string  },
+	{ "get_ent_data_size"   , get_ent_data_size    },
+	{ "find_ent_data_info"  , find_ent_data_info   },
 
 	{ "get_gamerules_int"   , get_gamerules_int    },
 	{ "set_gamerules_int"   , set_gamerules_int    },
@@ -502,9 +527,8 @@ AMX_NATIVE_INFO pdata_gc_natives[] =
 	{ "set_gamerules_entity", set_gamerules_entity },
 	{ "get_gamerules_string", get_gamerules_string },
 	{ "set_gamerules_string", set_gamerules_string },
+	{ "get_gamerules_size"  , get_gamerules_size   },
+	{ "find_gamerules_info" , find_gamerules_info  },
 
-	{ "get_member_size"     , get_member_size      },
-	{ "find_member_info"    , find_member_info     },
-
-	{ nullptr              , nullptr      }
+	{ nullptr               , nullptr              }
 };

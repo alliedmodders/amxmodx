@@ -809,6 +809,34 @@ native get_ent_data_string(entity, const class[], const member[], value[], maxle
 native set_ent_data_string(entity, const class[], const member[], const value[], element = 0);
 
 /**
+ * Retrieves the size of array of n entity class member.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ *
+ * @return          Size of array (in elements), otherwise 1 if member is not an array
+ * @error           If either class or member is empty, no offset is found or an invalid
+ *                  offset is retrieved, an error will be thrown.
+ */
+native get_ent_data_size(const class[], const member[]);
+
+/**
+ * Finds a offset based off an entity class and member name.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param type      Optional variable to store member type in (FIELD_* constants)
+ * @param arraysize Optional variable to store array size in, if member is an array
+ * @param unsigned  Optional variable to store whether member is unsigned (short and char types only)
+ *
+ * @return          Class member offset
+ * @error           If either class or member is empty, no offset is found or an invalid
+ *                  offset is retrieved, an error will be thrown.
+ */
+native find_ent_data_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
+
+
+/**
  * Retrieves an integer value from the gamerules object based off a class
  * and member name.
  *
@@ -986,7 +1014,7 @@ native get_gamerules_string(const class[], const member[], value[], maxlen, elem
 native set_gamerules_string(const class[], const member[], const value[], element = 0);
 
 /**
- * Retrieves the size of array of a class member.
+ * Retrieves the size of array of a gamerules class member.
  *
  * @param class     Class name
  * @param member    Member name
@@ -995,10 +1023,10 @@ native set_gamerules_string(const class[], const member[], const value[], elemen
  * @error           If either class or member is empty, no offset is found or an invalid
  *                  offset is retrieved, an error will be thrown.
  */
-native get_member_size(const class[], const member[]);
+native get_gamerules_size(const class[], const member[]);
 
 /**
- * Finds an offset based off a class and member name.
+ * Finds a gamerules offset based off a class and member name.
  *
  * @param class     Class name
  * @param member    Member name
@@ -1010,7 +1038,7 @@ native get_member_size(const class[], const member[]);
  * @error           If either class or member is empty, no offset is found or an invalid
  *                  offset is retrieved, an error will be thrown.
  */
-native find_member_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
+native find_gamerules_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
 
 /**
  * Returns the data field base type based off a specific field type.

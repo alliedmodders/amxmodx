@@ -105,7 +105,7 @@
     <ClCompile Include="..\dllfunc.cpp" />
     <ClCompile Include="..\engfunc.cpp" />
     <ClCompile Include="..\pdata_entities.cpp" />
-    <ClCompile Include="..\pdata_gc.cpp" />
+    <ClCompile Include="..\pdata_gamerules.cpp" />
     <ClCompile Include="..\pev.cpp" />
     <ClCompile Include="..\forward.cpp" />
     <ClCompile Include="..\glb.cpp" />

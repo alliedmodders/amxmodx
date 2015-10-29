@@ -15,7 +15,7 @@ binary.sources = [
   'fakemeta_amxx.cpp',
   'pdata.cpp',
   'pdata_entities.cpp',
-  'pdata_gc.cpp',
+  'pdata_gamerules.cpp',
   'forward.cpp',
   'fm_tr.cpp',
   'pev.cpp',

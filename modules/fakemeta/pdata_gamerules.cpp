@@ -14,13 +14,6 @@
 #include "fakemeta_amxx.h"
 #include "pdata_shared.h"
 
-#define CHECK_GAMERULES()                                                                  \
-	if (!GameRulesAddress)                                                                 \
-	{                                                                                      \
-		MF_LogError(amx, AMX_ERR_NATIVE, "%s is disabled. Check your AMXX log.", __FUNCTION__);  \
-		return 0;                                                                          \
-	}
-
 // native any:get_gamerules_int(const class[], const member[], element = 0);
 static cell AMX_NATIVE_CALL get_gamerules_int(AMX *amx, cell *params)
 {
@@ -229,7 +222,7 @@ static cell AMX_NATIVE_CALL find_gamerules_info(AMX *amx, cell *params)
 }
 
 
-AMX_NATIVE_INFO pdata_gc_natives[] =
+AMX_NATIVE_INFO pdata_gamerules_natives[] =
 {
 	{ "get_gamerules_int"   , get_gamerules_int    },
 	{ "set_gamerules_int"   , set_gamerules_int    },

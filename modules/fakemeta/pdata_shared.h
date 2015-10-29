@@ -63,6 +63,13 @@ enum class BaseFieldType
 			return 0;                                                                      \
 	}
 
+#define CHECK_GAMERULES()                                                                  \
+	if (!GameRulesAddress)                                                                 \
+	{                                                                                      \
+		MF_LogError(amx, AMX_ERR_NATIVE, "%s is disabled. Check your AMXX log.", __FUNCTION__);  \
+		return 0;                                                                          \
+	}
+
 class PvData
 {
 public:
@@ -152,7 +159,7 @@ public:
 				}
 				else
 				{
-					set_pdata<int16>(pObject, data.fieldOffset, static_cast<uint16>(value), element);
+					set_pdata<int16>(pObject, data.fieldOffset, static_cast<int16>(value), element);
 				}
 				break;
 			}
@@ -164,7 +171,7 @@ public:
 				}
 				else
 				{
-					set_pdata<int8>(pObject, data.fieldOffset, static_cast<uint8>(value), element);
+					set_pdata<int8>(pObject, data.fieldOffset, static_cast<int8>(value), element);
 				}
 				break;
 			}

@@ -65,7 +65,7 @@ void OnAmxxAttach()
 	}
 
 	MF_AddNatives(pdata_entities_natives);
-	MF_AddNatives(pdata_gc_natives);
+	MF_AddNatives(pdata_gamerules_natives);
 }
 
 void OnPluginsLoaded()

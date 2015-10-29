@@ -14,62 +14,6 @@
 #include "fakemeta_amxx.h"
 #include "pdata_shared.h"
 
-#define GET_TYPE_DESCRIPTION(position, data, baseType, list)  \
-	GET_TYPE_DESCRIPTION_START(position, data, baseType)      \
-	CHECK_##list##_OFFSET(className, memberName, data)        \
-	CHECK_ERROR(className, memberName)                        \
-	GET_TYPE_DESCRIPTION_END(memberName, data, baseType)
-
-#define GET_TYPE_DESCRIPTION_START(position, data, baseType)                               \
-	int classLength, memberLength;                                                         \
-	const char *className  = MF_GetAmxString(amx, params[position], 0, &classLength);      \
-	const char *memberName = MF_GetAmxString(amx, params[position + 1], 1, &memberLength); \
-	if (!classLength || !memberLength)                                                     \
-	{                                                                                      \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Either class (\"%s\") or member (\"%s\") is empty", className, memberName); \
-		return 0;                                                                          \
-	}
-
-#define CHECK_ENTITY_OFFSET(className, memberName, data)                         \
-	else if (!CommonConfig->GetOffsetByClass(className, memberName, &data))
-
-#define CHECK_GAMERULES_OFFSET(className, memberName, data)                      \
-	else if (!GamerulesConfig->GetOffsetByClass(className, memberName, &data))
-
-#define CHECK_ALL_OFFSET(className, memberName, data)                            \
-	else if (!CommonConfig->GetOffsetByClass(className, memberName, &data) &&    \
-			 !GamerulesConfig->GetOffsetByClass(className, memberName, &data))
-
-#define CHECK_ERROR(className, memberName)                                       \
-	{                                                                            \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Could not find class \"%s\" and/or member \"%s\" in gamedata", className, memberName); \
-		return 0;                                                                \
-	}
-
-#define GET_TYPE_DESCRIPTION_END(memberName, data, baseType) \
-	else if (data.fieldOffset < 0)                                                         \
-	{                                                                                      \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid offset %d retrieved from \"%s\" member", data.fieldOffset, memberName); \
-		return 0;                                                                          \
-	}                                                                                      \
-	else if (baseType > BaseFieldType::None && baseType != GetBaseDataType(data))          \
-	{                                                                                      \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Data field is not %s-based", BaseFieldTypeName[static_cast<int>(baseType)]); \
-		return 0;                                                                          \
-	}
-
-#define CHECK_ELEMENT(element)                                                             \
-	if (element < 0 || (element > 0 && element >= data.fieldSize))                         \
-	{                                                                                      \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid element index %d, value must be between 0 and %d", element, data.fieldSize);  \
-		return 0;                                                                          \
-	}                                                                                      \
-	else if (element > 0 && !data.fieldSize)                                               \
-	{                                                                                      \
-		MF_LogError(amx, AMX_ERR_NATIVE, "Member \"%s\" is not an array. Element %d is invalid.", memberName, element);\
-		return 0;                                                                          \
-	}
-
 #define CHECK_GAMERULES()                                                                  \
 	if (!GameRulesAddress)                                                                 \
 	{                                                                                      \
@@ -85,10 +29,10 @@ static cell AMX_NATIVE_CALL get_ent_data(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Integer, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Integer);
 
 	return PvData::GetInt(entity, data, element);
 }
@@ -100,10 +44,10 @@ static cell AMX_NATIVE_CALL set_ent_data(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Integer, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[5];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Integer);
 
 	if (data.fieldType == FieldType::FIELD_STRUCTURE || data.fieldType == FieldType::FIELD_CLASS)
 	{
@@ -124,10 +68,10 @@ static cell AMX_NATIVE_CALL get_ent_data_float(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Float, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Float);
 
 	return PvData::GetFloat(entity, data, element);
 }
@@ -139,10 +83,10 @@ static cell AMX_NATIVE_CALL set_ent_data_float(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Float, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[5];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Float);
 
 	PvData::SetFloat(entity, data, amx_ctof(params[4]), element);
 
@@ -157,10 +101,10 @@ static cell AMX_NATIVE_CALL get_ent_data_vector(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Vector, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[5];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Vector);
 
 	PvData::GetVector(entity, data, MF_GetAmxAddr(amx, params[4]), element);
 
@@ -174,10 +118,10 @@ static cell AMX_NATIVE_CALL set_ent_data_vector(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Vector, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[5];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Vector);
 
 	PvData::SetVector(entity, data, MF_GetAmxAddr(amx, params[4]), element);
 
@@ -192,10 +136,10 @@ static cell AMX_NATIVE_CALL get_ent_data_entity(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Entity, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Entity);
 
 	return PvData::GetEntity(entity, data, element);
 }
@@ -214,10 +158,10 @@ static cell AMX_NATIVE_CALL set_ent_data_entity(AMX *amx, cell *params)
 	}
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::Entity, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[5];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Entity);
 
 	PvData::SetEntity(entity, data, value, element);
 
@@ -232,10 +176,10 @@ static cell AMX_NATIVE_CALL get_ent_data_string(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::String, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[6];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::String);
 
 	auto buffer = params[4];
 	auto maxlen = params[5];
@@ -257,10 +201,10 @@ static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 	CHECK_ENTITY(entity);
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(2, data, BaseFieldType::String, ENTITY);
+	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
 
 	int element = params[5];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::String);
 
 	int length;
 	const char *value = MF_GetAmxString(amx, params[4], 0, &length);
@@ -273,7 +217,7 @@ static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
 {
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ENTITY);
+	GET_TYPE_DESCRIPTION(1, data, CommonConfig);
 
 	return data.fieldSize;
 }
@@ -282,7 +226,7 @@ static cell AMX_NATIVE_CALL get_ent_data_size(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL find_ent_data_info(AMX *amx, cell *params)
 {
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, ENTITY);
+	GET_TYPE_DESCRIPTION(1, data, CommonConfig);
 
 	*MF_GetAmxAddr(amx, params[3]) = static_cast<cell>(data.fieldType);
 	*MF_GetAmxAddr(amx, params[4]) = ke::Max<int>(0, data.fieldSize);
@@ -300,10 +244,10 @@ static cell AMX_NATIVE_CALL get_gamerules_int(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Integer, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[3];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Integer);
 
 	return PvData::GetInt(GameRulesAddress, data, element);
 }
@@ -314,10 +258,10 @@ static cell AMX_NATIVE_CALL set_gamerules_int(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Integer, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Integer);
 
 	if (data.fieldType == FieldType::FIELD_STRUCTURE || data.fieldType == FieldType::FIELD_CLASS)
 	{
@@ -337,10 +281,10 @@ static cell AMX_NATIVE_CALL get_gamerules_float(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Float, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[3];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Float);
 
 	return PvData::GetFloat(GameRulesAddress, data, element);
 }
@@ -351,10 +295,10 @@ static cell AMX_NATIVE_CALL set_gamerules_float(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Float, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Float);
 
 	PvData::SetFloat(GameRulesAddress, data, amx_ctof(params[3]), element);
 
@@ -368,10 +312,10 @@ static cell AMX_NATIVE_CALL get_gamerules_vector(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Vector, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Vector);
 
 	PvData::GetVector(GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
 
@@ -384,10 +328,10 @@ static cell AMX_NATIVE_CALL set_gamerules_vector(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Vector, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Vector);
 
 	PvData::GetVector(GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
 
@@ -401,10 +345,10 @@ static cell AMX_NATIVE_CALL get_gamerules_entity(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Entity, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[3];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Entity);
 
 	return PvData::GetEntity(GameRulesAddress, data, element);
 }
@@ -422,10 +366,10 @@ static cell AMX_NATIVE_CALL set_gamerules_entity(AMX *amx, cell *params)
 	}
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::Entity, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::Entity);
 
 	PvData::SetEntity(GameRulesAddress, data, params[3], element);
 
@@ -439,10 +383,10 @@ static cell AMX_NATIVE_CALL get_gamerules_string(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::String, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[5];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::String);
 
 	auto buffer = params[3];
 	auto maxlen = params[4];
@@ -463,10 +407,10 @@ static cell AMX_NATIVE_CALL set_gamerules_string(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::String, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	int element = params[4];
-	CHECK_ELEMENT(element);
+	CHECK_DATA(data, element, BaseFieldType::String);
 
 	int length;
 	const char *value = MF_GetAmxString(amx, params[3], 0, &length);
@@ -481,7 +425,7 @@ static cell AMX_NATIVE_CALL get_gamerules_size(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	return data.fieldSize;
 }
@@ -492,7 +436,7 @@ static cell AMX_NATIVE_CALL find_gamerules_info(AMX *amx, cell *params)
 	CHECK_GAMERULES();
 
 	TypeDescription data;
-	GET_TYPE_DESCRIPTION(1, data, BaseFieldType::None, GAMERULES);
+	GET_TYPE_DESCRIPTION(1, data, GamerulesConfig);
 
 	*MF_GetAmxAddr(amx, params[3]) = static_cast<cell>(data.fieldType);
 	*MF_GetAmxAddr(amx, params[4]) = ke::Max<int>(0, data.fieldSize);

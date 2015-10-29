@@ -26,6 +26,43 @@ enum class BaseFieldType
 	String,
 };
 
+#define GET_TYPE_DESCRIPTION(position, data, conf)                                         \
+	int classLength, memberLength;                                                         \
+	char const *className = MF_GetAmxString(amx, params[position], 0, &classLength);       \
+	char const *memberName = MF_GetAmxString(amx, params[position + 1], 1, &memberLength); \
+	if (!classLength || !memberLength)                                                     \
+	{                                                                                      \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Either class (\"%s\") or member (\"%s\") is empty", className, memberName); \
+		return 0;                                                                          \
+	}                                                                                      \
+	else if (!conf->GetOffsetByClass(className, memberName, &data))                        \
+	{                                                                                      \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Could not find class \"%s\" and/or member \"%s\" in gamedata", className, memberName); \
+		return 0;                                                                          \
+	}                                                                                      \
+	else if (data.fieldOffset < 0)                                                         \
+	{                                                                                      \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid offset %d retrieved from \"%s\" member", data.fieldOffset, memberName); \
+			return 0;                                                                      \
+	}
+
+#define CHECK_DATA(data, element, baseType)                                                \
+	if (baseType > BaseFieldType::None && baseType != PvData::GetBaseDataType(data))       \
+	{                                                                                      \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Data field is not %s-based", PvData::GetBaseTypeName(baseType)); \
+			return 0;                                                                      \
+	}                                                                                      \
+	else if (element < 0 || (element > 0 && element >= data.fieldSize))                    \
+	{                                                                                      \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid element index %d, value must be between 0 and %d", element, data.fieldSize); \
+			return 0;                                                                      \
+	}                                                                                      \
+	else if (element > 0 && !data.fieldSize)                                               \
+	{                                                                                      \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Member \"%s\" is not an array. Element %d is invalid.", memberName, element); \
+			return 0;                                                                      \
+	}
+
 class PvData
 {
 public:

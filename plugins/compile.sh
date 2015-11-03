@@ -28,7 +28,7 @@ if [[ $# -ne 0 ]]; then
 		fi
 	done
 else
-	for sourcefile in *.sp
+	for sourcefile in *.sma
 	do
 		outfile="$(echo "$sourcefile" | sed -e 's/\.sma$/\.amxx/')"
 		echo -e "// Compiling $sourcefile ..."

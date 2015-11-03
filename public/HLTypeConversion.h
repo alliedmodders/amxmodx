@@ -19,10 +19,16 @@ template <typename T> static inline T& ref_pdata(void *pPrivateData, int offset,
 }
 
 
+template <typename T> inline T get_pdata_direct(void *pPrivateData, int offset, int element = 0, int size = 0)
+{
+	return reinterpret_cast<T>(reinterpret_cast<int8*>(pPrivateData) + offset + (element * size));
+}
+
 template <typename T> inline T get_pdata_direct(edict_t *pEntity, int offset, int element = 0, int size = 0)
 {
-	return reinterpret_cast<T>((reinterpret_cast<int8*>(pEntity->pvPrivateData) + offset + (element * size)));
+	return get_pdata_direct<T>(pEntity->pvPrivateData, offset, element, size);
 }
+
 
 template <typename T> inline T& get_pdata(void *pPrivateData, int offset, int element = 0)
 {

@@ -104,7 +104,8 @@
     <ClCompile Include="..\pdata.cpp" />
     <ClCompile Include="..\dllfunc.cpp" />
     <ClCompile Include="..\engfunc.cpp" />
-    <ClCompile Include="..\pdata_gc.cpp" />
+    <ClCompile Include="..\pdata_entities.cpp" />
+    <ClCompile Include="..\pdata_gamerules.cpp" />
     <ClCompile Include="..\pev.cpp" />
     <ClCompile Include="..\forward.cpp" />
     <ClCompile Include="..\glb.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="..\forwardmacros.h" />
     <ClInclude Include="..\glb.h" />
     <ClInclude Include="..\moduleconfig.h" />
+    <ClInclude Include="..\pdata_shared.h" />
     <ClInclude Include="..\sdk\CString.h" />
     <ClInclude Include="..\sdk\CVector.h" />
     <ClInclude Include="..\..\..\public\sdk\amxxmodule.h" />

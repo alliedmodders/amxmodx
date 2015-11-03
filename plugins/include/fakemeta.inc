@@ -809,7 +809,7 @@ native get_ent_data_string(entity, const class[], const member[], value[], maxle
 native set_ent_data_string(entity, const class[], const member[], const value[], element = 0);
 
 /**
- * Retrieves the size of array of a class member.
+ * Retrieves the size of array of n entity class member.
  *
  * @param class     Class name
  * @param member    Member name
@@ -821,7 +821,7 @@ native set_ent_data_string(entity, const class[], const member[], const value[],
 native get_ent_data_size(const class[], const member[]);
 
 /**
- * Finds an offset based off a class and member name.
+ * Finds a offset based off an entity class and member name.
  *
  * @param class     Class name
  * @param member    Member name
@@ -831,9 +831,214 @@ native get_ent_data_size(const class[], const member[]);
  *
  * @return          Class member offset
  * @error           If either class or member is empty, no offset is found or an invalid
- *                  offset is retrieved, an error will be thrown.   
+ *                  offset is retrieved, an error will be thrown.
  */
 native find_ent_data_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
+
+
+/**
+ * Retrieves an integer value from the gamerules object based off a class
+ * and member name.
+ *
+ * @note This native is used to access the following (C++/engine) data types:
+ *       integer, boolean, short, character, pointer, structure, class,
+ *       stringint and function. Unsigned variants (if applicable) are supported
+ *       and will be converted automatically.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @return          Integer value
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native any:get_gamerules_int(const class[], const member[], element = 0);
+
+/**
+ * Sets an integer value to the gamerules objecta based off a class
+ * and member name.
+ *
+ * @note This native is used to access the following (C++/engine) data types:
+ *       integer, boolean, short, character, pointer, stringint and function.
+ *       Unsigned variants (if applicable) are supported and will be converted
+ *       automatically.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Value to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native set_gamerules_int(const class[], const member[], any:value, element = 0);
+
+/**
+ * Retrieves a float value from the gamerules object based off a class
+ * and member name.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @return          Float value
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native Float:get_gamerules_float(const class[], const member[], element = 0);
+
+/**
+ * Sets a float value to the gamerules object based off a class
+ * and member name.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Value to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native set_gamerules_float(const class[], const member[], Float:value, element = 0);
+
+/**
+ * Retrieves a vector from the gamerules object based off a class and member name.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Vector buffer to store data in
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native get_gamerules_vector(const class[], const member[], Float:value[3], element = 0);
+
+/**
+ * Sets a vector to the gamerules object based off a class and member name.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Vector to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native set_gamerules_vector(const class[], const member[], Float:value[3], element = 0);
+
+/**
+ * Retrieves an entity index from the gamerules object based off a class
+ * and member name.
+ *
+ * @note This native is used to access the following (C++/engine) data types:
+ *       classptr, entvars, edict and ehandle.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @return          Entity index if found, -1 otherwise
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native get_gamerules_entity(const class[], const member[], element = 0);
+
+/**
+ * Sets an entity index to the gamerules object based off a class
+ * and member name.
+ *
+ * @note This native is used to access the following (C++/engine) data types:
+ *       classptr, entvars, edict and ehandle.
+ * @note Pass -1 as value to act as C++ NULL.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Entity index to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @noreturn
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native set_gamerules_entity(const class[], const member[], value, element = 0);
+
+/**
+ * Retrieves a string from the gamerules object based off a class and member name.
+ *
+ * @note This native is used to access the following (C++/engine) data types:
+ *       string, stringptr.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     Buffer to store data in
+ * @param maxlen    Maximum size of the buffer
+ * @param element   Element to retrieve (starting from 0) if member is an array
+ *
+ * @return          Number of cells written to buffer
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native get_gamerules_string(const class[], const member[], value[], maxlen, element = 0);
+
+/**
+ * Sets a string to the gamerules object based off a class and member name.
+ *
+ * @note This native is used to access the following (C++/engine) data types:
+ *       string, stringptr.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param value     String to set
+ * @param element   Element to set (starting from 0) if member is an array
+ *
+ * @return          Number of cells written to buffer
+ * @error           If member is empty, no offset is found or an invalid offset
+ *                  is retrieved, or the data type does not match, an error will
+ *                  be thrown.
+ */
+native set_gamerules_string(const class[], const member[], const value[], element = 0);
+
+/**
+ * Retrieves the size of array of a gamerules class member.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ *
+ * @return          Size of array (in elements), otherwise 1 if member is not an array
+ * @error           If either class or member is empty, no offset is found or an invalid
+ *                  offset is retrieved, an error will be thrown.
+ */
+native get_gamerules_size(const class[], const member[]);
+
+/**
+ * Finds a gamerules offset based off a class and member name.
+ *
+ * @param class     Class name
+ * @param member    Member name
+ * @param type      Optional variable to store member type in (FIELD_* constants)
+ * @param arraysize Optional variable to store array size in, if member is an array
+ * @param unsigned  Optional variable to store whether member is unsigned (short and char types only)
+ *
+ * @return          Class member offset
+ * @error           If either class or member is empty, no offset is found or an invalid
+ *                  offset is retrieved, an error will be thrown.
+ */
+native find_gamerules_info(const class[], const member[], &FieldType:type = FIELD_NONE, &arraysize = 0, &bool:unsigned = false);
 
 /**
  * Returns the data field base type based off a specific field type.
@@ -848,9 +1053,9 @@ native find_ent_data_info(const class[], const member[], &FieldType:type = FIELD
  *
  * @return          Base field type (BASEFIELD_* constants)
  */
-stock BaseFieldType:get_ent_data_basetype(FieldType:type, type_name[] = "", maxlen = 0)
+stock BaseFieldType:get_field_basetype(FieldType:type, type_name[] = "", maxlen = 0)
 {
-	static baseFieldTypeNames[BaseFieldType][] =
+	static const baseFieldTypeNames[BaseFieldType][] =
 	{
 		"none",
 		"integer",

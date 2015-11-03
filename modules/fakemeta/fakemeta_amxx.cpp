@@ -15,9 +15,12 @@
 #include "sh_stack.h"
 
 IGameConfig *CommonConfig;
+IGameConfig *GamerulesConfig;
 IGameConfigManager *ConfigManager;
 
 HLTypeConversion TypeConversion;
+void *GameRulesReferenceAddress;
+void *GameRulesAddress;
 
 void OnAmxxAttach()
 {
@@ -39,17 +42,30 @@ void OnAmxxAttach()
 
 	ConfigManager = MF_GetConfigManager();
 
-	char error[256];
-	error[0] = '\0';
+	char error[256] = "";
 
 	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)) && error[0] != '\0')
 	{
-		MF_Log("Could not read common.games gamedata: %s", error);
-		MF_Log("get/set/find_ent_data* natives have been disabled");
+		MF_Log("get/set_ent_data* natives have been disabled because common.games gamedata could not be read: %s", error);
 		return;
 	}
 
-	MF_AddNatives(pdata_gc_natives);
+	*error = '\0';
+
+	if (!ConfigManager->LoadGameConfigFile("common.games/gamerules.games", &GamerulesConfig, error, sizeof(error)) && error[0] != '\0')
+	{
+		MF_Log("get/set_gamerules_* natives have been disabled because common.games/gamerules.games gamedata could not be read: %s", error);
+		return;
+	}
+
+	if (!CommonConfig->GetAddress("g_pGameRules", &GameRulesReferenceAddress) || !GameRulesReferenceAddress)
+	{
+		MF_Log("get/set_gamerules_* natives have been disabled because g_pGameRules address could not be found. ");
+		return;
+	}
+
+	MF_AddNatives(pdata_entities_natives);
+	MF_AddNatives(pdata_gamerules_natives);
 }
 
 void OnPluginsLoaded()
@@ -63,6 +79,9 @@ extern ke::Vector<KVD_Wrapper *> g_FreeKVDWs;
 
 void OnAmxxDetach()
 {
+	ConfigManager->CloseGameConfigFile(CommonConfig);
+	ConfigManager->CloseGameConfigFile(GamerulesConfig);
+
 	while (!g_FreeTRs.empty())
 	{
 		delete g_FreeTRs.front();
@@ -78,6 +97,11 @@ void OnAmxxDetach()
 
 void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
+	if (GameRulesReferenceAddress)
+	{
+		GameRulesAddress = **reinterpret_cast<void***>(GameRulesReferenceAddress);
+	}
+
 	g_pFunctionTable_Post->pfnServerDeactivate = FMH_ServerDeactivate_Post;
 	RETURN_META(MRES_IGNORED);
 }

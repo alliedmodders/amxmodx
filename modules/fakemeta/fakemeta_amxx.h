@@ -55,7 +55,8 @@ extern AMX_NATIVE_INFO engfunc_natives[];
 extern AMX_NATIVE_INFO dllfunc_natives[];
 extern AMX_NATIVE_INFO forward_natives[];
 extern AMX_NATIVE_INFO pdata_natives[];
-extern AMX_NATIVE_INFO pdata_gc_natives[];
+extern AMX_NATIVE_INFO pdata_entities_natives[];
+extern AMX_NATIVE_INFO pdata_gamerules_natives[];
 extern AMX_NATIVE_INFO tr_Natives[];
 extern AMX_NATIVE_INFO pev_natives[];
 extern AMX_NATIVE_INFO glb_natives[];
@@ -75,9 +76,11 @@ extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable;
 extern NEW_DLL_FUNCTIONS *g_pNewFunctionsTable_Post;
 
 extern IGameConfig *CommonConfig;
+extern IGameConfig *GamerulesConfig;
 extern IGameConfigManager *ConfigManager;
 
 extern HLTypeConversion TypeConversion;
+extern void *GameRulesAddress;
 
 #endif //_FAKEMETA_INCLUDE_H
 

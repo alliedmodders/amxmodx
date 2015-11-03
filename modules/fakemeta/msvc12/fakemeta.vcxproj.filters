@@ -71,11 +71,14 @@
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\pdata_gc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp">
       <Filter>Memtools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pdata_entities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\pdata_gamerules.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +120,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h">
       <Filter>Memtools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\pdata_shared.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

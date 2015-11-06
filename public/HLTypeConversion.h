@@ -77,7 +77,7 @@ class HLTypeConversion
 
 		int edict_to_id(edict_t *pEdict)
 		{
-			if (FNullEnt(pEdict))
+			if (!pEdict)
 			{
 				return -1;
 			}
@@ -89,7 +89,7 @@ class HLTypeConversion
 
 		edict_t* entvar_to_edict(entvars_t *pev)
 		{
-			if (!pev || FNullEnt(pev->pContainingEntity))
+			if (!pev || !(pev->pContainingEntity))
 			{
 				return nullptr;
 			}
@@ -198,7 +198,7 @@ class EHANDLE
 
 		edict_t* Get(void)
 		{
-			if (!FNullEnt(m_pent))
+			if (m_pent)
 			{
 				if (m_pent->serialnumber == m_serialnumber)
 				{
@@ -213,7 +213,7 @@ class EHANDLE
 
 		edict_t* Set(edict_t *pent)
 		{
-			if (!FNullEnt(pent))
+			if (pent)
 			{
 				m_pent = pent;
 				m_serialnumber = m_pent->serialnumber;

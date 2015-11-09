@@ -19,13 +19,13 @@ IGameConfig *GamerulesConfig;
 IGameConfigManager *ConfigManager;
 
 HLTypeConversion TypeConversion;
-void *GameRulesReferenceAddress;
-void *GameRulesAddress;
+void **GameRulesAddress;
 
 void OnAmxxAttach()
 {
 	initialze_offsets();
 	initialize_glb_offsets();
+
 	MF_AddNatives(engfunc_natives);
 	MF_AddNatives(dllfunc_natives);
 	MF_AddNatives(pev_natives);
@@ -35,6 +35,9 @@ void OnAmxxAttach()
 	MF_AddNatives(glb_natives);
 	MF_AddNatives(ext2_natives);
 	MF_AddNatives(misc_natives);
+	MF_AddNatives(pdata_entities_natives);
+	MF_AddNatives(pdata_gamerules_natives);
+
 	g_kvd_glb.kvd.szClassName = const_cast<char *>(g_kvd_glb.cls.chars());
 	g_kvd_glb.kvd.szKeyName = const_cast<char *>(g_kvd_glb.key.chars());
 	g_kvd_glb.kvd.szValue = const_cast<char *>(g_kvd_glb.val.chars());
@@ -58,14 +61,19 @@ void OnAmxxAttach()
 		return;
 	}
 
-	if (!CommonConfig->GetAddress("g_pGameRules", &GameRulesReferenceAddress) || !GameRulesReferenceAddress)
+	void *address = nullptr;
+
+	if (!CommonConfig->GetAddress("g_pGameRules", &address) || !address)
 	{
 		MF_Log("get/set_gamerules_* natives have been disabled because g_pGameRules address could not be found. ");
 		return;
 	}
 
-	MF_AddNatives(pdata_entities_natives);
-	MF_AddNatives(pdata_gamerules_natives);
+#if defined(KE_WINDOWS)
+	GameRulesAddress = *reinterpret_cast<void***>(address);
+#else
+	GameRulesAddress = reinterpret_cast<void**>(address);
+#endif
 }
 
 void OnPluginsLoaded()
@@ -97,11 +105,6 @@ void OnAmxxDetach()
 
 void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
-	if (GameRulesReferenceAddress)
-	{
-		GameRulesAddress = **reinterpret_cast<void***>(GameRulesReferenceAddress);
-	}
-
 	g_pFunctionTable_Post->pfnServerDeactivate = FMH_ServerDeactivate_Post;
 	RETURN_META(MRES_IGNORED);
 }

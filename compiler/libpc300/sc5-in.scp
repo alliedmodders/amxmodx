@@ -165,7 +165,7 @@ static char *warnmsg[] = {
 /*229*/  "index tag mismatch (symbol \"%s\")\n",
 /*230*/  "no implementation for state \"%s\" / function \"%s\", no fall-back\n",
 /*231*/  "state specification on forward declaration is ignored\n",
-/*232*/  "output file is written, but with compact encoding disabled\n"
+/*232*/  "output file is written, but with compact encoding disabled\n",
 /*233*/  "symbol \"%s\" is marked as deprecated: %s\n",
 /*234*/  "recursive function \"%s\"\n",
        };

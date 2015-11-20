@@ -26,5 +26,6 @@ extern int MessageIdTeamInfo;
 extern int MessageIdTextMsg;
 
 void EnableMessageHooks();
+void DisableMessageHooks(bool force = false);
 
 #endif // CSTRIKE_USER_MESSAGES_H

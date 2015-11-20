@@ -653,6 +653,15 @@
 #define HLW_SUIT            31
 #define HLW_ALLWEAPONS      (~(1<<HLW_SUIT))
 
+/**
+ * Item's flags
+ */
+#define ITEM_FLAG_SELECTONEMPTY     (1<<0)
+#define ITEM_FLAG_NOAUTORELOAD      (1<<1)
+#define ITEM_FLAG_NOAUTOSWITCHEMPTY (1<<2)
+#define ITEM_FLAG_LIMITINWORLD      (1<<3)
+#define ITEM_FLAG_EXHAUSTIBLE		(1<<4)
+
 
 #define FEV_NOTHOST     (1<<0)  // Skip local host for event send.
 #define FEV_RELIABLE    (1<<1)  // Send the event reliably.  You must specify the origin and angles

@@ -27,6 +27,17 @@ bool UTIL_CheckForPublic(const char *publicname);
 #define GETCLIENTKEYVALUE	(*g_engfuncs.pfnInfoKeyValue)
 #define CREATENAMEDENTITY	(*g_engfuncs.pfnCreateNamedEntity)
 
+#define CHECK_ENTITY_SIMPLE(x) \
+	if (x < 0 || x > gpGlobals->maxEntities) { \
+		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
+		return 0; \
+	} else { \
+		if (x != 0 && FNullEnt(INDEXENT(x))) { \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
+			return 0; \
+		} \
+	}
+
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
@@ -99,6 +110,7 @@ bool UTIL_CheckForPublic(const char *publicname);
 		member = type.fieldOffset;                                                  \
 	}
 
+
 class CUnifiedSignals
 {
 	public:
@@ -109,17 +121,17 @@ class CUnifiedSignals
 			m_flSignal = 0;
 		}
 
-		void Signal(int flags) 
+		void Signal(int flags)
 		{
 			m_flSignal |= flags;
 		}
 
-		int GetSignal(void) 
+		int GetSignal(void)
 		{
 			return m_flSignal;
 		}
 
-		int GetState(void) 
+		int GetState(void)
 		{
 			return m_flState;
 		}

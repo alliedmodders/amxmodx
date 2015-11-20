@@ -21,121 +21,7 @@
 	#pragma loadlib cstrike
 #endif
 
-/**
- * @section Team and team model constants, used by cs_[get|set]_user_team().
- */
-
-/**
- * Internal Counter-Strike model id constants.
- *
- * @note Model ids starting with CZ_ are only valid in Condition Zero.
- */
-enum CsInternalModel
-{
-	CS_NORESET = -1,
-	CS_DONTCHANGE = 0,
-	CS_CT_URBAN = 1,
-	CS_T_TERROR = 2,
-	CS_T_LEET = 3,
-	CS_T_ARCTIC = 4,
-	CS_CT_GSG9 = 5,
-	CS_CT_GIGN = 6,
-	CS_CT_SAS = 7,
-	CS_T_GUERILLA = 8,
-	CS_CT_VIP = 9,
-	CZ_T_MILITIA = 10,
-	CZ_CT_SPETSNAZ = 11,
-};
-
-/**
- * Counter-Strike team id constants.
- */
-enum CsTeams
-{
-	CS_TEAM_UNASSIGNED = 0,
-	CS_TEAM_T = 1,
-	CS_TEAM_CT = 2,
-	CS_TEAM_SPECTATOR = 3,
-};
-
-/**
- * @endsection
- */
-
-/**
- * Counter-Strike armor types for use with cs_[get|set]_user_armor().
- */
-enum CsArmorType
-{
-	CS_ARMOR_NONE = 0,      // no armor
-	CS_ARMOR_KEVLAR = 1,    // body vest only
-	CS_ARMOR_VESTHELM = 2,  // vest and helmet
-};
-
-/**
- * Map zone flags returned by cs_get_user_mapzones().
- */
-#define CS_MAPZONE_BUY              (1<<0) // Buyzone
-#define CS_MAPZONE_BOMBTARGET       (1<<1) // Bomb target zone
-#define CS_MAPZONE_HOSTAGE_RESCUE   (1<<2) // Hostage rescue zone
-#define CS_MAPZONE_ESCAPE           (1<<3) // Terrorist escape zone
-#define CS_MAPZONE_VIP_SAFETY       (1<<4) // VIP escape zone
-
-/**
- * Constants used for cs_[get|set]_user_zoom().
- */
-enum
-{
-	CS_RESET_ZOOM = 0,      // Reset any zoom blocking (mode has no effect)
-	CS_SET_NO_ZOOM,         // Disable any sort of zoom
-	CS_SET_FIRST_ZOOM,      // Set first zoom level (AWP style)
-	CS_SET_SECOND_ZOOM,     // Set second zoom level (AWP style)
-	CS_SET_AUGSG552_ZOOM,   // Set AUG/SG552 zoom style
-};
-
-/**
- * Constants used for the CS_OnBuy() and CS_OnBuyAttempt() forwards.
- *
- * @note While these mostly overlap with the CSW_* constants the CSI_* constants
- *       contain custom AMXX values that do not correspond to any real value in
- *       the game. The CSI_* constants should therefore be used for consistency.
- */
-#define CSI_P228                CSW_P228
-#define CSI_SCOUT               CSW_SCOUT
-#define CSI_HEGRENADE           CSW_HEGRENADE
-#define CSI_XM1014              CSW_XM1014
-#define CSI_C4                  CSW_C4
-#define CSI_MAC10               CSW_MAC10
-#define CSI_AUG                 CSW_AUG
-#define CSI_SMOKEGRENADE        CSW_SMOKEGRENADE
-#define CSI_ELITE               CSW_ELITE
-#define CSI_FIVESEVEN           CSW_FIVESEVEN
-#define CSI_UMP45               CSW_UMP45
-#define CSI_SG550               CSW_SG550
-#define CSI_GALIL               CSW_GALIL
-#define CSI_FAMAS               CSW_FAMAS
-#define CSI_USP                 CSW_USP
-#define CSI_GLOCK18             CSW_GLOCK18
-#define CSI_AWP                 CSW_AWP
-#define CSI_MP5NAVY             CSW_MP5NAVY
-#define CSI_M249                CSW_M249
-#define CSI_M3                  CSW_M3
-#define CSI_M4A1                CSW_M4A1
-#define CSI_TMP                 CSW_TMP
-#define CSI_G3SG1               CSW_G3SG1
-#define CSI_FLASHBANG           CSW_FLASHBANG
-#define CSI_DEAGLE              CSW_DEAGLE
-#define CSI_SG552               CSW_SG552
-#define CSI_AK47                CSW_AK47
-#define CSI_P90                 CSW_P90
-#define CSI_SHIELDGUN           CSW_SHIELDGUN   // The real CS value, use CSI_SHELD instead.
-#define CSI_VEST                CSW_VEST        // Custom
-#define CSI_VESTHELM            CSW_VESTHELM    // Custom
-#define CSI_DEFUSER             33              // Custom
-#define CSI_NVGS                34              // Custom
-#define CSI_PRIAMMO             36              // Custom
-#define CSI_SECAMMO             37              // Custom
-#define CSI_SHIELD              38              // Custom - The value passed by the forward, more convenient for plugins.
+#include <cstrike_const>
 
 /**
  * Returns client's deaths.
@@ -1138,6 +1024,157 @@ native cs_create_entity(const classname[]);
  * @return              Entity index > 0 if found, 0 otherwise
  */
 native cs_find_ent_by_class(start_index, const classname[]);
+
+/**
+ * Finds an entity in the world using Counter-Strike's custom FindEntityByString
+ * wrapper, matching by owner.
+ *
+ * @note Unlike other mods CS keeps track of entities using a custom hashtable.
+ *       This function utilizes the hasthable and allows for considerably faster
+ *       classname lookup compared to the default FindEntityByString (used by
+ *       find_ent_by_owner() for example).
+ * @note This exclusively considers entities in the hashtable, created by the
+ *       game itself or using cs_create_entity().
+ *
+ * @param start_index   Entity index to start searching from. -1 to start from
+ *                      the first entity
+ * @param classname     Classname to search for
+ * @param owner         Entity index to search for entity's owner
+ *
+ * @return              Entity index > 0 if found, 0 otherwise
+ */
+native cs_find_ent_by_owner(start_index, const classname[], owner);
+
+/**
+ * Returns the item id associated with an item name and its aliases.
+ *
+ * @note The item name is case sensitive an can be with or without 
+ *       weapon_ and item_ prefixes. This can be a command alias as well.
+ *       Values examples: ak47, weapon_ak47, kevlar, item_kevlar, vest, bullpup, ...
+ *
+ * @param name          Alias or classname
+ * @param classid       If item is a weapon, variable to store the associated 
+ *                      weapon class id in (CS_WEAPONCLASS_* constants)
+ *
+ * @return              Item id (CSI_* constants)
+ */
+native any:cs_get_item_id(const name[], &CsWeaponClassType:classid = CS_WEAPONCLASS_NONE);
+
+/**
+ * Returns an item name associated with a command alias.
+ *
+ * @note The alias is case sensitive.
+ * @note If not an alias to a weapon, buffer will be set with the original alias.
+ *
+ * @param alias         Alias name
+ * @param itemname      Buffer to store item name to
+ * @param maxlength     Maximum buffer size
+ *
+ * @return              True if alias is translated, false otherwise
+ */
+native bool:cs_get_translated_item_alias(const alias[], itemname[], maxlength);
+
+/**
+ * Returns some information about a weapon.
+ *
+ * @param weapon_id     Weapon id, see CSW_* constants
+ * @param type          Info type, see CS_WEAPONINFO_* constants
+ *
+ * @return              Weapon information value
+ * @error               If weapon_id and type are out of bound, an error will be thrown.
+ */
+native any:cs_get_weapon_info(weapon_id, CsWeaponInfo:type);
+
+/**
+ * Returns a weapon class id associated with a weapon id.
+ *
+ * @param weapon_id     Weapon id (CSI_* constants)
+ *
+ * @return              Weapon class id (CS_WEAPONCLASS_* constants)
+ */
+stock CsWeaponClassType:cs_get_weapon_class(weapon_id)
+{
+	new CsWeaponClassType:type = CS_WEAPONCLASS_NONE;
+
+	if (cs_is_valid_itemid(weapon_id, .weapon_only = true) || weapon_id == CSI_SHIELD)
+	{
+		switch (weapon_id)
+		{
+			case CSI_SHIELDGUN, CSI_SHIELD: 
+			{
+				type = CS_WEAPONCLASS_PISTOL;
+			}
+			case CSI_KNIFE: 
+			{
+				type = CS_WEAPONCLASS_KNIFE;
+			}
+			default:
+			{
+				new const bits = (1 << weapon_id);
+
+				if(bits & CSI_ALL_PISTOLS)
+				{
+					type = CS_WEAPONCLASS_PISTOL;
+				}
+				else if(bits & CSI_ALL_GRENADES)
+				{
+					type = CS_WEAPONCLASS_GRENADE;
+				}
+				else if(bits & CSI_ALL_SMGS)
+				{
+					type = CS_WEAPONCLASS_SUBMACHINEGUN;
+				}
+				else if(bits & CSI_ALL_SHOTGUNS)
+				{
+					type = CS_WEAPONCLASS_SHOTGUN;
+				}
+				else if(bits & CSI_ALL_MACHINEGUNS)
+				{
+					type = CS_WEAPONCLASS_MACHINEGUN;
+				}
+				else if(bits & CSI_ALL_RIFLES)
+				{
+					type = CS_WEAPONCLASS_RIFLE;
+				}
+				else if(bits & CSI_ALL_SNIPERRIFLES)
+				{
+					type = CS_WEAPONCLASS_SNIPERRIFLE;
+				}
+			}
+		}
+	}
+
+	return type;
+}
+
+/**
+ * Checks whether an item id is not out of bounds.
+ *
+ * @param id           Item id (CSI_* constants) 
+ * @param weapon_only  If true, only the real weapon ids will be checked,
+ *                     including shield as well 
+ *
+ * @return             True if item id is valid, false otherwise
+ */
+stock bool:cs_is_valid_itemid(id, bool:weapon_only = false)
+{
+	if (id <= CSI_NONE)
+	{
+		return false;
+	}
+
+	if (id > CSI_LAST_WEAPON && id != CSI_SHIELDGUN && weapon_only)
+	{
+		return false;
+	}
+
+	if (id >= CSI_MAX_COUNT)
+	{
+		return false;
+	}
+
+	return true;
+}
 
 /**
  * Called when CS internally fires a command to a player.

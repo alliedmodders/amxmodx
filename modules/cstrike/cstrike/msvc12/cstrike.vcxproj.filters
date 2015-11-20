@@ -59,6 +59,9 @@
     <ClCompile Include="..\CstrikeMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CstrikeItemsInfos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CstrikePlayer.h">
@@ -94,9 +97,15 @@
     <ClInclude Include="..\CstrikeUserMessages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CstrikeItemsInfos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\plugins\include\cstrike.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\..\..\plugins\include\cstrike_const.inc">
       <Filter>Pawn Includes</Filter>
     </None>
   </ItemGroup>

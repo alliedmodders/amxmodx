@@ -150,6 +150,11 @@ class HLTypeConversion
 			return get_pdata<entvars_t*>(cbase, m_PevOffset);
 		}
 
+		edict_t* cbase_to_edict(void *cbase)
+		{
+			return entvar_to_edict(cbase_to_entvar(cbase));
+		}
+
 		int cbase_to_id(void *cbase)
 		{
 			return entvars_to_id(cbase_to_entvar(cbase));

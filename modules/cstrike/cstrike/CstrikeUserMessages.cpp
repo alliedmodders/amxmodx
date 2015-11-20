@@ -11,16 +11,22 @@
 // Counter-Strike Module
 //
 
-#include <amxxmodule.h>
 #include "CstrikeUserMessages.h"
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include "CstrikePlayer.h"
+#include "CstrikeItemsInfos.h"
+#include <amtl/am-string.h>
 
 bool ShouldBlock;
 bool ShouldBlockHLTV;
+bool ShouldDisableHooks;
+bool RetrieveWeaponName;
+ke::AString CurrentWeaponName;
+int ArgPosition;
 
 int MessageIdArmorType;
+int MessageIdItemStatus;
 int MessageIdHLTV;
 int MessageIdMoney;
 int MessageIdResetHUD;
@@ -30,6 +36,10 @@ int MessageIdSetFOV;
 int MessageIdStatusIcon;
 int MessageIdTeamInfo;
 int MessageIdTextMsg;
+int MessageIdWeaponList;
+
+extern bool OnMessageStatusIcon(edict_t *pPlayer);
+extern bool OnMessageItemStatus(edict_t *pPlayer);
 
 struct UserMsg
 {
@@ -40,6 +50,7 @@ struct UserMsg
 UserMsg MessagesList[] =
 {
 	{ "ArmorType"  , &MessageIdArmorType   },
+	{ "ItemStatus" , &MessageIdItemStatus  },
 	{ "HLTV"       , &MessageIdHLTV        },
 	{ "Money"      , &MessageIdMoney       },
 	{ "ResetHUD"   , &MessageIdResetHUD    },
@@ -49,6 +60,7 @@ UserMsg MessagesList[] =
 	{ "StatusIcon" , &MessageIdStatusIcon  },
 	{ "TeamInfo"   , &MessageIdTeamInfo    },
 	{ "TextMsg"    , &MessageIdTextMsg     },
+	{ "WeaponList" , &MessageIdWeaponList  },
 	{ nullptr      , nullptr               }
 };
 
@@ -98,7 +110,10 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 				int index = ENTINDEX(pEntity);
 
 				if (Players[index].GetZoom())
+				{
 					Players[index].ResetZoom();
+					DisableMessageHooks();
+				}
 			}
 			break;
 		}
@@ -113,6 +128,13 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 			}
 			break;
 		}
+		case MSG_INIT:
+		{
+			if (msg_type == MessageIdWeaponList)
+			{
+				RetrieveWeaponName = true;
+			}
+		}
 	}
 
 	if (ShouldBlockHLTV)
@@ -123,11 +145,31 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 	RETURN_META(MRES_IGNORED);
 }
 
-void OnWriteByte(int iValue)
+void OnWriteByte(int value)
 {
-	if (ShouldBlock) 
+	if (ShouldBlock)
 	{
 		RETURN_META(MRES_SUPERCEDE);
+	}
+
+	if (RetrieveWeaponName && ++ArgPosition == 7 && value >= 0 && value < MAX_WEAPONS)
+	{
+		strncopy(WeaponNameList[value], CurrentWeaponName.chars(), sizeof(WeaponNameList[value]));
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void OnWriteString(const char *value)
+{
+	if (ShouldBlock)
+	{
+		RETURN_META(MRES_SUPERCEDE);
+	}
+
+	if (RetrieveWeaponName)
+	{
+		CurrentWeaponName = value;
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -138,18 +180,52 @@ void OnMessageEnd(void)
 	if (ShouldBlock)
 	{
 		ShouldBlock = false;
+
+		if (ShouldDisableHooks)
+		{
+			ShouldDisableHooks = false;
+			DisableMessageHooks();
+		}
+
 		RETURN_META(MRES_SUPERCEDE);
+	}
+
+	if (RetrieveWeaponName)
+	{
+		RetrieveWeaponName = false;
+		ArgPosition = 0;
 	}
 
 	RETURN_META(MRES_IGNORED);
 }
 
+size_t RefCount;
+
 void EnableMessageHooks()
 {
+	++RefCount;
+
 	if (!g_pengfuncsTable->pfnMessageBegin)
 	{
 		g_pengfuncsTable->pfnMessageBegin = OnMessageBegin;
 		g_pengfuncsTable->pfnWriteByte    = OnWriteByte;
+		g_pengfuncsTable->pfnWriteString  = OnWriteString;
 		g_pengfuncsTable->pfnMessageEnd   = OnMessageEnd;
+	}
+}
+
+void DisableMessageHooks(bool force)
+{
+	if (force)
+	{
+		RefCount = 1;
+	}
+
+	if (--RefCount == 0)
+	{
+		g_pengfuncsTable->pfnMessageBegin = nullptr;
+		g_pengfuncsTable->pfnWriteByte    = nullptr;
+		g_pengfuncsTable->pfnWriteString  = nullptr;
+		g_pengfuncsTable->pfnMessageEnd   = nullptr;
 	}
 }

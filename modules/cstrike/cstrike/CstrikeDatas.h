@@ -17,6 +17,7 @@
 /**
  * Weapon Ids for use with CS_OnBuyAttempt(), CS_OnBuy().
  */
+#define CSI_NONE                CSW_NONE
 #define CSI_P228                CSW_P228
 #define CSI_SCOUT               CSW_SCOUT
 #define CSI_HEGRENADE           CSW_HEGRENADE
@@ -50,15 +51,27 @@
 #define CSI_VESTHELM            CSW_VESTHELM    // Custom
 #define CSI_DEFUSER             33              // Custom
 #define CSI_NVGS                34              // Custom
+#define CSI_SHIELD              35              // Custom - The value passed by the forward, more convenient for plugins.
 #define CSI_PRIAMMO             36              // Custom
 #define CSI_SECAMMO             37              // Custom
-#define CSI_SHIELD              38              // Custom - The value passed by the forward, more convenient for plugins.
+#define CSI_MAX_COUNT           38
+#define CSI_LAST_WEAPON         CSW_LAST_WEAPON
 
-#define BITS_PISTOLS					(1<<CSI_GLOCK18 | 1<<CSI_USP | 1<<CSI_P228 | 1<<CSI_DEAGLE | 1<<CSI_ELITE | 1<<CSI_FIVESEVEN)
+#define CSI_ALL_WEAPONS         CSW_ALL_WEAPONS
+#define CSI_ALL_PISTOLS         CSW_ALL_PISTOLS
+#define CSI_ALL_SHOTGUNS        CSW_ALL_SHOTGUNS
+#define CSI_ALL_SMGS            CSW_ALL_SMGS
+#define CSI_ALL_RIFLES          CSW_ALL_RIFLES
+#define CSI_ALL_SNIPERRIFLES    CSW_ALL_SNIPERRIFLES
+#define CSI_ALL_MACHINEGUNS     CSW_ALL_MACHINEGUNS
+#define CSI_ALL_GRENADES        CSW_ALL_GRENADES
+#define CSI_ALL_ARMORS          CSW_ALL_ARMORS
+#define CSI_ALL_GUNS            CSW_ALL_GUNS
 
 /**
  * Weapons Ids.
  */
+#define CSW_NONE                        0
 #define CSW_P228						1
 #define CSW_SCOUT						3
 #define CSW_HEGRENADE					4
@@ -91,6 +104,18 @@
 #define CSW_VEST						31 // Brand new invention!
 #define CSW_VESTHELM					32 // Brand new invention!
 #define CSW_SHIELDGUN					99
+#define CSW_LAST_WEAPON                 CSW_P90
+
+#define CSW_ALL_WEAPONS      (~(1 << CSW_VEST))
+#define CSW_ALL_PISTOLS      (1 << CSW_P228 | 1 << CSW_ELITE | 1 << CSW_FIVESEVEN | 1 << CSW_USP | 1 << CSW_GLOCK18 | 1 << CSW_DEAGLE)
+#define CSW_ALL_SHOTGUNS     (1 << CSW_M3 | 1 << CSW_XM1014)
+#define CSW_ALL_SMGS         (1 << CSW_MAC10 | 1 << CSW_UMP45 | 1 << CSW_MP5NAVY | 1 << CSW_TMP | 1 << CSW_P90)
+#define CSW_ALL_RIFLES       (1 << CSW_AUG | 1 << CSW_GALIL | 1 << CSW_FAMAS | 1 << CSW_M4A1 | 1 << CSW_AK47 | 1 << CSW_SG552)
+#define CSW_ALL_SNIPERRIFLES (1 << CSW_SCOUT | 1 << CSW_AWP | 1 << CSW_G3SG1 | 1 << CSW_SG550)
+#define CSW_ALL_MACHINEGUNS  (1 << CSW_M249)
+#define CSW_ALL_GRENADES     (1 << CSW_HEGRENADE | 1 << CSW_SMOKEGRENADE | 1 << CSW_FLASHBANG)
+#define CSW_ALL_ARMORS       (1 << CSW_VEST | 1 << CSW_VESTHELM)
+#define CSW_ALL_GUNS         (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS)
 
 /**
  * Armoury entity ids for use with cs_get/set_armoury_type().
@@ -277,5 +302,99 @@ typedef enum
 	Menu_ClientBuy
 
 } Menu;
+
+
+/**
+ * Weapon class types.
+ */
+enum CsWeaponClassType
+{
+	CS_WEAPONCLASS_NONE          = 0,
+	CS_WEAPONCLASS_KNIFE         = 1,
+	CS_WEAPONCLASS_PISTOL        = 2,
+	CS_WEAPONCLASS_GRENADE       = 3,
+	CS_WEAPONCLASS_SUBMACHINEGUN = 4,
+	CS_WEAPONCLASS_SHOTGUN       = 5,
+	CS_WEAPONCLASS_MACHINEGUN    = 6,
+	CS_WEAPONCLASS_RIFLE         = 7,
+	CS_WEAPONCLASS_SNIPERRIFLE   = 8,
+	CS_WEAPONCLASS_MAX_COUNT     = 9,
+};
+
+/**
+ * Weapon infos.
+ */
+typedef struct
+{
+	int id;
+	int cost;
+	int clipCost;
+	int buyClipSize;
+	int gunClipSize;
+	int maxRounds;
+	int ammoType;
+	char *entityName;
+}
+WeaponInfoStruct;
+
+/**
+ * Weapon infos for use with cs_get_weapon_info().
+ */
+enum CsWeaponInfo
+{
+	CS_WEAPONINFO_COST          = 0,
+	CS_WEAPONINFO_CLIP_COST     = 1,
+	CS_WEAPONINFO_BUY_CLIP_SIZE = 2,
+	CS_WEAPONINFO_GUN_CLIP_SIZE = 3,
+	CS_WEAPONINFO_MAX_ROUNDS    = 4,
+	CS_WEAPONINFO_AMMO_TYPE     = 5,
+};
+
+/**
+ * Weapon default cost.
+ */
+enum WeaponCostType
+{
+	AK47_PRICE      = 2500,
+	AWP_PRICE       = 4750,
+	DEAGLE_PRICE    = 650,
+	G3SG1_PRICE     = 5000,
+	SG550_PRICE     = 4200,
+	GLOCK18_PRICE   = 400,
+	M249_PRICE      = 5750,
+	M3_PRICE        = 1700,
+	M4A1_PRICE      = 3100,
+	AUG_PRICE       = 3500,
+	MP5NAVY_PRICE   = 1500,
+	P228_PRICE      = 600,
+	P90_PRICE       = 2350,
+	UMP45_PRICE     = 1700,
+	MAC10_PRICE     = 1400,
+	SCOUT_PRICE     = 2750,
+	SG552_PRICE     = 3500,
+	TMP_PRICE       = 1250,
+	USP_PRICE       = 500,
+	ELITE_PRICE     = 800,
+	FIVESEVEN_PRICE = 750,
+	XM1014_PRICE    = 3000,
+	GALIL_PRICE     = 2000,
+	FAMAS_PRICE     = 2250,
+	SHIELDGUN_PRICE = 2200
+};
+
+/**
+ * Equipment default cost.
+ */
+enum ItemCostType
+{
+	ASSAULTSUIT_PRICE  = 1000,
+	FLASHBANG_PRICE    = 200,
+	HEGRENADE_PRICE    = 300,
+	SMOKEGRENADE_PRICE = 300,
+	KEVLAR_PRICE       = 650,
+	HELMET_PRICE       = 350,
+	NVG_PRICE          = 1250,
+	DEFUSEKIT_PRICE    = 200
+};
 
 #endif // CSTRIKE_DATA_H

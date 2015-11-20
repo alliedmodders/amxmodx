@@ -119,43 +119,6 @@ public stock const Float:NULL_VECTOR[3];
 #define PLUGIN_HANDLED_MAIN 2   /* to use in client_command(), continue all plugins but stop the command */
 
 /**
- * IDs of weapons in CS
- */
-#define CSW_P228            1
-#define CSW_SCOUT           3
-#define CSW_HEGRENADE       4
-#define CSW_XM1014          5
-#define CSW_C4              6
-#define CSW_MAC10           7
-#define CSW_AUG             8
-#define CSW_SMOKEGRENADE    9
-#define CSW_ELITE           10
-#define CSW_FIVESEVEN       11
-#define CSW_UMP45           12
-#define CSW_SG550           13
-#define CSW_GALI            14
-#define CSW_GALIL           14
-#define CSW_FAMAS           15
-#define CSW_USP             16
-#define CSW_GLOCK18         17
-#define CSW_AWP             18
-#define CSW_MP5NAVY         19
-#define CSW_M249            20
-#define CSW_M3              21
-#define CSW_M4A1            22
-#define CSW_TMP             23
-#define CSW_G3SG1           24
-#define CSW_FLASHBANG       25
-#define CSW_DEAGLE          26
-#define CSW_SG552           27
-#define CSW_AK47            28
-#define CSW_KNIFE           29
-#define CSW_P90             30
-#define CSW_VEST            31  // Custom
-#define CSW_VESTHELM        32  // Custom
-#define CSW_SHIELDGUN       99
-
-/**
  * HI weapon constants
  */
 #define HIW_BERETTA     1
@@ -187,6 +150,7 @@ public stock const Float:NULL_VECTOR[3];
 #define HIT_RIGHTARM    5
 #define HIT_LEFTLEG     6
 #define HIT_RIGHTLEG    7
+#define HIT_SHIELD      8 // CS only
 
 /**
  * @section emit_sound() constants
@@ -485,3 +449,5 @@ enum HashType
 	Hash_Keccak_384, // Provides Keccak 384 bit hashing
 	Hash_Keccak_512  // Provides Keccak 512 bit hashing
 };
+
+#include <cstrike_const> // To keep backward compatibility

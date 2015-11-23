@@ -119,7 +119,7 @@ class CLibrary
 {
 	public:
 
-		CLibrary(ke::Ref<ke::SharedLib> lib);
+		CLibrary(ke::RefPtr<ke::SharedLib> lib);
 
 	public:
 
@@ -128,7 +128,7 @@ class CLibrary
 
 	private:
 
-		ke::Ref<ke::SharedLib> lib_;
+		ke::RefPtr<ke::SharedLib> lib_;
 };
 
 class LibrarySystem

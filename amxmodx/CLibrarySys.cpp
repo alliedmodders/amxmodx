@@ -161,7 +161,7 @@ bool CDirectory::IsValid()
 /* Library Code */
 /****************/
 
-CLibrary::CLibrary(ke::Ref<ke::SharedLib> lib) : lib_(lib)
+CLibrary::CLibrary(ke::RefPtr<ke::SharedLib> lib) : lib_(lib)
 {}
 
 void CLibrary::CloseLibrary()
@@ -209,7 +209,7 @@ CDirectory *LibrarySystem::OpenDirectory(const char* path)
 
 CLibrary* LibrarySystem::OpenLibrary(const char* path, char* error, size_t maxlength)
 {
-	ke::Ref<ke::SharedLib> lib = ke::SharedLib::Open(path, error, maxlength);
+	ke::RefPtr<ke::SharedLib> lib = ke::SharedLib::Open(path, error, maxlength);
 
 	if (!lib)
 	{

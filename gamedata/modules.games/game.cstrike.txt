@@ -79,6 +79,22 @@
 				"mac"       "@_Z23UTIL_FindEntityByStringP11CBaseEntityPKcS2_"
 			}
 
+			"AddEntityHashValue" // void AddEntityHashValue(struct entvars_s *pev, const char *value, hash_types_e fieldType)
+			{
+				"library"   "server"
+				"windows"   "\x8B\x2A\x2A\x2A\x83\x2A\x2A\x85\x2A\x53\x55\x56\x57\x0F"
+				"linux"     "@_Z18AddEntityHashValueP9entvars_sPKc12hash_types_e"
+				"mac"       "@_Z18AddEntityHashValueP9entvars_sPKc12hash_types_e"
+			}
+
+			"RemoveEntityHashValue" // void RemoveEntityHashValue(struct entvars_s *pev, const char *value, hash_types_e fieldType)
+			{
+				"library"   "server"
+				"windows"   "\x8B\x2A\x2A\x2A\x53\x8B\x2A\x55\x8A\x2A\x33"
+				"linux"     "@_Z21RemoveEntityHashValueP9entvars_sPKc12hash_types_e"
+				"mac"       "@_Z21RemoveEntityHashValueP9entvars_sPKc12hash_types_e"
+			}
+
 			"GetWeaponInfo" // WeaponInfoStruct *GetWeaponInfo(int id);
 			{
 				"library"   "server"

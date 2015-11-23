@@ -1782,6 +1782,34 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
 	return 0;
 }
 
+// cs_set_ent_class(index, const classname[])
+static cell AMX_NATIVE_CALL cs_set_ent_class(AMX* amx, cell* params)
+{
+	if (AddEntityHashValue <= 0 || RemoveEntityHashValue <= 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_set_ent_class() is disabled. Check your amxx logs.");
+		return 0;
+	}
+
+	auto entity = params[1];
+	CHECK_ENTITY_SIMPLE(entity);
+
+	auto pev = TypeConversion.id_to_entvars(entity);
+
+	if (pev->classname)
+	{
+		RemoveEntityHashValue(pev, STRING(pev->classname), HashType::Classname);
+	}
+
+	int length;
+	auto new_classname = MF_GetAmxString(amx, params[2], 0, &length);
+
+	pev->classname = ALLOC_STRING(new_classname);
+	AddEntityHashValue(pev, STRING(pev->classname), HashType::Classname);
+
+	return 1;
+}
+
 // native any:cs_get_item_id(const name[], &CsWeaponClassType:classid = CS_WEAPONCLASS_NONE);
 static cell AMX_NATIVE_CALL cs_get_item_id(AMX* amx, cell* params)
 {
@@ -2004,6 +2032,7 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_create_entity",			cs_create_entity },
 	{"cs_find_ent_by_class",		cs_find_ent_by_class},
 	{"cs_find_ent_by_owner",        cs_find_ent_by_owner},
+	{"cs_set_ent_class",			cs_set_ent_class },
 	{"cs_get_item_id",		        cs_get_item_id},
 	{"cs_get_translated_item_alias",cs_get_translated_item_alias},
 	{"cs_get_weapon_info",          cs_get_weapon_info},

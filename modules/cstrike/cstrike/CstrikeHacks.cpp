@@ -39,6 +39,8 @@ CDetour *BuyGunAmmoDetour;
 CreateNamedEntityFunc       CS_CreateNamedEntity;
 UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
 GetWeaponInfoFunc           GetWeaponInfo;
+AddEntityHashValueFunc      AddEntityHashValue;
+RemoveEntityHashValueFunc   RemoveEntityHashValue;
 
 int CurrentItemId;
 bool TriggeredFromCommand;
@@ -535,6 +537,16 @@ void InitFuncsAddresses()
 	if (MainConfig->GetMemSig("GetWeaponInfo", &address)) // cs_get_weapon_info()
 	{
 		GetWeaponInfo = reinterpret_cast<GetWeaponInfoFunc>(address);
+	}
+
+	if (MainConfig->GetMemSig("AddEntityHashValue", &address)) // cs_set_ent_class()
+	{
+		AddEntityHashValue = reinterpret_cast<AddEntityHashValueFunc>(address);
+	}
+
+	if (MainConfig->GetMemSig("RemoveEntityHashValue", &address)) // cs_set_ent_class()
+	{
+		RemoveEntityHashValue = reinterpret_cast<RemoveEntityHashValueFunc>(address);
 	}
 
 

@@ -1311,9 +1311,9 @@ static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
 	char *str2 = get_amxstring(amx, params[2], 1, len);
 
 	if (params[4])
-		return strncmp(str1, str2, (size_t)params[3]);
-	else
 		return strncasecmp(str1, str2, (size_t)params[3]);
+	else
+		return strncmp(str1, str2, (size_t)params[3]);
 }
 
 static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)

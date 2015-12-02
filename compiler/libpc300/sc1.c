@@ -419,9 +419,9 @@ static void inst_binary_name(char *binfname)
   len = strlen(binfname);
   for (i = len - 1; i < len; i--)
   {
-    slashchar = binfname[i] == ‘/‘;
+    slashchar = binfname[i] == '/';
 #if defined WIN32 || defined _WIN32
-    slashchar = slashchar || binfname[i] == ‘\\';
+    slashchar = slashchar || binfname[i] == '\\';
 #endif
     if (slashchar)
     {

@@ -1219,6 +1219,12 @@ CopyFiles('gamedata/common.games/entities.games/valve', 'base/addons/amxmodx/dat
   ]
 )
 
+CopyFiles('gamedata/common.games/gamerules.games', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games',
+  [ 
+    'master.games.txt',
+  ]
+)
+
 CopyFiles('gamedata/common.games/gamerules.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/cstrike',
   [ 
     'offsets-cgamerules.txt',

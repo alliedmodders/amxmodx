@@ -102,85 +102,80 @@ const char *CMD_ARGV(int i)
 DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientCommand(edict_t *pEntity)
 {
 	auto command = CMD_ARGV(0);
+	auto client = TypeConversion.edict_to_id(pEdict);
 
 	CurrentItemId = CSI_NONE;
 
-	// Purpose is to retrieve an item id based on alias name or selected item from menu,
-	// to be used in CS_OnBuy* forwards.
-	if ((HasOnBuyAttemptForward || HasOnBuyForward) && command && *command)
+	if (MF_IsPlayerAlive(client))
 	{
-		int itemId = CSI_NONE;
-
-		// Handling buy via menu.
-		if (!strcmp(command, "menuselect"))
+		// Purpose is to retrieve an item id based on alias name or selected item from menu,
+		// to be used in CS_OnBuy* forwards.
+		if ((HasOnBuyAttemptForward || HasOnBuyForward) && command && *command)
 		{
-			int slot = atoi(CMD_ARGV(1));
-
-			if (slot > 0 && slot < 9)
+			// Handling buy via menu.
+			if (!strcmp(command, "menuselect"))
 			{
-				static const int menuItemsTe[][9] =
-				{
-					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
-					/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_ELITE, 0, 0, 0 },
-					/* Menu_BuyRifle         */ { 0, CSI_GALIL, CSI_AK47, CSI_SCOUT, CSI_SG552, CSI_AWP, CSI_G3SG1, 0, 0 },
-					/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
-					/* Menu_BuyShotgun       */ { 0, CSI_M3, CSI_XM1014, 0, 0, 0, 0, 0, 0 },
-					/* Menu_BuySubMachineGun */ { 0, CSI_MAC10, CSI_MP5NAVY, CSI_UMP45, CSI_P90, 0, 0, 0, 0 },
-					/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, 0, 0 }
-				};
+				auto slot = atoi(CMD_ARGV(1));
 
-				static const int menuItemsCt[][9] =
+				if (slot > 0 && slot < 9)
 				{
-					/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
-					/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_FIVESEVEN, 0, 0, 0 },
-					/* Menu_BuyRifle         */ { 0, CSI_FAMAS, CSI_SCOUT, CSI_M4A1, CSI_AUG, CSI_SG550, CSI_AWP, 0, 0 },
-					/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
-					/* Menu_BuyShotgun       */ { 0, CSI_M3, CSI_XM1014, 0, 0, 0, 0, 0, 0 },
-					/* Menu_BuySubMachineGun */ { 0, CSI_TMP, CSI_MP5NAVY, CSI_UMP45, CSI_P90, 0, 0, 0, 0 },
-					/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELD }
-				};
-
-				int menuId = get_pdata<int>(pEdict, MenuDesc.fieldOffset);
-
-				if (menuId >= Menu_Buy && menuId <= Menu_BuyItem)
-				{
-					switch (get_pdata<int>(pEdict, TeamDesc.fieldOffset))
+					static const int menuItemsTe[][9] =
 					{
-						case TEAM_T: itemId = menuItemsTe[menuId - 4][slot]; break; // -4 because array is zero-based and Menu_Buy* constants starts from 4.
-						case TEAM_CT:itemId = menuItemsCt[menuId - 4][slot]; break;
+						/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
+						/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_ELITE, 0, 0, 0 },
+						/* Menu_BuyRifle         */ { 0, CSI_GALIL, CSI_AK47, CSI_SCOUT, CSI_SG552, CSI_AWP, CSI_G3SG1, 0, 0 },
+						/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
+						/* Menu_BuyShotgun       */ { 0, CSI_M3, CSI_XM1014, 0, 0, 0, 0, 0, 0 },
+						/* Menu_BuySubMachineGun */ { 0, CSI_MAC10, CSI_MP5NAVY, CSI_UMP45, CSI_P90, 0, 0, 0, 0 },
+						/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, 0, 0 }
+					};
+
+					static const int menuItemsCt[][9] =
+					{
+						/* Menu_Buy              */ { 0, 0, 0, 0, 0, 0, CSI_PRIAMMO, CSI_SECAMMO, 0 },
+						/* Menu_BuyPistol        */ { 0, CSI_GLOCK18, CSI_USP, CSI_P228, CSI_DEAGLE, CSI_FIVESEVEN, 0, 0, 0 },
+						/* Menu_BuyRifle         */ { 0, CSI_FAMAS, CSI_SCOUT, CSI_M4A1, CSI_AUG, CSI_SG550, CSI_AWP, 0, 0 },
+						/* Menu_BuyMachineGun    */ { 0, CSI_M249, 0, 0, 0, 0, 0, 0, 0 },
+						/* Menu_BuyShotgun       */ { 0, CSI_M3, CSI_XM1014, 0, 0, 0, 0, 0, 0 },
+						/* Menu_BuySubMachineGun */ { 0, CSI_TMP, CSI_MP5NAVY, CSI_UMP45, CSI_P90, 0, 0, 0, 0 },
+						/* Menu_BuyItem          */ { 0, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER, CSI_SHIELD }
+					};
+
+					auto menuId = get_pdata<int>(pEdict, MenuDesc.fieldOffset);
+
+					if (menuId >= Menu_Buy && menuId <= Menu_BuyItem)
+					{
+						switch (get_pdata<int>(pEdict, TeamDesc.fieldOffset))
+						{
+							case TEAM_T: CurrentItemId = menuItemsTe[menuId - 4][slot]; break; // -4 because array is zero-based and Menu_Buy* constants starts from 4.
+							case TEAM_CT:CurrentItemId = menuItemsCt[menuId - 4][slot]; break;
+						}
 					}
+				}
+			}
+			else // Handling buy via alias
+			{
+				if (get_pdata<CUnifiedSignals>(pEdict, SignalsDesc.fieldOffset).GetState() & SIGNAL_BUY) // Are we inside the buy zone?
+				{
+					AliasInfo info;
 
-					if (itemId)
+					if (ItemsManager.GetAliasInfosFromBuy(command, &info))
 					{
-						CurrentItemId = itemId;
+						CurrentItemId = info.itemid;
 					}
 				}
 			}
 		}
-		else // Handling buy via alias
+
+		if (HasInternalCommandForward && *UseBotArgs && MF_ExecuteForward(ForwardInternalCommand, client, *BotArgs) > 0)
 		{
-			if (get_pdata<CUnifiedSignals>(pEdict, SignalsDesc.fieldOffset).GetState() & SIGNAL_BUY) // Are we inside the buy zone?
-			{
-				AliasInfo info;
-
-				if (ItemsManager.GetAliasInfosFromBuy(command, &info))
-				{
-					CurrentItemId = info.itemid;
-				}
-			}
+			return;
 		}
-	}
 
-	auto client = TypeConversion.edict_to_id(pEdict);
-
-	if (HasInternalCommandForward && *UseBotArgs && MF_ExecuteForward(ForwardInternalCommand, client, *BotArgs) > 0)
-	{
-		return;
-	}
-
-	if (HasOnBuyAttemptForward && CurrentItemId && MF_IsPlayerAlive(client) && MF_ExecuteForward(ForwardOnBuyAttempt, client, CurrentItemId) > 0)
-	{
-		return;
+		if (HasOnBuyAttemptForward && CurrentItemId && MF_ExecuteForward(ForwardOnBuyAttempt, client, CurrentItemId) > 0)
+		{
+			return;
+		}
 	}
 
 	TriggeredFromCommand = CurrentItemId != CSI_NONE;

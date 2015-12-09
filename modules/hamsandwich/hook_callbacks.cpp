@@ -108,10 +108,14 @@ extern bool gDoForwards;
 		{																	\
 			if (hook->post.at(i)->state == FSTATE_OK)						\
 			{																\
-					MF_ExecuteForward(hook->post.at(i)->id, iThis
+					thisresult = MF_ExecuteForward(hook->post.at(i)->id, iThis
 
 #define POST_END()														\
 				);														\
+			}															\
+			if (thisresult > result)									\
+			{															\
+				result=thisresult;										\
 			}															\
 		}																\
 	}																	\

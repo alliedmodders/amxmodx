@@ -52,7 +52,13 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 	const char *pLangName = NULL;
 	const char *def = NULL;
 	int status;
-	cell *addr = get_amxaddr(amx, amxaddr);
+	cell *addr = NULL;
+
+	if(amxaddr >= LANG_SERVER && amxaddr <= gpGlobals->maxClients)
+		addr = &amxaddr;
+	else
+		addr = get_amxaddr(amx, amxaddr);
+	
 	char name[4];
 	if (addr[0] == LANG_PLAYER)
 	{

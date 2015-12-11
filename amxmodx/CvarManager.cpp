@@ -392,18 +392,18 @@ void CvarManager::SetCvarMin(CvarInfo* info, bool set, float value, int pluginId
 
 	if (set)
 	{
+		// Detour is disabled on map change.
+		if (m_HookDetour)
+		{
+			m_HookDetour->EnableDetour();
+		}
+
 		info->bound.minVal = value;
 
 		// Current value is already in the allowed range.
 		if (info->var->value >= value)
 		{
 			return;
-		}
-
-		// Detour is disabled on map change.
-		if (m_HookDetour)
-		{
-			m_HookDetour->EnableDetour();
 		}
 
 		// Update if needed.
@@ -418,18 +418,18 @@ void CvarManager::SetCvarMax(CvarInfo* info, bool set, float value, int pluginId
 
 	if (set)
 	{
+		// Detour is disabled on map change.
+		if (m_HookDetour)
+		{
+			m_HookDetour->EnableDetour();
+		}
+
 		info->bound.maxVal = value;
 
 		// Current value is already in the allowed range.
 		if (info->var->value <= value)
 		{
 			return;
-		}
-
-		// Detour is disabled on map change.
-		if (m_HookDetour)
-		{
-			m_HookDetour->EnableDetour();
 		}
 
 		// Update if needed.

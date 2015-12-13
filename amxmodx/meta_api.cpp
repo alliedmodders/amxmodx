@@ -958,11 +958,48 @@ void C_ClientCommand(edict_t *pEntity)
 	// Handle "amxx" if not on listenserver
 	if (IS_DEDICATED_SERVER())
 	{
+		static char buf[1024];
+		size_t len = 0;
+
 		if (cmd && stricmp(cmd, "amxx") == 0)
 		{
+		    int argc = CMD_ARGC();
+		    if(argc > 1 && stricmp(arg, "plugins") == 0)
+		    {
+				if(!g_plugins.getPluginsNum())
+				{
+					CLIENT_PRINT(pEntity, print_console, "[AMXX] No plugins found.");
+					RETURN_META(MRES_SUPERCEDE);
+				}
+
+				CPluginMngr::iterator a = g_plugins.begin();
+				size_t i = 0;
+
+				while(a)
+				{
+					if((*a).getStatusCode() == ps_running)
+					{
+						len = ke::SafeSprintf(buf, sizeof(buf), "[%d] \"%s\"", ++i, (*a).getTitle());
+
+						if(*(*a).getVersion())
+						{
+							len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " (%s)", (*a).getVersion());
+						}
+						if(*(*a).getAuthor())
+						{
+							len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " by %s", (*a).getAuthor());
+						}
+					
+						len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " %s\n", (*a).getName());
+						CLIENT_PRINT(pEntity, print_console, buf);
+
+				        ++a;
+					}
+				}
+				RETURN_META(MRES_SUPERCEDE);
+			}
+
 			// Print version
-			static char buf[1024];
-			size_t len = 0;
 			
 			sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
 			CLIENT_PRINT(pEntity, print_console, buf);

@@ -1001,22 +1001,22 @@ void C_ClientCommand(edict_t *pEntity)
 
 			// Print version
 			
-			sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
+			ke::SafeSprintf(buf, sizeof(buf), "%s %s\n", Plugin_info.name, Plugin_info.version);
 			CLIENT_PRINT(pEntity, print_console, buf);
-			len = sprintf(buf, "Authors: \n         David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Felix \"SniperBeamer\" Geyer\n");
-			len += sprintf(&buf[len], "         Jonny \"Got His Gun\" Bergstrom, Lukasz \"SidLuke\" Wlasinski\n");
+			len = ke::SafeSprintf(buf, sizeof(buf), "Authors: \n         David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Felix \"SniperBeamer\" Geyer\n");
+			len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "         Jonny \"Got His Gun\" Bergstrom, Lukasz \"SidLuke\" Wlasinski\n");
 			CLIENT_PRINT(pEntity, print_console, buf);
-			len = sprintf(buf, "         Christian \"Basic-Master\" Hammacher, Borja \"faluco\" Ferrer\n");
-			len += sprintf(&buf[len], "         Scott \"DS\" Ehlert\n");
-			len += sprintf(&buf[len], "Compiled: %s\nURL:http://www.amxmodx.org/\n", __DATE__ ", " __TIME__);
+			len = ke::SafeSprintf(buf, sizeof(buf), "         Christian \"Basic-Master\" Hammacher, Borja \"faluco\" Ferrer\n");
+			len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "         Scott \"DS\" Ehlert\n");
+			len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "Compiled: %s\nURL:http://www.amxmodx.org/\n", __DATE__ ", " __TIME__);
 			CLIENT_PRINT(pEntity, print_console, buf);
 #ifdef JIT
-			sprintf(buf, "Core mode: JIT\n");
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: JIT\n");
 #else
 #ifdef ASM32
-			sprintf(buf, "Core mode: ASM\n");
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: ASM\n");
 #else
-			sprintf(buf, "Core mode: Normal\n");
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: Normal\n");
 #endif
 #endif
 			CLIENT_PRINT(pEntity, print_console, buf);

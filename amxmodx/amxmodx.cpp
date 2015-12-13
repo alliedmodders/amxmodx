@@ -336,7 +336,8 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 			{
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
-
+				
+				msg[0] = 0x01;
 				if (len > 190)	// Server crashes after byte 190. (190 + \n = 191)
 				{
 					len = 190;

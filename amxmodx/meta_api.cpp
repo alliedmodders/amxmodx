@@ -1010,14 +1010,14 @@ void C_ClientCommand(edict_t *pEntity)
 			len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "         Scott \"DS\" Ehlert\n");
 			len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "Compiled: %s\nURL:http://www.amxmodx.org/\n", __DATE__ ", " __TIME__);
 			CLIENT_PRINT(pEntity, print_console, buf);
-#ifdef JIT
-			ke::SafeSprintf(buf, sizeof(buf), "Core mode: JIT\n");
-#else
-#ifdef ASM32
-			ke::SafeSprintf(buf, sizeof(buf), "Core mode: ASM\n");
+#if defined JIT && !defined ASM32
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: JIT Only\n");
+#elif !defined JIT && defined ASM32
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: ASM32 Only\n");
+#elif defined JIT && defined ASM32
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: JIT+ASM32\n");
 #else
 			ke::SafeSprintf(buf, sizeof(buf), "Core mode: Normal\n");
-#endif
 #endif
 			CLIENT_PRINT(pEntity, print_console, buf);
 			RETURN_META(MRES_SUPERCEDE);

@@ -4456,7 +4456,7 @@ static cell AMX_NATIVE_CALL LookupLangKey(AMX *amx, cell *params)
 {
 	int len;
 	char *key=get_amxstring(amx,params[3],0,len);
-	const char *def=translate(amx,params[4],key);
+	const char *def=translate(amx, playerlang(params[4]),key);
 
 	if (def==NULL)
 	{

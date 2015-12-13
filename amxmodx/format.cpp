@@ -44,79 +44,99 @@ template size_t atcprintf<char, char>(char *, size_t, const char *, AMX *, cell 
 
 THash<ke::AString, lang_err> BadLang_Table;
 
-static cvar_t *amx_mldebug = NULL;
-static cvar_t *amx_cl_langs = NULL;
+static cvar_t *amx_mldebug = nullptr;
+static cvar_t *amx_cl_langs = nullptr;
 
-const char *translate(AMX *amx, cell amxaddr, const char *key)
+const char *playerlang(const cell index)
 {
-	const char *pLangName = NULL;
-	const char *def = NULL;
-	int status;
-	cell *addr = get_amxaddr(amx, amxaddr);
-	char name[4];
-	if (addr[0] == LANG_PLAYER)
+	const char *pLangName = nullptr;
+
+	if (index == LANG_PLAYER)
 	{
 		if (!amx_cl_langs)
+		{
 			amx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
-		if ( (int)amx_cl_langs->value == 0 )
+		}
+
+		if (static_cast<int>(amx_cl_langs->value) == 0)
 		{
 			pLangName = amxmodx_language->string;
-		} else {
+		}
+		else
+		{
 			pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(g_langMngr.GetDefLang())->pEdict, "lang");
 		}
-	} else if (addr[0] == LANG_SERVER) {
+	}
+	else if (index == LANG_SERVER)
+	{
 		pLangName = amxmodx_language->string;
-	} else if (addr[0] >= 1 && addr[0] <= gpGlobals->maxClients) {
+	}
+	else if (index >= 1 && index <= gpGlobals->maxClients)
+	{
 		if (!amx_cl_langs)
+		{
 			amx_cl_langs = CVAR_GET_POINTER("amx_client_languages");
-		if ( (int)amx_cl_langs->value == 0 )
+		}
+
+		if (static_cast<int>(amx_cl_langs->value) == 0)
 		{
 			pLangName = amxmodx_language->string;
-		} else {
-			pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(addr[0])->pEdict, "lang");
 		}
-	} else {
-		get_amxstring_r(amx, amxaddr, name, 3);
-		pLangName = name;
+		else
+		{
+			pLangName = ENTITY_KEYVALUE(GET_PLAYER_POINTER_I(index)->pEdict, "lang");
+		}
 	}
+
+	return pLangName;
+}
+
+const char *translate(AMX *amx, const char *lang, const char *key)
+{
+	auto pLangName = lang;
+	int status;
 
 	if (!pLangName || !isalpha(pLangName[0]))
 	{
 		pLangName = amxmodx_language->string;
 	}
 
-	//next parameter!
-	def = g_langMngr.GetDef(pLangName, key, status);
-			
-	if (!amx_mldebug)
-		amx_mldebug = CVAR_GET_POINTER("amx_mldebug");
+	auto def = g_langMngr.GetDef(pLangName, key, status);
 
-	bool debug = (amx_mldebug && amx_mldebug->string && (amx_mldebug->string[0] != '\0'));
-		
+	if (!amx_mldebug)
+	{
+		amx_mldebug = CVAR_GET_POINTER("amx_mldebug");
+	}
+
+	auto debug = (amx_mldebug && amx_mldebug->string && (amx_mldebug->string[0] != '\0'));
+
 	if (debug)
 	{
 		int debug_status;
-		bool validlang = true;
-		const char *testlang = amx_mldebug->string;
+		auto validlang = true;
+		auto testlang = amx_mldebug->string;
+
 		if (!g_langMngr.LangExists(testlang))
 		{
 			AMXXLOG_Error("[AMXX] \"%s\" is an invalid debug language", testlang);
 			validlang = false;
 		}
-				
+
 		g_langMngr.GetDef(testlang, key, debug_status);
-				
+
 		if (validlang && debug_status == ERR_BADKEY)
+		{
 			AMXXLOG_Error("[AMXX] Language key \"%s\" not found for language \"%s\", check \"%s\"", key, testlang, GetFileName(amx));
+		}
 	}
-				
-	if (def == NULL)
+
+	if (!def)
 	{
 		if (debug && status == ERR_BADLANG)
 		{
-			ke::AString lang(pLangName);
+			ke::AString langName(pLangName);
 
-			lang_err &err = BadLang_Table.AltFindOrInsert(ke::Move(lang));
+			auto &err = BadLang_Table.AltFindOrInsert(ke::Move(langName));
 
 			if (err.last + 120.0f < gpGlobals->time)
 			{
@@ -125,11 +145,15 @@ const char *translate(AMX *amx, cell amxaddr, const char *key)
 			}
 		}
 
-		if (addr[0] != LANG_SERVER)
+		if (strcmp(pLangName, amxmodx_language->string) != 0)
+		{
 			def = g_langMngr.GetDef(amxmodx_language->string, key, status);
-		
+		}
+
 		if (!def && (strcmp(pLangName, "en") != 0 && strcmp(amxmodx_language->string, "en") != 0))
+		{
 			def = g_langMngr.GetDef("en", key, status);
+		}
 	}
 
 	return def;
@@ -656,20 +680,23 @@ reswitch:
 		case 'L':
 		case 'l':
 			{
-				cell target;
+				const char *lang;
+				int len;
 				if (ch == 'L')
 				{
 					CHECK_ARGS(1);
-					target = params[arg++];
+					auto currParam = params[arg++];
+					lang = playerlang(*get_amxaddr(amx, currParam));
+					if (!lang)
+						lang = get_amxstring(amx, currParam, 4, len);
 				}
 				else
 				{
 					CHECK_ARGS(0);
-					target = g_langMngr.GetDefLang();
+					lang = playerlang(g_langMngr.GetDefLang());
 				}
-				int len;
 				const char *key = get_amxstring(amx, params[arg++], 3, len);
-				const char *def = translate(amx, target, key);
+				const char *def = translate(amx, lang, key);
 				if (!def)
 				{
 					static char buf[255];

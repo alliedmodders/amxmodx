@@ -67,13 +67,19 @@ void OnPluginsLoaded()
 	ForwardInternalCommand = MF_RegisterForward("CS_InternalCommand", ET_STOP, FP_CELL, FP_STRING, FP_DONE);
 	ForwardOnBuy           = MF_RegisterForward("CS_OnBuy"          , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
 	ForwardOnBuyAttempt    = MF_RegisterForward("CS_OnBuyAttempt"   , ET_STOP, FP_CELL, FP_CELL, FP_DONE);
+}
 
-	if (!ClientCommandDetour) // All CS_* forwards requires ClientCommand. Unlikely to fail.
+void OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
+{
+	// Used to catch WeaponList message at map change.
+	EnableMessageHooks();
+
+	if (!ClientCommandDetour) // All CS_* forwards requires ClientCommand. Unlikely to fail. 
 	{
 		ToggleDetour_ClientCommands(false);
 		ToggleDetour_BuyCommands(false);
 
-		return;
+		RETURN_META(MRES_IGNORED);
 	}
 
 	auto haveBotDetours = UseBotArgs && BotArgs;
@@ -85,12 +91,6 @@ void OnPluginsLoaded()
 
 	ToggleDetour_ClientCommands(HasInternalCommandForward || HasOnBuyAttemptForward || HasOnBuyForward);
 	ToggleDetour_BuyCommands(HasOnBuyForward);
-}
-
-void OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
-{
-	// Used to catch WeaponList message at map change.
-	EnableMessageHooks();
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -98,6 +98,19 @@ void OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 void OnServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 {
 	DisableMessageHooks();
+
+	RETURN_META(MRES_IGNORED);
+}
+
+void OnServerDeactivate()
+{
+	if (!ClientCommandDetour)
+	{
+		RETURN_META(MRES_IGNORED);
+	}
+
+	ToggleDetour_ClientCommands(false);
+	ToggleDetour_BuyCommands(false);
 
 	RETURN_META(MRES_IGNORED);
 }

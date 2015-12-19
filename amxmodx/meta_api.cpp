@@ -619,6 +619,11 @@ void C_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 		}
 	}
 
+	if (DropClientDetour)
+	{
+		DropClientDetour->EnableDetour();
+	}
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -687,6 +692,11 @@ void C_ServerDeactivate()
 		}
 	}
 
+	if (DropClientDetour)
+	{
+		DropClientDetour->DisableDetour();
+	}
+
 	g_players_num	= 0;
 	executeForwards(FF_PluginEnd);
 
@@ -703,7 +713,7 @@ void C_ServerDeactivate_Post()
 		RETURN_META(MRES_IGNORED);
 
 	modules_callPluginsUnloading();
-	
+
 	detachReloadModules();
 
 	CoreCfg.Clear();
@@ -1581,7 +1591,6 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
 	{
 		DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
-		DropClientDetour->EnableDetour();
 	}
 	else
 	{

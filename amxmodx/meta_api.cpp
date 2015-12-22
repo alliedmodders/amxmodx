@@ -145,6 +145,7 @@ int FF_PluginEnd = -1;
 int FF_InconsistentFile = -1;
 int FF_ClientAuthorized = -1;
 int FF_ChangeLevel = -1;
+int FF_ClientConnectEx = -1;
 
 IFileSystem* g_FileSystem;
 HLTypeConversion TypeConversion;
@@ -503,8 +504,9 @@ int	C_Spawn(edict_t *pent)
 	FF_PluginLog = registerForward("plugin_log", ET_STOP, FP_DONE);
 	FF_PluginEnd = registerForward("plugin_end", ET_IGNORE, FP_DONE);
 	FF_InconsistentFile = registerForward("inconsistent_file", ET_STOP, FP_CELL, FP_STRING, FP_STRINGEX, FP_DONE);
-	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_DONE);
+	FF_ClientAuthorized = registerForward("client_authorized", ET_IGNORE, FP_CELL, FP_STRING, FP_DONE);
 	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
+	FF_ClientConnectEx = registerForward("client_connectex", ET_STOP, FP_CELL, FP_STRING, FP_STRING, FP_ARRAY, FP_DONE);
 
 	CoreCfg.OnAmxxInitialized();
 
@@ -820,21 +822,31 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 				g_auth.put(aa);
 		} else {
 			pPlayer->Authorize();
+			const char* authid = GETPLAYERAUTHID(pEntity);
 			if (g_auth_funcs.size())
 			{
 				List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
 				AUTHORIZEFUNC fn;
-				const char* authid = GETPLAYERAUTHID(pEntity);
 				for (iter=g_auth_funcs.begin(); iter!=end; iter++)
 				{
 					fn = (*iter);
 					fn(pPlayer->index, authid);
 				}
 			}
-			executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index));
+			executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index), authid);
 		}
 	}
 	
+	RETURN_META_VALUE(MRES_IGNORED, TRUE);
+}
+
+BOOL C_ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
+{
+	CPlayer* pPlayer = GET_PLAYER_POINTER(pEntity);
+
+	if(executeForwards(FF_ClientConnectEx, static_cast<cell>(pPlayer->index), pszName, pszAddress, prepareCharArray(szRejectReason, 128, true)))
+		RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
+
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
@@ -923,18 +935,18 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
 
 		pPlayer->Authorize();
+		const char* authid = GETPLAYERAUTHID(pEntity);
 		if (g_auth_funcs.size())
 		{
 			List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
 			AUTHORIZEFUNC fn;
-			const char* authid = GETPLAYERAUTHID(pEntity);
 			for (iter=g_auth_funcs.begin(); iter!=end; iter++)
 			{
 				fn = (*iter);
 				fn(pPlayer->index, authid);
 			}
 		}
-		executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index));
+		executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index), authid);
 
 		pPlayer->PutInServer();
 		++g_players_num;
@@ -1131,7 +1143,7 @@ void C_StartFrame_Post(void)
 						fn((*a)->index, auth);
 					}
 				}
-				executeForwards(FF_ClientAuthorized, static_cast<cell>((*a)->index));
+				executeForwards(FF_ClientAuthorized, static_cast<cell>((*a)->index), auth);
 				a.remove();
 				
 				continue;
@@ -1717,6 +1729,7 @@ C_DLLEXPORT	int	GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 	gFunctionTable.pfnClientDisconnect = C_ClientDisconnect;
 	gFunctionTable.pfnInconsistentFile = C_InconsistentFile;
 	gFunctionTable.pfnServerActivate = C_ServerActivate;
+	gFunctionTable.pfnClientConnect = C_ClientConnect;
 
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 

@@ -13,6 +13,7 @@
 #define MAX_LOGARGS 12
 
 #include <stdarg.h>
+#include "natives_handles.h"
 
 // *****************************************************
 // class LogEventsMngr
@@ -95,13 +96,16 @@ public:
 		
 		LogCond *filters;
 		LogEventsMngr* parent;
-		
+
+		ForwardState m_State;
+
 		CLogEvent *next;
-		CLogEvent(CPluginMngr::CPlugin *p, int f, LogEventsMngr* ppp) : plugin(p), func(f), filters(0), parent(ppp), next(0) {}
+		CLogEvent(CPluginMngr::CPlugin *p, int f, LogEventsMngr* ppp) : plugin(p), func(f), filters(nullptr), parent(ppp), m_State(FSTATE_ACTIVE), next(nullptr) {}
 		~CLogEvent();
 	public:
 		inline CPluginMngr::CPlugin *getPlugin() { return plugin; }
 		void registerFilter(char* filter);
+		void setForwardState(ForwardState value);
 		inline int getFunction() { return func; }
 	};
 
@@ -116,7 +120,7 @@ public:
 	~LogEventsMngr();
 
 	// Interface
-	CLogEvent* registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos);
+	int registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos);
 	inline bool logEventsExist() { return arelogevents; } 
 	
 	void setLogString(const char* frmt, va_list& vaptr);
@@ -152,5 +156,13 @@ public:
 	inline iterator begin() { return iterator(getValidLogEvent(logevents[logArgc]), this); }
 	inline iterator end() { return iterator(0, this); }
 };
+
+struct LogEventHook
+{
+	explicit LogEventHook(LogEventsMngr::CLogEvent *logevent) : m_logevent(logevent) {}
+	LogEventsMngr::CLogEvent *m_logevent;
+};
+
+extern NativeHandle<LogEventHook> LogEventHandles;
 
 #endif //LOGEVENTS_H

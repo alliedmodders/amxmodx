@@ -10,6 +10,8 @@
 #include "amxmodx.h"
 #include "CLogEvent.h"
 
+NativeHandle<LogEventHook> LogEventHandles;
+
 // *****************************************************
 // class LogEventsMngr
 // *****************************************************
@@ -164,18 +166,37 @@ void LogEventsMngr::parseLogString()
 	}
 }
 
-LogEventsMngr::CLogEvent* LogEventsMngr::registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos)
+void LogEventsMngr::CLogEvent::setForwardState(ForwardState state)
+{
+	m_State = state;
+}
+
+int LogEventsMngr::registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos)
 {
 	if (pos < 1 || pos > MAX_LOGARGS)
+	{
 		return 0;
+	}
 
 	arelogevents = true;
-	CLogEvent** d = &logevents[pos];
-	
+	auto d = &logevents[pos];
+
 	while (*d)
+	{
 		d = &(*d)->next;
-	
-	return *d = new CLogEvent(plugin, func, this);
+	}
+
+	auto logevent = new CLogEvent(plugin, func, this);
+	auto handle = LogEventHandles.create(logevent);
+
+	if (!handle)
+	{
+		return 0;
+	}
+
+	*d = logevent;
+
+	return handle;
 }
 
 void LogEventsMngr::executeLogEvents()
@@ -184,8 +205,13 @@ void LogEventsMngr::executeLogEvents()
 
 	for (CLogEvent* a = logevents[logArgc]; a; a = a->next)
 	{
+		if (a->m_State != FSTATE_ACTIVE)
+		{
+			continue;
+		}
+
 		valid = true;
-		
+
 		for (CLogEvent::LogCond* b = a->filters; b; b = b->next)
 		{
 			valid = false;
@@ -198,11 +224,11 @@ void LogEventsMngr::executeLogEvents()
 					break;
 				}
 			}
-			
-			if (!valid) 
+
+			if (!valid)
 				break;
 		}
-		
+
 		if (valid)
 		{
 			executeForwards(a->func);
@@ -227,6 +253,8 @@ void LogEventsMngr::clearLogEvents()
 	}
 	
 	clearConditions();
+
+	LogEventHandles.clear();
 }
 
 void LogEventsMngr::clearConditions()

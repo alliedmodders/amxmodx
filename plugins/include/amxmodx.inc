@@ -566,11 +566,31 @@ native disable_event(handle);
  *                    - "&" for substring comparison
  *                  The argument is compared to the specified string accordingly
  *
- * @return          1 on successfully registering event, 0 on failure
+ * @return          Log event handle
  * @error           If an invalid callback function is provided, an error will
  *                  be thrown.
  */
 native register_logevent(const function[], argsnum, ...);
+
+/**
+ * Enables a function hook of a game log event which has been previously registered with register_logevent().
+ *
+ * @param handle    Value returned from register_logevent()
+ *
+ * @noreturn
+ * @error           If an invalid handle is provided, an error will be thrown.
+ */
+native enable_logevent(handle);
+
+/**
+ * Disables a function hook of a game log event which has been previously registered with register_logevent().
+ *
+ * @param handle    Value returned from register_logevent()
+ *
+ * @noreturn
+ * @error           If an invalid handle is provided, an error will be thrown.
+ */
+native disable_logevent(handle);
 
 /**
  * Sets display parameters for hudmessages.

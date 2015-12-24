@@ -26,12 +26,6 @@ enum
 // class EventsMngr
 // *****************************************************
 
-enum ForwardState 
-{
-	FSTATE_ACTIVE, 
-	FSTATE_STOP
-};
-
 class EventsMngr
 {
 	enum MsgParamType
@@ -154,7 +148,7 @@ public:
 
 struct EventHook
 {
-	EventHook(EventsMngr::ClEvent *event) : m_event(event) {}
+	explicit EventHook(EventsMngr::ClEvent *event) : m_event(event) {}
 	EventsMngr::ClEvent *m_event;
 };
 

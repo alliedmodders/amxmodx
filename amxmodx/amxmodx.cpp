@@ -3070,29 +3070,66 @@ static cell AMX_NATIVE_CALL parse_loguser(AMX *amx, cell *params)
 	return 1;
 }
 
+// native register_logevent(const function[], argsnum, ...);
 static cell AMX_NATIVE_CALL register_logevent(AMX *amx, cell *params)
 {
-	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
-	int a, iFunc;
-	char* temp = get_amxstring(amx, params[1], 0, a);
+	int length;
+	auto callback = get_amxstring(amx, params[1], 0, length);
 
-	iFunc = registerSPForwardByName(amx, temp, FP_DONE);
-	
-	if (iFunc == -1)
+	auto forwardId = registerSPForwardByName(amx, callback, FP_DONE);
+
+	if (forwardId == -1)
 	{
-		LogError(amx, AMX_ERR_NOTFOUND, "Function \"%s\" was not found", temp);
+		LogError(amx, AMX_ERR_NOTFOUND, "Function \"%s\" was not found", callback);
 		return 0;
 	}
 
-	LogEventsMngr::CLogEvent* r = g_logevents.registerLogEvent(plugin, iFunc, params[2]);
+	auto handle = g_logevents.registerLogEvent(g_plugins.findPluginFast(amx), forwardId, params[2]);
 
-	if (r == 0)
+	if (!handle)
+	{
 		return 0;
+	}
 
-	int numparam = *params / sizeof(cell);
+	auto logevent = LogEventHandles.lookup(handle)->m_logevent;
+	auto numparam = *params / sizeof(cell);
 
-	for (int i = 3; i <= numparam; ++i)
-		r->registerFilter(get_amxstring(amx, params[i], 0, a));
+	for (auto i = 3; i <= numparam; ++i)
+	{
+		logevent->registerFilter(get_amxstring(amx, params[i], 0, length));
+	}
+
+	return handle;
+}
+
+// native enable_logevent(handle);
+static cell AMX_NATIVE_CALL enable_logevent(AMX *amx, cell *params)
+{
+	auto handle = LogEventHandles.lookup(params[1]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid log event handle %d", params[1]);
+		return 0;
+	}
+
+	handle->m_logevent->setForwardState(FSTATE_ACTIVE);
+
+	return 1;
+}
+
+// native disable_logevent(handle);
+static cell AMX_NATIVE_CALL disable_logevent(AMX *amx, cell *params)
+{
+	auto handle = LogEventHandles.lookup(params[1]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid log event handle: %d", params[1]);
+		return 0;
+	}
+
+	handle->m_logevent->setForwardState(FSTATE_STOP);
 
 	return 1;
 }
@@ -4665,6 +4702,8 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"enable_event",			enable_event},
 	{"disable_event",			disable_event},
 	{"register_logevent",		register_logevent},
+	{"enable_logevent",			enable_logevent},
+	{"disable_logevent",		disable_logevent},
 	{"register_menucmd",		register_menucmd},
 	{"register_menuid",			register_menuid},
 	{"register_plugin",			register_plugin},

@@ -113,4 +113,10 @@ class NativeHandle
 		}
 };
 
+enum ForwardState
+{
+	FSTATE_ACTIVE,
+	FSTATE_STOP
+};
+
 #endif // _NATIVES_NATIVES_HANDLES_H_

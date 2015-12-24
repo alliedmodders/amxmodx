@@ -348,12 +348,12 @@ static cell AMX_NATIVE_CALL replace_stringex(AMX *amx, cell *params)
 
 	char *ptr = UTIL_ReplaceEx(text, maxlength + 1, search, searchLen, replace, replaceLen, caseSensitive); // + EOS
 
-	if (ptr == NULL)
+	if (!ptr)
 	{
 		return -1;
 	}
 
-	set_amxstring(amx, params[1], ptr, maxlength);
+	set_amxstring(amx, params[1], text, maxlength);
 
 	return ptr - text;
 }

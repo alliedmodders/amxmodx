@@ -29,7 +29,7 @@ stock dod_make_deathmsg(killer, victim, weaponNUM)
 }
 
 /* Kills a user without a message. */
-stock user_silentkill(index)
+stock user_silentkill(index, flag = 1)
 {
 	static msgid = 0;
 	new msgblock;
@@ -39,7 +39,7 @@ stock user_silentkill(index)
 	}
 	msgblock = get_msg_block(msgid);
 	set_msg_block(msgid, BLOCK_ONCE);	
-	user_kill(index, 1);
+	user_kill(index, flag);
 	set_msg_block(msgid, msgblock);
 
 	return 1;

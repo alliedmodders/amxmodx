@@ -144,16 +144,33 @@ forward client_infochanged(id);
 forward client_connect(id);
 
 /**
+ * Called when a client is connecting.
+ *
+ * @note This forward is called too early to do anything that directly affects
+ *       the client.
+ *
+ * @param id        Client index
+ * @param name      Client name
+ * @param ip        Client ip address with port
+ * @param reason    A reason that will be displayed when player gets rejected (can be overwritten)
+ *
+ * @return          PLUGIN_CONTINUE to let a client join to the server
+ *                  PLUGIN_HANDLED or higher to prevent a client to join
+ */
+forward client_connectex(id, const name[], const ip[], reason[128]);
+
+/**
  * Called when the client gets a valid SteamID.
  *
  * @note This may occur before or after client_putinserver has been called.
  * @note This is called for bots, and the SteamID will be "BOT".
  *
- * @param id    Client index
+ * @param id		Client index
+ * @param authid	Client auth
  *
  * @noreturn
  */
-forward client_authorized(id);
+forward client_authorized(id, const authid[]);
 
 /**
  * @deprecated This function does not catch all cases.

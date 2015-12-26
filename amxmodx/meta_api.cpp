@@ -963,12 +963,12 @@ void C_ClientCommand(edict_t *pEntity)
 
 		if (cmd && stricmp(cmd, "amxx") == 0)
 		{
-		    int argc = CMD_ARGC();
-		    if(argc > 1 && stricmp(arg, "plugins") == 0)
-		    {
+			int argc = CMD_ARGC();
+			if(argc > 1 && stricmp(arg, "plugins") == 0)
+			{
 				if(!g_plugins.getPluginsNum())
 				{
-					CLIENT_PRINT(pEntity, print_console, "[AMXX] No plugins found.");
+					CLIENT_PRINT(pEntity, print_console, "[AMXX] No plugins found.\n");
 					RETURN_META(MRES_SUPERCEDE);
 				}
 
@@ -992,13 +992,44 @@ void C_ClientCommand(edict_t *pEntity)
 					
 						len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " %s\n", (*a).getName());
 						CLIENT_PRINT(pEntity, print_console, buf);
-
-				        ++a;
 					}
+					++a;
 				}
 				RETURN_META(MRES_SUPERCEDE);
 			}
+			else if(argc > 1 && stricmp(arg, "modules") == 0)
+			{
+				if(!g_modules.size())
+				{
+					CLIENT_PRINT(pEntity, print_console, "[AMXX] No modules found.\n");
+					RETURN_META(MRES_SUPERCEDE);
+				}
 
+				CList<CModule, const char *>::iterator a = g_modules.begin();
+				size_t i = 0;
+
+				while(a)
+				{
+					if((*a).getStatusValue() == MODULE_LOADED)
+					{
+						len = ke::SafeSprintf(buf, sizeof(buf), "[%d] \"%s\"", ++i, (*a).getName());
+
+						if(*(*a).getVersion())
+						{
+							len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " (%s)", (*a).getVersion());
+						}
+						if(*(*a).getAuthor())
+						{
+							len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " by %s", (*a).getAuthor());
+						}
+
+						len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "\n");
+						CLIENT_PRINT(pEntity, print_console, buf);
+					}
+					++a;
+				}
+				RETURN_META(MRES_SUPERCEDE);
+			}
 			// Print version
 			
 			ke::SafeSprintf(buf, sizeof(buf), "%s %s\n", Plugin_info.name, Plugin_info.version);

@@ -37,9 +37,10 @@ public:
 	int              del;     // 1 if this hook should be destroyed after exec
 	void            *tramp;   // trampoline for this hook
 	char			*ent;     // ent name that's being hooked
+	int              trampSize;
 
 	Hook(void **vtable_, int entry_, void *target_, bool voidcall, bool retbuf, int paramcount, char *name) :
-		func(NULL), vtable(vtable_), entry(entry_), target(target_), exec(0), del(0), tramp(NULL)
+		func(NULL), vtable(vtable_), entry(entry_), target(target_), exec(0), del(0), tramp(NULL), trampSize(0)
 		{
 			// original function is vtable[entry]
 			// to not make the compiler whine, cast vtable to int **
@@ -48,7 +49,7 @@ public:
 
 			// now install a trampoline
 			// (int thiscall, int voidcall, int paramcount, void *extraptr)
-			tramp = CreateGenericTrampoline(true, voidcall, retbuf, paramcount, (void*)this, target);
+			tramp = CreateGenericTrampoline(true, voidcall, retbuf, paramcount, (void*)this, target, &trampSize);
 
 			// Insert into vtable
 #if defined(_WIN32)
@@ -82,7 +83,9 @@ public:
 		ivtable[entry]=(int *)func;
 #if defined(_WIN32)
 		VirtualFree(tramp, 0, MEM_RELEASE);
-#elif defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux__)
+		munmap(tramp, trampSize);
+#elif defined(__APPLE__)
 		free(tramp);
 #endif
 

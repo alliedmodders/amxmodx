@@ -186,6 +186,7 @@ jit_rewind:
 		//spengine->SetReadWrite(wr.outbase);
 		wr.outptr = wr.outbase;
 		detour_trampoline = wr.outbase;
+		detour_trampolineSize = CodeSize;
 		goto jit_rewind;
 	}
 
@@ -206,7 +207,7 @@ void CDetour::DeleteDetour()
 	if (detour_trampoline)
 	{
 		/* Free the allocated trampoline memory */
-		FreePageMemory(detour_trampoline);
+		FreePageMemory(detour_trampoline, detour_trampolineSize);
 		detour_trampoline = NULL;
 	}
 }

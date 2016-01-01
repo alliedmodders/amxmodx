@@ -77,18 +77,20 @@ inline unsigned char *AllocatePageMemory(size_t size)
 #elif defined __GNUC__
 #if defined __APPLE__
 	unsigned char *addr = (unsigned char *)valloc(size);
-#else
-	unsigned char *addr = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), size);
-#endif
 	mprotect(addr, size, PROT_READ | PROT_WRITE | PROT_EXEC);
+#else
+	unsigned char *addr = (unsigned char *)mmap(nullptr, size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+#endif
 	return addr;
 #endif
 }
 
-inline void FreePageMemory(void *addr)
+inline void FreePageMemory(void *addr, size_t size)
 {
 #if defined(WIN32)
 	VirtualFree(addr, 0, MEM_RELEASE);
+#elif defined(__linux__)
+	munmap(addr, size);
 #else
 	free(addr);
 #endif

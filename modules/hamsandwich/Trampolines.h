@@ -562,10 +562,10 @@ namespace Trampolines
 #elif defined(__GNUC__)
 # if defined(__APPLE__)
 			void *ret = valloc(m_size);
-# else
-			void *ret=memalign(sysconf(_SC_PAGESIZE), m_size);
-# endif
 			mprotect(ret,m_size,PROT_READ|PROT_WRITE|PROT_EXEC);
+# else
+			void *ret=mmap(nullptr, m_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+# endif
 #endif
 			memcpy(ret, m_buffer, m_size);
 
@@ -588,7 +588,7 @@ namespace Trampolines
 /**
  * Utility to make a generic trampoline.
  */
-inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, int paramcount, void *extraptr, void *callee)
+inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, int paramcount, void *extraptr, void *callee, int *size)
 {
 	Trampolines::TrampolineMaker tramp;
 
@@ -628,7 +628,7 @@ inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, 
 	}
 #endif
 
-	return tramp.Finish(NULL);
+	return tramp.Finish(size);
 };
 
 

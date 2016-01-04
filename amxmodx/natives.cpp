@@ -468,10 +468,10 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 #elif defined(__GNUC__)
 # if defined(__APPLE__)
 	pNative->pfn = (char *)valloc(size+10);
+	mprotect((void *)pNative->pfn, size + 10, PROT_READ | PROT_WRITE | PROT_EXEC);
 # else
-	pNative->pfn = (char *)memalign(sysconf(_SC_PAGESIZE), size+10);
+	pNative->pfn = (char *)mmap(nullptr, size + 10, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 # endif
-	mprotect((void *)pNative->pfn, size+10, PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 
 	int id = (int)g_RegNatives.length();
@@ -492,7 +492,11 @@ void ClearPluginLibraries()
 	ClearLibraries(LibSource_Plugin);
 	for (size_t i=0; i<g_RegNatives.length(); i++)
 	{
+#ifdef __linux__
+		munmap(g_RegNatives[i]->pfn, amxx_DynaCodesize() + 10);
+#else
 		delete [] g_RegNatives[i]->pfn;
+#endif
 		delete g_RegNatives[i];
 	}
 	g_RegNatives.clear();

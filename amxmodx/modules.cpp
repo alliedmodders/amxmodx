@@ -300,10 +300,10 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 #elif defined(__GNUC__)
 # if defined(__APPLE__)
 			amx->base = (unsigned char *)valloc(amx->code_size);
+			mprotect((void *)amx->base, amx->code_size, PROT_READ | PROT_WRITE | PROT_EXEC);
 # else
-			amx->base = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), amx->code_size);
+			amx->base = (unsigned char *)mmap(nullptr, amx->code_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 # endif
-			mprotect((void *)amx->base, amx->code_size, PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 			if (amx->base)
 				memcpy(amx->base, np, amx->code_size);
@@ -562,6 +562,7 @@ int unload_amxscript(AMX* amx, void** program)
 {	
 #if defined JIT
 	int flags = amx->flags;
+	long code_size = amx->code_size;
 #endif
 
 	Debugger *pDebugger = (Debugger *)amx->userdata[UD_DEBUGGER];
@@ -592,12 +593,16 @@ int unload_amxscript(AMX* amx, void** program)
 	{
 		delete [] prg;
 	} else {
+#ifdef __linux__
+		munmap(prg, code_size);
+#else
 #ifdef free
 #undef free
 		free(prg);
 #define free(ptr)	m_deallocator(__FILE__, __LINE__, __FUNCTION__, m_alloc_free, ptr)
 #else
 		free(prg);
+#endif
 #endif
 	}
 #elif defined WIN32

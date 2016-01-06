@@ -1903,6 +1903,41 @@ static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 	return 0;
 }
 
+// native cs_get_user_weapon_entity(playerIndex);
+static cell AMX_NATIVE_CALL cs_get_user_weapon_entity(AMX *amx, cell *params)
+{
+	GET_OFFSET("CBasePlayer", m_pActiveItem);
+
+	int playerIndex = params[1];
+
+	CHECK_PLAYER(playerIndex);
+	edict_t *pPlayer = MF_GetPlayerEdict(playerIndex);
+
+	int weaponEntIndex = TypeConversion.cbase_to_id(get_pdata<void *>(pPlayer, m_pActiveItem));
+
+	return (weaponEntIndex != -1) ? weaponEntIndex : 0;
+}
+
+// native cs_get_user_weapon(playerIndex);
+static cell AMX_NATIVE_CALL cs_get_user_weapon(AMX *amx, cell *params)
+{
+	GET_OFFSET("CBasePlayer", m_pActiveItem);
+	GET_OFFSET("CBasePlayerItem", m_iId);
+
+	int playerIndex = params[1];
+
+	CHECK_PLAYER(playerIndex);
+	edict_t *pPlayer = MF_GetPlayerEdict(playerIndex);
+
+	edict_t *pWeapon = TypeConversion.cbase_to_edict(get_pdata<void *>(pPlayer, m_pActiveItem));
+
+	if (!FNullEnt(pWeapon))
+	{
+		return get_pdata<int>(pWeapon, m_iId);
+	}
+
+	return 0;
+}
 
 AMX_NATIVE_INFO CstrikeNatives[] =
 {
@@ -1972,5 +2007,7 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_get_item_id",		        cs_get_item_id},
 	{"cs_get_translated_item_alias",cs_get_translated_item_alias},
 	{"cs_get_weapon_info",          cs_get_weapon_info},
+	{"cs_get_user_weapon_entity",   cs_get_user_weapon_entity},
+	{"cs_get_user_weapon",          cs_get_user_weapon},
 	{nullptr,						nullptr}
 };

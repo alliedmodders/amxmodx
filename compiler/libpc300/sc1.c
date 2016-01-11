@@ -413,16 +413,17 @@ static void inst_binary_name(char *binfname)
   size_t i, len;
   char *binptr;
   char newpath[512], newname[512];
+  int slashchar;
 
   binptr = NULL;
   len = strlen(binfname);
   for (i = len - 1; i < len; i--)
   {
-    if (binfname[i] == '/'
+    slashchar = binfname[i] == '/';
 #if defined WIN32 || defined _WIN32
-      || binfname[i] == '\\'
+    slashchar = slashchar || binfname[i] == '\\';
 #endif
-      )
+    if (slashchar)
     {
       binptr = &binfname[i + 1];
       break;

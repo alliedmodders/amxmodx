@@ -30,6 +30,8 @@ new PLUGINNAME[] = "AMX Mod X"
 #define ADMIN_IPADDR	(1<<3)
 #define ADMIN_NAME	(1<<4)
 
+new bool:g_CaseSensitiveName[MAX_PLAYERS + 1];
+
 // pcvars
 new amx_mode;
 new amx_password_field;
@@ -91,6 +93,11 @@ public plugin_init()
 	format(configsDir, 63, "%s/users.ini", configsDir)
 	loadSettings(0, configsDir)					// Load admins accounts
 #endif
+}
+
+public client_connect(id)
+{
+	g_CaseSensitiveName[id] = false;
 }
 
 public addadminfn(id, level, cid)
@@ -517,6 +524,8 @@ getAccess(id, name[], authid[], ip[], password[])
 	static Access;
 	static AuthData[44];
 	static Password[32];
+	
+	g_CaseSensitiveName[id] = false;
 
 	Count=admins_num();
 	for (new i = 0; i < Count; ++i)
@@ -558,14 +567,16 @@ getAccess(id, name[], authid[], ip[], password[])
 				{
 					if (contain(name, AuthData) != -1)
 					{
-						index = i
-						break
+						index = i;
+						g_CaseSensitiveName[id] = true;
+						break;
 					}
 				}
 				else if (equal(name, AuthData))
 				{
-					index = i
-					break
+					index = i;
+					g_CaseSensitiveName[id] = true;
+					break;
 				}
 			}
 			else
@@ -699,6 +710,35 @@ accessUser(id, name[] = "")
 		engclient_print(id, engprint_console, "* %L", id, "PRIV_SET")
 	}
 	
+	return PLUGIN_CONTINUE
+}
+
+public client_infochanged(id)
+{
+	if (!is_user_connected(id) || !get_pcvar_num(amx_mode))
+	{
+		return PLUGIN_CONTINUE
+	}
+
+	new newname[MAX_NAME_LENGTH], oldname[MAX_NAME_LENGTH]
+	
+	get_user_name(id, oldname, charsmax(oldname))
+	get_user_info(id, "name", newname, charsmax(newname))
+
+	if (g_CaseSensitiveName[id])
+	{
+		if (!equal(newname, oldname))
+		{
+			accessUser(id, newname)
+		}
+	}
+	else
+	{
+		if (!equali(newname, oldname))
+		{
+			accessUser(id, newname)
+		}
+	}
 	return PLUGIN_CONTINUE
 }
 

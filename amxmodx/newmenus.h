@@ -129,6 +129,7 @@ public:
 
 void ClearMenus();
 Menu *get_menu_by_id(int id);
+bool CloseNewMenus(CPlayer *pPlayer);
 
 extern ke::Vector<Menu *> g_NewMenus;
 extern AMX_NATIVE_INFO g_NewMenuNatives[];

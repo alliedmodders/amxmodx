@@ -68,6 +68,28 @@ Menu *get_menu_by_id(int id)
 	return g_NewMenus[id];
 }
 
+bool CloseNewMenus(CPlayer *pPlayer)
+{
+	// If the stupid handler keeps drawing menus,
+	// We need to keep cancelling them.  But we put in a quick infinite loop
+	// counter to prevent this from going nuts. 
+
+	int loops = 0;
+	Menu *pMenu;
+
+	while ((pMenu = get_menu_by_id(pPlayer->newmenu)))
+	{
+		pMenu->Close(pPlayer->index);
+
+		if (++loops >= 10)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
 m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
 isDestroying(false), items_per_page(7)
@@ -792,28 +814,10 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 	int page = params[3];
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(player);
 	
-	/* If the stupid handler keeps drawing menus, 
-	 * We need to keep cancelling them.  But we put in a quick infinite loop
-	 * counter to prevent this from going nuts.
-	 */
-	int menu;
-	int loops = 0;
-	while ((menu = pPlayer->newmenu) >= 0)
+	if (!CloseNewMenus(pPlayer))
 	{
-		if ((size_t)menu >= g_NewMenus.length() || !g_NewMenus[menu])
-		{
-			break;
-		}
-
-		Menu *pOther = g_NewMenus[menu];
-		pOther->Close(pPlayer->index);
-
-		/* Infinite loop counter */
-		if (++loops >= 10)
-		{
-			LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
-			return 0;
-		}
+		LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
+		return 0;
 	}
 
 	int time = -1;

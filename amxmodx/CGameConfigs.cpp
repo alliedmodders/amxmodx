@@ -637,7 +637,6 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 
 	if (!g_LibSys.PathExists(path))
 	{
-#if 0
 		// Single config file without master
 		g_LibSys.PathFormat(path, sizeof(path), "%s.txt", m_File);
 
@@ -645,7 +644,7 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 		{
 			return false;
 		}
-#endif
+
 		// Allow customizations of default gamedata files
 		build_pathname_r(path, sizeof(path), "%s/gamedata/custom/%s.txt", dataDir, m_File);
 

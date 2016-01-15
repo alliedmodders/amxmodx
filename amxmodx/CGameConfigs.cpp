@@ -651,7 +651,15 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 		if (g_LibSys.PathExists(path))
 		{
 			g_LibSys.PathFormat(path, sizeof(path), "custom/%s.txt", m_File);
-			return EnterFile(path, error, maxlength);
+
+			auto success = EnterFile(path, error, maxlength);
+
+			if (success)
+			{
+				AMXXLOG_Log("[AMXX] Parsed custom gamedata override file: %s", path);
+			}
+
+			return success;
 		}
 		return true;
 	}
@@ -717,6 +725,8 @@ bool CGameConfig::Reparse(char *error, size_t maxlength)
 			g_LibSys.CloseDirectory(customDir);
 			return false;
 		}
+
+		AMXXLOG_Log("[AMXX] Parsed custom gamedata override file: %s", path);
 
 		customDir->NextEntry();
 	}

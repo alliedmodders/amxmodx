@@ -688,7 +688,7 @@ reswitch:
 					auto currParam = params[arg++];
 					lang = playerlang(*get_amxaddr(amx, currParam));
 					if (!lang)
-						lang = get_amxstring(amx, currParam, 4, len);
+						lang = get_amxstring(amx, currParam, 2, len);
 				}
 				else
 				{

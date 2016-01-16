@@ -1251,8 +1251,11 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				pPlayer->menu = 0;
 
 				// Fire newmenu callback so closing it can be handled by the plugin
-				if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
-					pMenu->Close(pPlayer->index);
+				if (!CloseNewMenus(pPlayer))
+				{
+					LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
+					return 0;
+				}
 
 				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
 			}
@@ -1274,8 +1277,11 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			pPlayer->menu = 0;
 
 			// Fire newmenu callback so closing it can be handled by the plugin
-			if (Menu *pMenu = get_menu_by_id(pPlayer->newmenu))
-				pMenu->Close(pPlayer->index);
+			if (!CloseNewMenus(pPlayer))
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
+				return 0;
+			}
 
 			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
 		}

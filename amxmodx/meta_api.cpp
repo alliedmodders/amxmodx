@@ -1572,9 +1572,9 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	FlagMan.SetFile("cmdaccess.ini");
 
-	g_CvarManager.CreateCvarHook();
-
 	ConfigManager.OnAmxxStartup();
+
+	g_CvarManager.CreateCvarHook();
 
 	void *address = nullptr;
 

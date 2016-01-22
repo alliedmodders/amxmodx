@@ -14,6 +14,7 @@
 #include <amtl/am-vector.h>
 #include <amtl/am-inlinelist.h>
 #include <sm_namehashset.h>
+#include "CGameConfigs.h"
 
 class CDetour;
 

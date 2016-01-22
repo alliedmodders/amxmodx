@@ -116,41 +116,16 @@ void CvarManager::CreateCvarHook(void)
 	//   	Cvar_DirectSet(var, value); // <- We want to hook this.
 	// }
 
-	byte *baseAddress = (byte *)g_engfuncs.pfnCvar_DirectSet;
-	uintptr_t *functionAddress = nullptr;
+	void *functionAddress = nullptr;
 
-#if defined(WIN32)
-	// 55              push    ebp
-	// 8B EC           mov     ebp, esp
-	// 8B 45 0C        mov     eax, [ebp+arg_4]
-	// 8B 4D 08        mov     ecx, [ebp+arg_0]
-	// 50              push    eax
-	// 51              push    ecx
-	// E8 XX XX XX XX  call    Cvar_DirectSet
-	const byte opcodeJump = 0xE8;
-#else
-	// E9 XX XX XX XX  jmp     Cvar_DirectSet
-	const byte opcodeJump = 0xE9;
-#endif
-
-	const byte opcodeJumpSize     = 5;
-	const byte opcodeJumpByteSize = 1;
-
-	const int maxBytesLimit = 20;
-
-	for (size_t i = 0; i < maxBytesLimit; ++i, ++baseAddress)
-	{
-		if (*baseAddress == opcodeJump)
-		{
-			functionAddress = (uintptr_t *)(&baseAddress[opcodeJumpSize] + *(uintptr_t *)&baseAddress[opcodeJumpByteSize]);
-			break;
-		}
-	}
-
-	if (functionAddress)
+	if (CommonConfig && CommonConfig->GetMemSig("Cvar_DirectSet", &functionAddress) && functionAddress)
 	{
 		// Disabled by default.
-		m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, (void *)functionAddress);
+		m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress);
+	}
+	else
+	{
+		AMXXLOG_Log("Binding/Hooking cvars have been disabled - check your gamedata files.");
 	}
 }
 

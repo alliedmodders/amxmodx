@@ -21,6 +21,7 @@ extern HLTypeConversion TypeConversion;
 bool UTIL_IsPlayer(edict_t *pPlayer);
 void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message);
 bool UTIL_CheckForPublic(const char *publicname);
+void UTIL_StringToLower(const char *str, char *buffer, size_t maxlength);
 
 #define GETINFOKEYBUFFER	(*g_engfuncs.pfnGetInfoKeyBuffer)
 #define	SETCLIENTKEYVALUE	(*g_engfuncs.pfnSetClientKeyValue)

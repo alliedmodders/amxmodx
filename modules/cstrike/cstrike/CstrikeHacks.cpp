@@ -158,8 +158,11 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 				if (get_pdata<CUnifiedSignals>(pEdict, SignalsDesc.fieldOffset).GetState() & SIGNAL_BUY) // Are we inside the buy zone?
 				{
 					AliasInfo info;
+					char commandLowered[32];
 
-					if (ItemsManager.GetAliasInfosFromBuy(command, &info))
+					UTIL_StringToLower(command, commandLowered, sizeof(commandLowered));
+
+					if (ItemsManager.GetAliasInfosFromBuy(commandLowered, &info))
 					{
 						CurrentItemId = info.itemid;
 					}

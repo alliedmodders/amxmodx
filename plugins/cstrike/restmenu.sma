@@ -16,6 +16,7 @@
 
 #include <amxmodx>
 #include <amxmisc>
+#include <cstrike>
 
 #define MAXMENUPOS 34
 
@@ -26,18 +27,6 @@ new g_saveFile[64]
 new g_Restricted[] = "* This item is restricted *"
 new g_szWeapRestr[27] = "00000000000000000000000000"
 new g_szEquipAmmoRestr[10] = "000000000"
-new g_InBuyMenu[MAX_PLAYERS + 1]
-new g_RegisteredMenus[10]
-
-new g_menuStrings[6][] =
-{
-	"BuyPistol",
-	"BuyShotgun",
-	"BuySubMachineGun",
-	"BuyRifle",
-	"BuyMachineGun",
-	"BuyItem"
-}
 
 new g_menusNames[7][] =
 {
@@ -65,9 +54,6 @@ new g_menusSets[7][2] =
 {
 	{0, 6}, {6, 8}, {8, 13}, {13, 23}, {23, 24}, {24, 32}, {32, 34}
 }
-
-new g_AliasBlockNum
-new g_AliasBlock[MAXMENUPOS]
 
 // First position is a position of menu (0 for ammo, 1 for pistols, 6 for equipment etc.)
 // Second is a key for TERRORIST (all is key are minus one, 1 is 0, 2 is 1 etc.)
@@ -239,66 +225,6 @@ new g_Aliases[MAXMENUPOS][] =
 	"secammo"
 }
 
-new g_Aliases2[MAXMENUPOS][] =
-{
-	"km45",		//Pistols
-	"9x19mm", 
-	"nighthawk", 
-	"228compact", 
-	"elites", 
-	"fiveseven", 
-
-	"12gauge",	//Shotguns
-	"autoshotgun", 
-
-	"smg",		//SMG
-	"mp", 
-	"c90", 
-	"mac10", 
-	"ump45", 
-
-	"cv47",		//Rifles
-	"defender", 
-	"clarion", 
-	"krieg552", 
-	"m4a1", 
-	"bullpup", 
-	"scout", 
-	"magnum", 
-	"d3au1", 
-	"krieg550", 
-
-	"m249",		//Machine Gun
-
-	"vest",		//Equipment
-	"vesthelm", 
-	"flash", 
-	"hegren", 
-	"sgren", 
-	"defuser", 
-	"nvgs", 
-	"shield", 
-	"primammo", //Ammo
-	"secammo"
-}
-
-#define AUTOBUYLENGTH 511
-new g_Autobuy[MAX_PLAYERS + 1][AUTOBUYLENGTH + 1]
-//new g_Rebuy[MAX_PLAYERS + 1][AUTOBUYLENGTH + 1]
-
-bool:IsOurMenuID(id)
-{
-	for (new i=1; i<=g_RegisteredMenus[0]; i++)
-	{
-		if (g_RegisteredMenus[i] == id)
-		{
-			return true
-		}
-	}
-	
-	return false
-}
-
 setWeapon(a, action)
 {
 	new b, m = g_Keys[a][0] * 8
@@ -322,23 +248,6 @@ setWeapon(a, action)
 		else
 			g_blockPos[b] = action
 	}
-
-	for (new i = 0; i < g_AliasBlockNum; ++i)
-		if (g_AliasBlock[i] == a)
-		{
-			if (!action || action == 2)
-			{
-				--g_AliasBlockNum
-				
-				for (new j = i; j < g_AliasBlockNum; ++j)
-					g_AliasBlock[j] = g_AliasBlock[j + 1]
-			}
-			
-			return
-		}
-
-	if (action && g_AliasBlockNum < MAXMENUPOS)
-		g_AliasBlock[g_AliasBlockNum++] = a
 }
 
 findMenuId(name[])
@@ -602,69 +511,6 @@ public actionMenu(id, key)
 	return PLUGIN_HANDLED
 }
 
-public CS_InternalCommand(id, const cmd[])
-{
-	new a = 0
-
-	do
-	{
-		if (equali(g_Aliases[g_AliasBlock[a]], cmd) || equali(g_Aliases2[g_AliasBlock[a]], cmd))
-		{
-			client_print(id, print_center, "%s", g_Restricted)
-			return PLUGIN_HANDLED
-		}
-	} while (++a < g_AliasBlockNum)
-	
-	return PLUGIN_CONTINUE
-}
-
-public client_command(id)
-{
-	if (g_AliasBlockNum)
-	{
-		new arg[13]
-
-		if (read_argv(0, arg, charsmax(arg)) > 11)		/* Longest buy command has 11 chars so if command is longer then don't care */
-		{
-			return PLUGIN_CONTINUE
-		}
-		
-		if (equali(arg, "menuselect") && is_user_connected(id))
-		{
-			new menu, newmenu
-			new inMenu = player_menu_info(id, menu, newmenu)
-			
-			if (!inMenu && g_InBuyMenu[id])
-			{
-				new key[12], num
-				
-				read_argv(1, key, charsmax(key))
-				num = str_to_num(key) - 1
-				
-				return checkRest(id, g_InBuyMenu[id], num)
-			} else if ((!menu || newmenu != -1) 
-					 || !IsOurMenuID(menu)) {
-				g_InBuyMenu[id] = 0
-			}
-
-			return PLUGIN_CONTINUE
-		}
-
-		new a = 0
-
-		do
-		{
-			if (equali(g_Aliases[g_AliasBlock[a]], arg) || equali(g_Aliases2[g_AliasBlock[a]], arg))
-			{
-				client_print(id, print_center, "%s", g_Restricted)
-				return PLUGIN_HANDLED
-			}
-		} while (++a < g_AliasBlockNum)
-	}
-	
-	return PLUGIN_CONTINUE
-}
-
 public blockcommand(id)
 {
 	client_print(id, print_center, "%s", g_Restricted)
@@ -680,43 +526,6 @@ public cmdMenu(id, level, cid)
 	
 	return PLUGIN_HANDLED
 }
-
-checkRest(id, menu, key)
-{
-	new team = get_user_team(id)
-	
-	if (team != 1 && team != 2)
-	{
-		return PLUGIN_HANDLED
-	}
-		
-	new pos = (menu * 8 + key) + (get_user_team(id) - 1) * 56
-	
-	if (pos < 0 || pos >= 112)
-	{
-		return PLUGIN_CONTINUE
-	}
-	
-	if (g_blockPos[pos])
-	{
-		engclient_cmd(id, "menuselect", "10")
-		client_print(id, print_center, "%s", g_Restricted)
-		
-		return PLUGIN_HANDLED
-	}
-	
-	return PLUGIN_CONTINUE
-}
-
-public ammoRest1(id)		return checkRest(id, 0, 5)
-public ammoRest2(id)        return checkRest(id, 0, 6)
-public menuBuy(id, key)     return checkRest(id, 0, key)
-public menuPistol(id, key)  return checkRest(id, 1, key)
-public menuShotgun(id, key) return checkRest(id, 2, key)
-public menuSub(id, key)     return checkRest(id, 3, key)
-public menuRifle(id, key)   return checkRest(id, 4, key)
-public menuMachine(id, key) return checkRest(id, 5, key)
-public menuItem(id, key)    return checkRest(id, 6, key)
 
 saveSettings(filename[])
 {
@@ -773,181 +582,19 @@ loadSettings(filename[])
 	return 1
 }
 
-// JGHG
-public fn_setautobuy(id)
-{
-	// Empty user's autobuy prefs. (unnecessary?)
-	g_Autobuy[id][0] = '^0'
-
-	new argCount = read_argc()
-	new arg[128]
-	new autobuyLen = 0
-	
-	for (new i = 1; i < argCount; i++)		// Start at parameter 1; parameter 0 is just "cl_setautobuy"
-	{
-		read_argv(i, arg, charsmax(arg))
-		// Add this parameter to user's autobuy prefs
-		autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, "%s", arg)
-		
-		// If we detect more parameters, add a space
-		if (i + 1 < argCount)
-			autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, " ")
-	}
-
-	if (g_AliasBlockNum)
-	{
-		// Strip any blocked items
-		new strippedItems[AUTOBUYLENGTH + 1]
-	
-		if (!StripBlockedItems(g_Autobuy[id], strippedItems))
-			return PLUGIN_CONTINUE				// don't touch anything if we didn't strip anything...
-
-		//server_print("Stripped items: ^"%s^"", strippedItems)
-		engclient_cmd(id, "cl_setautobuy", strippedItems)
-
-		return PLUGIN_HANDLED
-	}
-	
-	return PLUGIN_CONTINUE
-}
-
-// Returns true if this strips any items, else false.
-StripBlockedItems(inString[AUTOBUYLENGTH + 1], outString[AUTOBUYLENGTH + 1])
-{
-	// First copy string
-	format(outString, AUTOBUYLENGTH, inString)
-
-	// After that convert all chars in string to lower case (fix by VEN)
-	strtolower(outString)
-
-	// Then strip those that are blocked.
-	for (new i = 0; i < g_AliasBlockNum; i++)
-	{
-		while (containi(outString, g_Aliases[g_AliasBlock[i]]) != -1)
-			replace(outString, AUTOBUYLENGTH, g_Aliases[g_AliasBlock[i]], "")
-		while (containi(outString, g_Aliases2[g_AliasBlock[i]]) != -1)
-			replace(outString, AUTOBUYLENGTH, g_Aliases2[g_AliasBlock[i]], "")
-	}
-
-	// We COULD trim white space from outString here, but I don't think it really is necessary currently...
-	if (strlen(outString) < strlen(inString))
-		return true							// outstring is shorter: we stripped items, return true
-
-	return false							// else end here, return false, no items were stripped
-}
-
-public fn_autobuy(id)
-{
-	// Don't do anything if no items are blocked.
-	if (!g_AliasBlockNum)
-		return PLUGIN_CONTINUE
-
-	// Strip any blocked items
-	new strippedItems[AUTOBUYLENGTH + 1]
-	
-	if (!StripBlockedItems(g_Autobuy[id], strippedItems))
-		return PLUGIN_CONTINUE				// don't touch anything if we didn't strip anything...
-
-	engclient_cmd(id, "cl_setautobuy", strippedItems)
-	
-	return PLUGIN_HANDLED
-}
-
-public HookEvent_ShowMenu(id)
-{
-	new menustring[24]
-	
-	read_data(4, menustring, charsmax(menustring))
-	
-	/* Early breakouts */
-	new curidx
-	if (menustring[curidx++] != '#')
-	{
-		g_InBuyMenu[id] = 0
-		return
-	}
-	
-	/* Strip D */
-	if (menustring[curidx] == 'D')
-	{
-		curidx++
-	}
-	
-	/* Strip AS_ */
-	if (menustring[curidx] == 'A'
-	    && menustring[curidx+1] == 'S'
-	    && menustring[curidx+2] == '_')
-	{
-		curidx += 3
-	}
-	
-	/* Strip any team tags */
-	if (menustring[curidx] == 'C'
-	    && menustring[curidx+1] == 'T'
-	    && menustring[curidx+2] == '_')
-	{
-		curidx += 3
-	} else if (menustring[curidx] == 'T'
-			 && menustring[curidx+1] == '_') {
-		curidx += 2
-	}
-	
-	if (menustring[curidx] != 'B')
-	{
-		g_InBuyMenu[id] = 0
-		return
-	}
-	
-	for (new i=0; i<sizeof(g_menuStrings); i++)
-	{
-		if (equali(menustring[curidx], g_menuStrings[i]))
-		{
-			g_InBuyMenu[id] = i+1
-			return
-		}
-	}
-	
-	g_InBuyMenu[id] = 0
-}
-
-RegisterMenuID(const menuname[])
-{
-	new id = register_menuid(menuname, 1)
-	g_RegisteredMenus[++g_RegisteredMenus[0]] = id
-	return id
-}
-
 public plugin_init()
 {
 	register_plugin("Restrict Weapons", AMXX_VERSION_STR, "AMXX Dev Team")
 	register_dictionary("restmenu.txt")
 	register_dictionary("common.txt")
-	register_clcmd("buyammo1", "ammoRest1")
-	register_clcmd("buyammo2", "ammoRest2")
-	register_clcmd("cl_setautobuy", "fn_setautobuy")
-	register_clcmd("cl_autobuy", "fn_autobuy")
+
 	register_clcmd("amx_restmenu", "cmdMenu", ADMIN_CFG, "- displays weapons restriction menu")
-	register_menucmd(register_menuid("#Buy", 1), 511, "menuBuy")
+
 	register_menucmd(register_menuid("Restrict Weapons"), 1023, "actionMenu")
-	register_menucmd(RegisterMenuID("BuyPistol"), 511, "menuPistol")
-	register_menucmd(RegisterMenuID("BuyShotgun"), 511, "menuShotgun")
-	register_menucmd(RegisterMenuID("BuySub"), 511, "menuSub")
-	register_menucmd(RegisterMenuID("BuyRifle"), 511, "menuRifle")
-	register_menucmd(RegisterMenuID("BuyMachine"), 511, "menuMachine")
-	register_menucmd(RegisterMenuID("BuyItem"), 511, "menuItem")
-	register_menucmd(-28, 511, "menuBuy")
-	register_menucmd(-29, 511, "menuPistol")
-	register_menucmd(-30, 511, "menuShotgun")
-	register_menucmd(-32, 511, "menuSub")
-	register_menucmd(-31, 511, "menuRifle")
-	register_menucmd(-33, 511, "menuMachine")
-	register_menucmd(-34, 511, "menuItem")
 	register_concmd("amx_restrict", "cmdRest", ADMIN_CFG, "- displays help for weapons restriction")
 
 	register_cvar("amx_restrweapons", "00000000000000000000000000")
 	register_cvar("amx_restrequipammo", "000000000")
-	
-	register_event("ShowMenu", "HookEvent_ShowMenu", "b")
 
 	new configsDir[64];
 	get_configsdir(configsDir, charsmax(configsDir));

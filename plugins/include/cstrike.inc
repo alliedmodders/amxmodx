@@ -361,7 +361,7 @@ native cs_set_user_plant(index, plant = 1, showbombicon = 1);
  * @param index         Client index
  * @param team          Team id
  * @param model         Internal model id, if CS_DONTCHANGE the game will choose the model
- 			or if CS_NORESET the game will not update it.
+ *                      or if CS_NORESET the game will not update it.
  * @param send_teaminfo If true, a TeamInfo message will be sent
  *
  * @noreturn
@@ -1059,6 +1059,19 @@ native cs_find_ent_by_owner(start_index, const classname[], owner);
  * @return              Item id (CSI_* constants)
  */
 native any:cs_get_item_id(const name[], &CsWeaponClassType:classid = CS_WEAPONCLASS_NONE);
+
+/**
+ * Returns the alias name associated with an item index.
+ *
+ * @param itemid          Item id (CSI_* constants)
+ * @param name            Buffer to store alias name to
+ * @param name_maxlen     Maximum buffer size
+ * @param altname         Optional buffer to store if available alternative alias name to
+ * @param altname_maxlen  Maximum buffer size
+ *
+ * @return                True if alias is found, false otherwise
+ */
+native bool:cs_get_item_alias(itemid, name[], name_maxlen, altname[] = "", altname_maxlen = 0);
 
 /**
  * Returns an item name associated with a command alias.

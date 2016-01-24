@@ -31,11 +31,14 @@ struct AliasInfo
 	{
 		itemid  = CSI_NONE;
 		classid = CS_WEAPONCLASS_NONE;
+		classname = nullptr;
+		alt_alias = nullptr;
 	}
 
 	int itemid;
 	int classid;
 	ke::AString classname;
+	ke::AString alt_alias;
 };
 
 enum class Equipments
@@ -73,8 +76,8 @@ class CsItemInfo : public ITextListener_SMC
 	public:
 
 		bool GetAliasInfos(const char *alias, AliasInfo *info);
-		bool GetAliasInfosFromBuy(const char *alias, AliasInfo *info);
 		bool GetAliasInfosFromName(const char *classname, AliasInfo *info);
+		bool GetAliasFromId(size_t id, ke::AString &name, ke::AString &altname);
 
 		CsWeaponClassType WeaponIdToClass(int id);
 
@@ -84,17 +87,16 @@ class CsItemInfo : public ITextListener_SMC
 
 		typedef StringHashMap<AliasInfo> AliasMap;
 
-		AliasMap     m_CommonAliasesList;
-		AliasMap     m_WeaponAliasesList;
 		AliasMap     m_BuyAliasesList;
+		AliasMap     m_BuyAliasesAltList;
 
 		CsWeaponClassType m_WeaponIdToClass[CSI_MAX_COUNT];
 
 	private: // Config parsing
 
 		int          m_ParseState;
-		AliasMap*    m_List;
 		ke::AString  m_Alias;
+		ke::AString  m_AliasAlt;
 		AliasInfo    m_AliasInfo;
 		bool         m_ListsRetrievedFromConfig;
 		int          m_EquipmentsPrice[static_cast<size_t>(Equipments::Count)];

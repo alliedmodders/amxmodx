@@ -21,6 +21,7 @@
  */
 #define CSW_NONE            0
 #define CSW_P228            1
+#define CSW_GLOCK           2  // Unused by game, See CSW_GLOCK18.
 #define CSW_SCOUT           3
 #define CSW_HEGRENADE       4
 #define CSW_XM1014          5
@@ -147,6 +148,7 @@ enum
  */
 #define CSI_NONE                CSW_NONE
 #define CSI_P228                CSW_P228
+#define CSI_GLOCK               CSW_GLOCK  // Unused by game, See CSI_GLOCK18.
 #define CSI_SCOUT               CSW_SCOUT
 #define CSI_HEGRENADE           CSW_HEGRENADE
 #define CSI_XM1014              CSW_XM1014

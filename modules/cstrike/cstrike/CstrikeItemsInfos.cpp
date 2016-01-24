@@ -24,7 +24,6 @@ char WeaponNameList[MAX_WEAPONS][64];
 CsItemInfo::CsItemInfo()
 	:
 	m_ParseState(PSTATE_ALIASES_TYPE),
-	m_List(nullptr),
 	m_ListsRetrievedFromConfig(false)
 {}
 
@@ -35,9 +34,8 @@ CsItemInfo::~CsItemInfo()
 
 void CsItemInfo::Clear()
 {
-	m_CommonAliasesList.clear();
-	m_WeaponAliasesList.clear();
 	m_BuyAliasesList.clear();
+	m_BuyAliasesAltList.clear();
 }
 
 bool CsItemInfo::HasConfigError()
@@ -51,33 +49,15 @@ SMCResult CsItemInfo::ReadSMC_NewSection(const SMCStates *states, const char *na
 	{
 		case PSTATE_ALIASES_TYPE:
 		{
-			m_List = nullptr;
-
-			if (!strcmp(name, "CommonAlias"))
-			{
-				m_List = &m_CommonAliasesList;
-			}
-			else if (!strcmp(name, "WeaponAlias"))
-			{
-				m_List = &m_WeaponAliasesList;
-			}
-			else if (!strcmp(name, "BuyAlias") || !strcmp(name, "BuyEquipAlias") || !strcmp(name, "BuyAmmoAlias"))
-			{
-				m_List = &m_BuyAliasesList;
-			}
-
-			if (m_List)
+			if (!strcmp(name, "BuyAliases"))
 			{
 				m_ParseState = PSTATE_ALIASES_ALIAS;
 			}
-
 			break;
 		}
 		case PSTATE_ALIASES_ALIAS:
 		{
-			m_AliasInfo.clear();
 			m_Alias = name;
-
 			m_ParseState = PSTATE_ALIASES_ALIAS_DEFS;
 			break;
 		}
@@ -129,6 +109,10 @@ SMCResult CsItemInfo::ReadSMC_KeyValue(const SMCStates *states, const char *key,
 					}
 				}
 			}
+			else if (!strcmp(key, "altname"))
+			{
+				m_AliasAlt = value;
+			}
 			break;
 		}
 	}
@@ -147,11 +131,16 @@ SMCResult CsItemInfo::ReadSMC_LeavingSection(const SMCStates *states)
 		}
 		case PSTATE_ALIASES_ALIAS_DEFS:
 		{
-			m_List->replace(m_Alias.chars(), m_AliasInfo);
+			if (m_AliasAlt.length())
+			{
+				m_BuyAliasesAltList.replace(m_AliasAlt.chars(), m_AliasInfo);
+				m_AliasInfo.alt_alias = Move(m_AliasAlt);
+			}
+
+			m_BuyAliasesList.replace(m_Alias.chars(), m_AliasInfo);
 			m_WeaponIdToClass[m_AliasInfo.itemid] = static_cast<CsWeaponClassType>(m_AliasInfo.classid);
 
 			m_AliasInfo.clear();
-
 			m_ParseState = PSTATE_ALIASES_ALIAS;
 			break;
 		}
@@ -170,7 +159,7 @@ void CsItemInfo::ReadSMC_ParseEnd(bool halted, bool failed)
 
 bool CsItemInfo::GetAliasInfos(const char *alias, AliasInfo *info)
 {
-	if (GetAliasInfosFromBuy(alias, info) || m_WeaponAliasesList.retrieve(alias, info))
+	if (m_BuyAliasesList.retrieve(alias, info) || m_BuyAliasesAltList.retrieve(alias, info))
 	{
 		return true;
 	}
@@ -178,11 +167,17 @@ bool CsItemInfo::GetAliasInfos(const char *alias, AliasInfo *info)
 	return false;
 }
 
-bool CsItemInfo::GetAliasInfosFromBuy(const char *alias, AliasInfo *info)
+bool CsItemInfo::GetAliasFromId(size_t id, ke::AString &name, ke::AString &altname)
 {
-	if (m_CommonAliasesList.retrieve(alias, info) || m_BuyAliasesList.retrieve(alias, info))
+	for (auto iter = m_BuyAliasesList.iter(); !iter.empty(); iter.next())
 	{
-		return true;
+		if (iter->value.itemid == id)
+		{
+			name = iter->key;
+			altname = iter->value.alt_alias;
+
+			return true;
+		}
 	}
 
 	return false;
@@ -190,47 +185,50 @@ bool CsItemInfo::GetAliasInfosFromBuy(const char *alias, AliasInfo *info)
 
 bool CsItemInfo::GetAliasInfosFromName(const char *name, AliasInfo *info)
 {
-	static const char prefix_weapon[] = "weapon_";
-	static const char prefix_item[] = "item_";
+	static const char prefix_weapon[] = "weapon";
+	static const char prefix_item[] = "item";
 
-	const char *alias = name;
+	static const size_t prefix_weapon_length = sizeof(prefix_weapon) - 1;
+	static const size_t prefix_item_length = sizeof(prefix_item) - 1;
 
-	if (strstr(name, prefix_weapon) && strcmp(name + sizeof(prefix_weapon) - 1, "shield"))
+	if (name[prefix_weapon_length] == '_' && !strncmp(name, prefix_weapon, prefix_weapon_length))
 	{
-		for (size_t id = 0; id < ARRAYSIZE(WeaponNameList); ++id)
-		{
-			if (!strcmp(name, WeaponNameList[id]))
-			{
-				info->classname = name;
-				info->itemid    = id;
-				info->classid   = WeaponIdToClass(id);
+		name += prefix_weapon_length + 1; // including '_'
+	}
+	else if (name[prefix_item_length] == '_' && !strncmp(name, prefix_item, prefix_item_length))
+	{
+		name += prefix_item_length + 1;
+	}
 
-				return true;
-			}
+	for (size_t id = 0; id < ARRAYSIZE(WeaponNameList); ++id)
+	{
+		const char *weapon = WeaponNameList[id];
+
+		if (weapon[prefix_weapon_length] == '_' && !strncmp(weapon, prefix_weapon, prefix_weapon_length))
+		{
+			weapon += prefix_weapon_length + 1;
 		}
 
-		alias = name + sizeof(prefix_weapon) - 1;
-	}
-	else if (strstr(name, prefix_item))
-	{
-		for (auto iter = m_BuyAliasesList.iter(); !iter.empty(); iter.next())
+		if (!strcmp(weapon, name))
 		{
-			if (iter->value.classname.length() && !iter->value.classname.compare(name))
-			{
-				*info = iter->value;
-				return true;
-			}
+			info->classname = name;
+			info->itemid = id;
+			info->classid = WeaponIdToClass(id);
+
+			return true;
 		}
-
-		alias = name + sizeof(prefix_item) - 1;
 	}
 
-	if (GetAliasInfos(alias, info))
+	for (auto iter = m_BuyAliasesList.iter(); !iter.empty(); iter.next())
 	{
-		return true;
+		if (iter->value.classname.length() && !strcmp(iter->value.classname.chars() + prefix_item_length + 1, name))
+		{
+			*info = iter->value;
+			return true;
+		}
 	}
 
-	return false;
+	return GetAliasInfos(name, info);
 }
 
 CsWeaponClassType CsItemInfo::WeaponIdToClass(int id)

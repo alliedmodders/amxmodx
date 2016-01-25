@@ -193,7 +193,6 @@ extern const char *mStringResult;
 extern cell mlCellResult;
 extern float mlFloatResult;
 extern const char *mlStringResult;
-extern int lastFmRes;
 extern int retType;
 
 #endif //_INCLUDE_FORWARD_H

@@ -751,14 +751,12 @@
 #define SIMPLE_VOID_HOOK_INT_INT_CONSTVECT_EDICT(call) \
 	void call (int v, int vb, const float *vec, edict_t *e) \
 	{ \
-		if (vec) { \
-			PREPARE_VECTOR(vec); \
-			FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, (cell)vb, p_vec, (cell)ENTINDEX(e))); \
-		} else { \
-			const float b[3]={0.0,0.0,0.0}; \
-			PREPARE_VECTOR(b); \
-			FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, (cell)vb, p_b, (cell)ENTINDEX(e))); \
+		const float b[3]={0.0,0.0,0.0}; \
+		if (vec == nullptr) { \
+			vec = b; \
 		} \
+		PREPARE_VECTOR(vec); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, (cell)vb, p_vec, (cell)ENTINDEX(e))); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (int v, int vb, const float *vec, edict_t *e) \
@@ -924,6 +922,7 @@
 	register unsigned int i = 0; \
 	clfm(); \
 	int fmres = FMRES_IGNORED; \
+	int lastFmRes = FMRES_IGNORED; \
 	for (i=0; i<Engine[pfnCall].length(); i++) \
 	{ \
 		fmres = MF_ExecuteForward pfnArgs; \
@@ -941,6 +940,7 @@
 	register unsigned int i = 0; \
 	clfm(); \
 	int fmres = FMRES_IGNORED; \
+	int lastFmRes = FMRES_IGNORED; \
 	for (i=0; i<EnginePost[pfnCall].length(); i++) \
 	{ \
 		fmres = MF_ExecuteForward pfnArgs; \

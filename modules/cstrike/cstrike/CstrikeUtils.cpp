@@ -12,6 +12,7 @@
 //
 
 #include "amxxmodule.h"
+#include <amtl/am-algorithm.h>
 
 extern int MessageIdTextMsg;
 
@@ -46,4 +47,23 @@ bool UTIL_CheckForPublic(const char *publicname)
 	}
 
 	return false;
+}
+
+void UTIL_StringToLower(const char *str, char *buffer, size_t maxlength)
+{
+	auto length = ke::Min(strlen(str), maxlength - 1);
+
+	for (size_t i = 0; i < length; ++i)
+	{
+		if (str[i] >= 'A' && str[i] <= 'Z')
+		{
+			buffer[i] = tolower(str[i]);
+		}
+		else
+		{
+			buffer[i] = str[i];
+		}
+	}
+
+	buffer[length] = '\0';
 }

@@ -24,7 +24,6 @@ float mlFloatResult;
 const char *mStringResult;
 const char *mlStringResult;
 int retType = 0;
-int lastFmRes = FMRES_IGNORED;
 KVD_Wrapper g_kvd_hook;
 clientdata_t *g_cd_hook;
 entity_state_t *g_es_hook;
@@ -55,7 +54,6 @@ void clfm()
 	mlCellResult = 0;
 	mStringResult = "";
 	mlStringResult = "";
-	lastFmRes = FMRES_IGNORED;
 	mFloatResult = 0.0;
 	mlFloatResult = 0.0;
 }

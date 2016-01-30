@@ -18,6 +18,8 @@
 #include <amxmisc>
 #include <cstrike>
 
+new bool:BlockedItems[CSI_MAX_COUNT];
+
 #define MAXMENUPOS 34
 
 new g_Position[MAX_PLAYERS + 1]
@@ -223,6 +225,17 @@ new g_Aliases[MAXMENUPOS][] =
 
 	"primammo", //Ammo
 	"secammo"
+}
+
+public CS_OnBuyAttempt(player, itemid)
+{
+	if (BlockedItems[itemid])
+	{
+		client_print(player, print_center, "%s", g_Restricted);
+		return PLUGIN_HANDLED;
+	}
+	
+	return PLUGIN_CONTINUE;
 }
 
 setWeapon(a, action)

@@ -272,15 +272,6 @@ findMenuId(name[])
 	return -1
 }
 
-findAliasId(name[])
-{
-	for (new i = 0; i < MAXMENUPOS ; ++i)
-		if (equali(name, g_Aliases[i]))
-			return i
-	
-	return -1
-}
-
 switchCommand(id, action)
 {
 	new c = read_argc()
@@ -310,7 +301,7 @@ switchCommand(id, action)
 				console_print(id, "%s %L %L", g_MenuTitle[a], id, (a < 5) ? "HAVE_BEEN" : "HAS_BEEN", id, action ? "RESTRICTED" : "UNRESTRICTED")
 				g_Modified = found = true
 			}
-			else if ((a = findAliasId(arg)) != -1)
+			else if ((a = cs_get_item_id(arg)) != CSI_NONE)
 			{
 				g_Modified = found = true
 				setWeapon(a, action)
@@ -580,7 +571,7 @@ loadSettings(filename[])
 		
 		parse(text, text, charsmax(text))
 		
-		if ((a = findAliasId(text)) != -1)
+		if ((a = cs_get_item_id(text)) != CSI_NONE)
 		{
 			setWeapon(a, 1)
 			if (a < 24) g_szWeapRestr[a + 1] = '1' // primary and secondary weapons

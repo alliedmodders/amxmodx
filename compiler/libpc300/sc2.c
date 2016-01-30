@@ -152,7 +152,6 @@ static char *extensions[] = { ".inc", ".p", ".pawn" };
   PUSHSTK_I(iflevel);
   assert(!SKIPPING);
   assert(skiplevel==iflevel);   /* these two are always the same when "parsing" */
-  PUSHSTK_I(sc_is_utf8);
   PUSHSTK_I(icomment);
   PUSHSTK_I(fcurrent);
   PUSHSTK_I(fline);
@@ -169,7 +168,6 @@ static char *extensions[] = { ".inc", ".p", ".pawn" };
   assert(sc_status == statFIRST || strcmp(get_inputfile(fcurrent), inpfname) == 0);
   setfiledirect(inpfname);      /* (optionally) set in the list file */
   listline=-1;                  /* force a #line directive when changing the file */
-  sc_is_utf8=(short)scan_utf8(inpf,name);
   return TRUE;
 }
 
@@ -314,7 +312,6 @@ static void readline(unsigned char *line)
       fline=i;
       fcurrent=(short)POPSTK_I();
       icomment=(short)POPSTK_I();
-      sc_is_utf8=(short)POPSTK_I();
       iflevel=(short)POPSTK_I();
       skiplevel=iflevel;        /* this condition held before including the file */
       assert(!SKIPPING);        /* idem ditto */
@@ -2381,21 +2378,12 @@ static cell litchar(const unsigned char **lptr,int flags)
 
   cptr=*lptr;
   if ((flags & RAWMODE)!=0 || *cptr!=sc_ctrlchar) {  /* no escape character */
-    #if !defined NO_UTF8
-      if (sc_is_utf8 && (flags & UTF8MODE)!=0) {
-        c=get_utf8_char(cptr,&cptr);
-        assert(c>=0);   /* file was already scanned for conformance to UTF-8 */
-      } else {
-    #endif
       #if !defined NO_CODEPAGE
         c=cp_translate(cptr,&cptr);
       #else
         c=*cptr;
         cptr+=1;
       #endif
-    #if !defined NO_UTF8
-      } /* if */
-    #endif
   } else {
     cptr+=1;
     if (*cptr==sc_ctrlchar) {

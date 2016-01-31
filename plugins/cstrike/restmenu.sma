@@ -27,8 +27,12 @@ new g_Modified
 new g_blockPos[112]
 new g_saveFile[64]
 new g_Restricted[] = "* This item is restricted *"
-new g_szWeapRestr[27] = "00000000000000000000000000"
-new g_szEquipAmmoRestr[10] = "000000000"
+
+new RestrictedBotWeapons[] = "00000000000000000000000000";
+new RestrictedBotEquipAmmos[] = "000000000";
+
+new CvarPointerRestrictedWeapons;
+new CvarPointerRestrictedEquipAmmos;
 
 new g_menusNames[7][] =
 {
@@ -489,26 +493,26 @@ public actionMenu(id, key)
 
 			if (a < 24)
 			{
-				sz[0] = g_szWeapRestr[a + 1]
-				g_szWeapRestr[a + 1] = (sz[0] == '0') ? '1' : '0'  // primary and secondary weapons
+				sz[0] = RestrictedBotWeapons[a + 1]
+				RestrictedBotWeapons[a + 1] = (sz[0] == '0') ? '1' : '0'  // primary and secondary weapons
 			}
 			else if ((a >= 24) && (a < 31))
 			{
-				sz[0] = g_szEquipAmmoRestr[a - 24]
-				g_szEquipAmmoRestr[a - 24] = (sz[0] == '0') ? '1' : '0'  // equipments
+				sz[0] = RestrictedBotEquipAmmos[a - 24]
+				RestrictedBotEquipAmmos[a - 24] = (sz[0] == '0') ? '1' : '0'  // equipments
 			}
 			else if (a == 31)
 			{
-				sz[0] = g_szWeapRestr[25]
-				g_szWeapRestr[25] = (sz[0] == '0') ? '1' : '0'  // shield
+				sz[0] = RestrictedBotWeapons[25]
+				RestrictedBotWeapons[25] = (sz[0] == '0') ? '1' : '0'  // shield
 			}
 			else if ((a > 31) && (a < 34))
 			{
-				sz[0] = g_szEquipAmmoRestr[a - 25]
-				g_szEquipAmmoRestr[a - 25] = (sz[0] == '0') ? '1' : '0'   // primary and secondary ammo
+				sz[0] = RestrictedBotEquipAmmos[a - 25]
+				RestrictedBotEquipAmmos[a - 25] = (sz[0] == '0') ? '1' : '0'   // primary and secondary ammo
 			}
-			set_cvar_string("amx_restrweapons", g_szWeapRestr)
-			set_cvar_string("amx_restrequipammo", g_szEquipAmmoRestr)
+			set_pcvar_string(CvarPointerRestrictedWeapons, RestrictedBotWeapons);
+			set_pcvar_string(CvarPointerRestrictedEquipAmmos, RestrictedBotEquipAmmos);
 		}
 	}
 
@@ -561,9 +565,9 @@ loadSettings(filename[])
 	new text[16]
 	new a, pos = 0
 
-	format(g_szEquipAmmoRestr, charsmax(g_szEquipAmmoRestr), "000000000")
-	format(g_szWeapRestr, charsmax(g_szWeapRestr), "00000000000000000000000000")
-
+	arrayset(RestrictedBotEquipAmmos, '0', charsmax(RestrictedBotEquipAmmos));
+	arrayset(RestrictedBotWeapons, '0', charsmax(RestrictedBotWeapons));
+    
 	while (read_file(filename, pos++, text, charsmax(text), a))
 	{
 		if (text[0] == ';' || !a)
@@ -574,14 +578,14 @@ loadSettings(filename[])
 		if ((a = cs_get_item_id(text)) != CSI_NONE)
 		{
 			setWeapon(a, 1)
-			if (a < 24) g_szWeapRestr[a + 1] = '1' // primary and secondary weapons
-			else if ((a >= 24) && (a < 31)) g_szEquipAmmoRestr[a - 24] = '1'  // equipments
-			else if (a == 31) g_szWeapRestr[25] = '1'  // shield
-			else if ((a > 31) && (a < 34)) g_szEquipAmmoRestr[a - 25] = '1'  // primary and secondary ammo
+			if (a < 24) RestrictedBotWeapons[a + 1] = '1' // primary and secondary weapons
+			else if ((a >= 24) && (a < 31)) RestrictedBotEquipAmmos[a - 24] = '1'  // equipments
+			else if (a == 31) RestrictedBotWeapons[25] = '1'  // shield
+			else if ((a > 31) && (a < 34)) RestrictedBotEquipAmmos[a - 25] = '1'  // primary and secondary ammo
 		}
 	}
-	set_cvar_string("amx_restrweapons", g_szWeapRestr)
-	set_cvar_string("amx_restrequipammo", g_szEquipAmmoRestr)
+	set_pcvar_string(CvarPointerRestrictedWeapons, RestrictedBotWeapons);
+	set_pcvar_string(CvarPointerRestrictedEquipAmmos, RestrictedBotEquipAmmos);
 
 	return 1
 }
@@ -597,8 +601,8 @@ public plugin_init()
 	register_menucmd(register_menuid("Restrict Weapons"), 1023, "actionMenu")
 	register_concmd("amx_restrict", "cmdRest", ADMIN_CFG, "- displays help for weapons restriction")
 
-	register_cvar("amx_restrweapons", "00000000000000000000000000")
-	register_cvar("amx_restrequipammo", "000000000")
+	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"  , RestrictedBotWeapons);
+	CvarPointerRestrictedEquipAmmos = register_cvar("amx_restrequipammo", RestrictedBotEquipAmmos);
 
 	new configsDir[64];
 	get_configsdir(configsDir, charsmax(configsDir));

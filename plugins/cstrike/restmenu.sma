@@ -34,6 +34,20 @@ new RestrictedBotEquipAmmos[] = "000000000";
 new CvarPointerRestrictedWeapons;
 new CvarPointerRestrictedEquipAmmos;
 
+enum
+{
+	ItemType_Handguns,
+	ItemType_Shotguns,
+	ItemType_SubMachineGuns,
+	ItemType_AssaultRifles,
+	ItemType_SniperRifles,
+	ItemType_MachineGuns,
+	ItemType_Equipment,
+	ItemType_Ammunition,
+//  -
+	MaxItemTypes
+};
+
 new g_menusNames[7][] =
 {
 	"pistol", 
@@ -45,16 +59,40 @@ new g_menusNames[7][] =
 	"ammo"
 }
 
-new g_MenuTitle[7][] =
+new const g_MenuTitle[MaxItemTypes][] =
 {
-	"Handguns", 
-	"Shotguns", 
-	"Sub-Machine Guns", 
-	"Assault & Sniper Rifles", 
-	"Machine Guns", 
-	"Equipment", 
-	"Ammunition"
+	"MENU_TITLE_HANDGUNS",
+	"MENU_TITLE_SHOTGUNS",
+	"MENU_TITLE_SUBMACHINES",
+	"MENU_TITLE_RIFLES",
+	"MENU_TITLE_SNIPERS",
+	"MENU_TITLE_MACHINE",
+	"MENU_TITLE_EQUIPMENT",
+	"MENU_TITLE_AMMUNITION"
 }
+
+const MaxBuyMenuSlots = 8;
+
+enum MenuItem
+{
+    m_Index,
+    m_Name[32],
+};
+
+#define ITEM(%0)  { CSI_%0, "MENU_ITEM_" + #%0 }
+#define ITEM_NONE { CSI_NONE, "" }
+
+new const ItemsInfos[MaxItemTypes][MaxBuyMenuSlots][MenuItem] =
+{
+    { ITEM(USP)    , ITEM(GLOCK18) , ITEM(DEAGLE)   , ITEM(P228)     , ITEM(ELITE)       , ITEM(FIVESEVEN), ITEM_NONE , ITEM_NONE    },
+    { ITEM(M3)     , ITEM(XM1014)  , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+    { ITEM(MP5NAVY), ITEM(TMP)     , ITEM(P90)      , ITEM(MAC10)    , ITEM(UMP45)       , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+    { ITEM(AK47)   , ITEM(SG552)   , ITEM(M4A1)     , ITEM(GALIL)    , ITEM(FAMAS)       , ITEM(AUG)      , ITEM_NONE , ITEM_NONE    },
+    { ITEM(SCOUT)  , ITEM(AWP)     , ITEM(G3SG1)    , ITEM(SG550)    , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+    { ITEM(M249)   , ITEM_NONE     , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+    { ITEM(VEST)   , ITEM(VESTHELM), ITEM(FLASHBANG), ITEM(HEGRENADE), ITEM(SMOKEGRENADE), ITEM(DEFUSER)  , ITEM(NVGS), ITEM(SHIELD) },
+    { ITEM(PRIAMMO), ITEM(SECAMMO) , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+};
 
 new g_menusSets[7][2] =
 {
@@ -140,51 +178,6 @@ new g_WeaponNames[MAXMENUPOS][] =
 	"Tactical Shield", 
 	"Primary weapon ammo", 
 	"Secondary weapon ammo"
-}
-
-new g_MenuItem[MAXMENUPOS][] =
-{
-	"\yHandguns^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\yShotguns^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\ySub-Machine Guns^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\yAssault Rifles^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\ySniper Rifles^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\yMachine Guns^n\w^n%d. %s\y\R%L^n\w^n", 
-
-	"\yEquipment^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\yAmmunition^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w"
 }
 
 new g_Aliases[MAXMENUPOS][] =
@@ -431,37 +424,50 @@ public cmdRest(id, level, cid)
 
 displayMenu(id, pos)
 {
-	if (pos < 0)
-		return
-
-	new menubody[512], start = pos * 7
-
-	if (start >= MAXMENUPOS)
-		start = pos = g_Position[id] = 0
-
-	new len = format(menubody, charsmax(menubody), "\y%L\R%d/5^n^n\w", id, "REST_WEAP", pos + 1)
-	new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
-
-	if (end > MAXMENUPOS)
-		end = MAXMENUPOS
-
-	for (new a = start; a < end; ++a)
+	new menuTitle[64], menuBody[128];
+	new length = formatex(menuTitle, charsmax(menuTitle), "      \y%l", "REST_WEAP");
+	
+	new menu = menu_create(menuTitle, "actionMenu");
+	
+	if (pos < 0)  // Main menu
 	{
-		keys |= (1<<k)
-		len += format(menubody[len], charsmax(menubody) - len, g_MenuItem[a], ++k, g_WeaponNames[a], id, positionBlocked(a) ? "ON" : "OFF")
+		for (new type = 0; type < sizeof(g_MenuTitle); ++type)
+		{
+			LookupLangKey(menuBody, charsmax(menuBody), g_MenuTitle[type], id);
+			menu_additem(menu, menuBody);
+		}
+	}
+	else // Sub-menus
+	{
+		formatex(menuTitle[length], charsmax(menuTitle) - length, " > \d%l", g_MenuTitle[pos]);
+		menu_setprop(menu, MPROP_TITLE, menuTitle);
+
+		for (new slot = 0, data[MenuItem]; slot < MaxBuyMenuSlots; ++slot)
+		{
+			data = ItemsInfos[pos][slot];
+
+			if (data[m_Index])
+			{
+				formatex(menuBody, charsmax(menuBody), "%l\y\R%l", data[m_Name], BlockedItems[data[m_Index]] ? "ON" : "OFF");
+				menu_additem(menu, menuBody);
+				continue;
+			}
+
+			menu_addblank2(menu);
+		}
 	}
 
-	len += format(menubody[len], charsmax(menubody) - len, "^n8. %L \y\R%s^n\w", id, "SAVE_SET", g_Modified ? "*" : "")
+	formatex(menuBody, charsmax(menuBody), "%l \y\R%s", "SAVE_SET", g_Modified ? "*" : "");
+	menu_addblank(menu, .slot = false); 
+	menu_additem(menu, menuBody);
 
-	if (end != MAXMENUPOS)
-	{
-		format(menubody[len], charsmax(menubody) - len, "^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
-		keys |= MENU_KEY_9
-	}
-	else
-		format(menubody[len], charsmax(menubody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT")
+	formatex(menuBody, charsmax(menuBody), "%l", pos < 0 ? "EXIT" : "BACK");
+	menu_setprop(menu, MPROP_EXITNAME, menuBody);       // If inside a sub-menu we want to 'back' to main menu.
+	menu_setprop(menu, MPROP_PERPAGE, 0);               // Disable pagination.
+	menu_setprop(menu, MPROP_EXIT, MEXIT_FORCE);        // Force an EXIT item since pagination is disabled.
+	menu_setprop(menu, MPROP_NUMBER_COLOR, "      \r"); // Small QoL change to avoid menu overlapping with left icons.
 
-	show_menu(id, keys, menubody, -1, "Restrict Weapons")
+	menu_display(id, menu);
 }
 
 public actionMenu(id, key)
@@ -525,14 +531,14 @@ public blockcommand(id)
 	return PLUGIN_HANDLED
 }
 
-public cmdMenu(id, level, cid)
+@ClientCommand_MainMenu(id, level, cid)
 {
 	if (cmd_access(id, level, cid, 1))
 	{
-		displayMenu(id, g_Position[id] = 0)
+		displayMenu(id, g_Position[id] = -1);
 	}
 	
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 saveSettings(filename[])
@@ -596,14 +602,12 @@ public plugin_init()
 	register_dictionary("restmenu.txt")
 	register_dictionary("common.txt")
 
-	register_clcmd("amx_restmenu", "cmdMenu", ADMIN_CFG, "- displays weapons restriction menu")
-
-	register_menucmd(register_menuid("Restrict Weapons"), 1023, "actionMenu")
-	register_concmd("amx_restrict", "cmdRest", ADMIN_CFG, "- displays help for weapons restriction")
+	register_clcmd("amx_restmenu", "@ClientCommand_MainMenu", ADMIN_CFG, "- displays weapons restriction menu");
+	register_concmd("amx_restrict", "cmdRest", ADMIN_CFG, "- displays help for weapons restriction");
 
 	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"  , RestrictedBotWeapons);
 	CvarPointerRestrictedEquipAmmos = register_cvar("amx_restrequipammo", RestrictedBotEquipAmmos);
-
+    
 	new configsDir[64];
 	get_configsdir(configsDir, charsmax(configsDir));
 #if defined MAPSETTINGS

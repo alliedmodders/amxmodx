@@ -778,7 +778,7 @@ failed:
 * INI parser
 */
 
-bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listener, unsigned int *line, unsigned int *col)
+bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listener, unsigned int *line, unsigned int *col, bool inline_comment)
 {
 	FILE *fp = fopen(file, "rt");
 	unsigned int curline = 0;
@@ -842,46 +842,49 @@ bool TextParsers::ParseFile_INI(const char *file, ITextListener_INI *ini_listene
 			continue;
 		}
 
-		/* Now search for comment characters */
-		in_quote = false;
-		save_ptr = ptr;
-		for (size_t i = 0; i<len; i++, ptr++)
+		if (inline_comment)
 		{
-			if (!in_quote)
+			/* Now search for comment characters */
+			in_quote = false;
+			save_ptr = ptr;
+			for (size_t i = 0; i<len; i++, ptr++)
 			{
-				switch (*ptr)
+				if (!in_quote)
 				{
-					case '"':
+					switch (*ptr)
 					{
-						in_quote = true;
-						break;
-					}
-					case ';':
-					{
-						/* Stop the loop */
-						len = i;
+						case '"':
+						{
+							in_quote = true;
+							break;
+						}
+						case ';':
+						{
+							/* Stop the loop */
+							len = i;
 
-						/* Terminate the string here */
-						*ptr = '\0';
-						break;
+							/* Terminate the string here */
+							*ptr = '\0';
+							break;
+						}
+					}
+				}
+				else 
+				{
+					if (*ptr == '"')
+					{
+						in_quote = false;
 					}
 				}
 			}
-			else 
+
+			if (!len)
 			{
-				if (*ptr == '"')
-				{
-					in_quote = false;
-				}
+				continue;
 			}
-		}
 
-		if (!len)
-		{
-			continue;
+			ptr = save_ptr;
 		}
-
-		ptr = save_ptr;
 
 		/* Lastly, strip ending whitespace off */
 		for (size_t i = len - 1; i<len; i--)

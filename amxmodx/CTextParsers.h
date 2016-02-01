@@ -52,7 +52,8 @@ public:
 	bool ParseFile_INI(const char *file,
 		ITextListener_INI *ini_listener,
 		unsigned int *line,
-		unsigned int *col);
+		unsigned int *col,
+		bool inline_comment);
 
 	SMCError ParseFile_SMC(const char *file,
 		ITextListener_SMC *smc_listener,

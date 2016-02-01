@@ -490,7 +490,7 @@ int CLangMngr::MergeDefinitionFile(const char *file)
 	Data.currentFile = file;
 
 	unsigned int line, col;
-	bool result = textparsers->ParseFile_INI(file, static_cast<ITextListener_INI*>(this), &line, &col);
+	bool result = textparsers->ParseFile_INI(file, static_cast<ITextListener_INI*>(this), &line, &col, false);
 
 	if (!result)
 	{

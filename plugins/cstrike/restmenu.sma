@@ -427,7 +427,7 @@ displayMenu(id, pos)
 	new menuTitle[64], menuBody[128];
 	new length = formatex(menuTitle, charsmax(menuTitle), "      \y%l", "REST_WEAP");
 	
-	new menu = menu_create(menuTitle, "actionMenu");
+	new menu = menu_create(menuTitle, "@OnMenuAction");
 	
 	if (pos < 0)  // Main menu
 	{
@@ -457,7 +457,7 @@ displayMenu(id, pos)
 		}
 	}
 
-	formatex(menuBody, charsmax(menuBody), "%l \y\R%s", "SAVE_SET", g_Modified ? "*" : "");
+	formatex(menuBody, charsmax(menuBody), "%s%l \y\R%s", g_Modified ? "\y" : "\d", "SAVE_SET", g_Modified ? "*" : "");
 	menu_addblank(menu, .slot = false); 
 	menu_additem(menu, menuBody);
 
@@ -470,59 +470,69 @@ displayMenu(id, pos)
 	menu_display(id, menu);
 }
 
-public actionMenu(id, key)
+@OnMenuAction(id, menu, key)
 {
-	switch (key)
+	new position = g_Position[id];
+	
+	switch (key + 1)
 	{
-		case 7:
+		case 1 .. MaxBuyMenuSlots:
 		{
-			if (saveSettings(g_saveFile))
+			if (position < 0)  // We are right now in the main menu, go to sub-menu.
 			{
-				g_Modified = false
-				client_print(id, print_chat, "* %L", id, "CONF_SAV_SUC")
+				position = key;
 			}
-			else
-				client_print(id, print_chat, "* %L", id, "CONF_SAV_FAIL")
+			else  // We are in a sub-menu.
+			{
+				g_Modified = true;
 
-			displayMenu(id, g_Position[id])
+				new itemid = ItemsInfos[any:position][key][m_Index];
+				BlockedItems[itemid] = !BlockedItems[itemid];
+
+				new sz[1]
+
+				if (itemid < 24)
+				{
+					sz[0] = RestrictedBotWeapons[itemid + 1]
+					RestrictedBotWeapons[itemid + 1] = (sz[0] == '0') ? '1' : '0'  // primary and secondary weapons
+				}
+				else if ((itemid >= 24) && (itemid < 31))
+				{
+					sz[0] = RestrictedBotEquipAmmos[itemid - 24]
+					RestrictedBotEquipAmmos[itemid - 24] = (sz[0] == '0') ? '1' : '0'  // equipments
+				}
+				else if (itemid == 31)
+				{
+					sz[0] = RestrictedBotWeapons[25]
+					RestrictedBotWeapons[25] = (sz[0] == '0') ? '1' : '0'  // shield
+				}
+				else if ((itemid > 31) && (itemid < 34))
+				{
+					sz[0] = RestrictedBotEquipAmmos[itemid - 25]
+					RestrictedBotEquipAmmos[itemid - 25] = (sz[0] == '0') ? '1' : '0'   // primary and secondary ammo
+				}
+				set_pcvar_string(CvarPointerRestrictedWeapons, RestrictedBotWeapons);
+				set_pcvar_string(CvarPointerRestrictedEquipAmmos, RestrictedBotEquipAmmos);
+			}
 		}
-		case 8: displayMenu(id, ++g_Position[id])
-		case 9: displayMenu(id, --g_Position[id])
+		case MaxBuyMenuSlots + 1:  // Save option.
+		{
+			client_print(id, print_chat, "* %l", (g_Modified = !saveSettings(g_saveFile)) ? "CONF_SAV_FAIL" : "CONF_SAV_SUC");
+		}
 		default:
 		{
-			setWeapon(g_Position[id] * 7 + key, 2)
-			g_Modified = true
-			displayMenu(id, g_Position[id])
-
-			new a = g_Position[id] * 7 + key
-			new sz[1]
-
-			if (a < 24)
-			{
-				sz[0] = RestrictedBotWeapons[a + 1]
-				RestrictedBotWeapons[a + 1] = (sz[0] == '0') ? '1' : '0'  // primary and secondary weapons
-			}
-			else if ((a >= 24) && (a < 31))
-			{
-				sz[0] = RestrictedBotEquipAmmos[a - 24]
-				RestrictedBotEquipAmmos[a - 24] = (sz[0] == '0') ? '1' : '0'  // equipments
-			}
-			else if (a == 31)
-			{
-				sz[0] = RestrictedBotWeapons[25]
-				RestrictedBotWeapons[25] = (sz[0] == '0') ? '1' : '0'  // shield
-			}
-			else if ((a > 31) && (a < 34))
-			{
-				sz[0] = RestrictedBotEquipAmmos[a - 25]
-				RestrictedBotEquipAmmos[a - 25] = (sz[0] == '0') ? '1' : '0'   // primary and secondary ammo
-			}
-			set_pcvar_string(CvarPointerRestrictedWeapons, RestrictedBotWeapons);
-			set_pcvar_string(CvarPointerRestrictedEquipAmmos, RestrictedBotEquipAmmos);
+			position = -1;  // Back to main menu.
 		}
 	}
 
-	return PLUGIN_HANDLED
+	menu_destroy(menu);
+
+	if (position != g_Position[id] || key >= 0)
+	{
+		displayMenu(id, g_Position[id] = position);
+	}
+
+	return PLUGIN_HANDLED;
 }
 
 public blockcommand(id)

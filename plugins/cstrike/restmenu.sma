@@ -489,30 +489,8 @@ displayMenu(id, pos)
 				new itemid = ItemsInfos[any:position][key][m_Index];
 				BlockedItems[itemid] = !BlockedItems[itemid];
 
-				new sz[1]
-
-				if (itemid < 24)
-				{
-					sz[0] = RestrictedBotWeapons[itemid + 1]
-					RestrictedBotWeapons[itemid + 1] = (sz[0] == '0') ? '1' : '0'  // primary and secondary weapons
-				}
-				else if ((itemid >= 24) && (itemid < 31))
-				{
-					sz[0] = RestrictedBotEquipAmmos[itemid - 24]
-					RestrictedBotEquipAmmos[itemid - 24] = (sz[0] == '0') ? '1' : '0'  // equipments
-				}
-				else if (itemid == 31)
-				{
-					sz[0] = RestrictedBotWeapons[25]
-					RestrictedBotWeapons[25] = (sz[0] == '0') ? '1' : '0'  // shield
-				}
-				else if ((itemid > 31) && (itemid < 34))
-				{
-					sz[0] = RestrictedBotEquipAmmos[itemid - 25]
-					RestrictedBotEquipAmmos[itemid - 25] = (sz[0] == '0') ? '1' : '0'   // primary and secondary ammo
-				}
-				set_pcvar_string(CvarPointerRestrictedWeapons, RestrictedBotWeapons);
-				set_pcvar_string(CvarPointerRestrictedEquipAmmos, RestrictedBotEquipAmmos);
+				restrictPodbotItem(itemid, .toggle = true);
+				updatePodbotCvars();
 			}
 		}
 		case MaxBuyMenuSlots + 1:  // Save option.
@@ -579,31 +557,57 @@ loadSettings(filename[])
 		return 0
 
 	new text[16]
-	new a, pos = 0
+	new itemid, len, pos = 0
 
 	arrayset(RestrictedBotEquipAmmos, '0', charsmax(RestrictedBotEquipAmmos));
 	arrayset(RestrictedBotWeapons, '0', charsmax(RestrictedBotWeapons));
     
-	while (read_file(filename, pos++, text, charsmax(text), a))
+	while (read_file(filename, pos++, text, charsmax(text), len))
 	{
-		if (text[0] == ';' || !a)
+		if (text[0] == ';' || !len)
 			continue	// line is a comment
 		
 		parse(text, text, charsmax(text))
 		
-		if ((a = cs_get_item_id(text)) != CSI_NONE)
+		if ((itemid = cs_get_item_id(text)) != CSI_NONE)
 		{
-			setWeapon(a, 1)
-			if (a < 24) RestrictedBotWeapons[a + 1] = '1' // primary and secondary weapons
-			else if ((a >= 24) && (a < 31)) RestrictedBotEquipAmmos[a - 24] = '1'  // equipments
-			else if (a == 31) RestrictedBotWeapons[25] = '1'  // shield
-			else if ((a > 31) && (a < 34)) RestrictedBotEquipAmmos[a - 25] = '1'  // primary and secondary ammo
+			BlockedItems[itemid] = true;
+			restrictPodbotItem(itemid);
 		}
 	}
-	set_pcvar_string(CvarPointerRestrictedWeapons, RestrictedBotWeapons);
-	set_pcvar_string(CvarPointerRestrictedEquipAmmos, RestrictedBotEquipAmmos);
+
+	updatePodbotCvars();
 
 	return 1
+}
+
+restrictPodbotItem(const itemid, const bool:toggle = false)
+{
+	new const translatedItems[CSI_MAX_COUNT] = 
+	{ 
+		// CSI ids -> string indexes of pb_restrweapons and pb_restrequipammo cvars. See podbot.cfg. 
+		-1, 4, -1, 20, 3, 8, -1, 12, 19, 4, 5, 6, 13, 23, 17, 18, 1, 2, 21, 9, 24, 7, 16, 10, 22, 2, 3, 15, 14, 0, 11, 0, 1, 5, 6, 25, 7, 8
+	};
+
+	new index = translatedItems[itemid];
+	
+	if (index >= 0)
+	{
+		if ((itemid <= CSI_LAST_WEAPON && !(itemid & CSI_ALL_GRENADES)) || itemid == CSI_SHIELD)
+		{
+			RestrictedBotWeapons[index] = toggle && RestrictedBotWeapons[index] == '1' ? '0' : '1';
+		}
+		else
+		{
+			RestrictedBotEquipAmmos[index] = toggle && RestrictedBotEquipAmmos[index] == '1' ? '0' : '1';
+		}
+	}
+}
+
+updatePodbotCvars()
+{
+	set_pcvar_string(CvarPointerRestrictedWeapons, RestrictedBotWeapons);
+	set_pcvar_string(CvarPointerRestrictedEquipAmmos, RestrictedBotEquipAmmos);
 }
 
 public plugin_init()

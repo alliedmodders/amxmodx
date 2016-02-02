@@ -50,27 +50,24 @@ enum
 	MaxItemTypes
 };
 
-new g_menusNames[7][] =
-{
-	"pistol", 
-	"shotgun", 
-	"sub", 
-	"rifle", 
-	"machine", 
-	"equip", 
-	"ammo"
-}
 
-new const g_MenuTitle[MaxItemTypes][] =
+
+enum MenuTitle
 {
-	"MENU_TITLE_HANDGUNS",
-	"MENU_TITLE_SHOTGUNS",
-	"MENU_TITLE_SUBMACHINES",
-	"MENU_TITLE_RIFLES",
-	"MENU_TITLE_SNIPERS",
-	"MENU_TITLE_MACHINE",
-	"MENU_TITLE_EQUIPMENT",
-	"MENU_TITLE_AMMUNITION"
+	m_Title[24],
+	m_Alias[12],
+};
+
+new const g_MenuTitle[MaxItemTypes][MenuTitle] =
+{
+	{ "MENU_TITLE_HANDGUNS"   , "pistol"  },
+	{ "MENU_TITLE_SHOTGUNS"   , "shotgun" },
+	{ "MENU_TITLE_SUBMACHINES", "sub"     },
+	{ "MENU_TITLE_RIFLES"     , "rifle"   },
+	{ "MENU_TITLE_SNIPERS"    , "sniper"  },
+	{ "MENU_TITLE_MACHINE"    , "machine" },
+	{ "MENU_TITLE_EQUIPMENT"  , "equip"   },
+	{ "MENU_TITLE_AMMUNITION" , "ammo"    },
 }
 
 const MaxBuyMenuSlots = 8;
@@ -95,11 +92,6 @@ new const ItemsInfos[MaxItemTypes][MaxBuyMenuSlots][MenuItem] =
     { ITEM(VEST)   , ITEM(VESTHELM), ITEM(FLASHBANG), ITEM(HEGRENADE), ITEM(SMOKEGRENADE), ITEM(DEFUSER)  , ITEM(NVGS), ITEM(SHIELD) },
     { ITEM(PRIAMMO), ITEM(SECAMMO) , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
 };
-
-new g_menusSets[7][2] =
-{
-	{0, 6}, {6, 8}, {8, 13}, {13, 23}, {23, 24}, {24, 32}, {32, 34}
-}
 
 // First position is a position of menu (0 for ammo, 1 for pistols, 6 for equipment etc.)
 // Second is a key for TERRORIST (all is key are minus one, 1 is 0, 2 is 1 etc.)
@@ -237,82 +229,6 @@ public CS_OnBuyAttempt(player, itemid)
 	return PLUGIN_CONTINUE;
 }
 
-setWeapon(a, action)
-{
-	new b, m = g_Keys[a][0] * 8
-	
-	if (g_Keys[a][1] != -1)
-	{
-		b = m + g_Keys[a][1]
-		
-		if (action == 2)
-			g_blockPos[b] = 1 - g_blockPos[b]
-		else
-			g_blockPos[b] = action
-	}
-
-	if (g_Keys[a][2] != -1)
-	{
-		b = m + g_Keys[a][2] + 56
-		
-		if (action == 2)
-			g_blockPos[b] = 1 - g_blockPos[b]
-		else
-			g_blockPos[b] = action
-	}
-}
-
-findMenuId(name[])
-{
-	for (new i = 0; i < sizeof(g_menusNames) ; ++i)
-		if (equali(name, g_menusNames[i]))
-			return i
-	
-	return -1
-}
-
-switchCommand(id, action)
-{
-	new c = read_argc()
-
-	if (c < 3)
-	{
-		for (new x = 0; x < MAXMENUPOS; x++)
-			setWeapon(x, action)		
-
-		console_print(id, "%L", id, action ? "EQ_WE_RES" : "EQ_WE_UNRES")
-		g_Modified = true
-	} else {
-		new arg[32], a
-		new bool:found = false
-		
-		for (new b = 2; b < c; ++b)
-		{
-			read_argv(b, arg, charsmax(arg))
-			
-			if ((a = findMenuId(arg)) != -1)
-			{
-				c = g_menusSets[a][1]
-				
-				for (new i = g_menusSets[a][0]; i < c; ++i)
-					setWeapon(i, action)
-				
-				console_print(id, "%s %L %L", g_MenuTitle[a], id, (a < 5) ? "HAVE_BEEN" : "HAS_BEEN", id, action ? "RESTRICTED" : "UNRESTRICTED")
-				g_Modified = found = true
-			}
-			else if ((a = cs_get_item_id(arg)) != CSI_NONE)
-			{
-				g_Modified = found = true
-				setWeapon(a, action)
-				console_print(id, "%s %L %L", g_WeaponNames[a], id, "HAS_BEEN", id, action ? "RESTRICTED" : "UNRESTRICTED")
-			}
-		}
-
-		if (!found)
-			console_print(id, "%L", id, "NO_EQ_WE")
-	}
-}
-
 positionBlocked(a)
 {
 	new m = g_Keys[a][0] * 8
@@ -323,105 +239,200 @@ positionBlocked(a)
 	return d
 }
 
-public cmdRest(id, level, cid)
+findMenuAliasId(const name[])
 {
-	if (!cmd_access(id, level, cid, 1))
-		return PLUGIN_HANDLED
-
-	new cmd[8]
-	
-	read_argv(1, cmd, charsmax(cmd))
-	
-	if (equali("on", cmd))
-		switchCommand(id, 1)
-	else if (equali("off", cmd))
-		switchCommand(id, 0)
-	else if (equali("list", cmd))
+	for (new i = 0; i < sizeof(g_MenuTitle); ++i)
 	{
-		new arg1[8]
-		new	start = read_argv(2, arg1, charsmax(arg1)) ? str_to_num(arg1) : 1
-		
-		if (--start < 0)
-			start = 0
-		
-		if (start >= MAXMENUPOS)
-			start = MAXMENUPOS - 1
-		
-		new end = start + 10
-		
-		if (end > MAXMENUPOS)
-			end = MAXMENUPOS
-		
-		new lName[16], lValue[16], lStatus[16], lOnOff[16]
-		
-		format(lName, charsmax(lName), "%L", id, "NAME")
-		format(lValue, charsmax(lValue), "%L", id, "VALUE")
-		format(lStatus, charsmax(lStatus), "%L", id, "STATUS")
-		
-		console_print(id, "^n----- %L: -----", id, "WEAP_RES")
-		console_print(id, "     %-32.31s   %-10.9s   %-9.8s", lName, lValue, lStatus)
-		
-		if (start != -1)
+		if (equal(name, g_MenuTitle[i][m_Alias]))
 		{
-			for (new a = start; a < end; ++a)
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+findItemFullName(const itemid, name[], maxlen)
+{
+	for (new class = 0, slot; class < sizeof ItemsInfos; ++class)
+	{
+		for (slot = 0; slot < sizeof ItemsInfos[]; ++slot)
+		{
+			if (ItemsInfos[class][slot][m_Index] == itemid)
 			{
-				format(lOnOff, charsmax(lOnOff), "%L", id, positionBlocked(a) ? "ON" : "OFF")
-				console_print(id, "%3d: %-32.31s   %-10.9s   %-9.8s", a + 1, g_WeaponNames[a], g_Aliases[a], lOnOff)
+				copy(name, maxlen, ItemsInfos[class][slot][m_Name]);
+				return;
 			}
 		}
-		
-		console_print(id, "----- %L -----", id, "REST_ENTRIES_OF", start + 1, end, MAXMENUPOS)
-		
-		if (end < MAXMENUPOS)
-			console_print(id, "----- %L -----", id, "REST_USE_MORE", end + 1)
-		else
-			console_print(id, "----- %L -----", id, "REST_USE_BEGIN")
 	}
-	else if (equali("save", cmd))
+}
+
+@ConsoleCommand_Restrict(id, level, cid)
+{
+	if (!cmd_access(id, level, cid, 1))
+	{
+		return PLUGIN_HANDLED;
+	}
+	
+	new command[8];
+	read_argv(1, command, charsmax(command));
+
+	trim(command);
+	strtolower(command);
+	
+	new const ch1 = command[0];
+	new const ch2 = command[1];
+	
+	if (ch1 == 'o' && (ch2 == 'n' || ch2 == 'f'))  // [on]/[of]f
+	{
+		new const bool:status = (ch2 == 'n');
+		new const numArgs = read_argc();
+
+		if (numArgs <= 2) // No arguments, all items are concerned.
+		{
+			arrayset(BlockedItems, status, sizeof(BlockedItems));
+			console_print(id, "%l", status ? "EQ_WE_RES" : "EQ_WE_UNRES");
+			g_Modified = true;
+		} 
+		else // Either item type or specific alias
+		{
+			new commands[128];
+			new itemName[64];
+			new argument[16];
+			new bool:found;
+			new position, class;
+			new itemid, slot;
+			
+			for (new argindex = 2; argindex < numArgs; ++argindex, position = 0)
+			{
+				read_argv(argindex, commands, charsmax(commands));
+
+				trim(commands);
+				strtolower(commands);
+				
+				// In case argument contains several input between quotes.
+				while ((position = argparse(commands, position, argument, charsmax(argument))) != -1)
+				{
+					if ((class = findMenuAliasId(argument)) != -1)
+					{
+						for (slot = 0; slot < sizeof ItemsInfos[] && (itemid = ItemsInfos[class][slot][m_Index]) != CSI_NONE; ++slot)
+						{
+							BlockedItems[itemid] = status;
+						}
+						
+						console_print(id, "%l %l %l", g_MenuTitle[class], (class < 6) ? "HAVE_BEEN" : "HAS_BEEN", status ? "RESTRICTED" : "UNRESTRICTED");
+						g_Modified = found = true;
+					}
+					else if ((itemid = cs_get_item_id(argument)) != CSI_NONE)
+					{
+						BlockedItems[itemid] = status;
+						findItemFullName(itemid, itemName, charsmax(itemName));
+						
+						console_print(id, "%l %l %l", itemName, "HAS_BEEN", status ? "RESTRICTED" : "UNRESTRICTED");
+						g_Modified = found = true;
+					}
+				}
+			}
+			
+			if (!found)
+			{
+				console_print(id, "%l", "NO_EQ_WE");
+			}
+		}
+	}
+	else if (ch1 == 'l' && ch2 == 'i')  // [li]st
+	{
+		new argument[2];
+		new selection = -1;
+		
+		if (read_argv(2, argument, charsmax(argument)))
+		{
+			selection = clamp(strtol(argument), 1, sizeof ItemsInfos) - 1;
+		}
+
+		console_print(id, "^n----- %l: -----^n", "WEAP_RES");
+		
+		if (selection == -1) // Item types list.
+		{
+			for (new i = 0; i < sizeof g_MenuTitle; ++i)
+			{
+				console_print(id, "%3d: %l", i + 1, g_MenuTitle[i][m_Title]);
+			}
+			
+			console_print(id, "^n----- %l: -----^n", "REST_USE_HOW");
+		}
+		else // Items list.
+		{
+			new langName[24], langValue[24], langStatus[24], langOnOff[24];
+			new alias[16], itemid;
+			
+			LookupLangKey(langName, charsmax(langName), "NAME", id);
+			LookupLangKey(langValue, charsmax(langValue), "VALUE", id);
+			LookupLangKey(langStatus, charsmax(langStatus), "STATUS", id);
+			
+			console_print(id, "  %-32.31s   %-10.9s   %-9.8s", langName, langValue, langStatus)
+		
+			for (new slot = 0; slot < sizeof ItemsInfos[] && (itemid = ItemsInfos[selection][slot][m_Index]) != CSI_NONE; ++slot)
+			{
+				LookupLangKey(langOnOff, charsmax(langOnOff), BlockedItems[itemid] ? "ON" : "OFF", id);
+				LookupLangKey(langName, charsmax(langName), ItemsInfos[selection][slot][m_Name], id);
+				
+				cs_get_item_alias(itemid, alias, charsmax(alias));
+				
+				console_print(id, "  %-32.31s   %-10.9s   %-9.8s", langName, alias, langOnOff);
+			}
+		}
+	}
+	else if(ch1 == 's')  // [s]ave
 	{
 		if (saveSettings(g_saveFile))
 		{
-			console_print(id, "%L", id, "REST_CONF_SAVED", g_saveFile)
-			g_Modified = false
-		}
-		else
-			console_print(id, "%L", id, "REST_COULDNT_SAVE", g_saveFile)
-	}
-	else if (equali("load", cmd))
-	{
-		setc(g_blockPos, sizeof(g_blockPos), 0)	// Clear current settings
-		new arg1[64]
-
-		if (read_argv(2, arg1, charsmax(arg1)))
-		{
-			new configsdir[32]
-			get_configsdir(configsdir, charsmax(configsdir))
-
-			format(arg1, charsmax(arg1), "%s/%s", configsdir, arg1)
+			g_Modified = false;
 		}
 		
-		if (loadSettings(arg1))
+		console_print(id, "%l", g_Modified ? "REST_COULDNT_SAVE" : "REST_CONF_SAVED", g_saveFile);
+	}
+	else if (ch1 == 'l' && ch2 == 'o')  // [lo]ad
+	{
+		arrayset(BlockedItems, false, sizeof BlockedItems); 
+		
+		new argument[64];
+		new length;
+
+		length = read_argv(2, argument, charsmax(argument));
+		length -= trim(argument);
+		
+		if (length)
 		{
-			console_print(id, "%L", id, "REST_CONF_LOADED", arg1)
-			g_Modified = true
+			new filepath[PLATFORM_MAX_PATH];
+			length = get_configsdir(filepath, charsmax(filepath));
+
+			formatex(filepath[length], charsmax(filepath) - length, "/%s", argument);
+			
+			if (loadSettings(filepath))
+			{
+				g_Modified = true;
+			}
 		}
-		else
-			console_print(id, "%L", id, "REST_COULDNT_LOAD", arg1)
-	} else {
-		console_print(id, "%L", id, "COM_REST_USAGE")
-		console_print(id, "%L", id, "COM_REST_COMMANDS")
-		console_print(id, "%L", id, "COM_REST_ON")
-		console_print(id, "%L", id, "COM_REST_OFF")
-		console_print(id, "%L", id, "COM_REST_ONV")
-		console_print(id, "%L", id, "COM_REST_OFFV")
-		console_print(id, "%L", id, "COM_REST_LIST")
-		console_print(id, "%L", id, "COM_REST_SAVE")
-		console_print(id, "%L", id, "COM_REST_LOAD")
-		console_print(id, "%L", id, "COM_REST_VALUES")
-		console_print(id, "%L", id, "COM_REST_TYPE")
+
+		console_print(id, "%l", g_Modified ? "REST_CONF_LOADED" : "REST_COULDNT_LOAD", argument);
+	}
+	else 
+	{
+		console_print(id, "%l", "COM_REST_USAGE");
+		console_print(id, "^n%l", "COM_REST_COMMANDS");
+		console_print(id, "%l", "COM_REST_ON");
+		console_print(id, "%l", "COM_REST_OFF");
+		console_print(id, "%l", "COM_REST_ONV");
+		console_print(id, "%l", "COM_REST_OFFV");
+		console_print(id, "%l", "COM_REST_LIST");
+		console_print(id, "%l", "COM_REST_SAVE");
+		console_print(id, "%l^n", "COM_REST_LOAD");
+		console_print(id, "%l^n", "COM_REST_VALUES");
+		console_print(id, "%l^n", "COM_REST_TYPE");
 	}
 
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 displayMenu(id, pos)
@@ -435,13 +446,13 @@ displayMenu(id, pos)
 	{
 		for (new type = 0; type < sizeof(g_MenuTitle); ++type)
 		{
-			LookupLangKey(menuBody, charsmax(menuBody), g_MenuTitle[type], id);
+			LookupLangKey(menuBody, charsmax(menuBody), g_MenuTitle[type][m_Title], id);
 			menu_additem(menu, menuBody);
 		}
 	}
 	else // Sub-menus
 	{
-		formatex(menuTitle[length], charsmax(menuTitle) - length, " > \d%l", g_MenuTitle[pos]);
+		formatex(menuTitle[length], charsmax(menuTitle) - length, " > \d%l", g_MenuTitle[pos][m_Title]);
 		menu_setprop(menu, MPROP_TITLE, menuTitle);
 
 		for (new slot = 0, data[MenuItem]; slot < MaxBuyMenuSlots; ++slot)
@@ -497,7 +508,12 @@ displayMenu(id, pos)
 		}
 		case MaxBuyMenuSlots + 1:  // Save option.
 		{
-			client_print(id, print_chat, "* %l", (g_Modified = !saveSettings(g_saveFile)) ? "CONF_SAV_FAIL" : "CONF_SAV_SUC");
+			if (saveSettings(g_saveFile))
+			{
+				g_Modified = false;
+			}
+			
+			client_print(id, print_chat, "* %l", g_Modified ? "CONF_SAV_FAIL" : "CONF_SAV_SUC");
 		}
 		default:
 		{
@@ -562,7 +578,7 @@ bool:saveSettings(const filename[])
 				if (showCategory)
 				{
 					showCategory = false;
-					fprintf(fp, "^n; %l^n; -^n", g_MenuTitle[i]);
+					fprintf(fp, "^n; %l^n; -^n", g_MenuTitle[i][m_Title]);
 				}
 				
 				cs_get_item_alias(itemid, alias, charsmax(alias));
@@ -652,7 +668,7 @@ public plugin_init()
 	register_dictionary("common.txt")
 
 	register_clcmd("amx_restmenu", "@ClientCommand_MainMenu", ADMIN_CFG, "- displays weapons restriction menu");
-	register_concmd("amx_restrict", "cmdRest", ADMIN_CFG, "- displays help for weapons restriction");
+	register_concmd("amx_restrict", "@ConsoleCommand_Restrict", ADMIN_CFG, "- displays help for weapons restriction");
 
 	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"  , RestrictedBotWeapons);
 	CvarPointerRestrictedEquipAmmos = register_cvar("amx_restrequipammo", RestrictedBotEquipAmmos);

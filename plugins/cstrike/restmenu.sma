@@ -24,7 +24,6 @@ new bool:BlockedItems[CSI_MAX_COUNT];
 new g_Position[MAX_PLAYERS + 1]
 new g_Modified
 new g_saveFile[64]
-new g_Restricted[] = "* This item is restricted *"
 
 new RestrictedBotWeapons[] = "00000000000000000000000000";
 new RestrictedBotEquipAmmos[] = "000000000";
@@ -75,7 +74,7 @@ public CS_OnBuyAttempt(player, itemid)
 {
 	if (BlockedItems[itemid])
 	{
-		client_print(player, print_center, "%s", g_Restricted);
+		client_print(player, print_center, "%l", "RESTRICTED_ITEM");
 		return PLUGIN_HANDLED;
 	}
 	
@@ -376,8 +375,8 @@ displayMenu(id, pos)
 
 public blockcommand(id)
 {
-	client_print(id, print_center, "%s", g_Restricted)
-	return PLUGIN_HANDLED
+	client_print(id, print_center, "%l", "RESTRICTED_ITEM");
+	return PLUGIN_HANDLED;
 }
 
 @ClientCommand_MainMenu(id, level, cid)
@@ -510,8 +509,12 @@ public plugin_init()
 	register_dictionary("restmenu.txt")
 	register_dictionary("common.txt")
 
-	register_clcmd("amx_restmenu", "@ClientCommand_MainMenu", ADMIN_CFG, "- displays weapons restriction menu");
-	register_concmd("amx_restrict", "@ConsoleCommand_Restrict", ADMIN_CFG, "- displays help for weapons restriction");
+	new description[128], id = LANG_SERVER;
+	LookupLangKey(description, charsmax(description), "REG_CMD_MENU", id);
+	register_clcmd("amx_restmenu", "@ClientCommand_MainMenu", ADMIN_CFG, description);
+	
+	LookupLangKey(description, charsmax(description), "REG_CMD_REST", id);
+	register_concmd("amx_restrict", "@ConsoleCommand_Restrict", ADMIN_CFG, description);
 
 	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"  , RestrictedBotWeapons);
 	CvarPointerRestrictedEquipAmmos = register_cvar("amx_restrequipammo", RestrictedBotEquipAmmos);

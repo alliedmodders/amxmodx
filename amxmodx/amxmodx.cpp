@@ -1522,7 +1522,8 @@ static cell AMX_NATIVE_CALL get_pluginsnum(AMX *amx, cell *params)
 	return g_plugins.getPluginsNum();
 }
 
-static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param */
+// native register_concmd(const cmd[], const function[], flags = -1, const info[] = "", FlagManager = -1, bool:info_ml = false);
+static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin* plugin = g_plugins.findPluginFast(amx);
 	int i, idx = 0;
@@ -1541,7 +1542,8 @@ static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param *
 	CmdMngr::Command* cmd;
 	int access = params[3];
 	bool listable = true;
-	
+	bool info_ml = *params / sizeof(cell) >= 6 && params[6] != 0 && i;
+
 	if (access < 0)		// is access is -1 then hide from listing
 	{
 		access = 0;
@@ -1553,7 +1555,7 @@ static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param *
 		FlagMan.LookupOrAdd(temp,access,amx);
 	}
 
-	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable)) == NULL)
+	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable, info_ml)) == NULL)
 		return 0;
 
 	if (CheckBadConList(temp, 1))
@@ -1567,7 +1569,8 @@ static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params) /* 4 param *
 	return cmd->getId();
 }
 
-static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params) /* 4 param */
+// native register_clcmd(const client_cmd[], const function[], flags = -1, const info[] = "", FlagManager = -1, bool:info_ml = false);
+static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin* plugin = g_plugins.findPluginFast(amx);
 	int i, idx = 0;
@@ -1582,11 +1585,12 @@ static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params) /* 4 param */
 	}
 	
 	temp = get_amxstring(amx, params[1], 0, i);
-	char* info = get_amxstring(amx, params[4], 1, i);
+	const char* info = get_amxstring(amx, params[4], 1, i);
 	CmdMngr::Command* cmd;
 	int access = params[3];
 	bool listable = true;
-	
+	bool info_ml = *params / sizeof(cell) >= 6 && params[6] != 0 && i;
+
 	if (access < 0)		// is access is -1 then hide from listing
 	{
 		access = 0;
@@ -1598,7 +1602,7 @@ static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params) /* 4 param */
 		FlagMan.LookupOrAdd(temp,access,amx);
 	}
 
-	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable)) == NULL)
+	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable, info_ml)) == NULL)
 		return 0;
 	
 	cmd->setCmdType(CMD_ClientCommand);
@@ -1606,7 +1610,8 @@ static cell AMX_NATIVE_CALL register_clcmd(AMX *amx, cell *params) /* 4 param */
 	return cmd->getId();
 }
 
-static cell AMX_NATIVE_CALL register_srvcmd(AMX *amx, cell *params) /* 2 param */
+// native register_srvcmd(const server_cmd[], const function[], flags = -1, const info[] = "", bool:info_ml = false);
+static cell AMX_NATIVE_CALL register_srvcmd(AMX *amx, cell *params)
 {
 	CPluginMngr::CPlugin* plugin = g_plugins.findPluginFast(amx);
 	int i, idx = 0;
@@ -1621,18 +1626,19 @@ static cell AMX_NATIVE_CALL register_srvcmd(AMX *amx, cell *params) /* 2 param *
 	}
 	
 	temp = get_amxstring(amx, params[1], 0, i);
-	char* info = get_amxstring(amx, params[4], 1, i);
+	const char* info = get_amxstring(amx, params[4], 1, i);
 	CmdMngr::Command* cmd;
 	int access = params[3];
 	bool listable = true;
-	
+	bool info_ml = *params / sizeof(cell) >= 5 && params[5] != 0 && i;
+
 	if (access < 0)		// is access is -1 then hide from listing
 	{
 		access = 0;
 		listable = false;
 	}
-	
-	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable)) == NULL)
+
+	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable, info_ml)) == NULL)
 		return 0;
 	
 	cmd->setCmdType(CMD_ServerCommand);
@@ -1641,7 +1647,8 @@ static cell AMX_NATIVE_CALL register_srvcmd(AMX *amx, cell *params) /* 2 param *
 	return cmd->getId();
 }
 
-static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params) /* 7 param */
+// native get_concmd(index, cmd[], len1, &flags, info[], len2, flag, id = -1, &bool:info_ml = false);
+static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params)
 {
 	int who = params[8];
 
@@ -1661,7 +1668,12 @@ static cell AMX_NATIVE_CALL get_concmd(AMX *amx, cell *params) /* 7 param */
 	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6]);
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
-	
+
+	if (*params / sizeof(cell) >= 9)
+	{
+		*get_amxaddr(amx, params[9]) = cmd->isInfoML();
+	}
+
 	return 1;
 }
 
@@ -1687,7 +1699,8 @@ static cell AMX_NATIVE_CALL get_concmd_plid(AMX *amx, cell *params)
 	return cmd->getPlugin()->getId();
 }
 
-static cell AMX_NATIVE_CALL get_clcmd(AMX *amx, cell *params) /* 7 param */
+// native get_clcmd(index, command[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
+static cell AMX_NATIVE_CALL get_clcmd(AMX *amx, cell *params)
 {
 	CmdMngr::Command* cmd = g_commands.getCmd(params[1], CMD_ClientCommand, params[7]);
 	
@@ -1696,12 +1709,19 @@ static cell AMX_NATIVE_CALL get_clcmd(AMX *amx, cell *params) /* 7 param */
 
 	set_amxstring_utf8(amx, params[2], cmd->getCmdLine(), strlen(cmd->getCmdLine()), params[3]);
 	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6]);
+	
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
+
+	if (*params / sizeof(cell) >= 8)
+	{
+		*get_amxaddr(amx, params[8]) = cmd->isInfoML();
+	}
 
 	return 1;
 }
 
+// native get_srvcmd(index, server_cmd[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
 static cell AMX_NATIVE_CALL get_srvcmd(AMX *amx, cell *params)
 {
 	CmdMngr::Command* cmd = g_commands.getCmd(params[1], CMD_ServerCommand, params[7]);
@@ -1713,7 +1733,12 @@ static cell AMX_NATIVE_CALL get_srvcmd(AMX *amx, cell *params)
 	set_amxstring_utf8(amx, params[5], cmd->getCmdInfo(), strlen(cmd->getCmdInfo()), params[6]);
 	cell *cpFlags = get_amxaddr(amx, params[4]);
 	*cpFlags = cmd->getFlags();
-	
+
+	if (*params / sizeof(cell) >= 8)
+	{
+		*get_amxaddr(amx, params[8]) = cmd->isInfoML();
+	}
+
 	return 1;
 }
 

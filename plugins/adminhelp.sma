@@ -78,7 +78,7 @@ public cmdHelp(id, level, cid)
 
 	console_print(id, "^n----- %L -----", id, "HELP_COMS")
 	
-	new info[128], cmd[32], eflags
+	new info[128], cmd[32], eflags, bool:is_info_ml
 	new end = start + lHelpAmount
 
 	if (end > clcmdsnum)
@@ -88,7 +88,13 @@ public cmdHelp(id, level, cid)
 
 	for (new i = start; i < end; i++)
 	{
-		get_concmd(i, cmd, charsmax(cmd), eflags, info, charsmax(info), flags, id)
+		get_concmd(i, cmd, charsmax(cmd), eflags, info, charsmax(info), flags, id, is_info_ml)
+
+		if (is_info_ml)
+		{
+			LookupLangKey(info, charsmax(info), info, id);
+		}
+
 		console_print(id, "%3d: %s %s", i + 1, cmd, info)
 	}
 	

@@ -30,7 +30,7 @@ CmdMngr::CmdMngr()
 }
 
 CmdMngr::Command::Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const char* pinfo, int pflags, 
-							int pfunc, bool pviewable, CmdMngr* pparent) : commandline(pcmd), info(pinfo)
+							int pfunc, bool pviewable, bool pinfo_ml, CmdMngr* pparent) : commandline(pcmd), info(pinfo)
 {
 	char szCmd[64], szArg[64];
 	*szCmd = 0; *szArg = 0;
@@ -43,6 +43,7 @@ CmdMngr::Command::Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const
 	prefix = 0;
 	function = pfunc;
 	listable = pviewable;
+	info_ml = pinfo_ml;
 	parent = pparent;
 	id = --uniqueid;
 }
@@ -52,9 +53,9 @@ CmdMngr::Command::~Command()
 	++uniqueid;
 }
 
-CmdMngr::Command* CmdMngr::registerCommand(CPluginMngr::CPlugin* plugin, int func, char* cmd, char* info, int level, bool listable)
+CmdMngr::Command* CmdMngr::registerCommand(CPluginMngr::CPlugin* plugin, int func, const char* cmd, const char* info, int level, bool listable, bool info_ml)
 {
-	Command* b = new Command(plugin, cmd, info, level, func, listable, this);
+	Command* b = new Command(plugin, cmd, info, level, func, listable, info_ml, this);
 	if (b == 0) return 0;
 	setCmdLink(&sortedlists[0], b);
 	

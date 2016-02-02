@@ -38,6 +38,7 @@ public:
 		ke::AString commandline;
 		ke::AString info;
 		
+		bool info_ml;
 		bool listable;
 		int function;
 		int flags;
@@ -46,7 +47,7 @@ public:
 		int prefix;
 		static int uniqueid;
 		
-		Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const char* pinfo, int pflags, int pfunc, bool pviewable, CmdMngr* pparent);
+		Command(CPluginMngr::CPlugin* pplugin, const char* pcmd, const char* pinfo, int pflags, int pfunc, bool pviewable, bool pinfo_ml, CmdMngr* pparent);
 		~Command();
 	public:
 		inline const char* getCommand() { return command.chars(); }
@@ -59,6 +60,7 @@ public:
 		inline bool gotAccess(int f) const { return (!flags || ((flags & f) != 0)); }
 		inline CPluginMngr::CPlugin* getPlugin() { return plugin; }
 		inline bool isViewable() const { return listable; }
+		inline bool isInfoML() const { return info_ml; }
 		inline int getFlags() const { return flags; }
 		inline long int getId() const { return (long int)id; }
 		
@@ -106,7 +108,7 @@ public:
 
 	void registerPrefix(const char* nn);
 	
-	Command* registerCommand(CPluginMngr::CPlugin* plugin, int func, char* cmd, char* info, int level, bool listable);
+	Command* registerCommand(CPluginMngr::CPlugin* plugin, int func, const char* cmd, const char* info, int level, bool listable, bool info_ml);
 	Command* getCmd(long int id, int type, int access);
 	int getCmdNum(int type, int access);
 	

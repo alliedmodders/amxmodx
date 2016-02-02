@@ -78,8 +78,14 @@ stock cmd_access(id, level, cid, num, bool:accesssilent = false)
 	}
 	if (read_argc() < num)
 	{
-		new hcmd[32], hinfo[128], hflag;
-		get_concmd(cid, hcmd, charsmax(hcmd), hflag, hinfo, charsmax(hinfo), level);
+		new hcmd[32], hinfo[128], hflag, bool:info_ml;
+		get_concmd(cid, hcmd, charsmax(hcmd), hflag, hinfo, charsmax(hinfo), level, info_ml);
+
+		if (info_ml)
+		{
+			LookupLangKey(hinfo, charsmax(hinfo), hinfo, id);
+		}
+
 		console_print(id, "%L:  %s %s", id, "USAGE", hcmd, hinfo);
 		return 0;
 	}

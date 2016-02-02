@@ -11,9 +11,6 @@
 // Restrict Weapons Plugin
 //
 
-// Uncomment if you want to have seperate settings for each map
-//#define MAPSETTINGS
-
 #include <amxmodx>
 #include <amxmisc>
 #include <cstrike>
@@ -28,6 +25,7 @@ new g_saveFile[64]
 new RestrictedBotWeapons[] = "00000000000000000000000000";
 new RestrictedBotEquipAmmos[] = "000000000";
 
+new CvarPointerAllowMapSettings;
 new CvarPointerRestrictedWeapons;
 new CvarPointerRestrictedEquipAmmos;
 
@@ -516,17 +514,30 @@ public plugin_init()
 	LookupLangKey(description, charsmax(description), "REG_CMD_REST", id);
 	register_concmd("amx_restrict", "@ConsoleCommand_Restrict", ADMIN_CFG, description);
 
-	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"  , RestrictedBotWeapons);
-	CvarPointerRestrictedEquipAmmos = register_cvar("amx_restrequipammo", RestrictedBotEquipAmmos);
-    
-	new configsDir[64];
+	CvarPointerAllowMapSettings     = register_cvar("amx_restrmapsettings", "0");
+	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"    , RestrictedBotWeapons);
+	CvarPointerRestrictedEquipAmmos = register_cvar("amx_restrequipammo"  , RestrictedBotEquipAmmos);
+}
+
+public OnConfigsExecuted()
+{
+	new const configFile[] = "weaprest";
+	new const configFileExt[] = "ini";
+	
+	new configsDir[PLATFORM_MAX_PATH];
 	get_configsdir(configsDir, charsmax(configsDir));
-#if defined MAPSETTINGS
-	new mapname[32]
-	get_mapname(mapname, charsmax(mapname))
-	format(g_saveFile, charsmax(g_saveFile), "%s/weaprest_%s.ini", configsDir, mapname)
-#else
-	format(g_saveFile, charsmax(g_saveFile), "%s/weaprest.ini", configsDir)
-#endif
-	loadSettings(g_saveFile)
+	
+	if (!!get_pcvar_num(CvarPointerAllowMapSettings))
+	{
+		new mapName[32];
+		get_mapname(mapName, charsmax(mapName));
+		
+		formatex(g_saveFile, charsmax(g_saveFile), "%s/%s_%s.%s", configsDir, configFile, mapName, configFileExt);
+	}
+	else
+	{
+		formatex(g_saveFile, charsmax(g_saveFile), "%s/%s.%s", configsDir, configFile, configFileExt);
+	}
+	
+	loadSettings(g_saveFile);
 }

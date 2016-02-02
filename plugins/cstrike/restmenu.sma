@@ -21,12 +21,8 @@
 new const PluginName[] = "Restrict Weapons";
 
 new bool:BlockedItems[CSI_MAX_COUNT];
-
-#define MAXMENUPOS 34
-
 new g_Position[MAX_PLAYERS + 1]
 new g_Modified
-new g_blockPos[112]
 new g_saveFile[64]
 new g_Restricted[] = "* This item is restricted *"
 
@@ -36,29 +32,13 @@ new RestrictedBotEquipAmmos[] = "000000000";
 new CvarPointerRestrictedWeapons;
 new CvarPointerRestrictedEquipAmmos;
 
-enum
-{
-	ItemType_Handguns,
-	ItemType_Shotguns,
-	ItemType_SubMachineGuns,
-	ItemType_AssaultRifles,
-	ItemType_SniperRifles,
-	ItemType_MachineGuns,
-	ItemType_Equipment,
-	ItemType_Ammunition,
-//  -
-	MaxItemTypes
-};
-
-
-
 enum MenuTitle
 {
 	m_Title[24],
 	m_Alias[12],
 };
 
-new const g_MenuTitle[MaxItemTypes][MenuTitle] =
+new const g_MenuTitle[][MenuTitle] =
 {
 	{ "MENU_TITLE_HANDGUNS"   , "pistol"  },
 	{ "MENU_TITLE_SHOTGUNS"   , "shotgun" },
@@ -70,8 +50,6 @@ new const g_MenuTitle[MaxItemTypes][MenuTitle] =
 	{ "MENU_TITLE_AMMUNITION" , "ammo"    },
 }
 
-const MaxBuyMenuSlots = 8;
-
 enum MenuItem
 {
     m_Index,
@@ -81,7 +59,7 @@ enum MenuItem
 #define ITEM(%0)  { CSI_%0, "MENU_ITEM_" + #%0 }
 #define ITEM_NONE { CSI_NONE, "" }
 
-new const ItemsInfos[MaxItemTypes][MaxBuyMenuSlots][MenuItem] =
+new const ItemsInfos[][][MenuItem] =
 {
     { ITEM(USP)    , ITEM(GLOCK18) , ITEM(DEAGLE)   , ITEM(P228)     , ITEM(ELITE)       , ITEM(FIVESEVEN), ITEM_NONE , ITEM_NONE    },
     { ITEM(M3)     , ITEM(XM1014)  , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
@@ -93,131 +71,6 @@ new const ItemsInfos[MaxItemTypes][MaxBuyMenuSlots][MenuItem] =
     { ITEM(PRIAMMO), ITEM(SECAMMO) , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
 };
 
-// First position is a position of menu (0 for ammo, 1 for pistols, 6 for equipment etc.)
-// Second is a key for TERRORIST (all is key are minus one, 1 is 0, 2 is 1 etc.)
-// Third is a key for CT
-// Position with -1 doesn't exist
-
-new g_Keys[MAXMENUPOS][3] =
-{
-	{1, 1, 1},	// H&K USP .45 Tactical
-	{1, 0, 0},	// Glock18 Select Fire
-	{1, 3, 3},	// Desert Eagle .50AE
-	{1, 2, 2},	// SIG P228
-	{1, 4, -1}, // Dual Beretta 96G Elite
-	{1, -1, 4}, // FN Five-Seven
-	{2, 0, 0},	// Benelli M3 Super90
-	{2, 1, 1},	// Benelli XM1014
-	{3, 1, 1},	// H&K MP5-Navy
-	{3, -1, 0}, // Steyr Tactical Machine Pistol
-	{3, 3, 3},	// FN P90
-	{3, 0, -1}, // Ingram MAC-10
-	{3, 2, 2},	// H&K UMP45
-	{4, 1, -1}, // AK-47
-	{4, 0, -1}, // Gali
-	{4, -1, 0}, // Famas
-	{4, 3, -1}, // Sig SG-552 Commando
-	{4, -1, 2}, // Colt M4A1 Carbine
-	{4, -1, 3}, // Steyr Aug
-	{4, 2, 1},	// Steyr Scout
-	{4, 4, 5},	// AI Arctic Warfare/Magnum
-	{4, 5, -1}, // H&K G3/SG-1 Sniper Rifle
-	{4, -1, 4}, // Sig SG-550 Sniper
-	{5, 0, 0},	// FN M249 Para
-	{6, 0, 0},	// Kevlar Vest
-	{6, 1, 1},	// Kevlar Vest & Helmet
-	{6, 2, 2},	// Flashbang
-	{6, 3, 3},	// HE Grenade
-	{6, 4, 4},	// Smoke Grenade
-	{6, -1, 6}, // Defuse Kit
-	{6, 5, 5},	// NightVision Goggles
-	{6, -1, 7},	// Tactical Shield
-	{0, 5, 5},	// Primary weapon ammo
-	{0, 6, 6}	// Secondary weapon ammo
-}
-
-new g_WeaponNames[MAXMENUPOS][] =
-{
-	"H&K USP .45 Tactical", 
-	"Glock18 Select Fire", 
-	"Desert Eagle .50AE", 
-	"SIG P228", 
-	"Dual Beretta 96G Elite", 
-	"FN Five-Seven", 
-	"Benelli M3 Super90", 
-	"Benelli XM1014", 
-	"H&K MP5-Navy", 
-	"Steyr Tactical Machine Pistol", 
-	"FN P90", 
-	"Ingram MAC-10", 
-	"H&K UMP45", 
-	"AK-47", 
-	"Gali", 
-	"Famas", 
-	"Sig SG-552 Commando", 
-	"Colt M4A1 Carbine", 
-	"Steyr Aug", 
-	"Steyr Scout", 
-	"AI Arctic Warfare/Magnum", 
-	"H&K G3/SG-1 Sniper Rifle", 
-	"Sig SG-550 Sniper", 
-	"FN M249 Para", 
-	"Kevlar Vest", 
-	"Kevlar Vest & Helmet", 
-	"Flashbang", 
-	"HE Grenade", 
-	"Smoke Grenade", 
-	"Defuse Kit", 
-	"NightVision Goggles", 
-	"Tactical Shield", 
-	"Primary weapon ammo", 
-	"Secondary weapon ammo"
-}
-
-new g_Aliases[MAXMENUPOS][] =
-{
-	"usp",		//Pistols
-	"glock", 
-	"deagle", 
-	"p228", 
-	"elites", 
-	"fn57", 
-
-	"m3",		//Shotguns
-	"xm1014", 
-
-	"mp5",		//SMG
-	"tmp", 
-	"p90", 
-	"mac10", 
-	"ump45", 
-
-	"ak47",		//Rifles
-	"galil", 
-	"famas", 
-	"sg552", 
-	"m4a1", 
-	"aug", 
-	"scout", 
-	"awp", 
-	"g3sg1", 
-	"sg550", 
-
-	"m249",		//Machine Gun
-
-	"vest",		//Equipment
-	"vesthelm", 
-	"flash", 
-	"hegren", 
-	"sgren", 
-	"defuser", 
-	"nvgs", 
-	"shield", 
-
-	"primammo", //Ammo
-	"secammo"
-}
-
 public CS_OnBuyAttempt(player, itemid)
 {
 	if (BlockedItems[itemid])
@@ -227,16 +80,6 @@ public CS_OnBuyAttempt(player, itemid)
 	}
 	
 	return PLUGIN_CONTINUE;
-}
-
-positionBlocked(a)
-{
-	new m = g_Keys[a][0] * 8
-	new d = (g_Keys[a][1] == -1) ? 0 : g_blockPos[m + g_Keys[a][1]]
-	
-	d += (g_Keys[a][2] == -1) ? 0 : g_blockPos[m + g_Keys[a][2] + 56]
-	
-	return d
 }
 
 findMenuAliasId(const name[])
@@ -455,7 +298,7 @@ displayMenu(id, pos)
 		formatex(menuTitle[length], charsmax(menuTitle) - length, " > \d%l", g_MenuTitle[pos][m_Title]);
 		menu_setprop(menu, MPROP_TITLE, menuTitle);
 
-		for (new slot = 0, data[MenuItem]; slot < MaxBuyMenuSlots; ++slot)
+		for (new slot = 0, data[MenuItem]; slot < sizeof ItemsInfos[]; ++slot)
 		{
 			data = ItemsInfos[pos][slot];
 
@@ -489,7 +332,7 @@ displayMenu(id, pos)
 	
 	switch (key + 1)
 	{
-		case 1 .. MaxBuyMenuSlots:
+		case 1 .. sizeof ItemsInfos[]:
 		{
 			if (position < 0)  // We are right now in the main menu, go to sub-menu.
 			{
@@ -506,7 +349,7 @@ displayMenu(id, pos)
 				updatePodbotCvars();
 			}
 		}
-		case MaxBuyMenuSlots + 1:  // Save option.
+		case sizeof ItemsInfos[] + 1:  // Save option.
 		{
 			if (saveSettings(g_saveFile))
 			{

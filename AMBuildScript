@@ -123,7 +123,7 @@ class AMXXConfig(object):
     cfg = builder.DetectCompilers()
     cxx = cfg.cxx
 
-    if cxx.behavior == 'gcc':
+    if cxx.like('gcc'):
       cfg.cflags += [
         '-pipe',
         '-fno-strict-aliasing',
@@ -215,16 +215,16 @@ class AMXXConfig(object):
     # Optimization
     if builder.options.opt == '1':
       cfg.defines += ['NDEBUG']
-      if cxx.behavior == 'gcc':
+      if cxx.like('gcc'):
         cfg.cflags += ['-O2']
-      elif cxx.behavior == 'msvc':
+      elif cxx.like('msvc'):
         cfg.cflags += ['/Ox']
         cfg.linkflags += ['/OPT:ICF', '/OPT:REF']
 
     # Debugging
     if builder.options.debug == '1':
       cfg.defines += ['DEBUG', '_DEBUG']
-      if cxx.behavior == 'msvc':
+      if cxx.like('msvc'):
         cfg.cflags += ['/Od', '/RTC1']
 
     # This needs to be after our optimization flags which could otherwise disable it.
@@ -240,7 +240,7 @@ class AMXXConfig(object):
         cfg.postlink += ['-static-libgcc']
       elif cxx.name == 'clang':
         cfg.postlink += ['-lgcc_eh']
-      if cxx.behavior == 'gcc':
+      if cxx.like('gcc'):
         self.stdcxx_path = self.invokeCompiler(['-m32', '-print-file-name=' + 'libstdc++.a'])[0]
     elif builder.target_platform == 'mac':
       cfg.defines += ['OSX', '_OSX', 'POSIX']

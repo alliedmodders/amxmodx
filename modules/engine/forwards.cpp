@@ -57,12 +57,14 @@ int Spawn(edict_t *pEntity)
 		PRECACHE_MODEL("models/rpgrocket.mdl");
 		g_precachedStuff = true;
 	}
-	if (SpawnForward != -1) {
-		int retVal = 0;
-		int id = ENTINDEX(pEntity);
-		retVal = MF_ExecuteForward(SpawnForward, (cell)id);
-		if (retVal)
+	if (SpawnForward != -1)
+	{
+		int id = TypeConversion.edict_to_id(pEntity);
+
+		if (MF_ExecuteForward(SpawnForward, (cell)id))
+		{
 			RETURN_META_VALUE(MRES_SUPERCEDE, -1);
+		}
 	}
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
@@ -71,6 +73,7 @@ void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex
 {
 	if (PlaybackForward != -1) {
 		edict_t *e = (edict_t *)pInvoker;
+		int invoker = 0;
 		int retVal = 0;
 		static cell cOrigin[3];
 		static cell cAngles[3];
@@ -84,7 +87,9 @@ void PlaybackEvent(int flags, const edict_t *pInvoker, unsigned short eventindex
 		cAngles[2] = amx_ftoc(vAngles.z);
 		cell CellOrigin = MF_PrepareCellArray(cOrigin, 3);
 		cell CellAngles = MF_PrepareCellArray(cAngles, 3);
-		retVal = MF_ExecuteForward(PlaybackForward, (cell)flags, (cell)ENTINDEX(e), (cell)eventindex, delay, CellOrigin, CellAngles, fparam1, fparam2, (cell)iparam1, (cell)iparam2, (cell)bparam1, (cell)bparam2);
+		if (!FNullEnt(e))
+			invoker = TypeConversion.edict_to_id(e);
+		retVal = MF_ExecuteForward(PlaybackForward, (cell)flags, (cell)invoker, (cell)eventindex, delay, CellOrigin, CellAngles, fparam1, fparam2, (cell)iparam1, (cell)iparam2, (cell)bparam1, (cell)bparam2);
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
 	}
@@ -97,9 +102,8 @@ void KeyValue(edict_t *pEntity, KeyValueData *pkvd)
 	int retVal = 0;
 	g_inKeyValue=true;
 	g_pkvd=pkvd;
-	int index = ENTINDEX(pEntity);
 	if (DispatchKeyForward != -1) {
-		retVal = MF_ExecuteForward(DispatchKeyForward, (cell)index);
+		retVal = MF_ExecuteForward(DispatchKeyForward, (cell)TypeConversion.edict_to_id(pEntity));
 		g_inKeyValue=false;
 		if (retVal)
 			RETURN_META(MRES_SUPERCEDE);
@@ -125,11 +129,14 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	edict_t *pEntity = (edict_t *)player;
 	g_cmd = (struct usercmd_s *)_cmd;
 	int origImpulse = g_cmd->impulse; // incase a plugin alters it
+
+	auto index = TypeConversion.edict_to_id(pEntity);
+
 	for (i=0; i<Impulses.length(); i++)
 	{
 		if (Impulses[i]->Check == g_cmd->impulse)
 		{
-			retVal = MF_ExecuteForward(Impulses[i]->Forward, (cell)ENTINDEX(pEntity), (cell)origImpulse);
+			retVal = MF_ExecuteForward(Impulses[i]->Forward, (cell)index, (cell)origImpulse);
 			
 			// don't return SUPERCEDE in any way here, 
 			// we don't want to break client_impulse forward and access to cmd with [g/s]et_usercmd
@@ -141,7 +148,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	// client_impulse
 	if (ClientImpulseForward != -1 && origImpulse != 0) 
 	{
-		retVal = MF_ExecuteForward(ClientImpulseForward, (cell)ENTINDEX(pEntity), (cell)origImpulse);
+		retVal = MF_ExecuteForward(ClientImpulseForward, (cell)index, (cell)origImpulse);
 
 		if (retVal)
 			g_cmd->impulse = 0;
@@ -151,7 +158,7 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 	if (CmdStartForward != -1)
 	{
 		incmd = true;
-		retVal = MF_ExecuteForward(CmdStartForward, (cell)ENTINDEX(pEntity));
+		retVal = MF_ExecuteForward(CmdStartForward, (cell)index);
 		incmd = false;
 
 		if (retVal)
@@ -163,12 +170,12 @@ void CmdStart(const edict_t *player, const struct usercmd_s *_cmd, unsigned int 
 
 void ClientKill(edict_t *pEntity)
 {
-	int retVal = 0;
-
-	if (ClientKillForward != -1) {
-		retVal = MF_ExecuteForward(ClientKillForward, (cell)ENTINDEX(pEntity));
-		if (retVal)
+	if (ClientKillForward != -1)
+	{
+		if (MF_ExecuteForward(ClientKillForward, (cell)TypeConversion.edict_to_id(pEntity)))
+		{
 			RETURN_META(MRES_SUPERCEDE);
+		}
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -176,21 +183,27 @@ void ClientKill(edict_t *pEntity)
 
 void PlayerPreThink(edict_t *pEntity)
 {
-	MF_ExecuteForward(PlayerPreThinkForward, (cell)ENTINDEX(pEntity));
+	if (PlayerPreThinkForward != -1)
+	{
+		MF_ExecuteForward(PlayerPreThinkForward, (cell)TypeConversion.edict_to_id(pEntity));
+	}
+
 	RETURN_META(MRES_IGNORED);
 }
 
 void PlayerPostThink_Post(edict_t *pEntity)
 {
-	if(plinfo[ENTINDEX(pEntity)].pViewEnt) {
-		edict_t *pCamEnt = plinfo[ENTINDEX(pEntity)].pViewEnt;
+	auto index = TypeConversion.edict_to_id(pEntity);
+
+	if(plinfo[index].pViewEnt) {
+		edict_t *pCamEnt = plinfo[index].pViewEnt;
 
 		MAKE_VECTORS(pEntity->v.v_angle + pEntity->v.punchangle);
 		Vector vecSrc	 = pEntity->v.origin + pEntity->v.view_ofs;
 		Vector vecAiming = gpGlobals->v_forward;
 		TraceResult tr;
 
-		switch(plinfo[ENTINDEX(pEntity)].iViewType) {
+		switch(plinfo[index].iViewType) {
 			case CAMERA_3RDPERSON:
 				TRACE_LINE(vecSrc, vecSrc - (vecAiming * 128), ignore_monsters, ENT(pEntity), &tr);
 				SET_VIEW(pEntity, pCamEnt);
@@ -212,16 +225,16 @@ void PlayerPostThink_Post(edict_t *pEntity)
 				break;
 			default:
 				SET_VIEW(pEntity, pEntity);
-				REMOVE_ENTITY(plinfo[ENTINDEX(pEntity)].pViewEnt);
-				plinfo[ENTINDEX(pEntity)].iViewType = CAMERA_NONE;
-				plinfo[ENTINDEX(pEntity)].pViewEnt = NULL;
+				REMOVE_ENTITY(plinfo[index].pViewEnt);
+				plinfo[index].iViewType = CAMERA_NONE;
+				plinfo[index].pViewEnt = NULL;
 				break;
 		}
 	}
 
 	if (PlayerPostThinkForward != -1)
 	{
-		if (MF_ExecuteForward(PlayerPostThinkForward, (cell)ENTINDEX(pEntity)))
+		if (MF_ExecuteForward(PlayerPostThinkForward, (cell)index))
 			RETURN_META(MRES_SUPERCEDE);
 	}
 
@@ -234,8 +247,8 @@ void pfnTouch(edict_t *pToucher, edict_t *pTouched)
 	int retVal = 0;
 	const char *ptrClass = STRING(pToucher->v.classname);
 	const char *ptdClass = STRING(pTouched->v.classname);
-	int ptrIndex = ENTINDEX(pToucher);
-	int ptdIndex = ENTINDEX(pTouched);
+	int ptrIndex = TypeConversion.edict_to_id(pToucher);
+	int ptdIndex = TypeConversion.edict_to_id(pTouched);
 	META_RES res=MRES_IGNORED;
 	for (i=0; i<Touches.length(); i++)
 	{
@@ -297,14 +310,14 @@ void Think(edict_t *pent)
 	{
 		if (Thinks[i]->Class.compare(cls)==0)
 		{
-			retVal=MF_ExecuteForward(Thinks[i]->Forward, (cell)ENTINDEX(pent));
+			retVal=MF_ExecuteForward(Thinks[i]->Forward, (cell)TypeConversion.edict_to_id(pent));
 			if (retVal & 2/*PLUGIN_HANDLED_MAIN*/)
 				RETURN_META(MRES_SUPERCEDE);
 			else if (retVal)
 				res=MRES_SUPERCEDE;
 		}
 	}
-	retVal=MF_ExecuteForward(pfnThinkForward, (cell)ENTINDEX(pent));
+	retVal=MF_ExecuteForward(pfnThinkForward, (cell)TypeConversion.edict_to_id(pent));
 	if (retVal)
 		res=MRES_SUPERCEDE;
 

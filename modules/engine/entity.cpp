@@ -112,9 +112,11 @@ static cell AMX_NATIVE_CALL create_entity(AMX *amx, cell *params)
 	edict_t *pEnt = CREATE_NAMED_ENTITY(iszClass);
 
 	if (FNullEnt(pEnt))
+	{
 		return 0;
+	}
 
-	return ENTINDEX(pEnt);
+	return TypeConversion.edict_to_id(pEnt);
 }
 
 static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params)
@@ -125,11 +127,13 @@ static cell AMX_NATIVE_CALL remove_entity(AMX *amx, cell *params)
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity %d can not be removed", id);
 		return 0;
 	}
-	
+
 	edict_t *pEnt = TypeConversion.id_to_edict(id);
 
 	if (FNullEnt(pEnt))
+	{
 		return 0;
+	}
 
 	REMOVE_ENTITY(pEnt);
 
@@ -1118,7 +1122,7 @@ static cell AMX_NATIVE_CALL entity_get_edict2(AMX *amx, cell *params)
 	if (FNullEnt(pRet))
 		return -1;
 
-	return ENTINDEX(pRet);
+	return TypeConversion.edict_to_id(pRet);
 }
 
 static cell AMX_NATIVE_CALL entity_get_edict(AMX *amx, cell *params)
@@ -1348,12 +1352,12 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 	};
 	REAL radius = amx_ctof(params[3]);
 
-	int returnEnt = ENTINDEX(FIND_ENTITY_IN_SPHERE(pEnt, origin, radius));
+	if (!FNullEnt(pEnt = FIND_ENTITY_IN_SPHERE(pEnt, origin, radius)))
+	{
+		return TypeConversion.cbase_to_id(pEnt);
+	}
 
-	if (FNullEnt(returnEnt))
-		return 0;
-
-	return returnEnt;
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param */
@@ -1363,12 +1367,12 @@ static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param
 	int len;
 	char* sValue = MF_GetAmxString(amx, params[2], 0, &len);
 
-	pEnt = FIND_ENTITY_BY_STRING(pEnt, "classname", sValue);
+	if (!FNullEnt(pEnt = FIND_ENTITY_BY_CLASSNAME(pEnt, sValue)))
+	{
+		return TypeConversion.edict_to_id(pEnt);
+	}
 
-	if (FNullEnt(pEnt))
-		return 0;
-
-	return ENTINDEX(pEnt);
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sphere_class(aroundent, _lookforclassname[], Float:radius, entlist[], maxents, Float:origin[3] = {0.0, 0.0, 0.0}); // 6 params
@@ -1405,7 +1409,7 @@ static cell AMX_NATIVE_CALL find_sphere_class(AMX *amx, cell *params) // find_sp
 		else {
 			if (strcmp(STRING(pSearchEnt->v.classname), classToFind) == 0) {
 				// Add to entlist (params[4])
-				entList[entsFound++] = ENTINDEX(pSearchEnt); // raise entsFound
+				entList[entsFound++] = TypeConversion.edict_to_id(pSearchEnt); // raise entsFound
 			}
 		}
 	}
@@ -1419,20 +1423,14 @@ static cell AMX_NATIVE_CALL find_ent_by_target(AMX *amx, cell *params)
 	int iLength;
 	char *szValue = MF_GetAmxString(amx, params[2], 0, &iLength);
 
-	edict_t *pStart;
+	auto pStart = TypeConversion.id_to_edict(iStart);
 
-	if (iStart == -1) {
-		pStart = NULL;
-	} else {
-		if (!is_ent_valid(iStart))
-			pStart = NULL;
-		else
-			pStart = TypeConversion.id_to_edict(iStart);
+	if (!FNullEnt(pStart = FIND_ENTITY_BY_TARGET(pStart, szValue)))
+	{
+		return TypeConversion.edict_to_id(pStart);
 	}
 
-	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_TARGET(pStart, szValue));
-
-	return iReturnEnt;
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) { 
@@ -1441,29 +1439,14 @@ static cell AMX_NATIVE_CALL find_ent_by_model(AMX *amx, cell *params) {
 	char *szClass = MF_GetAmxString(amx, params[2], 0, &iLength);
 	char *szModel = MF_GetAmxString(amx, params[3], 1, &iLength2);
 
-	edict_t *pStart;
+	auto pEdict = TypeConversion.id_to_edict(iStart);
 
-	if (iStart == -1)
+	while (!FNullEnt(pEdict = FIND_ENTITY_BY_CLASSNAME(pEdict, szClass)))
 	{
-		pStart = NULL;
-	} else {
-		if (!is_ent_valid(iStart))
-			pStart = NULL;
-		else
-			pStart = TypeConversion.id_to_edict(iStart);
-	}
-
-	edict_t *pEdict = FIND_ENTITY_BY_STRING(pStart, "classname", szClass);
-
-	const char *check;
-
-	while (pEdict && !FNullEnt(pEdict))
-	{
-		check = STRING(pEdict->v.model);
-		if (!check || strcmp(check, szModel))
-			pEdict = FIND_ENTITY_BY_STRING(pEdict, "classname", szClass);
-		else
-			return ENTINDEX(pEdict);
+		if (pEdict->v.model > 0 && !strcmp(STRING(pEdict->v.model), szModel))
+		{
+			return TypeConversion.edict_to_id(pEdict);
+		}
 	}
 
 	return 0;
@@ -1474,20 +1457,14 @@ static cell AMX_NATIVE_CALL find_ent_by_tname(AMX *amx, cell *params) {
 	int iLength;
 	char *szValue = MF_GetAmxString(amx, params[2], 0, &iLength);
 
-	edict_t *pStart;
+	auto pStart = TypeConversion.id_to_edict(iStart);
 
-	if (iStart == -1) {
-		pStart = NULL;
-	} else {
-		if (!is_ent_valid(iStart))
-			pStart = NULL;
-		else
-			pStart = TypeConversion.id_to_edict(iStart);
+	if (!FNullEnt(pStart = FIND_ENTITY_BY_TARGETNAME(pStart, szValue)))
+	{
+		return TypeConversion.edict_to_id(pStart);
 	}
 
-	int iReturnEnt = ENTINDEX(FIND_ENTITY_BY_TARGETNAME(pStart, szValue));
-
-	return iReturnEnt;
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native find_ent_by_owner(start_from_ent, classname[], owner_index); = 3 params
@@ -1512,15 +1489,14 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 	int len;
 	char* classname = MF_GetAmxString(amx, params[2], 0, &len);
 
-	while (true) {
-		pEnt = FIND_ENTITY_BY_STRING(pEnt, sCategory, classname);
-		if (FNullEnt(pEnt)) // break and return 0 if bad
-			break;
-		else if (pEnt->v.owner == entOwner) // compare pointers
-			return ENTINDEX(pEnt);
+	while (!FNullEnt(pEnt = FIND_ENTITY_BY_STRING(pEnt, sCategory, classname)))
+	{
+		if (pEnt->v.owner == entOwner)
+		{
+			return TypeConversion.edict_to_id(pEnt);
+		}
 	}
 
-	// If it comes here, the while loop ended because an ent failed (FNullEnt() == true)
 	return 0;
 }
 
@@ -1544,7 +1520,7 @@ static cell AMX_NATIVE_CALL get_grenade_id(AMX *amx, cell *params)  /* 4 param *
 			if (params[3]>0) {
 				szModel = (char*)STRING(pentFind->v.model);
 				MF_SetAmxString(amx, params[2], szModel, params[3]);
-				return ENTINDEX(pentFind);
+				return TypeConversion.edict_to_id(pentFind);
 			}
 		}
 		pentFind = FIND_ENTITY_BY_CLASSNAME( pentFind, "grenade" );

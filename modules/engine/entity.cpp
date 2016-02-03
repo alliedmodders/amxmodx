@@ -1338,9 +1338,6 @@ static cell AMX_NATIVE_CALL get_entity_pointer(AMX *amx, cell *params) // get_en
 static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 {
 	int idx = params[1];
-	if (idx > 0) {
-		CHECK_ENTITY_SIMPLE(idx);
-	}
 
 	edict_t *pEnt = TypeConversion.id_to_edict(idx);
 	cell *cAddr = MF_GetAmxAddr(amx, params[2]);
@@ -1361,12 +1358,7 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL find_ent_by_class(AMX *amx, cell *params) /* 3 param */
 {
-	int idx = params[1];
-	if (idx > 0) {
-		CHECK_ENTITY_SIMPLE(idx);
-	}
-
-	edict_t *pEnt = TypeConversion.id_to_edict(idx);
+	edict_t *pEnt = TypeConversion.id_to_edict(params[1]);
 
 	int len;
 	char* sValue = MF_GetAmxString(amx, params[2], 0, &len);
@@ -1502,9 +1494,6 @@ static cell AMX_NATIVE_CALL find_ent_by_owner(AMX *amx, cell *params)  // native
 {
 	int iEnt = params[1];
 	int oEnt = params[3];
-	if (iEnt > 0) {
-		CHECK_ENTITY_SIMPLE(iEnt);
-	}
 	CHECK_ENTITY_SIMPLE(oEnt);
 
 	edict_t *pEnt = TypeConversion.id_to_edict(iEnt);

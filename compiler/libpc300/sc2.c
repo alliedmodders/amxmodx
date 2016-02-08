@@ -2599,17 +2599,22 @@ SC_FUNC int get_actual_compound(symbol *sym)
 
 SC_FUNC void delete_symbols(symbol *root,int level,int delete_labels,int delete_functions)
 {
-  symbol *origRoot=root;
-  symbol *sym,*parent_sym;
+  symbol *base;
+  symbol *sym,*parent_sym,*child_sym;
   constvalue *stateptr;
   int mustdelete=0;
 
   /* erase only the symbols with a deeper nesting level than the
    * specified nesting level */
-  while (root->next!=NULL) {
-    sym=root->next;
+  base=root;
+  while (base->next!=NULL) {
+    sym=base->next;
     if (get_actual_compound(sym)<level)
       break;
+    if ((sym->usage & uVISITED) != 0) {
+      base=sym;                           /* skip the symbol */
+      continue;
+    }
     switch (sym->ident) {
     case iLABEL:
       mustdelete=delete_labels;
@@ -2653,10 +2658,22 @@ SC_FUNC void delete_symbols(symbol *root,int level,int delete_labels,int delete_
       break;
     } /* switch */
     if (mustdelete) {
-      if (origRoot == &glbtab)
-        RemoveFromHashTable(sp_Globals, sym);
-      root->next=sym->next;
-      free_symbol(sym);
+      /* first delete children, if any */
+      int count=0;
+      while ((child_sym=finddepend(sym))!=NULL) {
+        delete_symbol(root,child_sym);
+        count++;
+      } /* while */
+      if (count==0) {
+        if (root == &glbtab)
+          RemoveFromHashTable(sp_Globals, sym);
+        base->next=sym->next;
+        free_symbol(sym);
+      } else {
+        /* chain has changed */
+        delete_symbol(root,sym);
+        base=root;      /* restart */
+      } /* if */
     } else {
       /* if the function was prototyped, but not implemented in this source,
        * mark it as such, so that its use can be flagged
@@ -2674,9 +2691,16 @@ SC_FUNC void delete_symbols(symbol *root,int level,int delete_labels,int delete_
        */
       if (sym->ident==iFUNCTN && !alpha(*sym->name))
         sym->usage &= ~uPROTOTYPED;
-      root=sym;                 /* skip the symbol */
+      /* mark the symbol as "visited", so we won't process it twice */
+      sym->usage |= uVISITED;
+      base=sym;                 /* skip the symbol */
     } /* if */
   } /* if */
+
+
+  /* go through the symbols again to erase any "visited" marks */
+  for (sym = root->next; sym != NULL; sym = sym->next)
+    sym->usage &= ~uVISITED;
 }
 
 static symbol *find_symbol(const symbol *root,const char *name,int fnumber,int includechildren)
@@ -2869,10 +2893,12 @@ SC_FUNC symbol *addvariable(const char *name,cell addr,int ident,int vclass,int 
   /* global variables may only be defined once
    * One complication is that functions returning arrays declare an array
    * with the same name as the function, so the assertion must allow for
-   * this special case.
+   * this special case. Another complication is that variables may be
+   * "redeclared" if they are local to an automaton (and findglb() will find
+   * the symbol without states if no symbol with states exists).
    */
   assert(vclass!=sGLOBAL || (sym=findglb(name))==NULL || (sym->usage & uDEFINE)==0
-         || (sym->ident==iFUNCTN && sym==curfunc));
+         || (sym->ident==iFUNCTN && (sym==curfunc || (sym->usage & uNATIVE) != 0)));
 
   if (ident==iARRAY || ident==iREFARRAY) {
     symbol *parent=NULL,*top;

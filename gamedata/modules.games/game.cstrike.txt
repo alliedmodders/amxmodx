@@ -43,16 +43,16 @@
 			{
 				"library"   "server"
 				"windows"   "\x8B\x2A\x2A\x2A\x56\x57\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2B"
-				"linux"     "@_ZN11CBasePlayer10GiveShieldEb"
-				"mac"       "@_ZN11CBasePlayer10GiveShieldEb"
+				"linux"     "@_ZN11CBasePlayer13GiveNamedItemEPKc"
+				"mac"       "@_ZN11CBasePlayer13GiveNamedItemEPKc"
 			}
 
 			"GiveDefaultItems" // void CBasePlayer::GiveDefaultItems(void)
 			{
 				"library"   "server"
 				"windows"   "\x56\x57\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xC6"
-				"linux"     "@_ZN11CBasePlayer10GiveShieldEb"
-				"mac"       "@_ZN11CBasePlayer10GiveShieldEb"
+				"linux"     "@_ZN11CBasePlayer16GiveDefaultItemsEv"
+				"mac"       "@_ZN11CBasePlayer16GiveDefaultItemsEv"
 			}
 
 			"GiveShield"    // void CBasePlayer::GiveShield(bool bRetire)

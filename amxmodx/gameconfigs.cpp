@@ -24,6 +24,7 @@ static cell AMX_NATIVE_CALL LoadGameConfigFile(AMX *amx, cell *params)
 
 	if (!ConfigManager.LoadGameConfigFile(filename, &config, error, sizeof(error)))
 	{
+		ConfigManager.CloseGameConfigFile(config);
 		LogError(amx, AMX_ERR_NATIVE, "Unable to open %s: %s", filename, error);
 		return 0;
 	}
@@ -31,7 +32,7 @@ static cell AMX_NATIVE_CALL LoadGameConfigFile(AMX *amx, cell *params)
 	int handle = GameConfigHandle.create();
 
 	auto configHandle = GameConfigHandle.lookup(handle);
-	
+
 	if (!configHandle)
 	{
 		return 0;

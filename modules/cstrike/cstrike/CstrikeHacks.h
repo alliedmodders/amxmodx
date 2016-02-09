@@ -54,13 +54,22 @@ extern CDetour *CanBuyThisDetour;
 extern CDetour *GiveDefaultItemsDetour;
 extern CDetour *BuyGunAmmoDetour;
 
+enum class HashType
+{
+	Classname
+};
+
 typedef edict_t* (*CreateNamedEntityFunc)(string_t iszClassname);
 typedef void*    (*UTIL_FindEntityByStringFunc)(void* pStartEntity, const char *szKeyword, const char *szValue);
 typedef WeaponInfoStruct* (*GetWeaponInfoFunc)(int id);
+typedef void (*AddEntityHashValueFunc)(struct entvars_s *pev, const char *value, HashType fieldType);
+typedef void (*RemoveEntityHashValueFunc)(struct entvars_s *pev, const char *value, HashType fieldType);
 
 extern CreateNamedEntityFunc       CS_CreateNamedEntity;
 extern UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
 extern GetWeaponInfoFunc           GetWeaponInfo;
+extern AddEntityHashValueFunc      AddEntityHashValue;
+extern RemoveEntityHashValueFunc   RemoveEntityHashValue;
 
 extern CDetour *GiveDefaultItemsDetour;
 extern enginefuncs_t *g_pengfuncsTable;

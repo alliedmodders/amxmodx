@@ -1015,7 +1015,7 @@ native cs_create_entity(const classname[]);
  *       classname lookup compared to the default FindEntityByString (used by
  *       find_ent_by_class() for example).
  * @note This exclusively considers entities in the hashtable, created by the
- *       game itself or using cs_create_entity().
+ *       game itself, using cs_create_entity(), or added via cs_set_ent_class().
  *
  * @param start_index   Entity index to start searching from. -1 to start from
  *                      the first entity
@@ -1034,7 +1034,7 @@ native cs_find_ent_by_class(start_index, const classname[]);
  *       classname lookup compared to the default FindEntityByString (used by
  *       find_ent_by_owner() for example).
  * @note This exclusively considers entities in the hashtable, created by the
- *       game itself or using cs_create_entity().
+ *       game itself, using cs_create_entity(), or added via cs_set_ent_class().
  *
  * @param start_index   Entity index to start searching from. -1 to start from
  *                      the first entity
@@ -1044,6 +1044,20 @@ native cs_find_ent_by_class(start_index, const classname[]);
  * @return              Entity index > 0 if found, 0 otherwise
  */
 native cs_find_ent_by_owner(start_index, const classname[], owner);
+
+/**
+ * Sets a custom classname of an entity.
+ *
+ * @note Unlike other mods CS keeps track of entities using a custom hashtable.
+ *       This function adds or updates the classname in the hasthable as well.
+ *       This is useful for use with cs_find_ent_by_class() and cs_find_ent_by_owner().
+ *
+ * @param index         Entity index
+ * @param classname     Classname to update for
+ *
+ * @noreturn
+ */
+native cs_set_ent_class(index, const classname[]);
 
 /**
  * Returns the item id associated with an item name and its aliases.

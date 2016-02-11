@@ -334,7 +334,7 @@ static cell AMX_NATIVE_CALL trace_line(AMX *amx, cell *params)
 	if (FNullEnt(pHit))
 		return 0;
 
-	return ENTINDEX(pHit);
+	return TypeConversion.edict_to_id(pHit);
 }
 
 static cell AMX_NATIVE_CALL set_speak(AMX *amx, cell *params) { 
@@ -429,10 +429,10 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 	{
 		case CAMERA_NONE:
 			SET_VIEW(pPlayer, pPlayer);
-			if(plinfo[ENTINDEX(pPlayer)].pViewEnt) {
-				REMOVE_ENTITY(plinfo[ENTINDEX(pPlayer)].pViewEnt);
+			if(plinfo[iIndex].pViewEnt) {
+				REMOVE_ENTITY(plinfo[iIndex].pViewEnt);
 			}
-			if (plinfo[ENTINDEX(pPlayer)].iViewType != CAMERA_NONE) // Verify that they were originally in a modified view
+			if (plinfo[iIndex].iViewType != CAMERA_NONE) // Verify that they were originally in a modified view
 			{
 				g_CameraCount--;
 				if (g_CameraCount < 0)
@@ -441,20 +441,20 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 					g_pFunctionTable->pfnAddToFullPack=NULL;
 			}
 
-			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_NONE;
-			plinfo[ENTINDEX(pPlayer)].pViewEnt = NULL;
+			plinfo[iIndex].iViewType = CAMERA_NONE;
+			plinfo[iIndex].pViewEnt = NULL;
 			return 1;
 			break;
 		case CAMERA_3RDPERSON:
-			if(plinfo[ENTINDEX(pPlayer)].iViewType != CAMERA_NONE) {
-				plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_3RDPERSON;
+			if(plinfo[iIndex].iViewType != CAMERA_NONE) {
+				plinfo[iIndex].iViewType = CAMERA_3RDPERSON;
 				return 1;
 			}
 			g_CameraCount++;
 			g_pFunctionTable_Post->pfnAddToFullPack=AddToFullPack_Post;
 			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
 
-			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_3RDPERSON;
+			plinfo[iIndex].iViewType = CAMERA_3RDPERSON;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
@@ -472,11 +472,11 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			SET_VIEW(pPlayer, pNewCamera);
 
-			plinfo[ENTINDEX(pPlayer)].pViewEnt = pNewCamera;
+			plinfo[iIndex].pViewEnt = pNewCamera;
 			break;
 		case CAMERA_UPLEFT:
-			if(plinfo[ENTINDEX(pPlayer)].iViewType != CAMERA_NONE) {
-				plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_UPLEFT;
+			if(plinfo[iIndex].iViewType != CAMERA_NONE) {
+				plinfo[iIndex].iViewType = CAMERA_UPLEFT;
 				return 1;
 			}
 
@@ -484,7 +484,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			g_pFunctionTable_Post->pfnAddToFullPack=AddToFullPack_Post;
 			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
 
-			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_UPLEFT;
+			plinfo[iIndex].iViewType = CAMERA_UPLEFT;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
@@ -502,11 +502,11 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			SET_VIEW(pPlayer, pNewCamera);
 
-			plinfo[ENTINDEX(pPlayer)].pViewEnt = pNewCamera;
+			plinfo[iIndex].pViewEnt = pNewCamera;
 			break;
 		case CAMERA_TOPDOWN:
-			if(plinfo[ENTINDEX(pPlayer)].iViewType != CAMERA_NONE) {
-				plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_TOPDOWN;
+			if(plinfo[iIndex].iViewType != CAMERA_NONE) {
+				plinfo[iIndex].iViewType = CAMERA_TOPDOWN;
 				return 1;
 			}
 
@@ -514,7 +514,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 			g_pFunctionTable_Post->pfnAddToFullPack=AddToFullPack_Post;
 			g_pFunctionTable_Post->pfnPlayerPostThink=PlayerPostThink_Post;
 
-			plinfo[ENTINDEX(pPlayer)].iViewType = CAMERA_TOPDOWN;
+			plinfo[iIndex].iViewType = CAMERA_TOPDOWN;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
@@ -532,7 +532,7 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			SET_VIEW(pPlayer, pNewCamera);
 
-			plinfo[ENTINDEX(pPlayer)].pViewEnt = pNewCamera;
+			plinfo[iIndex].pViewEnt = pNewCamera;
 			break;
 		default:
 			break;
@@ -915,7 +915,7 @@ static cell AMX_NATIVE_CALL traceresult(AMX *amx, cell *params)
 		return g_tr.iHitgroup;
 	case TR_Hit:
 		if (!FNullEnt(g_tr.pHit))
-			return ENTINDEX(g_tr.pHit);
+			return TypeConversion.edict_to_id(g_tr.pHit);
 		else
 			return -1;
 	case TR_Fraction:

@@ -170,9 +170,10 @@ static cell AMX_NATIVE_CALL get_global_edict2(AMX *amx, cell *params)
 			return -1;
 	}
 
-	// Will crash if ENTINDEX() is called on bad pointer?
-	if(!FNullEnt(pReturnEntity))
-		return ENTINDEX(pReturnEntity);
+	if (!FNullEnt(pReturnEntity))
+	{
+		return TypeConversion.edict_to_id(pReturnEntity);
+	}
 
 	return -1;
 }

@@ -164,7 +164,7 @@ qboolean Voice_SetClientListening(int iReceiver, int iSender, qboolean bListen)
 
 int AddToFullPack_Post(struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet)
 {
-	if( player && ent == host && plinfo[ENTINDEX(ent)].iViewType != CAMERA_NONE )
+	if( player && ent && ent == host && plinfo[TypeConversion.edict_to_id(ent)].iViewType != CAMERA_NONE )
 	{
 		state->rendermode = kRenderTransTexture;
 		state->renderamt = 100;
@@ -175,7 +175,7 @@ int AddToFullPack_Post(struct entity_state_s *state, int e, edict_t *ent, edict_
 
 void ClientDisconnect(edict_t *pEntity)
 {
-	int id = ENTINDEX(pEntity);
+	auto id = TypeConversion.edict_to_id(pEntity);
 
 	if (plinfo[id].iViewType != CAMERA_NONE) // Verify that they were originally in a modified view
 	{
@@ -194,7 +194,7 @@ void ClientDisconnect(edict_t *pEntity)
 
 BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
-	int id = ENTINDEX(pEntity);
+	auto id = TypeConversion.edict_to_id(pEntity);
 
 	plinfo[id].iSpeakFlags = SPEAK_NORMAL;
 	plinfo[id].iViewType = CAMERA_NONE;

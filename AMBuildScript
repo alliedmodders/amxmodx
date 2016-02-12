@@ -120,144 +120,31 @@ class AMXXConfig(object):
   def configure(self):
     builder.AddConfigureFile('pushbuild.txt')
 
-    cfg = builder.DetectCompilers()
-    cxx = cfg.cxx
+    cxx = builder.DetectCompilers()
 
-    if cxx.behavior == 'gcc':
-      cfg.cflags += [
-        '-pipe',
-        '-fno-strict-aliasing',
-        '-Wall',
-        '-Werror',
-        '-Wno-uninitialized',
-        '-Wno-unused',
-        '-Wno-switch',
-        '-Wno-format',
-        '-Wno-format-security',
-        '-m32',
-      ]
-      cfg.cxxflags += [
-        '-Wno-invalid-offsetof',
-        '-std=c++11',
-      ]
-
-      cfg.linkflags += ['-m32']
-
-      have_gcc = cxx.name == 'gcc'
-      have_clang = cxx.name == 'clang'
-
-      if have_clang or (have_gcc and cxx.version >= '4'):
-        cfg.cflags += ['-fvisibility=hidden']
-        cfg.cxxflags += ['-fvisibility-inlines-hidden']
-        if have_clang or (have_gcc and cxx.version >= '4.6'):
-          cfg.cflags += ['-Wno-narrowing']
-        if (have_gcc and cxx.version >= '4.7') or (have_clang and cxx.version >= '3'):
-          cfg.cxxflags += ['-Wno-delete-non-virtual-dtor']
-        if have_gcc and cxx.version >= '4.8':
-          cfg.cflags += ['-Wno-unused-result', '-Wno-error=sign-compare']
-      if have_clang:
-        cfg.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
-        if cxx.version >= 'apple-clang-5.1' or cxx.version >= 'clang-3.4':
-          cfg.cxxflags += ['-Wno-deprecated-register']
-        else:
-          cfg.cxxflags += ['-Wno-deprecated']
-        cfg.cflags += ['-Wno-sometimes-uninitialized']
-        if builder.target_platform == 'linux' and cxx.version >= '3.6':
-          cfg.cxxflags += ['-Wno-inconsistent-missing-override']
-          
-      if have_gcc:
-        cfg.cflags += ['-Wno-parentheses']
-        cfg.c_only_flags += ['-std=c99']
-      elif have_clang:
-        cfg.cflags += ['-Wno-logical-op-parentheses']
-
-      cfg.cxxflags += [
-        '-fno-exceptions',
-        '-fno-rtti',
-      ]
-    elif cxx.name == 'msvc':
-      if builder.options.debug == '1':
-        cfg.cflags += ['/MTd']
-        cfg.linkflags += ['/NODEFAULTLIB:libcmt']
-      else:
-        cfg.cflags += ['/MT']
-      cfg.defines += [
-        '_CRT_SECURE_NO_DEPRECATE',
-        '_CRT_SECURE_NO_WARNINGS',
-        '_CRT_NONSTDC_NO_DEPRECATE',
-        '_ITERATOR_DEBUG_LEVEL=0',
-      ]
-      cfg.cflags += [
-        '/W3',
-      ]
-      cfg.cxxflags += [
-        '/EHsc',
-        '/GR-',
-        '/TP',
-      ]
-      cfg.linkflags += [
-        '/MACHINE:X86',
-        '/SUBSYSTEM:WINDOWS',
-        'kernel32.lib',
-        'user32.lib',
-        'gdi32.lib',
-        'winspool.lib',
-        'comdlg32.lib',
-        'advapi32.lib',
-        'shell32.lib',
-        'ole32.lib',
-        'oleaut32.lib',
-        'uuid.lib',
-        'odbc32.lib',
-        'odbccp32.lib',
-      ] 
+    if cxx.like('gcc'):
+      self.configure_gcc(cxx)
+    elif cxx.like('msvc'):
+      self.configure_msvc(cxx)
 
     # Optimization
     if builder.options.opt == '1':
-      cfg.defines += ['NDEBUG']
-      if cxx.behavior == 'gcc':
-        cfg.cflags += ['-O2']
-      elif cxx.behavior == 'msvc':
-        cfg.cflags += ['/Ox']
-        cfg.linkflags += ['/OPT:ICF', '/OPT:REF']
+      cxx.defines += ['NDEBUG']
 
     # Debugging
     if builder.options.debug == '1':
-      cfg.defines += ['DEBUG', '_DEBUG']
-      if cxx.behavior == 'msvc':
-        cfg.cflags += ['/Od', '/RTC1']
-
-    # This needs to be after our optimization flags which could otherwise disable it.
-    if cxx.name == 'msvc':
-      # Don't omit the frame pointer.
-      cfg.cflags += ['/Oy-']
+      cxx.defines += ['DEBUG', '_DEBUG']
 
     # Platform-specifics
     if builder.target_platform == 'linux':
-      cfg.defines += ['_LINUX', 'POSIX', 'LINUX']
-      cfg.postlink += ['-ldl', '-lm']
-      if cxx.name == 'gcc':
-        cfg.postlink += ['-static-libgcc']
-      elif cxx.name == 'clang':
-        cfg.postlink += ['-lgcc_eh']
-      if cxx.behavior == 'gcc':
-        self.stdcxx_path = self.invokeCompiler(['-m32', '-print-file-name=' + 'libstdc++.a'])[0]
+      self.configure_linux(cxx)
     elif builder.target_platform == 'mac':
-      cfg.defines += ['OSX', '_OSX', 'POSIX']
-      cfg.cflags += ['-mmacosx-version-min=10.5']
-      cfg.postlink += [
-        '-mmacosx-version-min=10.5',
-        '-arch', 'i386',
-        '-lstdc++',
-        '-stdlib=libstdc++',
-        '-framework', 'CoreServices',
-      ]
-      cfg.cxxflags += ['-stdlib=libstdc++']
+      self.configure_mac(cxx)
     elif builder.target_platform == 'windows':
-      cfg.defines += ['WIN32', '_WINDOWS']
+      self.configure_windows(cxx)
 
     # Finish up.
-    cfg.defines += [
+    cxx.defines += [
       'AMX_NOPROPLIST',
       'PAWN_CELL_SIZE=32',
       'AMXMODX_BUILD',
@@ -265,19 +152,148 @@ class AMXXConfig(object):
     ]
 
     if self.use_auto_versioning():
-        cfg.defines += ['AMXX_GENERATED_BUILD']
-        cfg.includes += [os.path.join(builder.buildPath, 'includes')]
-        cfg.includes += [os.path.join(builder.sourcePath, 'support', 'versionlib')]
-        
-    cfg.includes += [os.path.join(builder.sourcePath, 'public')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'sdk')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'amtl', 'amtl')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'public', 'memtools')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'third_party')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'third_party', 'hashing')]
-    cfg.includes += [os.path.join(builder.sourcePath, 'third_party', 'zlib')]
-    return
+      cxx.defines += ['AMXX_GENERATED_BUILD']
+      cxx.includes += [os.path.join(builder.buildPath, 'includes')]
+      cxx.includes += [os.path.join(builder.sourcePath, 'support', 'versionlib')]
+
+    cxx.includes += [os.path.join(builder.sourcePath, 'public')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'public', 'sdk')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'public', 'amtl')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'public', 'amtl', 'amtl')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'public', 'memtools')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'third_party')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'third_party', 'hashing')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'third_party', 'zlib')]
+
+  def configure_gcc(self, cxx):
+    cxx.cflags += [
+      '-pipe',
+      '-fno-strict-aliasing',
+      '-Wall',
+      '-Werror',
+      '-Wno-uninitialized',
+      '-Wno-unused',
+      '-Wno-switch',
+      '-Wno-format',
+      '-Wno-format-security',
+      '-m32',
+    ]
+    cxx.cxxflags += [
+      '-Wno-invalid-offsetof',
+      '-std=c++11',
+    ]
+
+    cxx.linkflags += ['-m32']
+
+    have_gcc = cxx.vendor == 'gcc'
+    have_clang = cxx.vendor == 'clang'
+
+    if have_clang or (have_gcc and cxx.version >= '4'):
+      cxx.cflags += ['-fvisibility=hidden']
+      cxx.cxxflags += ['-fvisibility-inlines-hidden']
+      if have_clang or (have_gcc and cxx.version >= '4.6'):
+        cxx.cflags += ['-Wno-narrowing']
+      if (have_gcc and cxx.version >= '4.7') or (have_clang and cxx.version >= '3'):
+        cxx.cxxflags += ['-Wno-delete-non-virtual-dtor']
+      if have_gcc and cxx.version >= '4.8':
+        cxx.cflags += ['-Wno-unused-result', '-Wno-error=sign-compare']
+    if have_clang:
+      cxx.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
+      if cxx.version >= 'apple-clang-5.1' or cxx.version >= 'clang-3.4':
+        cxx.cxxflags += ['-Wno-deprecated-register']
+      else:
+        cxx.cxxflags += ['-Wno-deprecated']
+      cxx.cflags += ['-Wno-sometimes-uninitialized']
+      if builder.target_platform == 'linux' and cxx.version >= '3.6':
+        cxx.cxxflags += ['-Wno-inconsistent-missing-override']
+
+    if have_gcc:
+      cxx.cflags += ['-Wno-parentheses']
+      cxx.c_only_flags += ['-std=c99']
+    elif have_clang:
+      cxx.cflags += ['-Wno-logical-op-parentheses']
+
+    cxx.cxxflags += [
+      '-fno-exceptions',
+      '-fno-rtti',
+    ]
+
+    if builder.options.opt == '1':
+      cxx.cflags += ['-O2']
+
+  def configure_msvc(self, cxx):
+    if builder.options.debug == '1':
+      cxx.cflags += ['/MTd']
+      cxx.linkflags += ['/NODEFAULTLIB:libcmt']
+    else:
+      cxx.cflags += ['/MT']
+
+    cxx.defines += [
+      '_CRT_SECURE_NO_DEPRECATE',
+      '_CRT_SECURE_NO_WARNINGS',
+      '_CRT_NONSTDC_NO_DEPRECATE',
+      '_ITERATOR_DEBUG_LEVEL=0',
+    ]
+    cxx.cflags += [
+      '/W3',
+    ]
+    cxx.cxxflags += [
+      '/EHsc',
+      '/GR-',
+      '/TP',
+    ]
+    cxx.linkflags += [
+      '/MACHINE:X86',
+      '/SUBSYSTEM:WINDOWS',
+      'kernel32.lib',
+      'user32.lib',
+      'gdi32.lib',
+      'winspool.lib',
+      'comdlg32.lib',
+      'advapi32.lib',
+      'shell32.lib',
+      'ole32.lib',
+      'oleaut32.lib',
+      'uuid.lib',
+      'odbc32.lib',
+      'odbccp32.lib',
+    ]
+
+    if builder.options.opt == '1':
+      cxx.cflags += ['/Ox']
+      cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
+
+    if builder.options.debug == '1':
+      cxx.cflags += ['/Od', '/RTC1']
+
+    # This needs to be after our optimization flags which could otherwise disable it.
+    # Don't omit the frame pointer.
+    cxx.cflags += ['/Oy-']
+
+  def configure_linux(self, cxx):
+    cxx.defines += ['_LINUX', 'POSIX', 'LINUX']
+    cxx.linkflags  += ['-ldl', '-lm']
+    if cxx.vendor == 'gcc':
+      cxx.linkflags  += ['-static-libgcc']
+    elif cxx.vendor == 'clang':
+      cxx.linkflags  += ['-lgcc_eh']
+    if cxx.like('gcc'):
+      self.stdcxx_path = self.invokeCompiler(['-m32', '-print-file-name=' + 'libstdc++.a'])[0]
+
+  def configure_mac(self, cxx):
+    cxx.defines += ['OSX', '_OSX', 'POSIX']
+    cxx.cflags += ['-mmacosx-version-min=10.5']
+    cxx.linkflags += [
+      '-mmacosx-version-min=10.5',
+      '-arch', 'i386',
+      '-lstdc++',
+      '-stdlib=libstdc++',
+      '-framework', 'CoreServices',
+    ]
+    cxx.cxxflags += ['-stdlib=libstdc++']
+
+  def configure_windows(self, cxx):
+    cxx.defines += ['WIN32', '_WINDOWS']
 
   #
   # Low-level compiler and binary construction.
@@ -371,7 +387,7 @@ AMXX.zlib = builder.RunScript(
 AMXX.hashing = builder.RunScript(
   'third_party/hashing/AMBuilder'
 )
-  
+
 builder.RunBuildScripts(
   [
     'amxmodx/AMBuilder',

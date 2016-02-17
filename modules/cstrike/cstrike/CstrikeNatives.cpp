@@ -1946,11 +1946,14 @@ static cell AMX_NATIVE_CALL cs_get_user_weapon_entity(AMX *amx, cell *params)
 	return (weaponEntIndex != -1) ? weaponEntIndex : 0;
 }
 
-// native cs_get_user_weapon(playerIndex);
+// native cs_get_user_weapon(playerIndex, &clip = 0, &ammo = 0);
 static cell AMX_NATIVE_CALL cs_get_user_weapon(AMX *amx, cell *params)
 {
 	GET_OFFSET("CBasePlayer", m_pActiveItem);
+	GET_OFFSET("CBasePlayer", m_rgAmmo);
 	GET_OFFSET("CBasePlayerItem", m_iId);
+	GET_OFFSET("CBasePlayerWeapon", m_iClip);
+	GET_OFFSET("CBasePlayerWeapon", m_iPrimaryAmmoType);
 
 	int playerIndex = params[1];
 
@@ -1961,6 +1964,21 @@ static cell AMX_NATIVE_CALL cs_get_user_weapon(AMX *amx, cell *params)
 
 	if (!FNullEnt(pWeapon))
 	{
+		cell *cpTemp = MF_GetAmxAddr(amx, params[2]);
+		*cpTemp = get_pdata<int>(pWeapon, m_iClip);
+
+		cpTemp = MF_GetAmxAddr(amx, params[3]);
+		int iAmmoType = get_pdata<int>(pWeapon, m_iPrimaryAmmoType);
+
+		if(iAmmoType <= 0)
+		{
+			*cpTemp = 0;
+		}
+		else
+		{
+			*cpTemp = get_pdata<int>(pPlayer, m_rgAmmo, iAmmoType);
+		}
+
 		return get_pdata<int>(pWeapon, m_iId);
 	}
 

@@ -1117,13 +1117,15 @@ native cs_get_user_weapon_entity(playerIndex);
  * @note More reliable than get_user_weapon.
  *
  * @param playerIndex   Player index
+ * @param clip          Optional variable to store clip ammo to
+ * @param ammo          Optional variable to store backpack ammo to
  *
  * @return              Weapon index on success or 0 if there is no active weapon
  * @error               If the client index is not within the range of 1 to
  *                      maxClients, or the client is not connected, an error will be
  *                      thrown.
  */
-native cs_get_user_weapon(playerIndex);
+native cs_get_user_weapon(playerIndex, &clip = 0, &ammo = 0);
 
 /**
  * Returns a weapon class id associated with a weapon id.

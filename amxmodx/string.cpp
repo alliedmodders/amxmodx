@@ -1409,6 +1409,20 @@ static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)
 }
 
 
+#define MAX_FMT_LENGTH 256
+
+// native [MAX_FMT_LENGTH] fmt(const fmt[], any:...)
+static cell AMX_NATIVE_CALL fmt(AMX *amx, cell *params)
+{
+	int length;
+	const char *string = format_amxstring(amx, params, 1, length);
+
+	size_t num_params = *params / sizeof(cell);
+
+	set_amxstring_utf8_char(amx, params[num_params + 1], string, length, MAX_FMT_LENGTH - 1);
+
+	return 1;
+};
 
 
 AMX_NATIVE_INFO string_Natives[] =
@@ -1420,6 +1434,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"copyc",			copyc},
 	{"equal",			equal},
 	{"equali",			equali},
+	{"fmt",				fmt},
 	{"format",			format},
 	{"formatex",		formatex},
 	{"format_args",		format_args},

@@ -24,7 +24,12 @@
  * 			in the length.  This means that this is valid: 
  * 			copy(string, charsmax(string), ...)
  */
- 
+
+/**
+ * Buffer size used by fmt().
+ */
+#define MAX_FMT_LENGTH 256
+
 /**
  * Calculates the length of a string.
  *
@@ -166,6 +171,23 @@ native format(output[], len, const format[], any:...);
  * @return				Number of cells written.
  */
 native formatex(output[], len, const format[], any:...);
+
+/**
+ * Formats and returns a string according to the AMX Mod X format rules
+ * (see documentation).
+ *
+ * @note Example: menu_additem(menu, fmt("My first %s", "item")).
+ * @note This should only be used for simple inline formatting like in the above example.
+ *       Avoid using this function to store strings into variables as an additional
+ *       copying step is required.
+ * @note The buffer size is defined by MAX_FMT_LENGTH.
+ *
+ * @param format        Formatting rules.
+ * @param ...           Variable number of format parameters.
+ *
+ * @return              Formatted string
+ */
+native [MAX_FMT_LENGTH]fmt(const format[], any:...);
 
 /**
  * Formats a string according to the AMX Mod X format rules (see documentation).

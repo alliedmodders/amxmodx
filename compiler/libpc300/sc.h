@@ -127,7 +127,7 @@ typedef struct s_symbol {
   cell codeaddr;        /* address (in the code segment) where the symbol declaration starts */
   char vclass;          /* sLOCAL if "addr" refers to a local symbol */
   char ident;           /* see below for possible values */
-  char usage;           /* see below for possible values */
+  short usage;          /* see below for possible values */
   char flags;          /* see below for possible values */
   int compound;         /* compound level (braces nesting level) */
   int tag;              /* tagname id */
@@ -217,6 +217,7 @@ typedef struct s_symbol {
 #define uSTOCK    0x40
 #define uENUMFIELD 0x40
 #define uMISSING  0x80
+#define uVISITED  0x100 /* temporary flag, to mark fields as "visited" in recursive loops */
 /* uRETNONE is not stored in the "usage" field of a symbol. It is
  * used during parsing a function, to detect a mix of "return;" and
  * "return value;" in a few special cases.

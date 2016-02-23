@@ -3244,7 +3244,7 @@ static void funcstub(int native)
   /* attach the array to the function symbol */
   if (numdim>0) {
     assert(sym!=NULL);
-    sub=addvariable(symbolname,0,iARRAY,sGLOBAL,tag,dim,numdim,idxtag);
+    sub=addvariable(symbolname,0,iREFARRAY,sGLOBAL,tag,dim,numdim,idxtag);
     sub->parent=sym;
   } /* if */
 

@@ -1354,7 +1354,7 @@ static cell AMX_NATIVE_CALL find_ent_in_sphere(AMX *amx, cell *params)
 
 	if (!FNullEnt(pEnt = FIND_ENTITY_IN_SPHERE(pEnt, origin, radius)))
 	{
-		return TypeConversion.cbase_to_id(pEnt);
+		return TypeConversion.edict_to_id(pEnt);
 	}
 
 	return 0;

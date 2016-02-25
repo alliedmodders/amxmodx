@@ -1889,40 +1889,41 @@ static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 	}
 
 	int weapon_id = params[1];
+	int info_type = params[2];
 
-	if (weapon_id <= CSW_NONE || weapon_id == CSW_C4 || weapon_id == CSW_KNIFE || weapon_id > CSW_LAST_WEAPON)
+	WeaponInfoStruct *info;
+
+	if (weapon_id <= CSW_NONE || weapon_id > CSW_LAST_WEAPON || !(info = GetWeaponInfo(weapon_id)))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id: %d", weapon_id);
 		return 0;
 	}
 
-	int info_type = params[2];
-
 	switch (info_type)
 	{
 		case CS_WEAPONINFO_COST:
 		{
-			return GetWeaponInfo(weapon_id)->cost;
+			return info->cost;
 		}
 		case CS_WEAPONINFO_CLIP_COST:
 		{
-			return GetWeaponInfo(weapon_id)->clipCost;
+			return info->clipCost;
 		}
 		case CS_WEAPONINFO_BUY_CLIP_SIZE:
 		{
-			return GetWeaponInfo(weapon_id)->buyClipSize;
+			return info->buyClipSize;
 		}
 		case CS_WEAPONINFO_GUN_CLIP_SIZE:
 		{
-			return GetWeaponInfo(weapon_id)->gunClipSize;
+			return info->gunClipSize;
 		}
 		case CS_WEAPONINFO_MAX_ROUNDS:
 		{
-			return GetWeaponInfo(weapon_id)->maxRounds;
+			return info->maxRounds;
 		}
 		case CS_WEAPONINFO_AMMO_TYPE:
 		{
-			return GetWeaponInfo(weapon_id)->ammoType;
+			return info->ammoType;
 		}
 	}
 

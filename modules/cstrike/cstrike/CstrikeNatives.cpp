@@ -731,81 +731,46 @@ static cell AMX_NATIVE_CALL cs_set_user_defusekit(AMX *amx, cell *params)
 // native cs_get_user_bpammo(index, weapon);
 static cell AMX_NATIVE_CALL cs_get_user_backpackammo(AMX *amx, cell *params)
 {
-	GET_OFFSET("CBasePlayer"      , m_rgpPlayerItems  );
-	GET_OFFSET("CBasePlayer"      , m_rgAmmo          );
-	GET_OFFSET("CBasePlayerItem"  , m_pNext           );
-	GET_OFFSET("CBasePlayerItem"  , m_iId             );
-	GET_OFFSET("CBasePlayerWeapon", m_iPrimaryAmmoType);
+	GET_OFFSET("CBasePlayer", m_rgAmmo);
 
-	int index = params[1];
+	int index    = params[1];
 	int weaponId = params[2];
 
 	CHECK_PLAYER(index);
-	edict_t *pPlayer = MF_GetPlayerEdict(index);
 
-	if (weaponId < CSW_P228 || weaponId > CSW_P90 || weaponId == CSW_KNIFE)
+	int ammoIndex;
+
+	if (weaponId <= CSW_NONE || weaponId >= MAX_WEAPONS || (ammoIndex = WeaponsList[weaponId].ammoIndex1) < 0)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", params[2]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weaponId);
 		return 0;
 	}
 
-	for (size_t i = 0; i < MAX_WEAPON_SLOTS; ++i)
-	{
-		uintptr_t *pItem = get_pdata<uintptr_t*>(pPlayer, m_rgpPlayerItems, i);
-
-		while (pItem)
-		{
-			if (weaponId == get_pdata<int>(pItem, m_iId))
-			{
-				return get_pdata<int>(pPlayer, m_rgAmmo, get_pdata<int>(pItem, m_iPrimaryAmmoType));
-			}
-
-			pItem = get_pdata<uintptr_t*>(pItem, m_pNext);
-		}
-	}
-
-	return 0;
+	return get_pdata<int>(MF_GetPlayerEdict(index), m_rgAmmo, ammoIndex);
 }
 
 // native cs_set_user_bpammo(index, weapon, amount);
 static cell AMX_NATIVE_CALL cs_set_user_backpackammo(AMX *amx, cell *params)
 {
-	GET_OFFSET("CBasePlayer"      , m_rgpPlayerItems  );
-	GET_OFFSET("CBasePlayer"      , m_rgAmmo          );
-	GET_OFFSET("CBasePlayerItem"  , m_pNext           );
-	GET_OFFSET("CBasePlayerItem"  , m_iId             );
-	GET_OFFSET("CBasePlayerWeapon", m_iPrimaryAmmoType);
+	GET_OFFSET("CBasePlayer", m_rgAmmo);
 
 	int index    = params[1];
 	int weaponId = params[2];
 	int amount   = params[3];
 
 	CHECK_PLAYER(index);
-	edict_t *pPlayer = MF_GetPlayerEdict(index);
 
-	if (weaponId < CSW_P228 || weaponId > CSW_P90 || weaponId == CSW_KNIFE)
+	int ammoIndex;
+
+	if (weaponId <= CSW_NONE || weaponId >= MAX_WEAPONS || (ammoIndex = WeaponsList[weaponId].ammoIndex1) < 0)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", params[2]);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weaponId);
 		return 0;
 	}
 
-	for (size_t i = 0; i < MAX_WEAPON_SLOTS; ++i)
-	{
-		uintptr_t *pItem = get_pdata<uintptr_t*>(pPlayer, m_rgpPlayerItems, i);
+	set_pdata<int>(MF_GetPlayerEdict(index), m_rgAmmo, amount, ammoIndex);
 
-		while (pItem)
-		{
-			if (weaponId == get_pdata<int>(pItem, m_iId))
-			{
-				set_pdata<int>(pPlayer, m_rgAmmo, amount, get_pdata<int>(pItem, m_iPrimaryAmmoType));
-				return 1;
-			}
-
-			pItem = get_pdata<uintptr_t*>(pItem, m_pNext);
-		}
-	}
-
-	return 0;
+	return 1;
 }
 
 // native cs_get_user_nvg(index);
@@ -1903,7 +1868,7 @@ static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
 			default:
 			{
 				// weapon_* retrieved from WeaponList messages at map change.
-				name = WeaponNameList[info.itemid];
+				name = WeaponsList[info.itemid].name.chars();
 				break;
 			}
 		}

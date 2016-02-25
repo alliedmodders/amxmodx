@@ -21,8 +21,8 @@
 bool ShouldBlock;
 bool ShouldBlockHLTV;
 bool ShouldDisableHooks;
-bool RetrieveWeaponName;
-ke::AString CurrentWeaponName;
+bool RetrieveWeaponList;
+ItemInfo CurrentWeaponList;
 int ArgPosition;
 
 int MessageIdArmorType;
@@ -132,7 +132,19 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 		{
 			if (msg_type == MessageIdWeaponList)
 			{
-				RetrieveWeaponName = true;
+				//	MESSAGE_BEGIN(MSG_INIT, gmsgWeaponList);
+				//	  WRITE_STRING(pszName);
+				//	  WRITE_BYTE(CBasePlayer::GetAmmoIndex(II.pszAmmo1));
+				//	  WRITE_BYTE(II.iMaxAmmo1);
+				//	  WRITE_BYTE(CBasePlayer::GetAmmoIndex(II.pszAmmo2));
+				//	  WRITE_BYTE(II.iMaxAmmo2);
+				//	  WRITE_BYTE(II.iSlot);
+				//	  WRITE_BYTE(II.iPosition);
+				//	  WRITE_BYTE(II.iId);
+				//	  WRITE_BYTE(II.iFlags);
+				//	MESSAGE_END();
+				//
+				RetrieveWeaponList = true;
 			}
 		}
 	}
@@ -152,9 +164,19 @@ void OnWriteByte(int value)
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
-	if (RetrieveWeaponName && ++ArgPosition == 7 && value >= 0 && value < MAX_WEAPONS)
+	if (RetrieveWeaponList)
 	{
-		strncopy(WeaponNameList[value], CurrentWeaponName.chars(), sizeof(WeaponNameList[value]));
+		switch (++ArgPosition)
+		{
+			case 1: CurrentWeaponList.ammoIndex1 = value;
+			case 2: CurrentWeaponList.maxAmmo1 = value;
+			case 3: CurrentWeaponList.ammoIndex2 = value;
+			case 4: CurrentWeaponList.maxAmmo2 = value;
+			case 5: CurrentWeaponList.slot = value;
+			case 6: CurrentWeaponList.position = value;
+			case 7: CurrentWeaponList.id = value;
+			case 8: CurrentWeaponList.flags = value;
+		}
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -167,9 +189,9 @@ void OnWriteString(const char *value)
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
-	if (RetrieveWeaponName)
+	if (RetrieveWeaponList)
 	{
-		CurrentWeaponName = value;
+		CurrentWeaponList.name = value;
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -190,10 +212,12 @@ void OnMessageEnd(void)
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
-	if (RetrieveWeaponName)
+	if (RetrieveWeaponList)
 	{
-		RetrieveWeaponName = false;
+		RetrieveWeaponList = false;
 		ArgPosition = 0;
+
+		WeaponsList[CurrentWeaponList.id] = CurrentWeaponList;
 	}
 
 	RETURN_META(MRES_IGNORED);

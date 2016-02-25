@@ -1874,7 +1874,7 @@ static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
 		}
 	}
 
-	MF_SetAmxString(amx, params[2], alias, params[3]);
+	MF_SetAmxString(amx, params[2], name, params[3]);
 
 	return info.itemid != CSI_NONE;
 }

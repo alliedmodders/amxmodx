@@ -18,7 +18,7 @@ ke::Vector<int> ModelsUpdateQueue;
 
 void ClientDisconnect(edict_t *pEntity)
 {
-	int index = ENTINDEX(pEntity);
+	int index = TypeConversion.edict_to_id(pEntity);
 
 	Players[index].ResetModel();
 	Players[index].ResetZoom();
@@ -30,7 +30,7 @@ void ClientUserInfoChanged(edict_t *pEntity, char *infobuffer)
 {
 	if (pEntity->pvPrivateData)
 	{
-		Players[ENTINDEX(pEntity)].UpdateModel(pEntity);
+		Players[TypeConversion.edict_to_id(pEntity)].UpdateModel(pEntity);
 	}
 
 	RETURN_META(MRES_IGNORED);

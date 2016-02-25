@@ -200,7 +200,7 @@ bool CsItemInfo::GetAliasInfosFromName(const char *name, AliasInfo *info)
 		name += prefix_item_length + 1;
 	}
 
-	for (size_t id = 0; id < ARRAYSIZE(WeaponNameList); ++id)
+	for (size_t id = 0; id < ARRAYSIZE(WeaponsList); ++id)
 	{
 		const char *weapon = WeaponsList[id].name.chars();
 

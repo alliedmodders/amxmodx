@@ -87,7 +87,7 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 		{
 			if (msg_type == MessageIdSetFOV)
 			{
-				int index = ENTINDEX(pEntity);
+				int index = TypeConversion.edict_to_id(pEntity);
 				int zoom = Players[index].GetZoom();
 
 				if (zoom)
@@ -107,7 +107,7 @@ void OnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *p
 			}
 			else if (msg_type == MessageIdResetHUD)
 			{
-				int index = ENTINDEX(pEntity);
+				int index = TypeConversion.edict_to_id(pEntity);
 
 				if (Players[index].GetZoom())
 				{

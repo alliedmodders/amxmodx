@@ -115,7 +115,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_id(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pHostage = INDEXENT(index);
+	edict_t *pHostage = TypeConversion.id_to_edict(index);
 
 	CHECK_HOSTAGE(pHostage);
 
@@ -131,7 +131,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_silenced(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pWeapon = INDEXENT(index);
+	edict_t *pWeapon = TypeConversion.id_to_edict(index);
 
 	switch (get_pdata<int>(pWeapon, m_iId))
 	{
@@ -162,7 +162,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_id(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pWeapon = INDEXENT(index);
+	edict_t *pWeapon = TypeConversion.id_to_edict(index);
 
 	return get_pdata<int>(pWeapon, m_iId);
 }
@@ -177,7 +177,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params)
 	int silence  = params[2];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pWeapon = INDEXENT(index);
+	edict_t *pWeapon = TypeConversion.id_to_edict(index);
 
 	int draw_animation = 1;
 
@@ -231,7 +231,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_silenced(AMX *amx, cell *params)
 
 		if (draw_animation > 0 && UTIL_IsPlayer(pPlayer))
 		{
-			int currentWeapon = *static_cast<int *>(MF_PlayerPropAddr(ENTINDEX(pPlayer), Player_CurrentWeapon));
+			int currentWeapon = *static_cast<int *>(MF_PlayerPropAddr(TypeConversion.edict_to_id(pPlayer), Player_CurrentWeapon));
 
 			if (currentWeapon != weaponType)
 			{
@@ -299,7 +299,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_burstmode(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pWeapon = INDEXENT(index);
+	edict_t *pWeapon = TypeConversion.id_to_edict(index);
 
 	int flag = 0;
 
@@ -327,7 +327,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_burstmode(AMX *amx, cell *params)
 	int burst = params[2];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pWeapon = INDEXENT(index);
+	edict_t *pWeapon = TypeConversion.id_to_edict(index);
 
 	int weaponState = get_pdata<int>(pWeapon, m_iWeaponState);
 	int weaponNewState = weaponState;
@@ -908,7 +908,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t* pHostage = INDEXENT(index);
+	edict_t* pHostage = TypeConversion.id_to_edict(index);
 
 	CHECK_HOSTAGE(pHostage);
 
@@ -932,7 +932,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_follow(AMX *amx, cell *params)
 		pEntity = get_pdata<EHANDLE>(pHostage, m_hTargetEnt).Get();
 	}
 
-	return pEntity ? ENTINDEX(pEntity) : 0;
+	return pEntity ? TypeConversion.edict_to_id(pEntity) : 0;
 }
 
 // native cs_set_hostage_foll(index, followedindex = 0);
@@ -945,7 +945,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_follow(AMX *amx, cell *params)
 	int target = params[2];
 
 	CHECK_NONPLAYER(index);
-	edict_t* pHostage = INDEXENT(index);
+	edict_t* pHostage = TypeConversion.id_to_edict(index);
 
 	if (target != 0)
 	{
@@ -996,7 +996,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_ammo(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pWeapon = INDEXENT(index);
+	edict_t *pWeapon = TypeConversion.id_to_edict(index);
 
 	return get_pdata<int>(pWeapon, m_iClip);
 }
@@ -1010,7 +1010,7 @@ static cell AMX_NATIVE_CALL cs_set_weapon_ammo(AMX *amx, cell *params)
 	int ammo  = params[2];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pWeapon = INDEXENT(index);
+	edict_t *pWeapon = TypeConversion.id_to_edict(index);
 
 	set_pdata<int>(pWeapon, m_iClip, ammo);
 
@@ -1185,7 +1185,7 @@ static cell AMX_NATIVE_CALL cs_get_armoury_type(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pArmoury = INDEXENT(index);
+	edict_t *pArmoury = TypeConversion.id_to_edict(index);
 
 	if (strcmp(STRING(pArmoury->v.classname), "armoury_entity"))
 	{
@@ -1243,7 +1243,7 @@ static cell AMX_NATIVE_CALL cs_set_armoury_type(AMX *amx, cell *params)
 	int type  = params[2];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pArmoury = INDEXENT(index);
+	edict_t *pArmoury = TypeConversion.id_to_edict(index);
 
 	if (strcmp(STRING(pArmoury->v.classname), "armoury_entity"))
 	{
@@ -1509,7 +1509,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_lastuse(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pHostage = INDEXENT(index);
+	edict_t *pHostage = TypeConversion.id_to_edict(index);
 
 	CHECK_HOSTAGE(pHostage);
 
@@ -1535,7 +1535,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_lastuse(AMX *amx, cell *params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pHostage = INDEXENT(index);
+	edict_t *pHostage = TypeConversion.id_to_edict(index);
 
 	CHECK_HOSTAGE(pHostage);
  
@@ -1562,7 +1562,7 @@ static cell AMX_NATIVE_CALL cs_get_hostage_nextuse(AMX* amx, cell* params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pHostage = INDEXENT(index);
+	edict_t *pHostage = TypeConversion.id_to_edict(index);
 
 	CHECK_HOSTAGE(pHostage);
 
@@ -1577,7 +1577,7 @@ static cell AMX_NATIVE_CALL cs_set_hostage_nextuse(AMX* amx, cell* params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pHostage = INDEXENT(index);
+	edict_t *pHostage = TypeConversion.id_to_edict(index);
 
 	CHECK_HOSTAGE(pHostage);
 
@@ -1594,7 +1594,7 @@ static cell AMX_NATIVE_CALL cs_get_c4_explode_time(AMX* amx, cell* params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pC4 = INDEXENT(index);
+	edict_t *pC4 = TypeConversion.id_to_edict(index);
 
 	if (strcmp(STRING(pC4->v.classname), "grenade") != 0)
 	{
@@ -1613,7 +1613,7 @@ static cell AMX_NATIVE_CALL cs_set_c4_explode_time(AMX* amx, cell* params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pC4 = INDEXENT(index);
+	edict_t *pC4 = TypeConversion.id_to_edict(index);
 
 	if (strcmp(STRING(pC4->v.classname), "grenade") != 0)
 	{
@@ -1634,7 +1634,7 @@ static cell AMX_NATIVE_CALL cs_get_c4_defusing(AMX* amx, cell* params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pC4 = INDEXENT(index);
+	edict_t *pC4 = TypeConversion.id_to_edict(index);
 
 	if (strcmp(STRING(pC4->v.classname), "grenade") != 0)
 	{
@@ -1653,7 +1653,7 @@ static cell AMX_NATIVE_CALL cs_set_c4_defusing(AMX* amx, cell* params)
 	int index = params[1];
 
 	CHECK_NONPLAYER(index);
-	edict_t *pC4 = INDEXENT(index);
+	edict_t *pC4 = TypeConversion.id_to_edict(index);
 
 	if (strcmp(STRING(pC4->v.classname), "grenade") != 0)
 	{
@@ -1682,7 +1682,7 @@ static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
 
 	if (!FNullEnt(pEnt))
 	{
-		return ENTINDEX(pEnt);
+		return TypeConversion.edict_to_id(pEnt);
 	}
 
 	return 0;

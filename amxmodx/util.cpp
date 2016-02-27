@@ -718,3 +718,41 @@ void UTIL_TrimRight(char *buffer)
 		}
 	}
 }
+
+size_t UTIL_FilterEvilCharacters(const char *in, char *out, size_t out_maxlen, bool name_only)
+{
+	auto remainChars = out_maxlen - 1;
+	auto n = 0;
+
+	for (auto s = in; *s != '\0' && remainChars; ++s)
+	{
+		if (*s == '#' ||
+			*s == '%' ||
+			(name_only &&
+				*s == '&' ||
+				(n && out[n - 1] == '+' && static_cast<signed char>(*s) > 0 && isalnum(*s))
+			))
+		{
+			if (remainChars < 3)
+			{
+				break;
+			}
+
+			// http://unicode-table.com/blocks/halfwidth-and-fullwidth-forms/
+			out[n++] = 0xEF;
+			out[n++] = 0xBC | (((*s - 0x20) & 0x40) >> 6);
+			out[n++] = 0x80 + ((*s - 0x20) & 0x3F);
+
+			remainChars -= 3;
+		}
+		else
+		{
+			out[n++] = *s;
+			remainChars--;
+		}
+	}
+
+	out[n] = '\0';
+
+	return n;
+}

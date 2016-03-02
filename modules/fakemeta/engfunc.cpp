@@ -899,7 +899,11 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		iparam1 = cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[3]);
 		index = cRet[0];
-		CHECK_ENTITY(index);
+		if (index != -1)
+		{
+			CHECK_ENTITY(index);
+			pRet = TypeConversion.id_to_edict(index);
+		}
 		cRet = MF_GetAmxAddr(amx,params[4]);
 		iparam2 = cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[5]);
@@ -924,7 +928,7 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 		iparam5 = cRet[0];
 		cRet = MF_GetAmxAddr(amx,params[13]);
 		iparam6 = cRet[0];
-		(*g_engfuncs.pfnPlaybackEvent)(iparam1,TypeConversion.id_to_edict(index),iparam2,fparam1,Vec1,Vec2,fparam2,fparam3,iparam3,iparam4,iparam5,iparam6);
+		(*g_engfuncs.pfnPlaybackEvent)(iparam1,pRet,iparam2,fparam1,Vec1,Vec2,fparam2,fparam3,iparam3,iparam4,iparam5,iparam6);
 		return 1;
 
 		//pfnCheckVisibility

@@ -32,7 +32,7 @@ elif builder.target_platform == 'windows':
   ]
 
 binary.compiler.linkflags += jit_objects
-binary.compiler.linkflags += [AMXX.zlib.binary, AMXX.hashing.binary]
+binary.compiler.linkflags += [AMXX.zlib.binary, AMXX.hashing.binary, AMXX.utf8rewind.binary]
 
 if builder.target_platform == 'mac':
   binary.compiler.postlink += [

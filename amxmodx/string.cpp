@@ -11,6 +11,7 @@
 #include "amxmodx.h"
 #include "format.h"
 #include "binlog.h"
+#include <utf8rewind.h>
 
 const char* stristr(const char* str, const char* substr)
 {
@@ -169,11 +170,19 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 	return dest - start;
 }
 
+#define MAX_BUFFER_LENGTH 16384
+
+char *get_amxbuffer(int id)
+{
+	static char buffer[4][MAX_BUFFER_LENGTH];
+	return buffer[id];
+}
+
 char *get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 {
-	static char buffer[4][16384];
-	len = get_amxstring_r(amx, amx_addr, buffer[id], sizeof(buffer[id]) - 1);
-	return buffer[id];
+	auto buffer = get_amxbuffer(id);
+	len = get_amxstring_r(amx, amx_addr, buffer, MAX_BUFFER_LENGTH - 1);
+	return buffer;
 }
 
 char *get_amxstring_null(AMX *amx, cell amx_addr, int id, int& len)
@@ -716,32 +725,42 @@ static cell AMX_NATIVE_CALL parse(AMX *amx, cell *params) /* 3 param */
 	return ((iarg - 2)>>1);
 }
 
-static cell AMX_NATIVE_CALL strtolower(AMX *amx, cell *params) /* 1 param */
+static cell string_case_mapping(size_t (function)(const char*, size_t, char*, size_t, int32_t*), AMX *amx, cell *params)
 {
-	cell *cptr = get_amxaddr(amx, params[1]);
-	cell *begin = cptr;
-	
-	while (*cptr)
+	int string_length;
+	int32_t errors;
+
+	auto const buffer_id = 0;
+	auto string = get_amxstring(amx, params[1], buffer_id, string_length);
+	auto output = get_amxbuffer(buffer_id + 1);
+
+	// First, we get the final length without writing in to buffer.
+	// This is not guaranteed the length will be the same.
+	auto size_in_bytes = function(string, string_length, nullptr, 0, &errors);
+
+	if (size_in_bytes == 0 || errors != UTF8_ERR_NONE)
 	{
-		*cptr = tolower(*cptr);
-		cptr++;
+		return 0;
 	}
 
-	return cptr - begin;
+	// Any new string length which goes above the original length is truncated.
+	// Such special situation are rather specific and marginal though.
+	size_in_bytes = function(string, string_length, output, ke::Min<int>(size_in_bytes, string_length), nullptr);
+
+	// Length in bytes.
+	return set_amxstring_utf8_char(amx, params[1], output, size_in_bytes, string_length);
 }
 
-static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params) /* 1 param */
+// native strtolower(string[]);
+static cell AMX_NATIVE_CALL strtolower(AMX *amx, cell *params)
 {
-	cell *cptr = get_amxaddr(amx, params[1]);
-	cell *begin = cptr;
-	
-	while (*cptr)
-	{
-		*cptr = toupper(*cptr);
-		cptr++;
-	}
-	
-	return cptr - begin;
+	return string_case_mapping(utf8tolower, amx, params);
+}
+
+// native strtoupper(string[]);
+static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params)
+{
+	return string_case_mapping(utf8toupper, amx, params);
 }
 
 int fo_numargs(AMX *amx)

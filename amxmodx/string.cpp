@@ -725,30 +725,44 @@ static cell AMX_NATIVE_CALL parse(AMX *amx, cell *params) /* 3 param */
 	return ((iarg - 2)>>1);
 }
 
-static cell string_case_mapping(size_t (function)(const char*, size_t, char*, size_t, int32_t*), AMX *amx, cell *params)
+static cell string_case_mapping(size_t(function)(const char*, size_t, char*, size_t, int32_t*), AMX *amx, cell *params, bool first_ch = false)
 {
 	int string_length;
 	int32_t errors;
 
 	auto const buffer_id = 0;
+	auto first_ch_length = 0;
+
 	auto string = get_amxstring(amx, params[1], buffer_id, string_length);
 	auto output = get_amxbuffer(buffer_id + 1);
 
+	if (first_ch)
+	{
+		// Retrieves first character bytes length.
+		first_ch_length = utf8seek(string, string_length, string, 1, SEEK_CUR) - string;
+	}
+
 	// First, we get the final length without writing in to buffer.
 	// This is not guaranteed the length will be the same.
-	auto size_in_bytes = function(string, string_length, nullptr, 0, &errors);
+	auto size_in_bytes = function(string, first_ch ? first_ch_length : string_length, nullptr, 0, &errors);
 
-	if (size_in_bytes == 0 || errors != UTF8_ERR_NONE)
+	if (size_in_bytes == 0 || errors != UTF8_ERR_NONE || (first_ch && size_in_bytes > static_cast<size_t>(string_length)))
 	{
 		return 0;
 	}
 
+	if (first_ch)
+	{
+		// Fills output with the characters left and leave enough spaces for first character.
+		memcpy(output + size_in_bytes, string + first_ch_length, (string_length - size_in_bytes) * sizeof(char));
+	}
+
 	// Any new string length which goes above the original length is truncated.
-	// Such special situation are rather specific and marginal though.
+	// Such special situations are rather specific and marginal though.
 	size_in_bytes = function(string, string_length, output, ke::Min<int>(size_in_bytes, string_length), nullptr);
 
 	// Length in bytes.
-	return set_amxstring_utf8_char(amx, params[1], output, size_in_bytes, string_length);
+	return set_amxstring_utf8_char(amx, params[1], output, first_ch ? string_length + (size_in_bytes - first_ch_length) : size_in_bytes, string_length);
 }
 
 // native strtolower(string[]);
@@ -1249,15 +1263,10 @@ static cell AMX_NATIVE_CALL get_char_bytes(AMX *amx, cell *params)
 	return UTIL_GetUTF8CharBytes(str);
 };
 
+// native ucfirst(string[]);
 static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 {
-	cell *str = get_amxaddr(amx, params[1]);
-	
-	if (!isalpha((char)str[0]) || !(str[0] & (1<<5)))
-		return 0;
-	str[0] &= ~(1<<5);
-	
-	return 1;
+	return string_case_mapping(utf8totitle, amx, params, true);
 }
 
 static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)

@@ -708,18 +708,22 @@ native strcat(dest[], const source[], maxlength);
 /**
  * Tests whether a string is found inside another string.
  *
+ * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
+ *
  * @param string		String to search in.
  * @param sub			Substring to find inside the original string.
  * @param ignorecase	If true, search is case insensitive.
  *						If false (default), search is case sensitive.
- * @param pos			
+ * @param pos           Start position in string to search in.
  * @return				-1 on failure (no match found). Any other value
  *						indicates a position in the string where the match starts.
  */
-native strfind(const string[], const sub[], ignorecase=0, pos=0);
+native strfind(const string[], const sub[], ignorecase = 0, pos = 0);
 
 /**
  * Compares two strings lexographically.
+ *
+ * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
  *
  * @param string1		First string (left).
  * @param string2		Second string (right).
@@ -735,6 +739,7 @@ native strcmp(const string1[], const string2[], ignorecase=0);
  * Compares two strings parts lexographically.
  *
  * @note Only available in 1.8.3 and above.
+ * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
  *
  * @param string1		First string (left).
  * @param string2		Second string (right).

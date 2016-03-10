@@ -1320,62 +1320,93 @@ static cell AMX_NATIVE_CALL n_strcat(AMX *amx, cell *params)
 	return params[3] - num;
 }
 
-static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
+static void _utf8strfold(const char *&string1, size_t string1_length, const char *&string2, size_t string2_length)
 {
-	int len;
-	char *str1 = get_amxstring(amx, params[1], 0, len);
-	char *str2 = get_amxstring(amx, params[2], 1, len);
+	auto string1_folded = get_amxbuffer(2);
+	auto string2_folded = get_amxbuffer(3);
 
-	if (params[3])
-		return stricmp(str1, str2);
-	else
-		return strcmp(str1, str2);
-}
-
-static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
-{
-	int len;
-	char *str1 = get_amxstring(amx, params[1], 0, len);
-	char *str2 = get_amxstring(amx, params[2], 1, len);
-
-	if (params[4])
-		return strncasecmp(str1, str2, (size_t)params[3]);
-	else
-		return strncmp(str1, str2, (size_t)params[3]);
-}
-
-static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
-{
-	int len;
-	char *str = get_amxstring(amx, params[1], 0, len);
-	int sublen;
-	char *sub = get_amxstring(amx, params[2], 1, sublen);
-
-	bool igcase = params[3] ? true : false;
-	
-	if (igcase)
+	if (utf8strcasefold(string1, string1_length, string1_folded, MAX_BUFFER_LENGTH - 1) &&
+		utf8strcasefold(string2, string2_length, string2_folded, MAX_BUFFER_LENGTH - 1))
 	{
-		for (int i = 0; i < len; i++)
-		{
-			if (str[i] & (1<<5))
-				str[i] &= ~(1<<5);
-		}
-		for (int i = 0; i < sublen; i++)
-		{
-			if (str[i] & (1<<5))
-				str[i] &= ~(1<<5);			
-		}
+		string1 = string1_folded;
+		string2 = string2_folded;
+	}
+}
+
+static size_t _utf8strncmp(const char *string1, size_t string1_length, const char *string2, size_t string2_length, bool ignore_case, size_t num_bytes = 0)
+{
+	if (!num_bytes)
+	{
+		num_bytes = ke::Min(string1_length, string2_length);
 	}
 
-	if (params[4] > len)
-		return -1;
+	if (ignore_case)
+	{
+		_utf8strfold(string1, string1_length, string2, string2_length);
+	}
 
-	char *find = strstr(str + params[4], sub);
+	return memcmp(string1, string2, num_bytes);
+}
+
+// native strcmp(const string1[], const string2[], ignorecase = 0);
+static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
+{
+	int string1_length;
+	int string2_length;
+
+	const char *string1 = get_amxstring(amx, params[1], 0, string1_length);
+	const char *string2 = get_amxstring(amx, params[2], 1, string2_length);
+
+	auto ignore_case = params[3] != 0;
+
+	return _utf8strncmp(string1, string1_length, string2, string2_length, ignore_case);
+}
+
+// native strncmp(const string1[], const string2[], num, bool:ignorecase=false);
+static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
+{
+	int string1_length;
+	int string2_length;
+
+	const char *string1 = get_amxstring(amx, params[1], 0, string1_length);
+	const char *string2 = get_amxstring(amx, params[2], 1, string2_length);
+
+	auto num_bytes = static_cast<size_t>(params[3]);
+	auto ignore_case = params[4] != 0;
+
+	return _utf8strncmp(string1, string1_length, string2, string2_length, ignore_case, num_bytes);
+}
+
+// native strfind(const string[], const sub[], ignorecase = 0, pos = 0);
+static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
+{
+	int string_length;
+	int substring_length;
+
+	const char *string    = get_amxstring(amx, params[1], 0, string_length);
+	const char *substring = get_amxstring(amx, params[2], 1, substring_length);
+
+	auto ignore_case    = params[3] != 0;
+	auto start_position = params[4];
+
+	if (start_position > string_length)
+	{
+		return -1;
+	}
+
+	if (ignore_case)
+	{
+		_utf8strfold(string, string_length, substring, substring_length);
+	}
+
+	auto find = strstr(string + start_position, substring);
 
 	if (!find)
+	{
 		return -1;
+	}
 
-	return (find - str);
+	return (find - string);
 }
 
 static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)

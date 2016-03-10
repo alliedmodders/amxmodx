@@ -9,6 +9,7 @@
 
 #include <time.h>
 #include "amxmodx.h"
+#include <utf8rewind.h>
 
 int UTIL_ReadFlags(const char* c) 
 {
@@ -498,6 +499,24 @@ unsigned int strncopy(D *dest, const S *src, size_t count)
 	*dest = '\0';
 
 	return (dest - start);
+}
+
+size_t utf8strcasefold(const char *text, size_t textLen, char *&buffer, size_t bufferLen)
+{
+	int32_t errors;
+
+	// First, we get the final length without writing in to buffer.
+	// If there are errors we don't bother to process further.
+	if (utf8casefold(text, textLen, nullptr, 0, &errors) != 0 && errors == UTF8_ERR_NONE)
+	{
+		// Final size can vary. We want to have room as much as possible.
+		textLen = utf8casefold(text, textLen, buffer, bufferLen, nullptr);
+
+		buffer[textLen] = '\0';
+		return textLen;
+	}
+
+	return 0;
 }
 
 /**

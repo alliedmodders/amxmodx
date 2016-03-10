@@ -135,6 +135,8 @@ void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);
 void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg);
 void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName);
 
+size_t utf8strcasefold(const char *text, size_t textLen, char *&buffer, size_t bufferLen);
+
 template <typename D> int UTIL_CheckValidChar(D *c); 
 template <typename D, typename S> unsigned int strncopy(D *dest, const S *src, size_t count);
 unsigned int UTIL_GetUTF8CharBytes(const char *stream);

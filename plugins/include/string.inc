@@ -74,15 +74,15 @@ native containi(const source[],const string[]);
 native replace(text[], len, const what[], const with[]);
 
 /**
- * Given a string, replaces all occurrences of a search string with a 
+ * Given a string, replaces all occurrences of a search string with a
  * replacement string.
  *
- * @note Similar to replace_all() stock, but implemented as native and 
- *       with different algorithm. This native doesn't error on bad 
- *       buffer size and will smartly cut off the string in a way 
+ * @note Similar to replace_all() stock, but implemented as native and
+ *       with different algorithm. This native doesn't error on bad
+ *       buffer size and will smartly cut off the string in a way
  *       that pushes old data out.
- *	
  * @note Only available in 1.8.3 and above.
+ * @note This supports multi-byte characters (UTF-8) on case insensitive replacement.
  *
  * @param text			String to perform search and replacements on.
  * @param maxlength		Maximum length of the string buffer.
@@ -92,18 +92,18 @@ native replace(text[], len, const what[], const with[]);
  *
  * @return				Number of replacements that were performed.
  */
-native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive=true);
+native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive = true);
 
 /**
- * Given a string, replaces the first occurrence of a search string with a 
+ * Given a string, replaces the first occurrence of a search string with a
  * replacement string.
  *
- * @note Similar to replace() native, but implemented with more options and 
- *       with different algorithm. This native doesn't error on bad 
- *       buffer size and will smartly cut off the string in a way 
+ * @note Similar to replace() native, but implemented with more options and
+ *       with different algorithm. This native doesn't error on bad
+ *       buffer size and will smartly cut off the string in a way
  *       that pushes old data out.
- *	
  * @note Only available in 1.8.3 and above.
+ * @note This supports multi-byte characters (UTF-8) on case insensitive replacement.
  *
  * @param text			String to perform search and replacements on.
  * @param maxlength		Maximum length of the string buffer.
@@ -119,7 +119,8 @@ native replace_string(text[], maxlength, const search[], const replace[], bool:c
  *						the last replacement ended, or -1 if no replacements were
  *						made.
  */
-native replace_stringex(text[], maxlength, const search[], const replace[], searchLen=-1, replaceLen=-1, bool:caseSensitive=true);
+native replace_stringex(text[], maxlength, const search[], const replace[], searchLen = -1, replaceLen = -1, bool:caseSensitive = true);
+
 
 /**
  * Concatenates one string onto another.

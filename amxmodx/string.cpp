@@ -1293,6 +1293,42 @@ static cell AMX_NATIVE_CALL is_char_mb(AMX *amx, cell *params)
 	return bytes;
 }
 
+// native bool:is_string_category(const input[], input_size, flags, &output_size = 0);
+static cell AMX_NATIVE_CALL is_string_category(AMX *amx, cell *params)
+{
+	int input_length;
+	const char *input = get_amxstring(amx, params[1], 0, input_length);
+
+	auto input_maxlength = ke::Min(params[2], input_length);
+
+	auto flags = params[3];
+	auto size  = get_amxaddr(amx, params[4]);
+
+	if (!input_length)
+	{
+		*size = 0;
+		return FALSE;
+	}
+
+	// User wants to check only one character
+	if (input_maxlength <= 1)
+	{
+		// Gets the character length.
+		input_maxlength = utf8seek(input, input_length, input, 1, SEEK_CUR) - input;
+
+		// Truncated character.
+		if (input_maxlength > input_length)
+		{
+			*size = 0;
+			return FALSE;
+		}
+	}
+
+	*size = utf8iscategory(input, input_maxlength, flags);
+
+	return *size == input_maxlength ? TRUE : FALSE;
+}
+
 static cell AMX_NATIVE_CALL get_char_bytes(AMX *amx, cell *params)
 {
 	int len;
@@ -1542,6 +1578,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"is_char_upper",	is_char_upper},
 	{"is_char_lower",	is_char_lower},
 	{"is_char_mb",		is_char_mb},
+	{"is_string_category",is_string_category},
 	{"get_char_bytes",	get_char_bytes},
 	{"num_to_str",		numtostr},
 	{"numtostr",		numtostr},

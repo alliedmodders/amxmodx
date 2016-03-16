@@ -814,14 +814,14 @@
 	{ \
 		PREPARE_VECTOR(vec); \
 		PREPARE_VECTOR(vecb); \
-		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, (cell)ENTINDEX((edict_t*)e), (cell)eb, f, p_vec, p_vecb, fb, fc, (cell)vb, (cell)vc, (cell)vd, (cell)ve)); \
+		FM_ENG_HANDLE(FM_##call, (Engine[FM_##call].at(i),  (cell)v, e ? (cell)ENTINDEX((edict_t*)e) : -1, (cell)eb, f, p_vec, p_vecb, fb, fc, (cell)vb, (cell)vc, (cell)vd, (cell)ve)); \
 		RETURN_META(mswi(lastFmRes)); \
 	} \
 	void call##_post (int v, const edict_t *e, unsigned short eb, float f, float *vec, float *vecb, float fb, float fc, int vb, int vc, int vd, int ve) \
 	{ \
 		PREPARE_VECTOR(vec); \
 		PREPARE_VECTOR(vecb); \
-		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), (cell)v, (cell)ENTINDEX((edict_t*)e),(cell)eb, f, p_vec, p_vecb, fb, fc, (cell)vb, (cell)vc, (cell)vd, (cell)ve)); \
+		FM_ENG_HANDLE_POST(FM_##call, (EnginePost[FM_##call].at(i), (cell)v, e ? (cell)ENTINDEX((edict_t*)e) : -1, (cell)eb, f, p_vec, p_vecb, fb, fc, (cell)vb, (cell)vc, (cell)vd, (cell)ve)); \
 		RETURN_META(MRES_IGNORED); \
 	} 
 

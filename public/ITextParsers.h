@@ -351,12 +351,14 @@
 		 * @param ini_listener	Event handler for reading file.
 		 * @param line			If non-NULL, will contain last line parsed (0 if file could not be opened).
 		 * @param col			If non-NULL, will contain last column parsed (undefined if file could not be opened).
+		 * @param inline_comment Whether inline comment is allowed.
 		 * @return				True if parsing succeeded, false if file couldn't be opened or there was a syntax error.
 		 */
 		virtual bool ParseFile_INI(const char *file,
 									ITextListener_INI *ini_listener,
 									unsigned int *line,
-									unsigned int *col) =0;
+									unsigned int *col,
+									bool inline_comment = true) =0;
 
 		/**
 		 * @brief Parses an SMC-format text file.

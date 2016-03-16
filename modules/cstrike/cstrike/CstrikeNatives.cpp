@@ -1837,6 +1837,40 @@ static cell AMX_NATIVE_CALL cs_get_item_id(AMX* amx, cell* params)
 	return CSI_NONE;
 }
 
+// native bool:cs_get_item_alias(itemid, name[], name_maxlen, altname[] = "", altname_maxlen = 0); 
+static cell AMX_NATIVE_CALL cs_get_item_alias(AMX* amx, cell* params)
+{
+	if (ItemsManager.HasConfigError())
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_item_alias() is disabled because of corrupted or missing gamedata");
+		return 0;
+	}
+
+	auto itemid = params[1];
+
+	if (itemid == CSI_SHIELDGUN)
+	{
+		itemid = CSI_SHIELD;
+	}
+	else if (itemid == CSI_GLOCK)
+	{
+		itemid = CSI_GLOCK18;
+	}
+	else if (itemid <= CSI_NONE || itemid >= CSI_MAX_COUNT)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid item id: %d", itemid);
+		return FALSE;
+	}
+
+	ke::AString name, altname;
+	auto result = ItemsManager.GetAliasFromId(itemid, name, altname);
+
+	MF_SetAmxString(amx, params[2], name.chars(), params[3]);
+	MF_SetAmxString(amx, params[4], altname.chars(), params[5]);
+
+	return result ? TRUE : FALSE;
+}
+
 // native bool:cs_get_translated_item_alias(const alias[], itemname[], maxlength);
 static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
 {
@@ -2052,6 +2086,7 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_find_ent_by_owner",        cs_find_ent_by_owner},
 	{"cs_set_ent_class",			cs_set_ent_class },
 	{"cs_get_item_id",		        cs_get_item_id},
+	{"cs_get_item_alias",			cs_get_item_alias},
 	{"cs_get_translated_item_alias",cs_get_translated_item_alias},
 	{"cs_get_weapon_info",          cs_get_weapon_info},
 	{"cs_get_user_weapon_entity",   cs_get_user_weapon_entity},

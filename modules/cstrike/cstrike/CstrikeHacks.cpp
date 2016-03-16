@@ -164,7 +164,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 
 					UTIL_StringToLower(command, commandLowered, sizeof(commandLowered));
 
-					if (ItemsManager.GetAliasInfosFromBuy(commandLowered, &info))
+					if (ItemsManager.GetAliasInfos(commandLowered, &info))
 					{
 						CurrentItemId = info.itemid;
 					}

@@ -375,11 +375,11 @@ static int skim(int *opstr,void (*testfunc)(int),int dropval,int endval,
       } /* if */
       dropout(lvalue,testfunc,droplab,lval);
       if (!lvalue && sc_intest && (lval->ident==iARRAY || lval->ident==iREFARRAY)) {
-        error(33, lval->sym ? (lval->sym->name ? lval->sym->name : "-unknown") : "-unknown-");  /* array was not indexed in an expression */
+        error(33, lval->sym ? lval->sym->name : "-unknown-");  /* array was not indexed in an expression */
       }
     } else if (hits) {                       /* no (more) identical operators */
       if (!lvalue && sc_intest && (lval->ident==iARRAY || lval->ident==iREFARRAY)) {
-        error(33, lval->sym ? (lval->sym->name ? lval->sym->name : "-unknown") : "-unknown-");  /* array was not indexed in an expression */
+        error(33, lval->sym ? lval->sym->name : "-unknown-");  /* array was not indexed in an expression */
       }
       dropout(lvalue,testfunc,droplab,lval); /* found at least one operator! */
       ldconst(endval,sPRI);

@@ -234,23 +234,17 @@ public blockcommand(id) // Might be used by others plugins, so keep this for bac
 		}
 		else // Items list.
 		{
-			new langName[24], langValue[24], langStatus[24], langOnOff[24];
 			new alias[16], itemid;
+			console_print(id, "  %-32.31s   %-10.9s   %-9.8s", fmt("%l", "NAME"), fmt("%l", "VALUE"), fmt("%l", "STATUS"));
 
-			LookupLangKey(langName, charsmax(langName), "NAME", id);
-			LookupLangKey(langValue, charsmax(langValue), "VALUE", id);
-			LookupLangKey(langStatus, charsmax(langStatus), "STATUS", id);
-
-			console_print(id, "  %-32.31s   %-10.9s   %-9.8s", langName, langValue, langStatus)
+			SetGlobalTransTarget(id);
 
 			for (new slot = 0; slot < sizeof ItemsInfos[] && (itemid = ItemsInfos[selection][slot][m_Index]) != CSI_NONE; ++slot)
 			{
-				LookupLangKey(langOnOff, charsmax(langOnOff), BlockedItems[itemid] ? "ON" : "OFF", id);
-				LookupLangKey(langName, charsmax(langName), ItemsInfos[selection][slot][m_Name], id);
-
 				cs_get_item_alias(itemid, alias, charsmax(alias));
 
-				console_print(id, "  %-32.31s   %-10.9s   %-9.8s", langName, alias, langOnOff);
+				console_print(id, "  %-32.31s   %-10.9s   %-9.8s", fmt("%l", ItemsInfos[selection][slot][m_Name]), alias
+																 , fmt("%l", BlockedItems[itemid] ? "ON" : "OFF"));
 			}
 		}
 	}
@@ -308,8 +302,10 @@ public blockcommand(id) // Might be used by others plugins, so keep this for bac
 
 displayMenu(id, pos)
 {
-	new menuTitle[64], menuBody[128];
-	new length = formatex(menuTitle, charsmax(menuTitle), "      \y%l", "REST_WEAP");
+	SetGlobalTransTarget(id);
+
+	new menuTitle[64];
+	formatex(menuTitle, charsmax(menuTitle), "      \y%l", "REST_WEAP");
 
 	new menu = menu_create(menuTitle, "@OnMenuAction");
 
@@ -317,14 +313,12 @@ displayMenu(id, pos)
 	{
 		for (new type = 0; type < sizeof(MenuInfos); ++type)
 		{
-			LookupLangKey(menuBody, charsmax(menuBody), MenuInfos[type][m_Title], id);
-			menu_additem(menu, menuBody);
+			menu_additem(menu, fmt("%l", MenuInfos[type][m_Title]));
 		}
 	}
 	else // Sub-menus
 	{
-		formatex(menuTitle[length], charsmax(menuTitle) - length, " > \d%l", MenuInfos[pos][m_Title]);
-		menu_setprop(menu, MPROP_TITLE, menuTitle);
+		menu_setprop(menu, MPROP_TITLE, fmt("%s  > \d%l", menuTitle, MenuInfos[pos][m_Title]));
 
 		for (new slot = 0, data[MenuItem]; slot < sizeof ItemsInfos[]; ++slot)
 		{
@@ -332,8 +326,7 @@ displayMenu(id, pos)
 
 			if (data[m_Index])
 			{
-				formatex(menuBody, charsmax(menuBody), "%l\y\R%l", data[m_Name], BlockedItems[data[m_Index]] ? "ON" : "OFF");
-				menu_additem(menu, menuBody);
+				menu_additem(menu, fmt("%l\y\R%l", data[m_Name], BlockedItems[data[m_Index]] ? "ON" : "OFF"));
 				continue;
 			}
 
@@ -341,15 +334,13 @@ displayMenu(id, pos)
 		}
 	}
 
-	formatex(menuBody, charsmax(menuBody), "%s%l \y\R%s", ModifiedItem ? "\y" : "\d", "SAVE_SET", ModifiedItem ? "*" : "");
 	menu_addblank(menu, .slot = false);
-	menu_additem(menu, menuBody);
+	menu_additem(menu, fmt("%s%l \y\R%s", ModifiedItem ? "\y" : "\d", "SAVE_SET", ModifiedItem ? "*" : ""));
 
-	formatex(menuBody, charsmax(menuBody), "%l", pos < 0 ? "EXIT" : "BACK");
-	menu_setprop(menu, MPROP_EXITNAME, menuBody);       // If inside a sub-menu we want to 'back' to main menu.
-	menu_setprop(menu, MPROP_PERPAGE, 0);               // Disable pagination.
-	menu_setprop(menu, MPROP_EXIT, MEXIT_FORCE);        // Force an EXIT item since pagination is disabled.
-	menu_setprop(menu, MPROP_NUMBER_COLOR, "      \r"); // Small QoL change to avoid menu overlapping with left icons.
+	menu_setprop(menu, MPROP_EXITNAME, fmt("%l", pos < 0 ? "EXIT" : "BACK")); // If inside a sub-menu we want to 'back' to main menu.
+	menu_setprop(menu, MPROP_PERPAGE, 0);                                     // Disable pagination.
+	menu_setprop(menu, MPROP_EXIT, MEXIT_FORCE);                              // Force an EXIT item since pagination is disabled.
+	menu_setprop(menu, MPROP_NUMBER_COLOR, "      \r");                       // Small QoL change to avoid menu overlapping with left icons.
 
 	menu_display(id, menu);
 }

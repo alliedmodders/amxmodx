@@ -19,7 +19,12 @@
 /* Creates a death message. */
 stock dod_make_deathmsg(killer, victim, weaponNUM)
 {
-	message_begin(MSG_ALL, get_user_msgid("DeathMsg"), {0,0,0}, 0);
+	static msgid = 0;
+	if (!msgid)
+	{
+		msgid = get_user_msgid("DeathMsg");
+	}
+	message_begin(MSG_ALL, msgid, {0,0,0}, 0);
 	write_byte(killer);
 	write_byte(victim);
 	write_byte(weaponNUM);
@@ -38,7 +43,7 @@ stock user_silentkill(index, flag = 1)
 		msgid = get_user_msgid("DeathMsg");
 	}
 	msgblock = get_msg_block(msgid);
-	set_msg_block(msgid, BLOCK_ONCE);	
+	set_msg_block(msgid, BLOCK_ONCE);
 	user_kill(index, flag);
 	set_msg_block(msgid, msgblock);
 
@@ -48,7 +53,12 @@ stock user_silentkill(index, flag = 1)
 /* Creates a death message. */
 stock make_deathmsg(killer, victim, headshot, const weapon[])
 {
-	message_begin(MSG_ALL, get_user_msgid("DeathMsg"), {0,0,0}, 0);
+	static msgid = 0;
+	if (!msgid)
+	{
+		msgid = get_user_msgid("DeathMsg");
+	}
+	message_begin(MSG_ALL, msgid, {0,0,0}, 0);
 	write_byte(killer);
 	write_byte(victim);
 

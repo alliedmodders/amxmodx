@@ -375,11 +375,11 @@ static int skim(int *opstr,void (*testfunc)(int),int dropval,int endval,
       } /* if */
       dropout(lvalue,testfunc,droplab,lval);
       if (!lvalue && sc_intest && (lval->ident==iARRAY || lval->ident==iREFARRAY)) {
-        error(33, lval->sym ? (lval->sym->name ? lval->sym->name : "-unknown") : "-unknown-");  /* array was not indexed in an expression */
+        error(33, lval->sym ? lval->sym->name : "-unknown-");  /* array was not indexed in an expression */
       }
     } else if (hits) {                       /* no (more) identical operators */
       if (!lvalue && sc_intest && (lval->ident==iARRAY || lval->ident==iREFARRAY)) {
-        error(33, lval->sym ? (lval->sym->name ? lval->sym->name : "-unknown") : "-unknown-");  /* array was not indexed in an expression */
+        error(33, lval->sym ? lval->sym->name : "-unknown-");  /* array was not indexed in an expression */
       }
       dropout(lvalue,testfunc,droplab,lval); /* found at least one operator! */
       ldconst(endval,sPRI);
@@ -749,7 +749,7 @@ static int hier14(value *lval1)
    * negative value would do).
    */
   for (i=0; i<sDIMEN_MAX; i++)
-    arrayidx1[i]=arrayidx2[i]=(cell)(-1L << (sizeof(cell)*8-1));
+    arrayidx1[i]=arrayidx2[i]=(cell)(-1UL << (sizeof(cell)*8-1));
   org_arrayidx=lval1->arrayidx; /* save current pointer, to reset later */
   if (lval1->arrayidx==NULL)
     lval1->arrayidx=arrayidx1;

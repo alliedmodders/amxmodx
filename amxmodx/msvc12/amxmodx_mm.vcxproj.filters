@@ -141,9 +141,6 @@
     <ClCompile Include="..\newmenus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\nongpl_matches.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\optimizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -378,9 +375,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\newmenus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\nongpl_matches.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\optimizer.h">

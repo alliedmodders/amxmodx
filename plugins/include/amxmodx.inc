@@ -322,8 +322,6 @@ native engine_changelevel(const map[]);
  * @noreturn
  * @error           If the index is not within the range of 1 to MaxClients or
  *                  the client is not connected, an error will be thrown.
- * @error           If called outside of the plugin_precache() forward, an error
- *                  is thrown.
  */
 native set_user_info(index, const info[], const value[]);
 

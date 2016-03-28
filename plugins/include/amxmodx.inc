@@ -1327,14 +1327,29 @@ native get_players(players[MAX_PLAYERS], &num, const flags[] = "", const team[] 
  * Retrieves argument of client command.
  *
  * @note Should only be used inside of the client_command() forward.
+ * @note Usage examples:
+ *       value = read_argv(1);
+ *       read_argv(2, floatvalue);
+ *       written = read_argv(3, buffer, buffersize);
  *
  * @param id        Argument index starting from 1, 0 returns the command itself
- * @param output    Buffer to copy command argument to
- * @param len       Maximum buffer size
+ * @param ...       Changes the native's behavior depending on how many
+ *                  additional parameters are provided:
+ *                     0 - Return the argument integer value directly
+ *                     1 - Store the argument float value in the variable passed
+ *                         as the second parameter
+ *                     2 - Copy the argument string value to the buffer provided
+ *                         in the second parameter, using the third as the
+ *                         maximum buffer size
  *
- * @return          Number of cells written to buffer
+ * @return          Changes depending on how many additional parameters are
+ *                  provided:
+ *                     0 - Returns the argument integer value
+ *                     1 - Returns the argument float value, converted
+ *                         (truncated) to an integer
+ *                     2 - Returns the number of cells written to the buffer
  */
-native read_argv(id, output[], len);
+native read_argv(id, any:...);
 
 /**
  * Retrieves full client command string.

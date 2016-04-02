@@ -19,9 +19,9 @@
 // Module info
 #define MODULE_NAME "Sockets"
 #define MODULE_VERSION AMXX_VERSION
-#define MODULE_AUTHOR "HLSW Dev Team"
-#define MODULE_URL "http://www.hlsw.net/"
-#define MODULE_LOGTAG "SOCKET"
+#define MODULE_AUTHOR "AMX Mod X Dev Team"
+#define MODULE_URL "http://www.amxmodx.org"
+#define MODULE_LOGTAG "SOCKETS"
 #define MODULE_LIBRARY "sockets"
 #define MODULE_LIBCLASS ""
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line

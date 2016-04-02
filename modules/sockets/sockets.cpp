@@ -37,12 +37,6 @@
 	#include <fcntl.h>
 #endif
 
-// Backwards compatibility
-#define ERROR_CREATE_SOCKET 1		// Couldn't create a socket
-#define ERROR_SERVER_UNKNOWN 2		// Server unknown
-#define ERROR_WHILE_CONNECTING 3	// Error while connecting
-#define ERROR_EHOSTUNREACH 113		// libc error code: No route to host
-
 #ifdef _WIN32
 	bool g_winsock_initialized = false;
 #endif
@@ -50,23 +44,63 @@
 static char *g_send2_buffer = nullptr;
 static int g_send2_buffer_length = 0;
 
-// native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error, _libc_errors = DISABLE_LIBC_ERRORS);
+
+bool setnonblocking(int sockfd)
+{
+#ifdef _WIN32
+	unsigned long flags = 1;
+
+	return (ioctlsocket(sockfd, FIONBIO, &flags) == 0);
+#else
+
+	int flags = -1;
+
+	if((flags = fcntl(sockfd, F_GETFL, 0)) == -1)
+		return false;
+
+	if(fcntl(sockfd, F_SETFL, flags | O_NONBLOCK) == -1)
+		return false;
+
+	return true;
+#endif
+}
+
+// native socket_open(_hostname[], _port, _protocol = SOCKET_TCP, &_error, _flags = 0);
 static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 {
-	int length = 0;
-	char *hostname = MF_GetAmxString(amx, params[1], 0, &length);
+	// Socket flags and backwards compatibility
+	enum
+	{
+		SOCK_NON_BLOCKING = (1 << 0),
+		SOCK_LIBC_ERRORS = (1 << 1)
+	};
+
+	#define SOCK_ERROR_OK               0 // No error
+	#define SOCK_ERROR_CREATE_SOCKET    1 // Couldn't create a socket
+	#define SOCK_ERROR_SERVER_UNKNOWN   2 // Server unknown
+	#define SOCK_ERROR_WHILE_CONNECTING 3 // Error while connecting
+	#define ERROR_EHOSTUNREACH 113		// libc error code: No route to host
+
+	int hostname_length = 0;
+	char *hostname = MF_GetAmxString(amx, params[1], 0, &hostname_length);
 
 	cell *error = MF_GetAmxAddr(amx, params[4]);
 	*error = 0;
 
-	bool libc_errors = false;
+	unsigned int flags = 0;
+	bool libc_errors = false, nonblocking_socket = false;
 
 	if((*params / sizeof(cell)) == 5)
-		libc_errors = (params[5] == 1) ? true : false;
-
-	if(length == 0)
 	{
-		*error = libc_errors ? ERROR_EHOSTUNREACH : ERROR_SERVER_UNKNOWN;
+		flags = params[5];
+
+		nonblocking_socket = (flags & SOCK_NON_BLOCKING) != 0;
+		libc_errors = (flags & SOCK_LIBC_ERRORS) != 0;
+	}
+
+	if(hostname_length == 0)
+	{
+		*error = libc_errors ? ERROR_EHOSTUNREACH : SOCK_ERROR_SERVER_UNKNOWN;
 		return -1;
 	}
 
@@ -74,6 +108,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 	ke::SafeSprintf(port_number, sizeof(port_number), "%d", params[2]);
 
 	int sockfd = -1, getaddrinfo_status = -1, connect_status = -1;
+	bool setnonblocking_status = false, connect_inprogress = false;
 	struct addrinfo hints, *server_info, *server;
 
 	memset(&hints, 0, sizeof(hints));
@@ -82,7 +117,7 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 
 	if((getaddrinfo_status = getaddrinfo(hostname, port_number, &hints, &server_info)) != 0)
 	{
-		*error = libc_errors ? getaddrinfo_status : ERROR_SERVER_UNKNOWN;
+		*error = libc_errors ? getaddrinfo_status : SOCK_ERROR_SERVER_UNKNOWN;
 		return -1;
 	}
 
@@ -92,104 +127,16 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 	{
 		if((sockfd = socket(server->ai_family, server->ai_socktype, server->ai_protocol)) != -1)
 		{
-			if((connect_status = connect(sockfd, server->ai_addr, server->ai_addrlen)) == -1)
-			{
-				*error = libc_errors ? errno : ERROR_WHILE_CONNECTING;
-				close(sockfd);
-			}
-			else
-			{
-				*error = 0;
-			}
-		}
-		else
-		{
-			if(*error == 0)
-				*error = libc_errors ? errno : ERROR_CREATE_SOCKET;
-		}
+			if(nonblocking_socket)
+				setnonblocking_status = setnonblocking(sockfd);
 
-	} while(connect_status != 0 && (server = server->ai_next) != nullptr);
-
-	freeaddrinfo(server_info);
-
-	if(sockfd == -1 || server == nullptr)
-		return -1;
-
-	return sockfd;
-}
-
-int set_nonblocking(int sockfd)
-{
-#ifdef _WIN32
-	unsigned long flags = 1;
-
-	if(ioctlsocket(sockfd, FIONBIO, &flags) == 0)
-		return 0;
-	else
-		return errno;
-#else
-	int flags = -1;
-
-	if((flags = fcntl(sockfd, F_GETFL, 0)) == -1)
-		return errno;
-
-	if(fcntl(sockfd, F_SETFL, flags | O_NONBLOCK) == -1)
-		return errno;
-
-	return 0;
-#endif
-}
-
-// native socket_open_nb(_hostname[], _port, _protocol = SOCKET_TCP, &_error);
-static cell AMX_NATIVE_CALL socket_open_nb(AMX *amx, cell *params)
-{
-	int length = 0;
-	char *hostname = MF_GetAmxString(amx, params[1], 0, &length);
-
-	cell *error = MF_GetAmxAddr(amx, params[4]);
-	*error = 0;
-
-	if(length == 0)
-	{
-		*error = ERROR_EHOSTUNREACH;
-		return -1;
-	}
-
-	char port_number[6];
-	ke::SafeSprintf(port_number, sizeof(port_number), "%d", params[2]);
-
-	int sockfd = -1, getaddrinfo_status = -1, connect_status = -1, setnonblocking_status = -1;
-	bool connect_inprogress = false;
-	struct addrinfo hints, *server_info, *server;
-
-	memset(&hints, 0, sizeof(hints));
-
-	// Both hostname and port should be numeric to prevent the name resolution service from being called and potentially blocking the call for a long time
-	hints.ai_flags = AI_NUMERICHOST | AI_NUMERICSERV; 
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = params[3];
-
-	if((getaddrinfo_status = getaddrinfo(hostname, port_number, &hints, &server_info)) != 0)
-	{
-		*error = getaddrinfo_status;
-		return -1;
-	}
-
-	server = server_info;
-
-	do
-	{
-		if((sockfd = socket(server->ai_family, server->ai_socktype, server->ai_protocol)) != -1)
-		{
-			setnonblocking_status = set_nonblocking(sockfd);
-
-			if(setnonblocking_status == 0)
+			if(nonblocking_socket == false || (nonblocking_socket && setnonblocking_status == true))
 			{
 				if((connect_status = connect(sockfd, server->ai_addr, server->ai_addrlen)) == -1)
 				{
-					*error = errno;
+					*error = libc_errors ? errno : SOCK_ERROR_WHILE_CONNECTING;
 
-					if(*error == EINPROGRESS)
+					if(nonblocking_socket && (errno == EINPROGRESS || errno == EWOULDBLOCK))
 						connect_inprogress = true;
 					else
 						close(sockfd);
@@ -202,7 +149,7 @@ static cell AMX_NATIVE_CALL socket_open_nb(AMX *amx, cell *params)
 			else
 			{
 				if(*error == 0)
-					*error = setnonblocking_status;
+					*error = libc_errors ? errno : SOCK_ERROR_CREATE_SOCKET;
 			}
 		}
 		else
@@ -211,8 +158,8 @@ static cell AMX_NATIVE_CALL socket_open_nb(AMX *amx, cell *params)
 				*error = errno;
 		}
 
-	} while(connect_inprogress == false && connect_status != 0 && (server = server->ai_next) != nullptr);
-
+	} while((nonblocking_socket && connect_inprogress == false) && connect_status != 0 && (server = server->ai_next) != nullptr);
+	
 	freeaddrinfo(server_info);
 
 	if(sockfd == -1 || server == nullptr)
@@ -224,7 +171,7 @@ static cell AMX_NATIVE_CALL socket_open_nb(AMX *amx, cell *params)
 // native socket_close(_socket);
 static cell AMX_NATIVE_CALL socket_close(AMX *amx, cell *params)
 {
-	return (close(params[1]) == -1) ? -1 : 1;
+	return (close(params[1]) == -1) ? 0 : 1;
 }
 
 // native socket_recv(_socket, _data[], _length);
@@ -285,9 +232,10 @@ static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)
 	}
 
 	cell *data = MF_GetAmxAddr(amx, params[2]);
+	char *buffer = g_send2_buffer;
 
 	while(length--)
-		*g_send2_buffer++ = (char)*data++;
+		*buffer++ = (char)*data++;
 
 	return send(sockfd, g_send2_buffer, length, 0);
 }
@@ -306,7 +254,7 @@ static cell AMX_NATIVE_CALL socket_change(AMX *amx, cell *params)
 	FD_ZERO(&readfds);
 	FD_SET(sockfd, &readfds);
 
-	return (select(sockfd + 1, &readfds, nullptr, nullptr, &tv) > 0) ? 1 : -1;
+	return (select(sockfd + 1, &readfds, nullptr, nullptr, &tv) > 0) ? 1 : 0;
 }
 
 // native socket_is_readable(_socket, _timeout = 100000);
@@ -329,13 +277,12 @@ static cell AMX_NATIVE_CALL socket_is_writable(AMX *amx, cell *params)
 	FD_ZERO(&writefds);
 	FD_SET(sockfd, &writefds);
 
-	return (select(sockfd + 1, nullptr, &writefds, nullptr, &tv) > 0) ? 1 : -1;
+	return (select(sockfd + 1, nullptr, &writefds, nullptr, &tv) > 0) ? 1 : 0;
 }
 
 AMX_NATIVE_INFO sockets_natives[] =
 {
 	{"socket_open", socket_open},
-	{"socket_open_nb", socket_open_nb},
 
 	{"socket_close", socket_close},
 

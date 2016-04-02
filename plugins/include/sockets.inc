@@ -21,18 +21,21 @@
 	#pragma loadlib sockets
 #endif
 
-// Backwards compatibility and error reporting
-#define ERROR_CREATE_SOCKET       1 // Couldn't create a socket
-#define ERROR_SERVER_UNKNOWN      2 // Server unknown
-#define ERROR_WHILE_CONNECTING    3 // Error while connecting
+// Socket flags
+#define SOCK_NON_BLOCKING (1 << 0)    // Set the socket a nonblocking
+#define SOCK_LIBC_ERRORS  (1 << 1)    // Enable libc error reporting
 
-#define DISABLE_LIBC_ERRORS 0 // Old, default error reporting
-#define ENABLE_LIBC_ERRORS  1 // Enable libc error reporting
+// Error reporting
+#define SOCK_ERROR_OK               0 // No error
+#define SOCK_ERROR_CREATE_SOCKET    1 // Couldn't create a socket
+#define SOCK_ERROR_SERVER_UNKNOWN   2 // Server unknown
+#define SOCK_ERROR_WHILE_CONNECTING 3 // Error while connecting
 
-// Use SOCKET_TCP for TCP Socket connections
+// Nonblocking sockets error handler
+stock SOCK_ERROR_EINPROGRESS(error) return (error == 0 || error == 10035 || error == 10036 || error == 115)
+
+// Socket connection type (TCP/UDP)
 #define SOCKET_TCP 1
-
-// Use SOCKET_UDP for UDP Socket connections
 #define SOCKET_UDP 2
 
 /**
@@ -49,36 +52,25 @@
  *       https://github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
  *       https://msdn.microsoft.com/en-us/library/ms740668.aspx
  *
- * @param _hostname    Node to connect to
- * @param _port        Service to connect to
- * @param _protocol    Connect via SOCKET_TCP or SOCKET_UDP
- * @param _error       Set an error code here if anything goes wrong
- * @param _libc_errors Optional parameter that defaults to DISABLE_LIBC_ERRORS. If set to ENABLE_LIBC_ERRORS the new libc errors will be set on _error instead of the old, made up ones
+ * @note The currently available bit flags are:
+ *       - SOCK_NON_BLOCKING : if set, the socket would be on nonblocking mode
+ *       - SOCK_LIBC_ERRORS : if set, the new libc errors will be seen on _error instead of the old, made up ones
+ * @note If no flags are set, the behaviour of the function will not be modified (default blocking mode and error reporting).
+ * @note Multiple flags may be set at the same time using the | operator. For example, SOCK_NON_BLOCKING|SOCK_LIBC_ERRORS will create a nonblocking socket with libc error codes.
  *
- * @return             A socket descriptor (a positive integer) on success
- *                     -1 on failure
-*/
-native socket_open(const _hostname[], _port, _protocol = SOCKET_TCP, &_error, _libc_errors = DISABLE_LIBC_ERRORS);
-
-/**
- * Connects on nonblocking mode to the given node and service via TCP/UDP.
- *
- * @note _hostname should be numeric to avoid calling the name resolution server and potentially blocking the call
- * @note The returned socket descriptor may be still connecting, further checks should be done with socket_is_writable()
- * @note Unlike in socket_open() libc error codes are used. They can be found at:
- *       https://www.gnu.org/software/libc/manual/html_node/Error-Codes.html
- *       https://github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
- *       https://msdn.microsoft.com/en-us/library/ms740668.aspx
+ * @note If you're creating a new nonblocking socket, _hostname should be numeric to avoid calling the name resolution server and potentially blocking the call
+ * @note If the socket is a nonblocking one, the returned socket descriptor may be still connecting and further checks should be done with socket_is_writable() before trying to send data
  *
  * @param _hostname    Node to connect to
  * @param _port        Service to connect to
  * @param _protocol    Connect via SOCKET_TCP or SOCKET_UDP
  * @param _error       Set an error code here if anything goes wrong
-
+ * @param _flags       Optional bit flags that change the behaviour of the function
+ *
  * @return             A socket descriptor (a positive integer) on success
  *                     -1 on failure
 */
-native socket_open_nb(const _hostname[], _port, _protocol = SOCKET_TCP, &_error);
+native socket_open(const _hostname[], _port, _protocol = SOCKET_TCP, &_error, _flags = 0);
 
 /**
  * Closes a socket

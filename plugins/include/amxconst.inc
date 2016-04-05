@@ -403,6 +403,7 @@ enum
 #define FP_FLOAT        1
 #define FP_STRING       2
 #define FP_ARRAY        4
+#define FP_VAL_BYREF    5   //cell & float are handled in the same way
 
 /**
  * @endsection

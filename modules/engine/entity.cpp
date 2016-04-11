@@ -1568,10 +1568,10 @@ static cell AMX_NATIVE_CALL entity_intersects(AMX *amx, cell *params) // bool:en
 		pevOther->absmax.y < pevEntity->absmin.y ||
 		pevOther->absmax.z < pevEntity->absmin.z)
 	{
-		return 1;
+		return 0;
 	}
 
-	return 0;
+	return 1;
 }
 
 AMX_NATIVE_INFO ent_NewNatives[] =

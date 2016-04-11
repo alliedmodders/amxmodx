@@ -170,12 +170,7 @@ static cell AMX_NATIVE_CALL get_global_edict2(AMX *amx, cell *params)
 			return -1;
 	}
 
-	if (!FNullEnt(pReturnEntity))
-	{
-		return TypeConversion.edict_to_id(pReturnEntity);
-	}
-
-	return -1;
+	return TypeConversion.edict_to_id(pReturnEntity);
 }
 
 static cell AMX_NATIVE_CALL get_global_edict(AMX *amx, cell *params) // globals_get_edict(variable); = 1 param

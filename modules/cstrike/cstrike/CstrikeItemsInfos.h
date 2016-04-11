@@ -20,6 +20,37 @@
 #include <amtl/am-string.h>
 #include <sm_stringhashmap.h>
 
+struct ItemInfo
+{
+	ItemInfo() : name("Empty"), ammoIndex1(-1), maxAmmo1(0), ammoIndex2(-1), maxAmmo2(0), slot(0), position(0), id(0), flags(0)
+	{}
+
+	ItemInfo &operator = (ItemInfo &other)
+	{
+		name       = other.name;
+		ammoIndex1 = other.ammoIndex1;
+		maxAmmo1   = other.maxAmmo1;
+		ammoIndex2 = other.ammoIndex2;
+		maxAmmo2   = other.maxAmmo2;
+		slot       = other.slot;
+		position   = other.position;
+		id         = other.id;
+		flags      = other.flags;
+
+		return *this;
+	}
+
+	ke::AString name;
+	int         ammoIndex1;
+	int         maxAmmo1;
+	int         ammoIndex2;
+	int         maxAmmo2;
+	int         slot;
+	int         position;
+	int         id;
+	int         flags;
+};
+
 struct AliasInfo
 {
 	AliasInfo()
@@ -102,7 +133,7 @@ class CsItemInfo : public ITextListener_SMC
 		int          m_EquipmentsPrice[static_cast<size_t>(Equipments::Count)];
 };
 
-extern char WeaponNameList[MAX_WEAPONS][64];
+extern ItemInfo WeaponsList[MAX_WEAPONS];
 extern CsItemInfo ItemsManager;
 
 #endif // _CSTRIKE_WEAPONS_INFOS_H_

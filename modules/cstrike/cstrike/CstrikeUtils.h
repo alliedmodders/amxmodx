@@ -33,7 +33,7 @@ void UTIL_StringToLower(const char *str, char *buffer, size_t maxlength);
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
 		return 0; \
 	} else { \
-		if (x != 0 && FNullEnt(INDEXENT(x))) { \
+		if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 			return 0; \
 		} \
@@ -50,7 +50,7 @@ void UTIL_StringToLower(const char *str, char *buffer, size_t maxlength);
 				return 0; \
 			} \
 		} else { \
-			if (x != 0 && FNullEnt(INDEXENT(x))) { \
+			if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 				return 0; \
 			} \
@@ -73,7 +73,7 @@ void UTIL_StringToLower(const char *str, char *buffer, size_t maxlength);
 		MF_LogError(amx, AMX_ERR_NATIVE, "Non-player entity %d out of range", x); \
 		return 0; \
 	} else { \
-		if (FNullEnt(INDEXENT(x))) { \
+		if (FNullEnt(TypeConversion.id_to_edict(x))) { \
 			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid non-player entity %d", x); \
 			return 0; \
 		} \

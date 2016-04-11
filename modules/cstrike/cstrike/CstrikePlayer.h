@@ -70,7 +70,7 @@ class CPlayer
 			{
 				MDLL_ClientUserInfoChanged(pPlayer, GETINFOKEYBUFFER(pPlayer));
 
-				PostponeModelUpdate(ENTINDEX(pPlayer) - 1);
+				PostponeModelUpdate(TypeConversion.edict_to_id(pPlayer) - 1);
 			}
 		}
 
@@ -85,7 +85,7 @@ class CPlayer
 
 			if (strcmp(GETCLIENTKEYVALUE(infobuffer, "model"), m_Model) != 0)
 			{
-				int index = ENTINDEX(pPlayer);
+				int index = TypeConversion.edict_to_id(pPlayer);
 
 				SETCLIENTKEYVALUE(index, infobuffer, "model", m_Model);
 

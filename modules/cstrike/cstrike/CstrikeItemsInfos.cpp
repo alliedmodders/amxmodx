@@ -15,7 +15,7 @@
 #include "CstrikeHacks.h"
 
 CsItemInfo ItemsManager;
-char WeaponNameList[MAX_WEAPONS][64];
+ItemInfo WeaponsList[MAX_WEAPONS];
 
 #define PSTATE_ALIASES_TYPE       0
 #define PSTATE_ALIASES_ALIAS      1
@@ -200,9 +200,9 @@ bool CsItemInfo::GetAliasInfosFromName(const char *name, AliasInfo *info)
 		name += prefix_item_length + 1;
 	}
 
-	for (size_t id = 0; id < ARRAYSIZE(WeaponNameList); ++id)
+	for (size_t id = 0; id < ARRAYSIZE(WeaponsList); ++id)
 	{
-		const char *weapon = WeaponNameList[id];
+		const char *weapon = WeaponsList[id].name.chars();
 
 		if (weapon[prefix_weapon_length] == '_' && !strncmp(weapon, prefix_weapon, prefix_weapon_length))
 		{

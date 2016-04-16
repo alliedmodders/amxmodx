@@ -862,16 +862,16 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 
 		GET_OFFSET("CBasePlayer", m_modelIndexPlayer);
 
-		char model[260];
-		ke::SafeSprintf(model, sizeof(model), "models/player/%s/%s.mdl", newModel, newModel);
+		char modelpath[260];
+		ke::SafeSprintf(modelpath, sizeof(modelpath), "models/player/%s/%s.mdl", newModel, newModel);
 
 		for (size_t i = 0; i < HL_MODEL_MAX; ++i)
 		{
-			if (Server->model_precache[i] && !strcmp(Server->model_precache[i], model))
+			if (Server->model_precache[i] && !strcmp(Server->model_precache[i], modelpath))
 			{
 				if (pPlayer->v.modelindex != i)
 				{
-					SET_MODEL(pPlayer, model);
+					SET_MODEL(pPlayer, STRING(ALLOC_STRING(modelpath)));
 				}
 
 				set_pdata<int>(pPlayer, m_modelIndexPlayer, i);

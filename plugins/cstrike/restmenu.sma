@@ -77,12 +77,8 @@ public plugin_init()
 	register_dictionary("restmenu.txt");
 	register_dictionary("common.txt");
 
-	new description[128], id = LANG_SERVER;
-	LookupLangKey(description, charsmax(description), "REG_CMD_MENU", id);
-	register_clcmd("amx_restmenu", "@ClientCommand_MainMenu", ADMIN_CFG, description);
-
-	LookupLangKey(description, charsmax(description), "REG_CMD_REST", id);
-	register_concmd("amx_restrict", "@ConsoleCommand_Restrict", ADMIN_CFG, description);
+	register_clcmd( "amx_restmenu", "@ClientCommand_MainMenu" , ADMIN_CFG, .info = "REG_CMD_MENU", .info_ml = true);
+	register_concmd("amx_restrict", "@ConsoleCommand_Restrict", ADMIN_CFG, .info = "REG_CMD_REST", .info_ml = true);
 
 	CvarPointerAllowMapSettings     = register_cvar("amx_restrmapsettings", "0");
 	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"    , RestrictedBotWeapons);

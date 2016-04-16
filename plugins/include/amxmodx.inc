@@ -1762,12 +1762,13 @@ native remove_user_flags(index, flags = -1, id = 0);
  * @param info          Command description
  * @param FlagManager   0 opts out of flag manager, 1 opts in, -1 selects
  *                      automatically
+ * @param info_ml       If true, the parameter "info" will be looked up as multilingual key
  *
  * @return              Command id, 0 on failure
  * @error               If an invalid callback function is specified, an error
  *                      will be thrown.
  */
-native register_clcmd(const client_cmd[], const function[], flags = -1, const info[] = "", FlagManager = -1);
+native register_clcmd(const client_cmd[], const function[], flags = -1, const info[] = "", FlagManager = -1, bool:info_ml = false);
 
 /**
  * Registers a callback to be called when the client or server executes a
@@ -1787,12 +1788,13 @@ native register_clcmd(const client_cmd[], const function[], flags = -1, const in
  * @param info          Command description
  * @param FlagManager   0 opts out of flag manager, 1 opts in, -1 selects
  *                      automatically
+ * @param info_ml       If true, the parameter "info" will be looked up as multilingual key
  *
  * @return              Command id, 0 on failure
  * @error               If an invalid callback function is specified, an error
  *                      will be thrown.
  */
-native register_concmd(const cmd[], const function[], flags = -1, const info[] = "", FlagManager = -1);
+native register_concmd(const cmd[], const function[], flags = -1, const info[] = "", FlagManager = -1, bool:info_ml = false);
 
 /**
  * Registers a callback to be called when the server executes a command from the
@@ -1805,12 +1807,13 @@ native register_concmd(const cmd[], const function[], flags = -1, const info[] =
  * @param function      Callback function
  * @param flags         Admin privilege flags required
  * @param info          Command description
+ * @param info_ml       If true, the parameter "info" will be looked up as multilingual key
  *
  * @return              Command id, 0 on failure
  * @error               If an invalid callback function is specified, an error
  *                      will be thrown.
  */
-native register_srvcmd(const server_cmd[], const function[], flags = -1, const info[] = "");
+native register_srvcmd(const server_cmd[], const function[], flags = -1, const info[] = "", bool:info_ml = false);
 
 /**
  * Retrieves information about a client command.
@@ -1826,10 +1829,11 @@ native register_srvcmd(const server_cmd[], const function[], flags = -1, const i
  * @param len2      Maximum description buffer size
  * @param flag      Only considers commands that can be accessed with
  *                  the specified privilege flags
+ * @param info_ml   Variable to store whether the parameter "info" is a multilingual key
  *
  * @return          1 on success, 0 if command was not found
  */
-native get_clcmd(index, command[], len1, &flags, info[], len2, flag);
+native get_clcmd(index, command[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
 
 /**
  * Returns number of registered client commands.
@@ -1858,10 +1862,11 @@ native get_clcmdsnum(flag);
  * @param len2      Maximum description buffer size
  * @param flag      Only considers commands that can be accessed with
  *                  the specified privilege flags
+ * @param info_ml   Variable to store whether the parameter "info" is a multilingual key
  *
  * @return          1 on success, 0 if command was not found
  */
-native get_srvcmd(index, server_cmd[], len1, &flags, info[], len2, flag);
+native get_srvcmd(index, server_cmd[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
 
 /**
  * Returns number of registered server commands.
@@ -1893,10 +1898,11 @@ native get_srvcmdsnum(flag);
  * @param id        If set to 0 only server commands will be considered,
  *                  positive will only consider client commands, otherwise
  *                  all console commands will be considered
+ * @param info_ml   Variable to store whether the parameter "info" is a multilingual key
  *
  * @return          1 on success, 0 if command was not found
  */
-native get_concmd(index, cmd[], len1, &flags, info[], len2, flag, id = -1);
+native get_concmd(index, cmd[], len1, &flags, info[], len2, flag, id = -1, &bool:info_ml = false);
 
 /**
  * Returns the parent plugin id of a console command.

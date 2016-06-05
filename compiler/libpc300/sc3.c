@@ -852,8 +852,8 @@ static int hier14(value *lval1)
       assert(lval2.arrayidx==arrayidx2);
       for (i=0; i<sDIMEN_MAX; i++)
         same=same && (lval3.arrayidx[i]==lval2.arrayidx[i]);
-        if (same)
-          error(226,lval3.sym->name);   /* self-assignment */
+      if (same)
+        error(226,lval3.sym->name);   /* self-assignment */
     } /* if */
   } else {
     if (oper){

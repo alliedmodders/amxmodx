@@ -4155,9 +4155,13 @@ static cell AMX_NATIVE_CALL ExecuteForward(AMX *amx, cell *params)
 		LogError(amx, AMX_ERR_NATIVE, "Expected %d parameters, got %d", g_forwards.getParamsNum(id), count-2);
 		return 0;
 	}
+
+	ForwardParam param_type;
+
 	for (cell i=3; i<=count; i++)
 	{
-		if (g_forwards.getParamType(id, i-3) == FP_STRING)
+		param_type = g_forwards.getParamType(id, i-3);
+		if (param_type == FP_STRING)
 		{
 			char *tmp = get_amxstring(amx, params[i], 0, len);
 			cell num = len / sizeof(cell) + 1;
@@ -4168,7 +4172,14 @@ static cell AMX_NATIVE_CALL ExecuteForward(AMX *amx, cell *params)
 			}
 			strcpy((char *)allots[i-3].phys_addr, tmp);
 			ps[i-3] = (cell)allots[i-3].phys_addr;
-		} else {
+		}
+		else if (param_type == FP_CELL_BYREF)
+		{
+			cell *temp = get_amxaddr(amx, params[i]);
+			ps[i-3] = reinterpret_cast<cell>(temp);
+		}
+		else
+		{
 			ps[i-3] = *get_amxaddr(amx, params[i]);
 		}
 	}

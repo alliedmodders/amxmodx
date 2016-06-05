@@ -2087,6 +2087,8 @@ enum ForwardParam
 	FP_STRING,						// string
 	FP_STRINGEX,					// string; will be updated to the last function's value
 	FP_ARRAY,						// array; use the return value of prepareArray.
+	FP_CELL_BYREF,                  // cell; pass by reference
+	FP_FLOAT_BYREF,                 // float; pass by reference
 };
 
 enum PlayerProp

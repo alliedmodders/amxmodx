@@ -59,7 +59,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			if (pDebugger)
 				pDebugger->BeginExec();
 			
-			// handle strings & arrays
+			// handle strings & arrays & values by reference
 			int i;
 			
 			for (i = 0; i < m_NumParams; ++i)
@@ -70,7 +70,7 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					cell *tmp;
 					if (!str)
 						str = "";
-					amx_Allot(iter->pPlugin->getAMX(), (m_ParamTypes[i] == FP_STRING) ? strlen(str) + 1 : STRINGEX_MAXLENGTH, &realParams[i], &tmp);
+					amx_Allot(amx, (m_ParamTypes[i] == FP_STRING) ? strlen(str) + 1 : STRINGEX_MAXLENGTH, &realParams[i], &tmp);
 					amx_SetStringOld(tmp, str, 0, 0);
 					physAddrs[i] = tmp;
 				}
@@ -89,7 +89,24 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 						for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 							*tmp++ = (static_cast<cell>(*data++)) & 0xFF;
 					}
-				} else {
+				}
+				else if (m_ParamTypes[i] == FP_CELL_BYREF || m_ParamTypes[i] == FP_FLOAT_BYREF)
+				{
+					cell *tmp;
+					amx_Allot(amx, 1, &realParams[i], &tmp);
+					physAddrs[i] = tmp;
+
+					if (m_ParamTypes[i] == FP_CELL_BYREF)
+					{
+						memcpy(tmp, reinterpret_cast<cell *>(params[i]), sizeof(cell));
+					}
+					else
+					{
+						memcpy(tmp, reinterpret_cast<REAL *>(params[i]), sizeof(REAL));
+					}
+				}
+				else
+				{
 					realParams[i] = params[i];
 				}
 			}
@@ -127,18 +144,18 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			if (pDebugger)
 				pDebugger->EndExec();
 
-			// cleanup strings & arrays
+			// cleanup strings & arrays & values by reference
 			for (i = 0; i < m_NumParams; ++i)
 			{
 				if (m_ParamTypes[i] == FP_STRING)
 				{
-					amx_Release(iter->pPlugin->getAMX(), realParams[i]);
+					amx_Release(amx, realParams[i]);
 				}
 				else if (m_ParamTypes[i] == FP_STRINGEX)
 				{
 					// copy back
 					amx_GetStringOld(reinterpret_cast<char*>(params[i]), physAddrs[i], 0);
-					amx_Release(iter->pPlugin->getAMX(), realParams[i]);
+					amx_Release(amx, realParams[i]);
 				}
 				else if (m_ParamTypes[i] == FP_ARRAY)
 				{
@@ -156,7 +173,21 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 								*data++ = static_cast<char>(*tmp++ & 0xFF);
 						}
 					}
-					amx_Release(iter->pPlugin->getAMX(), realParams[i]);
+					amx_Release(amx, realParams[i]);
+				}
+				else if (m_ParamTypes[i] == FP_CELL_BYREF || m_ParamTypes[i] == FP_FLOAT_BYREF)
+				{
+					//copy back
+					cell *tmp = physAddrs[i];
+					if (m_ParamTypes[i] == FP_CELL_BYREF)
+					{
+						memcpy(reinterpret_cast<cell *>(params[i]), tmp, sizeof(cell));
+					}
+					else
+					{
+						memcpy(reinterpret_cast<REAL *>(params[i]), tmp, sizeof(REAL));
+					}
+					amx_Release(amx, realParams[i]);
 				}
 			}
 
@@ -236,7 +267,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	if (pDebugger)
 		pDebugger->BeginExec();
 
-	// handle strings & arrays
+	// handle strings & arrays & values by reference
 	int i;
 	
 	for (i = 0; i < m_NumParams; ++i)
@@ -266,7 +297,24 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 				for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 					*tmp++ = (static_cast<cell>(*data++)) & 0xFF;
 			}
-		} else {
+		}
+		else if (m_ParamTypes[i] == FP_CELL_BYREF || m_ParamTypes[i] == FP_FLOAT_BYREF)
+		{
+			cell *tmp;
+			amx_Allot(m_Amx, 1, &realParams[i], &tmp);
+			physAddrs[i] = tmp;
+
+			if (m_ParamTypes[i] == FP_CELL_BYREF)
+			{
+				memcpy(tmp, reinterpret_cast<cell *>(params[i]), sizeof(cell));
+			}
+			else
+			{
+				memcpy(tmp, reinterpret_cast<REAL *>(params[i]), sizeof(REAL));
+			}
+		}
+		else
+		{
 			realParams[i] = params[i];
 		}
 	}
@@ -300,7 +348,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	
 	m_Amx->error = AMX_ERR_NONE;
 
-	// cleanup strings & arrays
+	// cleanup strings & arrays & values by reference
 	for (i = 0; i < m_NumParams; ++i)
 	{
 		if (m_ParamTypes[i] == FP_STRING)
@@ -328,6 +376,20 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 					for (unsigned int j = 0; j < preparedArrays[params[i]].size; ++j)
 						*data++ = static_cast<char>(*tmp++ & 0xFF);
 				}
+			}
+			amx_Release(m_Amx, realParams[i]);
+		}
+		else if (m_ParamTypes[i] == FP_CELL_BYREF || m_ParamTypes[i] == FP_FLOAT_BYREF)
+		{
+			//copy back
+			cell *tmp = physAddrs[i];
+			if (m_ParamTypes[i] == FP_CELL_BYREF)
+			{
+				memcpy(reinterpret_cast<cell *>(params[i]), tmp, sizeof(cell));
+			}
+			else
+			{
+				memcpy(reinterpret_cast<REAL *>(params[i]), tmp, sizeof(REAL));
 			}
 			amx_Release(m_Amx, realParams[i]);
 		}
@@ -683,13 +745,26 @@ cell executeForwards(int id, ...)
 	
 	va_list argptr;
 	va_start(argptr, id);
+
+	ForwardParam param_type;
 	
 	for (int i = 0; i < paramsNum && i < FORWARD_MAX_PARAMS; ++i)
 	{
-		if (g_forwards.getParamType(id, i) == FP_FLOAT)
+		param_type = g_forwards.getParamType(id, i);
+		if (param_type == FP_FLOAT)
 		{
 			REAL tmp = (REAL)va_arg(argptr, double);			// floats get converted to doubles
-			params[i] = *(cell*)&tmp;
+			params[i] = amx_ftoc(tmp);
+		}
+		else if(param_type == FP_FLOAT_BYREF)
+		{
+			REAL *tmp = reinterpret_cast<REAL *>(va_arg(argptr, double*));
+			params[i] = reinterpret_cast<cell>(tmp);
+		}
+		else if(param_type == FP_CELL_BYREF)
+		{
+			cell *tmp = reinterpret_cast<cell *>(va_arg(argptr, cell*));
+			params[i] = reinterpret_cast<cell>(tmp);
 		}
 		else
 			params[i] = (cell)va_arg(argptr, cell);

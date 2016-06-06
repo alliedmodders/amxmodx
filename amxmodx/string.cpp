@@ -1343,12 +1343,20 @@ static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 	return string_case_mapping(utf8totitle, amx, params, true);
 }
 
+
+// native strlen(const string[], bool:in_codepoints = false);
 static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 {
 	int len;
-	char *str = get_amxstring(amx, params[1], 0, len);
+	auto str = get_amxstring(amx, params[1], 0, len);
+	auto in_codepoints = false;
 
-	return strlen(str);
+	if (*params / sizeof(cell) >= 2)
+	{
+		in_codepoints = params[2] != 0;
+	}
+
+	return in_codepoints ? utf8len(str) : strlen(str);
 }
 
 static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)

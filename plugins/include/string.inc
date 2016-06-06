@@ -29,9 +29,12 @@
  * Calculates the length of a string.
  *
  * @param string		String to check.
- * @return				Number of valid character bytes in the string.
+ * @param in_codepoints If true, the length is calculated in code points of a UTF-8 encoded string.
+ *
+ * @return				If in_codepoints parameter is set, the number of valid code points, otherwise
+ *                      the number of valid character bytes in the string.
  */
-native strlen(const string[]);
+native strlen(const string[], bool:in_codepoints = false);
 
 /**
  * Tests whether a string is found inside another string.

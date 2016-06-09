@@ -498,28 +498,25 @@ static cell AMX_NATIVE_CALL contain(AMX *amx, cell *params) /* 2 param */
 	return -1;
 }
 
-static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params) /* 2 param */
+// native containi(const source[], const string[]);
+static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params)
 {
-	register cell *a = get_amxaddr(amx, params[2]);
-	register cell *b = get_amxaddr(amx, params[1]);
-	register cell *c = b;
-	cell* str = b;
-	cell* substr = a;
-	
-	while (*c)
+	int string_length;
+	int substring_length;
+
+	const char *string    = get_amxstring(amx, params[1], 0, string_length);
+	const char *substring = get_amxstring(amx, params[2], 1, substring_length);
+
+	_utf8strfold(string, string_length, substring, substring_length);
+
+	auto result = strstr(string, substring);
+
+	if (!result)
 	{
-		if (tolower(*c) == tolower(*a))
-		{
-			c++;
-			if (!*++a)
-				return b - str;
-		} else {
-			c = ++b;
-			a = substr;
-		}
+		return -1;
 	}
-	
-	return -1;
+
+	return (result - string);
 }
 
 static cell AMX_NATIVE_CALL strtonum(AMX *amx, cell *params) /* 1 param */

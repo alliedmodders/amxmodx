@@ -499,6 +499,20 @@ native strtolower(string[]);
 native strtoupper(string[]);
 
 /**
+ * Converts a string to title case.
+ *
+ * @note This supports multi-byte characters (UTF-8).  Case mapping is not
+ *       reversible. That is, toUpper(toLower(x)) != toLower(toUpper(x)).
+ *       Although most code points can be converted in-place, there are notable
+ *       exceptions and the final length can vary, therefore the converted
+ *       string could be truncated if its length goes beyond the original one.
+ *
+ * @param string		The string to convert.
+ * @return				Number of bytes written.
+ */
+native strtotitle(string[]);
+
+/**
  * Make a string's first character uppercase.
  *
  * @note This supports multi-byte characters (UTF-8).  Case mapping is not

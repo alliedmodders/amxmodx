@@ -829,6 +829,13 @@ static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params)
 	return string_case_mapping(utf8toupper, amx, params);
 }
 
+// native strtotitle(string[]);
+static cell AMX_NATIVE_CALL strtotitle(AMX *amx, cell *params)
+{
+	return string_case_mapping(utf8totitle, amx, params);
+}
+
+
 int fo_numargs(AMX *amx)
 {
 	unsigned char *data = amx->base + (int)((AMX_HEADER *)amx->base)->dat;
@@ -1586,6 +1593,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"split_string",	split_string},
 	{"strtolower",		strtolower},
 	{"strtoupper",		strtoupper},
+	{"strtotitle",		strtotitle},
 	{"str_to_num",		strtonum},
 	{"strtonum",		strtonum},
 	{"strtol",			amx_strtol},

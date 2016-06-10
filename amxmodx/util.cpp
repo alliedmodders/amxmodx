@@ -505,10 +505,10 @@ size_t utf8strcasefold(const char *text, size_t textLen, char *&buffer, size_t b
 
 	// First, we get the final length without writing in to buffer.
 	// If there are errors we don't bother to process further.
-	if (utf8casefold(text, textLen, nullptr, 0, &errors) != 0 && errors == UTF8_ERR_NONE)
+	if (utf8casefold(text, textLen, nullptr, 0, UTF8_LOCALE_DEFAULT, &errors) != 0 && errors == UTF8_ERR_NONE)
 	{
 		// Final size can vary. We want to have room as much as possible.
-		textLen = utf8casefold(text, textLen, buffer, bufferLen, nullptr);
+		textLen = utf8casefold(text, textLen, buffer, bufferLen, UTF8_LOCALE_DEFAULT, nullptr);
 
 		buffer[textLen] = '\0';
 		return textLen;

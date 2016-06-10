@@ -288,7 +288,7 @@ static size_t _utf8strncmp(const char *string1, size_t string1_length, const cha
 	return memcmp(string1, string2, num_bytes);
 }
 
-static cell string_case_mapping(size_t(function)(const char*, size_t, char*, size_t, int32_t*), AMX *amx, cell *params, bool first_ch = false)
+static cell string_case_mapping(size_t(function)(const char*, size_t, char*, size_t, size_t, int32_t*), AMX *amx, cell *params, bool first_ch = false)
 {
 	int string_length;
 	int32_t errors;
@@ -307,7 +307,7 @@ static cell string_case_mapping(size_t(function)(const char*, size_t, char*, siz
 
 	// First, we get the final length without writing in to buffer.
 	// This is not guaranteed the length will be the same.
-	auto size_in_bytes = function(string, first_ch ? first_ch_length : string_length, nullptr, 0, &errors);
+	auto size_in_bytes = function(string, first_ch ? first_ch_length : string_length, nullptr, 0, UTF8_LOCALE_DEFAULT, &errors);
 
 	if (size_in_bytes == 0 || errors != UTF8_ERR_NONE || (first_ch && size_in_bytes > static_cast<size_t>(string_length)))
 	{
@@ -322,7 +322,7 @@ static cell string_case_mapping(size_t(function)(const char*, size_t, char*, siz
 
 	// Any new string length which goes above the original length is truncated.
 	// Such special situations are rather specific and marginal though.
-	size_in_bytes = function(string, string_length, output, ke::Min<int>(size_in_bytes, string_length), nullptr);
+	size_in_bytes = function(string, string_length, output, ke::Min<int>(size_in_bytes, string_length), UTF8_LOCALE_DEFAULT, nullptr);
 
 	// Length in bytes.
 	return set_amxstring_utf8_char(amx, params[1], output, first_ch ? string_length + (size_in_bytes - first_ch_length) : size_in_bytes, string_length);

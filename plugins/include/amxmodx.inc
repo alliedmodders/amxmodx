@@ -898,8 +898,6 @@ native is_user_alive(index);
 /**
  * Returns if the server is a dedicated server.
  *
- * @param index     Client index
- *
  * @return          1 if server is a dedicated server, 0 otherwise
  */
 native is_dedicated_server();
@@ -907,16 +905,12 @@ native is_dedicated_server();
 /**
  * Returns if the server is running on Linux.
  *
- * @param index     Client index
- *
  * @return          1 if server is running on Linux, 0 otherwise
  */
 native is_linux_server();
 
 /**
  * Returns if the AMXX installation has the JIT enabled.
- *
- * @param index     Client index
  *
  * @return          1 if JIT is enabled, 0 otherwise
  */

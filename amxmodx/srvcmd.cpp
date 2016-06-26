@@ -13,6 +13,14 @@
 void amx_command()
 {
 	const char* cmd = CMD_ARGV(1);
+	const char* search = nullptr;
+	if (CMD_ARGC() > 2)
+	{
+		search = CMD_ARGV(2);
+		// Ignore empty search criteria
+		if (!(*search))
+			search = nullptr;
+	}
 
 	if (!strcmp(cmd, "plugins") || !strcmp(cmd, "list"))
 	{
@@ -26,11 +34,14 @@ void amx_command()
 
 		while (a)
 		{
-			++plugins;
-			if ((*a).isValid() && !(*a).isPaused())
-				++running;
+			if (!search || stristr((*a).getTitle(), search) != nullptr || stristr((*a).getName(), search) != nullptr || stristr((*a).getAuthor(), search) != nullptr)
+			{
+				++plugins;
+				if ((*a).isValid() && !(*a).isPaused())
+					++running;
 
-			print_srvconsole(" [%3d] %-23.22s %-11.10s %-17.16s %-16.15s %-9.8s\n", plugins, (*a).getTitle(), (*a).getVersion(), (*a).getAuthor(), (*a).getName(), (*a).getStatus());
+				print_srvconsole(" [%3d] %-23.22s %-11.10s %-17.16s %-16.15s %-9.8s\n", plugins, (*a).getTitle(), (*a).getVersion(), (*a).getAuthor(), (*a).getName(), (*a).getStatus());
+			}
 			++a;
 		}
 
@@ -39,15 +50,13 @@ void amx_command()
 		int num = 0;
 		while (a)
 		{
-			num++;
-			if ((*a).getStatusCode() == ps_bad_load)
+			if (!search || stristr((*a).getTitle(), search) != nullptr || stristr((*a).getName(), search) != nullptr || stristr((*a).getAuthor(), search) != nullptr)
 			{
-				//error
-				print_srvconsole("(%3d) Load fails: %s\n", num, (*a).getError());
-			}
-			else if ((*a).getStatusCode() == ps_error) {
-				//error
-				print_srvconsole("(%3d) Error: %s\n", num, (*a).getError());
+				num++;
+				if ((*a).getStatusCode() == ps_bad_load)
+					print_srvconsole("(%3d) Load fails: %s\n", num, (*a).getError());
+				else if ((*a).getStatusCode() == ps_error)
+					print_srvconsole("(%3d) Error: %s\n", num, (*a).getError());
 			}
 			++a;
 		}
@@ -237,7 +246,7 @@ void amx_command()
 		print_srvconsole("Commands:\n");
 		print_srvconsole("   version                    - display amxx version info\n");
 		print_srvconsole("   gpl                        - print the license\n");
-		print_srvconsole("   plugins                    - list plugins currently loaded\n");
+		print_srvconsole("   plugins [ criteria ]       - list plugins currently loaded or ones matching given search criteria\n");
 		print_srvconsole("   modules                    - list modules currently loaded\n");
 		print_srvconsole("   cvars [ plugin ] [ index ] - list cvars handled by amxx or show information about a cvar if index is provided\n");
 		print_srvconsole("   cmds [ plugin ]            - list commands registered by plugins\n");

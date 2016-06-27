@@ -29,6 +29,7 @@ enum MODULE_STATUS
 	MODULE_FUNCNOTPRESENT,	// Function not present
 	MODULE_NOT64BIT,		// Not 64 bit compatible
 	MODULE_BADGAME,			// Module cannot load on the current game mod
+	MODULE_LIBNOTPRESENT	// Module can't be loaded because it depends on another one
 };
 
 struct amxx_module_info_s
@@ -46,6 +47,7 @@ struct amxx_module_info_s
 #define AMXX_IFVERS				1			/* interface version */
 #define AMXX_PARAM				2			/* Invalid parameter */
 #define AMXX_FUNC_NOT_PRESENT	3			/* Function not present */
+#define AMXX_LIB_NOT_PRESENT	4			/* Module dependency not present */
 
 #define AMXX_GAME_OK			0			/* Module can load on this game. */
 #define AMXX_GAME_BAD			1			/* Module cannot load on this game. */
@@ -63,6 +65,7 @@ class CModule
 	DLHANDLE m_Handle;				// handle
 	MODULE_STATUS m_Status;			// status
 	const char *m_MissingFunc;		// missing function; only set on MODULE_FUNCNOTPRESENT status
+	const char *m_MissingLib;	// missing module; only set on MODULE_LIBNOTPRESENT status
 
 	void clear(bool clearFilename = true);
 public:
@@ -91,6 +94,7 @@ public:
 	inline bool isReloadable() { return ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)); }
 	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }
+	inline const char *getMissingModule() const { return m_MissingLib; }
 	inline const char *getFilename() { return m_Filename.chars(); }
 	inline bool IsMetamod() { return m_Metamod; }
 	

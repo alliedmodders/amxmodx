@@ -318,6 +318,7 @@ enum ModuleCallReason
 extern ModuleCallReason g_ModuleCallReason;		// modules.cpp
 extern CModule *g_CurrentlyCalledModule;		// modules.cpp
 extern const char *g_LastRequestedFunc;			// modules.cpp
+extern const char *g_LastRequestedLib;		// modules.cpp
 
 void Module_CacheFunctions();
 void Module_UncacheFunctions();

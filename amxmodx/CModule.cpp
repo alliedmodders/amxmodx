@@ -173,6 +173,10 @@ bool CModule::attachModule()
 				m_Status = MODULE_FUNCNOTPRESENT;
 				m_MissingFunc = g_LastRequestedFunc;
 				return false;
+			case AMXX_LIB_NOT_PRESENT:
+				m_Status = MODULE_LIBNOTPRESENT;
+				m_MissingLib = g_LastRequestedLib;
+				return false;
 			default:
 				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.chars(), getVersion());
 				m_Status = MODULE_BADLOAD;
@@ -412,6 +416,8 @@ const char* CModule::getStatus() const
 		case MODULE_INTERROR:	return "internal err";
 		case MODULE_NOT64BIT:	return "not 64bit";
 		case MODULE_BADGAME:	return "bad game";
+		case MODULE_LIBNOTPRESENT:
+								return "dep missing";
 		default:				break;
 	}
 	

@@ -19,6 +19,7 @@
 // config
 #include "moduleconfig.h"
 #include <IGameConfigs.h>
+#include <InterfaceSys.h>
 
 #include <stddef.h> // size_t
 // metamod include files
@@ -70,6 +71,7 @@ struct amxx_module_info_s
 #define AMXX_IFVERS				1			/* interface version */
 #define AMXX_PARAM				2			/* Invalid parameter */
 #define AMXX_FUNC_NOT_PRESENT	3			/* Function not present */
+#define AMXX_LIB_NOT_PRESENT	4			/* Module dependency not present */
 
 #define AMXX_GAME_OK			0			/* This module can load on the current game mod. */
 #define AMXX_GAME_BAD			1			/* This module can not load on the current game mod. */
@@ -2221,6 +2223,9 @@ typedef int				(*PFN_AMX_REREGISTER)			(AMX * /*amx*/, AMX_NATIVE_INFO * /*list*
 typedef void *			(*PFN_REGISTERFUNCTIONEX)		(void * /*pfn*/, const char * /*desc*/);
 typedef void			(*PFN_MESSAGE_BLOCK)			(int /* mode */, int /* message */, int * /* opt */);
 typedef IGameConfigManager* (*PFN_GET_CONFIG_MANAGER)   ();
+typedef bool			(*PFN_ADDINTERFACE)				(AMXXInterface *);
+typedef bool			(*PFN_REQUESTINTERFACE)			(const char *ifaceName, unsigned int ifaceVers, AMXXInterface **pIface);
+typedef bool			(*PFN_REQUESTMODULE)			(const char *module);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_ADD_NEW_NATIVES			g_fn_AddNewNatives;
@@ -2302,6 +2307,9 @@ extern PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 extern PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 extern PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 extern PFN_GET_CONFIG_MANAGER		g_fn_GetConfigManager;
+extern PFN_ADDINTERFACE				g_fn_AddInterface;
+extern PFN_REQUESTINTERFACE			g_fn_RequestInterface;
+extern PFN_REQUESTMODULE			g_fn_RequestLibrary;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2380,6 +2388,9 @@ int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return
 void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }
 void *			MF_MessageBlock				(int mode, int msg, int *opt) { }
 IGameConfigManager* MF_GetConfigManager     (void) { }
+bool			MF_AddInterface				(AMXXInterface *iface) { }
+bool			MF_RequestInterface			(const char *ifaceName, unsigned int ifaceVers, AMXXInterface **pIface) { }
+bool			MF_RequestLibrary			(const char *module);
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2463,6 +2474,9 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_RegisterFunctionEx g_fn_RegisterFunctionEx
 #define MF_MessageBlock g_fn_MessageBlock
 #define MF_GetConfigManager g_fn_GetConfigManager
+#define MF_AddInterface g_fn_AddInterface
+#define MF_RequestInterface g_fn_RequestInterface
+#define MF_RequestLibrary g_fn_RequestLibrary
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

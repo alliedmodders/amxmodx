@@ -29,6 +29,7 @@ new bool:BlockedItems[CSI_MAX_COUNT];
 new bool:ModifiedItem;
 
 new MenuPosition[MAX_PLAYERS + 1];
+new MenuHandle  [MAX_PLAYERS + 1] = { -1, ... };
 new ConfigFilePath[PLATFORM_MAX_PATH];
 
 new RestrictedBotWeapons[] = "00000000000000000000000000";
@@ -178,7 +179,9 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 		{
 			arrayset(BlockedItems, restricted, sizeof BlockedItems);
 			console_print(id, "%l", restricted ? "EQ_WE_RES" : "EQ_WE_UNRES");
+
 			ModifiedItem = true;
+			refreshMenus(level);
 		}
 		else // Either item type or specific alias
 		{
@@ -192,7 +195,7 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 
 			for (; argumentIndex < argumentsCount; ++argumentIndex, position = 0)
 			{
-                // Ignore if the argument is empty or the first character is not a letter.
+				// Ignore if the argument is empty or the first character is not a letter.
 				if ((commandLength = read_argv(argumentIndex, commands, charsmax(commands)) - trim(commands)) <= 0 || !isalpha(commands[0]))
 				{
 					continue;
@@ -227,6 +230,10 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 			if (!found)
 			{
 				console_print(id, "%l", "NO_EQ_WE");
+			}
+			else
+			{
+				refreshMenus(level);
 			}
 		}
 	}
@@ -275,6 +282,7 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 		if (saveSettings(ConfigFilePath))
 		{
 			ModifiedItem = false;
+			refreshMenus(level);
 		}
 
 		console_print(id, "%l^n", ModifiedItem ? "REST_COULDNT_SAVE" : "REST_CONF_SAVED", ConfigFilePath);
@@ -285,6 +293,7 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 
 		new argument[MaxConfigFileLength];
 		new length = read_argv(++argumentIndex, argument, charsmax(argument)) - trim(argument);
+		new bool:loadedFile;
 
 		if (length || !isalpha(argument[0]))
 		{
@@ -295,11 +304,12 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 
 			if (loadSettings(filepath))
 			{
-				ModifiedItem = true;
+				loadedFile = ModifiedItem = true;
+				refreshMenus(level);
 			}
 		}
 
-		console_print(id, "%l^n", ModifiedItem ? "REST_CONF_LOADED" : "REST_COULDNT_LOAD", argument);
+		console_print(id, "%l^n", loadedFile ? "REST_CONF_LOADED" : "REST_COULDNT_LOAD", argument);
 	}
 	else
 	{
@@ -327,7 +337,7 @@ displayMenu(const id, const position)
 	new menuTitle[MaxMenuTitleLength * 2];
 	formatex(menuTitle, charsmax(menuTitle), "      \y%l", "REST_WEAP");
 
-	new const menu = menu_create(menuTitle, "@OnMenuAction");
+	new const menu = MenuHandle[id] = menu_create(menuTitle, "@OnMenuAction");
 
 	if (position < 0)  // Main menu
 	{
@@ -357,51 +367,67 @@ displayMenu(const id, const position)
 	menu_addblank(menu, .slot = false);
 	menu_additem(menu, fmt("%s%l \y\R%s", ModifiedItem ? "\y" : "\d", "SAVE_SET", ModifiedItem ? "*" : ""));
 
-	menu_setprop(menu, MPROP_EXITNAME, fmt("%l", position < 0 ? "EXIT" : "BACK"));  // If inside a sub-menu we want to 'back' to main menu.
-	menu_setprop(menu, MPROP_PERPAGE, 0);                                           // Disable pagination.
-	menu_setprop(menu, MPROP_EXIT, MEXIT_FORCE);                                    // Force an EXIT item since pagination is disabled.
-	menu_setprop(menu, MPROP_NUMBER_COLOR, "      \r");                             // Small QoL change to avoid menu overlapping with left icons.
+	if (position >= 0) // Inside a sub-menu
+	{
+		menu_addblank(menu, .slot = false);
+		menu_additem(menu, fmt("%l", "BACK"));
+	}
+	else // Main menu
+	{
+		menu_setprop(menu, MPROP_EXITNAME, fmt("%l", "EXIT"));
+		menu_setprop(menu, MPROP_EXIT, MEXIT_FORCE);                // Force an EXIT item since pagination is disabled.
+	}
+
+	menu_setprop(menu, MPROP_PERPAGE, 0);                           // Disable pagination.
+	menu_setprop(menu, MPROP_NUMBER_COLOR, "      \r");             // Small QoL change to avoid menu overlapping with left icons.
 
 	menu_display(id, menu);
+
+	return menu;
 }
 
 @OnMenuAction(const id, const menu, const key)
 {
 	new position = MenuPosition[id];
 
-	switch (key + 1)
+	if (key >= 0)
 	{
-		case 1 .. sizeof ItemsInfos[]:
+		switch (key + 1)
 		{
-			if (position < 0)  // We are right now in the main menu, go to sub-menu.
+			case 1 .. sizeof ItemsInfos[]:
 			{
-				position = key;
+				if (position < 0)  // We are right now in the main menu, go to sub-menu.
+				{
+					position = key;
+				}
+				else  // We are in a sub-menu.
+				{
+					ModifiedItem = true;
+
+					new const itemid = ItemsInfos[any:position][key][m_Index];
+					BlockedItems[itemid] = !BlockedItems[itemid];
+
+					restrictPodbotItem(itemid, .toggle = true);
+					updatePodbotCvars();
+				}
 			}
-			else  // We are in a sub-menu.
+			case sizeof ItemsInfos[] + 1:  // Save option.
 			{
-				ModifiedItem = true;
+				if (saveSettings(ConfigFilePath))
+				{
+					ModifiedItem = false;
+				}
 
-				new const itemid = ItemsInfos[any:position][key][m_Index];
-				BlockedItems[itemid] = !BlockedItems[itemid];
-
-				restrictPodbotItem(itemid, .toggle = true);
-				updatePodbotCvars();
+				client_print(id, print_chat, "* %l", ModifiedItem ? "CONF_SAV_FAIL" : "CONF_SAV_SUC");
 			}
-		}
-		case sizeof ItemsInfos[] + 1:  // Save option.
-		{
-			if (saveSettings(ConfigFilePath))
+			default:
 			{
-				ModifiedItem = false;
+				position = -1;  // Back to main menu.
 			}
-
-			client_print(id, print_chat, "* %l", ModifiedItem ? "CONF_SAV_FAIL" : "CONF_SAV_SUC");
-		}
-		default:
-		{
-			position = -1;  // Back to main menu.
 		}
 	}
+
+	MenuHandle[id] = -1;
 
 	menu_destroy(menu);
 
@@ -411,6 +437,25 @@ displayMenu(const id, const position)
 	}
 
 	return PLUGIN_HANDLED;
+}
+
+refreshMenus(const commandLevel)
+{
+	new playersList[MAX_PLAYERS], playersCount, player;
+	new menu, newmenu;
+
+	get_players(playersList, playersCount, "ch");
+
+	for (new i = 0; i < playersCount, (player = playersList[i]); ++i)
+	{
+		if (player_menu_info(player, menu, newmenu) && newmenu != -1 && newmenu == MenuHandle[player])
+		{
+			if (access(player, commandLevel)) // extra safety
+			{
+				MenuHandle[player] = displayMenu(player, MenuPosition[player]);
+			}
+		}
+	}
 }
 
 bool:saveSettings(const filename[])
@@ -535,7 +580,7 @@ restrictPodbotItem(const itemid, const bool:toggle = false)
 		-1, 4, -1, 20, 3, 8, -1, 12, 19, 4, 5, 6, 13, 23, 17, 18, 1, 2, 21, 9, 24, 7, 16, 10, 22, 2, 3, 15, 14, 0, 11, 0, 1, 5, 6, 25, 7, 8
 	};
 
-	new index = translatedItems[itemid];
+	new const index = translatedItems[itemid];
 
 	if (index >= 0)
 	{

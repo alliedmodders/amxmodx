@@ -197,7 +197,7 @@ extern cvar_t* mp_timelimit;
 extern fakecmd_t g_fakecmd;
 extern float g_game_restarting;
 extern float g_game_timeleft;
-extern float g_task_time;
+extern bool g_task_enabled;
 extern float g_auth_time;
 extern bool g_NewDLL_Available;
 extern hudtextparms_t g_hudset;

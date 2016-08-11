@@ -2504,33 +2504,15 @@ static cell AMX_NATIVE_CALL set_task(AMX *amx, cell *params) /* 2 param */
 
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 
-	int a, iFunc;
+	int a;
 
-	char* stemp = get_amxstring(amx, params[2], 1, a);
-
-	if (params[5])
-	{
-		iFunc = registerSPForwardByName(amx, stemp, FP_ARRAY, FP_CELL, FP_DONE);
-	} else {
-		iFunc = registerSPForwardByName(amx, stemp, FP_CELL, FP_DONE);
-	}
-	
-	if (iFunc == -1)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Function is not present (function \"%s\") (plugin \"%s\")", stemp, plugin->getName());
-		return 0;
-	}
+	char* sFunc = get_amxstring(amx, params[2], 1, a);
 
 	float base = amx_ctof(params[1]);
 
-	if (base < 0.1f)
-		base = 0.1f;
-
 	char* temp = get_amxstring(amx, params[6], 0, a);
 
-	g_tasksMngr.registerTask(plugin, iFunc, UTIL_ReadFlags(temp), params[3], base, params[5], get_amxaddr(amx, params[4]), params[7]);
-
-	return 1;
+	return g_tasksMngr.registerTask(plugin, UTIL_ReadFlags(temp), params[3], base, params[5], get_amxaddr(amx, params[4]), params[7], sFunc);
 }
 
 static cell AMX_NATIVE_CALL remove_task(AMX *amx, cell *params) /* 1 param */
@@ -3149,7 +3131,7 @@ static cell AMX_NATIVE_CALL register_logevent(AMX *amx, cell *params)
 	auto logevent = LogEventHandles.lookup(handle)->m_logevent;
 	auto numparam = *params / sizeof(cell);
 
-	for (auto i = 3; i <= numparam; ++i)
+	for (auto i = 3U; i <= numparam; ++i)
 	{
 		logevent->registerFilter(get_amxstring(amx, params[i], 0, length));
 	}

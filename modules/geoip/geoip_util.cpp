@@ -13,6 +13,7 @@
 
 #include "geoip_util.h"
 #include "geoip_natives.h"
+#include <amtl/am-algorithm.h>
 
 const char GeoIPCountryCode[252][3] =
 {

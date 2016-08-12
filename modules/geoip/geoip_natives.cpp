@@ -15,9 +15,6 @@
 #include "geoip_natives.h"
 #include "geoip_util.h"
 
-#include <amtl/am-string.h>
-#include <amtl/am-vector.h>
-
 // native geoip_code2(const ip[], ccode[3]);
 // Deprecated.
 static cell AMX_NATIVE_CALL amx_geoip_code2(AMX *amx, cell *params)

@@ -25,6 +25,7 @@
 #include "entity_state.h"
 #include <amtl/am-vector.h>
 #include <amtl/am-string.h>
+#include <amtl/am-algorithm.h>
 #include <CDetour/detours.h>
 #include <HLTypeConversion.h>
 

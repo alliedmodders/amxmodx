@@ -16,6 +16,7 @@
 
 #include <amtl/am-string.h>
 #include <amtl/am-vector.h>
+#include <amtl/am-algorithm.h>
 
 extern MMDB_s HandleDB;
 extern ke::Vector<ke::AString> LangList;

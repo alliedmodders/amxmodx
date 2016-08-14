@@ -2460,19 +2460,7 @@ static cell AMX_NATIVE_CALL read_argv(AMX *amx, cell *params) /* 3 param */
 	int argc = params[1];
 
 	const char *value = g_fakecmd.notify ? (argc >= 0 && argc < 3 ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
-
-	switch (*params / sizeof(cell))
-	{
-		case 1:
-			return atoi(value);
-		case 3:
-			return set_amxstring_utf8(amx, params[2], value, strlen(value), *get_amxaddr(amx, params[3]));
-		default:
-			cell *fCell = get_amxaddr(amx, params[2]);
-			REAL fparam = static_cast<REAL>(atof(value));
-			*fCell = amx_ftoc(fparam);
-			return static_cast<int>(fparam);
-	}
+	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3]);
 }
 
 static cell AMX_NATIVE_CALL read_args(AMX *amx, cell *params) /* 2 param */

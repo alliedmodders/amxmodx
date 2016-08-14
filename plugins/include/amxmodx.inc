@@ -3139,7 +3139,7 @@ native PrepareArray(const array[], size, copyback = 0);
  * @note Passing arrays requires them to be prepared using PrepareArray()
  *
  * @param forward_handle    Forward handle
- * @param ret               Variable to store return value in
+ * @param ret               Optional variable to store return value in
  * @param ...               Variable number of parameters to pass through
  *
  * @return                  1 on success, 0 if forward can't be executed
@@ -3147,7 +3147,7 @@ native PrepareArray(const array[], size, copyback = 0);
  *                          of parameters that the forward was declared with,
  *                          an error is thrown.
  */
-native ExecuteForward(forward_handle, &ret, any:...);
+native ExecuteForward(forward_handle, &ret = 0, any:...);
 
 /**
  * Destroys and deallocates a forward.

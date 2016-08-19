@@ -1,6 +1,6 @@
 // //////////////////////////////////////////////////////////
 // md5.cpp
-// Copyright (c) 2014 Stephan Brumme. All rights reserved.
+// Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
 // see http://create.stephan-brumme.com/disclaimer.html
 //
 
@@ -311,72 +311,49 @@ void MD5::processBuffer()
 }
 
 
-/// return latest hash as 16 hex characters
+/// return latest hash as 32 hex characters
 const char* MD5::getHash()
 {
-  // convert hash to string
-  static const char dec2hex[16+1] = "0123456789abcdef";
+  // compute hash (as raw bytes)
+  unsigned char rawHash[HashBytes];
+  getHash(rawHash);
 
+  // convert to hex string
+  static char result[32+1];
+  size_t written = 0;
+  for (int i = 0; i < HashBytes; i++)
+  {
+    static const char dec2hex[16+1] = "0123456789abcdef";
+    result[written++] = dec2hex[(rawHash[i] >> 4) & 15];
+    result[written++] = dec2hex[ rawHash[i]       & 15];
+  }
+  result[written] = 0;
+  return const_cast<const char *>(result);
+}
+
+
+/// return latest hash as bytes
+void MD5::getHash(unsigned char buffer[MD5::HashBytes])
+{
   // save old hash if buffer is partially filled
-  uint32_t oldHash[4];
-  oldHash[0] = m_hash[0];
-  oldHash[1] = m_hash[1];
-  oldHash[2] = m_hash[2];
-  oldHash[3] = m_hash[3];
+  uint32_t oldHash[HashValues];
+  for (int i = 0; i < HashValues; i++)
+    oldHash[i] = m_hash[i];
 
   // process remaining bytes
   processBuffer();
 
-  // create hash string
-  static char hashBuffer[4*8+1];
+  unsigned char* current = buffer;
+  for (int i = 0; i < HashValues; i++)
+  {
+    *current++ =  m_hash[i]        & 0xFF;
+    *current++ = (m_hash[i] >>  8) & 0xFF;
+    *current++ = (m_hash[i] >> 16) & 0xFF;
+    *current++ = (m_hash[i] >> 24) & 0xFF;
 
-  hashBuffer[ 0] = dec2hex[(m_hash[0] >>  4) & 15];
-  hashBuffer[ 1] = dec2hex[ m_hash[0]        & 15];
-  hashBuffer[ 2] = dec2hex[(m_hash[0] >> 12) & 15];
-  hashBuffer[ 3] = dec2hex[(m_hash[0] >>  8) & 15];
-  hashBuffer[ 4] = dec2hex[(m_hash[0] >> 20) & 15];
-  hashBuffer[ 5] = dec2hex[(m_hash[0] >> 16) & 15];
-  hashBuffer[ 6] = dec2hex[ m_hash[0] >> 28      ];
-  hashBuffer[ 7] = dec2hex[(m_hash[0] >> 24) & 15];
-
-  hashBuffer[ 8] = dec2hex[(m_hash[1] >>  4) & 15];
-  hashBuffer[ 9] = dec2hex[ m_hash[1]        & 15];
-  hashBuffer[10] = dec2hex[(m_hash[1] >> 12) & 15];
-  hashBuffer[11] = dec2hex[(m_hash[1] >>  8) & 15];
-  hashBuffer[12] = dec2hex[(m_hash[1] >> 20) & 15];
-  hashBuffer[13] = dec2hex[(m_hash[1] >> 16) & 15];
-  hashBuffer[14] = dec2hex[ m_hash[1] >> 28      ];
-  hashBuffer[15] = dec2hex[(m_hash[1] >> 24) & 15];
-
-  hashBuffer[16] = dec2hex[(m_hash[2] >>  4) & 15];
-  hashBuffer[17] = dec2hex[ m_hash[2]        & 15];
-  hashBuffer[18] = dec2hex[(m_hash[2] >> 12) & 15];
-  hashBuffer[19] = dec2hex[(m_hash[2] >>  8) & 15];
-  hashBuffer[20] = dec2hex[(m_hash[2] >> 20) & 15];
-  hashBuffer[21] = dec2hex[(m_hash[2] >> 16) & 15];
-  hashBuffer[22] = dec2hex[ m_hash[2] >> 28      ];
-  hashBuffer[23] = dec2hex[(m_hash[2] >> 24) & 15];
-
-  hashBuffer[24] = dec2hex[(m_hash[3] >>  4) & 15];
-  hashBuffer[25] = dec2hex[ m_hash[3]        & 15];
-  hashBuffer[26] = dec2hex[(m_hash[3] >> 12) & 15];
-  hashBuffer[27] = dec2hex[(m_hash[3] >>  8) & 15];
-  hashBuffer[28] = dec2hex[(m_hash[3] >> 20) & 15];
-  hashBuffer[29] = dec2hex[(m_hash[3] >> 16) & 15];
-  hashBuffer[30] = dec2hex[ m_hash[3] >> 28      ];
-  hashBuffer[31] = dec2hex[(m_hash[3] >> 24) & 15];
-
-  // zero-terminated string
-  hashBuffer[32] = 0;
-
-  // restore old hash
-  m_hash[0] = oldHash[0];
-  m_hash[1] = oldHash[1];
-  m_hash[2] = oldHash[2];
-  m_hash[3] = oldHash[3];
-
-  // convert to std::string
-  return (const char*)hashBuffer;
+    // restore old hash
+    m_hash[i] = oldHash[i];
+  }
 }
 
 

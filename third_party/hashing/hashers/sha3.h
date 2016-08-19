@@ -1,6 +1,6 @@
 // //////////////////////////////////////////////////////////
 // sha3.h
-// Copyright (c) 2014 Stephan Brumme. All rights reserved.
+// Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
 // see http://create.stephan-brumme.com/disclaimer.html
 //
 

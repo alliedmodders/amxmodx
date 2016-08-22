@@ -1,6 +1,6 @@
 // //////////////////////////////////////////////////////////
 // crc32.h
-// Copyright (c) 2014 Stephan Brumme. All rights reserved.
+// Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
 // see http://create.stephan-brumme.com/disclaimer.html
 //
 
@@ -20,10 +20,18 @@
     while (more data available)
       crc32.add(pointer to fresh data, number of new bytes);
     std::string myHash3 = crc32.getHash();
+
+    Note:
+    You can find code for the faster Slicing-by-16 algorithm on my website, too:
+    http://create.stephan-brumme.com/crc32/
+    Its unrolled version is about twice as fast but its look-up table doubled in size as well.
   */
 class CRC32 //: public Hash
 {
 public:
+  /// hash is 4 bytes long
+  enum { HashBytes = 4 };
+
   /// same as reset()
   CRC32();
 
@@ -35,8 +43,10 @@ public:
   /// add arbitrary number of bytes
   void add(const void* data, size_t numBytes);
 
-  /// return latest hash as 16 hex characters
+  /// return latest hash as 8 hex characters
   const char* getHash();
+  /// return latest hash as bytes
+  void        getHash(unsigned char buffer[HashBytes]);
 
   /// restart
   void reset();

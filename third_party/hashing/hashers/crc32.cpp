@@ -1,6 +1,6 @@
 // //////////////////////////////////////////////////////////
 // crc32.cpp
-// Copyright (c) 2014 Stephan Brumme. All rights reserved.
+// Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
 // see http://create.stephan-brumme.com/disclaimer.html
 //
 
@@ -374,7 +374,7 @@ void CRC32::add(const void* data, size_t numBytes)
 }
 
 
-/// return latest hash as 16 hex characters
+/// return latest hash as 8 hex characters
 const char* CRC32::getHash()
 {
   // convert hash to string
@@ -390,12 +390,21 @@ const char* CRC32::getHash()
   hashBuffer[5] = dec2hex[(m_hash >>  8) & 15];
   hashBuffer[6] = dec2hex[(m_hash >>  4) & 15];
   hashBuffer[7] = dec2hex[ m_hash        & 15];
-
   // zero-terminated string
   hashBuffer[8] = 0;
 
   // convert to std::string
-  return (const char *)hashBuffer;
+  return const_cast<const char *>(hashBuffer);
+}
+
+
+/// return latest hash as bytes
+void CRC32::getHash(unsigned char buffer[CRC32::HashBytes])
+{
+  buffer[0] = (m_hash >> 24) & 0xFF;
+  buffer[1] = (m_hash >> 16) & 0xFF;
+  buffer[2] = (m_hash >>  8) & 0xFF;
+  buffer[3] =  m_hash        & 0xFF;
 }
 
 

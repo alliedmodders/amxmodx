@@ -2463,6 +2463,35 @@ static cell AMX_NATIVE_CALL read_argv(AMX *amx, cell *params) /* 3 param */
 	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3]);
 }
 
+static cell AMX_NATIVE_CALL read_argv_int(AMX *amx, cell *params) /* 1 param */
+{
+	int argc = params[1];
+
+	if (argc <= 0)
+	{
+		return 0;
+	}
+
+	const char *value = g_fakecmd.notify ? (argc >= 1 && argc < 3 ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
+
+	return atoi(value);
+}
+
+static cell AMX_NATIVE_CALL read_argv_float(AMX *amx, cell *params) /* 1 param */
+{
+	int argc = params[1];
+
+	if (argc <= 0)
+	{
+		return 0;
+	}
+
+	const char *value = g_fakecmd.notify ? (argc >= 1 && argc < 3 ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
+	float flValue = atof(value);
+
+	return amx_ftoc(flValue);
+}
+
 static cell AMX_NATIVE_CALL read_args(AMX *amx, cell *params) /* 2 param */
 {
 	const char* sValue = g_fakecmd.notify ? (g_fakecmd.argc > 1 ? g_fakecmd.args : g_fakecmd.argv[0]) : CMD_ARGS();
@@ -4742,6 +4771,8 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"read_argc",				read_argc},
 	{"read_args",				read_args},
 	{"read_argv",				read_argv},
+	{"read_argv_int",			read_argv_int},
+	{"read_argv_float",			read_argv_float},
 	{"read_data",				read_data},
 	{"read_datanum",			read_datanum},
 	{"read_datatype",			read_datatype},

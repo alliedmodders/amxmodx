@@ -1318,7 +1318,7 @@ native get_playersnum(flag = 0);
 native get_players(players[MAX_PLAYERS], &num, const flags[] = "", const team[] = "");
 
 /**
- * Retrieves argument of client command.
+ * Retrieves argument of client command as string.
  *
  * @note Should only be used inside of the client_command() forward.
  *
@@ -1329,6 +1329,28 @@ native get_players(players[MAX_PLAYERS], &num, const flags[] = "", const team[] 
  * @return          Number of cells written to buffer
  */
 native read_argv(id, output[], len);
+
+/**
+ * Retrieves argument of client command as integer value.
+ *
+ * @note Should only be used inside of the client_command() forward.
+ *
+ * @param id        Argument index starting from 1
+ *
+ * @return          Integer value
+ */
+native read_argv_int(id);
+
+/**
+ * Retrieves argument of client command as float value.
+ *
+ * @note Should only be used inside of the client_command() forward.
+ *
+ * @param id        Argument index starting from 1
+ *
+ * @return          Float value
+ */
+native Float:read_argv_float(id);
 
 /**
  * Retrieves full client command string.

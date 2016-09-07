@@ -267,6 +267,7 @@ scripting_files = [
   'testsuite/textparse_test.sma',
   'testsuite/textparse_test.cfg',
   'testsuite/textparse_test.ini',
+  'testsuite/fuzzy_search_test.sma',
   'include/amxconst.inc',
   'include/amxmisc.inc',
   'include/amxmodx.inc',

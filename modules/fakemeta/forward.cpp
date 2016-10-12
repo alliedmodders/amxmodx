@@ -848,6 +848,7 @@ static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
 		if (peng->at(i) == func_id)
 		{
 			peng->remove(i);
+			MF_UnregisterSPForward(func_id);
 			if (!peng->length() && patchAddr != NULL && func != FM_ServerDeactivate)
 			{
 				/* Clear out this forward if we no longer need it */

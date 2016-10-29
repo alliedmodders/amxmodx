@@ -539,6 +539,16 @@ native console_cmd(id, const cmd[], any:...);
 native register_event(const event[], const function[], const flags[], const cond[] = "", ...);
 
 /**
+ * This is a wrapper around register_event that adds proper names for flags.
+ * RegisterEventFlags can be found in amxconst.inc and they exactly match those of register_event.
+ *
+ * @note Look at register_event for documentation.
+ *
+ * @return Event handle
+ */
+native register_event_ex(const event[], const function[], RegisterEventFlags:flags, const cond[] = "", ...);
+
+/**
  * Enables a function hook of a game event which has been previously registered with register_event().
  *
  * @param handle    Value returned from register_event()
@@ -1453,6 +1463,16 @@ native get_flags(flags, output[], len);
  * @return          Client index, or 0 if no client was found
  */
 native find_player(const flags[], ...);
+
+/**
+ * This is a wrapper around find_player that adds proper names for flags.
+ * FindPlayerFlags can be found in amxconst.inc and they exactly match those of find_player.
+ *
+ * @note Look at find_player for documentation.
+ *
+ * @return Event handle
+ */
+native find_player_ex(FindPlayerFlags:flags, ...);
 
 /**
  * Removes double-quotes from the beginning and end of a string.

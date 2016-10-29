@@ -809,3 +809,33 @@ stock reset_menu(index)
 {
 	show_menu(index, 0, "", 0);
 }
+
+/**
+ * This is a wrapper around set_task that adds proper names for flags.
+ * SetTaskFlags can be found in amxconst.inc and they exactly match those of set_task.
+ *
+ * @note Look at set_task for documentation.
+ *
+ * @noreturn
+ */
+stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = "", len = 0, SetTaskFlags:flags = SetTaskFlags:0, repeat = 0)
+{
+	new strFlags[2]; // There should never be a need to set more than 1 flag
+	get_flags(_:flags, strFlags, charsmax(strFlags));
+	set_task(time, function, id, parameter, len, strFlags, repeat);
+}
+
+/**
+ * This is a wrapper around get_players that adds proper names for flags.
+ * GetPlayersFlags can be found in amxconst.inc and they exactly match those of get_players.
+ *
+ * @note Look at get_players for documentation.
+ *
+ * @noreturn
+ */
+stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags, const team[] = "")
+{
+	new strFlags[10];
+	get_flags(_:flags, strFlags, charsmax(strFlags));
+	get_players(players, num, strFlags, team);
+}

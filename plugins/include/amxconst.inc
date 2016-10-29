@@ -451,4 +451,53 @@ enum HashType
 	Hash_Keccak_512  // Provides Keccak 512 bit hashing
 };
 
+enum SetTaskFlags (<<= 1)
+{
+	SetTask_RepeatTimes = 1,
+	SetTask_Repeat,
+	SetTask_AfterMapStart,
+	SetTask_BeforeMapChange
+};
+
+enum RegisterEventFlags (<<= 1)
+{
+	RegisterEvent_Global = 1,
+	RegisterEvent_Single,
+	RegisterEvent_OnceForMultiple,
+	RegisterEvent_OnlyDead,
+	RegisterEvent_OnlyAlive,
+	RegisterEvent_OnlyHuman,
+	RegisterEvent_OnlyBots
+};
+
+enum GetPlayersFlags (<<= 1)
+{
+	GetPlayers_ExcludeDead = 1,
+	GetPlayers_ExcludeAlive,
+	GetPlayers_ExcludeBots,
+	GetPlayers_ExcludeHuman,
+	GetPlayers_MatchTeam,
+	GetPlayers_MatchNameSubstring,
+	GetPlayers_MatchCaseInsensitive,
+	GetPlayers_ExcludeHLTV,
+	GetPlayers_IncludeConnecting
+};
+
+enum FindPlayerFlags (<<= 1)
+{
+	FindPlayer_MatchName = 1,
+	FindPlayer_MatchNameSubstring,
+	FindPlayer_MatchAuthId,
+	FindPlayer_MatchIP,
+	FindPlayer_MatchTeam,
+	FindPlayer_ExcludeDead,
+	FindPlayer_ExcludeAlive,
+	FindPlayer_ExcludeBots,
+	FindPlayer_ExcludeHuman,
+	FindPlayer_LastMatched,
+	FindPlayer_MatchUserId,
+	FindPlayer_MatchCaseInsensitive,
+	FindPlayer_IncludeConnecting
+}
+
 #include <cstrike_const> // To keep backward compatibility

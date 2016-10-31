@@ -239,8 +239,6 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 	}
 	else if (ch1 == 'l' && ch2 == 'i')  // [li]st
 	{
-		console_print(id, "^n----- %l: -----^n", "WEAP_RES");
-
 		// Items list.
 		if (argumentsCount > ++argumentIndex)
 		{
@@ -248,6 +246,8 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 
 			if (0 <= selection <= charsmax(ItemsInfos))
 			{
+				console_print(id, "^n----- %l: %l -----^n", "WEAP_RES", MenuInfos[selection][m_Title]);
+  
 				SetGlobalTransTarget(id);
 
 				new alias[MaxAliasNameLength];
@@ -269,13 +269,15 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 			}
 		}
 
+		console_print(id, "^n----- %l -----^n", "WEAP_RES");
+
 		// Item types list.
 		for (new class = 0; class < sizeof MenuInfos; ++class)
 		{
 			console_print(id, "%3d: %l", class + 1, MenuInfos[class][m_Title]);
 		}
 
-		console_print(id, "^n----- %l: -----^n", "REST_USE_HOW");
+		console_print(id, "^n----- %l -----^n", "REST_USE_HOW");
 	}
 	else if (ch1 == 's')  // [s]ave
 	{

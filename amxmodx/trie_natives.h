@@ -155,7 +155,7 @@ struct TrieSnapshot
 	}
 
 	size_t length;
-	ke::AutoArray<int> keys;
+	ke::AutoPtr<int[]> keys;
 	BaseStringTable strings;
 };
 

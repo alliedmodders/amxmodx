@@ -355,7 +355,7 @@ static cell AMX_NATIVE_CALL TrieSnapshotCreate(AMX *amx, cell *params)
 	int index = TrieSnapshotHandles.create();
 	TrieSnapshot *snapshot = TrieSnapshotHandles.lookup(index);
 	snapshot->length = t->map.elements();
-	snapshot->keys = new int[snapshot->length];
+	snapshot->keys = ke::MakeUnique<int[]>(snapshot->length);
 
 	size_t i = 0;
 	for (StringHashMap<Entry>::iterator iter = t->map.iter(); !iter.empty(); iter.next(), i++)

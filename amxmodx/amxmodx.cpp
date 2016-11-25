@@ -458,7 +458,7 @@ static cell AMX_NATIVE_CALL next_hudchannel(AMX *amx, cell *params)
 	int index = params[1];
 	if (index < 1 || index > gpGlobals->maxClients)
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid player %d");
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", index);
 		return 0;
 	}
 

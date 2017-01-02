@@ -92,7 +92,7 @@ public:
 	Data(int type, void *ptr) : m_data(ptr), m_index(NULL), m_type(type)
 	{ /* nothing */ };
 
-	Data(int type, void *ptr, int *cptr) : m_data(ptr), m_index(NULL), m_type(type)
+	Data(int type, void *ptr, int *cptr) : m_data(ptr), m_index(cptr), m_type(type)
 	{ /* nothing */ };
 
 	~Data()

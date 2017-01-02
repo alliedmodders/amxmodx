@@ -260,6 +260,75 @@ bool fastcellcmp(cell *a, cell *b, cell len)
 	return true;
 }
 
+static void _utf8strfold(const char *&string1, size_t string1_length, const char *&string2, size_t string2_length)
+{
+	auto string1_folded = get_amxbuffer(2);
+	auto string2_folded = get_amxbuffer(3);
+
+	if (utf8strcasefold(string1, string1_length, string1_folded, MAX_BUFFER_LENGTH - 1) &&
+		utf8strcasefold(string2, string2_length, string2_folded, MAX_BUFFER_LENGTH - 1))
+	{
+		string1 = string1_folded;
+		string2 = string2_folded;
+	}
+}
+
+static size_t _utf8strncmp(const char *string1, size_t string1_length, const char *string2, size_t string2_length, bool ignore_case, size_t num_bytes = 0)
+{
+	if (!num_bytes)
+	{
+		num_bytes = ke::Min(string1_length, string2_length);
+	}
+
+	if (ignore_case)
+	{
+		_utf8strfold(string1, string1_length, string2, string2_length);
+	}
+
+	return memcmp(string1, string2, num_bytes);
+}
+
+static cell string_case_mapping(size_t(function)(const char*, size_t, char*, size_t, int32_t*), AMX *amx, cell *params, bool first_ch = false)
+{
+	int string_length;
+	int32_t errors;
+
+	auto const buffer_id = 0;
+	auto first_ch_length = 0;
+
+	auto string = get_amxstring(amx, params[1], buffer_id, string_length);
+	auto output = get_amxbuffer(buffer_id + 1);
+
+	if (first_ch)
+	{
+		// Retrieves first character bytes length.
+		first_ch_length = utf8seek(string, string_length, string, 1, SEEK_CUR) - string;
+	}
+
+	// First, we get the final length without writing in to buffer.
+	// This is not guaranteed the length will be the same.
+	auto size_in_bytes = function(string, first_ch ? first_ch_length : string_length, nullptr, 0, &errors);
+
+	if (size_in_bytes == 0 || errors != UTF8_ERR_NONE || (first_ch && size_in_bytes > static_cast<size_t>(string_length)))
+	{
+		return 0;
+	}
+
+	if (first_ch)
+	{
+		// Fills output with the characters left and leave enough spaces for first character.
+		memcpy(output + size_in_bytes, string + first_ch_length, (string_length - size_in_bytes) * sizeof(char));
+	}
+
+	// Any new string length which goes above the original length is truncated.
+	// Such special situations are rather specific and marginal though.
+	size_in_bytes = function(string, string_length, output, ke::Min<int>(size_in_bytes, string_length), nullptr);
+
+	// Length in bytes.
+	return set_amxstring_utf8_char(amx, params[1], output, first_ch ? string_length + (size_in_bytes - first_ch_length) : size_in_bytes, string_length);
+}
+
+
 static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 {
 	cell *text = get_amxaddr(amx, params[1]);
@@ -656,30 +725,18 @@ static cell AMX_NATIVE_CALL equal(AMX *amx, cell *params) /* 3 param */
 	return ret ? 0 : 1;
 }
 
-static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params) /* 3 param */
+// native equali(const a[],const b[],c=0);
+static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params)
 {
-	cell *a = get_amxaddr(amx, params[1]);
-	cell *b = get_amxaddr(amx, params[2]);
-	int f, l, c = params[3];
-	
-	if (c)
-	{
-		do
-		{
-			f = tolower(*a++);
-			l = tolower(*b++);
-		} while (--c && l && f && f == l);
-		
-		return (f - l) ? 0 : 1;
-	}
+	int string1_length;
+	int string2_length;
 
-	do
-	{
-		f = tolower(*a++);
-		l = tolower(*b++);
-	} while (f && f == l);
-	
-	return (f - l) ? 0 : 1;
+	const char *string1 = get_amxstring(amx, params[1], 0, string1_length);
+	const char *string2 = get_amxstring(amx, params[2], 1, string2_length);
+
+	auto num_bytes = static_cast<size_t>(params[3]);
+
+	return _utf8strncmp(string1, string1_length, string2, string2_length, true, num_bytes) == 0;
 }
 
 static cell g_cpbuf[4096];
@@ -761,46 +818,6 @@ static cell AMX_NATIVE_CALL parse(AMX *amx, cell *params) /* 3 param */
 	}
 
 	return ((iarg - 2)>>1);
-}
-
-static cell string_case_mapping(size_t(function)(const char*, size_t, char*, size_t, int32_t*), AMX *amx, cell *params, bool first_ch = false)
-{
-	int string_length;
-	int32_t errors;
-
-	auto const buffer_id = 0;
-	auto first_ch_length = 0;
-
-	auto string = get_amxstring(amx, params[1], buffer_id, string_length);
-	auto output = get_amxbuffer(buffer_id + 1);
-
-	if (first_ch)
-	{
-		// Retrieves first character bytes length.
-		first_ch_length = utf8seek(string, string_length, string, 1, SEEK_CUR) - string;
-	}
-
-	// First, we get the final length without writing in to buffer.
-	// This is not guaranteed the length will be the same.
-	auto size_in_bytes = function(string, first_ch ? first_ch_length : string_length, nullptr, 0, &errors);
-
-	if (size_in_bytes == 0 || errors != UTF8_ERR_NONE || (first_ch && size_in_bytes > static_cast<size_t>(string_length)))
-	{
-		return 0;
-	}
-
-	if (first_ch)
-	{
-		// Fills output with the characters left and leave enough spaces for first character.
-		memcpy(output + size_in_bytes, string + first_ch_length, (string_length - size_in_bytes) * sizeof(char));
-	}
-
-	// Any new string length which goes above the original length is truncated.
-	// Such special situations are rather specific and marginal though.
-	size_in_bytes = function(string, string_length, output, ke::Min<int>(size_in_bytes, string_length), nullptr);
-
-	// Length in bytes.
-	return set_amxstring_utf8_char(amx, params[1], output, first_ch ? string_length + (size_in_bytes - first_ch_length) : size_in_bytes, string_length);
 }
 
 // native strtolower(string[]);
@@ -1400,34 +1417,6 @@ static cell AMX_NATIVE_CALL n_strcat(AMX *amx, cell *params)
 	*cdest = 0;
 
 	return params[3] - num;
-}
-
-static void _utf8strfold(const char *&string1, size_t string1_length, const char *&string2, size_t string2_length)
-{
-	auto string1_folded = get_amxbuffer(2);
-	auto string2_folded = get_amxbuffer(3);
-
-	if (utf8strcasefold(string1, string1_length, string1_folded, MAX_BUFFER_LENGTH - 1) &&
-		utf8strcasefold(string2, string2_length, string2_folded, MAX_BUFFER_LENGTH - 1))
-	{
-		string1 = string1_folded;
-		string2 = string2_folded;
-	}
-}
-
-static size_t _utf8strncmp(const char *string1, size_t string1_length, const char *string2, size_t string2_length, bool ignore_case, size_t num_bytes = 0)
-{
-	if (!num_bytes)
-	{
-		num_bytes = ke::Min(string1_length, string2_length);
-	}
-
-	if (ignore_case)
-	{
-		_utf8strfold(string1, string1_length, string2, string2_length);
-	}
-
-	return memcmp(string1, string2, num_bytes);
 }
 
 // native strcmp(const string1[], const string2[], ignorecase = 0);

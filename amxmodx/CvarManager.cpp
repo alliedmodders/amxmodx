@@ -482,8 +482,8 @@ void CvarManager::OnConsoleCommand()
 	if (!indexToSearch)
 	{
 		print_srvconsole("\nManaged cvars:\n");
-		print_srvconsole("       %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", "NAME", "VALUE", "PLUGIN", "BOUND", "HOOKED", "BOUNDED");
-		print_srvconsole(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n");
+		print_srvconsole("       %-32.31s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", "NAME", "VALUE", "PLUGIN", "BOUND", "HOOKED", "BOUNDED");
+		print_srvconsole(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n");
 	}
 
 	for (CvarsList::iterator iter = m_Cvars.begin(); iter != m_Cvars.end(); iter++)
@@ -497,7 +497,7 @@ void CvarManager::OnConsoleCommand()
 		{
 			if (!indexToSearch)
 			{
-				print_srvconsole(" [%3d] %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", ++index, ci->name.chars(), ci->var->string,
+				print_srvconsole(" [%3d] %-32.31s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", ++index, ci->name.chars(), ci->var->string,
 								 ci->plugin.length() ? ci->plugin.chars() : "-",
 								 ci->binds.empty() ? "no" : "yes",
 								 ci->hooks.empty() ? "no" : "yes",

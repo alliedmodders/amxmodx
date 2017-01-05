@@ -27,10 +27,13 @@ if AMXX.mysql_path:
       os.path.join(AMXX.mysql_path, 'lib', 'opt', 'mysqlclient.lib'),
       'ws2_32.lib'
     ]
+    if binary.compiler.vendor == 'msvc' and binary.compiler.version >= 1900:
+      binary.compiler.linkflags += ['legacy_stdio_definitions.lib', 'legacy_stdio_wide_specifiers.lib']
 
   binary.compiler.linkflags += [AMXX.zlib.binary]
-    
+
   binary.sources = [
+    'msvc15hack.c',
     'basic_sql.cpp',
     'handles.cpp',
     'module.cpp',
@@ -47,7 +50,7 @@ if AMXX.mysql_path:
 
   if builder.target_platform == 'windows':
     binary.sources += ['version.rc']
-    
+
   if builder.target_platform == 'windows':
     binary.sources += [
       'thread/WinThreads.cpp',

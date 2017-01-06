@@ -549,7 +549,7 @@ enum
  * write_byte(color)
  * write_short(count)
  * write_short(base speed)
- * write_short(ramdon velocity)
+ * write_short(random velocity)
  */
 #define TE_STREAK_SPLASH            25
 

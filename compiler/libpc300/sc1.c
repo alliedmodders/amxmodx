@@ -5308,6 +5308,18 @@ static symbol *fetchlab(char *name)
   return sym;
 }
 
+static int is_variadic(symbol *sym)
+{
+  arginfo *arg;
+
+  assert(sym->ident==iFUNCTN);
+  for (arg = sym->dim.arglist; arg->ident; arg++) {
+    if (arg->ident == iVARARGS)
+      return TRUE;
+  }
+  return FALSE;
+}
+
 /*  doreturn
  *
  *  Global references: rettype  (altered)
@@ -5412,7 +5424,11 @@ static void doreturn(void)
        * it stays on the heap for the moment, and it is removed -usually- at
        * the end of the expression/statement, see expression() in SC3.C)
        */
-      address(sub,sALT);                /* ALT = destination */
+      if (is_variadic(curfunc)) {
+        load_hidden_arg();
+      } else {
+        address(sub,sALT);           /* ALT = destination */
+      }
       arraysize=calc_arraysize(dim,numdim,0);
       memcopy(arraysize*sizeof(cell));  /* source already in PRI */
       /* moveto1(); is not necessary, callfunction() does a popreg() */

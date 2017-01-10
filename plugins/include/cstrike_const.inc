@@ -78,6 +78,7 @@ const CSW_ALL_GUNS         = (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS 
  */
 enum CsInternalModel
 {
+	CS_NORESET     = -1,
 	CS_DONTCHANGE  = 0,
 	CS_UNASSIGNED  = 0,
 	CS_CT_URBAN    = 1,

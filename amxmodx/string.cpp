@@ -708,7 +708,7 @@ static cell AMX_NATIVE_CALL parse(AMX *amx, cell *params) /* 3 param */
 			c = *get_amxaddr(amx, params[iarg++]);
 			
 			while (c-- && *arg)
-				*cptr++ = (cell)*arg++;
+				*cptr++ = (unsigned char)*arg++;
 			*cptr = 0;
 		}
 	}
@@ -1006,7 +1006,7 @@ static cell AMX_NATIVE_CALL argparse(AMX *amx, cell *params)
 			break;
 
 		if (size_t(bufpos - buffer) < buflen)
-			*bufpos++ = input[i];
+			*bufpos++ = (unsigned char)input[i];
 	}
 
 	*bufpos = '\0';
@@ -1068,7 +1068,7 @@ do_copy:
 				{
 					start = &(string[i]);
 					while (end--)
-						*right++ = (cell)*start++;
+						*right++ = (unsigned char)*start++;
 				}
 				*right = '\0';
 				return 1;

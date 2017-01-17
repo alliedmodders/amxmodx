@@ -829,7 +829,10 @@ static cell AMX_NATIVE_CALL is_visible(AMX *amx, cell *params)
 
 	TraceResult tr;
 
+	auto oldSolid = pTarget->v.solid;
+	pTarget->v.solid = SOLID_NOT;
 	TRACE_LINE(vLooker, vTarget, FALSE, pEntity, &tr);
+	pTarget->v.solid = oldSolid;
 
 	if (tr.fInOpen && tr.fInWater)
 		return 0;

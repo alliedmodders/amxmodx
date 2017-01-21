@@ -125,17 +125,27 @@ const char* get_localinfo( const char* name , const char* def = 0 )
 	return b;
 }
 
+static bool ClientKill_wasAlive;
+
+void ClientKill(edict_t *pEntity)
+{
+	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
+	ClientKill_wasAlive = pPlayer->IsAlive();
+
+	RETURN_META(MRES_IGNORED);
+}
+
 void ClientKill_Post(edict_t *pEntity)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	if ( pPlayer->IsAlive())
-		RETURN_META(MRES_IGNORED);
-
-	MF_ExecuteForward( iFDamage,static_cast<cell>(pPlayer->index), static_cast<cell>(pPlayer->index) , 
-		static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0) );		// he would
-	pPlayer->saveKill(pPlayer,0,0,0);
-	MF_ExecuteForward( iFDeath,static_cast<cell>(pPlayer->index), static_cast<cell>(pPlayer->index),
-		static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0) );
+	if (ClientKill_wasAlive && !pPlayer->IsAlive())
+	{
+		MF_ExecuteForward(iFDamage, static_cast<cell>(pPlayer->index), static_cast<cell>(pPlayer->index),
+			static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0));		// he would
+		pPlayer->saveKill(pPlayer, 0, 0, 0);
+		MF_ExecuteForward(iFDeath, static_cast<cell>(pPlayer->index), static_cast<cell>(pPlayer->index),
+			static_cast<cell>(0), static_cast<cell>(0), static_cast<cell>(0));
+	}
 
 	RETURN_META(MRES_IGNORED);
 }

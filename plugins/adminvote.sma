@@ -405,7 +405,7 @@ public cmdVote(id, level, cid)
 	set_cvar_float("amx_last_voting", get_gametime() + vote_time)
 	g_voteRatio = get_cvar_float("amx_vote_ratio")
 	replace_all(quest, charsmax(quest), "%", "");
-	format(g_Answer, charsmax(g_Answer), "%s - %%s", quest)
+	format(g_Answer, charsmax(g_Answer), "%s - ^"%%s^"", quest)
 	show_menu(0, keys, menu_msg, floatround(vote_time), "Vote: ")
 	set_task(vote_time, "checkVotes", 99889988)
 	g_voteCaller = id

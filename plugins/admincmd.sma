@@ -247,7 +247,7 @@ public cmdUnban(id, level, cid)
 		server_cmd("removeip ^"%s^";writeip", arg)
 		console_print(id, "[AMXX] %L", id, "IP_REMOVED", arg)
 	} else {
-		server_cmd("removeid %s;writeid", arg)
+		server_cmd("removeid ^"%s^";writeid", arg)
 		console_print(id, "[AMXX] %L", id, "AUTHID_REMOVED", arg)
 	}
 
@@ -376,7 +376,7 @@ public cmdAddBan(id, level, cid)
 		server_cmd("addip ^"%s^" ^"%s^";wait;writeip", minutes, arg)
 		console_print(id, "[AMXX] Ip ^"%s^" added to ban list", arg)
 	} else {
-		server_cmd("banid %s %s;wait;writeid", minutes, arg)
+		server_cmd("banid ^"%s^" ^"%s^";wait;writeid", minutes, arg)
 		console_print(id, "[AMXX] Authid ^"%s^" added to ban list", arg)
 	}
 
@@ -1045,7 +1045,7 @@ public cmdCfg(id, level, cid)
 	log_amx("Cmd: ^"%s<%d><%s><>^" execute cfg (file ^"%s^")", name, get_user_userid(id), authid, arg)
 	
 	console_print(id, "[AMXX] Executing file ^"%s^"", arg)
-	server_cmd("exec %s", arg)
+	server_cmd("exec ^"%s^"", arg)
 
 	show_activity_key("ADMIN_CONF_1", "ADMIN_CONF_2", name, arg);
 

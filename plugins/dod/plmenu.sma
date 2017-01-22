@@ -619,14 +619,12 @@ public actionClcmdMenu(id,key) {
       new player = g_menuPlayers[id][g_menuPosition[id] * 7 + key]
       new flags = g_clcmdMisc[g_menuSelect[id][g_menuOption[id]]][1]
       if (is_user_connected(player)) {
-        new command[64], authid[32], name[MAX_NAME_LENGTH], userid[32]
+        new command[64], authid[32], userid[32]
         copy(command,charsmax(command),g_clcmdCmd[g_menuSelect[id][g_menuOption[id]]])
         get_user_authid(player,authid,charsmax(authid))
-        get_user_name(player,name,charsmax(name))
         num_to_str(get_user_userid(player),userid,charsmax(userid))
         replace(command,charsmax(command),"%userid%",userid)
         replace(command,charsmax(command),"%authid%",authid)
-        replace(command,charsmax(command),"%name%",name)
         if (flags & 1) {
           server_cmd("%s", command)
           server_exec()

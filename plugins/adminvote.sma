@@ -343,7 +343,7 @@ public cmdVote(id, level, cid)
 	
 	trim(quest);
 	
-	if (contain(quest, "sv_password") != -1 || contain(quest, "rcon_password") != -1)
+	if (containi(quest, "sv_password") != -1 || containi(quest, "rcon_password") != -1)
 	{
 		console_print(id, "%L", id, "VOTING_FORBIDDEN")
 		return PLUGIN_HANDLED

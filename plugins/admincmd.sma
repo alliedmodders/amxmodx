@@ -763,6 +763,15 @@ public cmdCvar(id, level, cid)
 		console_print(id, "[AMXX] %L", id, "CVAR_IS", arg, arg2)
 		return PLUGIN_HANDLED
 	}
+	
+	if (equali(arg, "servercfgfile") || equali(arg, "lservercfgfile"))
+	{
+		new pos = contain(arg2, ";")
+		if (pos != -1)
+		{
+			arg2[pos] = '^0'
+		}
+	}
 
 	new authid[32], name[MAX_NAME_LENGTH]
 	

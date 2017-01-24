@@ -1,0 +1,26 @@
+# vim: sts=2 ts=8 sw=2 tw=99 et ft=python: 
+import os, platform
+
+lib = builder.compiler.StaticLibrary('utf8rewind')
+
+lib.compiler.defines += [
+  'UTF8REWINDS_EXPORTS',
+]
+
+lib.compiler.includes += [
+  os.path.join(builder.sourcePath, 'third_party', 'utf8rewind'),
+]
+
+lib.sources += [
+  'utf8rewind.c',
+  'unicodedatabase.c',
+  'internal/casemapping.c',
+  'internal/codepoint.c',
+  'internal/composition.c',
+  'internal/database.c',
+  'internal/decomposition.c',
+  'internal/seeking.c',
+  'internal/streaming.c',
+]
+
+rvalue = builder.Add(lib)

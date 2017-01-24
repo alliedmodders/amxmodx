@@ -54,6 +54,12 @@
     </Filter>
     <Filter Include="ReSDK\engine">
       <UniqueIdentifier>{04fab577-6f56-40d0-8f69-7ce1b8bf3bb9}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="Third Party\UTF8Rewind">
+      <UniqueIdentifier>{270f3524-564f-4154-bb35-242a6faac09e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Third Party\UTF8Rewind\internal">
+      <UniqueIdentifier>{295b670a-1aa3-4b80-bbf6-4ba422672274}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +309,33 @@
     <ClCompile Include="..\..\public\resdk\mod_rehlds_api.cpp">
       <Filter>ReSDK</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\unicodedatabase.c">
+      <Filter>Third Party\UTF8Rewind</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\utf8rewind.c">
+      <Filter>Third Party\UTF8Rewind</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\casemapping.c">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\codepoint.c">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\composition.c">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\database.c">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\decomposition.c">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\seeking.c">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\streaming.c">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\amx.h">
@@ -508,6 +541,36 @@
     </ClInclude>
     <ClInclude Include="..\CFrameAction.h">
       <Filter>Header Files</Filter>
+	</ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\unicodedatabase.h">
+      <Filter>Third Party\UTF8Rewind</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\base.h">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\casemapping.h">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\codepoint.h">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\composition.h">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\database.h">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\decomposition.h">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\seeking.h">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\streaming.h">
+      <Filter>Third Party\UTF8Rewind\internal</Filter>
+	</ClInclude>
+    <ClInclude Include="..\..\third_party\utf8rewind\utf8rewind.h">
+      <Filter>Third Party\UTF8Rewind</Filter>
     </ClInclude>
     <ClInclude Include="..\..\public\resdk\common\hookchains.h">
       <Filter>ReSDK\common</Filter>

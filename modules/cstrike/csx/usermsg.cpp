@@ -24,9 +24,33 @@ bool ignore;
 CPlayer *pAttacker;
 
 
-void Client_ResetHUD(void* mValue){
-	if ( mPlayer ){ 
-		mPlayer->clearStats = gpGlobals->time + 0.25f;
+void Client_HLTV(void* mValue)
+{
+	static bool updateAllPlayers;
+
+	switch (mState++)
+	{
+	case 0:
+		{
+			updateAllPlayers = *(int *)mValue == 0;
+		}
+		break;
+	case 1:
+		{
+			bool isDefaultFOV = *(int *)mValue == 0;
+			if (updateAllPlayers && isDefaultFOV)
+			{
+				for (int playerIndex = 1; playerIndex <= gpGlobals->maxClients; playerIndex++)
+				{
+					if (!MF_IsPlayerIngame(playerIndex))
+						continue;
+
+					CPlayer *player = GET_PLAYER_POINTER_I(playerIndex);
+					player->ClearStats();
+				}
+			}
+		}
+		break;
 	}
 }
 

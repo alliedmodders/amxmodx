@@ -122,7 +122,6 @@ void CPlayer::Connect(const char* address ){
 		}
 	}
 	rank = 0;
-	clearStats = 0.0f;
 }
 
 void CPlayer::restartStats(bool all)
@@ -134,12 +133,23 @@ void CPlayer::restartStats(bool all)
 	memset(&life,0,sizeof(life));
 }
 
+void CPlayer::ClearStats()
+{
+	if (!isModuleActive())
+		return;
+	if (ignoreBots(pEdict))
+		return;
+	
+	if (rank != nullptr)
+		rank->updatePosition(&life);
+	restartStats(false);
+}
+
 void CPlayer::Init( int pi, edict_t* pe )
 {
     pEdict = pe;
     index = pi;
 	current = 0;
-	clearStats = 0.0f;
 	rank = 0;
 }
 

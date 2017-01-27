@@ -305,6 +305,7 @@ scripting_files = [
   'include/sockets.inc',
   'include/string.inc',
   'include/string_const.inc',
+  'include/string_stocks.inc',
   'include/tfcconst.inc',
   'include/tfcstats.inc',
   'include/tfcx.inc',

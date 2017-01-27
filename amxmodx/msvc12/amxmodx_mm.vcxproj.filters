@@ -690,6 +690,9 @@
     <None Include="..\..\plugins\include\string_const.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\plugins\include\string_stocks.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Object Include="..\Jit\helpers-x86.obj">

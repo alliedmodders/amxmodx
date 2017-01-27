@@ -410,6 +410,7 @@
     <None Include="..\..\plugins\include\datapack.inc" />
     <None Include="..\..\plugins\include\gameconfig.inc" />
     <None Include="..\..\plugins\include\string_const.inc" />
+    <None Include="..\..\plugins\include\string_stocks.inc" />
     <None Include="..\..\plugins\include\textparse_ini.inc" />
     <None Include="..\..\plugins\include\textparse_smc.inc" />
     <None Include="..\amxdefn.asm" />

@@ -169,11 +169,19 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 	return dest - start;
 }
 
+#define MAX_BUFFER_LENGTH 16384
+
+char *get_amxbuffer(int id)
+{
+	static char buffer[4][MAX_BUFFER_LENGTH];
+	return buffer[id];
+}
+
 char *get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 {
-	static char buffer[4][16384];
-	len = get_amxstring_r(amx, amx_addr, buffer[id], sizeof(buffer[id]) - 1);
-	return buffer[id];
+	auto buffer = get_amxbuffer(id);
+	len = get_amxstring_r(amx, amx_addr, buffer, MAX_BUFFER_LENGTH - 1);
+	return buffer;
 }
 
 char *get_amxstring_null(AMX *amx, cell amx_addr, int id, int& len)

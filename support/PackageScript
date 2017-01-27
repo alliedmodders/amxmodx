@@ -304,6 +304,7 @@ scripting_files = [
   'include/regex.inc',
   'include/sockets.inc',
   'include/string.inc',
+  'include/string_const.inc',
   'include/tfcconst.inc',
   'include/tfcstats.inc',
   'include/tfcx.inc',

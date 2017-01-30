@@ -1334,38 +1334,47 @@ static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
 		return strncmp(str1, str2, (size_t)params[3]);
 }
 
+// native strfind(const string[], const sub[], bool:ignorecase = false, pos = 0);
 static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 {
-	int len;
-	char *str = get_amxstring(amx, params[1], 0, len);
-	int sublen;
-	char *sub = get_amxstring(amx, params[2], 1, sublen);
+	enum args { arg_count, arg_source, arg_search, arg_ignorecase, arg_startpos };
 
-	bool igcase = params[3] ? true : false;
-	
-	if (igcase)
+	auto sourceLength = 0;
+	auto searchLength = 0;
+
+	auto source = get_amxstring(amx, params[arg_source], 0, sourceLength);
+	auto search = get_amxstring(amx, params[arg_search], 1, searchLength);
+
+	if (params[arg_ignorecase] != 0)
 	{
-		for (int i = 0; i < len; i++)
-		{
-			if (str[i] & (1<<5))
-				str[i] &= ~(1<<5);
-		}
-		for (int i = 0; i < sublen; i++)
-		{
-			if (str[i] & (1<<5))
-				str[i] &= ~(1<<5);			
-		}
+		auto sourceFolded = get_amxbuffer(2);
+		auto searchFolded = get_amxbuffer(3);
+
+		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+		sourceFolded[sourceLength] = '\0';
+		searchFolded[searchLength] = '\0';
+
+		source = sourceFolded;
+		search = searchFolded;
 	}
 
-	if (params[4] > len)
+	auto position = params[arg_startpos];
+	
+	if (position < 0 || position > sourceLength)
+	{
 		return -1;
+	}
 
-	char *find = strstr(str + params[4], sub);
+	auto find = strstr(source + position, search);
 
 	if (!find)
+	{
 		return -1;
+	}
 
-	return (find - str);
+	return (find - source);
 }
 
 static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)

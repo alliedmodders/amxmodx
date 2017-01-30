@@ -622,6 +622,7 @@ native strcmp(const string1[], const string2[], bool:ignorecase = false);
  * Compares two strings parts lexographically.
  *
  * @note Only available in 1.8.3 and above.
+ * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
  *
  * @param string1		First string (left).
  * @param string2		Second string (right).
@@ -632,7 +633,7 @@ native strcmp(const string1[], const string2[], bool:ignorecase = false);
  *						0 if string1 == string2
  *						1 if string1 > string2
  */
-native strncmp(const string1[], const string2[], num, bool:ignorecase=false);
+native strncmp(const string1[], const string2[], num, bool:ignorecase = false);
 
 /**
  * Parses an argument string to find the first argument. You can use this to

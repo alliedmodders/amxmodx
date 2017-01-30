@@ -1339,16 +1339,33 @@ static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
 	return strcmp(string1, string2);
 }
 
+// native strncmp(const string1[], const string2[], num, bool:ignorecase = false);
 static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
 {
-	int len;
-	char *str1 = get_amxstring(amx, params[1], 0, len);
-	char *str2 = get_amxstring(amx, params[2], 1, len);
+	enum args { arg_count, arg_string1, arg_string2, arg_numbytes, arg_ignorecase };
 
-	if (params[4])
-		return strncasecmp(str1, str2, (size_t)params[3]);
-	else
-		return strncmp(str1, str2, (size_t)params[3]);
+	auto string1Length = 0;
+	auto string2Length = 0;
+
+	auto string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
+	auto string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
+
+	if (params[arg_ignorecase] != 0)
+	{
+		auto string1Folded = get_amxbuffer(2);
+		auto string2Folded = get_amxbuffer(3);
+
+		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+		string2Folded[string1Length] = '\0';
+		string1Folded[string2Length] = '\0';
+
+		string1 = string1Folded;
+		string2 = string2Folded;
+	}
+
+	return strncmp(string1, string2, params[arg_numbytes]);
 }
 
 // native strfind(const string[], const sub[], bool:ignorecase = false, pos = 0);

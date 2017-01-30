@@ -606,6 +606,8 @@ native strfind(const string[], const sub[], bool:ignorecase = false, pos = 0);
 /**
  * Compares two strings lexographically.
  *
+ * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
+ *
  * @param string1		First string (left).
  * @param string2		Second string (right).
  * @param ignorecase	If true, comparison is case insensitive.
@@ -614,7 +616,7 @@ native strfind(const string[], const sub[], bool:ignorecase = false, pos = 0);
  *						0 if string1 == string2
  *						1 if string1 > string2
  */
-native strcmp(const string1[], const string2[], ignorecase=0);
+native strcmp(const string1[], const string2[], bool:ignorecase = false);
 
 /**
  * Compares two strings parts lexographically.

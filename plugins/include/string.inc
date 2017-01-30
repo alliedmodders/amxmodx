@@ -47,13 +47,15 @@ native contain(const source[], const string[]);
 /**
  * Tests whether a string is found inside another string with case ignoring.
  *
+ * @note This supports multi-byte characters (UTF-8) on comparison.
+ *
  * @param source		String to search in.
  * @param string		Substring to find inside the original string.
  *
  * @return				-1 on failure (no match found). Any other value
  *						indicates a position in the string where the match starts.
  */
-native containi(const source[],const string[]);
+native containi(const source[], const string[]);
 
 /**
  * Given a string, replaces the first occurrence of a search string with a 

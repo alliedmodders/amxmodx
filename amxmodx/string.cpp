@@ -11,6 +11,7 @@
 #include "amxmodx.h"
 #include "format.h"
 #include "binlog.h"
+#include <utf8rewind.h>
 
 const char* stristr(const char* str, const char* substr)
 {
@@ -390,27 +391,36 @@ static cell AMX_NATIVE_CALL contain(AMX *amx, cell *params) /* 2 param */
 	return -1;
 }
 
-static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params) /* 2 param */
+// native containi(const source[], const string[]);
+static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params)
 {
-	register cell *a = get_amxaddr(amx, params[2]);
-	register cell *b = get_amxaddr(amx, params[1]);
-	register cell *c = b;
-	cell* str = b;
-	cell* substr = a;
-	
-	while (*c)
+	enum args { arg_count, arg_source, arg_search };
+
+	auto sourceLength = 0;
+	auto searchLength = 0;
+
+	auto source = get_amxstring(amx, params[arg_source], 0, sourceLength);
+	auto search = get_amxstring(amx, params[arg_search], 1, searchLength);
+
+	if (sourceLength && searchLength)
 	{
-		if (tolower(*c) == tolower(*a))
+		auto sourceFolded = get_amxbuffer(2);
+		auto searchFolded = get_amxbuffer(3);
+
+		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+		sourceFolded[sourceLength] = '\0';
+		searchFolded[searchLength] = '\0';
+
+		auto result = strstr(sourceFolded, searchFolded);
+
+		if (result)
 		{
-			c++;
-			if (!*++a)
-				return b - str;
-		} else {
-			c = ++b;
-			a = substr;
+			return result - sourceFolded;
 		}
 	}
-	
+
 	return -1;
 }
 

@@ -80,6 +80,7 @@ native replace(text[], len, const what[], const with[]);
  *       that pushes old data out.
  *	
  * @note Only available in 1.8.3 and above.
+ * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
  *
  * @param text			String to perform search and replacements on.
  * @param maxlength		Maximum length of the string buffer.
@@ -89,7 +90,7 @@ native replace(text[], len, const what[], const with[]);
  *
  * @return				Number of replacements that were performed.
  */
-native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive=true);
+native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive = true);
 
 /**
  * Given a string, replaces the first occurrence of a search string with a 
@@ -101,6 +102,7 @@ native replace_string(text[], maxlength, const search[], const replace[], bool:c
  *       that pushes old data out.
  *	
  * @note Only available in 1.8.3 and above.
+ * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
  *
  * @param text			String to perform search and replacements on.
  * @param maxlength		Maximum length of the string buffer.
@@ -116,7 +118,7 @@ native replace_string(text[], maxlength, const search[], const replace[], bool:c
  *						the last replacement ended, or -1 if no replacements were
  *						made.
  */
-native replace_stringex(text[], maxlength, const search[], const replace[], searchLen=-1, replaceLen=-1, bool:caseSensitive=true);
+native replace_stringex(text[], maxlength, const search[], const replace[], searchLen = -1, replaceLen = -1, bool:caseSensitive = true);
 
 /**
  * Concatenates one string onto another.

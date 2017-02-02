@@ -170,8 +170,6 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 	return dest - start;
 }
 
-#define MAX_BUFFER_LENGTH 16384
-
 char *get_amxbuffer(int id)
 {
 	static char buffer[4][MAX_BUFFER_LENGTH];
@@ -311,58 +309,68 @@ static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 	return 0;
 }
 
+// native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive = true);
 static cell AMX_NATIVE_CALL replace_string(AMX *amx, cell *params)
 {
-	int len;
-	size_t maxlength = (size_t)params[2];
+	enum args { arg_count, arg_text, arg_maxlength, arg_search, arg_replace, arg_casesensitive };
 
-	char *text = get_amxstring(amx, params[1], 0, len);
-	const char *search = get_amxstring(amx, params[3], 1, len);
-	const char *replace = get_amxstring(amx, params[4], 2, len);
+	auto textLength    = 0;
+	auto searchLength  = 0;
+	auto replaceLength = 0;
 
-	bool caseSensitive = params[5] ? true : false;
+	auto text    = get_amxstring(amx, params[arg_text]   , 0, textLength);
+	auto search  = get_amxstring(amx, params[arg_search] , 1, searchLength);
+	auto replace = get_amxstring(amx, params[arg_replace], 2, replaceLength);
 
-	if (search[0] == '\0')
+	auto textMaxLength = params[arg_maxlength];
+	auto caseSensitive = params[arg_casesensitive] != 0;
+
+	if (!*search)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Cannot replace searches of empty strings.");
 		return -1;
 	}
 
-	int count = UTIL_ReplaceAll(text, maxlength + 1, search, replace, caseSensitive); // + EOS
+	auto count = UTIL_ReplaceAll(text, textMaxLength + 1, search, searchLength, replace, replaceLength, caseSensitive); // + EOS
 
-	set_amxstring(amx, params[1], text, maxlength);
+	set_amxstring(amx, params[arg_text], text, textMaxLength);
 
 	return count;
 }
 
+// native replace_stringex(text[], maxlength, const search[], const replace[], searchLen = -1, replaceLen = -1, bool:caseSensitive = true);
 static cell AMX_NATIVE_CALL replace_stringex(AMX *amx, cell *params)
 {
-	int len;
-	size_t maxlength = (size_t)params[2];
+	enum args { arg_count, arg_text, arg_maxlength, arg_search, arg_replace, arg_searchlen, arg_replacelen, arg_casesensitive };
 
-	char *text = get_amxstring(amx, params[1], 0, len);
-	const char *search = get_amxstring(amx, params[3], 1, len);
-	const char *replace = get_amxstring(amx, params[4], 2, len);
+	auto textLength    = 0;
+	auto searchLength  = 0;
+	auto replaceLength = 0;
 
-	size_t searchLen = (params[5] == -1) ? strlen(search) : (size_t)params[5];
-	size_t replaceLen = (params[6] == -1) ? strlen(replace) : (size_t)params[6];
+	auto text    = get_amxstring(amx, params[arg_text]   , 0, textLength);
+	auto search  = get_amxstring(amx, params[arg_search] , 1, searchLength);
+	auto replace = get_amxstring(amx, params[arg_replace], 2, replaceLength);
 
-	bool caseSensitive = params[7] ? true : false;
+	auto textMaxLength = params[arg_maxlength];
+	auto caseSensitive = params[arg_casesensitive] != 0;
 
-	if (searchLen == 0)
+	if (params[arg_searchlen]  != -1) { searchLength  = params[arg_searchlen]; }
+	if (params[arg_replacelen] != -1) { replaceLength = params[arg_replacelen]; }
+
+	if (searchLength <= 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Cannot replace searches of empty strings.");
 		return -1;
 	}
 
-	char *ptr = UTIL_ReplaceEx(text, maxlength + 1, search, searchLen, replace, replaceLen, caseSensitive); // + EOS
+	auto ptr = UTIL_ReplaceEx(text, textMaxLength + 1, search, searchLength, replace, replaceLength, caseSensitive); // + EOS
 
 	if (!ptr)
 	{
 		return -1;
 	}
 
-	set_amxstring(amx, params[1], text, maxlength);
+	set_amxstring(amx, params[arg_text], text, textMaxLength);
 
 	return ptr - text;
 }

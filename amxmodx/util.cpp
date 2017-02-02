@@ -9,6 +9,7 @@
 
 #include <time.h>
 #include "amxmodx.h"
+#include <utf8rewind.h>
 
 int UTIL_ReadFlags(const char* c) 
 {
@@ -454,11 +455,27 @@ int UTIL_CheckValidChar(D *c)
 	return 0;
 }
 
-unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive)
-{
-	size_t searchLen = strlen(search);
-	size_t replaceLen = strlen(replace);
+static char OutputBuffer1[MAX_BUFFER_LENGTH];
+static char OutputBuffer2[MAX_BUFFER_LENGTH];
 
+int utf8strncasecmp(const char *string1, const char *string2, size_t n)
+{
+	auto string1Length = utf8casefold(string1, strlen(string1), OutputBuffer1, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+	auto string2Length = utf8casefold(string2, strlen(string2), OutputBuffer2, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+	OutputBuffer1[string1Length] = '\0';
+	OutputBuffer2[string2Length] = '\0';
+
+	return n != 0 ? strncmp(OutputBuffer1, OutputBuffer2, n) : strcmp(OutputBuffer1, OutputBuffer2);
+}
+
+int utf8strcasecmp(const char *string1, const char *string2)
+{
+	return utf8strncasecmp(string1, string2, 0);
+}
+
+size_t UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive)
+{
 	char *newptr, *ptr = subject;
 	unsigned int total = 0;
 	while ((newptr = UTIL_ReplaceEx(ptr, maxlength, search, searchLen, replace, replaceLen, caseSensitive)) != NULL)
@@ -474,6 +491,11 @@ unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search
 	}
 
 	return total;
+}
+
+size_t UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive)
+{
+	return UTIL_ReplaceAll(subject, maxlength, search, strlen(search), replace, strlen(replace), caseSensitive);
 }
 
 template unsigned int strncopy<char, char>(char *, const char *, size_t);
@@ -534,7 +556,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 		/* If the search matches and the replace length is 0,
 		* we can just terminate the string and be done.
 		*/
-		if ((caseSensitive ? strcmp(subject, search) : strcasecmp(subject, search)) == 0 && replaceLen == 0)
+		if ((caseSensitive ? strcmp(subject, search) : utf8strcasecmp(subject, search)) == 0 && replaceLen == 0)
 		{
 			*subject = '\0';
 			return subject;
@@ -551,7 +573,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 	while (*ptr != '\0' && (browsed <= textLen - searchLen))
 	{
 		/* See if we get a comparison */
-		if ((caseSensitive ? strncmp(ptr, search, searchLen) : strncasecmp(ptr, search, searchLen)) == 0)
+		if ((caseSensitive ? strncmp(ptr, search, searchLen) : utf8strncasecmp(ptr, search, searchLen)) == 0)
 		{
 			if (replaceLen > searchLen)
 			{

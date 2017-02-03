@@ -563,6 +563,33 @@ native mb_ucfirst(string[], maxlength = 0);
 native mb_strtotitle(string[], maxlength = 0);
 
 /**
+ * Checks if the input string conforms to the category specified by the flags.
+ *
+ * @note This function can be used to check if the code points in a string are part
+ *       of a category. Valid flags are part of the UTF8C_* list of defines.
+ *       The category for a code point is defined as part of the entry in
+ *       UnicodeData.txt, the data file for the Unicode code point database.
+ * @note Flags parameter must be a combination of UTF8C_* flags or a single UTF8C_IS* flag.
+ *       In order to main backwards compatibility with POSIX functions like `isdigit`
+ *       and `isspace`, compatibility flags have been provided. Note, however, that
+ *       the result is only guaranteed to be correct for code points in the Basic
+ *       Latin range, between U+0000 and 0+007F. Combining a compatibility flag with
+ *       a regular category flag will result in undefined behavior.
+ * @note The function is greedy. This means it will try to match as many code
+ *       points with the matching category flags as possible and return the offset in
+ *       the input in bytes.
+ *
+ * @param input         The string to check
+ * @param input_size    Size of the string, use 1 to check one character regardless its size
+ * @param flags         Requested category, see UTF8C_* flags
+ * @param output_size   Number of bytes in the input that conform to the specified
+ *                      category flags
+ * @return              True if the whole input of `input_size` conforms to the specified
+ *                      category flags, false otherwise
+ */
+native bool:is_string_category(const input[], input_size, flags, &output_size = 0);
+
+/**
  * Returns whether a character is numeric.
  *
  * @note Multi-byte characters will always return false.

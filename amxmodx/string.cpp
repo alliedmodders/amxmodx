@@ -1606,6 +1606,38 @@ static cell AMX_NATIVE_CALL mb_strtotitle(AMX *amx, cell *params)
 	return set_amxstring_utf8(amx, params[arg_string], output, outputLength, outputMaxLength);
 }
 
+// native bool:is_string_category(const input[], input_size, flags, &output_size = 0);
+static cell AMX_NATIVE_CALL is_string_category(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_input, arg_inputsize, arg_flags, arg_outputsize };
+
+	auto inputLength = 0;
+	auto input = get_amxstring(amx, params[arg_input], 0, inputLength);
+
+	auto inputMaxLength = ke::Min(params[arg_inputsize], inputLength);
+	auto outputSize = get_amxaddr(amx, params[arg_outputsize]);
+
+	// User wants to check only one character whatever its size.
+	if (inputMaxLength <= 1)
+	{
+		// Gets the character length.
+		inputMaxLength = utf8seek(input, inputLength, input, 1, SEEK_CUR) - input;
+
+		// Truncated character.
+		if (inputMaxLength > inputLength)
+		{
+			*outputSize = 0;
+			return FALSE;
+		}
+	}
+
+	// Checks input with the given flags.
+	*outputSize = utf8iscategory(input, inputMaxLength, params[arg_flags]);
+
+	// If function consumed input, then it's a success.
+	return *outputSize == inputMaxLength ? TRUE : FALSE;
+}
+
 AMX_NATIVE_INFO string_Natives[] =
 {
 	{"add",				add},
@@ -1626,6 +1658,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"is_char_upper",	is_char_upper},
 	{"is_char_lower",	is_char_lower},
 	{"is_char_mb",		is_char_mb},
+	{"is_string_category", is_string_category },
 	{"get_char_bytes",	get_char_bytes},
 	{"mb_strtotitle",	mb_strtotitle},
 	{"mb_strtolower",	mb_strtolower},

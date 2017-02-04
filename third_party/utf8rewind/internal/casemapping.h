@@ -60,7 +60,7 @@ uint8_t casemapping_initialize(
 	uint8_t quickCheck, size_t locale,
 	int32_t* errors);
 
-size_t casemapping_execute(CaseMappingState* state, int32_t* errors, bool no_replacement = false);
+size_t casemapping_execute(CaseMappingState* state, int32_t* errors, int no_replacement);
 
 /*! \endcond */
 

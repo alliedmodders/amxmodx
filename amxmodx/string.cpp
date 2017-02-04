@@ -415,8 +415,8 @@ static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params)
 		auto sourceFolded = get_amxbuffer(2);
 		auto searchFolded = get_amxbuffer(3);
 
-		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
-		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 		sourceFolded[sourceLength] = '\0';
 		searchFolded[searchLength] = '\0';
@@ -649,8 +649,8 @@ static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params)
 	auto string1Folded = get_amxbuffer(2);
 	auto string2Folded = get_amxbuffer(3);
 
-	string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
-	string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+	string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 	string2Folded[string1Length] = '\0';
 	string1Folded[string2Length] = '\0';
@@ -776,7 +776,7 @@ static cell AMX_NATIVE_CALL mb_strtolower(AMX *amx, cell *params)
 	}
 
 	auto output = get_amxbuffer(1);
-	auto outputLength = utf8tolower(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+	auto outputLength = utf8tolower(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 	
 	output[outputLength] = '\0';
 
@@ -813,7 +813,7 @@ static cell AMX_NATIVE_CALL mb_strtoupper(AMX *amx, cell *params)
 	}
 
 	auto output = get_amxbuffer(1);
-	auto outputLength = utf8toupper(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+	auto outputLength = utf8toupper(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 	output[outputLength] = '\0';
 
@@ -1338,7 +1338,7 @@ static cell AMX_NATIVE_CALL mb_ucfirst(AMX *amx, cell *params)
 	if (firstChLength)
 	{
 		char output[8] = {};
-		auto outputLength = utf8toupper(source, firstChLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+		auto outputLength = utf8toupper(source, firstChLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 		// The converted character is either larger or smaller in bytes.
 		if (firstChLength != outputLength)
@@ -1424,8 +1424,8 @@ static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
 		auto string1Folded = get_amxbuffer(2);
 		auto string2Folded = get_amxbuffer(3);
 
-		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
-		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 		string2Folded[string1Length] = '\0';
 		string1Folded[string2Length] = '\0';
@@ -1453,8 +1453,8 @@ static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
 		auto string1Folded = get_amxbuffer(2);
 		auto string2Folded = get_amxbuffer(3);
 
-		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
-		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 		string2Folded[string1Length] = '\0';
 		string1Folded[string2Length] = '\0';
@@ -1482,8 +1482,8 @@ static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
 		auto sourceFolded = get_amxbuffer(2);
 		auto searchFolded = get_amxbuffer(3);
 
-		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
-		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 		sourceFolded[sourceLength] = '\0';
 		searchFolded[searchLength] = '\0';
@@ -1599,7 +1599,7 @@ static cell AMX_NATIVE_CALL mb_strtotitle(AMX *amx, cell *params)
 	}
 
 	auto output = get_amxbuffer(1);
-	auto outputLength = utf8totitle(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+	auto outputLength = utf8totitle(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
 	output[outputLength] = '\0';
 

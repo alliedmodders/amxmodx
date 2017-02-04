@@ -98,7 +98,7 @@ uint8_t casemapping_initialize(
 	return 1;
 }
 
-size_t casemapping_execute(CaseMappingState* state, int32_t* errors, bool no_replacement)
+size_t casemapping_execute(CaseMappingState* state, int32_t* errors, int no_replacement)
 {
 	uint8_t qc_casemapped = 0;
 	uint8_t bytes_needed = 0;

@@ -539,9 +539,6 @@
     <ClInclude Include="..\CoreConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CFrameAction.h">
-      <Filter>Header Files</Filter>
-	</ClInclude>
     <ClInclude Include="..\..\third_party\utf8rewind\unicodedatabase.h">
       <Filter>Third Party\UTF8Rewind</Filter>
     </ClInclude>
@@ -568,7 +565,7 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\utf8rewind\internal\streaming.h">
       <Filter>Third Party\UTF8Rewind\internal</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\..\third_party\utf8rewind\utf8rewind.h">
       <Filter>Third Party\UTF8Rewind</Filter>
     </ClInclude>
@@ -583,6 +580,9 @@
     </ClInclude>
     <ClInclude Include="..\..\public\resdk\mod_rehlds_api.h">
       <Filter>ReSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CFrameAction.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

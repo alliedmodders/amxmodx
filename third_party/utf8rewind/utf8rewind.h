@@ -769,7 +769,7 @@ UTF8_API size_t utf8len(const char* text);
 	\sa utf32toutf8
 	\sa widetoutf8
 */
-UTF8_API size_t utf16toutf8(const utf16_t* input, size_t inputSize, char* target, size_t targetSize, int32_t* errors, bool no_replacement = false);
+UTF8_API size_t utf16toutf8(const utf16_t* input, size_t inputSize, char* target, size_t targetSize, int32_t* errors);
 
 /*!
 	\brief Convert a UTF-32 encoded string to a UTF-8 encoded string.
@@ -1264,7 +1264,7 @@ UTF8_API size_t utf8envlocale();
 	\sa utf8totitle
 	\sa utf8casefold
 */
-UTF8_API size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement = false);
+UTF8_API size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, int no_replacement);
 
 /*!
 	\brief Convert UTF-8 encoded text to lowercase.
@@ -1360,7 +1360,7 @@ UTF8_API size_t utf8toupper(const char* input, size_t inputSize, char* target, s
 	\sa utf8totitle
 	\sa utf8casefold
 */
-UTF8_API size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement = false);
+UTF8_API size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, int no_replacement);
 
 /*!
 	\brief Convert UTF-8 encoded text to titlecase.
@@ -1443,7 +1443,7 @@ UTF8_API size_t utf8tolower(const char* input, size_t inputSize, char* target, s
 	\sa utf8toupper
 	\sa utf8casefold
 */
-UTF8_API size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement = false);
+UTF8_API size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, int no_replacement);
 
 /*!
 	\brief Remove case distinction from UTF-8 encoded text.
@@ -1548,7 +1548,7 @@ UTF8_API size_t utf8totitle(const char* input, size_t inputSize, char* target, s
 	\sa utf8toupper
 	\sa utf8totitle
 */
-UTF8_API size_t utf8casefold(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement = false);
+UTF8_API size_t utf8casefold(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, int no_replacement);
 
 /*!
 	\brief Check if a string is stable in the specified Unicode Normalization

@@ -95,7 +95,7 @@ size_t utf8len(const char* text)
 	return length;
 }
 
-size_t utf16toutf8(const utf16_t* input, size_t inputSize, char* target, size_t targetSize, int32_t* errors, bool no_replacement)
+size_t utf16toutf8(const utf16_t* input, size_t inputSize, char* target, size_t targetSize, int32_t* errors)
 {
 	const utf16_t* src;
 	size_t src_size;
@@ -600,7 +600,7 @@ UTF8_API size_t utf8envlocale()
 	return UTF8_LOCALE_DEFAULT;
 }
 
-size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement)
+size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, int no_replacement)
 {
 	CaseMappingState state;
 
@@ -647,7 +647,7 @@ size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t tar
 	return state.total_bytes_needed;
 }
 
-size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement)
+size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, int no_replacement)
 {
 	CaseMappingState state;
 
@@ -694,7 +694,7 @@ size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t tar
 	return state.total_bytes_needed;
 }
 
-size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement)
+size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, int no_replacement)
 {
 	CaseMappingState state;
 
@@ -770,7 +770,7 @@ size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t tar
 	return state.total_bytes_needed;
 }
 
-size_t utf8casefold(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement)
+size_t utf8casefold(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, int no_replacement)
 {
 	CaseMappingState state;
 

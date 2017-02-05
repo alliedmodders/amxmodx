@@ -200,15 +200,30 @@ static cell AMX_NATIVE_CALL TrieGetString(AMX *amx, cell *params)
 
 	int len;
 	const char *key = get_amxstring(amx, params[2], 0, len);
-	cell *pSize = get_amxaddr(amx, params[5]);
+
+	cell *refSize {};
+	if (*params / sizeof(cell) >= 5)
+	{
+		refSize = get_amxaddr(amx, params[5]);
+	}
 
 	StringHashMap<Entry>::Result r = t->map.find(key);
 	if (!r.found() || !r->value.isString())
 	{
+		if (refSize)
+		{
+			*refSize = 0;
+		}
+
 		return 0;
 	}
 
-	*pSize = (cell)set_amxstring_utf8(amx, params[3], r->value.chars(), strlen(r->value.chars()), params[4]);
+	auto size = (cell)set_amxstring_utf8(amx, params[3], r->value.chars(), strlen(r->value.chars()), params[4]);
+
+	if (refSize)
+	{
+		*refSize = size;
+	}
 
 	return 1;
 }
@@ -233,7 +248,12 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 	int len;
 	const char *key = get_amxstring(amx, params[2], 0, len);
 	cell *pValue = get_amxaddr(amx, params[3]);
-	cell *pSize = get_amxaddr(amx, params[5]);
+
+	cell *refSize {};
+	if (*params / sizeof(cell) >= 5)
+	{
+		refSize = get_amxaddr(amx, params[5]);
+	}
 
 	StringHashMap<Entry>::Result r = t->map.find(key);
 	if (!r.found() || !r->value.isArray())
@@ -241,14 +261,13 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 		return 0;
 	}
 
-	if (!r->value.array())
+	if (!r->value.array() || !params[4])
 	{
-		*pSize = 0;
-		return 1;
-	}
+		if (refSize)
+		{
+			*refSize = 0;
+		}
 
-	if (!params[4])
-	{
 		return 1;
 	}
 
@@ -256,11 +275,17 @@ static cell AMX_NATIVE_CALL TrieGetArray(AMX *amx, cell *params)
 	cell *base = r->value.array();
 
 	if (length > size_t(params[4]))
-		*pSize = params[4];
-	else
-		*pSize = length;
+	{
+		length = params[4];
+	}
 
-	memcpy(pValue, base, sizeof(cell) * pSize[0]);
+	if (refSize)
+	{
+		*refSize = length;
+	}
+
+	memcpy(pValue, base, sizeof(cell) * length);
+
 	return 1;
 }
 

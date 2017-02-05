@@ -1583,6 +1583,28 @@ static cell AMX_NATIVE_CALL fmt(AMX *amx, cell *params)
 	return 1;
 };
 
+// native mb_strtotitle(source[], maxlength = 0);
+static cell AMX_NATIVE_CALL mb_strtotitle(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string, arg_maxlength };
+
+	auto sourceLength = 0;
+	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+
+	auto outputMaxLength = params[arg_maxlength];
+
+	if (outputMaxLength <= 0)
+	{
+		outputMaxLength = sourceLength;
+	}
+
+	auto output = get_amxbuffer(1);
+	auto outputLength = utf8totitle(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+	output[outputLength] = '\0';
+
+	return set_amxstring_utf8(amx, params[arg_string], output, outputLength, outputMaxLength);
+}
 
 AMX_NATIVE_INFO string_Natives[] =
 {
@@ -1605,6 +1627,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"is_char_lower",	is_char_lower},
 	{"is_char_mb",		is_char_mb},
 	{"get_char_bytes",	get_char_bytes},
+	{"mb_strtotitle",	mb_strtotitle},
 	{"mb_strtolower",	mb_strtolower},
 	{"mb_strtoupper",	mb_strtoupper},
 	{"mb_ucfirst",		mb_ucfirst},

@@ -542,6 +542,27 @@ native ucfirst(string[]);
 native mb_ucfirst(string[], maxlength = 0);
 
 /**
+ * Performs a multi-byte safe (UTF-8) conversion of all chars in string to title case.
+ *
+ * @note Although most code points can be converted in-place, there are notable
+ *       exceptions and the final length can vary.
+ * @note Any type of punctuation can break up a word, even if this is
+ *       not grammatically valid. This happens because the titlecasing algorithm
+ *       does not and cannot take grammar rules into account.
+ * @note Examples:
+ *         The running man                      | The Running Man
+ *	       NATO Alliance                        | Nato Alliance
+ *	       You're amazing at building libraries | You'Re Amazing At Building Libraries
+ *
+ * @param string		The string to convert.
+ * @param maxlength		Optional size of the buffer. If 0, the length of the original string
+ *                      will be used instead.
+ *
+ * @return				Number of bytes written.
+ */
+native mb_strtotitle(string[], maxlength = 0);
+
+/**
  * Returns whether a character is numeric.
  *
  * @note Multi-byte characters will always return false.

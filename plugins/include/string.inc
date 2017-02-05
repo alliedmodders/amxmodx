@@ -528,6 +528,20 @@ native mb_strtoupper(string[], maxlength = 0);
 native ucfirst(string[]);
 
 /**
+ * Performs a multi-byte safe (UTF-8) conversion of a string's first character to upper case.
+ *
+ * @note Although most code points can be converted in-place, there are notable
+ *       exceptions and the final length can vary.
+ *
+ * @param string		The string to convert.
+ * @param maxlength		Optional size of the buffer. If 0, the length of the original string
+ *                      will be used instead.
+ *
+ * @return				Number of bytes written.
+ */
+native mb_ucfirst(string[], maxlength = 0);
+
+/**
  * Returns whether a character is numeric.
  *
  * @note Multi-byte characters will always return false.

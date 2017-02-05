@@ -1317,6 +1317,46 @@ static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 	return 1;
 }
 
+// native mb_ucfirst(string[], maxlength = 0);
+static cell AMX_NATIVE_CALL mb_ucfirst(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string, arg_maxlength };
+
+	auto sourceLength = 0;
+	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+
+	auto outputMaxLength = params[arg_maxlength];
+
+	if (outputMaxLength <= 0)
+	{
+		outputMaxLength = sourceLength;
+	}
+
+	// Retrieves the first character length in bytes.
+	auto firstChLength = utf8seek(source, sourceLength, source, 1, SEEK_CUR) - source;
+
+	if (firstChLength)
+	{
+		char output[8] = {};
+		auto outputLength = utf8toupper(source, firstChLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+		// The converted character is either larger or smaller in bytes.
+		if (firstChLength != outputLength)
+		{
+			// Calculates the new string length and makes sure we don't go over the buffer size (fairly unlikely).
+			sourceLength = ke::Min<int>(sourceLength + (outputLength - firstChLength), outputMaxLength);
+
+			// Move data forward or backward minus the first character (whathever its size).
+			memmove(source + outputLength, source + firstChLength, (sourceLength - outputLength) * sizeof(char));	
+		}
+
+		// Copy the new character at the start of the string.
+		memcpy(source, output, outputLength);
+	}
+
+	return set_amxstring_utf8(amx, params[arg_string], source, sourceLength, outputMaxLength);
+}
+
 static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 {
 	int len;
@@ -1567,6 +1607,7 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"get_char_bytes",	get_char_bytes},
 	{"mb_strtolower",	mb_strtolower},
 	{"mb_strtoupper",	mb_strtoupper},
+	{"mb_ucfirst",		mb_ucfirst},
 	{"num_to_str",		numtostr},
 	{"numtostr",		numtostr},
 	{"parse",			parse},

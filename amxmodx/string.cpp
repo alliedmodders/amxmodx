@@ -760,6 +760,29 @@ static cell AMX_NATIVE_CALL strtolower(AMX *amx, cell *params) /* 1 param */
 	return cptr - begin;
 }
 
+// native mb_strtolower(source[], maxlength = 0);
+static cell AMX_NATIVE_CALL mb_strtolower(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string, arg_maxlength };
+
+	auto sourceLength = 0;
+	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+
+	auto outputMaxLength = params[arg_maxlength];
+
+	if (outputMaxLength <= 0)
+	{
+		outputMaxLength = sourceLength;
+	}
+
+	auto output = get_amxbuffer(1);
+	auto outputLength = utf8tolower(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+	
+	output[outputLength] = '\0';
+
+	return set_amxstring_utf8(amx, params[arg_string], output, outputLength, outputMaxLength);
+}
+
 static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params) /* 1 param */
 {
 	cell *cptr = get_amxaddr(amx, params[1]);
@@ -772,6 +795,29 @@ static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params) /* 1 param */
 	}
 	
 	return cptr - begin;
+}
+
+// native mb_strtoupper(source[], maxlength = 0);
+static cell AMX_NATIVE_CALL mb_strtoupper(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string, arg_maxlength };
+
+	auto sourceLength = 0;
+	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+	
+	auto outputMaxLength = params[arg_maxlength];
+
+	if (outputMaxLength <= 0)
+	{
+		outputMaxLength = sourceLength;
+	}
+
+	auto output = get_amxbuffer(1);
+	auto outputLength = utf8toupper(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+	output[outputLength] = '\0';
+
+	return set_amxstring_utf8(amx, params[arg_string], output, outputLength, outputMaxLength);
 }
 
 int fo_numargs(AMX *amx)
@@ -1519,6 +1565,8 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"is_char_lower",	is_char_lower},
 	{"is_char_mb",		is_char_mb},
 	{"get_char_bytes",	get_char_bytes},
+	{"mb_strtolower",	mb_strtolower},
+	{"mb_strtoupper",	mb_strtoupper},
 	{"num_to_str",		numtostr},
 	{"numtostr",		numtostr},
 	{"parse",			parse},

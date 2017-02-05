@@ -482,12 +482,42 @@ native trim(text[]);
 native strtolower(string[]);
 
 /**
+ * Performs a multi-byte safe (UTF-8) conversion of all chars in string to lower case.
+ *
+ * @note Although most code points can be converted in-place, there are notable
+ *       exceptions and the final length can vary.
+ * @note Case mapping is not reversible. That is, toUpper(toLower(x)) != toLower(toUpper(x)).
+ *
+ * @param string		The string to convert.
+ * @param maxlength		Optional size of the buffer. If 0, the length of the original string
+ *                      will be used instead.
+ *
+ * @return				Number of bytes written.
+ */
+native mb_strtolower(string[], maxlength = 0);
+
+/**
  * Converts all chars in string to upper case.
  *
  * @param string		The string to convert.
  * @return				Number of bytes written.
  */
 native strtoupper(string[]);
+
+/**
+ * Performs a multi-byte safe (UTF-8) conversion of all chars in string to upper case.
+ *
+ * @note Although most code points can be converted in-place, there are notable
+ *       exceptions and the final length can vary.
+ * @note Case mapping is not reversible. That is, toUpper(toLower(x)) != toLower(toUpper(x)).
+ *
+ * @param string		The string to convert.
+ * @param maxlength		Optional size of the buffer. If 0, the length of the original string
+ *                      will be used instead.
+ *
+ * @return				Number of bytes written.
+ */
+native mb_strtoupper(string[], maxlength = 0);
 
 /**
  * Make a string's first character uppercase.
@@ -692,4 +722,3 @@ native split_string(const source[], const split[], part[], partLen);
 
 // Always keep this at the bottom of this file.
 #include <string_stocks>
-

@@ -11,6 +11,11 @@ lib.compiler.includes += [
   os.path.join(builder.sourcePath, 'third_party', 'utf8rewind'),
 ]
 
+if builder.target_platform == 'windows':
+  lib.compiler.cflags += [
+    '/TP',
+  ]
+
 lib.sources += [
   'utf8rewind.c',
   'unicodedatabase.c',

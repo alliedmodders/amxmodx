@@ -180,15 +180,42 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">$(IntDir)hashing\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">$(IntDir)hashing\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\utf8rewind\internal\casemapping.c" />
-    <ClCompile Include="..\..\third_party\utf8rewind\internal\codepoint.c" />
-    <ClCompile Include="..\..\third_party\utf8rewind\internal\composition.c" />
-    <ClCompile Include="..\..\third_party\utf8rewind\internal\database.c" />
-    <ClCompile Include="..\..\third_party\utf8rewind\internal\decomposition.c" />
-    <ClCompile Include="..\..\third_party\utf8rewind\internal\seeking.c" />
-    <ClCompile Include="..\..\third_party\utf8rewind\internal\streaming.c" />
-    <ClCompile Include="..\..\third_party\utf8rewind\unicodedatabase.c" />
-    <ClCompile Include="..\..\third_party\utf8rewind\utf8rewind.c" />
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\casemapping.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\codepoint.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\composition.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\database.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\decomposition.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\seeking.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\streaming.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\unicodedatabase.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\utf8rewind.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\third_party\zlib\adler32.c">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">$(IntDir)zlib\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">$(IntDir)zlib\</ObjectFileName>

@@ -95,7 +95,7 @@ size_t utf8len(const char* text)
 	return length;
 }
 
-size_t utf16toutf8(const utf16_t* input, size_t inputSize, char* target, size_t targetSize, int32_t* errors)
+size_t utf16toutf8(const utf16_t* input, size_t inputSize, char* target, size_t targetSize, int32_t* errors, bool no_replacement)
 {
 	const utf16_t* src;
 	size_t src_size;
@@ -600,13 +600,20 @@ UTF8_API size_t utf8envlocale()
 	return UTF8_LOCALE_DEFAULT;
 }
 
-size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors)
+size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement)
 {
 	CaseMappingState state;
 
 	/* Validate parameters */
 
-	UTF8_VALIDATE_PARAMETERS_CHAR(char, 0);
+	if (no_replacement)
+	{
+		UTF8_VALIDATE_PARAMETERS_CHAR_NOCR(char, 0);
+	}
+	else
+	{
+		UTF8_VALIDATE_PARAMETERS_CHAR(char, 0);
+	}
 
 	/* Initialize case mapping */
 
@@ -627,7 +634,7 @@ size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t tar
 	{
 		size_t converted;
 
-		if ((converted = casemapping_execute(&state, errors)) == 0)
+		if ((converted = casemapping_execute(&state, errors, no_replacement)) == 0)
 		{
 			return state.total_bytes_needed;
 		}
@@ -640,13 +647,20 @@ size_t utf8toupper(const char* input, size_t inputSize, char* target, size_t tar
 	return state.total_bytes_needed;
 }
 
-size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors)
+size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement)
 {
 	CaseMappingState state;
 
 	/* Validate parameters */
 
-	UTF8_VALIDATE_PARAMETERS_CHAR(char, 0);
+	if (no_replacement)
+	{
+		UTF8_VALIDATE_PARAMETERS_CHAR_NOCR(char, 0);
+	}
+	else
+	{
+		UTF8_VALIDATE_PARAMETERS_CHAR(char, 0);
+	}
 
 	/* Initialize case mapping */
 
@@ -667,7 +681,7 @@ size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t tar
 	{
 		size_t converted;
 
-		if ((converted = casemapping_execute(&state, errors)) == 0)
+		if ((converted = casemapping_execute(&state, errors, no_replacement)) == 0)
 		{
 			return state.total_bytes_needed;
 		}
@@ -680,13 +694,20 @@ size_t utf8tolower(const char* input, size_t inputSize, char* target, size_t tar
 	return state.total_bytes_needed;
 }
 
-size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors)
+size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement)
 {
 	CaseMappingState state;
 
 	/* Validate parameters */
 
-	UTF8_VALIDATE_PARAMETERS_CHAR(char, 0);
+	if (no_replacement)
+	{
+		UTF8_VALIDATE_PARAMETERS_CHAR_NOCR(char, 0);
+	}
+	else
+	{
+		UTF8_VALIDATE_PARAMETERS_CHAR(char, 0);
+	}
 
 	/* Initialize case mapping */
 
@@ -707,7 +728,7 @@ size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t tar
 	{
 		size_t converted;
 		
-		if ((converted = casemapping_execute(&state, errors)) == 0)
+		if ((converted = casemapping_execute(&state, errors, no_replacement)) == 0)
 		{
 			return state.total_bytes_needed;
 		}
@@ -749,13 +770,20 @@ size_t utf8totitle(const char* input, size_t inputSize, char* target, size_t tar
 	return state.total_bytes_needed;
 }
 
-size_t utf8casefold(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors)
+size_t utf8casefold(const char* input, size_t inputSize, char* target, size_t targetSize, size_t locale, int32_t* errors, bool no_replacement)
 {
 	CaseMappingState state;
 
 	/* Validate parameters */
 
-	UTF8_VALIDATE_PARAMETERS_CHAR(char, 0);
+	if (no_replacement)
+	{
+		UTF8_VALIDATE_PARAMETERS_CHAR_NOCR(char, 0);
+	}
+	else
+	{
+		UTF8_VALIDATE_PARAMETERS_CHAR(char, 0);
+	}
 
 	/* Initialize case mapping */
 
@@ -867,6 +895,12 @@ size_t utf8casefold(const char* input, size_t inputSize, char* target, size_t ta
 				goto invaliddata;
 			}
 
+			/* If option set, we want to avoid invalid byte to be replaced. Forces size to 1 to read the next byte. */
+			if (no_replacement && state.last_code_point == REPLACEMENT_CHARACTER)
+			{
+				state.last_code_point_size = 1;
+			}
+
 			/* Move source cursor */
 
 			if (state.src_size >= state.last_code_point_size)
@@ -907,7 +941,23 @@ size_t utf8casefold(const char* input, size_t inputSize, char* target, size_t ta
 			{
 				/* Write code point unchanged to output */
 
-				if (!(bytes_needed = codepoint_write(state.last_code_point, &state.dst, &state.dst_size)))
+				/* If option set, we want to write any invalid byte as it is. */
+				if (no_replacement && state.last_code_point == REPLACEMENT_CHARACTER)
+				{
+					bytes_needed = 1;
+
+					if (state.dst != 0)
+					{
+						if (state.dst_size < bytes_needed)
+						{
+							goto outofspace;
+						}
+
+						*state.dst = *(state.src - bytes_needed);
+						state.dst += bytes_needed;
+					}	
+				}
+				else if (!(bytes_needed = codepoint_write(state.last_code_point, &state.dst, &state.dst_size)))
 				{
 					goto outofspace;
 				}

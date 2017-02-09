@@ -81,6 +81,33 @@
 		} \
 	}
 
+#define UTF8_VALIDATE_PARAMETERS_CHAR_NOCR(_inputType, _result) \
+	if (input == 0) { \
+		UTF8_SET_ERROR(INVALID_DATA); \
+		return _result; \
+	} \
+	else if (inputSize < sizeof(_inputType)) { \
+		UTF8_SET_ERROR(INVALID_DATA); \
+		return _result; \
+	} \
+	if (target != 0 && targetSize == 0) { \
+		UTF8_SET_ERROR(NOT_ENOUGH_SPACE); \
+		return _result; \
+	} \
+	if ((char*)input == target) { \
+		UTF8_SET_ERROR(OVERLAPPING_PARAMETERS); \
+		return _result; \
+	} \
+	{ \
+		char* input_center = (char*)input + (inputSize / 2); \
+		char* target_center = target + (targetSize / 2); \
+		size_t delta = (size_t)((input_center > target_center) ? (input_center - target_center) : (target_center - input_center)); \
+		if (delta < (inputSize + targetSize) / 2) { \
+			UTF8_SET_ERROR(OVERLAPPING_PARAMETERS); \
+			return _result; \
+		} \
+	}
+
 #define UTF8_VALIDATE_PARAMETERS(_inputType, _outputType, _result) \
 	if (input == 0) { \
 		UTF8_SET_ERROR(INVALID_DATA); \

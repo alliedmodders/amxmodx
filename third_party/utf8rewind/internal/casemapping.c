@@ -98,7 +98,7 @@ uint8_t casemapping_initialize(
 	return 1;
 }
 
-size_t casemapping_execute(CaseMappingState* state, int32_t* errors)
+size_t casemapping_execute(CaseMappingState* state, int32_t* errors, bool no_replacement)
 {
 	uint8_t qc_casemapped = 0;
 	uint8_t bytes_needed = 0;
@@ -118,15 +118,23 @@ size_t casemapping_execute(CaseMappingState* state, int32_t* errors)
 
 	if (state->last_code_point == REPLACEMENT_CHARACTER)
 	{
-		/* Get code point properties */
+		/* If option set, we want to avoid invalid byte to be replaced. Forces size to 1 to read the next byte. */
+		if (no_replacement)
+		{
+			state->last_code_point_size = 1;
+		}
+		else
+		{
+			/* Get code point properties */
 
-		state->last_canonical_combining_class = CCC_NOT_REORDERED;
-		state->last_general_category = UTF8_CATEGORY_SYMBOL_OTHER;
+			state->last_canonical_combining_class = CCC_NOT_REORDERED;
+			state->last_general_category = UTF8_CATEGORY_SYMBOL_OTHER;
 
-		resolved = REPLACEMENT_CHARACTER_STRING;
-		bytes_needed = REPLACEMENT_CHARACTER_STRING_LENGTH;
+			resolved = REPLACEMENT_CHARACTER_STRING;
+			bytes_needed = REPLACEMENT_CHARACTER_STRING_LENGTH;
 
-		goto writeresolved;
+			goto writeresolved;
+		}
 	}
 
 	if (state->locale == UTF8_LOCALE_TURKISH_AND_AZERI_LATIN)
@@ -471,7 +479,14 @@ writeregular:
 			{
 				/* All other code points in Basic Latin are unaffected by case mapping */
 
-				*state->dst = (char)state->last_code_point;
+				if (no_replacement && state->last_code_point == REPLACEMENT_CHARACTER)
+				{
+					*state->dst = (char)*(state->src - state->last_code_point_size);
+				}
+				else
+				{
+					*state->dst = (char)state->last_code_point;
+				}
 			}
 
 			state->dst++;

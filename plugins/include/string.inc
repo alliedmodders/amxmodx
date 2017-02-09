@@ -358,13 +358,15 @@ native equal(const a[],const b[],c=0);
 /**
  * Returns whether two strings are equal with case ignoring.
  *
+ * @note This supports multi-byte characters (UTF-8) on comparison.
+ *
  * @param a				First string (left).
  * @param b				Second string (right).
  * @param c				Number of characters to compare.
  *
  * @return				True if equal, false otherwise.
  */
-native equali(const a[],const b[],c=0);
+native equali(const a[], const b[], c = 0);
 
 /**
  * Copies one string to another string.

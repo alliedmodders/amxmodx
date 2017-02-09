@@ -627,30 +627,34 @@ static cell AMX_NATIVE_CALL equal(AMX *amx, cell *params) /* 3 param */
 	return ret ? 0 : 1;
 }
 
-static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params) /* 3 param */
+// native equali(const a[], const b[], c = 0);
+static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params)
 {
-	cell *a = get_amxaddr(amx, params[1]);
-	cell *b = get_amxaddr(amx, params[2]);
-	int f, l, c = params[3];
-	
-	if (c)
-	{
-		do
-		{
-			f = tolower(*a++);
-			l = tolower(*b++);
-		} while (--c && l && f && f == l);
-		
-		return (f - l) ? 0 : 1;
-	}
+	enum args { arg_count, arg_string1, arg_string2, arg_numbytes };
 
-	do
+	auto string1Length = 0;
+	auto string2Length = 0;
+
+	auto string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
+	auto string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
+
+	auto string1Folded = get_amxbuffer(2);
+	auto string2Folded = get_amxbuffer(3);
+
+	string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+	string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+	string2Folded[string1Length] = '\0';
+	string1Folded[string2Length] = '\0';
+
+	if (params[arg_numbytes] > 0)
 	{
-		f = tolower(*a++);
-		l = tolower(*b++);
-	} while (f && f == l);
-	
-	return (f - l) ? 0 : 1;
+		return strncmp(string1Folded, string2Folded, params[arg_numbytes]) == 0 ? TRUE : FALSE;
+	}
+	else
+	{
+		return strcmp(string1Folded, string2Folded) == 0 ? TRUE : FALSE;
+	}
 }
 
 static cell g_cpbuf[4096];

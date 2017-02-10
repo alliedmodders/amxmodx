@@ -138,6 +138,10 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 void UTIL_TrimLeft(char *buffer);
 void UTIL_TrimRight(char *buffer);
 
+char* utf8stristr(const char *string1, const char *string2);
+int utf8strncasecmp(const char *string1, const char *string2, size_t n);
+int utf8strcasecmp(const char *string1, const char *string2);
+
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t))])
 #define GET_PLAYER_POINTER_I(i) (&g_players[i])

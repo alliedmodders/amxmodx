@@ -2267,7 +2267,7 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 			{
 				if (flags & 64)
 				{
-					if (stristr(pPlayer->name.chars(), sptemp) == NULL)
+					if (utf8stristr(pPlayer->name.chars(), sptemp) == NULL)
 						continue;
 				}
 				else if (strstr(pPlayer->name.chars(), sptemp) == NULL)
@@ -2301,7 +2301,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 
 	// Switch for the l flag
 	if (flags & 2048)
-		func = strcasecmp;
+		func = utf8strcasecmp;
 	else
 		func = strcmp;
 
@@ -2327,7 +2327,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 			{
 				if (flags & 2048)
 				{
-					if (stristr(pPlayer->name.chars(), sptemp) == NULL)
+					if (utf8stristr(pPlayer->name.chars(), sptemp) == NULL)
 						continue;
 				}
 				else if (strstr(pPlayer->name.chars(), sptemp) == NULL)

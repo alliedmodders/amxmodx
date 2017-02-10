@@ -458,6 +458,17 @@ int UTIL_CheckValidChar(D *c)
 static char OutputBuffer1[MAX_BUFFER_LENGTH];
 static char OutputBuffer2[MAX_BUFFER_LENGTH];
 
+char* utf8stristr(const char *string1, const char *string2)
+{
+	auto string1Length = utf8casefold(string1, strlen(string1), OutputBuffer1, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+	auto string2Length = utf8casefold(string2, strlen(string2), OutputBuffer2, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);
+
+	OutputBuffer1[string1Length] = '\0';
+	OutputBuffer2[string2Length] = '\0';
+
+	return strstr(OutputBuffer1, OutputBuffer2);
+}
+
 int utf8strncasecmp(const char *string1, const char *string2, size_t n)
 {
 	auto string1Length = utf8casefold(string1, strlen(string1), OutputBuffer1, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, true);

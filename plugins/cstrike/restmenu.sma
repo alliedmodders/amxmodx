@@ -17,11 +17,19 @@
 
 new const PluginName[] = "Restrict Weapons";
 
+const MaxAliasNameLength    = 16;
+const MaxItemNameLength     = 32;
+const MaxMenuTitleLength    = 48;
+const MaxCommandAliasLength = 12;
+const MaxConfigFileLength   = 48;
+const MaxConsoleLength      = 128;
+const MaxMapLength          = 32;
+
 new bool:BlockedItems[CSI_MAX_COUNT];
 new bool:ModifiedItem;
 
 new MenuPosition[MAX_PLAYERS + 1];
-new ConfigFile[PLATFORM_MAX_PATH];
+new ConfigFilePath[PLATFORM_MAX_PATH];
 
 new RestrictedBotWeapons[] = "00000000000000000000000000";
 new RestrictedBotEquipAmmos[] = "000000000";
@@ -32,26 +40,28 @@ new CvarPointerRestrictedEquipAmmos;
 
 enum MenuTitle
 {
-	m_Title[24],
-	m_Alias[12],
+	m_Title[MaxMenuTitleLength],
+	m_Alias[MaxCommandAliasLength],
 };
+
+#define TITLE(%0)  "MENU_TITLE_" + #%0
 
 new const MenuInfos[][MenuTitle] =
 {
-	{ "MENU_TITLE_HANDGUNS"   , "pistol"  },
-	{ "MENU_TITLE_SHOTGUNS"   , "shotgun" },
-	{ "MENU_TITLE_SUBMACHINES", "sub"     },
-	{ "MENU_TITLE_RIFLES"     , "rifle"   },
-	{ "MENU_TITLE_SNIPERS"    , "sniper"  },
-	{ "MENU_TITLE_MACHINE"    , "machine" },
-	{ "MENU_TITLE_EQUIPMENT"  , "equip"   },
-	{ "MENU_TITLE_AMMUNITION" , "ammo"    },
+	{ TITLE(HANDGUNS)    , "pistol"  },
+	{ TITLE(SHOTGUNS)    , "shotgun" },
+	{ TITLE(SUBMACHINES) , "sub"     },
+	{ TITLE(RIFLES)      , "rifle"   },
+	{ TITLE(SNIPERS)     , "sniper"  },
+	{ TITLE(MACHINE)     , "machine" },
+	{ TITLE(EQUIPMENT)   , "equip"   },
+	{ TITLE(AMMUNITION)  , "ammo"    },
 }
 
 enum MenuItem
 {
 	m_Index,
-	m_Name[32],
+	m_Name[MaxItemNameLength],
 };
 
 #define ITEM(%0)  { CSI_%0, "MENU_ITEM_" + #%0 }
@@ -95,17 +105,17 @@ public OnConfigsExecuted()
 
 	if (!!get_pcvar_num(CvarPointerAllowMapSettings))
 	{
-		new mapName[32];
+		new mapName[MaxMapLength];
 		get_mapname(mapName, charsmax(mapName));
 
-		formatex(ConfigFile, charsmax(ConfigFile), "%s/%s_%s.%s", configsDir, configFile, mapName, configFileExt);
+		formatex(ConfigFilePath, charsmax(ConfigFilePath), "%s/%s_%s.%s", configsDir, configFile, mapName, configFileExt);
 	}
 	else
 	{
-		formatex(ConfigFile, charsmax(ConfigFile), "%s/%s.%s", configsDir, configFile, configFileExt);
+		formatex(ConfigFilePath, charsmax(ConfigFilePath), "%s/%s.%s", configsDir, configFile, configFileExt);
 	}
 
-	loadSettings(ConfigFile);
+	loadSettings(ConfigFilePath);
 }
 
 public CS_OnBuyAttempt(player, itemid)
@@ -118,13 +128,13 @@ public CS_OnBuyAttempt(player, itemid)
 	return PLUGIN_CONTINUE;
 }
 
-public blockcommand(id) // Might be used by others plugins, so keep this for backward compatibility.
+public blockcommand(const id) // Might be used by others plugins, so keep this for backward compatibility.
 {
 	client_print(id, print_center, "%l", "RESTRICTED_ITEM");
 	return PLUGIN_HANDLED;
 }
 
-@ClientCommand_MainMenu(id, level, cid)
+@ClientCommand_MainMenu(const id, const level, const cid)
 {
 	if (cmd_access(id, level, cid, 1))
 	{
@@ -134,68 +144,81 @@ public blockcommand(id) // Might be used by others plugins, so keep this for bac
 	return PLUGIN_HANDLED;
 }
 
-@ConsoleCommand_Restrict(id, level, cid)
+@ConsoleCommand_Restrict(const id, const level, const cid)
 {
 	if (!cmd_access(id, level, cid, 1))
 	{
 		return PLUGIN_HANDLED;
 	}
 
-	new command[8];
-	read_argv(1, command, charsmax(command));
+	new const argumentsCount = read_argc();
 
-	trim(command);
-	strtolower(command);
+	if (argumentsCount <= 1) // Main command only, no arguments.
+	{
+		goto usage;
+	}
 
-	new const ch1 = command[0];
-	new const ch2 = command[1];
+	new action[8];
+	new argumentIndex;
+	new const actionLength = read_argv(++argumentIndex, action, charsmax(action)) - trim(action);
+
+	if (!actionLength || !isalpha(action[0])) // Empty argument or first character is not a letter.
+	{
+		goto usage;
+	}
+
+	new const ch1 = char_to_lower(action[0]);
+	new const ch2 = char_to_lower(action[1]);
 
 	if (ch1 == 'o' && (ch2 == 'n' || ch2 == 'f'))  // [on]/[of]f
 	{
-		new const bool:status = (ch2 == 'n');
-		new const numArgs = read_argc();
+		new const bool:restricted = (ch2 == 'n');
 
-		if (numArgs <= 2) // No arguments, all items are concerned.
+		if (argumentsCount <= ++argumentIndex) // No arguments, all items are concerned.
 		{
-			arrayset(BlockedItems, status, sizeof(BlockedItems));
-			console_print(id, "%l", status ? "EQ_WE_RES" : "EQ_WE_UNRES");
+			arrayset(BlockedItems, restricted, sizeof BlockedItems);
+			console_print(id, "%l", restricted ? "EQ_WE_RES" : "EQ_WE_UNRES");
 			ModifiedItem = true;
 		}
 		else // Either item type or specific alias
 		{
-			new commands[128];
-			new itemName[64];
-			new argument[16];
+			new commands[MaxConsoleLength];
+			new itemName[MaxItemNameLength];
+			new argument[MaxAliasNameLength];
 			new bool:found;
 			new position, class;
 			new itemid, slot;
+			new commandLength;
 
-			for (new argindex = 2; argindex < numArgs; ++argindex, position = 0)
+			for (; argumentIndex < argumentsCount; ++argumentIndex, position = 0)
 			{
-				read_argv(argindex, commands, charsmax(commands));
+                // Ignore if the argument is empty or the first character is not a letter.
+				if ((commandLength = read_argv(argumentIndex, commands, charsmax(commands)) - trim(commands)) <= 0 || !isalpha(commands[0]))
+				{
+					continue;
+				}
 
-				trim(commands);
 				strtolower(commands);
 
 				// In case argument contains several input between quotes.
-				while ((position = argparse(commands, position, argument, charsmax(argument))) != -1)
+				while (position != commandLength && (position = argparse(commands, position, argument, charsmax(argument))) != -1)
 				{
 					if ((class = findMenuAliasId(argument)) != -1)
 					{
 						for (slot = 0; slot < sizeof ItemsInfos[] && (itemid = ItemsInfos[class][slot][m_Index]) != CSI_NONE; ++slot)
 						{
-							BlockedItems[itemid] = status;
+							BlockedItems[itemid] = restricted;
 						}
 
-						console_print(id, "%l %l %l", MenuInfos[class], (class < 6) ? "HAVE_BEEN" : "HAS_BEEN", status ? "RESTRICTED" : "UNRESTRICTED");
+						console_print(id, "%l %l %l", MenuInfos[class], (class < 6) ? "HAVE_BEEN" : "HAS_BEEN", restricted ? "RESTRICTED" : "UNRESTRICTED");
 						ModifiedItem = found = true;
 					}
 					else if ((itemid = cs_get_item_id(argument)) != CSI_NONE)
 					{
-						BlockedItems[itemid] = status;
+						BlockedItems[itemid] = restricted;
 						findItemFullName(itemid, itemName, charsmax(itemName));
 
-						console_print(id, "%l %l %l", itemName, "HAS_BEEN", status ? "RESTRICTED" : "UNRESTRICTED");
+						console_print(id, "%l %l %l", itemName, "HAS_BEEN", restricted ? "RESTRICTED" : "UNRESTRICTED");
 						ModifiedItem = found = true;
 					}
 				}
@@ -209,61 +232,61 @@ public blockcommand(id) // Might be used by others plugins, so keep this for bac
 	}
 	else if (ch1 == 'l' && ch2 == 'i')  // [li]st
 	{
-		new argument[2];
-		new selection = -1;
-
-		if (read_argv(2, argument, charsmax(argument)))
-		{
-			selection = clamp(strtol(argument), 1, sizeof ItemsInfos) - 1;
-		}
-
 		console_print(id, "^n----- %l: -----^n", "WEAP_RES");
 
-		if (selection == -1) // Item types list.
+		// Items list.
+		if (argumentsCount > ++argumentIndex)
 		{
-			for (new i = 0; i < sizeof MenuInfos; ++i)
-			{
-				console_print(id, "%3d: %l", i + 1, MenuInfos[i][m_Title]);
-			}
+			new const selection = read_argv_int(argumentIndex) - 1; // Index starts from 0.
 
-			console_print(id, "^n----- %l: -----^n", "REST_USE_HOW");
+			if (0 <= selection <= charsmax(ItemsInfos))
+			{
+				SetGlobalTransTarget(id);
+
+				new alias[MaxAliasNameLength];
+				new itemid;
+
+				console_print(id, "  %-32.31s   %-10.9s   %-9.8s", fmt("%l", "NAME"), fmt("%l", "VALUE"), fmt("%l", "STATUS"));
+				console_print(id, "");
+
+				for (new slot = 0; slot < sizeof ItemsInfos[] && (itemid = ItemsInfos[selection][slot][m_Index]) != CSI_NONE; ++slot)
+				{
+					cs_get_item_alias(itemid, alias, charsmax(alias));
+
+					console_print(id, "  %-32.31s   %-10.9s   %-9.8s", fmt("%l", ItemsInfos[selection][slot][m_Name]), alias
+																	 , fmt("%l", BlockedItems[itemid] ? "ON" : "OFF"));
+				}
+
+				console_print(id, "");
+				return PLUGIN_HANDLED;
+			}
 		}
-		else // Items list.
+
+		// Item types list.
+		for (new class = 0; class < sizeof MenuInfos; ++class)
 		{
-			new alias[16], itemid;
-			console_print(id, "  %-32.31s   %-10.9s   %-9.8s", fmt("%l", "NAME"), fmt("%l", "VALUE"), fmt("%l", "STATUS"));
-
-			SetGlobalTransTarget(id);
-
-			for (new slot = 0; slot < sizeof ItemsInfos[] && (itemid = ItemsInfos[selection][slot][m_Index]) != CSI_NONE; ++slot)
-			{
-				cs_get_item_alias(itemid, alias, charsmax(alias));
-
-				console_print(id, "  %-32.31s   %-10.9s   %-9.8s", fmt("%l", ItemsInfos[selection][slot][m_Name]), alias
-																 , fmt("%l", BlockedItems[itemid] ? "ON" : "OFF"));
-			}
+			console_print(id, "%3d: %l", class + 1, MenuInfos[class][m_Title]);
 		}
+
+		console_print(id, "^n----- %l: -----^n", "REST_USE_HOW");
 	}
-	else if(ch1 == 's')  // [s]ave
+	else if (ch1 == 's')  // [s]ave
 	{
-		if (saveSettings(ConfigFile))
+		if (saveSettings(ConfigFilePath))
 		{
 			ModifiedItem = false;
 		}
 
-		console_print(id, "%l", ModifiedItem ? "REST_COULDNT_SAVE" : "REST_CONF_SAVED", ConfigFile);
+		console_print(id, "%l^n", ModifiedItem ? "REST_COULDNT_SAVE" : "REST_CONF_SAVED", ConfigFilePath);
 	}
 	else if (ch1 == 'l' && ch2 == 'o')  // [lo]ad
 	{
 		arrayset(BlockedItems, false, sizeof BlockedItems);
 
-		new argument[64];
-		new length;
+		new argument[MaxConfigFileLength];
+		new length = read_argv(++argumentIndex, argument, charsmax(argument)) - trim(argument);
 
-		length = read_argv(2, argument, charsmax(argument));
-		length -= trim(argument);
-
-		if (length)
+		if (length || !isalpha(argument[0]))
 		{
 			new filepath[PLATFORM_MAX_PATH];
 			length = get_configsdir(filepath, charsmax(filepath));
@@ -276,10 +299,11 @@ public blockcommand(id) // Might be used by others plugins, so keep this for bac
 			}
 		}
 
-		console_print(id, "%l", ModifiedItem ? "REST_CONF_LOADED" : "REST_COULDNT_LOAD", argument);
+		console_print(id, "%l^n", ModifiedItem ? "REST_CONF_LOADED" : "REST_COULDNT_LOAD", argument);
 	}
 	else
 	{
+		usage:
 		console_print(id, "%l", "COM_REST_USAGE");
 		console_print(id, "^n%l", "COM_REST_COMMANDS");
 		console_print(id, "%l", "COM_REST_ON");
@@ -296,33 +320,33 @@ public blockcommand(id) // Might be used by others plugins, so keep this for bac
 	return PLUGIN_HANDLED;
 }
 
-displayMenu(id, pos)
+displayMenu(const id, const position)
 {
 	SetGlobalTransTarget(id);
 
-	new menuTitle[64];
+	new menuTitle[MaxMenuTitleLength * 2];
 	formatex(menuTitle, charsmax(menuTitle), "      \y%l", "REST_WEAP");
 
-	new menu = menu_create(menuTitle, "@OnMenuAction");
+	new const menu = menu_create(menuTitle, "@OnMenuAction");
 
-	if (pos < 0)  // Main menu
+	if (position < 0)  // Main menu
 	{
-		for (new type = 0; type < sizeof(MenuInfos); ++type)
+		for (new class = 0; class < sizeof MenuInfos; ++class)
 		{
-			menu_additem(menu, fmt("%l", MenuInfos[type][m_Title]));
+			menu_additem(menu, fmt("%l", MenuInfos[class][m_Title]));
 		}
 	}
 	else // Sub-menus
 	{
-		menu_setprop(menu, MPROP_TITLE, fmt("%s  > \d%l", menuTitle, MenuInfos[pos][m_Title]));
+		menu_setprop(menu, MPROP_TITLE, fmt("%s  > \d%l", menuTitle, MenuInfos[position][m_Title]));
 
-		for (new slot = 0, data[MenuItem]; slot < sizeof ItemsInfos[]; ++slot)
+		for (new slot = 0, data[MenuItem], index; slot < sizeof ItemsInfos[]; ++slot)
 		{
-			data = ItemsInfos[pos][slot];
+			data = ItemsInfos[position][slot];
 
-			if (data[m_Index])
+			if ((index = data[m_Index]))
 			{
-				menu_additem(menu, fmt("%l\y\R%l", data[m_Name], BlockedItems[data[m_Index]] ? "ON" : "OFF"));
+				menu_additem(menu, fmt("%l\R%s%l", data[m_Name], BlockedItems[index] ? "\y" : "\r", BlockedItems[index] ? "ON" : "OFF"));
 				continue;
 			}
 
@@ -333,15 +357,15 @@ displayMenu(id, pos)
 	menu_addblank(menu, .slot = false);
 	menu_additem(menu, fmt("%s%l \y\R%s", ModifiedItem ? "\y" : "\d", "SAVE_SET", ModifiedItem ? "*" : ""));
 
-	menu_setprop(menu, MPROP_EXITNAME, fmt("%l", pos < 0 ? "EXIT" : "BACK")); // If inside a sub-menu we want to 'back' to main menu.
-	menu_setprop(menu, MPROP_PERPAGE, 0);                                     // Disable pagination.
-	menu_setprop(menu, MPROP_EXIT, MEXIT_FORCE);                              // Force an EXIT item since pagination is disabled.
-	menu_setprop(menu, MPROP_NUMBER_COLOR, "      \r");                       // Small QoL change to avoid menu overlapping with left icons.
+	menu_setprop(menu, MPROP_EXITNAME, fmt("%l", position < 0 ? "EXIT" : "BACK"));  // If inside a sub-menu we want to 'back' to main menu.
+	menu_setprop(menu, MPROP_PERPAGE, 0);                                           // Disable pagination.
+	menu_setprop(menu, MPROP_EXIT, MEXIT_FORCE);                                    // Force an EXIT item since pagination is disabled.
+	menu_setprop(menu, MPROP_NUMBER_COLOR, "      \r");                             // Small QoL change to avoid menu overlapping with left icons.
 
 	menu_display(id, menu);
 }
 
-@OnMenuAction(id, menu, key)
+@OnMenuAction(const id, const menu, const key)
 {
 	new position = MenuPosition[id];
 
@@ -357,7 +381,7 @@ displayMenu(id, pos)
 			{
 				ModifiedItem = true;
 
-				new itemid = ItemsInfos[any:position][key][m_Index];
+				new const itemid = ItemsInfos[any:position][key][m_Index];
 				BlockedItems[itemid] = !BlockedItems[itemid];
 
 				restrictPodbotItem(itemid, .toggle = true);
@@ -366,7 +390,7 @@ displayMenu(id, pos)
 		}
 		case sizeof ItemsInfos[] + 1:  // Save option.
 		{
-			if (saveSettings(ConfigFile))
+			if (saveSettings(ConfigFilePath))
 			{
 				ModifiedItem = false;
 			}
@@ -391,7 +415,7 @@ displayMenu(id, pos)
 
 bool:saveSettings(const filename[])
 {
-	new fp = fopen(filename, "wt");
+	new const fp = fopen(filename, "wt");
 
 	if (!fp)
 	{
@@ -400,17 +424,17 @@ bool:saveSettings(const filename[])
 
 	fprintf(fp, "%L", LANG_SERVER, "CONFIG_FILE_HEADER", PluginName);
 
-	new alias[16];
+	new alias[MaxAliasNameLength];
 	new itemid;
 	new bool:showCategory;
 
-	for (new i = 0, j; i < sizeof(ItemsInfos); ++i)
+	for (new class = 0, slot; class < sizeof ItemsInfos; ++class)
 	{
 		showCategory = true;
 
-		for (j = 0; j < sizeof(ItemsInfos[]); ++j)
+		for (slot = 0; slot < sizeof ItemsInfos[]; ++slot)
 		{
-			if ((itemid = ItemsInfos[i][j][m_Index]) == CSI_NONE)
+			if ((itemid = ItemsInfos[class][slot][m_Index]) == CSI_NONE)
 			{
 				break;
 			}
@@ -420,11 +444,11 @@ bool:saveSettings(const filename[])
 				if (showCategory)
 				{
 					showCategory = false;
-					fprintf(fp, "^n; %l^n; -^n", MenuInfos[i][m_Title]);
+					fprintf(fp, "^n; %l^n; -^n", MenuInfos[class][m_Title]);
 				}
 
 				cs_get_item_alias(itemid, alias, charsmax(alias));
-				fprintf(fp, "%-16.15s ; %L^n", alias, LANG_SERVER, ItemsInfos[i][j][m_Name]);
+				fprintf(fp, "%-16.15s ; %L^n", alias, LANG_SERVER, ItemsInfos[class][slot][m_Name]);
 			}
 		}
 	}
@@ -436,26 +460,27 @@ bool:saveSettings(const filename[])
 
 bool:loadSettings(const filename[])
 {
-	new fp = fopen(filename, "rt");
+	new const fp = fopen(filename, "rt");
 
 	if (!fp)
 	{
 		return false;
 	}
 
-	new lineRead[16], alias[16];
-	new length, ch;
-	new itemid;
+	new lineRead[MaxAliasNameLength], alias[MaxAliasNameLength];
+	new itemid, ch;
 
 	arrayset(RestrictedBotEquipAmmos, '0', charsmax(RestrictedBotEquipAmmos));
 	arrayset(RestrictedBotWeapons, '0', charsmax(RestrictedBotWeapons));
 
 	while (!feof(fp))
 	{
-		length = fgets(fp, lineRead, charsmax(lineRead));
-		length -= trim(lineRead);
+		if (fgets(fp, lineRead, charsmax(lineRead)) - trim(lineRead) <= 0)
+		{
+			continue;
+		}
 
-		if (!length || (ch = lineRead[0]) == ';' || ch == '/' || ch == '#')
+		if ((ch = lineRead[0]) == ';' || ch == '/' || ch == '#')
 		{
 			continue;
 		}
@@ -476,7 +501,7 @@ bool:loadSettings(const filename[])
 
 findMenuAliasId(const name[])
 {
-	for (new i = 0; i < sizeof(MenuInfos); ++i)
+	for (new i = 0; i < sizeof MenuInfos; ++i)
 	{
 		if (equal(name, MenuInfos[i][m_Alias]))
 		{
@@ -487,7 +512,7 @@ findMenuAliasId(const name[])
 	return -1;
 }
 
-findItemFullName(const itemid, name[], maxlen)
+findItemFullName(const itemid, name[], const maxlen)
 {
 	for (new class = 0, slot; class < sizeof ItemsInfos; ++class)
 	{

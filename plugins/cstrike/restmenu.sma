@@ -27,6 +27,7 @@ const MaxMapLength          = 32;
 
 new bool:BlockedItems[CSI_MAX_COUNT];
 new bool:ModifiedItem;
+new bool:ConfigsExecuted;
 
 new MenuPosition[MAX_PLAYERS + 1];
 new MenuHandle  [MAX_PLAYERS + 1] = { -1, ... };
@@ -104,7 +105,7 @@ public OnConfigsExecuted()
 	new configsDir[PLATFORM_MAX_PATH];
 	get_configsdir(configsDir, charsmax(configsDir));
 
-	if (!!get_pcvar_num(CvarPointerAllowMapSettings))
+	if (get_pcvar_bool(CvarPointerAllowMapSettings))
 	{
 		new mapName[MaxMapLength];
 		get_mapname(mapName, charsmax(mapName));
@@ -117,6 +118,8 @@ public OnConfigsExecuted()
 	}
 
 	loadSettings(ConfigFilePath);
+
+	ConfigsExecuted = true;
 }
 
 public CS_OnBuyAttempt(player, itemid)
@@ -174,13 +177,14 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 	if (ch1 == 'o' && (ch2 == 'n' || ch2 == 'f'))  // [on]/[of]f
 	{
 		new const bool:restricted = (ch2 == 'n');
+		new bool:valid;
 
-		if (argumentsCount <= ++argumentIndex) // No arguments, all items are concerned.
+		if (argumentsCount <= argumentIndex + 1) // No arguments, all items are concerned.
 		{
 			arrayset(BlockedItems, restricted, sizeof BlockedItems);
 			console_print(id, "%l", restricted ? "EQ_WE_RES" : "EQ_WE_UNRES");
 
-			ModifiedItem = true;
+			ModifiedItem = valid = true;
 			refreshMenus(level);
 		}
 		else // Either item type or specific alias
@@ -188,20 +192,20 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 			new commands[MaxConsoleLength];
 			new itemName[MaxItemNameLength];
 			new argument[MaxAliasNameLength];
-			new bool:found;
 			new position, class;
 			new itemid, slot;
 			new commandLength;
 
-			for (; argumentIndex < argumentsCount; ++argumentIndex, position = 0)
+			while (argumentIndex < argumentsCount)
 			{
 				// Ignore if the argument is empty or the first character is not a letter.
-				if ((commandLength = read_argv(argumentIndex, commands, charsmax(commands)) - trim(commands)) <= 0 || !isalpha(commands[0]))
+				if ((commandLength = read_argv(++argumentIndex, commands, charsmax(commands)) - trim(commands)) <= 0 || !isalpha(commands[0]))
 				{
 					continue;
 				}
 
 				strtolower(commands);
+				position = 0;
 
 				// In case argument contains several input between quotes.
 				while (position != commandLength && (position = argparse(commands, position, argument, charsmax(argument))) != -1)
@@ -214,7 +218,7 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 						}
 
 						console_print(id, "%l %l %l", MenuInfos[class], (class < 6) ? "HAVE_BEEN" : "HAS_BEEN", restricted ? "RESTRICTED" : "UNRESTRICTED");
-						ModifiedItem = found = true;
+						ModifiedItem = valid = true;
 					}
 					else if ((itemid = cs_get_item_id(argument)) != CSI_NONE)
 					{
@@ -222,12 +226,12 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 						findItemFullName(itemid, itemName, charsmax(itemName));
 
 						console_print(id, "%l %l %l", itemName, "HAS_BEEN", restricted ? "RESTRICTED" : "UNRESTRICTED");
-						ModifiedItem = found = true;
+						ModifiedItem = valid = true;
 					}
 				}
 			}
 
-			if (!found)
+			if (!valid)
 			{
 				console_print(id, "%l", "NO_EQ_WE");
 			}
@@ -236,18 +240,24 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 				refreshMenus(level);
 			}
 		}
+
+		if (ConfigsExecuted && valid)
+		{
+			show_activity_key("ADMIN_UPD_RES_1", "ADMIN_UPD_RES_2", fmt("%n", id));
+			log_amx("%L", LANG_SERVER, "ADMIN_CMD_UPDATEDCFG", id);
+		}
 	}
 	else if (ch1 == 'l' && ch2 == 'i')  // [li]st
 	{
 		// Items list.
-		if (argumentsCount > ++argumentIndex)
+		if (argumentsCount > argumentIndex + 1) // Available arguments.
 		{
-			new const selection = read_argv_int(argumentIndex) - 1; // Index starts from 0.
+			new const selection = read_argv_int(++argumentIndex) - 1; // Index starts from 0.
 
 			if (0 <= selection <= charsmax(ItemsInfos))
 			{
 				console_print(id, "^n----- %l: %l -----^n", "WEAP_RES", MenuInfos[selection][m_Title]);
-  
+
 				SetGlobalTransTarget(id);
 
 				new alias[MaxAliasNameLength];
@@ -281,37 +291,66 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 	}
 	else if (ch1 == 's')  // [s]ave
 	{
-		if (saveSettings(ConfigFilePath))
+		// If 'save' is used in a per-map config file, the plugin config file is not yet known as it depends on
+		// amx_restrmapsettings cvar value read after per-map configs are processed. Postponing the saving a little.
+		if (!ConfigsExecuted)
 		{
-			ModifiedItem = false;
-			refreshMenus(level);
+			const taskId = 424242;
+
+			if (!task_exists(taskId))
+			{
+				set_task(0.1, "@Task_SaveConfig", taskId);
+			}
+
+			return PLUGIN_HANDLED;
 		}
 
-		console_print(id, "%l^n", ModifiedItem ? "REST_COULDNT_SAVE" : "REST_CONF_SAVED", ConfigFilePath);
-	}
-	else if (ch1 == 'l' && ch2 == 'o')  // [lo]ad
-	{
-		arrayset(BlockedItems, false, sizeof BlockedItems);
+		new bool:saved = saveSettings(ConfigFilePath);
 
-		new argument[MaxConfigFileLength];
-		new length = read_argv(++argumentIndex, argument, charsmax(argument)) - trim(argument);
-		new bool:loadedFile;
-
-		if (length || !isalpha(argument[0]))
+		if (saved)
 		{
-			new filepath[PLATFORM_MAX_PATH];
-			length = get_configsdir(filepath, charsmax(filepath));
+			ModifiedItem = false;
+			refreshMenus(level, .displaySaveMessage = true);
 
-			formatex(filepath[length], charsmax(filepath) - length, "/%s", argument);
-
-			if (loadSettings(filepath))
+			if (ConfigsExecuted)
 			{
-				loadedFile = ModifiedItem = true;
-				refreshMenus(level);
+				log_amx("%L", LANG_SERVER, "ADMIN_CMD_SAVEDCFG", id, ConfigFilePath);
 			}
 		}
 
-		console_print(id, "%l^n", loadedFile ? "REST_CONF_LOADED" : "REST_COULDNT_LOAD", argument);
+		console_print(id, "%l^n", saved ? "REST_CONF_SAVED" : "REST_COULDNT_SAVE", ConfigFilePath);
+	}
+	else if (ch1 == 'l' && ch2 == 'o')  // [lo]ad
+	{
+		if (argumentsCount <= argumentIndex + 1) // No argument
+		{
+			goto usage;
+		}
+
+		new argument[MaxConfigFileLength];
+		read_argv(++argumentIndex, argument, charsmax(argument)) - trim(argument);
+
+		new filepath[PLATFORM_MAX_PATH];
+		new length = get_configsdir(filepath, charsmax(filepath));
+		formatex(filepath[length], charsmax(filepath) - length, "/%s", argument);
+
+		new bool:loaded = loadSettings(filepath);
+
+		if (loaded)
+		{
+			arrayset(BlockedItems, false, sizeof BlockedItems);
+
+			ModifiedItem = true;
+			refreshMenus(level);
+
+			if (ConfigsExecuted)
+			{
+				show_activity_key("ADMIN_UPD_RES_1", "ADMIN_UPD_RES_2", fmt("%n", id));
+				log_amx("%L", LANG_SERVER, "ADMIN_CMD_LOADEDCFG", id, ConfigFilePath);
+			}
+		}
+
+		console_print(id, "%l^n", loaded ? "REST_CONF_LOADED" : "REST_COULDNT_LOAD", filepath);
 	}
 	else
 	{
@@ -330,6 +369,11 @@ public blockcommand(const id) // Might be used by others plugins, so keep this f
 	}
 
 	return PLUGIN_HANDLED;
+}
+
+@Task_SaveConfig()
+{
+	server_cmd("amx_restrict save");
 }
 
 displayMenu(const id, const position)
@@ -417,6 +461,9 @@ displayMenu(const id, const position)
 			{
 				if (saveSettings(ConfigFilePath))
 				{
+					show_activity_key("ADMIN_UPD_RES_1", "ADMIN_UPD_RES_2", fmt("%n", id));
+					log_amx("%L", LANG_SERVER, "ADMIN_MENU_SAVEDCFG", id ,ConfigFilePath);
+
 					ModifiedItem = false;
 				}
 
@@ -441,9 +488,9 @@ displayMenu(const id, const position)
 	return PLUGIN_HANDLED;
 }
 
-refreshMenus(const commandLevel)
+findAdminsWithMenu(playersList[MAX_PLAYERS], &playersCount, const commandLevel = -1)
 {
-	new playersList[MAX_PLAYERS], playersCount, player;
+	new player, adminsCount;
 	new menu, newmenu;
 
 	get_players(playersList, playersCount, "ch");
@@ -452,10 +499,33 @@ refreshMenus(const commandLevel)
 	{
 		if (player_menu_info(player, menu, newmenu) && newmenu != -1 && newmenu == MenuHandle[player])
 		{
-			if (access(player, commandLevel)) // extra safety
+			if (commandLevel == -1 || access(player, commandLevel)) // extra safety
 			{
-				MenuHandle[player] = displayMenu(player, MenuPosition[player]);
+				playersList[adminsCount++] = player;
 			}
+		}
+	}
+
+	playersCount = adminsCount;
+}
+
+refreshMenus(const commandLevel = 0, const bool:displaySaveMessage = false)
+{
+	new playersList[MAX_PLAYERS], playersCount;
+	findAdminsWithMenu(playersList, playersCount, commandLevel);
+
+	if (!playersCount)
+	{
+		return;
+	}
+
+	for (new i = 0, player; i < playersCount, (player = playersList[i]); ++i)
+	{
+		MenuHandle[player] = displayMenu(player, MenuPosition[player]);
+
+		if (displaySaveMessage)
+		{
+			client_print(playersList[i], print_chat, "* %l (amx_restrict)", "CONF_SAV_SUC");
 		}
 	}
 }

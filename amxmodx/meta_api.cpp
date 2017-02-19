@@ -93,7 +93,7 @@ fakecmd_t g_fakecmd;
 
 float g_game_restarting;
 float g_game_timeleft;
-float g_task_time;
+bool g_task_enabled;
 float g_auth_time;
 
 bool g_initialized = false;
@@ -465,7 +465,7 @@ int	C_Spawn(edict_t *pent)
 
 	// ###### Init time and freeze tasks
 	g_game_timeleft = g_bmod_dod ? 1.0f : 0.0f;
-	g_task_time = gpGlobals->time + 99999.0f;
+	g_task_enabled = false;
 	g_auth_time = gpGlobals->time + 99999.0f;
 #ifdef MEMORY_TEST
 	g_next_memreport_time = gpGlobals->time + 99999.0f;
@@ -650,7 +650,7 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 	if (!g_bmod_dod)
 		g_game_timeleft = 0;
 
-	g_task_time = gpGlobals->time;
+	g_task_enabled = true;
 	g_auth_time = gpGlobals->time;
 
 #ifdef MEMORY_TEST
@@ -1217,10 +1217,9 @@ void C_StartFrame_Post(void)
 	}
 #endif // MEMORY_TEST
 
-	if (g_task_time > gpGlobals->time)
+	if (!g_task_enabled)
 		RETURN_META(MRES_IGNORED);
 
-	g_task_time = gpGlobals->time + 0.1f;
 	g_tasksMngr.startFrame();
 
 	CoreCfg.OnMapConfigTimer();

@@ -407,6 +407,17 @@ native ArrayFindString(Array:which, const item[]);
 native ArrayFindValue(Array:which, any:item);
 
 /**
+ * Returns the blocksize the array was created with.
+ *
+ * @param which         Array handle
+ *
+ * @return              The blocksize of the array
+ * @error               If an invalid handle is provided an error will be
+ *                      thrown.
+ */
+ native ArrayGetBlockSize(Array:which);
+
+/**
  * Creates a special handle that can be passed to a string format routine for
  * printing as a string (with the %a format option).
  *

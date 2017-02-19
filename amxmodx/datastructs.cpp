@@ -893,6 +893,22 @@ static cell AMX_NATIVE_CALL ArrayFindValue(AMX* amx, cell* params)
 	return -1;
 }
 
+// native ArrayGetBlockSize(Array:which); 
+static cell AMX_NATIVE_CALL ArrayGetBlockSize(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_handle };
+
+	auto vec = ArrayHandles.lookup(params[arg_handle]);
+
+	if (!vec)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[arg_handle]);
+		return -1;
+	}
+
+	return vec->blocksize();
+}
+
 AMX_NATIVE_INFO g_DataStructNatives[] = 
 {
 	{ "ArrayCreate"            , ArrayCreate },
@@ -923,5 +939,6 @@ AMX_NATIVE_INFO g_DataStructNatives[] =
 	{ "ArraySortEx"            , ArraySortEx },
 	{ "ArrayFindString"        , ArrayFindString },
 	{ "ArrayFindValue"         , ArrayFindValue },
+	{ "ArrayGetBlockSize"      , ArrayGetBlockSize },
 	{ nullptr                  , nullptr }
 };

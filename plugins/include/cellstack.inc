@@ -139,6 +139,17 @@ native bool:PopStackArray(Stack:handle, any:buffer[], size = -1);
 native bool:IsStackEmpty(Stack:handle);
 
 /**
+ * Returns the blocksize the stack was created with.
+ *
+ * @param handle        Stack handle
+ *
+ * @return              The blocksize of the stack
+ * @error               If an invalid handle is provided an error will be
+ *                      thrown.
+ */
+ native GetStackBlockSize(Stack:handle);
+
+/**
  * Pops a value off a stack, ignoring it completely.
  *
  * @param handle    Stack handle

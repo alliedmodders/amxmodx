@@ -10,6 +10,7 @@
 #include "trie_natives.h"
 
 NativeHandle<CellTrie> TrieHandles;
+NativeHandle<CellTrieIter> TrieIterHandles;
 NativeHandle<TrieSnapshot> TrieSnapshotHandles;
 
 // native Trie:TrieCreate();

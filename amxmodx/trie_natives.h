@@ -143,6 +143,12 @@ struct CellTrie
 	StringHashMap<Entry> map;
 };
 
+struct CellTrieIter
+{
+	CellTrie *trie;
+	StringHashMap<Entry>::iterator *iter;
+};
+
 struct TrieSnapshot
 {
 	TrieSnapshot()
@@ -160,6 +166,7 @@ struct TrieSnapshot
 };
 
 extern NativeHandle<CellTrie> TrieHandles;
+extern NativeHandle<CellTrieIter> TrieIterHandles;
 extern NativeHandle<TrieSnapshot> TrieSnapshotHandles;
 extern AMX_NATIVE_INFO trie_Natives[];
 

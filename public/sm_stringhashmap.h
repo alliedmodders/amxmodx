@@ -194,6 +194,11 @@ public:
 		return internal_.iter();
 	}
 
+	iterator* iter_p()
+	{
+		return new iterator(iter());
+	}
+
 	size_t mem_usage() const
 	{
 		return internal_.estimateMemoryUse() + memory_used_;

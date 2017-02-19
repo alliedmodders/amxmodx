@@ -3292,3 +3292,4 @@ native AutoExecConfig(bool:autoCreate = true, const name[] = "", const folder[] 
 
 // Always keep this at the bottom of this file
 #include <message_stocks>
+#include <string_stocks>

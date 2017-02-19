@@ -9,6 +9,7 @@
 
 #include <time.h>
 #include "amxmodx.h"
+#include <utf8rewind.h>
 
 int UTIL_ReadFlags(const char* c) 
 {
@@ -454,13 +455,11 @@ int UTIL_CheckValidChar(D *c)
 	return 0;
 }
 
-unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive)
+size_t UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive)
 {
-	size_t searchLen = strlen(search);
-	size_t replaceLen = strlen(replace);
-
 	char *newptr, *ptr = subject;
-	unsigned int total = 0;
+	size_t total = 0;
+
 	while ((newptr = UTIL_ReplaceEx(ptr, maxlength, search, searchLen, replace, replaceLen, caseSensitive)) != NULL)
 	{
 		total++;
@@ -500,6 +499,24 @@ unsigned int strncopy(D *dest, const S *src, size_t count)
 	return (dest - start);
 }
 
+size_t utf8strcasefold(const char *text, size_t textLen, char *&buffer, size_t bufferLen)
+{
+	int32_t errors;
+
+	// First, we get the final length without writing in to buffer.
+	// If there are errors we don't bother to process further.
+	if (utf8casefold(text, textLen, nullptr, 0, UTF8_LOCALE_DEFAULT, &errors) != 0 && errors == UTF8_ERR_NONE)
+	{
+		// Final size can vary. We want to have room as much as possible.
+		textLen = utf8casefold(text, textLen, buffer, bufferLen, UTF8_LOCALE_DEFAULT, nullptr);
+
+		buffer[textLen] = '\0';
+		return textLen;
+	}
+
+	return 0;
+}
+
 /**
 * NOTE: Do not edit this for the love of god unless you have
 * read the test cases and understand the code behind each one.
@@ -519,28 +536,38 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 	size_t browsed = 0;
 	size_t textLen = strlen(subject);
 
+	static char folded[MAX_BUFFER_LENGTH];
+	auto foldedPtr = folded;
+
 	/* It's not possible to search or replace */
 	if (searchLen > textLen)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	/* Handle the case of one byte replacement.
 	* It's only valid in one case.
 	*/
-	if (maxLen == 1)
+	if (maxLen <= 2) // 1 byte + EOS
 	{
 		/* If the search matches and the replace length is 0,
 		* we can just terminate the string and be done.
 		*/
-		if ((caseSensitive ? strcmp(subject, search) : strcasecmp(subject, search)) == 0 && replaceLen == 0)
+		auto toCompare = subject;
+
+		if (!caseSensitive && utf8strcasefold(toCompare, searchLen, foldedPtr, sizeof(folded) - 1))
+		{
+			toCompare = foldedPtr;
+		}
+
+		if (strcmp(toCompare, search) == 0 && replaceLen == 0)
 		{
 			*subject = '\0';
 			return subject;
 		}
 		else
 		{
-			return NULL;
+			return nullptr;
 		}
 	}
 
@@ -549,8 +576,15 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 
 	while (*ptr != '\0' && (browsed <= textLen - searchLen))
 	{
+		auto toCompare = ptr;
+
+		if (!caseSensitive && utf8strcasefold(toCompare, searchLen, foldedPtr, sizeof(foldedPtr) - 1))
+		{
+			toCompare = foldedPtr;
+		}
+
 		/* See if we get a comparison */
-		if ((caseSensitive ? strncmp(ptr, search, searchLen) : strncasecmp(ptr, search, searchLen)) == 0)
+		if (strncmp(toCompare, search, searchLen) == 0)
 		{
 			if (replaceLen > searchLen)
 			{
@@ -642,7 +676,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 				char *moveFrom = ptr + searchLen;		/* Start after the search pointer */
 				char *moveTo = ptr + replaceLen;		/* Copy to where the replacement ends */
 
-				/* Copy our replacement in, if any */
+														/* Copy our replacement in, if any */
 				if (replaceLen)
 				{
 					memcpy(ptr, replace, replaceLen);
@@ -674,7 +708,7 @@ char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t se
 		browsed++;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // From Metamod:Source

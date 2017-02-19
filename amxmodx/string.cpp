@@ -1424,6 +1424,52 @@ static cell AMX_NATIVE_CALL fmt(AMX *amx, cell *params)
 	return 1;
 };
 
+/**
+ *
+ */
+static cell AMX_NATIVE_CALL levenshtein(AMX *amx, cell *params)
+{
+	int a_len, b_len, i, j, prev, tmp;
+	const char *a = get_amxstring(amx, params[1], 0, a_len);
+	const char *b = get_amxstring(amx, params[2], 1, b_len);
+
+	if (a_len == 0) {
+		return b_len;
+	}
+
+	if (b_len == 0) {
+		return a_len;
+	}
+
+	int column[a_len + 1];
+
+#define MIN2(a, b) (a) > (b) ? (b) : (a)
+#define MIN3(a, b, c) MIN2(c, MIN2(a, b))
+
+	for (i = 1; i < a_len + 1; ++i) {
+		column[i] = i;
+	}
+
+	for (j = 1; j < b_len + 1; ++j) {
+		column[0] = j;
+		prev = j - 1;
+		for (i = 1; i < a_len + 1; ++i) {
+			tmp = column[i];
+			column[i] = MIN3(
+				column[i] + 1,
+				column[i - 1] + 1,
+				prev + (a[i - 1] == b[j - 1] ? 0 : 1)
+			);
+			prev = tmp;
+		}
+	}
+
+#undef MIN3
+#undef MIN2
+
+	return column[a_len];
+}
+
 
 AMX_NATIVE_INFO string_Natives[] =
 {
@@ -1474,5 +1520,6 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"str_to_float",	str_to_float},
 	{"float_to_str",	float_to_str},
 	{"vformat",			vformat},
+	{"levenshtein",		levenshtein},
 	{NULL,				NULL}
 };

@@ -818,6 +818,14 @@ stock argbreak(const text[], left[], leftlen, right[], rightlen)
 native split_string(const source[], const split[], part[], partLen);
 
 /**
+ * @param str1		String being evaluated for Levenshtein distance
+ * @param str2		String being evaluated for Levenshtein distance
+ *
+ * @return			Levenshtein distance
+ */
+native levenshtein(const str1[], const str2[]);
+
+/**
  * It is basically strbreak but you have a delimiter that is more than one character in length. By Suicid3.
  *
  * @param szInput		Source input string.

@@ -41,23 +41,6 @@
 #define SOCK_ERROR_SERVER_UNKNOWN   2 /* Server unknown */
 #define SOCK_ERROR_WHILE_CONNECTING 3 /* Error while connecting */
 
-/*
- * Nonblocking sockets error handler
- *
- * @param error    Error code returned by socket_open()
- *
- * @note           A newly created nonblocking socket may be still finishing his connection when
- *                 socket_open() returns the socket descriptor. This stock should be used to
- *                 check if socket_open() succeded on creating a new socket, and socket_is_writable()
- *                 should be used later on the socket descriptor when data is about to be sent to check if 
- *                 the connection ended up being established.
- *                 
- *                 
- * @return         true if the socket is succesfully created and connected or currently connecting
- *                 false if the socket failed to be created
- */
-stock bool:SOCK_ERROR_EINPROGRESS(error) return (error == 0 || error == 10035 || error == 10036 || error == 115)
-
 /**
  * Connects to the given node and service via TCP/UDP.
  *
@@ -97,6 +80,29 @@ stock bool:SOCK_ERROR_EINPROGRESS(error) return (error == 0 || error == 10035 ||
  *                     -1 on failure
 */
 native socket_open(const _hostname[], _port, _protocol = SOCKET_TCP, &_error, _flags = 0);
+
+/*
+ * Nonblocking sockets error handler
+ *
+ * @param error    Error code returned by socket_open()
+ *
+ * @note           A newly created nonblocking socket may be still finishing his connection when
+ *                 socket_open() returns the socket descriptor. This stock should be used to
+ *                 check if socket_open() succeded on creating a new socket, and socket_is_writable()
+ *                 should be used later on the socket descriptor when data is about to be sent to check if 
+ *                 the connection ended up being established.
+ * 
+ *                 
+ * @return         true if the socket is succesfully created and connected or currently connecting
+ *                 false if the socket failed to be created
+ */
+stock bool:SOCK_ERROR_EINPROGRESS(error) 
+{
+    return (error == 0
+         || error == 10035    // WINDOWS, WSAEWOULDBLOCK
+         || error == 10036    // WINDOWS, WSAEINPROGRESS 
+         || error == 115)     // POSIX, EINPROGRESS
+}
 
 /**
  * Closes a socket

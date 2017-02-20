@@ -4636,6 +4636,24 @@ static cell AMX_NATIVE_CALL AutoExecConfig(AMX *amx, cell *params)
 	return 1;
 }
 
+//native RequestFrame(const callback[], any:data);
+static cell AMX_NATIVE_CALL RequestFrame(AMX *amx, cell *params)
+{
+	int len;
+	const char *funcName = get_amxstring(amx, params[1], 0, len);
+
+	int func = registerSPForwardByName(amx, funcName, FP_CELL, FP_DONE);
+	if (func < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Function \"%s\" was not found", funcName);
+		return 0;
+	}
+
+	g_frameActionMngr.AddFrameAction(func, params[2]);
+
+	return 0;
+}
+
 static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
 {
 	return 1;
@@ -4834,6 +4852,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"PrepareArray",			PrepareArray},
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
 	{"AutoExecConfig",			AutoExecConfig},
+	{"RequestFrame",			RequestFrame},
 	{"is_rukia_a_hag",			is_rukia_a_hag},
 	{NULL,						NULL}
 };

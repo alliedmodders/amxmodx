@@ -3290,5 +3290,18 @@ forward OnAutoConfigsBuffered();
  */
 native AutoExecConfig(bool:autoCreate = true, const name[] = "", const folder[] = "");
 
+/**
+ * Creates a single use hook for the next frame.
+ *
+ * @param callback      Function to be executed on the next frame.
+ * @param data          Optional data to be passed to the callback function.
+ *
+ * @note                Callback function prototype:
+ *                          public function(data)
+ *
+ * @noreturn
+ */
+native RequestFrame(const callback[], any:data = 0);
+
 // Always keep this at the bottom of this file
 #include <message_stocks>

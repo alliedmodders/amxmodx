@@ -71,6 +71,7 @@ CPlayer g_players[33];
 CPlayer* mPlayer;
 CPluginMngr g_plugins;
 CTaskMngr g_tasksMngr;
+CFrameActionMngr g_frameActionMngr;
 CmdMngr g_commands;
 CFlagManager FlagMan;
 EventsMngr g_events;
@@ -1216,6 +1217,8 @@ void C_StartFrame_Post(void)
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
+
+	g_frameActionMngr.ExecuteFrameCallbacks();
 
 	if (g_task_time > gpGlobals->time)
 		RETURN_META(MRES_IGNORED);

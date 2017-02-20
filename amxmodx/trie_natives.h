@@ -145,8 +145,12 @@ struct CellTrie
 
 struct CellTrieIter
 {
+	CellTrieIter() : trie(nullptr), iter(nullptr), mod_count(0) 
+	{}
+
 	CellTrie *trie;
 	StringHashMap<Entry>::iterator *iter;
+	size_t mod_count;
 };
 
 struct TrieSnapshot

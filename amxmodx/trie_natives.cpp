@@ -482,6 +482,21 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 	return 0;
 }
 
+
+#define CHECK_ITER_HANDLE(handle)                                                                       \
+	if (!handle) {                                                                                      \
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]); \
+		return 0;                                                                                       \
+	}                                                                                                   \
+	if (!handle->trie) {                                                                                \
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);  \
+		return 0;                                                                                       \
+	}                                                                                                   \
+	if (handle->mod_count != handle->trie->map.mod_count()) {                                           \
+		LogError(amx, AMX_ERR_NATIVE, "Outdated map iterator handle provided (%d)", params[arg_handle]);\
+		return 0;                                                                                       \
+	}
+
 // native TrieIter:TrieIterCreate(Trie:handle)
 static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 {
@@ -500,6 +515,7 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 
 	iter->trie = handle;
 	iter->iter = handle->map.iter_p();
+	iter->mod_count = handle->map.mod_count();
 
 	return static_cast<cell>(index);
 }
@@ -511,17 +527,7 @@ static cell AMX_NATIVE_CALL TrieIterEnded(AMX *amx, cell *params)
 
 	auto handle = TrieIterHandles.lookup(params[arg_handle]);
 
-	if (!handle)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
-
-	if (!handle->iter)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
+	CHECK_ITER_HANDLE(handle)
 
 	return handle->iter->empty();
 }
@@ -533,22 +539,14 @@ static cell AMX_NATIVE_CALL TrieIterMore(AMX *amx, cell *params)
 
 	auto handle = TrieIterHandles.lookup(params[arg_handle]);
 
-	if (!handle)
+	CHECK_ITER_HANDLE(handle)
+
+	if (handle->iter->empty())
 	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
 		return 0;
 	}
 
-	if (!handle->iter)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
-
-	if (!handle->iter->empty())
-	{
-		handle->iter->next();
-	}
+	handle->iter->next();
 
 	return 1;
 }
@@ -560,27 +558,15 @@ static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 
 	auto handle = TrieIterHandles.lookup(params[arg_handle]);
 
-	if (!handle)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
+	CHECK_ITER_HANDLE(handle)
 
-	auto iter = handle->iter;
-
-	if (!iter)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
-
-	if (iter->empty())
+	if (handle->iter->empty())
 	{
 		*get_amxaddr(amx, params[arg_output]) = '\0';
 		return 0;
 	}
 
-	return set_amxstring_utf8(amx, params[arg_output], (*iter)->key.chars(), (*iter)->key.length(), params[arg_outputsize]);
+	return set_amxstring_utf8(amx, params[arg_output], (*handle->iter)->key.chars(), (*handle->iter)->key.length(), params[arg_outputsize]);
 }
 
 // native TrieIterGetSize(TrieIter:handle)
@@ -590,17 +576,7 @@ static cell AMX_NATIVE_CALL TrieIterGetSize(AMX *amx, cell *params)
 
 	auto handle = TrieIterHandles.lookup(params[arg_handle]);
 
-	if (!handle)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
-
-	if (!handle->iter)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
+	CHECK_ITER_HANDLE(handle)
 
 	return handle->trie->map.elements();
 }
@@ -612,17 +588,7 @@ static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 
 	auto handle = TrieIterHandles.lookup(params[arg_handle]);
 
-	if (!handle)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
-
-	if (!handle->iter)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
+	CHECK_ITER_HANDLE(handle)
 
 	if (handle->iter->empty() || !(*handle->iter)->value.isCell())
 	{
@@ -641,17 +607,7 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 
 	auto handle = TrieIterHandles.lookup(params[arg_handle]);
 
-	if (!handle)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
-
-	if (!handle->iter)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
+	CHECK_ITER_HANDLE(handle)
 
 	if (params[arg_outputsize] < 0)
 	{
@@ -678,16 +634,7 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 
 	auto handle = TrieIterHandles.lookup(params[arg_handle]);
 
-	if (!handle)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
-		return 0;
-	}
-
-	if (!handle->iter)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
-	}
+	CHECK_ITER_HANDLE(handle)
 
 	auto outputSize = size_t(params[arg_outputsize]);
 

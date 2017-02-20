@@ -310,6 +310,8 @@ native TrieIter:TrieIterCreate(Trie:handle);
  *
  * @return              True if iterator has reached the end, false otherwise
  * @error               Invalid Handle
+ *                      Iterator has been closed (underlying map destroyed)
+ *                      Iterator is outdated
  */
 native bool:TrieIterEnded(TrieIter:handle);
 
@@ -319,6 +321,8 @@ native bool:TrieIterEnded(TrieIter:handle);
  * @param handle        Iterator handle
  *
  * @error               Invalid Handle
+ *                      Iterator has been closed (underlying map destroyed)
+ *                      Iterator is outdated
  */
 native TrieIterMore(TrieIter:handle);
 
@@ -331,6 +335,8 @@ native TrieIterMore(TrieIter:handle);
  *
  * @return 				Nnumber of bytes written to the buffer
  * @error				Invalid handle
+ *                      Iterator has been closed (underlying map destroyed)
+ *                      Iterator is outdated
  */
 native TrieIterGetKey(TrieIter:handle, key[], outputsize);
 
@@ -343,6 +349,8 @@ native TrieIterGetKey(TrieIter:handle, key[], outputsize);
  *
  * @return				Number of elements in the map
  * @error				Invalid handle
+ *                      Iterator has been closed (underlying map destroyed)
+ *                      Iterator is outdated
  */
 native TrieIterGetSize(TrieIter:handle);
 
@@ -355,6 +363,8 @@ native TrieIterGetSize(TrieIter:handle);
  * @return 				True on success, false if the iterator is empty or the current
  *						value is an array or a string.
  * @error				Invalid handle
+ *                      Iterator has been closed (underlying map destroyed)
+ *                      Iterator is outdated
  */
 native bool:TrieIterGetCell(TrieIter:handle, &any:value);
 
@@ -370,6 +380,8 @@ native bool:TrieIterGetCell(TrieIter:handle, &any:value);
  *						is not a string.
  * @error				Invalid handle
  *                      Invalid buffer size
+ *                      Iterator has been closed (underlying map destroyed)
+ *                      Iterator is outdated
  */
 native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0);
 
@@ -385,6 +397,8 @@ native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0);
  *						value is not an array.
  * @error				Invalid handle
  *						Invalid buffer size
+ *                      Iterator has been closed (underlying map destroyed)
+ *                      Iterator is outdated
  */
 native bool:TrieIterGetArray(TrieIter:handle, any:array[], outputsize, &size = 0);
 

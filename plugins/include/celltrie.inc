@@ -345,3 +345,15 @@ native TrieIterGetKey(TrieIter:handle, key[], outputsize);
  * @error				Invalid handle
  */
 native TrieIterGetSize(TrieIter:handle);
+
+/**
+ * Retrieves a value at the current position of the iterator.
+ *
+ * @param handle		Iterator handle
+ * @param value			Variable to store value in
+ *
+ * @return 				True on success, false if the iterator is empty or the current
+ *						value is an array or a string.
+ * @error				Invalid handle
+ */
+native bool:TrieIterGetCell(TrieIter:handle, &any:value);

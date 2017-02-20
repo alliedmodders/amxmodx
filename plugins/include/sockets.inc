@@ -21,45 +21,71 @@
 	#pragma loadlib sockets
 #endif
 
-// Socket flags
-#define SOCK_NON_BLOCKING (1 << 0)    // Set the socket a nonblocking
-#define SOCK_LIBC_ERRORS  (1 << 1)    // Enable libc error reporting
-
-// Error reporting
-#define SOCK_ERROR_OK               0 // No error
-#define SOCK_ERROR_CREATE_SOCKET    1 // Couldn't create a socket
-#define SOCK_ERROR_SERVER_UNKNOWN   2 // Server unknown
-#define SOCK_ERROR_WHILE_CONNECTING 3 // Error while connecting
-
-// Nonblocking sockets error handler
-stock SOCK_ERROR_EINPROGRESS(error) return (error == 0 || error == 10035 || error == 10036 || error == 115)
-
-// Socket connection type (TCP/UDP)
+/*
+ * Socket connection type (TCP/UDP)
+ */
 #define SOCKET_TCP 1
 #define SOCKET_UDP 2
 
 /**
+ * Socket flags
+ */
+#define SOCK_NON_BLOCKING (1 << 0)    /* Set the socket a nonblocking */
+#define SOCK_LIBC_ERRORS  (1 << 1)    /* Enable libc error reporting */
+
+/*
+ * Error reporting
+ */
+#define SOCK_ERROR_OK               0 /* No error */
+#define SOCK_ERROR_CREATE_SOCKET    1 /* Couldn't create a socket */
+#define SOCK_ERROR_SERVER_UNKNOWN   2 /* Server unknown */
+#define SOCK_ERROR_WHILE_CONNECTING 3 /* Error while connecting */
+
+/*
+ * Nonblocking sockets error handler
+ *
+ * @param error    Error code returned by socket_open()
+ *
+ * @note           A newly created nonblocking socket may be still finishing his connection when
+ *                 socket_open() returns the socket descriptor. This stock should be used to
+ *                 check if socket_open() succeded on creating a new socket, and socket_is_writable()
+ *                 should be used later on the socket descriptor when data is about to be sent to check if 
+ *                 the connection ended up being established.
+ *                 
+ *                 
+ * @return         true if the socket is succesfully created and connected or currently connecting
+ *                 false if the socket failed to be created
+ */
+stock bool:SOCK_ERROR_EINPROGRESS(error) return (error == 0 || error == 10035 || error == 10036 || error == 115)
+
+/**
  * Connects to the given node and service via TCP/UDP.
  *
- * @note There's 2 types of error reporting on this function that you can use, for backwards compatibility reasons libc errors are disabled by default
- * @note Old, default error codes:
+ * @note There's 2 types of error reporting on this function that you can use.
+ * @note Default error codes:
  *       0 - No error
  *       1 - Error while creating socket
  *       2 - Couldn't resolve hostname
  *       3 - Couldn't connect
- * @note New, libc error codes:
+ * @note New, more expressive libc error codes:
  *       https://www.gnu.org/software/libc/manual/html_node/Error-Codes.html
  *       https://github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
  *       https://msdn.microsoft.com/en-us/library/ms740668.aspx
  *
  * @note The currently available bit flags are:
- *       - SOCK_NON_BLOCKING : if set, the socket would be on nonblocking mode
- *       - SOCK_LIBC_ERRORS : if set, the new libc errors will be seen on _error instead of the old, made up ones
- * @note If no flags are set, the behaviour of the function will not be modified (default blocking mode and error reporting).
- * @note Multiple flags may be set at the same time using the | operator. For example, SOCK_NON_BLOCKING|SOCK_LIBC_ERRORS will create a nonblocking socket with libc error codes.
+ *       - SOCK_NON_BLOCKING : if set, the socket will be on nonblocking mode
+ *       - SOCK_LIBC_ERRORS : if set, the new libc errors will be seen on _error
  *
- * @note If you're creating a new nonblocking socket, _hostname should be numeric to avoid calling the name resolution server and potentially blocking the call
- * @note If the socket is a nonblocking one, the returned socket descriptor may be still connecting and further checks should be done with socket_is_writable() before trying to send data
+ * @note If no flags are set, the behaviour of the function will not be modified.
+ *
+ * @note Multiple flags may be set at the same time using the | operator. 
+ *       For example, SOCK_NON_BLOCKING|SOCK_LIBC_ERRORS will create a nonblocking socket with libc error codes.
+ *
+ * @note If you're creating a new nonblocking socket, _hostname should be numeric to avoid calling the 
+ *       name resolution server and potentially blocking the call
+ *
+ * @note If the socket is a nonblocking one, the returned socket descriptor may be still connecting and 
+ *       further checks should be done with socket_is_writable() before trying to send data
  *
  * @param _hostname    Node to connect to
  * @param _port        Service to connect to
@@ -85,13 +111,13 @@ native socket_close(_socket);
 /**
  * Receives data.
  *
- * @note The ammount of bytes than you end up receiving can be less than the one you expected
+ * @note The amount of bytes than you end up receiving can be less than the one you expected
  *
  * @param _socket    Socket descriptor
  * @param _data      Array to save the data
  * @param _length    Length of the array
  *
- * @return           Ammount of bytes received
+ * @return           Amount of bytes received
  *                   0 if the peer closed the connection
  *                   -1 on failure
  */
@@ -100,13 +126,14 @@ native socket_recv(_socket, _data[], _length);
 /**
  * Sends data.
  *
- * @note The ammount of bytes than you end up sending can be less than expected, you're responsible of sending the rest later
+ * @note The amount of bytes that end up being sent may be lower than the total length of the array,
+ *       check the return value and send the rest if needed
  *
  * @param _socket    Socket descriptor
  * @param _data      Array with the data to send
  * @param _length    Length of the array
  *
- * @return           Ammount of bytes sent
+ * @return           Amount of bytes sent
  *                   -1 on failure
  */
 native socket_send(_socket, const _data[], _length);
@@ -114,41 +141,36 @@ native socket_send(_socket, const _data[], _length);
 /**
  * Sends data that can contain null bytes.
  *
- * @note The ammount of bytes than you end up sending can be less than expected, you're responsible of sending the rest later
+ * @note The amount of bytes that end up being sent may be lower than the total length of the array,
+ *       check the return value and send the rest if needed
  *
  * @param _socket    Socket descriptor
  * @param _data      Array with the data to send
  * @param _length    Length of the array
  *
- * @return           Ammount of bytes sent
+ * @return           Amount of bytes sent
  *                   -1 on failure
  */
 native socket_send2(_socket, const _data[], _length);
 
 /**
- * Check if a socket is marked as readable.
+ * Backwards compatible function
  *
- * @note You can use this function to make sure there's something on the socket and avoiding a blocking call
- * @note Set _timeout to 0 avoid blocking the call
- * @note A socket will become readable if there's any data or an EOF
- *
- * @param _socket    Socket descriptor
- * @param _timeout   Ammount of time to block the call waiting for the socket to be marked as readable or for the timeout to expire, in µSeconds (1 sec = 1000000 µsec)
- *
- * @return           1 if the socket is marked as readable
- *                   -1 otherwise
+ * @deprecated Renamed to socket_is_readable
  */
+#pragma deprecated Use socket_is_readable() instead
 native socket_change(_socket, _timeout = 100000);
 
 /**
- * Check if a socket is marked as readable.
+ * Checks if a socket is marked as readable.
  *
  * @note You can use this function to make sure there's something on the socket and avoiding a blocking call
  * @note Set _timeout to 0 avoid blocking the call
  * @note A socket will become readable if there's any data or an EOF
  *
  * @param _socket    Socket descriptor
- * @param _timeout   Ammount of time to block the call waiting for the socket to be marked as readable or for the timeout to expire, in µSeconds (1 sec = 1000000 µsec)
+ * @param _timeout   Amount of time to block the call waiting for the socket to be marked as readable or
+ *                   for the timeout to expire, in µSeconds (1 sec = 1000000 µsec)
  *
  * @return           1 if the socket is marked as readable
  *                   -1 otherwise
@@ -156,14 +178,15 @@ native socket_change(_socket, _timeout = 100000);
 native socket_is_readable(_socket, _timeout = 100000);
 
 /**
- * Check if a socket is marked as writable.
+ * Checks if a socket is marked as writable.
  *
  * @note Use this function to check if a nonblocking socket is ready to be used
  * @note Set _timeout to 0 avoid blocking the call
  * @note An UDP socket is always writable
  *
  * @param _socket    Socket descriptor
- * @param _timeout   Ammount of time to block the call waiting for the socket to be marked as writable or for the timeout to expire, in µSeconds (1 sec = 1000000 µsec)
+ * @param _timeout   Amount of time to block the call waiting for the socket to be marked as writable or
+ *                   for the timeout to expire, in µSeconds (1 sec = 1000000 µsec)
  *
  * @return           1 if the socket is marked as writable
  *                   -1 otherwise

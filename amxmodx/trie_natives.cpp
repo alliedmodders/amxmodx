@@ -470,6 +470,28 @@ static cell AMX_NATIVE_CALL TrieSnapshotDestroy(AMX *amx, cell *params)
 	return 0;
 }
 
+// native TrieIter:TrieIterCreate(Trie:handle)
+static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_handle };
+
+	auto handle = TrieHandles.lookup(params[arg_handle]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map handle provided (%d)", params[arg_handle]);
+		return 0;
+	}
+
+	auto index = TrieIterHandles.create();
+	auto iter  = TrieIterHandles.lookup(index);
+
+	iter->trie = handle;
+	iter->iter = handle->map.iter_p();
+
+	return static_cast<cell>(index);
+}
+
 AMX_NATIVE_INFO trie_Natives[] =
 {
 	{ "TrieCreate"               ,	TrieCreate },
@@ -493,6 +515,8 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieSnapshotKeyBufferSize",	TrieSnapshotKeyBufferSize },
 	{ "TrieSnapshotGetKey"       ,	TrieSnapshotGetKey },
 	{ "TrieSnapshotDestroy"      ,	TrieSnapshotDestroy },
+
+	{ "TrieIterCreate"           ,	TrieIterCreate },
 
 	{ nullptr                    ,	nullptr}
 };

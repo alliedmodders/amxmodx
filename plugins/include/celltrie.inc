@@ -28,6 +28,21 @@ enum Trie
 };
 
 /**
+ * Hash map iterator tag declaration
+ *
+ * @note The word "Trie" in this API is historical. As of AMX Mod X 1.8.3,
+ *       tries have been internally replaced with hash tables, which have O(1)
+ *       insertion time instead of O(n).
+ * @note Plugins are responsible for freeing all TrieIter handles they acquire.
+ *       Failing to free handles will result in the plugin and AMXX leaking
+ *       memory.
+ */
+enum TrieIter
+{
+	Invalid_TrieIter = 0
+}
+
+/**
  * Hash map snapshot tag declaration
  *
  * @note Plugins are responsible for freeing all Snapshot handles they acquire.
@@ -269,3 +284,21 @@ native TrieSnapshotGetKey(Snapshot:handle, index, buffer[], maxlength);
  * @return          1 on success, 0 if an invalid handle was passed in
  */
 native TrieSnapshotDestroy(&Snapshot:handle);
+
+
+/**
+ * Creates an iterator for a map. An iterator provides iterative read-only access to a map.
+ *
+ * @note Just like in snapshots the key/value pairs are not sorted.
+ * @note Any mutating change - that is key addition or key removal - to the underlying map will
+ *       be invalidated. Updating the value of already existing keys is allowed and will be
+ *       immediately changed.
+ * @note Iterators are designed to be short-lived and not be permanently stored or cached.
+ *       Creating new iterators is very fast, exhibiting virtually no overhead, even for very
+ *       large tries. It is generally recommended to create them on-demand. Value retrieval
+ *       can be done through the iterator and is as fast as directly reading from the underlying map.
+ *
+ * @return              New iterator handle, which must be freed via TrieIterDestroy().
+ * @error               Invalid Handle
+ */
+native TrieIter:TrieIterCreate(Trie:handle);

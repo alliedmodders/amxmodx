@@ -345,6 +345,18 @@ static cell AMX_NATIVE_CALL TrieDestroy(AMX *amx, cell *params)
 		return 0;
 	}
 
+	CellTrieIter *iter;
+ 	for (size_t index = 1; index <= TrieIterHandles.size(); index++)
+ 	{
+ 		if ((iter = TrieIterHandles.lookup(index)))
+ 		{
+			if (iter->trie == t)
+			{
+				iter->trie = nullptr;
+			}
+ 		}
+ 	}
+
 	if (TrieHandles.destroy(*ptr))
 	{
 		*ptr = 0;
@@ -714,6 +726,33 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 	return true;
 }
 
+// native TrieIterDestroy(&TrieIter:handle)
+static cell AMX_NATIVE_CALL TrieIterDestroy(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_handle };
+
+	auto refhandle = get_amxaddr(amx, params[arg_handle]);
+	auto handle = TrieIterHandles.lookup(*refhandle);
+
+	if (!handle)
+	{
+		return false;
+	}
+
+	delete handle->iter;
+
+	handle->iter = nullptr;
+	handle->trie = nullptr;
+
+	if (TrieIterHandles.destroy(*refhandle))
+	{
+		*refhandle = 0;
+		return true;
+	}
+
+	return false;
+}
+
 
 AMX_NATIVE_INFO trie_Natives[] =
 {
@@ -747,6 +786,7 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieIterGetCell"          ,  TrieIterGetCell },
 	{ "TrieIterGetString"        ,  TrieIterGetString },
 	{ "TrieIterGetArray"         ,  TrieIterGetArray },
+	{ "TrieIterDestroy"          ,  TrieIterDestroy },
 
 	{ nullptr                    ,	nullptr}
 };

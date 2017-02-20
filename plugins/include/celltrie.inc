@@ -387,3 +387,12 @@ native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0);
  *						Invalid buffer size
  */
 native bool:TrieIterGetArray(TrieIter:handle, any:array[], outputsize, &size = 0);
+
+/**
+ * Destroys an iterator handle.
+ *
+ * @param handle	Iterator handle.
+ *
+ * @return			True on success, false if the value was never set.
+ */
+native TrieIterDestroy(&TrieIter:handle);

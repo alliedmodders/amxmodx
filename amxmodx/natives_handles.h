@@ -45,6 +45,11 @@ class NativeHandle
 			m_handles.clear();
 		}
 
+		size_t size()
+		{
+			return m_handles.length();
+		}
+
 		T *lookup(int handle)
 		{
 			--handle;

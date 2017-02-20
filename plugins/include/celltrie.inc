@@ -302,3 +302,14 @@ native TrieSnapshotDestroy(&Snapshot:handle);
  * @error               Invalid Handle
  */
 native TrieIter:TrieIterCreate(Trie:handle);
+
+/**
+ * Returns if the iterator has reached its end and no more data can be read.
+ *
+ * @param handle        Iterator handle
+ *
+ * @return              True if iterator has reached the end, false otherwise
+ * @error               Invalid Handle
+ */
+native bool:TrieIterEnded(TrieIter:handle);
+

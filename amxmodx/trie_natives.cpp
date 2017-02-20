@@ -659,6 +659,61 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 	return true;
 }
 
+// native bool:TrieIterGetArray(TrieIter:handle, array[], outputsize, &size = 0)
+static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_handle, arg_output, arg_outputsize, arg_refsize };
+
+	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
+		return 0;
+	}
+
+	if (!handle->iter)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
+	}
+
+	auto outputSize = size_t(params[arg_outputsize]);
+
+	if (outputSize < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array size (%d)", params[arg_outputsize]);
+		return 0;
+	}
+
+	if (handle->iter->empty() || !(*handle->iter)->value.isArray())
+	{
+		return false;
+	}
+
+	auto pOutput = get_amxaddr(amx, params[arg_output]);
+	auto pSize   = get_amxaddr(amx, params[arg_refsize]);
+
+	if (!(*handle->iter)->value.array() || !outputSize)
+	{
+		*pSize = 0;
+		return false;
+	}
+
+	auto length = (*handle->iter)->value.arrayLength();
+	auto base   = (*handle->iter)->value.array();
+
+	if (length > outputSize)
+	{
+		length = outputSize;
+	}
+
+	*pSize = length;
+
+	memcpy(pOutput, base, sizeof(cell) * length);
+
+	return true;
+}
+
 
 AMX_NATIVE_INFO trie_Natives[] =
 {
@@ -691,6 +746,7 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieIterGetSize"          ,  TrieIterGetSize },
 	{ "TrieIterGetCell"          ,  TrieIterGetCell },
 	{ "TrieIterGetString"        ,  TrieIterGetString },
+	{ "TrieIterGetArray"         ,  TrieIterGetArray },
 
 	{ nullptr                    ,	nullptr}
 };

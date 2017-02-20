@@ -372,3 +372,18 @@ native bool:TrieIterGetCell(TrieIter:handle, &any:value);
  *                      Invalid buffer size
  */
 native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0);
+
+/**
+ * Retrieves an array at the current position of the iterator.
+ *
+ * @param handle		Iterator handle
+ * @param buffer		Buffer to store the array
+ * @param outputsize	Maximum size of buffer
+ * @param size			Optional parameter to store the number of bytes written to the buffer
+ *
+ * @return 				True on success, false if the iterator is empty or the current
+ *						value is not an array.
+ * @error				Invalid handle
+ *						Invalid buffer size
+ */
+native bool:TrieIterGetArray(TrieIter:handle, any:array[], outputsize, &size = 0);

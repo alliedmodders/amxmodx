@@ -514,6 +514,33 @@ static cell AMX_NATIVE_CALL TrieIterEnded(AMX *amx, cell *params)
 	return handle->iter->empty();
 }
 
+// native TrieIterMore(TrieIter:handle)
+static cell AMX_NATIVE_CALL TrieIterMore(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_handle };
+
+	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
+		return 0;
+	}
+
+	if (!handle->iter)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
+		return 0;
+	}
+
+	if (!handle->iter->empty())
+	{
+		handle->iter->next();
+	}
+
+	return 1;
+}
+
 
 AMX_NATIVE_INFO trie_Natives[] =
 {
@@ -541,6 +568,7 @@ AMX_NATIVE_INFO trie_Natives[] =
 
 	{ "TrieIterCreate"           ,	TrieIterCreate },
 	{ "TrieIterEnded"            ,	TrieIterEnded },
+	{ "TrieIterMore"             ,	TrieIterMore },
 
 	{ nullptr                    ,	nullptr}
 };

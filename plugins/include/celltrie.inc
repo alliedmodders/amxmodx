@@ -313,3 +313,12 @@ native TrieIter:TrieIterCreate(Trie:handle);
  */
 native bool:TrieIterEnded(TrieIter:handle);
 
+/**
+ * Advances the iterator to the next key/value pair if one is available.
+ *
+ * @param handle        Iterator handle
+ *
+ * @error               Invalid Handle
+ */
+native TrieIterMore(TrieIter:handle);
+

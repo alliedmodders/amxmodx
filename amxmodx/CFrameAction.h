@@ -2,7 +2,7 @@
 #define FRAMEACTION_H
 
 #include "amxmodx.h"
-#include "CQueue.h"
+#include <amtl/am-deque.h>
 
 class CFrameActionMngr
 {
@@ -37,25 +37,24 @@ public:
 
 	void AddFrameAction(int callbackForward, cell callbackData)
 	{
-		m_requestedFrames.push(new CFrameAction(callbackForward, callbackData));
+		m_requestedFrames.append(new CFrameAction(callbackForward, callbackData));
 	}
 
 	void ExecuteFrameCallbacks()
 	{
 		// In case a frame callback requests another frame, newly added frames won't be executed this way
-		int callbacksToRun = m_requestedFrames.size();
+		int callbacksToRun = m_requestedFrames.length();
 		while (callbacksToRun--)
 		{
-			CFrameAction *action = m_requestedFrames.front();
-			m_requestedFrames.pop();
-
+			auto action = m_requestedFrames.popFrontCopy();
 			action->Execute();
+
 			delete action;
 		}
 	}
 
 private:
-	CQueue<CFrameAction *> m_requestedFrames;
+	ke::Deque<CFrameAction *> m_requestedFrames;
 
 };
 

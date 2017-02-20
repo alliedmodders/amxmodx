@@ -333,3 +333,15 @@ native TrieIterMore(TrieIter:handle);
  * @error				Invalid handle
  */
 native TrieIterGetKey(TrieIter:handle, key[], outputsize);
+
+/**
+ * Retrieves the number of elements in the underlying map.
+ *
+ * @note When used on a valid iterator this is exactly the same as calling TrieGetSize on the map directly.
+ *
+ * @param handle		Iterator handle
+ *
+ * @return				Number of elements in the map
+ * @error				Invalid handle
+ */
+native TrieIterGetSize(TrieIter:handle);

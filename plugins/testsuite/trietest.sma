@@ -197,7 +197,7 @@ public trietest()
 		server_print("entry K42K should not be an array or string"); ok = false;
 	}
 	if (!TrieSetArray(t, "K42K", data, 1))
-    {
+	{
 		server_print("couldn't set K42K to 1-entry array"); ok = false;
 	}
 	if (!TrieGetArray(t, "K42K", array, sizeof(array), value))
@@ -262,7 +262,7 @@ public trietest()
 		fail("Exists/Delete");
 
 	ok = true;
-		
+
 	TrieClear(t);
 
 	if (TrieGetSize(t))
@@ -293,7 +293,7 @@ public trietest()
 			else if (strcmp(buffer, "egg") == 0)			found[2] = true;
 			else { server_print("unexpected key: %s", buffer); ok = false; }
 		}
-		
+
 		if (!found[0] || !found[1] || !found[2])
 		{
 			server_print("did not find all keys"); ok = false;
@@ -302,12 +302,209 @@ public trietest()
 
 	TrieSnapshotDestroy(keys);
 	TrieDestroy(t);
-	
+
 	if (ok)
 		pass("Snapshot");
 	else
 		fail("Snapshot");
 
+
+	ok = true;
+
+	t = TrieCreate();
+
+	TrieSetString(t, "full", "throttle");
+	TrieSetString(t, "brutal", "legend");
+	TrieSetString(t, "broken", "age");
+
+	new TrieIter:iter = TrieIterCreate(t);
+	{
+		if (TrieIterGetSize(iter) != 3)
+		{
+			server_print("Trie iterator size should be 3, is %d", TrieIterGetSize(iter));
+			ok = false;
+		}
+
+		if (TrieIterEnded(iter))
+		{
+			server_print("Trie iterator should have a next key/value pair at this point");
+			ok = false;
+		}
+
+		new key[32], value[32], bool:valid[4], klen, vlen;
+		if (!TrieIterGetKey(iter, key, charsmax(key)))
+		{
+			server_print("Trie iterator should not be empty at this point (no key retrieval)");
+			ok = false;
+		}
+		else
+		{
+			while (!TrieIterEnded(iter))
+			{
+				klen = TrieIterGetKey(iter, key, charsmax(key));
+				TrieIterGetString(iter, value, charsmax(value), vlen);
+
+				if (strcmp(key, "full") == 0 && strcmp(value, "throttle") == 0)
+					valid[0] = true;
+				else if (strcmp(key, "brutal") == 0 && strcmp(value, "legend") == 0)
+					valid[1] = true;
+				else if (strcmp(key, "broken") == 0 && strcmp(value, "age") == 0)
+					valid[2] = true;
+
+				if (strlen(key) != klen)
+				{
+					server_print("Key string length does not match. %d != %d", strlen(key), klen);
+					ok = false;
+				}
+
+				if (strlen(value) != vlen)
+				{
+					server_print("Value string length does not match. %d != %d", strlen(key), vlen);
+					ok = false;
+				}
+
+				TrieIterMore(iter);
+			}
+
+			if (!valid[0] || !valid[1] || !valid[2])
+			{
+				server_print("Did not find all value pairs (1)");
+				ok = false;
+			}
+		}
+
+		// Should thrown an error
+		// TrieSetString(t, "monkey", "island");
+		// TrieDeleteKey(t, "full");
+		// TrieClear(t);
+
+		TrieIterDestroy(iter);
+
+		if (iter)
+		{
+			server_print("Iterator handle should be null after being destroyed: %d", iter);
+			ok = false;
+		}
+
+		iter = TrieIterCreate(t);
+		{
+			TrieSetString(t, "full", "speed");
+			TrieSetString(t, "brutal", "uppercut");
+			TrieSetString(t, "broken", "sword");
+
+			arrayset(valid, false, sizeof(valid));
+
+			for (; !TrieIterEnded(iter); TrieIterMore(iter))
+			{
+				if (TrieIterGetCell(iter, value[0]) || TrieIterGetArray(iter, array, sizeof(array)))
+				{
+					server_print("Entries should not be an array or string");
+					ok = false;
+				}
+				else
+				{
+					TrieIterGetKey(iter, key, charsmax(key));
+					TrieIterGetString(iter, value, charsmax(value));
+
+					if (strcmp(key, "full") == 0)
+						TrieSetString(t, "full", "speed");
+					else if (strcmp(key, "brutal") == 0)
+						TrieSetString(t, "brutal", "uppercut");
+					else if (strcmp(key, "broken") == 0)
+						TrieSetString(t, "broken", "sword");
+				}
+			}
+
+			if (TrieGetString(t, "full", value, charsmax(value)) && strcmp(value, "speed") == 0)
+				valid[0] = true;
+			if (TrieGetString(t, "brutal", value, charsmax(value)) && strcmp(value, "uppercut") == 0)
+				valid[1] = true;
+			if (TrieGetString(t, "broken", value, charsmax(value)) && strcmp(value, "sword") == 0)
+				valid[2] = true;
+
+			if (!valid[0] || !valid[1] || !valid[2])
+			{
+				server_print("Did not set the new values (overwriting value is allowed)");
+				ok = false;
+			}
+
+
+		}
+		TrieIterDestroy(iter);
+
+		if (TrieIterDestroy(iter))
+		{
+			server_print("Iter should be null");
+			ok = false;
+		}
+
+		iter = TrieIterCreate(t);
+		{
+			TrieDestroy(t);
+			// Should throw an error
+			// TrieIterMore(iter)
+		}
+
+		if (!TrieIterDestroy(iter))
+		{
+			server_print("Iter should be valid");
+			ok = false;
+		}
+
+		t = TrieCreate();
+		TrieSetCell(t, "key_1", cellmin);
+		TrieSetArray(t, "key_2", data, sizeof data);
+
+		iter = TrieIterCreate(t);
+
+		if (TrieIterEnded(iter))
+		{
+			server_print("Iter should not be ended: %d", iter);
+			ok = false;
+		}
+
+		for (; !TrieIterEnded(iter); TrieIterMore(iter))
+		{
+			TrieIterGetKey(iter, key, charsmax(key));
+
+			if (strcmp(key, "key_1") == 0)
+			{
+				new val;
+				if (!TrieIterGetCell(iter, val) || val != cellmin)
+				{
+					server_print("Failed to retrieve value (%d)", val)
+					ok = false;
+				}
+			}
+			else if (strcmp(key, "key_2") == 0)
+			{
+				if (!TrieIterGetArray(iter, array, sizeof(array)))
+				{
+					server_print("Failed to retrieve array")
+					ok = false;
+				}
+				else
+				{
+					for (new i = 0; i < sizeof data; i++)
+					{
+						if (data[i] != array[i])
+						{
+							server_print("slot %d should be %d, got %d", i, data[i], array[i]);
+							ok = false;
+						}
+					}
+				}
+			}
+		}
+
+		TrieIterDestroy(iter);
+		TrieDestroy(t);
+	}
+
+	if (ok)
+		pass("Iterator");
+	else
+		fail("Iterator");
 
 	done();
 }

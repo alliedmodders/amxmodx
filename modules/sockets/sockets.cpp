@@ -237,7 +237,7 @@ static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)
 	while(length--)
 		*buffer++ = (char)*data++;
 
-	return send(sockfd, g_send2_buffer, length, 0);
+	return send(sockfd, g_send2_buffer, params[3], 0);
 }
 
 // native socket_change(_socket, _timeout = 100000);

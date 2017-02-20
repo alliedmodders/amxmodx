@@ -622,6 +622,43 @@ static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 	return true;
 }
 
+// native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0)
+static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_handle, arg_output, arg_outputsize, arg_refsize };
+
+	auto handle = TrieIterHandles.lookup(params[arg_handle]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid map iterator handle provided (%d)", params[arg_handle]);
+		return 0;
+	}
+
+	if (!handle->iter)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Closed map iterator handle provided (%d)", params[arg_handle]);
+		return 0;
+	}
+
+	if (params[arg_outputsize] < 0)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid buffer size (%d)", params[arg_outputsize]);
+		return 0;
+	}
+
+	if (handle->iter->empty() || !(*handle->iter)->value.isString())
+	{
+		return false;
+	}
+
+	auto refsize = get_amxaddr(amx, params[arg_refsize]);
+
+	*refsize = set_amxstring_utf8(amx, params[arg_output], (*handle->iter)->value.chars(), strlen((*handle->iter)->value.chars()), params[arg_outputsize]);
+
+	return true;
+}
+
 
 AMX_NATIVE_INFO trie_Natives[] =
 {
@@ -653,6 +690,7 @@ AMX_NATIVE_INFO trie_Natives[] =
 	{ "TrieIterGetKey"           ,	TrieIterGetKey },
 	{ "TrieIterGetSize"          ,  TrieIterGetSize },
 	{ "TrieIterGetCell"          ,  TrieIterGetCell },
+	{ "TrieIterGetString"        ,  TrieIterGetString },
 
 	{ nullptr                    ,	nullptr}
 };

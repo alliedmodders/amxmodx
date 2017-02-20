@@ -357,3 +357,18 @@ native TrieIterGetSize(TrieIter:handle);
  * @error				Invalid handle
  */
 native bool:TrieIterGetCell(TrieIter:handle, &any:value);
+
+/**
+ * Retrieves a string at the current position of the iterator.
+ *
+ * @param handle		Iterator handle
+ * @param buffer		Buffer to store the string in
+ * @param outputsize	Maximum size of string buffer
+ * @param size			Optional parameter to store the number of bytes written to the buffer.
+ *
+ * @return 				True on success, false if the iterator is empty or the current value
+ *						is not a string.
+ * @error				Invalid handle
+ *                      Invalid buffer size
+ */
+native bool:TrieIterGetString(TrieIter:handle, buffer[], outputsize, &size = 0);

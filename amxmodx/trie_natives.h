@@ -14,6 +14,7 @@
 #include <sm_stringhashmap.h>
 #include <sm_memtable.h>
 #include "natives_handles.h"
+#include <amtl/am-uniqueptr.h>
 
 enum EntryType
 {
@@ -145,11 +146,11 @@ struct CellTrie
 
 struct CellTrieIter
 {
-	CellTrieIter() : trie(nullptr), iter(nullptr), mod_count(0) 
+	CellTrieIter() : trie(nullptr), iter(nullptr), mod_count(0)
 	{}
 
 	CellTrie *trie;
-	StringHashMap<Entry>::iterator *iter;
+	ke::UniquePtr<StringHashMap<Entry>::iterator> iter;
 	size_t mod_count;
 };
 

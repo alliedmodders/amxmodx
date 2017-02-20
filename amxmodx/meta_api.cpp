@@ -410,6 +410,7 @@ int	C_Spawn(edict_t *pent)
 
 	ArrayHandles.clear();
 	TrieHandles.clear();
+	TrieIterHandles.clear();
 	TrieSnapshotHandles.clear();
 	DataPackHandles.clear();
 	TextParsersHandles.clear();

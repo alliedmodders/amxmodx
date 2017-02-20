@@ -322,3 +322,14 @@ native bool:TrieIterEnded(TrieIter:handle);
  */
 native TrieIterMore(TrieIter:handle);
 
+/**
+ * Retrieves the key the iterator currently points to.
+ *
+ * @param handle		Iterator handle.
+ * @param key			Buffer to store the current key in.
+ * @param outputsize	Maximum size of string buffer.
+ *
+ * @return 				Nnumber of bytes written to the buffer
+ * @error				Invalid handle
+ */
+native TrieIterGetKey(TrieIter:handle, key[], outputsize);

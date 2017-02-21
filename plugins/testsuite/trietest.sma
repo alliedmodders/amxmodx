@@ -363,6 +363,11 @@ public trietest()
 					ok = false;
 				}
 
+				// Should thrown an error
+				// TrieSetString(t, "monkey", "island");
+				// TrieDeleteKey(t, "full");
+				// TrieClear(t);
+		
 				TrieIterNext(iter);
 			}
 
@@ -372,11 +377,6 @@ public trietest()
 				ok = false;
 			}
 		}
-
-		// Should thrown an error
-		// TrieSetString(t, "monkey", "island");
-		// TrieDeleteKey(t, "full");
-		// TrieClear(t);
 
 		TrieIterDestroy(iter);
 

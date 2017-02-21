@@ -642,7 +642,7 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 
 	CHECK_ITER_HANDLE(handle)
 
-	auto outputSize = size_t(params[arg_outputsize]);
+	auto outputSize = params[arg_outputsize];
 
 	if (outputSize < 0)
 	{
@@ -669,7 +669,7 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 	auto length = (*iter)->value.arrayLength();
 	auto base   = (*iter)->value.array();
 
-	if (length > outputSize)
+	if (length > size_t(outputSize))
 	{
 		length = outputSize;
 	}

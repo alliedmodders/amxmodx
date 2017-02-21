@@ -287,17 +287,16 @@ native TrieSnapshotDestroy(&Snapshot:handle);
 
 
 /**
- * Creates an iterator for a map. An iterator provides iterative read-only access to a map.
+ * Creates an iterator for a map. It provides iterative read-only access to the
+ * maps contents.
  *
- * @note Just like in snapshots the key/value pairs are not sorted.
- * @note Any mutating change - that is key addition or key removal - to the underlying map will
- *       be invalidated.
- * @note Updating the value of already existing keys will not mark iterators as outdated. Iterators
- *       will immediately reflect updated values. Nothing is cached.
- * @note Iterators are designed to be short-lived and not be permanently stored or cached.
- *       Creating new iterators is very fast, exhibiting virtually no overhead, even for very
- *       large tries. It is generally recommended to create them on-demand. Value retrieval
- *       can be done through the iterator and is as fast as directly reading from the underlying map.
+ * @note Removing or adding keys to the underlying map will invalidate all its
+ *       iterators. Updating values of existing keys is allowed and the changes 
+ *       will be immediately reflected in the iterator.
+ * @note Iterators are designed to be short-lived and not stored, and creating
+ *       them is very cheap. Reading data from an iterator is just as fast as 
+ *       reading directly from the map.
+ * @note Just like in snapshots the keys are not sorted.
  *
  * @return              New iterator handle, which must be freed via TrieIterDestroy().
  * @error               Invalid Handle

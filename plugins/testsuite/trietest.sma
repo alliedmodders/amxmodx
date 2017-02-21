@@ -363,7 +363,7 @@ public trietest()
 					ok = false;
 				}
 
-				TrieIterMore(iter);
+				TrieIterNext(iter);
 			}
 
 			if (!valid[0] || !valid[1] || !valid[2])
@@ -394,7 +394,7 @@ public trietest()
 
 			arrayset(valid, false, sizeof(valid));
 
-			for (; !TrieIterEnded(iter); TrieIterMore(iter))
+			for (; !TrieIterEnded(iter); TrieIterNext(iter))
 			{
 				if (TrieIterGetCell(iter, value[0]) || TrieIterGetArray(iter, array, sizeof(array)))
 				{
@@ -442,7 +442,7 @@ public trietest()
 		{
 			TrieDestroy(t);
 			// Should throw an error
-			// TrieIterMore(iter)
+			// TrieIterNext(iter)
 		}
 
 		if (!TrieIterDestroy(iter))
@@ -463,7 +463,7 @@ public trietest()
 			ok = false;
 		}
 
-		for (; !TrieIterEnded(iter); TrieIterMore(iter))
+		for (; !TrieIterEnded(iter); TrieIterNext(iter))
 		{
 			TrieIterGetKey(iter, key, charsmax(key));
 

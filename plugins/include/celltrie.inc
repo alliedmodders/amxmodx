@@ -325,7 +325,7 @@ native bool:TrieIterEnded(TrieIter:handle);
  *                      Iterator has been closed (underlying map destroyed)
  *                      Iterator is outdated
  */
-native TrieIterMore(TrieIter:handle);
+native TrieIterNext(TrieIter:handle);
 
 /**
  * Retrieves the key the iterator currently points to.

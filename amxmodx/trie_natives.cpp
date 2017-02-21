@@ -532,8 +532,8 @@ static cell AMX_NATIVE_CALL TrieIterEnded(AMX *amx, cell *params)
 	return handle->iter->empty();
 }
 
-// native TrieIterMore(TrieIter:handle)
-static cell AMX_NATIVE_CALL TrieIterMore(AMX *amx, cell *params)
+// native TrieIterNext(TrieIter:handle)
+static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_handle };
 
@@ -732,7 +732,7 @@ AMX_NATIVE_INFO trie_Natives[] =
 
 	{ "TrieIterCreate"           ,	TrieIterCreate },
 	{ "TrieIterEnded"            ,	TrieIterEnded },
-	{ "TrieIterMore"             ,	TrieIterMore },
+	{ "TrieIterNext"             ,	TrieIterNext },
 	{ "TrieIterGetKey"           ,	TrieIterGetKey },
 	{ "TrieIterGetSize"          ,  TrieIterGetSize },
 	{ "TrieIterGetCell"          ,  TrieIterGetCell },

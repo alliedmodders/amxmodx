@@ -197,6 +197,24 @@ forward client_disconnect(id);
 forward client_disconnecting(id, bool:drop, message[], maxlen);
 
 /**
+ * Called when a client is disconnected from the server.
+ *
+ * @note This will be called in some additional cases that client_disconnect doesn't cover, 
+ *       most notably when a client aborts the connection process. It is guaranteed to pair 
+ *       with the client_connect() forward.
+ * @note By this point it is already too late to do anything that directly
+ *       affects the client.
+ *
+ * @param id         Client index
+ * @param drop       If true, client has been explicitly dropped by game
+ * @param message    If drop is true, a disconnected message or buffer to copy a new message to
+ * @param maxlen     Maximum size of buffer
+ *
+ * @noreturn
+ */
+forward client_disconnected(id, bool:drop, message[], maxlen);
+
+/**
  * Called when a client attempts to execute a command.
  *
  * @note The command and its arguments can be read using the read_arg* set of

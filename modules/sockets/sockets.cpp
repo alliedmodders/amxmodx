@@ -228,6 +228,13 @@ static cell AMX_NATIVE_CALL socket_send2(AMX *amx, cell *params)
 		delete[] g_send2_buffer;
 
 		g_send2_buffer = new char[length + 1];
+
+		if(g_send2_buffer == nullptr)
+		{
+			g_send2_buffer_length = 0;
+			return -1;
+		}
+		
 		g_send2_buffer_length = length;
 	}
 

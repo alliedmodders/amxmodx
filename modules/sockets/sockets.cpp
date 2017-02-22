@@ -75,11 +75,11 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 		SOCK_LIBC_ERRORS = (1 << 1)
 	};
 
-	#define SOCK_ERROR_OK               0 // No error
-	#define SOCK_ERROR_CREATE_SOCKET    1 // Couldn't create a socket
-	#define SOCK_ERROR_SERVER_UNKNOWN   2 // Server unknown
-	#define SOCK_ERROR_WHILE_CONNECTING 3 // Error while connecting
-	#define ERROR_EHOSTUNREACH 113		// libc error code: No route to host
+	#define SOCK_ERROR_OK               0    // No error
+	#define SOCK_ERROR_CREATE_SOCKET    1    // Couldn't create a socket
+	#define SOCK_ERROR_SERVER_UNKNOWN   2    // Server unknown
+	#define SOCK_ERROR_WHILE_CONNECTING 3    // Error while connecting
+	#define ERROR_EHOSTUNREACH          113  // libc error code: No route to host
 
 	int hostname_length = 0;
 	char *hostname = MF_GetAmxString(amx, params[1], 0, &hostname_length);

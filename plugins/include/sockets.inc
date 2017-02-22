@@ -65,10 +65,10 @@
  *       For example, SOCK_NON_BLOCKING|SOCK_LIBC_ERRORS will create a nonblocking socket with libc error codes.
  *
  * @note If you're creating a new nonblocking socket, _hostname should be numeric to avoid calling the 
- *       name resolution server and potentially blocking the call
+ *       name resolution server and potentially blocking the call.
  *
  * @note If the socket is a nonblocking one, the returned socket descriptor may be still connecting and 
- *       further checks should be done with socket_is_writable() before trying to send data
+ *       further checks should be done with socket_is_writable() before trying to send data.
  *
  * @param _hostname    Node to connect to
  * @param _port        Service to connect to
@@ -82,7 +82,7 @@
 native socket_open(const _hostname[], _port, _protocol = SOCKET_TCP, &_error, _flags = 0);
 
 /**
- * Closes a socket
+ * Closes a socket.
  *
  * @param _socket    Socket descriptor
  *
@@ -94,7 +94,7 @@ native socket_close(_socket);
 /**
  * Receives data.
  *
- * @note The amount of bytes than you end up receiving can be less than the one you expected
+ * @note The amount of bytes than you end up receiving can be less than the one you expected.
  *
  * @param _socket    Socket descriptor
  * @param _data      Array to save the data
@@ -110,7 +110,7 @@ native socket_recv(_socket, _data[], _length);
  * Sends data.
  *
  * @note The amount of bytes that end up being sent may be lower than the total length of the array,
- *       check the return value and send the rest if needed
+ *       check the return value and send the rest if needed.
  *
  * @param _socket    Socket descriptor
  * @param _data      Array with the data to send
@@ -125,7 +125,9 @@ native socket_send(_socket, const _data[], _length);
  * Sends data that can contain null bytes.
  *
  * @note The amount of bytes that end up being sent may be lower than the total length of the array,
- *       check the return value and send the rest if needed
+ *       check the return value and send the rest if needed.
+ *
+ * @note strlen(_data) will return the wrong length if the array contains null bytes.
  *
  * @param _socket    Socket descriptor
  * @param _data      Array with the data to send
@@ -137,9 +139,9 @@ native socket_send(_socket, const _data[], _length);
 native socket_send2(_socket, const _data[], _length);
 
 /**
- * Backwards compatible function
+ * Backwards compatible function.
  *
- * @deprecated Renamed to socket_is_readable
+ * @deprecated Renamed to socket_is_readable()
  */
 #pragma deprecated Use socket_is_readable() instead
 native socket_change(_socket, _timeout = 100000);
@@ -147,9 +149,9 @@ native socket_change(_socket, _timeout = 100000);
 /**
  * Checks if a socket is marked as readable.
  *
- * @note You can use this function to make sure there's something on the socket and avoiding a blocking call
- * @note Set _timeout to 0 avoid blocking the call
- * @note A socket will become readable if there's any data or an EOF
+ * @note You can use this function to make sure there's something on the socket and avoid a blocking call.
+ * @note Set _timeout to 0 avoid blocking the call.
+ * @note A socket will become readable if there's any data or an EOF.
  *
  * @param _socket    Socket descriptor
  * @param _timeout   Amount of time to block the call waiting for the socket to be marked as readable or
@@ -163,9 +165,9 @@ native socket_is_readable(_socket, _timeout = 100000);
 /**
  * Checks if a socket is marked as writable.
  *
- * @note Use this function to check if a nonblocking socket is ready to be used
- * @note Set _timeout to 0 avoid blocking the call
- * @note An UDP socket is always writable
+ * @note Use this function to check if a nonblocking socket is ready to be used.
+ * @note Set _timeout to 0 avoid blocking the call.
+ * @note An UDP socket is always writable.
  *
  * @param _socket    Socket descriptor
  * @param _timeout   Amount of time to block the call waiting for the socket to be marked as writable or

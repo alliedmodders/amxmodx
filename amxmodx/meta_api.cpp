@@ -911,12 +911,10 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	ke::SafeVsprintf(buffer, sizeof(buffer) - 1, format, ap);
 	va_end(ap);
 
-	CPlayer *pPlayer {};
+	auto pPlayer = cl->edict ? GET_PLAYER_POINTER(cl->edict) : nullptr;
 
-	if (cl->edict)
+	if (pPlayer)
 	{
-		pPlayer = GET_PLAYER_POINTER(cl->edict);
-
 		if (pPlayer->initialized)
 		{
 			pPlayer->disconnecting = true;
@@ -926,7 +924,7 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 
 	DETOUR_STATIC_CALL(SV_DropClient)(cl, crash, "%s", buffer);
 
-	if (cl->edict)
+	if (pPlayer)
 	{
 		pPlayer->Disconnect();
 		executeForwards(FF_ClientDisconnected, pPlayer->index, TRUE, prepareCharArray(buffer, sizeof(buffer), true), sizeof(buffer) - 1);

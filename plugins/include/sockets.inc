@@ -87,7 +87,7 @@ native socket_open(const _hostname[], _port, _protocol = SOCKET_TCP, &_error, _f
  * @param _socket    Socket descriptor
  *
  * @return           1 on success
- *                   -1 on failure
+ *                   0 on failure
  */
 native socket_close(_socket);
 
@@ -156,7 +156,7 @@ native socket_change(_socket, _timeout = 100000);
  *                   for the timeout to expire, in µSeconds (1 sec = 1000000 µsec)
  *
  * @return           1 if the socket is marked as readable
- *                   -1 otherwise
+ *                   0 otherwise
  */
 native socket_is_readable(_socket, _timeout = 100000);
 
@@ -172,6 +172,6 @@ native socket_is_readable(_socket, _timeout = 100000);
  *                   for the timeout to expire, in µSeconds (1 sec = 1000000 µsec)
  *
  * @return           1 if the socket is marked as writable
- *                   -1 otherwise
+ *                   0 otherwise
  */
 native socket_is_writable(_socket, _timeout = 100000);

@@ -60,7 +60,7 @@ public client_disconnected(id)
 {
 	if (get_pcvar_num(g_HidePtr))
 	{
-		setVisibleSlots(get_playersnum(1) - 1, MaxClients - get_pcvar_num(g_ResPtr))
+		setVisibleSlots(get_playersnum(1), MaxClients - get_pcvar_num(g_ResPtr))
 	}
 }
 

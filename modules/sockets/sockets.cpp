@@ -199,7 +199,17 @@ static cell AMX_NATIVE_CALL socket_recv(AMX *amx, cell *params)
 	recv_buffer[bytes_received] = '\0';
 
 	cell* destination = MF_GetAmxAddr(amx, params[2]);
-	strncopy(destination, recv_buffer, length - 1);
+
+	int current_length = 0;
+	int max_length = length - 1;
+
+	while(max_length-- && current_length < bytes_received)
+	{
+		*destination++ = (cell)*recv_buffer++;
+		current_length++;
+	}
+
+	*destination = 0;
 
 	delete[] recv_buffer;
 

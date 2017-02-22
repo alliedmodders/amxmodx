@@ -175,11 +175,11 @@ forward client_authorized(id, const authid[]);
 /**
  * @deprecated This function does not catch all cases.
  */
-#pragma deprecated Use client_disconnected() instead.
+#pragma deprecated Use client_disconnecting() instead.
 forward client_disconnect(id);
 
 /**
- * Called when a client is disconnected from the server.
+ * Called when a client is disconnecting from the server.
  *
  * @note This will be called in some additional cases that client_disconnect doesn't cover, 
  *       most notably when a client aborts the connection process. It is guaranteed to pair 
@@ -194,7 +194,7 @@ forward client_disconnect(id);
  *
  * @noreturn
  */
-forward client_disconnected(id, bool:drop, message[], maxlen);
+forward client_disconnecting(id, bool:drop, message[], maxlen);
 
 /**
  * Called when a client attempts to execute a command.

@@ -134,8 +134,8 @@ cvar_t* mp_timelimit = NULL;
 int FF_ClientCommand = -1;
 int FF_ClientConnect = -1;
 int FF_ClientDisconnect = -1;
-int FF_ClientDisconnecting = -1;
 int FF_ClientDisconnected = -1;
+int FF_ClientRemove = -1;
 int FF_ClientInfoChanged = -1;
 int FF_ClientPutInServer = -1;
 int FF_PluginInit = -1;
@@ -497,8 +497,8 @@ int	C_Spawn(edict_t *pent)
 	FF_ClientCommand = registerForward("client_command", ET_STOP, FP_CELL, FP_DONE);
 	FF_ClientConnect = registerForward("client_connect", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ClientDisconnect = registerForward("client_disconnect", ET_IGNORE, FP_CELL, FP_DONE);
-	FF_ClientDisconnecting = registerForward("client_disconnecting", ET_IGNORE, FP_CELL, FP_CELL, FP_ARRAY, FP_CELL, FP_DONE);
 	FF_ClientDisconnected = registerForward("client_disconnected", ET_IGNORE, FP_CELL, FP_CELL, FP_ARRAY, FP_CELL, FP_DONE);
+	FF_ClientRemove = registerForward("client_remove", ET_IGNORE, FP_CELL, FP_CELL, FP_STRING, FP_DONE);
 	FF_ClientInfoChanged = registerForward("client_infochanged", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ClientPutInServer = registerForward("client_putinserver", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_PluginCfg = registerForward("plugin_cfg", ET_IGNORE, FP_DONE);
@@ -683,7 +683,7 @@ void C_ServerDeactivate()
 
 			if (DropClientDetour && !pPlayer->disconnecting)
 			{
-				executeForwards(FF_ClientDisconnecting, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
+				executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
 			}
 		}
 
@@ -694,9 +694,9 @@ void C_ServerDeactivate()
 			pPlayer->Disconnect();
 			--g_players_num;
 
-			if (DropClientDetour && !wasDisconnecting)
+			if (!wasDisconnecting && DropClientDetour)
 			{
-				executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
+				executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
 			}
 		}
 	}
@@ -880,7 +880,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 		
 		if (DropClientDetour && !pPlayer->disconnecting)
 		{
-			executeForwards(FF_ClientDisconnecting, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
+			executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
 		}
 	}
 
@@ -893,9 +893,9 @@ void C_ClientDisconnect(edict_t *pEntity)
 
 	pPlayer->Disconnect();
 
-	if (!wasDisconnecting)
+	if (!wasDisconnecting && DropClientDetour)
 	{
-		executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
+		executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -918,7 +918,7 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 		if (pPlayer->initialized)
 		{
 			pPlayer->disconnecting = true;
-			executeForwards(FF_ClientDisconnecting, pPlayer->index, TRUE, prepareCharArray(buffer, sizeof(buffer), true), sizeof(buffer) - 1);
+			executeForwards(FF_ClientDisconnected, pPlayer->index, TRUE, prepareCharArray(buffer, sizeof(buffer), true), sizeof(buffer) - 1);
 		}
 	}
 
@@ -927,7 +927,7 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	if (pPlayer)
 	{
 		pPlayer->Disconnect();
-		executeForwards(FF_ClientDisconnected, pPlayer->index, TRUE, prepareCharArray(buffer, sizeof(buffer), true), sizeof(buffer) - 1);
+		executeForwards(FF_ClientRemove, pPlayer->index, TRUE, buffer);
 	}
 }
 
@@ -1609,7 +1609,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	}
 	else
 	{
-		AMXXLOG_Log("client_disconnected forward has been disabled - check your gamedata files.");
+		AMXXLOG_Log("client_disconnected and client_remove forwards have been disabled - check your gamedata files.");
 	}
 
 	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);

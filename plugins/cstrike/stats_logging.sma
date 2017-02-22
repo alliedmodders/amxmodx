@@ -23,7 +23,7 @@ public plugin_init()
 	register_plugin("CS Stats Logging", AMXX_VERSION_STR, "AMXX Dev Team")
 }
 
-public client_disconnecting(id)
+public client_disconnected(id)
 {
 	if (!g_inGame[id])
 		return

@@ -4651,7 +4651,7 @@ static cell AMX_NATIVE_CALL RequestFrame(AMX *amx, cell *params)
 
 	g_frameActionMngr.AddFrameAction(func, params[2]);
 
-	return 0;
+	return 1;
 }
 
 static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)

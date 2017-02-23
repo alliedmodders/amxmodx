@@ -3,6 +3,7 @@
 
 #include "amxmodx.h"
 #include <amtl/am-deque.h>
+#include <amtl/am-autoptr.h>
 
 class CFrameActionMngr
 {
@@ -46,15 +47,14 @@ public:
 		int callbacksToRun = m_requestedFrames.length();
 		while (callbacksToRun--)
 		{
-			auto action = m_requestedFrames.popFrontCopy();
+			ke::AutoPtr<CFrameAction> action = ke::Move(m_requestedFrames.front());
+			m_requestedFrames.popFront();
 			action->Execute();
-
-			delete action;
 		}
 	}
 
 private:
-	ke::Deque<CFrameAction *> m_requestedFrames;
+	ke::Deque<ke::AutoPtr<CFrameAction>> m_requestedFrames;
 
 };
 

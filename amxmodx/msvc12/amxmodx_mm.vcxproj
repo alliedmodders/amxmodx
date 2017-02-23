@@ -376,6 +376,7 @@
     <ClInclude Include="..\trie_natives.h" />
     <ClInclude Include="..\..\public\sdk\amxxmodule.h" />
     <ClInclude Include="..\..\public\sdk\moduleconfig.h" />
+    <ClInclude Include="..\CFrameAction.h">
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\version.rc" />

@@ -51,6 +51,7 @@
 #include "amxxlog.h"
 #include "CvarManager.h"
 #include "CoreConfig.h"
+#include "CFrameAction.h"
 #include <amxmodx_version.h>
 #include <HLTypeConversion.h>
 
@@ -166,6 +167,7 @@ struct fakecmd_t
 extern CLog g_log;
 extern CPluginMngr g_plugins;
 extern CTaskMngr g_tasksMngr;
+extern CFrameActionMngr g_frameActionMngr;
 extern CPlayer g_players[33];
 extern CPlayer* mPlayer;
 extern CmdMngr g_commands;

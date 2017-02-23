@@ -20,7 +20,7 @@ public plugin_init()
 {
 	register_plugin("Admin Help", AMXX_VERSION_STR, "AMXX Dev Team");
 	register_dictionary("adminhelp.txt");
-	register_concmd("amx_help", "cmdHelp", 0, "HELP_CMD_INFO", .info_ml = true);
+	register_concmd("amx_help", "cmdHelp", ADMIN_ALL, "HELP_CMD_INFO", .info_ml = true);
 
 	g_cvarDisplayClientMessage = register_cvar("amx_help_display_msg", "1");
 	g_cvarHelpAmount = register_cvar("amx_help_amount_per_page", "10");

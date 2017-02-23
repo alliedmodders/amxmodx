@@ -20,6 +20,8 @@ new CvarHelpAmount;
 new CvarNextmap[MaxMapLength];
 new Float:CvarTimeLimit;
 
+new bool:DisplayClientMessage[MAX_PLAYERS + 1 char];
+
 public plugin_init()
 {
 	register_plugin("Admin Help", AMXX_VERSION_STR, "AMXX Dev Team");
@@ -46,13 +48,18 @@ public client_putinserver(id)
 {
 	if (CvarDisplayClientMessage > 0 && !is_user_bot(id))
 	{
+		DisplayClientMessage{id} = true;
 		set_task(15.0, "dispInfo", id);
 	}
 }
 
 public client_disconnected(id)
 {
-	remove_task(id);
+	if (DisplayClientMessage{id})
+	{
+		DisplayClientMessage{id} = false; 
+		remove_task(id);
+	}
 }
 
 public cmdHelp(id, level, cid)

@@ -99,7 +99,15 @@ static cell AMX_NATIVE_CALL ArrayClone(AMX* amx, cell* params)
 		return 0;
 	}
 
-	return ArrayHandles.clone(vec->clone());
+	auto data = vec->clone();
+
+	if (!data)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Failed to clone array. Out of memory.");
+		return 0;
+	}
+
+	return ArrayHandles.clone(data);
 }
 
 // native ArrayGetArray(Array:which, item, any:output[], size = -1);

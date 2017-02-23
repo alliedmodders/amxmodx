@@ -13,8 +13,12 @@
 
 #include <amxmodx>
 
-new g_cvarDisplayClientMessage;
-new g_cvarHelpAmount;
+const MaxMapLength = 32;
+
+new CvarDisplayClientMessage;
+new CvarHelpAmount;
+new CvarNextmap[MaxMapLength];
+new Float:CvarTimeLimit;
 
 public plugin_init()
 {
@@ -22,13 +26,25 @@ public plugin_init()
 	register_dictionary("adminhelp.txt");
 	register_concmd("amx_help", "cmdHelp", ADMIN_ALL, "HELP_CMD_INFO", .info_ml = true);
 
-	g_cvarDisplayClientMessage = register_cvar("amx_help_display_msg", "1");
-	g_cvarHelpAmount = register_cvar("amx_help_amount_per_page", "10");
+	bind_pcvar_num(register_cvar("amx_help_display_msg", "1"), CvarDisplayClientMessage);
+	bind_pcvar_num(register_cvar("amx_help_amount_per_page", "10"), CvarHelpAmount);
+}
+
+public OnConfigsExecuted()
+{
+	new const pointer = get_cvar_pointer("amx_nextmap");
+
+	if (pointer)
+	{
+		bind_pcvar_string(pointer, CvarNextmap, charsmax(CvarNextmap));
+	}
+
+	bind_pcvar_float(get_cvar_pointer("mp_timelimit"), CvarTimeLimit);
 }
 
 public client_putinserver(id)
 {
-	if (get_pcvar_num(g_cvarDisplayClientMessage) && !is_user_bot(id))
+	if (CvarDisplayClientMessage > 0 && !is_user_bot(id))
 	{
 		set_task(15.0, "dispInfo", id);
 	}
@@ -43,7 +59,7 @@ public cmdHelp(id, level, cid)
 {
 	new arg1[8], flags = get_user_flags(id);
 	new start = read_argv(1, arg1, charsmax(arg1)) ? str_to_num(arg1) : 1;
-	new lHelpAmount = get_pcvar_num(g_cvarHelpAmount);
+	new lHelpAmount = CvarHelpAmount;
 
 	// HACK: ADMIN_ADMIN is never set as a user's actual flags, so those types of commands never show
 	if (flags > 0 && !(flags & ADMIN_USER))
@@ -116,30 +132,17 @@ public dispInfo(id)
 {
 	client_print(id, print_chat, "%L", id, "TYPE_HELP");
 
-	static amx_nextmap, mp_timelimit = 0;
-	if( !mp_timelimit )
-	{
-		amx_nextmap = get_cvar_pointer("amx_nextmap");
-		mp_timelimit = get_cvar_pointer("mp_timelimit");
-	}
-
-	new nextmap[32];
-	if( amx_nextmap )
-	{
-		get_pcvar_string(amx_nextmap, nextmap, charsmax(nextmap));
-	}
-	
-	if (get_pcvar_float(mp_timelimit))
+	if (CvarTimeLimit > 0.0)
 	{
 		new timeleft = get_timeleft();
 		
 		if (timeleft > 0)
 		{
-			client_print(id, print_chat, "%L", id, "TIME_INFO_1", timeleft / 60, timeleft % 60, nextmap);
+			client_print(id, print_chat, "%L", id, "TIME_INFO_1", timeleft / 60, timeleft % 60, CvarNextmap);
 		}
-		else if (amx_nextmap)
+		else if (CvarNextmap[0] != EOS)
 		{
-			client_print(id, print_chat, "%L", id, "TIME_INFO_2", nextmap);
+			client_print(id, print_chat, "%L", id, "TIME_INFO_2", CvarNextmap);
 		}
 	}
 }

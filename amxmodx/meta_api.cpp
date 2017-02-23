@@ -150,6 +150,7 @@ int FF_ClientConnectEx = -1;
 
 IFileSystem* g_FileSystem;
 HLTypeConversion TypeConversion;
+server_static_t *ServerStatic;
 
 bool ColoredMenus(const char *ModName)
 {
@@ -930,6 +931,27 @@ void C_ClientPutInServer_Post(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
+void C_ClientUserInfoChanged_Pre(edict_t *pEntity, char *infobuffer)
+{
+	if (ServerStatic)
+	{
+		auto clientIndex = TypeConversion.edict_to_id(pEntity);
+
+		const char *oldName = ServerStatic->clients[clientIndex - 1].name;
+		const char *newName = INFOKEY_VALUE(infobuffer, "name");
+
+		if (oldName[0] == '\0' || strcmp(newName, oldName) != 0)
+		{
+			char safeNewName[MAX_NAME];
+			UTIL_FilterEvilCharacters(newName, safeNewName, sizeof(safeNewName), true);
+
+			SET_CLIENT_KEYVALUE(clientIndex, infobuffer, "name", safeNewName);
+		}
+	}
+
+	RETURN_META(MRES_IGNORED);
+}
+
 void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
@@ -1007,6 +1029,19 @@ void C_ClientCommand(edict_t *pEntity)
 #endif
 			CLIENT_PRINT(pEntity, print_console, buf);
 			RETURN_META(MRES_SUPERCEDE);
+		}
+	}
+
+	if (!strcmp(cmd, "say") || !strcmp(cmd, "say_team"))
+	{
+		auto args = CMD_ARGS();
+
+		if (args && *args)
+		{
+			char safeMessage[128];
+			auto length = UTIL_FilterEvilCharacters(args, safeMessage, sizeof(safeMessage), false);
+
+			memcpy(const_cast<char*>(args), safeMessage, length + 1);
 		}
 	}
 
@@ -1589,15 +1624,37 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	g_CvarManager.CreateCvarHook();
 
-	void *address = nullptr;
+	if (CommonConfig)
+	{
+		void *address = nullptr;
 
-	if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
-	{
-		DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
-	}
-	else
-	{
-		AMXXLOG_Log("client_disconnected forward has been disabled - check your gamedata files.");
+#if defined(KE_WINDOWS)
+		TypeDescription typeDesc;
+
+		if (CommonConfig->GetOffset("svs", &typeDesc))
+		{
+			auto base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
+			ServerStatic = reinterpret_cast<decltype(ServerStatic)>(base - 4);
+		}
+#else
+		if (CommonConfig->GetMemSig("svs", &address))
+		{
+			ServerStatic = reinterpret_cast<decltype(ServerStatic)>(address);
+		}
+#endif
+		else
+		{
+			AMXXLOG_Log("svs global variable is not available - check your gamedata files.");
+		}
+
+		if (CommonConfig->GetMemSig("SV_DropClient", &address) && address)
+		{
+			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+		}
+		else
+		{
+			AMXXLOG_Log("client_disconnected forward has been disabled - check your gamedata files.");
+		}
 	}
 
 	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);
@@ -1742,6 +1799,7 @@ C_DLLEXPORT	int	GetEntityAPI2(DLL_FUNCTIONS *pFunctionTable, int *interfaceVersi
 	gFunctionTable.pfnInconsistentFile = C_InconsistentFile;
 	gFunctionTable.pfnServerActivate = C_ServerActivate;
 	gFunctionTable.pfnClientConnect = C_ClientConnect;
+	gFunctionTable.pfnClientUserInfoChanged = C_ClientUserInfoChanged_Pre;
 
 	memcpy(pFunctionTable, &gFunctionTable, sizeof(DLL_FUNCTIONS));
 

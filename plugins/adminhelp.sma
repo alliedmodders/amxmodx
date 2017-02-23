@@ -92,7 +92,7 @@ public cmdHelp(id, level, cid)
 		start = clcmdsnum - 1;
 	}
 
-	console_print(id, "^n----- %L -----", id, "HELP_COMS");
+	console_print(id, "^n----- %l -----", "HELP_COMS");
 	
 	new info[128], cmd[32], eflags, bool:is_info_ml;
 	new end = start + lHelpAmount;
@@ -114,15 +114,15 @@ public cmdHelp(id, level, cid)
 		console_print(id, "%3d: %s %s", i + 1, cmd, info);
 	}
 	
-	console_print(id, "----- %L -----", id, "HELP_ENTRIES", start + 1, end, clcmdsnum);
+	console_print(id, "----- %l -----", "HELP_ENTRIES", start + 1, end, clcmdsnum);
 
 	if (end < clcmdsnum)
 	{
-		console_print(id, "----- %L -----", id, "HELP_USE_MORE", end + 1);
+		console_print(id, "----- %l -----", "HELP_USE_MORE", end + 1);
 	}
 	else
 	{
-		console_print(id, "----- %L -----", id, "HELP_USE_BEGIN");
+		console_print(id, "----- %l -----", "HELP_USE_BEGIN");
 	}
 
 	return PLUGIN_HANDLED;
@@ -130,7 +130,7 @@ public cmdHelp(id, level, cid)
 
 public dispInfo(id)
 {
-	client_print(id, print_chat, "%L", id, "TYPE_HELP");
+	client_print(id, print_chat, "%l", "TYPE_HELP");
 
 	if (CvarTimeLimit > 0.0)
 	{
@@ -138,11 +138,11 @@ public dispInfo(id)
 		
 		if (timeleft > 0)
 		{
-			client_print(id, print_chat, "%L", id, "TIME_INFO_1", timeleft / 60, timeleft % 60, CvarNextmap);
+			client_print(id, print_chat, "%l", "TIME_INFO_1", timeleft / 60, timeleft % 60, CvarNextmap);
 		}
 		else if (CvarNextmap[0] != EOS)
 		{
-			client_print(id, print_chat, "%L", id, "TIME_INFO_2", CvarNextmap);
+			client_print(id, print_chat, "%l", "TIME_INFO_2", CvarNextmap);
 		}
 	}
 }

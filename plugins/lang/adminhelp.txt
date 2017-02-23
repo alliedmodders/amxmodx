@@ -6,6 +6,7 @@ HELP_USE_BEGIN = Use 'amx_help 1' for begin
 TYPE_HELP = Type 'amx_help' in the console to see available commands
 TIME_INFO_1 = Time Left: %d:%02d min. Next Map: %s
 TIME_INFO_2 = No Time Limit. Next Map: %s
+HELP_CMD_INFO = <entry no.> [no. of entries to display (server only)] - displays information about available commands
 
 [de]
 HELP_COMS = AMX Mod X Help: Befehle
@@ -42,6 +43,7 @@ HELP_USE_BEGIN = Utilise 'amx_help 1'  pour le debut
 TYPE_HELP = Tape 'amx_help' dans la console pour voir les commandes disponibles
 TIME_INFO_1 = Temps Restant: %d:%02d mn. Prochaine Carte: %s
 TIME_INFO_2 = Aucun Temps Limite. Prochaine Carte: %s
+HELP_CMD_INFO = <n entree.> [nbre d'entrees a afficher (serveur uniquement)] - affiche des informations sur les cmds dispo.
 
 [sv]
 HELP_COMS = AMX Mod X Hj'a'lp: Kommandon
@@ -96,6 +98,7 @@ HELP_USE_BEGIN = Escribe 'amx_help 1' para volver al principio
 TYPE_HELP = Escribe 'amx_help' en la consola para ver los comandos disponibles
 TIME_INFO_1 = Tiempo restante: %d:%02d min. Proximo Mapa: %s
 TIME_INFO_2 = Tiempo Ilimitado. Proximo Mapa: %s
+HELP_CMD_INFO = <num. entrada> [num. de entradas a mostrar (solo para el servidor)] - muestra informacion sobre los comandos
 
 [cz]
 HELP_COMS = AMX Mod X Help: Prikazy

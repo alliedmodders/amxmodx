@@ -1,4 +1,4 @@
-;(C)2004 AMX Mod X Development Team
+;(C)2004-2015 AMX Mod X Development Team
 ; Licensed under the GNU General Public License
 ; Originally written by -=HaXoMaTiC=-
 !define PRODUCT_NAME "AMX Mod X Installer"
@@ -334,12 +334,14 @@ Section "MainSection" SEC01
   File "installer\files\cstrike\addons\amxmodx\modules\csx_amxx_i386.so"
   SetOutPath "$INSTDIR\files\cstrike\plugins"
   File "installer\files\cstrike\addons\amxmodx\plugins\miscstats.amxx"
+  File "installer\files\cstrike\addons\amxmodx\plugins\plmenu.amxx"
   File "installer\files\cstrike\addons\amxmodx\plugins\restmenu.amxx"
   File "installer\files\cstrike\addons\amxmodx\plugins\statsx.amxx"
   File "installer\files\cstrike\addons\amxmodx\plugins\stats_logging.amxx"
   SetOutPath "$INSTDIR\files\cstrike\scripting"
   File "installer\files\cstrike\addons\amxmodx\scripting\csstats.sma"
   File "installer\files\cstrike\addons\amxmodx\scripting\miscstats.sma"
+  File "installer\files\cstrike\addons\amxmodx\scripting\plmenu.sma"
   File "installer\files\cstrike\addons\amxmodx\scripting\restmenu.sma"
   File "installer\files\cstrike\addons\amxmodx\scripting\statsx.sma"
   File "installer\files\cstrike\addons\amxmodx\scripting\stats_logging.sma"
@@ -582,11 +584,13 @@ Section Uninstall
   Delete "$INSTDIR\files\cstrike\scripting\stats_logging.sma"
   Delete "$INSTDIR\files\cstrike\scripting\statsx.sma"
   Delete "$INSTDIR\files\cstrike\scripting\restmenu.sma"
+  Delete "$INSTDIR\files\cstrike\scripting\plmenu.sma"
   Delete "$INSTDIR\files\cstrike\scripting\miscstats.sma"
   Delete "$INSTDIR\files\cstrike\scripting\csstats.sma"
   Delete "$INSTDIR\files\cstrike\plugins\stats_logging.amxx"
   Delete "$INSTDIR\files\cstrike\plugins\statsx.amxx"
   Delete "$INSTDIR\files\cstrike\plugins\restmenu.amxx"
+  Delete "$INSTDIR\files\cstrike\plugins\plmenu.amxx"
   Delete "$INSTDIR\files\cstrike\plugins\miscstats.amxx"
   Delete "$INSTDIR\files\cstrike\modules\csx_amxx_i386.so"
   Delete "$INSTDIR\files\cstrike\modules\csx_amxx.dylib"

@@ -73,7 +73,7 @@ public cmdHelp(id, level, cid)
 	}
 
 	new clcmdsnum = get_concmdsnum(flags, id);
-	new start = read_argv(1, arg1, charsmax(arg1)) ? str_to_num(arg1) : 1;
+	new start = clamp(read_argv_int(1), .min = 1, .max = clcmdsnum) - 1; // Zero-based list
 	new lHelpAmount = CvarHelpAmount;
 	new end = start + lHelpAmount;
 
@@ -88,16 +88,6 @@ public cmdHelp(id, level, cid)
 	if (lHelpAmount <= 0)
 	{
 		lHelpAmount = 10;
-	}
-
-	if (--start < 0)
-	{
-		start = 0;
-	}
-
-	if (start >= clcmdsnum)
-	{
-		start = clcmdsnum - 1;
 	}
 
 	console_print(id, "^n----- %l -----", "HELP_COMS");

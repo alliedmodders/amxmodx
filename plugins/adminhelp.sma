@@ -14,6 +14,7 @@
 #include <amxmodx>
 
 const MaxMapLength = 32;
+const MaxDefaultEntries = 10;
 
 new CvarDisplayClientMessage;
 new CvarHelpAmount;
@@ -64,7 +65,7 @@ public client_disconnected(id)
 
 public cmdHelp(id, level, cid)
 {
-	new arg1[8], flags = get_user_flags(id);
+	new flags = get_user_flags(id);
 
 	// HACK: ADMIN_ADMIN is never set as a user's actual flags, so those types of commands never show
 	if (flags > 0 && !(flags & ADMIN_USER))
@@ -73,31 +74,14 @@ public cmdHelp(id, level, cid)
 	}
 
 	new clcmdsnum = get_concmdsnum(flags, id);
-	new start = clamp(read_argv_int(1), .min = 1, .max = clcmdsnum) - 1; // Zero-based list
-	new lHelpAmount = CvarHelpAmount;
-	new end = start + lHelpAmount;
 
-	if (id == 0 && read_argc() == 3)
-	{
-		if (read_argv(2, arg1, charsmax(arg1)))
-		{
-			lHelpAmount = str_to_num(arg1);
-		}
-	}
-
-	if (lHelpAmount <= 0)
-	{
-		lHelpAmount = 10;
-	}
+	new start  = clamp(read_argv_int(1), .min = 1, .max = clcmdsnum) - 1; // Zero-based list
+	new amount = !id ? read_argv_int(2) : CvarHelpAmount;
+	new end    = min(start + (amount > 0 ? amount : MaxDefaultEntries), clcmdsnum);
 
 	console_print(id, "^n----- %l -----", "HELP_COMS");
 	
 	new info[128], cmd[32], eflags, bool:is_info_ml;
-
-	if (end > clcmdsnum)
-	{
-		end = clcmdsnum;
-	}
 
 	for (new i = start; i < end; i++)
 	{

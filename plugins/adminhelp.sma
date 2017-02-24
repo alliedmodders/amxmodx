@@ -65,14 +65,17 @@ public client_disconnected(id)
 public cmdHelp(id, level, cid)
 {
 	new arg1[8], flags = get_user_flags(id);
-	new start = read_argv(1, arg1, charsmax(arg1)) ? str_to_num(arg1) : 1;
-	new lHelpAmount = CvarHelpAmount;
 
 	// HACK: ADMIN_ADMIN is never set as a user's actual flags, so those types of commands never show
 	if (flags > 0 && !(flags & ADMIN_USER))
 	{
 		flags |= ADMIN_ADMIN;
 	}
+
+	new clcmdsnum = get_concmdsnum(flags, id);
+	new start = read_argv(1, arg1, charsmax(arg1)) ? str_to_num(arg1) : 1;
+	new lHelpAmount = CvarHelpAmount;
+	new end = start + lHelpAmount;
 
 	if (id == 0 && read_argc() == 3)
 	{
@@ -92,8 +95,6 @@ public cmdHelp(id, level, cid)
 		start = 0;
 	}
 
-	new clcmdsnum = get_concmdsnum(flags, id);
-
 	if (start >= clcmdsnum)
 	{
 		start = clcmdsnum - 1;
@@ -102,7 +103,6 @@ public cmdHelp(id, level, cid)
 	console_print(id, "^n----- %l -----", "HELP_COMS");
 	
 	new info[128], cmd[32], eflags, bool:is_info_ml;
-	new end = start + lHelpAmount;
 
 	if (end > clcmdsnum)
 	{

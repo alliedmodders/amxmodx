@@ -27,7 +27,7 @@ public plugin_init()
 {
 	register_plugin("Admin Help", AMXX_VERSION_STR, "AMXX Dev Team");
 	register_dictionary("adminhelp.txt");
-	register_concmd("amx_help", "cmdHelp", ADMIN_ALL, "HELP_CMD_INFO", .info_ml = true);
+	register_concmd("amx_help", "@ConsoleCommand_Help", ADMIN_ALL, "HELP_CMD_INFO", .info_ml = true);
 
 	bind_pcvar_num(register_cvar("amx_help_display_msg", "1"), CvarDisplayClientMessage);
 	bind_pcvar_num(register_cvar("amx_help_amount_per_page", "10"), CvarHelpAmount);
@@ -63,17 +63,17 @@ public client_disconnected(id)
 	}
 }
 
-public cmdHelp(id, level, cid)
+@ConsoleCommand_Help(id, level, cid)
 {
-	new flags = get_user_flags(id);
+	new user_flags = get_user_flags(id);
 
 	// HACK: ADMIN_ADMIN is never set as a user's actual flags, so those types of commands never show
-	if (flags > 0 && !(flags & ADMIN_USER))
+	if (user_flags > 0 && !(user_flags & ADMIN_USER))
 	{
-		flags |= ADMIN_ADMIN;
+		user_flags |= ADMIN_ADMIN;
 	}
 
-	new clcmdsnum = get_concmdsnum(flags, id);
+	new clcmdsnum = get_concmdsnum(user_flags, id);
 
 	new start  = clamp(read_argv_int(1), .min = 1, .max = clcmdsnum) - 1; // Zero-based list
 	new amount = !id ? read_argv_int(2) : CvarHelpAmount;
@@ -81,18 +81,18 @@ public cmdHelp(id, level, cid)
 
 	console_print(id, "^n----- %l -----", "HELP_COMS");
 	
-	new info[128], cmd[32], eflags, bool:is_info_ml;
+	new info[128], command[32], command_flags, bool:is_info_ml;
 
-	for (new i = start; i < end; i++)
+	for (new index = start; index < end; index++)
 	{
-		get_concmd(i, cmd, charsmax(cmd), eflags, info, charsmax(info), flags, id, is_info_ml);
+		get_concmd(index, command, charsmax(command), command_flags, info, charsmax(info), user_flags, id, is_info_ml);
 
 		if (is_info_ml)
 		{
 			LookupLangKey(info, charsmax(info), info, id);
 		}
 
-		console_print(id, "%3d: %s %s", i + 1, cmd, info);
+		console_print(id, "%3d: %s %s", index + 1, command, info);
 	}
 	
 	console_print(id, "----- %l -----", "HELP_ENTRIES", start + 1, end, clcmdsnum);

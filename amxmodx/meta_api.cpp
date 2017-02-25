@@ -136,6 +136,7 @@ int FF_ClientCommand = -1;
 int FF_ClientConnect = -1;
 int FF_ClientDisconnect = -1;
 int FF_ClientDisconnected = -1;
+int FF_ClientRemove = -1;
 int FF_ClientInfoChanged = -1;
 int FF_ClientPutInServer = -1;
 int FF_PluginInit = -1;
@@ -498,6 +499,7 @@ int	C_Spawn(edict_t *pent)
 	FF_ClientConnect = registerForward("client_connect", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ClientDisconnect = registerForward("client_disconnect", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ClientDisconnected = registerForward("client_disconnected", ET_IGNORE, FP_CELL, FP_CELL, FP_ARRAY, FP_CELL, FP_DONE);
+	FF_ClientRemove = registerForward("client_remove", ET_IGNORE, FP_CELL, FP_CELL, FP_STRING, FP_DONE);
 	FF_ClientInfoChanged = registerForward("client_infochanged", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_ClientPutInServer = registerForward("client_putinserver", ET_IGNORE, FP_CELL, FP_DONE);
 	FF_PluginCfg = registerForward("plugin_cfg", ET_IGNORE, FP_DONE);
@@ -688,8 +690,15 @@ void C_ServerDeactivate()
 
 		if (pPlayer->ingame)
 		{
+			auto wasDisconnecting = pPlayer->disconnecting;
+
 			pPlayer->Disconnect();
 			--g_players_num;
+
+			if (!wasDisconnecting && DropClientDetour)
+			{
+				executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
+			}
 		}
 	}
 
@@ -881,7 +890,14 @@ void C_ClientDisconnect(edict_t *pEntity)
 		--g_players_num;
 	}
 
+	auto wasDisconnecting = pPlayer->disconnecting;
+
 	pPlayer->Disconnect();
+
+	if (!wasDisconnecting && DropClientDetour)
+	{
+		executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
+	}
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -896,12 +912,10 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	ke::SafeVsprintf(buffer, sizeof(buffer) - 1, format, ap);
 	va_end(ap);
 
-	CPlayer *pPlayer;
+	auto pPlayer = cl->edict ? GET_PLAYER_POINTER(cl->edict) : nullptr;
 
-	if (cl->edict)
+	if (pPlayer)
 	{
-		pPlayer = GET_PLAYER_POINTER(cl->edict);
-
 		if (pPlayer->initialized)
 		{
 			pPlayer->disconnecting = true;
@@ -911,9 +925,10 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 
 	DETOUR_STATIC_CALL(SV_DropClient)(cl, crash, "%s", buffer);
 
-	if (cl->edict)
+	if (pPlayer)
 	{
 		pPlayer->Disconnect();
+		executeForwards(FF_ClientRemove, pPlayer->index, TRUE, buffer);
 	}
 }
 
@@ -1597,7 +1612,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	}
 	else
 	{
-		AMXXLOG_Log("client_disconnected forward has been disabled - check your gamedata files.");
+		AMXXLOG_Log("client_disconnected and client_remove forwards have been disabled - check your gamedata files.");
 	}
 
 	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);

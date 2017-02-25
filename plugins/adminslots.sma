@@ -56,11 +56,11 @@ public client_authorized(id)
  	server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "DROPPED_RES")
 }
 
-public client_disconnected(id)
+public client_remove(id)
 {
 	if (get_pcvar_num(g_HidePtr))
 	{
-		setVisibleSlots(get_playersnum(1) - 1, MaxClients - get_pcvar_num(g_ResPtr))
+		setVisibleSlots(get_playersnum(1), MaxClients - get_pcvar_num(g_ResPtr))
 	}
 }
 

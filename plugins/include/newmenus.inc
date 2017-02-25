@@ -39,13 +39,14 @@
  *
  * The handler function should be prototyped as:
  *
- * public <function>(id, menu, item)
+ * public <function>(id, menu, item, any:data)
  *  id     - Client the menu is being acted upon.
  *  menu   - Menu resource identifier.
  *  item   - Item the client selected.  If less than 0, the menu was 
  *           cancelled and the item is a status code.  menu_display 
  *			 should never be called immediately if the item is a status 
  *			 code, for re-entrancy reasons.
+ *  data   - Item's data the client selected.
  *
  * The handler function should always return PLUGIN_HANDLED to block 
  * any old menu handlers from potentially feeding on the menu, unless 
@@ -67,10 +68,11 @@ native menu_create(const title[], const handler[], ml=0);
  *
  * The handler function should be prototyped as:
  *
- * public <function>(id, menu, item)
+ * public <function>(id, menu, item, any:data)
  *  id      - Client index being displayed to.
  *  menu    - Menu resource identifier.
  *  item    - Item being drawn.
+ *  data    - Item's data.
  * <return> - ITEM_IGNORE to use the default functionality.  ITEM_ENABLED to 
  *            explicitly enable or ITEM_DISABLED to explicitly disable.
  *
@@ -92,6 +94,22 @@ native menu_makecallback(const function[]);
  * @error				Invalid menu resource.
  */
 native menu_additem(menu, const name[], const info[]="", paccess=0, callback=-1);
+
+/**
+ * Adds an item to a menu.
+ *
+ * @param menu			Menu resource identifier.
+ * @param name			Item text to display.
+ * @param info			Item data for internal information.
+ * @param paccess		Access required by the player viewing the menu.
+ * @param callback		If set to a valid ID from menu_makecallback(), the
+ *						callback will be invoked before drawing the item.
+ * @param dp_data		If true, item's data will be treat as DataPack and be destroyed
+ *						along with the menu.
+ * @noreturn
+ * @error				Invalid menu resource.
+ */
+native menu_additem2(menu, const name[], any:data = 0, access = 0, callback = -1, bool:dp_data = false);
 
 /**
  * Returns the number of pages in a menu.
@@ -181,6 +199,19 @@ native menu_item_setname(menu, item, const name[]);
  * @error				Invalid menu resource.
  */
 native menu_item_setcmd(menu, item, const info[]);
+
+/**
+ * Sets an item's data.
+ *
+ * @param menu			Menu resource identifier.
+ * @param item			Item identifier.
+ * @param data			New item data.
+ * @param dp_data		If true, item's data will be treat as DataPack and be destroyed
+ *						along with the menu.
+ * @return				1 on success, 0 on failure.
+ * @error				Invalid menu resource.
+ */
+native menu_item_setdata(menu, item, any:data = 0, bool:dp_data = false);
 
 /**
  * Sets an item's callback.

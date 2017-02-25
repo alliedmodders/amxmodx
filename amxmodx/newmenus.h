@@ -31,7 +31,7 @@
 #define MPROP_PADMENU	9
 #define MPROP_SET_NUMBER_COLOR	10
 
-typedef int (*MENUITEM_CALLBACK)(int, int, int);
+typedef int (*MENUITEM_CALLBACK)(int, int, int, int);
 
 class BlankItem
 {
@@ -79,6 +79,8 @@ struct menuitem
 	int access;
 	int handler;
 	bool isBlank;
+	int data;
+	bool isDataDataPack;
 	
 	MENUITEM_CALLBACK pfn;
 	size_t id;
@@ -99,7 +101,7 @@ public:
 	menuitem *GetMenuItem(item_t item);
 	size_t GetPageCount();
 	size_t GetItemCount();
-	menuitem *AddItem(const char *name, const char *cmd, int access);
+	menuitem *AddItem(const char *name, const char *cmd, int access, int handler);
 	
 	const char *GetTextString(int player, page_t page, int &keys);
 	bool Display(int player, page_t page);

@@ -15,6 +15,8 @@
 
 const MaxMapLength = 32;
 const MaxDefaultEntries = 10;
+const MaxCommandLength = 32;
+const MaxCommandInfoLength = 128;
 
 new CvarDisplayClientMessage;
 new CvarHelpAmount;
@@ -81,7 +83,7 @@ public client_disconnected(id)
 
 	console_print(id, "^n----- %l -----", "HELP_COMS");
 	
-	new info[128], command[32], command_flags, bool:is_info_ml;
+	new info[MaxCommandInfoLength], command[MaxCommandLength], command_flags, bool:is_info_ml;
 
 	for (new index = start; index < end; index++)
 	{

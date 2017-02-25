@@ -121,8 +121,8 @@ stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], c
 	new PluginName[64];
 	new func=get_func_id(Callback);
 	new tally;
-	new PluginCmd[64];
 	new MenuText[64];
+	new DataPack:itemData;
 	for (new i=0, max=get_pluginsnum();
 		 i<max;
 		 i++)
@@ -135,17 +135,19 @@ stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], c
 				get_plugin(i,"",0,PluginName,charsmax(PluginName),"",0,"",0,PluginState,charsmax(PluginState));
 						
 				// Command syntax is: "# Function", # being plugin ID, function being public function to call.
-				formatex(PluginCmd,charsmax(PluginCmd),"%d %s",i,Command);
 				formatex(MenuText,charsmax(MenuText),"%s - %d",PluginName,tally);
 				// If the plugin is running, add this as an activated menu item.
 				if (strcmp(PluginState,"running",true)==0 ||
 					strcmp(PluginState,"debug",  true)==0)
 				{
-					menu_additem(Menu,MenuText,PluginCmd,EnabledCallback);
+					itemData = CreateDataPack();
+					WritePackCell(itemData, i);
+					WritePackString(itemData, Command);
+					menu_additem2(Menu, MenuText, itemData, 0, EnabledCallback, true);
 				}
 				else
 				{
-					menu_additem(Menu,MenuText,"",_,DisabledCallback);
+					menu_additem2(Menu, MenuText, .callback = DisabledCallback);
 				}
 			}
 		}
@@ -319,8 +321,9 @@ public AlwaysEnableCallback(playerid, menuid, itemid)
  * @param id		The client selecting an item.
  * @param menu		The menu handle.
  * @param item		The item number that was selected.
+ * @param data		Item's data.
  */
-public PluginMenuSelection(id, menu, item)
+public PluginMenuSelection(id, menu, item, any:data)
 {
 	if (item==MENU_EXIT)
 	{
@@ -330,9 +333,8 @@ public PluginMenuSelection(id, menu, item)
 	{
 		return PLUGIN_HANDLED;
 	}
-	
-	new Command[64];
-	new Dummy[1];
+
+	ResetPack(data);
 	
 	// All of the commands set for each item is the public
 	// function that we want to call after the item is selected.
@@ -340,22 +342,11 @@ public PluginMenuSelection(id, menu, item)
 	// Note the menu is destroyed BEFORE the command
 	// gets executed.
 	// The command retrieved is in the format: "PLID Command"
-	menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),Dummy,0,Dummy[0]);
 	
+	new plid = ReadPackCell(data); //Plugin id
 	
-	new plid=str_to_num(Command);
 	new Function[32];
-	
-	for (new i=0;i<charsmax(Command);i++)
-	{
-		if (Command[i]==' ')
-		{
-			// we're at the break. move up one space.
-			i++;
-			copy(Function,charsmax(Function),Command[i]);
-			break;
-		}
-	}
+	ReadPackString(data, Function, charsmax(Function)); //Function name
 	
 	menu_destroy(menu);
 	
@@ -458,8 +449,9 @@ public CommandChangeCvar(id)
  * @param id		The client who chose an item.
  * @param menu		The menu handle.
  * @param item		The item that has been selected.
+ * @param data		Item's data.
  */
-public CvarMenuSelection(id, menu, item)
+public CvarMenuSelection(id, menu, item, any:data)
 {
 	
 	if (item==MENU_EXIT)
@@ -484,12 +476,11 @@ public CvarMenuSelection(id, menu, item)
 	else
 	{
 		new CvarName[64];
-		new Command[32];
-		new Dummy[1];
-		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
-		menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),CvarName,charsmax(CvarName),Dummy[0]);
+
+		ResetPack(data);
 		
-		CurrentCvar[id]=str_to_num(Command);
+		CurrentCvar[id] = ReadPackCell(data); //cvar ptr
+		ReadPackString(data, CvarName, charsmax(CvarName)); //cvar name
 		
 		if (CurrentCvar[id]==0) // This should never happen, but just incase..
 		{
@@ -498,15 +489,6 @@ public CvarMenuSelection(id, menu, item)
 		}
 		// TODO: ML this
 		
-		// Scan up "CvarName" and stop at the first space
-		for (new i=0;i<charsmax(CvarName);i++)
-		{
-			if (CvarName[i]==' ')
-			{
-				CvarName[i]='^0';
-				break;
-			}
-		}
 		copy(CurrentCvarName[id],charsmax(CurrentCvarName[]),CvarName);
 		client_print(id,print_chat,"[AMXX] Type in the new value for %s, or !cancel to cancel.",CvarName);
 		client_cmd(id,"messagemode amx_changecvar");
@@ -538,6 +520,7 @@ public DisplayCvarMenu(id, plid, page)
 	new CvarText[64];
 	new CvarData[32];
 	new CvarPtr;
+	new DataPack:itemData;
 	
 	for (new i=0, max=get_plugins_cvarsnum();
 		 i<max;
@@ -553,12 +536,14 @@ public DisplayCvarMenu(id, plid, page)
 				formatex(CvarText,charsmax(CvarText),"%s - %s",Cvar,CvarData);
 				
 				// Now store the pcvar data in Cvar
-				num_to_str(CvarPtr,Cvar,charsmax(Cvar));
-				menu_additem(Menu,CvarText,Cvar,_,EnabledCallback);
+				itemData = CreateDataPack();
+				WritePackCell(itemData, CvarPtr);
+				WritePackString(itemData, Cvar);
+				menu_additem2(Menu, CvarText, itemData, _, EnabledCallback, true);
 			}
 			else
 			{
-				menu_additem(Menu,Cvar,"",_,DisabledCallback);
+				menu_additem2(Menu, Cvar, .callback = DisabledCallback);
 			}
 			
 		}
@@ -614,8 +599,9 @@ public CvarMenuCommand(id, level, cid)
  * @param id		Id of the client.
  * @param menu		Menu handle.
  * @param item		Item that was selected.
+ * @param data		Item's data.
  */
-public SpecificCommandHandler(id,menu,item)
+public SpecificCommandHandler(id, menu, item, any:data)
 {
 	// Exit was called, return to the previous menu.
 	if (item<0)
@@ -631,18 +617,19 @@ public SpecificCommandHandler(id,menu,item)
 		
 		return PLUGIN_HANDLED;
 	}
+
+	ResetPack(data);
+	ReadPackString(data, CurrentCommand[id], charsmax(CurrentCommand[]));
+
+	if (CurrentCommand[id][0]==0) // This should never happen, but just incase..
+	{
+		client_print(id,print_chat,"[AMXX] There was an error extracting the command name.");
+		return PLUGIN_HANDLED;
+	}
+	// TODO: ML this
 	
-	new Dummy[1];
 	if (item==0)  // "With params"
 	{
-		menu_item_getinfo(menu, item, Dummy[0], CurrentCommand[id], charsmax(CurrentCommand[]),"",0,Dummy[0]);
-		if (CurrentCommand[id][0]==0) // This should never happen, but just incase..
-		{
-			client_print(id,print_chat,"[AMXX] There was an error extracting the command name.");
-			return PLUGIN_HANDLED;
-		}
-		// TODO: ML this
-		
 		client_print(id,print_chat,"[AMXX] Type in the parameters for %s, or !cancel to cancel.",CurrentCommand[id]);
 		client_cmd(id,"messagemode amx_executecmd");
 		
@@ -652,14 +639,6 @@ public SpecificCommandHandler(id,menu,item)
 	}
 	else if (item==1) // "No params"
 	{
-		menu_item_getinfo(menu, item, Dummy[0], CurrentCommand[id], charsmax(CurrentCommand[]),"",0,Dummy[0]);
-		if (CurrentCommand[id][0]==0) // This should never happen, but just incase..
-		{
-			client_print(id,print_chat,"[AMXX] There was an error extracting the command name.");
-			return PLUGIN_HANDLED;
-		}
-		// TODO: ML this
-
 		// Now redraw the menu for the client BEFORE the command is executed, incase
 		// that menu brings up a menu of its own.
 		if (CurrentMenuFunction[id]!=-1 && callfunc_begin_i(CurrentMenuFunction[id])==1)
@@ -696,6 +675,7 @@ stock DisplaySpecificCommand(id,cid)
 	new CommandTitle[256];
 	new CommandAccess;
 	new Menu;
+	new DataPack:itemData = CreateDataPack();
 	
 	get_concmd(cid,CommandName,charsmax(CommandName),CommandAccess, CommandDesc, charsmax(CommandDesc), -1, -1);
 	
@@ -708,8 +688,11 @@ stock DisplaySpecificCommand(id,cid)
 	{
 		Menu=menu_create(CommandName,"SpecificCommandHandler");
 	}
-	menu_additem(Menu,"Execute with parameters.",CommandName,_,EnabledCallback);
-	menu_additem(Menu,"Execute with no parameters.",CommandName,_,EnabledCallback);
+
+	WritePackString(itemData, CommandName);
+
+	menu_additem2(Menu, "Execute with parameters.", itemData, _, EnabledCallback, true);
+	menu_additem2(Menu, "Execute with no parameters.", itemData, _, EnabledCallback, true);
 	
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
 	menu_display(id,Menu,0);
@@ -778,8 +761,9 @@ public CommandExecuteCommand(id)
  * @param id		id of the client who made the selection.
  * @param menu		The menu handle.
  * @param item		The item that was selected.
+ * @param data		Item's data
  */
-public CommandMenuSelection(id, menu, item)
+public CommandMenuSelection(id, menu, item, any:data)
 {
 	if (item==MENU_EXIT)
 	{
@@ -805,14 +789,9 @@ public CommandMenuSelection(id, menu, item)
 	}
 	else
 	{
-		new Command[32];
-		new Dummy[1];
-		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
-		menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),"",0,Dummy[0]);
-		
 		menu_destroy(menu);
 		
-		DisplaySpecificCommand(id,str_to_num(Command));
+		DisplaySpecificCommand(id, data);
 	}
 	
 	return PLUGIN_HANDLED;
@@ -851,7 +830,6 @@ public DisplayCmdMenu(id, plid, page)
 	new Menu=menu_create(MenuTitle,"CommandMenuSelection");
 	
 	new Command[64];
-	new CidString[32];
 	new CommandAccess;
 	new userflags=get_user_flags(id);
 	new bool:isadmin=bool:is_user_admin(id);
@@ -872,12 +850,11 @@ public DisplayCmdMenu(id, plid, page)
 					 CommandAccess==ADMIN_USER ||
 					 CommandAccess==ADMIN_ALL)
 				{
-					num_to_str(i,CidString,charsmax(CidString));
-					menu_additem(Menu,Command,CidString,0,EnabledCallback);
+					menu_additem2(Menu, Command, i, .callback = EnabledCallback);
 				}
 				else
 				{
-					menu_additem(Menu,Command,"",0,DisabledCallback);
+					menu_additem2(Menu, Command, .callback = DisabledCallback);
 				}
 			}
 		}

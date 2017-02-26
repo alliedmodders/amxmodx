@@ -15,9 +15,9 @@
 
 const MaxMapLength         = 32;
 const MaxDefaultEntries    = 10;
-const MaxDefaultMsgTime    = 15;
 const MaxCommandLength     = 32;
 const MaxCommandInfoLength = 128;
+const DefaultMsgTime       = 15;
 
 new const HelpCommand[]   = "amx_help";
 new const SearchCommand[] = "amx_searchcmd";
@@ -62,7 +62,7 @@ public client_putinserver(id)
 	{
 		DisplayClientMessage{id} = true;
 
-		new Float:messageTime = float(CvarDisplayMessageTime <= 0 ? MaxDefaultMsgTime : CvarDisplayMessageTime);
+		new Float:messageTime = float(CvarDisplayMessageTime <= 0 ? DefaultMsgTime : CvarDisplayMessageTime);
 		set_task(messageTime, "@Task_DisplayMessage", id);
 	}
 }
@@ -113,10 +113,11 @@ ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const sear
 	new bool:is_info_ml;
 	new entries_found;
 	new total_entries;
+	new index;
 
 	if (do_search)
 	{
-		for (new index = 0; index < clcmdsnum; ++index)
+		for (index = 0; index < clcmdsnum; ++index)
 		{
 			get_concmd(index, command, charsmax(command), command_flags, info, charsmax(info), user_flags, id, is_info_ml);
 
@@ -137,12 +138,13 @@ ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const sear
 			return PLUGIN_HANDLED;
 		}
 
+		index = entries_found;
 		clcmdsnum = total_entries;
 		end = min(end, clcmdsnum);
 	}
 	else
 	{
-		for (new index = start; index < end; ++index)
+		for (index = start; index < end; ++index)
 		{
 			get_concmd(index, command, charsmax(command), command_flags, info, charsmax(info), user_flags, id, is_info_ml);
 
@@ -163,7 +165,7 @@ ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const sear
 	{
 		console_print(id, "----- %l -----", "HELP_USE_MORE", command, end + 1);
 	}
-	else
+	else if (start || index != clcmdsnum)
 	{
 		console_print(id, "----- %l -----", "HELP_USE_BEGIN", command);
 	}

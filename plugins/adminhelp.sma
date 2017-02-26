@@ -131,7 +131,7 @@ ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const sear
 			}
 		}
 
-		if (!entries_found)
+		if (!entries_found || entries_found > total_entries)
 		{
 			console_print(id, "%l", "NO_MATCHING_RESULTS");
 			return PLUGIN_HANDLED;

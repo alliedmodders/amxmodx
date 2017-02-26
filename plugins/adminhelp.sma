@@ -13,12 +13,12 @@
 
 #include <amxmodx>
 
-const MaxMapLength = 32;
-const MaxDefaultEntries = 10;
-const MaxCommandLength = 32;
+const MaxMapLength         = 32;
+const MaxDefaultEntries    = 10;
+const MaxCommandLength     = 32;
 const MaxCommandInfoLength = 128;
 
-new const HelpCommand[] = "amx_help";
+new const HelpCommand[]   = "amx_help";
 new const SearchCommand[] = "amx_searchcmd";
 
 new CvarDisplayClientMessage;
@@ -33,10 +33,10 @@ public plugin_init()
 	register_plugin("Admin Help", AMXX_VERSION_STR, "AMXX Dev Team");
 	register_dictionary("adminhelp.txt");
 
-	register_concmd(HelpCommand, "@ConsoleCommand_Help", ADMIN_ALL, "HELP_CMD_INFO", .info_ml = true);
+	register_concmd(HelpCommand  , "@ConsoleCommand_Help"  , ADMIN_ALL, "HELP_CMD_INFO"  , .info_ml = true);
 	register_concmd(SearchCommand, "@ConsoleCommand_Search", ADMIN_ALL, "SEARCH_CMD_INFO", .info_ml = true);
 
-	bind_pcvar_num(register_cvar("amx_help_display_msg", "1"), CvarDisplayClientMessage);
+	bind_pcvar_num(register_cvar("amx_help_display_msg"    , "1") , CvarDisplayClientMessage);
 	bind_pcvar_num(register_cvar("amx_help_amount_per_page", "10"), CvarHelpAmount);
 }
 

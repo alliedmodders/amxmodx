@@ -15,6 +15,7 @@
 
 const MaxMapLength         = 32;
 const MaxDefaultEntries    = 10;
+const MaxDefaultMsgTime    = 15;
 const MaxCommandLength     = 32;
 const MaxCommandInfoLength = 128;
 
@@ -22,7 +23,9 @@ new const HelpCommand[]   = "amx_help";
 new const SearchCommand[] = "amx_searchcmd";
 
 new CvarDisplayClientMessage;
+new CvarDisplayMessageTime;
 new CvarHelpAmount;
+
 new CvarNextmap[MaxMapLength];
 new Float:CvarTimeLimit;
 
@@ -36,8 +39,9 @@ public plugin_init()
 	register_concmd(HelpCommand  , "@ConsoleCommand_Help"  , ADMIN_ALL, "HELP_CMD_INFO"  , .info_ml = true);
 	register_concmd(SearchCommand, "@ConsoleCommand_Search", ADMIN_ALL, "SEARCH_CMD_INFO", .info_ml = true);
 
-	bind_pcvar_num(register_cvar("amx_help_display_msg"    , "1") , CvarDisplayClientMessage);
-	bind_pcvar_num(register_cvar("amx_help_amount_per_page", "10"), CvarHelpAmount);
+	bind_pcvar_num(register_cvar("amx_help_display_msg"     , "1") , CvarDisplayClientMessage);
+	bind_pcvar_num(register_cvar("amx_help_display_msg_time", "15"), CvarDisplayMessageTime);
+	bind_pcvar_num(register_cvar("amx_help_amount_per_page" , "10"), CvarHelpAmount);
 }
 
 public OnConfigsExecuted()
@@ -57,7 +61,9 @@ public client_putinserver(id)
 	if (CvarDisplayClientMessage > 0 && !is_user_bot(id))
 	{
 		DisplayClientMessage{id} = true;
-		set_task(15.0, "dispInfo", id);
+
+		new Float:messageTime = float(CvarDisplayMessageTime <= 0 ? MaxDefaultMsgTime : CvarDisplayMessageTime);
+		set_task(messageTime, "@Task_DisplayMessage", id);
 	}
 }
 
@@ -65,7 +71,7 @@ public client_disconnected(id)
 {
 	if (DisplayClientMessage{id})
 	{
-		DisplayClientMessage{id} = false; 
+		DisplayClientMessage{id} = false;
 		remove_task(id);
 	}
 }
@@ -165,14 +171,19 @@ ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const sear
 	return PLUGIN_HANDLED;
 }
 
-public dispInfo(id)
+@Task_DisplayMessage(id)
 {
+	if (!is_user_connected(id))
+	{
+		return;
+	}
+
 	client_print(id, print_chat, "%l", "TYPE_HELP");
 
 	if (CvarTimeLimit > 0.0)
 	{
 		new timeleft = get_timeleft();
-		
+
 		if (timeleft > 0)
 		{
 			client_print(id, print_chat, "%l", "TIME_INFO_1", timeleft / 60, timeleft % 60, CvarNextmap);

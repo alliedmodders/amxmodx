@@ -81,12 +81,12 @@ public client_disconnected(id)
 	new entry[MaxCommandLength];
 	read_argv(1, entry, charsmax(entry));
 
-	ProcessHelp(id, .start_argindex = 2, .do_search = true, .main_command = SearchCommand, .search = entry);
+	return ProcessHelp(id, .start_argindex = 2, .do_search = true, .main_command = SearchCommand, .search = entry);
 }
 
 @ConsoleCommand_Help(id, level, cid)
 {
-	ProcessHelp(id, .start_argindex = 1, .do_search = false, .main_command = HelpCommand);
+	return ProcessHelp(id, .start_argindex = 1, .do_search = false, .main_command = HelpCommand);
 }
 
 ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const search[] = "")
@@ -173,12 +173,7 @@ ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const sear
 
 @Task_DisplayMessage(id)
 {
-	if (!is_user_connected(id))
-	{
-		return;
-	}
-
-	client_print(id, print_chat, "%l", "TYPE_HELP");
+	client_print(id, print_chat, "%l", "TYPE_HELP", HelpCommand, SearchCommand);
 
 	if (CvarTimeLimit > 0.0)
 	{

@@ -341,6 +341,7 @@
     <ClInclude Include="..\CFileSystem.h" />
     <ClInclude Include="..\CFlagManager.h" />
     <ClInclude Include="..\CForward.h" />
+    <ClInclude Include="..\CFrameAction.h" />
     <ClInclude Include="..\CGameConfigs.h" />
     <ClInclude Include="..\CLang.h" />
     <ClInclude Include="..\CLibrarySys.h" />
@@ -376,7 +377,6 @@
     <ClInclude Include="..\trie_natives.h" />
     <ClInclude Include="..\..\public\sdk\amxxmodule.h" />
     <ClInclude Include="..\..\public\sdk\moduleconfig.h" />
-    <ClInclude Include="..\CFrameAction.h">
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\version.rc" />

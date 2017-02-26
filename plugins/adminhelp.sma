@@ -18,6 +18,9 @@ const MaxDefaultEntries = 10;
 const MaxCommandLength = 32;
 const MaxCommandInfoLength = 128;
 
+new const HelpCommand[] = "amx_help";
+new const SearchCommand[] = "amx_searchcmd";
+
 new CvarDisplayClientMessage;
 new CvarHelpAmount;
 new CvarNextmap[MaxMapLength];
@@ -29,7 +32,9 @@ public plugin_init()
 {
 	register_plugin("Admin Help", AMXX_VERSION_STR, "AMXX Dev Team");
 	register_dictionary("adminhelp.txt");
-	register_concmd("amx_help", "@ConsoleCommand_Help", ADMIN_ALL, "HELP_CMD_INFO", .info_ml = true);
+
+	register_concmd(HelpCommand, "@ConsoleCommand_Help", ADMIN_ALL, "HELP_CMD_INFO", .info_ml = true);
+	register_concmd(SearchCommand, "@ConsoleCommand_Search", ADMIN_ALL, "SEARCH_CMD_INFO", .info_ml = true);
 
 	bind_pcvar_num(register_cvar("amx_help_display_msg", "1"), CvarDisplayClientMessage);
 	bind_pcvar_num(register_cvar("amx_help_amount_per_page", "10"), CvarHelpAmount);
@@ -65,7 +70,20 @@ public client_disconnected(id)
 	}
 }
 
+@ConsoleCommand_Search(id, level, cid)
+{
+	new entry[MaxCommandLength];
+	read_argv(1, entry, charsmax(entry));
+
+	ProcessHelp(id, .start_argindex = 2, .do_search = true, .main_command = SearchCommand, .search = entry);
+}
+
 @ConsoleCommand_Help(id, level, cid)
+{
+	ProcessHelp(id, .start_argindex = 1, .do_search = false, .main_command = HelpCommand);
+}
+
+ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const search[] = "")
 {
 	new user_flags = get_user_flags(id);
 
@@ -77,35 +95,71 @@ public client_disconnected(id)
 
 	new clcmdsnum = get_concmdsnum(user_flags, id);
 
-	new start  = clamp(read_argv_int(1), .min = 1, .max = clcmdsnum) - 1; // Zero-based list
-	new amount = !id ? read_argv_int(2) : CvarHelpAmount;
+	new start  = clamp(read_argv_int(start_argindex), .min = 1, .max = clcmdsnum) - 1; // Zero-based list;
+	new amount = !id ? read_argv_int(start_argindex + 1) : CvarHelpAmount;
 	new end    = min(start + (amount > 0 ? amount : MaxDefaultEntries), clcmdsnum);
 
 	console_print(id, "^n----- %l -----", "HELP_COMS");
-	
-	new info[MaxCommandInfoLength], command[MaxCommandLength], command_flags, bool:is_info_ml;
 
-	for (new index = start; index < end; index++)
+	new info[MaxCommandInfoLength];
+	new command[MaxCommandLength];
+	new command_flags;
+	new bool:is_info_ml;
+	new entries_found;
+	new total_entries;
+
+	if (do_search)
 	{
-		get_concmd(index, command, charsmax(command), command_flags, info, charsmax(info), user_flags, id, is_info_ml);
-
-		if (is_info_ml)
+		for (new index = 0; index < clcmdsnum; ++index)
 		{
-			LookupLangKey(info, charsmax(info), info, id);
+			get_concmd(index, command, charsmax(command), command_flags, info, charsmax(info), user_flags, id, is_info_ml);
+
+			if (containi(command, search) != -1 && ++entries_found > start && (total_entries = entries_found) <= end)
+			{
+				if (is_info_ml)
+				{
+					LookupLangKey(info, charsmax(info), info, id);
+				}
+
+				console_print(id, "%3d: %s %s", entries_found, command, info);
+			}
 		}
 
-		console_print(id, "%3d: %s %s", index + 1, command, info);
-	}
-	
-	console_print(id, "----- %l -----", "HELP_ENTRIES", start + 1, end, clcmdsnum);
+		if (!entries_found)
+		{
+			console_print(id, "%l", "NO_MATCHING_RESULTS");
+			return PLUGIN_HANDLED;
+		}
 
-	if (end < clcmdsnum)
-	{
-		console_print(id, "----- %l -----", "HELP_USE_MORE", end + 1);
+		clcmdsnum = total_entries;
+		end = min(end, clcmdsnum);
 	}
 	else
 	{
-		console_print(id, "----- %l -----", "HELP_USE_BEGIN");
+		for (new index = start; index < end; ++index)
+		{
+			get_concmd(index, command, charsmax(command), command_flags, info, charsmax(info), user_flags, id, is_info_ml);
+
+			if (is_info_ml)
+			{
+				LookupLangKey(info, charsmax(info), info, id);
+			}
+
+			console_print(id, "%3d: %s %s", index + 1, command, info);
+		}
+	}
+
+	console_print(id, "----- %l -----", "HELP_ENTRIES", start + 1, end, clcmdsnum);
+
+	formatex(command, charsmax(command), "%s%c%s", main_command, do_search ? " " : "", search);
+
+	if (end < clcmdsnum)
+	{
+		console_print(id, "----- %l -----", "HELP_USE_MORE", command, end + 1);
+	}
+	else
+	{
+		console_print(id, "----- %l -----", "HELP_USE_BEGIN", command);
 	}
 
 	return PLUGIN_HANDLED;

@@ -300,6 +300,9 @@
     <ClCompile Include="..\CoreConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\public\reapi\mod_rehlds_api.cpp">
+      <Filter>ReAPI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\amx.h">
@@ -520,6 +523,9 @@
     </ClInclude>
     <ClInclude Include="..\..\public\reapi\common\hookchains.h">
       <Filter>ReAPI\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\reapi\mod_rehlds_api.h">
+      <Filter>ReAPI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -32,6 +32,7 @@
 #include <engine_strucs.h>
 #include <CDetour/detours.h>
 #include "CoreConfig.h"
+#include <reapi/mod_rehlds_api.h>
 
 plugin_info_t Plugin_info = 
 {
@@ -944,6 +945,18 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	SV_DropClient_PostHook(pPlayer, crash, buffer);
 }
 
+void SV_DropClient_RH(IRehldsHook_SV_DropClient *chain, IGameClient *cl, bool crash, const char *format)
+{
+	char buffer[1024];
+	ke::SafeStrcpy(buffer, sizeof(buffer), format);
+
+	auto pPlayer = SV_DropClient_PreHook(cl->GetEdict(), crash, buffer, ARRAY_LENGTH(buffer));
+
+	chain->callNext(cl, crash, buffer);
+
+	SV_DropClient_PostHook(pPlayer, crash, buffer);
+}
+
 void C_ClientPutInServer_Post(edict_t *pEntity)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
@@ -1616,15 +1629,23 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	g_CvarManager.CreateCvarHook();
 
-	void *address = nullptr;
-
-	if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
+	if (RehldsApi_Init())
 	{
-		DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+		RehldsHookchains->SV_DropClient()->registerHook(SV_DropClient_RH);
 	}
 	else
 	{
-		AMXXLOG_Log("client_disconnected and client_remove forwards have been disabled - check your gamedata files.");
+		void *address = nullptr;
+
+		if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
+		{
+			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+		}
+		else
+		{
+			auto reason = RehldsApi ? "update ReHLDS" : "check your gamedata files";
+			AMXXLOG_Log("client_disconnected and client_remove forwards have been disabled - %s.", reason);
+		}
 	}
 
 	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);
@@ -1675,6 +1696,10 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	if (DropClientDetour)
 	{
 		DropClientDetour->Destroy();
+	}
+	else if (RehldsApi)
+	{
+		RehldsHookchains->SV_DropClient()->unregisterHook(SV_DropClient_RH);
 	}
 
 	return (TRUE);

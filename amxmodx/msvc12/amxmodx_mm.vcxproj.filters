@@ -46,6 +46,15 @@
     <Filter Include="Third Party\Hashing\hashers">
       <UniqueIdentifier>{fb5fd616-bb2e-42f1-a113-a61eb9ead739}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ReAPI">
+      <UniqueIdentifier>{5dd87e1c-9be5-43d3-8216-74d36f4f7610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\engine">
+      <UniqueIdentifier>{581dfa97-1999-44ba-a120-7f90f484c68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\common">
+      <UniqueIdentifier>{9f12880b-4c0a-4e77-a6fc-a81728310e91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\amx.cpp">
@@ -502,6 +511,15 @@
     </ClInclude>
     <ClInclude Include="..\CFrameAction.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\reapi\engine\rehlds_api.h">
+      <Filter>ReAPI\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\reapi\engine\rehlds_interfaces.h">
+      <Filter>ReAPI\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\reapi\common\hookchains.h">
+      <Filter>ReAPI\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

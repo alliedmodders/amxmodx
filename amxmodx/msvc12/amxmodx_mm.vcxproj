@@ -311,6 +311,9 @@
     <ClInclude Include="..\..\public\memtools\CDetour\detourhelpers.h" />
     <ClInclude Include="..\..\public\memtools\CDetour\detours.h" />
     <ClInclude Include="..\..\public\memtools\MemoryUtils.h" />
+    <ClInclude Include="..\..\public\reapi\common\hookchains.h" />
+    <ClInclude Include="..\..\public\reapi\engine\rehlds_api.h" />
+    <ClInclude Include="..\..\public\reapi\engine\rehlds_interfaces.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\crc32.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\keccak.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\md5.h" />

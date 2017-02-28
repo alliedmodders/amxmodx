@@ -902,6 +902,31 @@ void C_ClientDisconnect(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
+CPlayer* SV_DropClient_PreHook(edict_s *client, qboolean crash, const char *buffer, size_t buffer_size)
+{
+	auto pPlayer = client ? GET_PLAYER_POINTER(client) : nullptr;
+
+	if (pPlayer)
+	{
+		if (pPlayer->initialized)
+		{
+			pPlayer->disconnecting = true;
+			executeForwards(FF_ClientDisconnected, pPlayer->index, TRUE, prepareCharArray(const_cast<char*>(buffer), buffer_size, true), buffer_size - 1);
+		}
+	}
+
+	return pPlayer;
+}
+
+void SV_DropClient_PostHook(CPlayer *pPlayer, qboolean crash, const char *buffer)
+{
+	if (pPlayer)
+	{
+		pPlayer->Disconnect();
+		executeForwards(FF_ClientRemove, pPlayer->index, TRUE, buffer);
+	}
+}
+
 // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
 DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, const char*, format)
 {
@@ -912,24 +937,11 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	ke::SafeVsprintf(buffer, sizeof(buffer) - 1, format, ap);
 	va_end(ap);
 
-	auto pPlayer = cl->edict ? GET_PLAYER_POINTER(cl->edict) : nullptr;
-
-	if (pPlayer)
-	{
-		if (pPlayer->initialized)
-		{
-			pPlayer->disconnecting = true;
-			executeForwards(FF_ClientDisconnected, pPlayer->index, TRUE, prepareCharArray(buffer, sizeof(buffer), true), sizeof(buffer) - 1);
-		}
-	}
+	auto pPlayer = SV_DropClient_PreHook(cl->edict, crash, buffer, ARRAY_LENGTH(buffer));
 
 	DETOUR_STATIC_CALL(SV_DropClient)(cl, crash, "%s", buffer);
 
-	if (pPlayer)
-	{
-		pPlayer->Disconnect();
-		executeForwards(FF_ClientRemove, pPlayer->index, TRUE, buffer);
-	}
+	SV_DropClient_PostHook(pPlayer, crash, buffer);
 }
 
 void C_ClientPutInServer_Post(edict_t *pEntity)

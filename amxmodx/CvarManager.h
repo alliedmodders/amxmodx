@@ -142,6 +142,9 @@ class CvarManager
 	public:
 
 		void      CreateCvarHook();
+		void      EnableHook();
+		void      DisableHook();
+		void      DestroyHook();
 
 		CvarInfo* CreateCvar(const char* name, const char* value, const char* plugin, int pluginId, int flags = 0, const char* helpText = "");
 		CvarInfo* FindCvar(const char* name);
@@ -166,6 +169,7 @@ class CvarManager
 		CvarsList  m_Cvars;
 		size_t     m_AmxmodxCvars;
 		CDetour*   m_HookDetour;
+		bool       m_ReHookEnabled;
 };
 
 extern CvarManager g_CvarManager;

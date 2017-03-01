@@ -1,5 +1,6 @@
 #pragma once
 
+#include <interface_helpers.h>
 #include "engine/rehlds_api.h"
 
 extern IRehldsApi* RehldsApi;

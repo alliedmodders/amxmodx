@@ -33,6 +33,7 @@
 #include <CDetour/detours.h>
 #include "CoreConfig.h"
 #include <reapi/mod_rehlds_api.h>
+#include <amtl/am-utility.h>
 
 plugin_info_t Plugin_info = 
 {

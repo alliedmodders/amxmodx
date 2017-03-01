@@ -1,5 +1,4 @@
 
-#include <amxmodx.h>
 #include "mod_rehlds_api.h"
 
 IRehldsApi*          RehldsApi;

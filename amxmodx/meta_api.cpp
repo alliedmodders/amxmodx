@@ -1627,8 +1627,6 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	ConfigManager.OnAmxxStartup();
 
-	g_CvarManager.CreateCvarHook();
-
 	if (RehldsApi_Init())
 	{
 		RehldsHookchains->SV_DropClient()->registerHook(SV_DropClient_RH);
@@ -1647,6 +1645,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 			AMXXLOG_Log("client_disconnected and client_remove forwards have been disabled - %s.", reason);
 		}
 	}
+
+	g_CvarManager.CreateCvarHook();
 
 	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);
 

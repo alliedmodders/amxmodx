@@ -83,4 +83,6 @@ extern void **GameRules;
 extern int *UseBotArgs;
 extern const char **BotArgs;
 
+extern bool HasReHlds;
+
 #endif // CSTRIKE_HACKS_H

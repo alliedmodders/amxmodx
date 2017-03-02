@@ -17,12 +17,15 @@
 #include "CstrikeItemsInfos.h"
 #include "CstrikeUserMessages.h"
 #include <IGameConfigs.h>
+#include <reapi/mod_rehlds_api.h>
 
 IGameConfig *MainConfig;
 IGameConfig *CommonConfig;
 IGameConfigManager *ConfigManager;
 
 HLTypeConversion TypeConversion;
+
+extern StringHashMap<int> ModelsList;
 
 int AmxxCheckGame(const char *game)
 {
@@ -32,6 +35,30 @@ int AmxxCheckGame(const char *game)
 		return AMXX_GAME_OK;
 	}
 	return AMXX_GAME_BAD;
+}
+
+void SV_ActivateServer_RH(IRehldsHook_SV_ActivateServer *chain, int runPhysics)
+{
+	chain->callNext(runPhysics);
+
+	auto numResources = RehldsData->GetResourcesNum();
+
+	if (!numResources)
+	{
+		return;
+	}
+
+	ModelsList.clear();
+
+	for (auto i = 0; i < numResources; ++i) // Saves all the precached models into a list.
+	{
+		auto resource = RehldsData->GetResource(i);
+
+		if (resource->type == t_model)
+		{
+			ModelsList.insert(resource->szFileName, i);
+		}
+	}
 }
 
 void OnAmxxAttach()
@@ -58,6 +85,8 @@ void OnAmxxAttach()
 	}
 
 	InitializeHacks();
+
+	RehldsHookchains->SV_ActivateServer()->registerHook(SV_ActivateServer_RH);
 }
 
 void OnPluginsLoaded()

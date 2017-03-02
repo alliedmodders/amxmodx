@@ -21,6 +21,7 @@
 #include <amtl/am-string.h>
 
 bool NoKnivesMode = false;
+StringHashMap<int> ModelsList;
 
 // native cs_set_user_money(index, money, flash = 1);
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params)
@@ -865,18 +866,17 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 		char modelpath[260];
 		ke::SafeSprintf(modelpath, sizeof(modelpath), "models/player/%s/%s.mdl", newModel, newModel);
 
-		for (size_t i = 0; i < HL_MODEL_MAX; ++i)
-		{
-			if (Server->model_precache[i] && !strcmp(Server->model_precache[i], modelpath))
-			{
-				if (pPlayer->v.modelindex != i)
-				{
-					SET_MODEL(pPlayer, STRING(ALLOC_STRING(modelpath)));
-				}
+		auto modelIndex = 0;
 
-				set_pdata<int>(pPlayer, m_modelIndexPlayer, i);
-				return 1;
+		if (ModelsList.retrieve(modelpath, &modelIndex))
+		{
+			if (pPlayer->v.modelindex != modelIndex)
+			{
+				SET_MODEL(pPlayer, STRING(ALLOC_STRING(modelpath)));
 			}
+
+			set_pdata<int>(pPlayer, m_modelIndexPlayer, modelIndex);
+			return 1;
 		}
 
 		MF_Log("Model must be precached using cs_set_user_model with update_index parameter set");

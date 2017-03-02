@@ -19,6 +19,7 @@ binary.sources = [
   '../../../public/memtools/MemoryUtils.cpp',
   '../../../public/memtools/CDetour/detours.cpp',
   '../../../public/memtools/CDetour/asm/asm.c',
+  '../../../public/reapi/mod_rehlds_api.cpp',
 ]
 
 if builder.target_platform == 'windows':

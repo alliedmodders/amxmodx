@@ -27,6 +27,15 @@
     <Filter Include="Memtools\CDetour\asm">
       <UniqueIdentifier>{4f3c4a13-065a-49b1-83a1-f646a3ec3678}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ReAPI">
+      <UniqueIdentifier>{7f37b35a-6ac7-4269-81a1-60dab5abbee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\engine">
+      <UniqueIdentifier>{bcfa2fd6-45a9-4671-a48e-f9ae4fdd3a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\common">
+      <UniqueIdentifier>{d192d10f-9ccb-4357-a360-875a563b016a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CstrikeHacks.cpp">
@@ -61,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="..\CstrikeItemsInfos.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\public\reapi\mod_rehlds_api.cpp">
+      <Filter>ReAPI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +111,18 @@
     </ClInclude>
     <ClInclude Include="..\CstrikeItemsInfos.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\reapi\engine\rehlds_api.h">
+      <Filter>ReAPI\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\reapi\engine\rehlds_interfaces.h">
+      <Filter>ReAPI\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\reapi\common\hookchains.h">
+      <Filter>ReAPI\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\reapi\mod_rehlds_api.h">
+      <Filter>ReAPI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,7 @@
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include "CstrikeItemsInfos.h"
+#include <reapi/mod_rehlds_api.h>
 
 int ForwardInternalCommand = -1;
 int ForwardOnBuy           = -1;
@@ -65,9 +66,13 @@ server_t *Server;
 // Mod global variable
 void **GameRules;
 
+bool HasReHlds;
+
 
 void InitializeHacks()
 {
+	HasReHlds = RehldsApi_Init();
+
 	CtrlDetours_ClientCommand(true);
 	CtrlDetours_BuyCommands(true);
 	CtrlDetours_Natives(true);
@@ -594,17 +599,20 @@ void InitGlobalVars()
 
 #if defined(KE_WINDOWS)
 
-	TypeDescription typeDesc;
-
-	if (CommonConfig->GetOffset("svs", &typeDesc))
+	if (!HasReHlds)
 	{
-		uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
-		ServerStatic = reinterpret_cast<decltype(ServerStatic)>(base - 4);
-	}
+		TypeDescription typeDesc;
 
-	if (CommonConfig->GetAddress("sv", &address))
-	{
-		Server = *reinterpret_cast<decltype(Server)*>(address);
+		if (CommonConfig->GetOffset("svs", &typeDesc))
+		{
+			uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
+			ServerStatic = reinterpret_cast<decltype(ServerStatic)>(base - 4);
+		}
+
+		if (CommonConfig->GetAddress("sv", &address))
+		{
+			Server = *reinterpret_cast<decltype(Server)*>(address);
+		}
 	}
 
 	if (CommonConfig->GetAddress("g_pGameRules", &address))
@@ -614,14 +622,17 @@ void InitGlobalVars()
 
 #else
 
-	if (CommonConfig->GetMemSig("svs", &address))
+	if (!HasReHlds)
 	{
-		ServerStatic = reinterpret_cast<decltype(ServerStatic)>(address);
-	}
+		if (CommonConfig->GetMemSig("svs", &address))
+		{
+			ServerStatic = reinterpret_cast<decltype(ServerStatic)>(address);
+		}
 
-	if (CommonConfig->GetMemSig("sv", &address))
-	{
-		Server = reinterpret_cast<decltype(Server)>(address);
+		if (CommonConfig->GetMemSig("sv", &address))
+		{
+			Server = reinterpret_cast<decltype(Server)>(address);
+		}
 	}
 
 	if (CommonConfig->GetMemSig("g_pGameRules", &address))
@@ -631,14 +642,17 @@ void InitGlobalVars()
 
 #endif
 
-	if (!ServerStatic)
+	if (!HasReHlds)
 	{
-		MF_Log("svs global variable is not available");
-	}
+		if (!ServerStatic)
+		{
+			MF_Log("svs global variable is not available");
+		}
 
-	if (!Server)
-	{
-		MF_Log("sv global variable is not available");
+		if (!Server)
+		{
+			MF_Log("sv global variable is not available");
+		}
 	}
 
 	if (!GameRules)

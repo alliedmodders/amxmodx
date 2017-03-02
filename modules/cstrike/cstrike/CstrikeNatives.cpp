@@ -19,6 +19,7 @@
 #include "CstrikeItemsInfos.h"
 #include <CDetour/detours.h>
 #include <amtl/am-string.h>
+#include <reapi/mod_regamedll_api.h>
 
 bool NoKnivesMode = false;
 StringHashMap<int> ModelsList;
@@ -1044,7 +1045,7 @@ static cell AMX_NATIVE_CALL cs_get_no_knives(AMX *amx, cell *params)
 // native cs_set_no_knives(noknives = 0);
 static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params)
 {
-	if (!GiveDefaultItemsDetour)
+	if (!HasReGameDll && !GiveDefaultItemsDetour)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_set_no_knives() is disabled. Check your amxx logs.");
 		return 0;
@@ -1052,14 +1053,7 @@ static cell AMX_NATIVE_CALL cs_set_no_knives(AMX *amx, cell *params)
 
 	NoKnivesMode = params[1] != 0;
 
-	if (NoKnivesMode)
-	{
-		GiveDefaultItemsDetour->EnableDetour();
-	}
-	else
-	{
-		GiveDefaultItemsDetour->DisableDetour();
-	}
+	ToggleHook_GiveDefaultItems(NoKnivesMode);
 
 	return 1;
 }
@@ -1698,7 +1692,7 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
 	}
 
 	int len;
-	void* pEntity = TypeConversion.id_to_cbase(params[1]);
+	auto pEntity = (CBaseEntity*)TypeConversion.id_to_cbase(params[1]);
 	const char* value = MF_GetAmxString(amx, params[2], 0, &len);
 
 	int index = TypeConversion.cbase_to_id(CS_UTIL_FindEntityByString(pEntity, "classname", value));
@@ -1724,7 +1718,7 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
 	CHECK_ENTITY_SIMPLE(owner);
 
 	int length;
-	void* pEntity = TypeConversion.id_to_cbase(params[1]);
+	auto pEntity = (CBaseEntity*)TypeConversion.id_to_cbase(params[1]);
 	const char* value = MF_GetAmxString(amx, params[2], 0, &length);
 
 	edict_t *pOwner = TypeConversion.id_to_edict(owner);
@@ -1763,14 +1757,14 @@ static cell AMX_NATIVE_CALL cs_set_ent_class(AMX* amx, cell* params)
 
 	if (pev->classname)
 	{
-		RemoveEntityHashValue(pev, STRING(pev->classname), HashType::Classname);
+		RemoveEntityHashValue(pev, STRING(pev->classname), CLASSNAME);
 	}
 
 	int length;
 	auto new_classname = MF_GetAmxString(amx, params[2], 0, &length);
 
 	pev->classname = ALLOC_STRING(new_classname);
-	AddEntityHashValue(pev, STRING(pev->classname), HashType::Classname);
+	AddEntityHashValue(pev, STRING(pev->classname), CLASSNAME);
 
 	return 1;
 }
@@ -1882,7 +1876,7 @@ static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
 // native cs_get_weapon_info(weapon_id, CsWeaponInfo:type);
 static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 {
-	if (GetWeaponInfo <= 0)
+	if (!HasReGameDll && GetWeaponInfo <= 0)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_weapon_info() is disabled. Check your amxx logs.");
 		return 0;
@@ -1891,9 +1885,9 @@ static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 	int weapon_id = params[1];
 	int info_type = params[2];
 
-	WeaponInfoStruct *info;
+	WeaponInfoStruct *info; 
 
-	if (weapon_id <= CSW_NONE || weapon_id > CSW_LAST_WEAPON || !(info = GetWeaponInfo(weapon_id)))
+	if (weapon_id <= CSW_NONE || weapon_id > CSW_LAST_WEAPON || !(info = HasReGameDll ? ReGameApi->GetWeaponInfo(weapon_id) : GetWeaponInfo(weapon_id)))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id: %d", weapon_id);
 		return 0;
@@ -1925,6 +1919,7 @@ static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 		{
 			return info->ammoType;
 		}
+		// TODO: Ammo name (custom)
 	}
 
 	MF_LogError(amx, AMX_ERR_NATIVE, "Invalid info type: %d", info_type);

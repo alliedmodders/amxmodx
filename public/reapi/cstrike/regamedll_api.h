@@ -33,7 +33,7 @@
 #include "../common/hookchains.h"
 
 #define REGAMEDLL_API_VERSION_MAJOR 5
-#define REGAMEDLL_API_VERSION_MINOR 0
+#define REGAMEDLL_API_VERSION_MINOR 1
 
 // CBasePlayer::Spawn hook
 typedef IVoidHookChainClass<class CBasePlayer> IReGameHook_CBasePlayer_Spawn;
@@ -256,8 +256,8 @@ typedef IHookChain<class CBaseEntity *, class CBasePlayer *, WeaponIdType> IReGa
 typedef IHookChainRegistry<class CBaseEntity *, class CBasePlayer *, WeaponIdType> IReGameHookRegistry_BuyWeaponByWeaponID;
 
 // InternalCommand hook
-typedef IHookChain<bool, edict_t *, const char *> IReGameHook_InternalCommand;
-typedef IHookChainRegistry<bool, edict_t *, const char *> IReGameHookRegistry_InternalCommand;
+typedef IVoidHookChain<edict_t *, const char *, const char *> IReGameHook_InternalCommand;
+typedef IVoidHookChainRegistry<edict_t *, const char *, const char *> IReGameHookRegistry_InternalCommand;
 
 // CHalfLifeMultiplay::FShouldSwitchWeapon hook
 typedef IHookChain<BOOL, class CBasePlayer *, class CBasePlayerItem *> IReGameHook_CSGameRules_FShouldSwitchWeapon;
@@ -351,6 +351,10 @@ typedef IVoidHookChainRegistry<> IReGameHookRegistry_CSGameRules_BalanceTeams;
 typedef IVoidHookChain<> IReGameHook_CSGameRules_OnRoundFreezeEnd;
 typedef IVoidHookChainRegistry<> IReGameHookRegistry_CSGameRules_OnRoundFreezeEnd;
 
+// PM_UpdateStepSound hook
+typedef IVoidHookChain<> IReGameHook_PM_UpdateStepSound;
+typedef IVoidHookChainRegistry<> IReGameHookRegistry_PM_UpdateStepSound;
+
 class IReGameHookchains {
 public:
 	virtual ~IReGameHookchains() {}
@@ -439,6 +443,7 @@ public:
 	virtual IReGameHookRegistry_CSGameRules_GoToIntermission* CSGameRules_GoToIntermission() = 0;
 	virtual IReGameHookRegistry_CSGameRules_BalanceTeams* CSGameRules_BalanceTeams() = 0;
 	virtual IReGameHookRegistry_CSGameRules_OnRoundFreezeEnd* CSGameRules_OnRoundFreezeEnd() = 0;
+	virtual IReGameHookRegistry_PM_UpdateStepSound* PM_UpdateStepSound() = 0;
 };
 
 struct ReGameFuncs_t {

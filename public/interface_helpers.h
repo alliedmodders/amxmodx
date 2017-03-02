@@ -14,10 +14,14 @@
 #include <amtl/os/am-shared-library.h>
 
 template <typename T>
-bool GET_IFACE(const char* library, T*& var, const char* version)
+bool GET_IFACE(const char* library, T*& var, const char* version, bool add_ext = true)
 {
 	char file[PLATFORM_MAX_PATH];
-	ke::path::Format(file, sizeof(file), "%s.%s", library, PLATFORM_LIB_EXT);
+
+	if (add_ext)
+		ke::path::Format(file, sizeof(file), "%s.%s", library, PLATFORM_LIB_EXT);
+	else
+		ke::SafeStrcpy(file, sizeof(file), library);
 
 	auto lib = ke::SharedLib::Open(file);
 

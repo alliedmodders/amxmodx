@@ -8,14 +8,14 @@ IReGameHookchains *  ReGameHookchains;
 bool RegamedllApi_Init()
 {
 	auto library = GET_GAME_INFO(PLID, GINFO_DLL_FULLPATH);
-	
-	if (!library || !GET_IFACE<IReGameApi>(library, ReGameApi, VRE_GAMEDLL_API_VERSION) || !ReGameApi)
+
+	if (!library || !GET_IFACE<IReGameApi>(library, ReGameApi, VRE_GAMEDLL_API_VERSION, false) || !ReGameApi)
 	{
 		return false;
 	}
 
-	int majorVersion = ReGameApi->GetMajorVersion();
-	int minorVersion = ReGameApi->GetMinorVersion();
+	auto majorVersion = ReGameApi->GetMajorVersion();
+	auto minorVersion = ReGameApi->GetMinorVersion();
 
 	if (majorVersion != REGAMEDLL_API_VERSION_MAJOR || minorVersion < REGAMEDLL_API_VERSION_MINOR)
 	{

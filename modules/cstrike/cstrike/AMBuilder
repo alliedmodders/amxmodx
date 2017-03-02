@@ -20,6 +20,7 @@ binary.sources = [
   '../../../public/memtools/CDetour/detours.cpp',
   '../../../public/memtools/CDetour/asm/asm.c',
   '../../../public/reapi/mod_rehlds_api.cpp',
+  '../../../public/reapi/mod_regamedll_api.cpp',
 ]
 
 if builder.target_platform == 'windows':

@@ -36,6 +36,9 @@
     <Filter Include="ReAPI\common">
       <UniqueIdentifier>{d192d10f-9ccb-4357-a360-875a563b016a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ReAPI\cstrike">
+      <UniqueIdentifier>{ba0b72ba-25d8-48c3-af84-c1d4d7436636}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CstrikeHacks.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\public\reapi\mod_rehlds_api.cpp">
+      <Filter>ReAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\public\reapi\mod_regamedll_api.cpp">
       <Filter>ReAPI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -123,6 +129,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\public\reapi\mod_rehlds_api.h">
       <Filter>ReAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\reapi\mod_regamedll_api.h">
+      <Filter>ReAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\reapi\cstrike\regamedll_api.h">
+      <Filter>ReAPI\cstrike</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\reapi\cstrike\regamedll_interfaces.h">
+      <Filter>ReAPI\cstrike</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\reapi\cstrike\regamedll_const.h">
+      <Filter>ReAPI\cstrike</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

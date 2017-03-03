@@ -11,7 +11,7 @@ bool RehldsApi_Init()
 {
 #if defined(PLATFORM_WINDOWS)
 	auto library = "swds";
-#elif defined(PLATFORM_UNIX)
+#elif defined(PLATFORM_POSIX)
 	auto library = "engine_i486";
 #endif
 

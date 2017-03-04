@@ -46,14 +46,14 @@
     <Filter Include="Third Party\Hashing\hashers">
       <UniqueIdentifier>{fb5fd616-bb2e-42f1-a113-a61eb9ead739}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ReAPI">
+    <Filter Include="ReSDK">
       <UniqueIdentifier>{5dd87e1c-9be5-43d3-8216-74d36f4f7610}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ReAPI\engine">
-      <UniqueIdentifier>{581dfa97-1999-44ba-a120-7f90f484c68e}</UniqueIdentifier>
+    <Filter Include="ReSDK\common">
+      <UniqueIdentifier>{26cdecf1-06de-459e-9ea0-0bbb4a2b3bf6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ReAPI\common">
-      <UniqueIdentifier>{9f12880b-4c0a-4e77-a6fc-a81728310e91}</UniqueIdentifier>
+    <Filter Include="ReSDK\engine">
+      <UniqueIdentifier>{04fab577-6f56-40d0-8f69-7ce1b8bf3bb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -300,8 +300,8 @@
     <ClCompile Include="..\CoreConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\public\reapi\mod_rehlds_api.cpp">
-      <Filter>ReAPI</Filter>
+    <ClCompile Include="..\..\public\resdk\mod_rehlds_api.cpp">
+      <Filter>ReSDK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -515,17 +515,17 @@
     <ClInclude Include="..\CFrameAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\reapi\engine\rehlds_api.h">
-      <Filter>ReAPI\engine</Filter>
+    <ClInclude Include="..\..\public\resdk\common\hookchains.h">
+      <Filter>ReSDK\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\reapi\engine\rehlds_interfaces.h">
-      <Filter>ReAPI\engine</Filter>
+    <ClInclude Include="..\..\public\resdk\engine\rehlds_api.h">
+      <Filter>ReSDK\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\reapi\common\hookchains.h">
-      <Filter>ReAPI\common</Filter>
+    <ClInclude Include="..\..\public\resdk\engine\rehlds_interfaces.h">
+      <Filter>ReSDK\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\public\reapi\mod_rehlds_api.h">
-      <Filter>ReAPI</Filter>
+    <ClInclude Include="..\..\public\resdk\mod_rehlds_api.h">
+      <Filter>ReSDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

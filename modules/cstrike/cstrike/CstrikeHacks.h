@@ -19,7 +19,7 @@
 #include <CDetour/detours.h>
 #include <engine_strucs.h>
 #include "CstrikeDatas.h"
-#include <reapi/cstrike/regamedll_api.h>
+#include <resdk/cstrike/regamedll_api.h>
 
 void InitializeHacks();
 void InitFuncsAddresses();

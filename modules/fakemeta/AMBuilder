@@ -10,7 +10,7 @@ binary.compiler.defines += [
 binary.sources = [
   '../../public/sdk/amxxmodule.cpp',
   '../../public/memtools/MemoryUtils.cpp',
-  '../../public/reapi/mod_regamedll_api.cpp',
+  '../../public/resdk/mod_regamedll_api.cpp',
   'dllfunc.cpp',
   'engfunc.cpp',
   'fakemeta_amxx.cpp',

@@ -17,7 +17,7 @@
 #include "CstrikeItemsInfos.h"
 #include "CstrikeUserMessages.h"
 #include <IGameConfigs.h>
-#include <reapi/mod_rehlds_api.h>
+#include <resdk/mod_rehlds_api.h>
 
 IGameConfig *MainConfig;
 IGameConfig *CommonConfig;

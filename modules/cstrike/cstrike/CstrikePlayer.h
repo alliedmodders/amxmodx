@@ -18,7 +18,7 @@
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include <amtl/am-vector.h>
-#include <reapi/mod_rehlds_api.h>
+#include <resdk/mod_rehlds_api.h>
 
 extern ke::Vector<int> ModelsUpdateQueue;
 

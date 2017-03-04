@@ -11,7 +11,7 @@
 #include "amxmodx.h"
 #include <CDetour/detours.h>
 #include <auto-string.h>
-#include <reapi/mod_rehlds_api.h>
+#include <resdk/mod_rehlds_api.h>
 
 CvarManager g_CvarManager;
 

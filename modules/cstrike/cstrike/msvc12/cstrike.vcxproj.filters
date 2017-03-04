@@ -27,16 +27,16 @@
     <Filter Include="Memtools\CDetour\asm">
       <UniqueIdentifier>{4f3c4a13-065a-49b1-83a1-f646a3ec3678}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ReAPI">
+    <Filter Include="ReSDK">
       <UniqueIdentifier>{7f37b35a-6ac7-4269-81a1-60dab5abbee4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ReAPI\engine">
+    <Filter Include="ReSDK\engine">
       <UniqueIdentifier>{bcfa2fd6-45a9-4671-a48e-f9ae4fdd3a9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ReAPI\common">
+    <Filter Include="ReSDK\common">
       <UniqueIdentifier>{d192d10f-9ccb-4357-a360-875a563b016a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ReAPI\cstrike">
+    <Filter Include="ReSDK\cstrike">
       <UniqueIdentifier>{ba0b72ba-25d8-48c3-af84-c1d4d7436636}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -74,11 +74,11 @@
     <ClCompile Include="..\CstrikeItemsInfos.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\public\reapi\mod_rehlds_api.cpp">
-      <Filter>ReAPI</Filter>
+    <ClCompile Include="..\..\..\..\public\resdk\mod_regamedll_api.cpp">
+      <Filter>ReSDK</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\public\reapi\mod_regamedll_api.cpp">
-      <Filter>ReAPI</Filter>
+    <ClCompile Include="..\..\..\..\public\resdk\mod_rehlds_api.cpp">
+      <Filter>ReSDK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,29 +118,29 @@
     <ClInclude Include="..\CstrikeItemsInfos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\reapi\engine\rehlds_api.h">
-      <Filter>ReAPI\engine</Filter>
+    <ClInclude Include="..\..\..\..\public\resdk\common\hookchains.h">
+      <Filter>ReSDK\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\reapi\engine\rehlds_interfaces.h">
-      <Filter>ReAPI\engine</Filter>
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\regamedll_api.h">
+      <Filter>ReSDK\cstrike</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\reapi\common\hookchains.h">
-      <Filter>ReAPI\common</Filter>
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\regamedll_const.h">
+      <Filter>ReSDK\cstrike</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\reapi\mod_rehlds_api.h">
-      <Filter>ReAPI</Filter>
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\regamedll_interfaces.h">
+      <Filter>ReSDK\cstrike</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\reapi\mod_regamedll_api.h">
-      <Filter>ReAPI</Filter>
+    <ClInclude Include="..\..\..\..\public\resdk\engine\rehlds_api.h">
+      <Filter>ReSDK\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\reapi\cstrike\regamedll_api.h">
-      <Filter>ReAPI\cstrike</Filter>
+    <ClInclude Include="..\..\..\..\public\resdk\engine\rehlds_interfaces.h">
+      <Filter>ReSDK\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\reapi\cstrike\regamedll_interfaces.h">
-      <Filter>ReAPI\cstrike</Filter>
+    <ClInclude Include="..\..\..\..\public\resdk\mod_regamedll_api.h">
+      <Filter>ReSDK</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\reapi\cstrike\regamedll_const.h">
-      <Filter>ReAPI\cstrike</Filter>
+    <ClInclude Include="..\..\..\..\public\resdk\mod_rehlds_api.h">
+      <Filter>ReSDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

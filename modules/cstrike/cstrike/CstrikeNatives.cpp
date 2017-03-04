@@ -19,7 +19,7 @@
 #include "CstrikeItemsInfos.h"
 #include <CDetour/detours.h>
 #include <amtl/am-string.h>
-#include <reapi/mod_regamedll_api.h>
+#include <resdk/mod_regamedll_api.h>
 
 bool NoKnivesMode = false;
 StringHashMap<int> ModelsList;

@@ -13,7 +13,7 @@
 
 #include "fakemeta_amxx.h"
 #include "sh_stack.h"
-#include <reapi/mod_regamedll_api.h>
+#include <resdk/mod_regamedll_api.h>
 
 IGameConfig *CommonConfig;
 IGameConfig *GamerulesConfig;

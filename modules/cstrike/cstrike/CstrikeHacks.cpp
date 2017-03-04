@@ -15,8 +15,8 @@
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include "CstrikeItemsInfos.h"
-#include <reapi/mod_rehlds_api.h>
-#include <reapi/mod_regamedll_api.h>
+#include <resdk/mod_rehlds_api.h>
+#include <resdk/mod_regamedll_api.h>
 
 int ForwardInternalCommand = -1;
 int ForwardOnBuy           = -1;

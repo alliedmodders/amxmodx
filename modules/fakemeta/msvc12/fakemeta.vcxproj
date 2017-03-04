@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp" />
+    <ClCompile Include="..\..\..\public\reapi\mod_regamedll_api.cpp" />
     <ClCompile Include="..\fakemeta_amxx.cpp" />
     <ClCompile Include="..\fm_tr.cpp" />
     <ClCompile Include="..\fm_tr2.cpp" />
@@ -114,6 +115,11 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\public\HLTypeConversion.h" />
     <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h" />
+    <ClInclude Include="..\..\..\public\reapi\common\hookchains.h" />
+    <ClInclude Include="..\..\..\public\reapi\cstrike\regamedll_api.h" />
+    <ClInclude Include="..\..\..\public\reapi\cstrike\regamedll_const.h" />
+    <ClInclude Include="..\..\..\public\reapi\cstrike\regamedll_interfaces.h" />
+    <ClInclude Include="..\..\..\public\reapi\mod_regamedll_api.h" />
     <ClInclude Include="..\fakemeta_amxx.h" />
     <ClInclude Include="..\fm_tr.h" />
     <ClInclude Include="..\dllfunc.h" />

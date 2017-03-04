@@ -13,12 +13,16 @@
 
 #include "fakemeta_amxx.h"
 #include "sh_stack.h"
+#include <reapi/mod_regamedll_api.h>
 
 IGameConfig *CommonConfig;
 IGameConfig *GamerulesConfig;
 IGameConfigManager *ConfigManager;
 
+bool HasRegameDll;
 HLTypeConversion TypeConversion;
+
+void *GameRulesRH;
 void **GameRulesAddress;
 
 void OnAmxxAttach()
@@ -61,19 +65,26 @@ void OnAmxxAttach()
 		return;
 	}
 
-	void *address = nullptr;
-
-	if (!CommonConfig->GetAddress("g_pGameRules", &address) || !address)
+	if ((HasRegameDll = RegamedllApi_Init()))
 	{
-		MF_Log("get/set_gamerules_* natives have been disabled because g_pGameRules address could not be found. ");
-		return;
+		GameRulesRH = ReGameApi->GetGameRules();
 	}
+	else
+	{
+		void *address = nullptr;
+
+		if (!CommonConfig->GetAddress("g_pGameRules", &address) || !address)
+		{
+			MF_Log("get/set_gamerules_* natives have been disabled because g_pGameRules address could not be found. ");
+			return;
+		}
 
 #if defined(KE_WINDOWS)
-	GameRulesAddress = *reinterpret_cast<void***>(address);
+		GameRulesAddress = *reinterpret_cast<void***>(address);
 #else
-	GameRulesAddress = reinterpret_cast<void**>(address);
+		GameRulesAddress = reinterpret_cast<void**>(address);
 #endif
+	}
 }
 
 void OnPluginsLoaded()

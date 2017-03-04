@@ -36,6 +36,18 @@
     <Filter Include="Memtools">
       <UniqueIdentifier>{e1b28b22-6fde-4e1f-a982-f37dec584571}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ReAPI">
+      <UniqueIdentifier>{395f243b-8294-49ad-a959-d3d9ca6b79db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\common">
+      <UniqueIdentifier>{213704a7-5d6d-4c8a-88f0-c2aeb6bef4da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\cstrike">
+      <UniqueIdentifier>{dfbb9769-2cb8-487e-8167-d43520db3f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI\engine">
+      <UniqueIdentifier>{b88afebc-8636-4205-9788-8d57eb0a0e3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\fakemeta_amxx.cpp">
@@ -80,6 +92,9 @@
     <ClCompile Include="..\pdata_gamerules.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\public\reapi\mod_regamedll_api.cpp">
+      <Filter>ReAPI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fakemeta_amxx.h">
@@ -123,6 +138,21 @@
     </ClInclude>
     <ClInclude Include="..\pdata_shared.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\reapi\common\hookchains.h">
+      <Filter>ReAPI\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\reapi\cstrike\regamedll_api.h">
+      <Filter>ReAPI\cstrike</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\reapi\cstrike\regamedll_const.h">
+      <Filter>ReAPI\cstrike</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\reapi\cstrike\regamedll_interfaces.h">
+      <Filter>ReAPI\cstrike</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\reapi\mod_regamedll_api.h">
+      <Filter>ReAPI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

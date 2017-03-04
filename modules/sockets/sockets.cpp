@@ -203,9 +203,10 @@ static cell AMX_NATIVE_CALL socket_recv(AMX *amx, cell *params)
 	int current_length = 0;
 	int max_length = length - 1;
 
+	const char *buffer = recv_buffer;
 	while(max_length-- && current_length < bytes_received)
 	{
-		*destination++ = (cell)*recv_buffer++;
+		*destination++ = (cell)*buffer++;
 		current_length++;
 	}
 

@@ -188,7 +188,7 @@ static cell AMX_NATIVE_CALL give_item(AMX *amx, cell *params) // native give_ite
 		return -1;
 	}
 
-	return ENTINDEX(pItemEntity);
+	return TypeConversion.edict_to_id(pItemEntity);
 }
 
 static cell AMX_NATIVE_CALL spawn(AMX *amx, cell *params) // spawn(id) = 1 param
@@ -574,7 +574,7 @@ AMX_NATIVE_INFO fun_Exports[] = {
 /******************************************************************************************/
 void PlayerPreThink(edict_t *pEntity)
 {
-	if (Players[ENTINDEX(pEntity)].HasSilentFootsteps()) {
+	if (Players[TypeConversion.edict_to_id(pEntity)].HasSilentFootsteps()) {
 		pEntity->v.flTimeStepSound = 999; 
 		RETURN_META(MRES_HANDLED);
 	}
@@ -584,7 +584,7 @@ void PlayerPreThink(edict_t *pEntity)
 
 int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
-	Players[ENTINDEX(pPlayer)].Reset();
+	Players[TypeConversion.edict_to_id(pPlayer)].Reset();
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
@@ -593,8 +593,8 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shoot
 	TRACE_LINE(v1, v2, fNoMonsters, shooter, ptr);
 	if ( ptr->pHit && (ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT))
 	&& shooter && (shooter->v.flags & (FL_CLIENT | FL_FAKECLIENT)) ) {
-		int shooterIndex = ENTINDEX(shooter);
-		if ( !(Players[shooterIndex].GetBodyHits(ENTINDEX(ptr->pHit))& (1<<ptr->iHitgroup)) )
+		int shooterIndex = TypeConversion.edict_to_id(shooter);
+		if ( !(Players[shooterIndex].GetBodyHits(TypeConversion.edict_to_id(ptr->pHit))& (1<<ptr->iHitgroup)) )
 			ptr->flFraction = 1.0;
 	}
 	RETURN_META(MRES_SUPERCEDE);

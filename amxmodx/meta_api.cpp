@@ -1087,8 +1087,14 @@ void C_ClientCommand(edict_t *pEntity)
 					int item = pMenu->PagekeyToItem(pPlayer->page, pressed_key+1);
 					if (item == MENU_BACK)
 					{
+						if (pMenu->pageCallback >= 0)
+							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_BACK));
+
 						pMenu->Display(pPlayer->index, pPlayer->page - 1);
 					} else if (item == MENU_MORE) {
+						if (pMenu->pageCallback >= 0)
+							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_MORE));
+
 						pMenu->Display(pPlayer->index, pPlayer->page + 1);
 					} else {
 						ret = executeForwards(pMenu->func, static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(item));

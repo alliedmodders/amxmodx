@@ -92,7 +92,7 @@ bool CloseNewMenus(CPlayer *pPlayer)
 
 Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
 m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
-isDestroying(false), items_per_page(7)
+isDestroying(false), pageCallback(-1), items_per_page(7)
 {
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
 	menuId = g_menucmds.registerMenuId(title, amx);
@@ -125,6 +125,7 @@ Menu::~Menu()
 	}
 
 	unregisterSPForward(this->func);
+	unregisterSPForward(this->pageCallback);
 	
 	m_Items.clear();
 }
@@ -954,6 +955,28 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 
 	switch (params[2])
 	{
+	case MPROP_PAGE_CALLBACK:
+		{
+			const char *str = get_amxstring_null(amx, params[3], 0, len);
+			if (str == nullptr)
+			{
+				unregisterSPForward(pMenu->pageCallback);
+				pMenu->pageCallback = -1;
+				break;
+			}
+
+			int callback = registerSPForwardByName(amx, str, FP_CELL, FP_CELL, FP_DONE);
+			if (callback < 0)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Function %s not present", str);
+				return 0;
+			}
+
+			unregisterSPForward(pMenu->pageCallback);
+			pMenu->pageCallback = callback;
+
+			break;
+		}
 	case MPROP_SET_NUMBER_COLOR:
 		{
 			char *str = get_amxstring(amx, params[3], 0, len);

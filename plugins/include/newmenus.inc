@@ -27,6 +27,9 @@
 #define MPROP_EXIT		6		/* Exit functionality (param1 = number, see MEXIT constants) */
 #define MPROP_NOCOLORS	8		/* Sets whether colors are not auto (param1 = number, 0=default) */
 #define MPROP_NUMBER_COLOR	10	/* Color indicator to use for numbers (param1 = string, "\r"=default) */
+#define MPROP_PAGE_CALLBACK	11	/* Function to be called on Back and Next (param1 = string) */
+								/* public function(id, status); where status is either MENU_BACK or MENU_MORE */
+								/* Pass NULL_STRING to disable the callback */
 
 #define MEXIT_NORMAL	0		/* DEPRECATED, do not use (has no effect) */
 #define MENUPAD_NONE	0		/* DEPRECATED, do not use (has no effect) */

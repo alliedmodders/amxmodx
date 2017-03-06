@@ -323,6 +323,8 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params)
 		Players.SetBodyHits(attacker, target, hitzones);
 	}
 
+	g_pengfuncsTable_Post->pfnTraceLine = Players.HaveBodyHits() ? TraceLine_Post : nullptr;
+
 	return 1;
 }
 
@@ -520,11 +522,13 @@ void OnPluginsLoaded()
 	TypeConversion.init();
 
 	g_pFunctionTable->pfnPlayerPreThink = nullptr;
+	g_pengfuncsTable_Post->pfnTraceLine = nullptr;
 }
 
 void ServerDeactivate()
 {
 	g_pFunctionTable->pfnPlayerPreThink = nullptr;
+	g_pengfuncsTable_Post->pfnTraceLine = nullptr;
 
 	RETURN_META(MRES_IGNORED);
 }

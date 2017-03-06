@@ -31,6 +31,7 @@
 #define HITGROUP_RIGHTLEG		7 // 128
 #define HITGROUP_MAX            8
 
+extern DLL_FUNCTIONS *g_pFunctionTable;
 
 static const auto kHitGroupsBits = (1 << HITGROUP_MAX) - 1;
 static const auto kMaxClients = 32u;

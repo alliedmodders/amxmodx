@@ -395,11 +395,26 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params)
 	{
 		pPlayer->v.flTimeStepSound = 999;
 		Players[index].SetSilentFootsteps(true);
+
+		g_pFunctionTable->pfnPlayerPreThink = PlayerPreThink;
 	}
 	else 
 	{
 		pPlayer->v.flTimeStepSound = STANDARDTIMESTEPSOUND;
 		Players[index].SetSilentFootsteps(false);
+
+		if (g_pFunctionTable->pfnPlayerPreThink)
+		{
+			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
+			{
+				if (Players[i].HasSilentFootsteps())
+				{
+					return 1;
+				}
+			}
+
+			g_pFunctionTable->pfnPlayerPreThink = nullptr;
+		}
 	}
 
 	return 1;
@@ -527,5 +542,13 @@ void OnPluginsLoaded()
 	}
 
 	TypeConversion.init();
+
+	g_pFunctionTable->pfnPlayerPreThink = nullptr;
 }
 
+void ServerDeactivate()
+{
+	g_pFunctionTable->pfnPlayerPreThink = nullptr;
+
+	RETURN_META(MRES_IGNORED);
+}

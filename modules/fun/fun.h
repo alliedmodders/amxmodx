@@ -29,6 +29,54 @@
 #define HITGROUP_RIGHTARM		5 // 32
 #define HITGROUP_LEFTLEG		6 // 64
 #define HITGROUP_RIGHTLEG		7 // 128
+#define HITGROUP_MAX            8
+
+
+static const auto kHitGroupsBits = (1 << HITGROUP_MAX) - 1;
+static const auto kMaxClients = 32u;
+
+class CPlayer
+{
+	public:
+
+		CPlayer()
+		{
+			Reset();
+		}
+
+	public:
+
+		int GetBodyHits(int other) const
+		{
+			return m_BodyHits[other];
+		}
+
+		void SetBodyHits(int other, int flags)
+		{
+			m_BodyHits[other] = flags;
+		}
+
+		bool HasSilentFootsteps() const
+		{
+			return m_HasSilentFootsteps;
+		}
+
+		void SetSilentFootsteps(bool state)
+		{
+			m_HasSilentFootsteps = state;
+		}
+
+		void Reset()
+		{
+			memset(m_BodyHits, kHitGroupsBits, sizeof(m_BodyHits));
+			m_HasSilentFootsteps = false;
+		}
+
+	private:
+
+		int  m_BodyHits[kMaxClients + 1];
+		bool m_HasSilentFootsteps;
+};
 
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \

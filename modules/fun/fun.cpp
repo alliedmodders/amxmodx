@@ -40,28 +40,9 @@
 	}
 */
 
-char g_bodyhits[33][33];	// where can the guy in the first dimension hit the people in the 2nd dimension? :-)
-bool g_silent[33];			// used for set_user_footsteps()
-
 HLTypeConversion TypeConversion;
+CPlayer Players[kMaxClients + 1];
 
-// ######## Utils:
-void FUNUTIL_ResetPlayer(int index)
-{
-	//MF_PrintSrvConsole("Resetting player index %d! maxclients: %d\n", index, gpGlobals->maxClients);
-	for (int i = 1; i <= gpGlobals->maxClients; i++) {
-		g_bodyhits[index][i] = (char)((1<<HITGROUP_GENERIC) | 
-						(1<<HITGROUP_HEAD) | 
-						(1<<HITGROUP_CHEST) | 
-						(1<<HITGROUP_STOMACH) | 
-						(1<<HITGROUP_LEFTARM) | 
-						(1<<HITGROUP_RIGHTARM)| 
-						(1<<HITGROUP_LEFTLEG) | 
-						(1<<HITGROUP_RIGHTLEG));
-	}
-	// Reset silent slippers
-	g_silent[index] = false;
-}
 
 // ######## Natives:
 static cell AMX_NATIVE_CALL get_client_listening(AMX *amx, cell *params) // get_client_listening(receiver, sender); = 2 params
@@ -433,7 +414,7 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 	if (shooter == 0 && gettingHit == 0) {
 		for (int i = 1; i <= gpGlobals->maxClients; i++) {
 			for (int j = 1; j <= gpGlobals->maxClients; j++) {
-				g_bodyhits[i][j] = hitzones;
+				Players[i].SetBodyHits(j, hitzones);
 			}
 			//g_zones_toHit[i] = hitzones;
 			//g_zones_getHit[i] = hitzones;
@@ -444,19 +425,19 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params) // set_use
 		CHECK_PLAYER(gettingHit);
 		// Where can all hit gettingHit?
 		for (int i = 1; i <= gpGlobals->maxClients; i++)
-			g_bodyhits[i][gettingHit] = hitzones;
+			Players[i].SetBodyHits(gettingHit, hitzones);
 	}
 	else if (shooter != 0 && gettingHit == 0) {
 		// Shooter can hit all in bodyparts.
 		CHECK_PLAYER(shooter);
 		for (int i = 1; i <= gpGlobals->maxClients; i++)
-			g_bodyhits[shooter][i] = hitzones;
+			Players[shooter].SetBodyHits(i, hitzones);
 	}
 	else {
 		// Specified, where can player A hit player B?
 		CHECK_PLAYER(shooter);
 		CHECK_PLAYER(gettingHit);
-		g_bodyhits[shooter][gettingHit] = hitzones;
+		Players[shooter].SetBodyHits(gettingHit, hitzones);
 	}
 
 	return 1;
@@ -468,7 +449,7 @@ static cell AMX_NATIVE_CALL get_user_hitzones(AMX *amx, cell *params) // get_use
 	CHECK_PLAYER(shooter);
 	int target = params[2];
 	CHECK_PLAYER(target);
-	return g_bodyhits[shooter][target];
+	return Players[shooter].GetBodyHits(target);
 }
 
 static cell AMX_NATIVE_CALL set_user_noclip(AMX *amx, cell *params) // set_user_noclip(index, noclip = 0); = 2 arguments
@@ -521,11 +502,11 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params) // set_us
 
 	if (params[2]) {
 		pPlayer->v.flTimeStepSound = 999;
-		g_silent[params[1]] = true;
+		Players[params[1]].SetSilentFootsteps(true);
 	}
 	else {
 		pPlayer->v.flTimeStepSound = STANDARDTIMESTEPSOUND;
-		g_silent[params[1]] = false;
+		Players[params[1]].SetSilentFootsteps(false);
 	}
 
 	return 1;
@@ -535,7 +516,7 @@ static cell AMX_NATIVE_CALL get_user_footsteps(AMX *amx, cell *params)
 {
 	CHECK_PLAYER(params[1]);
 
-	return g_silent[params[1]];
+	return Players[params[1]].HasSilentFootsteps();
 }
 
 // SidLuke
@@ -593,7 +574,7 @@ AMX_NATIVE_INFO fun_Exports[] = {
 /******************************************************************************************/
 void PlayerPreThink(edict_t *pEntity)
 {
-	if (g_silent[ENTINDEX(pEntity)]) {
+	if (Players[ENTINDEX(pEntity)].HasSilentFootsteps()) {
 		pEntity->v.flTimeStepSound = 999; 
 		RETURN_META(MRES_HANDLED);
 	}
@@ -603,8 +584,7 @@ void PlayerPreThink(edict_t *pEntity)
 
 int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress, char szRejectReason[128])
 {
-	// Reset stuff:
-	FUNUTIL_ResetPlayer(ENTINDEX(pPlayer));
+	Players[ENTINDEX(pPlayer)].Reset();
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
@@ -614,7 +594,7 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shoot
 	if ( ptr->pHit && (ptr->pHit->v.flags& (FL_CLIENT | FL_FAKECLIENT))
 	&& shooter && (shooter->v.flags & (FL_CLIENT | FL_FAKECLIENT)) ) {
 		int shooterIndex = ENTINDEX(shooter);
-		if ( !(g_bodyhits[shooterIndex][ENTINDEX(ptr->pHit)] & (1<<ptr->iHitgroup)) )
+		if ( !(Players[shooterIndex].GetBodyHits(ENTINDEX(ptr->pHit))& (1<<ptr->iHitgroup)) )
 			ptr->flFraction = 1.0;
 	}
 	RETURN_META(MRES_SUPERCEDE);
@@ -663,7 +643,7 @@ void OnPluginsLoaded() {
 	// Reset stuff - hopefully this should
 	for (int i = 1; i <= gpGlobals->maxClients; i++) {
 		// Reset all hitzones
-		FUNUTIL_ResetPlayer(i);
+		Players[i].Reset();
 	}
 
 	TypeConversion.init();

@@ -510,10 +510,8 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shooter, TraceResult *ptr) 
+void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *shooter, TraceResult *ptr)
 {
-	TRACE_LINE(v1, v2, fNoMonsters, shooter, ptr);
-
 	if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT))
 	    && shooter &&  (shooter->v.flags & (FL_CLIENT | FL_FAKECLIENT)) ) 
 	{
@@ -523,10 +521,11 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shoot
 		if (!(Players[shooterIndex].GetBodyHits(targetIndex) & (1 << ptr->iHitgroup)))
 		{
 			ptr->flFraction = 1.0;
+			RETURN_META(MRES_HANDLED);
 		}
 	}
 
-	RETURN_META(MRES_SUPERCEDE);
+	RETURN_META(MRES_IGNORED);
 }
 
 void OnAmxxAttach()

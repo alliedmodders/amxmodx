@@ -232,7 +232,7 @@
 // #define FN_SetOrigin							SetOrigin
 // #define FN_EmitSound							EmitSound
 // #define FN_EmitAmbientSound					EmitAmbientSound
-#define FN_TraceLine							TraceLine
+// #define FN_TraceLine							TraceLine
 // #define FN_TraceToss							TraceToss
 // #define FN_TraceMonsterHull					TraceMonsterHull
 // #define FN_TraceHull							TraceHull
@@ -378,7 +378,7 @@
 // #define FN_SetOrigin_Post					SetOrigin_Post
 // #define FN_EmitSound_Post					EmitSound_Post
 // #define FN_EmitAmbientSound_Post				EmitAmbientSound_Post
-// #define FN_TraceLine_Post					TraceLine_Post
+ #define FN_TraceLine_Post					TraceLine_Post
 // #define FN_TraceToss_Post					TraceToss_Post
 // #define FN_TraceMonsterHull_Post				TraceMonsterHull_Post
 // #define FN_TraceHull_Post					TraceHull_Post

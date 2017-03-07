@@ -290,7 +290,7 @@ static cell AMX_NATIVE_CALL get_user_gravity(AMX *amx, cell *params)
 	return amx_ftoc(pPlayer->v.gravity); 
 }
 
-// native set_user_hitzones(index = 0, target = 0, body = 255)
+// native set_user_hitzones(index = 0, target = 0, body = HITZONES_DEFAULT)
 static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_attacker, arg_target, arg_hitzones };
@@ -445,28 +445,28 @@ AMX_NATIVE_INFO fun_Exports[] =
 {
 	{ "get_client_listen" , get_client_listening },
 	{ "set_client_listen" , set_client_listening },
-	{ "set_user_godmode"  , set_user_godmode },
-	{ "get_user_godmode"  , get_user_godmode },
-	{ "set_user_health"   , set_user_health },
-	{ "give_item"         , give_item },
-	{ "spawn"             , spawn },
-	{ "set_user_frags"    , set_user_frags },
-	{ "set_user_armor"    , set_user_armor },
-	{ "set_user_origin"   , set_user_origin },
-	{ "set_user_rendering", set_user_rendering },
-	{ "get_user_rendering",	get_user_rendering},
-	{ "set_user_maxspeed" , set_user_maxspeed },
-	{ "get_user_maxspeed" , get_user_maxspeed },
-	{ "set_user_gravity"  , set_user_gravity },
-	{ "get_user_gravity"  , get_user_gravity },
-	{ "get_user_footsteps", get_user_footsteps },
-	{ "set_user_hitzones" , set_user_hitzones },
-	{ "get_user_hitzones" , get_user_hitzones },
-	{ "set_user_noclip"   , set_user_noclip },
-	{ "get_user_noclip"   , get_user_noclip },
-	{ "set_user_footsteps", set_user_footsteps },
-	{ "strip_user_weapons", strip_user_weapons },
-	{ NULL                , NULL }
+	{ "set_user_godmode"  , set_user_godmode     },
+	{ "get_user_godmode"  , get_user_godmode     },
+	{ "set_user_health"   , set_user_health      },
+	{ "give_item"         , give_item            },
+	{ "spawn"             , spawn                },
+	{ "set_user_frags"    , set_user_frags       },
+	{ "set_user_armor"    , set_user_armor       },
+	{ "set_user_origin"   , set_user_origin      },
+	{ "set_user_rendering", set_user_rendering   },
+	{ "get_user_rendering",	get_user_rendering   },
+	{ "set_user_maxspeed" , set_user_maxspeed    },
+	{ "get_user_maxspeed" , get_user_maxspeed    },
+	{ "set_user_gravity"  , set_user_gravity     },
+	{ "get_user_gravity"  , get_user_gravity     },
+	{ "get_user_footsteps", get_user_footsteps   },
+	{ "set_user_hitzones" , set_user_hitzones    },
+	{ "get_user_hitzones" , get_user_hitzones    },
+	{ "set_user_noclip"   , set_user_noclip      },
+	{ "get_user_noclip"   , get_user_noclip      },
+	{ "set_user_footsteps", set_user_footsteps   },
+	{ "strip_user_weapons", strip_user_weapons   },
+	{ nullptr             , nullptr              }
 };
 
 

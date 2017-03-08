@@ -996,29 +996,97 @@ void C_ClientCommand(edict_t *pEntity)
 	// Handle "amxx" if not on listenserver
 	if (IS_DEDICATED_SERVER())
 	{
+		static char buf[1024];
+		size_t len = 0;
+
 		if (cmd && stricmp(cmd, "amxx") == 0)
 		{
+			int argc = CMD_ARGC();
+			if(argc > 1 && stricmp(arg, "plugins") == 0)
+			{
+				if(!g_plugins.getPluginsNum())
+				{
+					CLIENT_PRINT(pEntity, print_console, "[AMXX] No plugins found.\n");
+					RETURN_META(MRES_SUPERCEDE);
+				}
+
+				CPluginMngr::iterator a = g_plugins.begin();
+				size_t i = 0;
+
+				while(a)
+				{
+					if((*a).getStatusCode() == ps_running)
+					{
+						len = ke::SafeSprintf(buf, sizeof(buf), "[%d] \"%s\"", ++i, (*a).getTitle());
+
+						if(*(*a).getVersion())
+						{
+							len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " (%s)", (*a).getVersion());
+						}
+						if(*(*a).getAuthor())
+						{
+							len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " by %s", (*a).getAuthor());
+						}
+					
+						len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " %s\n", (*a).getName());
+						CLIENT_PRINT(pEntity, print_console, buf);
+					}
+					++a;
+				}
+				RETURN_META(MRES_SUPERCEDE);
+			}
+			else if(argc > 1 && stricmp(arg, "modules") == 0)
+			{
+				if(!g_modules.size())
+				{
+					CLIENT_PRINT(pEntity, print_console, "[AMXX] No modules found.\n");
+					RETURN_META(MRES_SUPERCEDE);
+				}
+
+				CList<CModule, const char *>::iterator a = g_modules.begin();
+				size_t i = 0;
+
+				while(a)
+				{
+					if((*a).getStatusValue() == MODULE_LOADED)
+					{
+						len = ke::SafeSprintf(buf, sizeof(buf), "[%d] \"%s\"", ++i, (*a).getName());
+
+						if(*(*a).getVersion())
+						{
+							len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " (%s)", (*a).getVersion());
+						}
+						if(*(*a).getAuthor())
+						{
+							len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, " by %s", (*a).getAuthor());
+						}
+
+						len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "\n");
+						CLIENT_PRINT(pEntity, print_console, buf);
+					}
+					++a;
+				}
+				RETURN_META(MRES_SUPERCEDE);
+			}
 			// Print version
-			static char buf[1024];
-			size_t len = 0;
 			
-			sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
+			ke::SafeSprintf(buf, sizeof(buf), "%s %s\n", Plugin_info.name, Plugin_info.version);
 			CLIENT_PRINT(pEntity, print_console, buf);
-			len = sprintf(buf, "Authors: \n         David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Felix \"SniperBeamer\" Geyer\n");
-			len += sprintf(&buf[len], "         Jonny \"Got His Gun\" Bergstrom, Lukasz \"SidLuke\" Wlasinski\n");
+			len = ke::SafeSprintf(buf, sizeof(buf), "Authors: \n         David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Felix \"SniperBeamer\" Geyer\n");
+			len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "         Jonny \"Got His Gun\" Bergstrom, Lukasz \"SidLuke\" Wlasinski\n");
 			CLIENT_PRINT(pEntity, print_console, buf);
-			len = sprintf(buf, "         Christian \"Basic-Master\" Hammacher, Borja \"faluco\" Ferrer\n");
-			len += sprintf(&buf[len], "         Scott \"DS\" Ehlert\n");
-			len += sprintf(&buf[len], "Compiled: %s\nURL:http://www.amxmodx.org/\n", __DATE__ ", " __TIME__);
+			len = ke::SafeSprintf(buf, sizeof(buf), "         Christian \"Basic-Master\" Hammacher, Borja \"faluco\" Ferrer\n");
+			len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "         Scott \"DS\" Ehlert\n");
+			len += ke::SafeSprintf(&buf[len], sizeof(buf)-len, "Compiled: %s\nURL:http://www.amxmodx.org/\n", __DATE__ ", " __TIME__);
 			CLIENT_PRINT(pEntity, print_console, buf);
-#ifdef JIT
-			sprintf(buf, "Core mode: JIT\n");
+#if defined JIT && !defined ASM32
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: JIT Only\n");
+#elif !defined JIT && defined ASM32
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: ASM32 Only\n");
+#elif defined JIT && defined ASM32
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: JIT+ASM32\n");
 #else
-#ifdef ASM32
-			sprintf(buf, "Core mode: ASM\n");
-#else
-			sprintf(buf, "Core mode: Normal\n");
-#endif
+			ke::SafeSprintf(buf, sizeof(buf), "Core mode: Normal\n");
 #endif
 			CLIENT_PRINT(pEntity, print_console, buf);
 			RETURN_META(MRES_SUPERCEDE);

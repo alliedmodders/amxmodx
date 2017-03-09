@@ -32,6 +32,8 @@
 #include <engine_strucs.h>
 #include <CDetour/detours.h>
 #include "CoreConfig.h"
+#include <resdk/mod_rehlds_api.h>
+#include <amtl/am-utility.h>
 
 plugin_info_t Plugin_info = 
 {
@@ -902,6 +904,31 @@ void C_ClientDisconnect(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
+CPlayer* SV_DropClient_PreHook(edict_s *client, qboolean crash, const char *buffer, size_t buffer_size)
+{
+	auto pPlayer = client ? GET_PLAYER_POINTER(client) : nullptr;
+
+	if (pPlayer)
+	{
+		if (pPlayer->initialized)
+		{
+			pPlayer->disconnecting = true;
+			executeForwards(FF_ClientDisconnected, pPlayer->index, TRUE, prepareCharArray(const_cast<char*>(buffer), buffer_size, true), buffer_size - 1);
+		}
+	}
+
+	return pPlayer;
+}
+
+void SV_DropClient_PostHook(CPlayer *pPlayer, qboolean crash, const char *buffer)
+{
+	if (pPlayer)
+	{
+		pPlayer->Disconnect();
+		executeForwards(FF_ClientRemove, pPlayer->index, TRUE, buffer);
+	}
+}
+
 // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
 DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, const char*, format)
 {
@@ -912,24 +939,23 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	ke::SafeVsprintf(buffer, sizeof(buffer) - 1, format, ap);
 	va_end(ap);
 
-	auto pPlayer = cl->edict ? GET_PLAYER_POINTER(cl->edict) : nullptr;
-
-	if (pPlayer)
-	{
-		if (pPlayer->initialized)
-		{
-			pPlayer->disconnecting = true;
-			executeForwards(FF_ClientDisconnected, pPlayer->index, TRUE, prepareCharArray(buffer, sizeof(buffer), true), sizeof(buffer) - 1);
-		}
-	}
+	auto pPlayer = SV_DropClient_PreHook(cl->edict, crash, buffer, ARRAY_LENGTH(buffer));
 
 	DETOUR_STATIC_CALL(SV_DropClient)(cl, crash, "%s", buffer);
 
-	if (pPlayer)
-	{
-		pPlayer->Disconnect();
-		executeForwards(FF_ClientRemove, pPlayer->index, TRUE, buffer);
-	}
+	SV_DropClient_PostHook(pPlayer, crash, buffer);
+}
+
+void SV_DropClient_RH(IRehldsHook_SV_DropClient *chain, IGameClient *cl, bool crash, const char *format)
+{
+	char buffer[1024];
+	ke::SafeStrcpy(buffer, sizeof(buffer), format);
+
+	auto pPlayer = SV_DropClient_PreHook(cl->GetEdict(), crash, buffer, ARRAY_LENGTH(buffer));
+
+	chain->callNext(cl, crash, buffer);
+
+	SV_DropClient_PostHook(pPlayer, crash, buffer);
 }
 
 void C_ClientPutInServer_Post(edict_t *pEntity)
@@ -1602,18 +1628,26 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	ConfigManager.OnAmxxStartup();
 
-	g_CvarManager.CreateCvarHook();
-
-	void *address = nullptr;
-
-	if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
+	if (RehldsApi_Init())
 	{
-		DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+		RehldsHookchains->SV_DropClient()->registerHook(SV_DropClient_RH);
 	}
 	else
 	{
-		AMXXLOG_Log("client_disconnected and client_remove forwards have been disabled - check your gamedata files.");
+		void *address = nullptr;
+
+		if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
+		{
+			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+		}
+		else
+		{
+			auto reason = RehldsApi ? "update ReHLDS" : "check your gamedata files";
+			AMXXLOG_Log("client_disconnected and client_remove forwards have been disabled - %s.", reason);
+		}
 	}
+
+	g_CvarManager.CreateCvarHook();
 
 	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);
 
@@ -1663,6 +1697,10 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	if (DropClientDetour)
 	{
 		DropClientDetour->Destroy();
+	}
+	else if (RehldsApi)
+	{
+		RehldsHookchains->SV_DropClient()->unregisterHook(SV_DropClient_RH);
 	}
 
 	return (TRUE);

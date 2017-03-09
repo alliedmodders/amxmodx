@@ -18,6 +18,7 @@
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include <amtl/am-vector.h>
+#include <resdk/mod_rehlds_api.h>
 
 extern ke::Vector<int> ModelsUpdateQueue;
 
@@ -117,6 +118,11 @@ class CPlayer
 				g_pFunctionTable->pfnStartFrame = StartFrame;
 				g_pFunctionTable->pfnClientUserInfoChanged = ClientUserInfoChanged;
 				g_pengfuncsTable->pfnSetClientKeyValue = SetClientKeyValue;
+			}
+
+			if (HasReHlds)
+			{
+				return;
 			}
 
 			if (!ServerStatic)

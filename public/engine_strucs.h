@@ -66,6 +66,12 @@
 // This is the packet payload without any header bytes (which are attached for actual sending)
 #define NET_MAX_PAYLOAD        3990
 
+typedef enum sv_delta_s
+{
+	sv_packet_nodelta,
+	sv_packet_delta,
+} sv_delta_t;
+
 typedef enum netsrc_s
 {
 	NS_CLIENT,

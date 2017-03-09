@@ -17,12 +17,15 @@
 #include "CstrikeItemsInfos.h"
 #include "CstrikeUserMessages.h"
 #include <IGameConfigs.h>
+#include <resdk/mod_rehlds_api.h>
 
 IGameConfig *MainConfig;
 IGameConfig *CommonConfig;
 IGameConfigManager *ConfigManager;
 
 HLTypeConversion TypeConversion;
+
+extern StringHashMap<int> ModelsList;
 
 int AmxxCheckGame(const char *game)
 {
@@ -32,6 +35,30 @@ int AmxxCheckGame(const char *game)
 		return AMXX_GAME_OK;
 	}
 	return AMXX_GAME_BAD;
+}
+
+void SV_ActivateServer_RH(IRehldsHook_SV_ActivateServer *chain, int runPhysics)
+{
+	chain->callNext(runPhysics);
+
+	auto numResources = RehldsData->GetResourcesNum();
+
+	if (!numResources)
+	{
+		return;
+	}
+
+	ModelsList.clear();
+
+	for (auto i = 0; i < numResources; ++i) // Saves all the precached models into a list.
+	{
+		auto resource = RehldsData->GetResource(i);
+
+		if (resource->type == t_model)
+		{
+			ModelsList.insert(resource->szFileName, i);
+		}
+	}
 }
 
 void OnAmxxAttach()
@@ -58,6 +85,11 @@ void OnAmxxAttach()
 	}
 
 	InitializeHacks();
+
+	if (HasReHlds)
+	{
+		RehldsHookchains->SV_ActivateServer()->registerHook(SV_ActivateServer_RH);
+	}
 }
 
 void OnPluginsLoaded()
@@ -74,23 +106,30 @@ void OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	// Used to catch WeaponList message at map change.
 	EnableMessageHooks();
 
-	if (!ClientCommandDetour) // All CS_* forwards requires ClientCommand. Unlikely to fail. 
+	if (!HasReGameDll && !ClientCommandDetour) // All CS_* forwards requires ClientCommand. Unlikely to fail. 
 	{
-		ToggleDetour_ClientCommands(false);
-		ToggleDetour_BuyCommands(false);
+		ToggleHook_ClientCommands(false);
+		ToggleHook_BuyCommands(false);
 
 		RETURN_META(MRES_IGNORED);
 	}
 
-	auto haveBotDetours = UseBotArgs && BotArgs;
-	auto haveBuyDetours = BuyGunAmmoDetour && GiveNamedItemDetour && AddAccountDetour && CanPlayerBuyDetour && CanBuyThisDetour;
+	auto haveBotHooks = true;
+	auto haveBuyHooks = true;
 
-	HasInternalCommandForward = haveBotDetours && UTIL_CheckForPublic("CS_InternalCommand");
-	HasOnBuyAttemptForward    = haveBuyDetours && UTIL_CheckForPublic("CS_OnBuyAttempt");
-	HasOnBuyForward           = haveBuyDetours && UTIL_CheckForPublic("CS_OnBuy");
+	if (!HasReGameDll)
+	{
+		haveBotHooks = UseBotArgs && BotArgs;
+		haveBuyHooks = BuyGunAmmoDetour && GiveNamedItemDetour && AddAccountDetour && CanPlayerBuyDetour && CanBuyThisDetour;
+	}
 
-	ToggleDetour_ClientCommands(HasInternalCommandForward || HasOnBuyAttemptForward || HasOnBuyForward);
-	ToggleDetour_BuyCommands(HasOnBuyForward);
+	HasInternalCommandForward = haveBotHooks && UTIL_CheckForPublic("CS_InternalCommand");
+	HasOnBuyAttemptForward    = haveBuyHooks && UTIL_CheckForPublic("CS_OnBuyAttempt");
+	HasOnBuyForward           = haveBuyHooks && UTIL_CheckForPublic("CS_OnBuy");
+
+	ToggleHook_ClientCommands(HasInternalCommandForward || HasOnBuyAttemptForward || HasOnBuyForward);
+	ToggleHook_BuyCommands(HasOnBuyForward);
+	ToggleHook_GiveDefaultItems(false);
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -104,13 +143,15 @@ void OnServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 
 void OnServerDeactivate()
 {
-	if (!ClientCommandDetour)
+	if (!HasReGameDll && !ClientCommandDetour)
 	{
 		RETURN_META(MRES_IGNORED);
 	}
 
-	ToggleDetour_ClientCommands(false);
-	ToggleDetour_BuyCommands(false);
+	GameRulesRH = nullptr;
+
+	ToggleHook_ClientCommands(false);
+	ToggleHook_BuyCommands(false);
 
 	RETURN_META(MRES_IGNORED);
 }

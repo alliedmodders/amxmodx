@@ -151,6 +151,7 @@
     <ClCompile Include="..\..\public\memtools\CDetour\asm\asm.c" />
     <ClCompile Include="..\..\public\memtools\CDetour\detours.cpp" />
     <ClCompile Include="..\..\public\memtools\MemoryUtils.cpp" />
+    <ClCompile Include="..\..\public\resdk\mod_rehlds_api.cpp" />
     <ClCompile Include="..\..\third_party\hashing\hashers\crc32.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">$(IntDir)hashing\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">$(IntDir)hashing\</ObjectFileName>
@@ -311,6 +312,10 @@
     <ClInclude Include="..\..\public\memtools\CDetour\detourhelpers.h" />
     <ClInclude Include="..\..\public\memtools\CDetour\detours.h" />
     <ClInclude Include="..\..\public\memtools\MemoryUtils.h" />
+    <ClInclude Include="..\..\public\resdk\common\hookchains.h" />
+    <ClInclude Include="..\..\public\resdk\engine\rehlds_api.h" />
+    <ClInclude Include="..\..\public\resdk\engine\rehlds_interfaces.h" />
+    <ClInclude Include="..\..\public\resdk\mod_rehlds_api.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\crc32.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\keccak.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\md5.h" />

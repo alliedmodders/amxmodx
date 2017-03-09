@@ -55,7 +55,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FAKEMETA_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FAKEMETA_EXPORTS;HAVE_STDINT_H;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -78,7 +78,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\;..\..\..\public;..\..\..\public\sdk;..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FAKEMETA_EXPORTS;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FAKEMETA_EXPORTS;HAVE_STDINT_H;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader>
@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\public\memtools\MemoryUtils.cpp" />
+    <ClCompile Include="..\..\..\public\resdk\mod_regamedll_api.cpp" />
     <ClCompile Include="..\fakemeta_amxx.cpp" />
     <ClCompile Include="..\fm_tr.cpp" />
     <ClCompile Include="..\fm_tr2.cpp" />
@@ -114,6 +115,12 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\public\HLTypeConversion.h" />
     <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h" />
+    <ClInclude Include="..\..\..\public\resdk\common\hookchains.h" />
+    <ClInclude Include="..\..\..\public\resdk\cstrike\regamedll_api.h" />
+    <ClInclude Include="..\..\..\public\resdk\cstrike\regamedll_const.h" />
+    <ClInclude Include="..\..\..\public\resdk\cstrike\regamedll_interfaces.h" />
+    <ClInclude Include="..\..\..\public\resdk\mod_regamedll_api.h" />
+    <ClInclude Include="..\..\..\public\resdk\mod_rehlds_api.h" />
     <ClInclude Include="..\fakemeta_amxx.h" />
     <ClInclude Include="..\fm_tr.h" />
     <ClInclude Include="..\dllfunc.h" />

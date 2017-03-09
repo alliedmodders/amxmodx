@@ -15,6 +15,8 @@
 #include "CstrikeUtils.h"
 #include "CstrikeHacks.h"
 #include "CstrikeItemsInfos.h"
+#include <resdk/mod_rehlds_api.h>
+#include <resdk/mod_regamedll_api.h>
 
 int ForwardInternalCommand = -1;
 int ForwardOnBuy           = -1;
@@ -64,10 +66,20 @@ server_t *Server;
 
 // Mod global variable
 void **GameRules;
+void *GameRulesRH;
 
+bool HasReHlds;
+bool HasReGameDll;
+
+bool HasRestricteditem_Enabled;
+bool InternalCommand_Enabled;
+bool GiveDefaultItems_Enabled;
 
 void InitializeHacks()
 {
+	HasReHlds    = RehldsApi_Init();
+	HasReGameDll = RegamedllApi_Init();
+
 	CtrlDetours_ClientCommand(true);
 	CtrlDetours_BuyCommands(true);
 	CtrlDetours_Natives(true);
@@ -88,7 +100,11 @@ void ShutdownHacks()
 
 const char *CMD_ARGV(int i)
 {
-	if (*UseBotArgs)
+	if (HasReGameDll)
+	{
+		return ReGameFuncs->Cmd_Argv(i);
+	}
+	else if (*UseBotArgs)
 	{
 		if (i < 4)
 		{
@@ -101,9 +117,10 @@ const char *CMD_ARGV(int i)
 	return g_engfuncs.pfnCmd_Argv(i);
 }
 
-DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientCommand(edict_t *pEntity)
+void (*C_ClientCommand_Actual)(edict_t *) = nullptr;
+
+void ClientCommand_Custom(edict_t *pEdict, const char *command, const char *arg1, IReGameHook_InternalCommand *chain = nullptr)
 {
-	auto command = CMD_ARGV(0);
 	auto client = TypeConversion.edict_to_id(pEdict);
 
 	CurrentItemId = CSI_NONE;
@@ -117,7 +134,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 			// Handling buy via menu.
 			if (!strcmp(command, "menuselect"))
 			{
-				auto slot = atoi(CMD_ARGV(1));
+				auto slot = atoi(arg1);
 
 				if (slot > 0 && slot < 9)
 				{
@@ -172,7 +189,7 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 			}
 		}
 
-		if (HasInternalCommandForward && *UseBotArgs && MF_ExecuteForward(ForwardInternalCommand, client, *BotArgs) > 0)
+		if (HasInternalCommandForward && (HasReGameDll || *UseBotArgs) && MF_ExecuteForward(ForwardInternalCommand, client, CMD_ARGV(0)) > 0)
 		{
 			return;
 		}
@@ -185,9 +202,19 @@ DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientComma
 
 	TriggeredFromCommand = CurrentItemId != CSI_NONE;
 
-	DETOUR_STATIC_CALL(C_ClientCommand)(pEdict);
+	chain ? chain->callNext(pEdict, command, arg1) : C_ClientCommand_Actual(pEdict);
 
 	TriggeredFromCommand = BlockMoneyUpdate = BlockAmmosUpdate = false;
+}
+
+void C_ClientCommand(edict_t* pEdict) // void ClientCommand(edict_t *pEntity)
+{
+	ClientCommand_Custom(pEdict, CMD_ARGV(0), CMD_ARGV(1));
+}
+
+void InternalCommand_RH(IReGameHook_InternalCommand* chain, edict_t *pEdict, const char *command, const char *arg1)
+{
+	ClientCommand_Custom(pEdict, CMD_ARGV(0), CMD_ARGV(1), chain);
 }
 
 edict_s* OnCreateNamedEntity(int classname)
@@ -215,6 +242,18 @@ DETOUR_DECL_MEMBER0(GiveDefaultItems, void)  // void CBasePlayer::GiveDefaultIte
 	}
 
 	DETOUR_MEMBER_CALL(GiveDefaultItems)();
+
+	g_pengfuncsTable->pfnCreateNamedEntity = nullptr;
+}
+
+void GiveDefaultItems_RH(IReGameHook_CBasePlayer_GiveDefaultItems *chain, class CBasePlayer *pPlayer)
+{
+	if (NoKnivesMode)
+	{
+		g_pengfuncsTable->pfnCreateNamedEntity = OnCreateNamedEntity;
+	}
+
+	chain->callNext(pPlayer);
 
 	g_pengfuncsTable->pfnCreateNamedEntity = nullptr;
 }
@@ -340,6 +379,35 @@ DETOUR_DECL_MEMBER2(AddAccount, void, int, amount, bool, bTrackChange) // void C
 	DETOUR_MEMBER_CALL(AddAccount)(amount, bTrackChange);
 }
 
+bool CBasePlayer_HasRestrictItem_RH(IReGameHook_CBasePlayer_HasRestrictItem *chain, class CBasePlayer *pPlayer, ItemID item, ItemRestType type)
+{
+	if (type == ITEM_TYPE_BUYING && CurrentItemId != CSI_NONE)
+	{
+		auto player = TypeConversion.cbase_to_id(pPlayer);
+
+		if (MF_IsPlayerAlive(player) && MF_ExecuteForward(ForwardOnBuy, player, CurrentItemId) > 0)
+		{
+			return true;
+		}
+	}
+
+	return chain->callNext(pPlayer, item, type);
+}
+
+bool BuyGunAmmo_RH(IReGameHook_BuyGunAmmo *chain, class CBasePlayer *pPlayer, class CBasePlayerItem *pWeapon, bool blinkMoney)
+{
+	if (CurrentItemId == CSI_PRIAMMO || CurrentItemId == CSI_SECAMMO)
+	{
+		auto player = TypeConversion.cbase_to_id(pPlayer);
+
+		if (MF_IsPlayerAlive(player) && MF_ExecuteForward(ForwardOnBuy, player, CurrentItemId) > 0)
+		{
+			return false;
+		}
+	}
+
+	return chain->callNext(pPlayer, pWeapon, blinkMoney);
+}
 
 void ToggleDetour(CDetour *detour, bool enable)
 {
@@ -363,137 +431,190 @@ void CtrlDetours_ClientCommand(bool set)
 {
 	if (set)
 	{
-		auto base = reinterpret_cast<void *>(MDLL_ClientCommand);
+		if (HasReGameDll)
+		{
+			if (!InternalCommand_Enabled)
+			{
+				ReGameHookchains->InternalCommand()->registerHook(InternalCommand_RH);
+				InternalCommand_Enabled = true;
+			}
+		}
+		else
+		{
+			auto base = reinterpret_cast<void *>(MDLL_ClientCommand);
 
 #if defined(KE_WINDOWS)
 
-		TypeDescription type;
+			TypeDescription type;
 
-		if (MainConfig->GetOffset("UseBotArgs", &type))
-		{
-			UseBotArgs = get_pdata<decltype(UseBotArgs)>(base, type.fieldOffset);
-		}
+			if (MainConfig->GetOffset("UseBotArgs", &type))
+			{
+				UseBotArgs = get_pdata<decltype(UseBotArgs)>(base, type.fieldOffset);
+			}
 
-		if (MainConfig->GetOffset("BotArgs", &type))
-		{
-			BotArgs = get_pdata<decltype(BotArgs)>(base, type.fieldOffset);
-		}
+			if (MainConfig->GetOffset("BotArgs", &type))
+			{
+				BotArgs = get_pdata<decltype(BotArgs)>(base, type.fieldOffset);
+			}
 #else
-		void *address = nullptr;
+			void *address = nullptr;
 
-		if (MainConfig->GetMemSig("UseBotArgs", &address))
-		{
-			UseBotArgs = reinterpret_cast<decltype(UseBotArgs)>(address);
-		}
+			if (MainConfig->GetMemSig("UseBotArgs", &address))
+			{
+				UseBotArgs = reinterpret_cast<decltype(UseBotArgs)>(address);
+			}
 
-		if (MainConfig->GetMemSig("BotArgs", &address))
-		{
-			BotArgs = reinterpret_cast<decltype(BotArgs)>(address);
-		}
+			if (MainConfig->GetMemSig("BotArgs", &address))
+			{
+				BotArgs = reinterpret_cast<decltype(BotArgs)>(address);
+			}
 #endif
-		ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, base);
+			ClientCommandDetour = DETOUR_CREATE_STATIC_FIXED(C_ClientCommand, base);
 
-		if (!ClientCommandDetour)
-		{
-			MF_Log("ClientCommand is not available - forwards CS_InternalCommand and CS_OnBuy[Attempt] have been disabled");
-			CtrlDetours_ClientCommand(false);
-		}
-		else if (!UseBotArgs || !BotArgs)
-		{
-			MF_Log("UseBotArgs or BotArgs is not available - forward CS_InternalCommand has been disabled");
-		}
+			if (!ClientCommandDetour)
+			{
+				MF_Log("ClientCommand is not available - forwards CS_InternalCommand and CS_OnBuy[Attempt] have been disabled");
+				ToggleHook_ClientCommands(false);
+			}
+			else if (!UseBotArgs || !BotArgs)
+			{
+				MF_Log("UseBotArgs or BotArgs is not available - forward CS_InternalCommand has been disabled");
+			}
+		}	
 	}
 	else
 	{
-		DestroyDetour(ClientCommandDetour);
+		if (HasReGameDll)
+		{
+			ReGameHookchains->InternalCommand()->unregisterHook(InternalCommand_RH);
+			InternalCommand_Enabled = false;
+		}
+		else
+		{
+			DestroyDetour(ClientCommandDetour);
+		}
 	}
 }
 
-void ToggleDetour_ClientCommands(bool enable)
+void ToggleHook_ClientCommands(bool enable)
 {
-	ToggleDetour(ClientCommandDetour, enable);
+	if (HasReGameDll)
+	{
+		CtrlDetours_ClientCommand(enable);
+	}
+	else
+	{
+		ToggleDetour(ClientCommandDetour, enable);
+	}
 }
-
 
 void CtrlDetours_BuyCommands(bool set)
 {
 	if (set)
 	{
-		void *address = nullptr;
-
-		if (MainConfig->GetMemSig("BuyGunAmmo", &address))
+		if (HasReGameDll)
 		{
-			BuyGunAmmoDetour = DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, address);
-		}
-
-		if (MainConfig->GetMemSig("GiveNamedItem", &address))
-		{
-			GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, address);
-		}
-
-		if (MainConfig->GetMemSig("AddAccount", &address))
-		{
-			AddAccountDetour = DETOUR_CREATE_MEMBER_FIXED(AddAccount, address);
-		}
-
-		if (MainConfig->GetMemSig("CanPlayerBuy", &address))
-		{
-			CanPlayerBuyDetour = DETOUR_CREATE_MEMBER_FIXED(CanPlayerBuy, address);
-		}
-
-		if (MainConfig->GetMemSig("CanBuyThis", &address))
-		{
-			CanBuyThisDetour = DETOUR_CREATE_STATIC_FIXED(CanBuyThis, address);
-		}
-
-		if (!BuyGunAmmoDetour || !GiveNamedItemDetour || !AddAccountDetour || !CanPlayerBuyDetour || !CanBuyThisDetour)
-		{
-			if (!BuyGunAmmoDetour)
+			if (!HasRestricteditem_Enabled)
 			{
-				MF_Log("BuyGunAmmo is not available");
+				ReGameHookchains->CBasePlayer_HasRestrictItem()->registerHook(CBasePlayer_HasRestrictItem_RH);
+				ReGameHookchains->BuyGunAmmo()->registerHook(BuyGunAmmo_RH);
+				HasRestricteditem_Enabled = true;
+			}
+		}
+		else
+		{
+			void *address = nullptr;
+
+			if (MainConfig->GetMemSig("BuyGunAmmo", &address))
+			{
+				BuyGunAmmoDetour = DETOUR_CREATE_STATIC_FIXED(BuyGunAmmo, address);
 			}
 
-			if (!GiveNamedItemDetour)
+			if (MainConfig->GetMemSig("GiveNamedItem", &address))
 			{
-				MF_Log("GiveNamedItem is not available");
+				GiveNamedItemDetour = DETOUR_CREATE_MEMBER_FIXED(GiveNamedItem, address);
 			}
 
-			if (!AddAccountDetour)
+			if (MainConfig->GetMemSig("AddAccount", &address))
 			{
-				MF_Log("AddAccount is not available");
+				AddAccountDetour = DETOUR_CREATE_MEMBER_FIXED(AddAccount, address);
 			}
 
-			if (!CanPlayerBuyDetour)
+			if (MainConfig->GetMemSig("CanPlayerBuy", &address))
 			{
-				MF_Log("CanPlayerBuy is not available");
+				CanPlayerBuyDetour = DETOUR_CREATE_MEMBER_FIXED(CanPlayerBuy, address);
 			}
 
-			if (!CanBuyThisDetour)
+			if (MainConfig->GetMemSig("CanBuyThis", &address))
 			{
-				MF_Log("CanBuyThis is not available");
+				CanBuyThisDetour = DETOUR_CREATE_STATIC_FIXED(CanBuyThis, address);
 			}
 
-			MF_Log("Some functions are not available - forwards CS_OnBuy[Attempt] have been disabled");
-			ToggleDetour_BuyCommands(false);
+			if (!BuyGunAmmoDetour || !GiveNamedItemDetour || !AddAccountDetour || !CanPlayerBuyDetour || !CanBuyThisDetour)
+			{
+				if (!BuyGunAmmoDetour)
+				{
+					MF_Log("BuyGunAmmo is not available");
+				}
+
+				if (!GiveNamedItemDetour)
+				{
+					MF_Log("GiveNamedItem is not available");
+				}
+
+				if (!AddAccountDetour)
+				{
+					MF_Log("AddAccount is not available");
+				}
+
+				if (!CanPlayerBuyDetour)
+				{
+					MF_Log("CanPlayerBuy is not available");
+				}
+
+				if (!CanBuyThisDetour)
+				{
+					MF_Log("CanBuyThis is not available");
+				}
+
+				MF_Log("Some functions are not available - forwards CS_OnBuy[Attempt] have been disabled");
+				ToggleHook_BuyCommands(false);
+			}
 		}
 	}
 	else
 	{
-		DestroyDetour(BuyGunAmmoDetour);
-		DestroyDetour(GiveNamedItemDetour);
-		DestroyDetour(AddAccountDetour);
-		DestroyDetour(CanPlayerBuyDetour);
-		DestroyDetour(CanBuyThisDetour);
+		if (HasReGameDll)
+		{
+			ReGameHookchains->CBasePlayer_HasRestrictItem()->unregisterHook(CBasePlayer_HasRestrictItem_RH);
+			ReGameHookchains->BuyGunAmmo()->unregisterHook(BuyGunAmmo_RH);
+			HasRestricteditem_Enabled = false;
+		}
+		else
+		{
+			DestroyDetour(BuyGunAmmoDetour);
+			DestroyDetour(GiveNamedItemDetour);
+			DestroyDetour(AddAccountDetour);
+			DestroyDetour(CanPlayerBuyDetour);
+			DestroyDetour(CanBuyThisDetour);
+		}
 	}
 }
 
-void ToggleDetour_BuyCommands(bool enable)
+void ToggleHook_BuyCommands(bool enable)
 {
-	ToggleDetour(BuyGunAmmoDetour, enable);
-	ToggleDetour(GiveNamedItemDetour, enable);
-	ToggleDetour(AddAccountDetour, enable);
-	ToggleDetour(CanPlayerBuyDetour, enable);
-	ToggleDetour(CanBuyThisDetour, enable);
+	if (HasReGameDll)
+	{
+		CtrlDetours_BuyCommands(enable);
+	}
+	else
+	{
+		ToggleDetour(BuyGunAmmoDetour, enable);
+		ToggleDetour(GiveNamedItemDetour, enable);
+		ToggleDetour(AddAccountDetour, enable);
+		ToggleDetour(CanPlayerBuyDetour, enable);
+		ToggleDetour(CanBuyThisDetour, enable);
+	}
 }
 
 
@@ -501,54 +622,94 @@ void CtrlDetours_Natives(bool set)
 {
 	if (set)
 	{
-		void *address = nullptr;
-
-		if (MainConfig->GetMemSig("GiveDefaultItems", &address))
+		if (HasReGameDll)
 		{
-			GiveDefaultItemsDetour = DETOUR_CREATE_MEMBER_FIXED(GiveDefaultItems, address);
+			if (!GiveDefaultItems_Enabled)
+			{
+				ReGameHookchains->CBasePlayer_GiveDefaultItems()->registerHook(GiveDefaultItems_RH);
+				GiveDefaultItems_Enabled = true;
+			}
 		}
-
-		if (!GiveDefaultItemsDetour)
+		else
 		{
-			MF_Log("GiveDefaultItems is not available - native cs_set_no_knives has been disabled");
+			void *address = nullptr;
+
+			if (MainConfig->GetMemSig("GiveDefaultItems", &address))
+			{
+				GiveDefaultItemsDetour = DETOUR_CREATE_MEMBER_FIXED(GiveDefaultItems, address);
+			}
+
+			if (!GiveDefaultItemsDetour)
+			{
+				MF_Log("GiveDefaultItems is not available - native cs_set_no_knives has been disabled");
+			}
 		}
 	}
 	else
 	{
-		DestroyDetour(GiveDefaultItemsDetour);
+		if (HasReGameDll)
+		{
+			ReGameHookchains->CBasePlayer_GiveDefaultItems()->unregisterHook(GiveDefaultItems_RH);
+			GiveDefaultItems_Enabled = false;
+		}
+		else
+		{
+			DestroyDetour(GiveDefaultItemsDetour);
+		}
+	}
+}
+
+void ToggleHook_GiveDefaultItems(bool enable)
+{
+	if (HasReGameDll)
+	{
+		CtrlDetours_Natives(enable);
+	}
+	else
+	{
+		ToggleDetour(GiveDefaultItemsDetour, enable);
 	}
 }
 
 
 void InitFuncsAddresses()
 {
-	void *address = nullptr;
-
-	if (MainConfig->GetMemSig("CreateNamedEntity", &address)) // cs_create_entity()
+	if (HasReGameDll)
 	{
-		CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(address);
+		RemoveEntityHashValue      = ReGameFuncs->RemoveEntityHashValue;
+		CS_CreateNamedEntity       = ReGameFuncs->CREATE_NAMED_ENTITY2;
+		CS_UTIL_FindEntityByString = ReGameFuncs->UTIL_FindEntityByString;
+		AddEntityHashValue         = ReGameFuncs->AddEntityHashValue;
 	}
-
-	if (MainConfig->GetMemSig("FindEntityByString", &address)) // cs_find_ent_by_class()
+	else
 	{
-		CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(address);
-	}
+		void *address = nullptr;
 
-	if (MainConfig->GetMemSig("GetWeaponInfo", &address)) // cs_get_weapon_info()
-	{
-		GetWeaponInfo = reinterpret_cast<GetWeaponInfoFunc>(address);
-	}
+		if (MainConfig->GetMemSig("CreateNamedEntity", &address)) // cs_create_entity()
+		{
+			CS_CreateNamedEntity = reinterpret_cast<CreateNamedEntityFunc>(address);
+		}
 
-	if (MainConfig->GetMemSig("AddEntityHashValue", &address)) // cs_set_ent_class()
-	{
-		AddEntityHashValue = reinterpret_cast<AddEntityHashValueFunc>(address);
-	}
+		if (MainConfig->GetMemSig("FindEntityByString", &address)) // cs_find_ent_by_class()
+		{
+			CS_UTIL_FindEntityByString = reinterpret_cast<UTIL_FindEntityByStringFunc>(address);
+		}
 
-	if (MainConfig->GetMemSig("RemoveEntityHashValue", &address)) // cs_set_ent_class()
-	{
-		RemoveEntityHashValue = reinterpret_cast<RemoveEntityHashValueFunc>(address);
-	}
+		if (MainConfig->GetMemSig("GetWeaponInfo", &address)) // cs_get_weapon_info()
+		{
+			GetWeaponInfo = reinterpret_cast<GetWeaponInfoFunc>(address);
+		}
 
+		if (MainConfig->GetMemSig("AddEntityHashValue", &address)) // cs_set_ent_class()
+		{
+			AddEntityHashValue = reinterpret_cast<AddEntityHashValueFunc>(address);
+		}
+
+		if (MainConfig->GetMemSig("RemoveEntityHashValue", &address)) // cs_set_ent_class()
+		{
+			RemoveEntityHashValue = reinterpret_cast<RemoveEntityHashValueFunc>(address);
+		}
+	}
 
 	if (!CS_CreateNamedEntity)
 	{
@@ -560,7 +721,12 @@ void InitFuncsAddresses()
 		MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
 	}
 
-	if (!GetWeaponInfo)
+	if (!AddEntityHashValue || !AddEntityHashValue)
+	{
+		MF_Log("AddEntityHashValue or AddEntityHashValue is not available - native cs_set_ent_class() has been disabled");
+	}
+
+	if (!HasReGameDll && !GetWeaponInfo)
 	{
 		MF_Log("GetWeaponInfo is not available - native cs_get_weapon_info() and forward CS_OnBuy have been disabled");
 		CtrlDetours_BuyCommands(false);
@@ -584,66 +750,86 @@ void InitClassMembers()
 		!MoneyDesc.fieldOffset)
 	{
 		MF_Log("Invalid or missing entity gamedata files - forwards CS_OnBuy[Attempt] have been disabled");
-		CtrlDetours_BuyCommands(false);
+		ToggleHook_BuyCommands(false);
 	}
+}
+
+CGameRules* InstallGameRules(IReGameHook_InstallGameRules *chain)
+{
+	GameRulesRH = chain->callNext();
+	return static_cast<CGameRules*>(GameRulesRH);
 }
 
 void InitGlobalVars()
 {
 	void *address = nullptr;
 
+	if (!HasReHlds)
+	{
 #if defined(KE_WINDOWS)
+		TypeDescription typeDesc;
 
-	TypeDescription typeDesc;
+		if (CommonConfig->GetOffset("svs", &typeDesc))
+		{
+			uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
+			ServerStatic = reinterpret_cast<decltype(ServerStatic)>(base - 4);
+		}
 
-	if (CommonConfig->GetOffset("svs", &typeDesc))
-	{
-		uintptr_t base = *reinterpret_cast<uintptr_t*>(reinterpret_cast<byte*>(g_engfuncs.pfnGetCurrentPlayer) + typeDesc.fieldOffset);
-		ServerStatic = reinterpret_cast<decltype(ServerStatic)>(base - 4);
-	}
-
-	if (CommonConfig->GetAddress("sv", &address))
-	{
-		Server = *reinterpret_cast<decltype(Server)*>(address);
-	}
-
-	if (CommonConfig->GetAddress("g_pGameRules", &address))
-	{
-		GameRules = *reinterpret_cast<decltype(GameRules)*>(address);
-	}
-
+		if (CommonConfig->GetAddress("sv", &address))
+		{
+			Server = *reinterpret_cast<decltype(Server)*>(address);
+		}
 #else
+		if (CommonConfig->GetMemSig("svs", &address))
+		{
+			ServerStatic = reinterpret_cast<decltype(ServerStatic)>(address);
+		}
 
-	if (CommonConfig->GetMemSig("svs", &address))
-	{
-		ServerStatic = reinterpret_cast<decltype(ServerStatic)>(address);
-	}
-
-	if (CommonConfig->GetMemSig("sv", &address))
-	{
-		Server = reinterpret_cast<decltype(Server)>(address);
-	}
-
-	if (CommonConfig->GetMemSig("g_pGameRules", &address))
-	{
-		GameRules = reinterpret_cast<decltype(GameRules)>(address);
-	}
-
+		if (CommonConfig->GetMemSig("sv", &address))
+		{
+			Server = reinterpret_cast<decltype(Server)>(address);
+		}
 #endif
-
-	if (!ServerStatic)
-	{
-		MF_Log("svs global variable is not available");
 	}
 
-	if (!Server)
+	if (HasReGameDll)
 	{
-		MF_Log("sv global variable is not available");
+		ReGameHookchains->InstallGameRules()->registerHook(InstallGameRules);
+	}
+	else
+	{
+#if defined(KE_WINDOWS)
+		if (CommonConfig->GetAddress("g_pGameRules", &address))
+		{
+			GameRules = *reinterpret_cast<decltype(GameRules)*>(address);
+		}
+#else
+		if (CommonConfig->GetMemSig("g_pGameRules", &address))
+		{
+			GameRules = reinterpret_cast<decltype(GameRules)>(address);
+		}
+#endif
 	}
 
-	if (!GameRules)
+	if (!HasReHlds)
 	{
-		MF_Log("g_pGameRules is not available - Forward CS_OnBuy has been disabled");
-		CtrlDetours_BuyCommands(false);
+		if (!ServerStatic)
+		{
+			MF_Log("svs global variable is not available");
+		}
+
+		if (!Server)
+		{
+			MF_Log("sv global variable is not available");
+		}
+	}
+	
+	if (!HasReGameDll)
+	{
+		if (!GameRules)
+		{
+			MF_Log("g_pGameRules is not available - Forward CS_OnBuy has been disabled");
+			CtrlDetours_BuyCommands(false);
+		}
 	}
 }

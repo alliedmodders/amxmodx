@@ -117,7 +117,7 @@ const char *CMD_ARGV(int i)
 	return g_engfuncs.pfnCmd_Argv(i);
 }
 
-void (*ClientCommand_Actual)(edict_s *) = nullptr;
+void (*C_ClientCommand_Actual)(edict_t *) = nullptr;
 
 void ClientCommand_Custom(edict_t *pEdict, const char *command, const char *arg1, IReGameHook_InternalCommand *chain = nullptr)
 {
@@ -202,12 +202,12 @@ void ClientCommand_Custom(edict_t *pEdict, const char *command, const char *arg1
 
 	TriggeredFromCommand = CurrentItemId != CSI_NONE;
 
-	chain ? chain->callNext(pEdict, command, arg1) : ClientCommand_Actual(pEdict);
+	chain ? chain->callNext(pEdict, command, arg1) : C_ClientCommand_Actual(pEdict);
 
 	TriggeredFromCommand = BlockMoneyUpdate = BlockAmmosUpdate = false;
 }
 
-DETOUR_DECL_STATIC1(C_ClientCommand, void, edict_t*, pEdict) // void ClientCommand(edict_t *pEntity)
+void C_ClientCommand(edict_t* pEdict) // void ClientCommand(edict_t *pEntity)
 {
 	ClientCommand_Custom(pEdict, CMD_ARGV(0), CMD_ARGV(1));
 }

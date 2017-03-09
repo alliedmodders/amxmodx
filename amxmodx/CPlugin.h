@@ -57,7 +57,6 @@ public:
 		ke::AString author;
 		ke::AString errorMsg;
 		
-		unsigned int failcounter;
 		int m_PauseFwd;
 		int m_UnpauseFwd;
 		int paused_fun;
@@ -92,7 +91,6 @@ public:
 		inline bool isExecutable(int id) const { return (isValid() && !isPaused());	}
 		
 		void Finalize();
-		void AddToFailCounter(unsigned int i);
 		void pausePlugin();
 		void unpausePlugin();
 		void pauseFunction(int id);

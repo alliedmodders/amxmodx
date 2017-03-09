@@ -285,7 +285,6 @@
     <ClCompile Include="..\modules.cpp" />
     <ClCompile Include="..\natives.cpp" />
     <ClCompile Include="..\newmenus.cpp" />
-    <ClCompile Include="..\nongpl_matches.cpp" />
     <ClCompile Include="..\optimizer.cpp" />
     <ClCompile Include="..\power.cpp" />
     <ClCompile Include="..\sorting.cpp" />
@@ -368,7 +367,6 @@
     <ClInclude Include="..\natives.h" />
     <ClInclude Include="..\natives_handles.h" />
     <ClInclude Include="..\newmenus.h" />
-    <ClInclude Include="..\nongpl_matches.h" />
     <ClInclude Include="..\optimizer.h" />
     <ClInclude Include="..\sh_list.h" />
     <ClInclude Include="..\sh_stack.h" />

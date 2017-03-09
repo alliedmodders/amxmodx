@@ -233,17 +233,6 @@ CPluginMngr::CPlugin* CPluginMngr::findPlugin(const char* name)
 	return a;
 }
 
-void CPluginMngr::CPlugin::AddToFailCounter(unsigned int i)
-{
-	failcounter += i;
-	if ((failcounter >= 3)
-		&& (status ))
-	{
-		errorMsg = "This plugin is non-GPL which violates AMX Mod X's license.";
-		status = ps_bad_load;
-	}
-}
-
 const char* CPluginMngr::CPlugin::getStatus() const
 {
 	switch (status)
@@ -271,7 +260,6 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int 
 {
 	const char* unk = "unknown";
 	
-	failcounter = 0;
 	title = unk;
 	author = unk;
 	version = unk;

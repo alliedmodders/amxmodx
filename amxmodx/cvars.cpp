@@ -9,7 +9,6 @@
 
 #include "CvarManager.h"
 #include "amxmodx.h"
-#include "nongpl_matches.h"
 
 char CVarTempBuffer[64];
 const char *invis_cvar_list[5] ={ "amxmodx_version", "amxmodx_modules", "amx_debug", "amx_mldebug", "amx_client_languages" };
@@ -25,11 +24,6 @@ static cell AMX_NATIVE_CALL create_cvar(AMX *amx, cell *params)
 	int flags = params[3];
 
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
-
-	if (CheckBadConList(name, 0))
-	{
-		plugin->AddToFailCounter(1);
-	}
 
 	CvarInfo* info = g_CvarManager.CreateCvar(name, value, plugin->getName(), plugin->getId(), flags, helpText);
 
@@ -74,11 +68,6 @@ static cell AMX_NATIVE_CALL register_cvar(AMX *amx, cell *params)
 	float fvalue = amx_ctof(params[4]);
 
 	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
-
-	if (CheckBadConList(name, 0))
-	{
-		plugin->AddToFailCounter(1);
-	}
 
 	CvarInfo* info = g_CvarManager.CreateCvar(name, value, plugin->getName(), plugin->getId(), flags);
 

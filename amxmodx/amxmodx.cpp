@@ -16,7 +16,6 @@
 #include "binlog.h"
 #include "libraries.h"
 #include "CFlagManager.h"
-#include "nongpl_matches.h"
 #include "format.h"
 
 extern CFlagManager FlagMan;
@@ -1374,31 +1373,6 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 3 param *
 	a->setTitle(title);
 	a->setVersion(vers);
 	a->setAuthor(author);
-
-	/* Check if we need to add fail counters */
-	i = 0;
-	unsigned int counter = 0;
-	while (NONGPL_PLUGIN_LIST[i].author != NULL)
-	{
-		if (strcmp(NONGPL_PLUGIN_LIST[i].author, author) == 0)
-		{
-			counter++;
-		}
-		if (stricmp(NONGPL_PLUGIN_LIST[i].filename, a->getName()) == 0)
-		{
-			counter++;
-		}
-		if (stricmp(NONGPL_PLUGIN_LIST[i].title, title) == 0)
-		{
-			counter++;
-		}
-		if (counter)
-		{
-			a->AddToFailCounter(counter);
-			break;
-		}
-		i++;
-	}
 	
 	return a->getId();
 }
@@ -1557,11 +1531,6 @@ static cell AMX_NATIVE_CALL register_concmd(AMX *amx, cell *params)
 
 	if ((cmd = g_commands.registerCommand(plugin, idx, temp, info, access, listable, info_ml)) == NULL)
 		return 0;
-
-	if (CheckBadConList(temp, 1))
-	{
-		plugin->AddToFailCounter(1);
-	}
 	
 	cmd->setCmdType(CMD_ConsoleCommand);
 	REG_SVR_COMMAND((char*)cmd->getCommand(), plugin_srvcmd);

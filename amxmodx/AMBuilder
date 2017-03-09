@@ -79,7 +79,6 @@ binary.sources = [
   'libraries.cpp',
   'vector.cpp',
   'sorting.cpp',
-  'nongpl_matches.cpp',
   'CFlagManager.cpp',
   'datastructs.cpp',
   'trie_natives.cpp',

@@ -66,6 +66,7 @@ server_t *Server;
 
 // Mod global variable
 void **GameRules;
+void *GameRulesRH;
 
 bool HasReHlds;
 bool HasReGameDll;
@@ -289,7 +290,7 @@ DETOUR_DECL_MEMBER1(CanPlayerBuy, bool, bool, display)  // bool CBasePlayer::Can
 		{
 			allowedToBuy = !get_pdata<bool>(pPlayer, DefuserDesc.fieldOffset)        &&
 							get_pdata<int>(pPlayer, TeamDesc.fieldOffset) == TEAM_CT &&
-							get_pdata<bool>(HasReGameDll ? ReGameApi->GetGameRules() : *GameRules, BombTargetDesc.fieldOffset)  &&
+							get_pdata<bool>(*GameRules, BombTargetDesc.fieldOffset)  &&
 							get_pdata<int>(pPlayer, MoneyDesc.fieldOffset) >= itemPrice;
 			break;
 		}
@@ -753,6 +754,12 @@ void InitClassMembers()
 	}
 }
 
+CGameRules* InstallGameRules(IReGameHook_InstallGameRules *chain)
+{
+	GameRulesRH = chain->callNext();
+	return static_cast<CGameRules*>(GameRulesRH);
+}
+
 void InitGlobalVars()
 {
 	void *address = nullptr;
@@ -785,7 +792,11 @@ void InitGlobalVars()
 #endif
 	}
 
-	if (!HasReGameDll)
+	if (HasReGameDll)
+	{
+		ReGameHookchains->InstallGameRules()->registerHook(InstallGameRules);
+	}
+	else
 	{
 #if defined(KE_WINDOWS)
 		if (CommonConfig->GetAddress("g_pGameRules", &address))

@@ -145,6 +145,8 @@ void OnServerDeactivate()
 		RETURN_META(MRES_IGNORED);
 	}
 
+	GameRulesRH = nullptr;
+
 	ToggleHook_ClientCommands(false);
 	ToggleHook_BuyCommands(false);
 

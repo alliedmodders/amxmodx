@@ -81,6 +81,7 @@ extern bool NoKnivesMode;
 extern server_static_t *ServerStatic;
 extern server_t *Server;
 extern void **GameRules;
+extern void *GameRulesRH;
 
 extern int *UseBotArgs;
 extern const char **BotArgs;

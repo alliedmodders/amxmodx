@@ -25,6 +25,12 @@ HLTypeConversion TypeConversion;
 void *GameRulesRH;
 void **GameRulesAddress;
 
+CGameRules* InstallGameRules(IReGameHook_InstallGameRules *chain)
+{
+	GameRulesRH = chain->callNext();
+	return static_cast<CGameRules*>(GameRulesRH);
+}
+
 void OnAmxxAttach()
 {
 	initialze_offsets();
@@ -67,7 +73,7 @@ void OnAmxxAttach()
 
 	if ((HasRegameDll = RegamedllApi_Init()))
 	{
-		GameRulesRH = ReGameApi->GetGameRules();
+		ReGameHookchains->InstallGameRules()->registerHook(InstallGameRules);
 	}
 	else
 	{
@@ -146,6 +152,11 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 
 void FMH_ServerDeactivate_Post()
 {
+	if (HasRegameDll)
+	{
+		GameRulesRH = nullptr;
+	}
+
 	// Reset all call lists here.
 	// NULL all function tables
 	RESETE(PrecacheModel);

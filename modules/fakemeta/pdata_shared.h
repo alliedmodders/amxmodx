@@ -63,11 +63,11 @@ enum class BaseFieldType
 			return 0;                                                                      \
 	}
 
-#define CHECK_GAMERULES()                                                                  \
-	if ((HasRegameDll && !GameRulesRH) || !GameRulesAddress || !*GameRulesAddress)         \
-	{                                                                                      \
-		MF_LogError(amx, AMX_ERR_NATIVE, "%s is disabled. Check your AMXX log.", __FUNCTION__);  \
-		return 0;                                                                          \
+#define CHECK_GAMERULES()                                                                               \
+	if ((HasRegameDll && !GameRulesRH) || (!HasRegameDll && (!GameRulesAddress || !*GameRulesAddress))) \
+	{                                                                                                   \
+		MF_LogError(amx, AMX_ERR_NATIVE, "%s is disabled. Check your AMXX log.", __FUNCTION__);         \
+		return 0;                                                                                       \
 	}
 
 class PvData

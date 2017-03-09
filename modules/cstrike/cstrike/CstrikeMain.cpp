@@ -86,7 +86,10 @@ void OnAmxxAttach()
 
 	InitializeHacks();
 
-	RehldsHookchains->SV_ActivateServer()->registerHook(SV_ActivateServer_RH);
+	if (HasReHlds)
+	{
+		RehldsHookchains->SV_ActivateServer()->registerHook(SV_ActivateServer_RH);
+	}
 }
 
 void OnPluginsLoaded()

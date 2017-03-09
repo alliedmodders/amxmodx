@@ -15,7 +15,7 @@ bool RehldsApi_Init()
 	auto library = "engine_i486";
 #endif
 
-	if (!GET_IFACE<IRehldsApi>(library, RehldsApi, VREHLDS_HLDS_API_VERSION))
+	if (!GET_IFACE<IRehldsApi>(library, RehldsApi, VREHLDS_HLDS_API_VERSION) || !RehldsApi)
 	{
 		return false;
 	}

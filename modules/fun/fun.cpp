@@ -15,7 +15,7 @@
 #include <HLTypeConversion.h>
 
 HLTypeConversion TypeConversion;
-CPlayer Players[kMaxClients + 1];
+CPlayers Players;
 
 // native get_client_listen(receiver, sender)
 static cell AMX_NATIVE_CALL get_client_listening(AMX *amx, cell *params)
@@ -301,38 +301,26 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params)
 
 	if (attacker == 0 && target == 0)
 	{
-		for (auto i = 1; i <= gpGlobals->maxClients; ++i) 
-		{
-			for (auto j = 1; j <= gpGlobals->maxClients; ++j) 
-			{
-				Players[i].SetBodyHits(j, hitzones);
-			}
-		}
+		Players.SetEveryoneBodyHits(hitzones);
 	}
 	else if (attacker == 0 && target != 0)
 	{
 		CHECK_PLAYER(target);
 
-		for (auto i = 1; i <= gpGlobals->maxClients; ++i)
-		{
-			Players[i].SetBodyHits(target, hitzones);
-		}
+		Players.SetTargetsBodyHits(attacker, hitzones);
 	}
 	else if (attacker != 0 && target == 0) 
 	{
 		CHECK_PLAYER(attacker);
 
-		for (auto i = 1; i <= gpGlobals->maxClients; ++i)
-		{
-			Players[attacker].SetBodyHits(i, hitzones);
-		}
+		Players.SetAttackersBodyHits(target, hitzones);
 	}
 	else
 	{
 		CHECK_PLAYER(attacker);
 		CHECK_PLAYER(target);
 
-		Players[attacker].SetBodyHits(target, hitzones);
+		Players.SetBodyHits(attacker, target, hitzones);
 	}
 
 	return 1;
@@ -403,16 +391,8 @@ static cell AMX_NATIVE_CALL set_user_footsteps(AMX *amx, cell *params)
 		pPlayer->v.flTimeStepSound = STANDARDTIMESTEPSOUND;
 		Players[index].SetSilentFootsteps(false);
 
-		if (g_pFunctionTable->pfnPlayerPreThink)
+		if (g_pFunctionTable->pfnPlayerPreThink && !Players.HaveSilentFootsteps())
 		{
-			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
-			{
-				if (Players[i].HasSilentFootsteps())
-				{
-					return 1;
-				}
-			}
-
 			g_pFunctionTable->pfnPlayerPreThink = nullptr;
 		}
 	}
@@ -505,7 +485,7 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 {
 	auto index = TypeConversion.edict_to_id(pPlayer);
 
-	Players[index].Reset();
+	Players[index].Clear();
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
@@ -535,10 +515,7 @@ void OnAmxxAttach()
 
 void OnPluginsLoaded() 
 {
-	for (auto i = 1; i <= gpGlobals->maxClients; ++i) 
-	{
-		Players[i].Reset();
-	}
+	Players.Clear();
 
 	TypeConversion.init();
 

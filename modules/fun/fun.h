@@ -42,41 +42,155 @@ class CPlayer
 
 		CPlayer()
 		{
-			Reset();
+			Clear();
 		}
 
 	public:
 
+		bool HasBodyHits()
+		{
+			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
+			{
+				if (GetBodyHits(i) != kHitGroupsBits)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		int GetBodyHits(int other) const
 		{
-			return m_BodyHits[other];
+			return bodyHits_[other];
 		}
 
 		void SetBodyHits(int other, int flags)
 		{
-			m_BodyHits[other] = flags;
+			bodyHits_[other] = flags;
 		}
+
+		void SetBodyHits(int flags)
+		{
+			memset(bodyHits_, kHitGroupsBits, sizeof(bodyHits_));
+		}
+
+	public:
 
 		bool HasSilentFootsteps() const
 		{
-			return m_HasSilentFootsteps;
+			return silentFootsteps_;
 		}
 
 		void SetSilentFootsteps(bool state)
 		{
-			m_HasSilentFootsteps = state;
+			silentFootsteps_ = state;
 		}
 
-		void Reset()
+	public:
+
+		void Clear()
 		{
-			memset(m_BodyHits, kHitGroupsBits, sizeof(m_BodyHits));
-			m_HasSilentFootsteps = false;
+			SetBodyHits(kHitGroupsBits);
+			SetSilentFootsteps(false);
 		}
 
 	private:
 
-		int  m_BodyHits[kMaxClients + 1];
-		bool m_HasSilentFootsteps;
+		int  bodyHits_[kMaxClients + 1];
+		bool silentFootsteps_;
+};
+
+class CPlayers
+{
+	using Internal = CPlayer;
+
+	public:
+
+		CPlayers()
+		{}
+
+	public:
+
+		bool HaveBodyHits()
+		{
+			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
+			{
+				if (players_[i].HasBodyHits())
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		void SetBodyHits(int attacker, int target, int flags)
+		{
+			players_[attacker].SetBodyHits(target, flags);
+		}
+
+		void SetTargetsBodyHits(int attacker, int flags)
+		{
+			players_[attacker].SetBodyHits(flags);
+		}
+
+		void SetAttackersBodyHits(int target, int flags)
+		{
+			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
+			{
+				players_[i].SetBodyHits(target, flags);
+			}
+		}
+
+		void SetEveryoneBodyHits(int flags)
+		{
+			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
+			{
+				players_[i].SetBodyHits(flags);
+			}
+		}
+
+	public:
+
+		bool HaveSilentFootsteps() const
+		{
+			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
+			{
+				if (players_[i].HasSilentFootsteps())
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+	public:
+
+		void Clear()
+		{
+			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
+			{
+				players_[i].Clear();
+			}
+		}
+
+	public:
+
+		Internal& operator [](size_t index)
+		{
+			return players_[index];
+		}
+
+		const Internal& operator [](size_t index) const
+		{
+			return players_[index];
+		}
+
+	private:
+
+		Internal players_[kMaxClients + 1];
 };
 
 #define CHECK_ENTITY(x) \

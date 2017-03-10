@@ -52,7 +52,7 @@ void StartFrame()
 	{
 		g_pFunctionTable->pfnStartFrame = nullptr;
 
-		for (int i = 1; i < gpGlobals->maxClients; ++i)
+		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
 			if (Players[i].HasModel())
 			{

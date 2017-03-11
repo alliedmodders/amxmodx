@@ -1,12 +1,14 @@
 #include <amxmodx>
 
 new g_menuHandle;
+new bool:g_isCallbackSet = false;
 
 public plugin_init()
 {
 	register_plugin("Menu Pagination Callback Test", "1.0.0", "KliPPy");
 
 	register_clcmd("say testmenu", "@Command_TestMenu");
+	register_clcmd("say togglecallback", "@Command_ToggleCallback");
 
 	g_menuHandle = menu_create("Test menu", "@MenuHandler_TestMenu");
 	menu_additem(g_menuHandle, "Item 1");
@@ -18,7 +20,6 @@ public plugin_init()
 	menu_additem(g_menuHandle, "Item 7");
 	menu_additem(g_menuHandle, "item 8");
 
-	menu_setprop(g_menuHandle, MPROP_PAGE_CALLBACK, "@PageCallback_TestMenu");
 	menu_setprop(g_menuHandle, MPROP_PERPAGE, 2);
 }
 
@@ -54,4 +55,22 @@ public plugin_end()
 	menu_display(id, g_menuHandle);
 
 	return PLUGIN_HANDLED;
+}
+
+@Command_ToggleCallback(id)
+{
+	if(g_isCallbackSet)
+	{
+		menu_setprop(g_menuHandle, MPROP_PAGE_CALLBACK, NULL_STRING);
+		g_isCallbackSet = false;
+
+		client_print(id, print_chat, "Callback set to OFF");
+	}
+	else
+	{
+		menu_setprop(g_menuHandle, MPROP_PAGE_CALLBACK, "@PageCallback_TestMenu");
+		g_isCallbackSet = true;
+
+		client_print(id, print_chat, "Callback set to ON");
+	}
 }

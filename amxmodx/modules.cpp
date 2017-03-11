@@ -31,7 +31,10 @@
 #include "trie_natives.h"
 #include "CDataPack.h"
 #include "CGameConfigs.h"
+#include "InterfaceSys.h"
 
+
+StringHashMap<AMXXInterface *> g_AMXXInterfaces;
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
 
@@ -912,9 +915,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 	g_modules.put(cc);
 
 	if (error)
-	{
 		return false;
-	}
 
 	if (cc->IsMetamod())
 	{
@@ -941,6 +942,9 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 			break;
 		case MODULE_BADLOAD:
 			report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", cc->getFilename());
+			break;
+		case MODULE_LIBNOTPRESENT:
+			report_error(1, "[AMXX] Missing dependency, module \"%s\" is required for this module to run (file \"%s\")", cc->getMissingModule(), cc->getFilename());
 			break;
 		}
 
@@ -1586,6 +1590,25 @@ size_t MNF_RemoveLibraries(void *parent)
 	return RemoveLibraries(parent);
 }
 
+const char *g_LastRequestedLib = nullptr;
+bool MNF_RequestLibrary(const char *library)
+{
+	g_LastRequestedLib = library;
+
+	CList<CModule, const char *>::iterator i = g_modules.begin();
+	while (i)
+	{
+		// Match
+		if (!stricmp(i->getInfoNew()->library, library))
+			return (i->getStatusValue() == MODULE_LOADED);
+
+		++i;
+	}
+
+	// The requested module isn't running, try to load it
+	return LoadModule(library, PT_ANYTIME, true, true);
+}
+
 edict_t* MNF_GetPlayerEdict(int id)
 {
 	if (id < 1 || id > gpGlobals->maxClients)
@@ -1807,6 +1830,33 @@ IGameConfigManager *MNF_GetConfigManager()
 	return &ConfigManager;
 }
 
+bool MNF_AddInterface(AMXXInterface *iface)
+{
+	if (!iface)
+		return false;
+
+	return g_AMXXInterfaces.insert(iface->GetInterfaceName(), iface);
+}
+
+bool MNF_RequestInterface(const char *ifaceName, unsigned int ifaceVers, AMXXInterface **pIface)
+{
+	AMXXInterface *iface;
+	
+	if (!g_AMXXInterfaces.retrieve(ifaceName, &iface))
+		return false;
+
+	if (iface->GetInterfaceVersion() == ifaceVers || iface->IsVersionCompatible(ifaceVers))
+	{
+		if (pIface)
+			*pIface = iface;
+
+		return true;
+	}
+
+	return false;
+}
+
+
 void Module_CacheFunctions()
 {
 	func_s *pFunc;
@@ -1822,6 +1872,8 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("RegisterFunction", MNF_RegisterFunction);
 	REGISTER_FUNC("RegisterFunctionEx", MNF_RegisterFunctionEx);
 	REGISTER_FUNC("GetConfigManager", MNF_GetConfigManager);
+	REGISTER_FUNC("AddInterface", MNF_AddInterface);
+	REGISTER_FUNC("RequestInterface", MNF_RequestInterface);
 
 	// Amx scripts loading / unloading / managing
 	REGISTER_FUNC("GetAmxScript", MNF_GetAmxScript)
@@ -1900,6 +1952,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("FindLibrary", MNF_FindLibrary);
 	REGISTER_FUNC("AddLibraries", MFN_AddLibraries);
 	REGISTER_FUNC("RemoveLibraries", MNF_RemoveLibraries);
+	REGISTER_FUNC("RequestLibrary", MNF_RequestLibrary);
 	REGISTER_FUNC("OverrideNatives", MNF_OverrideNatives);
 	REGISTER_FUNC("GetLocalInfo", MNF_GetLocalInfo);
 

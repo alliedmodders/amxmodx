@@ -41,6 +41,15 @@
 #define MODULE_DATE "Unknown"
 #endif // __DATE__
 
+/**
+* Add here any modules you want your module to depend on
+* Terminate with a null pointer
+*/
+const char * const MODULE_DEPENDENCIES[] = 
+{
+	nullptr
+};
+
 // metamod plugin?
 // #define USE_METAMOD
 

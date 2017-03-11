@@ -2502,6 +2502,9 @@ PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 PFN_GET_CONFIG_MANAGER		g_fn_GetConfigManager;
+PFN_ADDINTERFACE			g_fn_AddInterface;
+PFN_REQUESTINTERFACE		g_fn_RequestInterface;
+PFN_REQUESTMODULE			g_fn_RequestLibrary;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2541,6 +2544,9 @@ C_DLLEXPORT int AMXX_CheckGame(const char *game)
 	return AMXX_GAME_OK;
 #endif
 }
+
+extern const char * const MODULE_DEPENDENCIES[];
+
 C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 {
 	// Check pointer
@@ -2562,6 +2568,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("RegisterFunction", g_fn_RegisterFunction, PFN_REGISTERFUNCTION);
 	REQFUNC("RegisterFunctionEx", g_fn_RegisterFunctionEx, PFN_REGISTERFUNCTIONEX);
 	REQFUNC("GetConfigManager", g_fn_GetConfigManager, PFN_GET_CONFIG_MANAGER);
+	REQFUNC("AddInterface", g_fn_AddInterface, PFN_ADDINTERFACE);
+	REQFUNC("RequestInterface", g_fn_RequestInterface, PFN_REQUESTINTERFACE);
 
 	// Amx scripts
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
@@ -2635,6 +2643,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("FindLibrary", g_fn_FindLibrary, PFN_FINDLIBRARY);
 	REQFUNC("AddLibraries", g_fn_AddLibraries, PFN_ADDLIBRARIES);
 	REQFUNC("RemoveLibraries", g_fn_RemoveLibraries, PFN_REMOVELIBRARIES);
+	REQFUNC("RequestLibrary", g_fn_RequestLibrary, PFN_REQUESTMODULE);
 	REQFUNC("OverrideNatives", g_fn_OverrideNatives, PFN_OVERRIDENATIVES);
 	REQFUNC("GetLocalInfo", g_fn_GetLocalInfo, PFN_GETLOCALINFO);
 	REQFUNC("AmxReregister", g_fn_AmxReRegister, PFN_AMX_REREGISTER);
@@ -2650,6 +2659,17 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 
 	REQFUNC("CellToReal", g_fn_CellToReal, PFN_CELL_TO_REAL);
 	REQFUNC("RealToCell", g_fn_RealToCell, PFN_REAL_TO_CELL);
+
+	// Request module dependencies
+	size_t i = 0;
+	while (MODULE_DEPENDENCIES[i] != nullptr)
+	{
+		if (!g_fn_RequestLibrary(MODULE_DEPENDENCIES[i]))
+		{
+			return AMXX_LIB_NOT_PRESENT;
+		}
+		++i;
+	}
 
 #ifdef FN_AMXX_ATTACH
 	FN_AMXX_ATTACH();
@@ -2790,6 +2810,9 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_OverrideNatives(NULL, NULL);
 	MF_MessageBlock(0, 0, NULL);
 	MF_GetConfigManager();
+	MF_AddInterface(NULL);
+	MF_RequestInterface("", 0, NULL);
+	MF_RequestLibrary("");
 }
 #endif
 

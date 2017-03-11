@@ -61,8 +61,8 @@ void CPluginMngr::Finalize()
 
 int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 {
-	char file[256];
-	FILE *fp = fopen(build_pathname_r(file, sizeof(file) - 1, "%s", filename), "rt");
+	char file[PLATFORM_MAX_PATH];
+	FILE *fp = fopen(build_pathname_r(file, sizeof(file), "%s", filename), "rt");
 
 	if (!fp) 
 	{
@@ -276,8 +276,8 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int 
 	author = unk;
 	version = unk;
 	
-	char file[256];
-	char* path = build_pathname_r(file, sizeof(file) - 1, "%s/%s", p, n);
+	char file[PLATFORM_MAX_PATH];
+	char* path = build_pathname_r(file, sizeof(file), "%s/%s", p, n);
 	code = 0;
 	memset(&amx, 0, sizeof(AMX));
 	int err = load_amxscript(&amx, &code, path, e, d);
@@ -688,8 +688,8 @@ void CPluginMngr::CacheAndLoadModules(const char *plugin)
 
 void CPluginMngr::CALMFromFile(const char *file)
 {
-	char filename[256];
-	FILE *fp = fopen(build_pathname_r(filename, sizeof(filename) - 1, "%s", file), "rt");
+	char filename[PLATFORM_MAX_PATH];
+	FILE *fp = fopen(build_pathname_r(filename, sizeof(filename), "%s", file), "rt");
 
 	if (!fp) 
 	{
@@ -751,7 +751,7 @@ void CPluginMngr::CALMFromFile(const char *file)
 			continue;
 		}
 
-		build_pathname_r(filename, sizeof(filename)-1, "%s/%s", get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins"), pluginName);
+		build_pathname_r(filename, sizeof(filename), "%s/%s", get_localinfo("amxx_pluginsdir", "addons/amxmodx/plugins"), pluginName);
 
 		CacheAndLoadModules(filename);
 	}

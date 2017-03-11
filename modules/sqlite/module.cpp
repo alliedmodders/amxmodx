@@ -69,7 +69,7 @@ void OnAmxxAttach()
 	MF_OverrideNatives(g_OldCompatNatives, MODULE_NAME);
 
 	char path[255];
-	MF_BuildPathnameR(path, sizeof(path)-1, "%s/sqlite3", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
+	MF_BuildPathnameR(path, sizeof(path), "%s/sqlite3", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
 	if (!DirExists(path))
 	{
 		mkdir(path

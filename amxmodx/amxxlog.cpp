@@ -75,14 +75,14 @@ void CLog::CreateNewFile()
 	time(&td);
 	tm *curTime = localtime(&td);
 
-	char file[256];
+	char file[PLATFORM_MAX_PATH];
 	char name[256];
 	int i = 0;
 	
 	while (true)
 	{
 		ke::SafeSprintf(name, sizeof(name), "%s/L%02d%02d%03d.log", g_log_dir.chars(), curTime->tm_mon + 1, curTime->tm_mday, i);
-		build_pathname_r(file, sizeof(file)-1, "%s", name);
+		build_pathname_r(file, sizeof(file), "%s", name);
 		FILE *pTmpFile = fopen(file, "r");			// open for reading to check whether the file exists
 		
 		if (!pTmpFile)
@@ -108,8 +108,8 @@ void CLog::CreateNewFile()
 
 void CLog::UseFile(const ke::AString &fileName)
 {
-	static char file[256];
-	m_LogFile = build_pathname_r(file, sizeof(file) - 1, "%s/%s", g_log_dir.chars(), fileName.chars());
+	static char file[PLATFORM_MAX_PATH];
+	m_LogFile = build_pathname_r(file, sizeof(file), "%s/%s", g_log_dir.chars(), fileName.chars());
 }
 
 void CLog::SetLogType(const char* localInfo)
@@ -128,11 +128,11 @@ void CLog::SetLogType(const char* localInfo)
 void CLog::MapChange()
 {
 	// create dir if not existing
-	char file[256];
+	char file[PLATFORM_MAX_PATH];
 #if defined(__linux__) || defined(__APPLE__)
-	mkdir(build_pathname_r(file, sizeof(file)-1, "%s", g_log_dir.chars()), 0700);
+	mkdir(build_pathname_r(file, sizeof(file), "%s", g_log_dir.chars()), 0700);
 #else
-	mkdir(build_pathname_r(file, sizeof(file) - 1, "%s", g_log_dir.chars()));
+	mkdir(build_pathname_r(file, sizeof(file), "%s", g_log_dir.chars()));
 #endif
 
 	SetLogType("amxx_logging");
@@ -152,7 +152,7 @@ void CLog::MapChange()
 
 void CLog::Log(const char *fmt, ...)
 {
-	static char file[256];
+	static char file[PLATFORM_MAX_PATH];
 	
 	if (m_LogType == 1 || m_LogType == 2)
 	{
@@ -189,7 +189,7 @@ void CLog::Log(const char *fmt, ...)
 				}
 			}
 		} else {
-			build_pathname_r(file, sizeof(file) - 1, "%s/L%04d%02d%02d.log", g_log_dir.chars(), (curTime->tm_year + 1900), curTime->tm_mon + 1, curTime->tm_mday);
+			build_pathname_r(file, sizeof(file), "%s/L%04d%02d%02d.log", g_log_dir.chars(), (curTime->tm_year + 1900), curTime->tm_mon + 1, curTime->tm_mday);
 			pF = fopen(file, "a+");
 		}
 		
@@ -218,7 +218,7 @@ void CLog::Log(const char *fmt, ...)
 
 void CLog::LogError(const char *fmt, ...)
 {
-	static char file[256];
+	static char file[PLATFORM_MAX_PATH];
 	static char name[256];
 
 	if (m_FoundError)
@@ -244,7 +244,7 @@ void CLog::LogError(const char *fmt, ...)
 
 	FILE *pF = NULL;
 	ke::SafeSprintf(name, sizeof(name), "%s/error_%04d%02d%02d.log", g_log_dir.chars(), curTime->tm_year + 1900, curTime->tm_mon + 1, curTime->tm_mday);
-	build_pathname_r(file, sizeof(file)-1, "%s", name);
+	build_pathname_r(file, sizeof(file), "%s", name);
 	pF = fopen(file, "a+");
 
 	if (pF)

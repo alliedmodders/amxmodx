@@ -808,7 +808,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 
 	build_pathname_r(
 		pathString, 
-		sizeof(pathString)-1, 
+		sizeof(pathString), 
 		"%s/%s",
 		get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
 		shortname);

@@ -187,9 +187,9 @@ void ParseAndOrAdd(CStack<ke::AString *> & files, const char *name)
 
 void BuildPluginFileList(const char *initialdir, CStack<ke::AString *> & files)
 {
-	char path[255];
+	char path[PLATFORM_MAX_PATH];
 #if defined WIN32
-	build_pathname_r(path, sizeof(path)-1, "%s/*.ini", initialdir);
+	build_pathname_r(path, sizeof(path), "%s/*.ini", initialdir);
 	_finddata_t fd;
 	intptr_t handle = _findfirst(path, &fd);
 
@@ -205,7 +205,7 @@ void BuildPluginFileList(const char *initialdir, CStack<ke::AString *> & files)
 
 	_findclose(handle);
 #elif defined(__linux__) || defined(__APPLE__)
-	build_pathname_r(path, sizeof(path)-1, "%s/", initialdir);
+	build_pathname_r(path, sizeof(path), "%s/", initialdir);
 	struct dirent *ep;
 	DIR *dp;
 
@@ -463,8 +463,8 @@ int	C_Spawn(edict_t *pent)
 	CVAR_SET_STRING(init_amxmodx_modules.name, buffer);
 
 	// ###### Load Vault
-	char file[255];
-	g_vault.setSource(build_pathname_r(file, sizeof(file) - 1, "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini")));
+	char file[PLATFORM_MAX_PATH];
+	g_vault.setSource(build_pathname_r(file, sizeof(file), "%s", get_localinfo("amxx_vault", "addons/amxmodx/configs/vault.ini")));
 	g_vault.loadVault();
 
 	// ###### Init time and freeze tasks

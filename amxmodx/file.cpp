@@ -1015,8 +1015,8 @@ static cell AMX_NATIVE_CALL rename_file(AMX *amx, cell *params)
 
 	if (params[0] / sizeof(cell) >= 3 && params[3] > 0)
 	{
-		build_pathname_r(file_old_r, sizeof(file_old_r) - 1, "%s", file_old);
-		build_pathname_r(file_new_r, sizeof(file_new_r) - 1, "%s", file_new);
+		build_pathname_r(file_old_r, sizeof(file_old_r), "%s", file_old);
+		build_pathname_r(file_new_r, sizeof(file_new_r), "%s", file_new);
 	}
 	else
 	{

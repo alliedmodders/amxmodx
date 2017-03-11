@@ -307,7 +307,7 @@ int ReadConfig(void)
 {
 	char FileName[512];
 
-	MF_BuildPathnameR(FileName,sizeof(FileName)-1,"%s",get_localinfo("amxx_configsdir","addons/amxmodx/configs"));
+	MF_BuildPathnameR(FileName,sizeof(FileName),"%s",get_localinfo("amxx_configsdir","addons/amxmodx/configs"));
 
 	strncat(FileName,"/hamdata.ini",sizeof(FileName)-1);
 

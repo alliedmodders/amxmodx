@@ -1468,9 +1468,9 @@ static cell AMX_NATIVE_CALL amx_md5_file(AMX *amx, cell *params)
 {
 	int len;
 	char *str = get_amxstring(amx, params[1], 0, len);
-	char file[255];
+	char file[PLATFORM_MAX_PATH];
 
-	build_pathname_r(file, sizeof(file)-1, "%s", str);
+	build_pathname_r(file, sizeof(file), "%s", str);
 
 	const char *hash = hashFile((const char *)file, Hash_Md5);
 	if (!hash)
@@ -1502,8 +1502,8 @@ static cell AMX_NATIVE_CALL amx_hash_file(AMX *amx, cell *params)
 {
 	int len;
 	char *str = get_amxstring(amx, params[1], 0, len);
-	char file[255];
-	build_pathname_r(file, sizeof(file)-1, "%s", str);
+	char file[PLATFORM_MAX_PATH];
+	build_pathname_r(file, sizeof(file), "%s", str);
 
 	HashType type = (HashType)params[2];
 
@@ -2016,13 +2016,13 @@ static cell AMX_NATIVE_CALL log_to_file(AMX *amx, cell *params) /* 1 param */
 	int ilen;
 	char* szFile = get_amxstring(amx, params[1], 0, ilen);
 	FILE*fp;
-	char file[256];
+	char file[PLATFORM_MAX_PATH];
 	
 	if (strchr(szFile, '/') || strchr(szFile, '\\'))
 	{
-		build_pathname_r(file, sizeof(file) - 1, "%s", szFile);
+		build_pathname_r(file, sizeof(file), "%s", szFile);
 	} else {
-		build_pathname_r(file, sizeof(file) - 1, "%s/%s", g_log_dir.chars(), szFile);
+		build_pathname_r(file, sizeof(file), "%s/%s", g_log_dir.chars(), szFile);
 	}
 	
 	bool first_time = true;
@@ -3891,8 +3891,8 @@ static cell AMX_NATIVE_CALL get_lang(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL register_dictionary(AMX *amx, cell *params)
 {
 	int len;
-	static char file[256];
-	int result = g_langMngr.MergeDefinitionFile(build_pathname_r(file, sizeof(file) - 1, "%s/lang/%s", get_localinfo("amxx_datadir", "addons/amxmodx/data"), get_amxstring(amx, params[1], 1, len)));
+	static char file[PLATFORM_MAX_PATH];
+	int result = g_langMngr.MergeDefinitionFile(build_pathname_r(file, sizeof(file), "%s/lang/%s", get_localinfo("amxx_datadir", "addons/amxmodx/data"), get_amxstring(amx, params[1], 1, len)));
 	
 	return result;
 }

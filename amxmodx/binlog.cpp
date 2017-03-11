@@ -49,8 +49,8 @@ int LookupFile(AMX_DBG *amxdbg, ucell address)
 bool BinLog::Open()
 {
 	const char *data = get_localinfo("amxmodx_datadir", "addons/amxmodx/data");
-	char path[255];
-	build_pathname_r(path, sizeof(path)-1, "%s/binlogs", data);
+	char path[PLATFORM_MAX_PATH];
+	build_pathname_r(path, sizeof(path), "%s/binlogs", data);
 	
 	if (!DirExists(path))
 	{
@@ -63,8 +63,8 @@ bool BinLog::Open()
 			return false;
 	}
 
-	char file[255];
-	build_pathname_r(file, sizeof(file)-1, "%s/binlogs/lastlog", data);
+	char file[PLATFORM_MAX_PATH];
+	build_pathname_r(file, sizeof(file), "%s/binlogs/lastlog", data);
 
 	unsigned int lastcntr = 0;
 	FILE *lastlog = fopen(file, "rb");
@@ -81,7 +81,7 @@ bool BinLog::Open()
 		fwrite(&lastcntr, sizeof(int), 1, lastlog);
 		fclose(lastlog);
 	}
-	build_pathname_r(file, sizeof(file)-1, "%s/binlogs/binlog%04d.blg", data, lastcntr);
+	build_pathname_r(file, sizeof(file), "%s/binlogs/binlog%04d.blg", data, lastcntr);
 	m_logfile = file;
 
 	/**

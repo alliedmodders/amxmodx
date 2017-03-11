@@ -46,13 +46,13 @@ static cell nvault_open(AMX *amx, cell *params)
 	int len, id=-1;
 	char *name = MF_GetAmxString(amx, params[1], 0, &len);
 	char path[255], file[255];
-	MF_BuildPathnameR(path, sizeof(path)-1, "%s/vault", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
+	MF_BuildPathnameR(path, sizeof(path), "%s/vault", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
 	sprintf(file, "%s/%s.vault", path, name);
 	for (size_t i=0; i<g_Vaults.length(); i++)
 	{
 		if (!g_Vaults[i])
 			continue;
-		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0) 
+		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0)
 			return i;
 	}
 	NVault *v = (NVault *)g_VaultMngr.OpenVault(file);

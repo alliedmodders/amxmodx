@@ -14,6 +14,7 @@
 #include "CstrikeItemsInfos.h"
 #include "CstrikeHacks.h"
 #include <amtl/am-utility.h>
+#include <resdk/mod_regamedll_api.h>
 
 CsItemInfo ItemsManager;
 ItemInfo WeaponsList[MAX_WEAPONS];
@@ -270,6 +271,11 @@ int CsItemInfo::GetItemPrice(int itemId)
 	if (id != Equipments::None)
 	{
 		return m_EquipmentsPrice[static_cast<size_t>(id)];
+	}
+
+	if (HasReGameDll)
+	{
+		return ReGameApi->GetWeaponInfo(itemId == CSI_SHIELD ? CSI_SHIELDGUN : itemId)->cost;
 	}
 
 	return GetWeaponInfo(itemId == CSI_SHIELD ? CSI_SHIELDGUN : itemId)->cost;

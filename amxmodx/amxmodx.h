@@ -10,7 +10,7 @@
 #ifndef AMXMODX_H
 #define AMXMODX_H
 
-#if defined(__linux__) || defined(__APPLE__)
+#if defined PLATFORM_POSIX
 #include <unistd.h>
 #include <stdlib.h>
 #include "sclinux.h"
@@ -75,7 +75,7 @@ extern AMX_NATIVE_INFO g_TextParserNatives[];
 extern AMX_NATIVE_INFO g_CvarNatives[];
 extern AMX_NATIVE_INFO g_GameConfigNatives[];
 
-#if defined(_WIN32)
+#if defined PLATFORM_WINDOWS
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)
 #define DLPROC(m, func) GetProcAddress(m, func)
 #define DLFREE(m) FreeLibrary(m)
@@ -96,14 +96,14 @@ extern AMX_NATIVE_INFO g_GameConfigNatives[];
 	#endif
 #endif
 
-#if defined(_WIN32)
+#if defined PLATFORM_WINDOWS
 	typedef HINSTANCE DLHANDLE;
 #else
 	typedef void* DLHANDLE;
 	#define INFINITE 0xFFFFFFFF
 #endif
 
-#if defined(_WIN32)
+#if defined PLATFORM_WINDOWS
 	#define PATH_SEP_CHAR		'\\'
 #else
 	#define PATH_SEP_CHAR		'/'

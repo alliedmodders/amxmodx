@@ -103,12 +103,6 @@ extern AMX_NATIVE_INFO g_GameConfigNatives[];
 	#define INFINITE 0xFFFFFFFF
 #endif
 
-#if defined PLATFORM_WINDOWS
-	#define PATH_SEP_CHAR		'\\'
-#else
-	#define PATH_SEP_CHAR		'/'
-#endif
-
 #ifndef GETPLAYERAUTHID
 #define GETPLAYERAUTHID     (*g_engfuncs.pfnGetPlayerAuthId)
 #endif

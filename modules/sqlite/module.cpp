@@ -17,7 +17,7 @@
 
 static int g_ident = 0;
 
-SqlFunctions g_SqliteFuncs = 
+SqlFunctions g_SqliteFuncs =
 {
 	&g_Sqlite,
 	SetMysqlAffinity,
@@ -96,4 +96,3 @@ void OnPluginsUnloaded()
 extern "C" void __cxa_pure_virtual(void)
 {
 }
-

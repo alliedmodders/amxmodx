@@ -51,7 +51,7 @@ bool BinLog::Open()
 	const char *data = get_localinfo("amxmodx_datadir", "addons/amxmodx/data");
 	char path[PLATFORM_MAX_PATH];
 	build_pathname_r(path, sizeof(path), "%s/binlogs", data);
-	
+
 	if (!DirExists(path))
 	{
 		mkdir(path

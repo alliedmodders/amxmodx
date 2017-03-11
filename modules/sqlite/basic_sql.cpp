@@ -601,7 +601,7 @@ static cell AMX_NATIVE_CALL SQL_SetCharset(AMX *amx, cell *params)
 	return 0;
 }
 
-AMX_NATIVE_INFO g_BaseSqlNatives[] = 
+AMX_NATIVE_INFO g_BaseSqlNatives[] =
 {
 	{"SQL_MakeDbTuple",		SQL_MakeDbTuple},
 	{"SQL_FreeHandle",		SQL_FreeHandle},
@@ -630,4 +630,3 @@ AMX_NATIVE_INFO g_BaseSqlNatives[] =
 
 	{NULL,					NULL},
 };
-

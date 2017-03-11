@@ -678,7 +678,7 @@ static cell AMX_NATIVE_CALL amx_fprintf(AMX *amx, cell *params)
 	{
 		assert(false);
 	}
-	
+
 	return 0;
 }
 
@@ -1205,7 +1205,7 @@ AMX_NATIVE_INFO file_Natives[] =
 	{"fungetc",			amx_ungetc},
 	{"fputs",			amx_fputs},
 	{"fflush",			amx_fflush},
-		
+
 	{"build_pathname",	amx_build_pathname},
 
 	{"dir_exists",		dir_exists},

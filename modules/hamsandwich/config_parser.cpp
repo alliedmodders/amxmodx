@@ -242,7 +242,7 @@ int read_number(char *input)
 	char *end; /* Temporary pointer, needed for strtoul(). */
 
 	// if begins with 0x or 0X it's to be interpretted as hex
-	if (*input=='0' && 
+	if (*input=='0' &&
 		(*(input+1)=='x' || *(input+1)=='X'))
 	{
 		return strtoul(input,&end,16);

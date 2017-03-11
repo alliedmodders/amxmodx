@@ -439,14 +439,14 @@ static cell AMX_NATIVE_CALL dbi_field_name(AMX *amx, cell *params)
 	return 1;
 }
 
-AMX_NATIVE_INFO g_OldCompatNatives[] = 
+AMX_NATIVE_INFO g_OldCompatNatives[] =
 {
 	{ "dbi_connect",		dbi_connect },
 	{ "dbi_query",			dbi_query },
 	{ "dbi_query2",			dbi_query2 },
-	{ "dbi_field",			dbi_field },	
-	{ "dbi_nextrow",		dbi_nextrow },	
-	{ "dbi_close",			dbi_close },	
+	{ "dbi_field",			dbi_field },
+	{ "dbi_nextrow",		dbi_nextrow },
+	{ "dbi_close",			dbi_close },
 	{ "dbi_error",			dbi_error },
 	{ "dbi_type",			dbi_type },
 	{ "dbi_free_result",	dbi_free_result },

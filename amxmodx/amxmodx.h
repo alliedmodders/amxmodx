@@ -23,7 +23,7 @@
 #ifdef _MSC_VER
 	// MSVC8 - replace POSIX functions with ISO C++ conformant ones as they are deprecated
 	#if _MSC_VER >= 1400
-		#define unlink _unlink	
+		#define unlink _unlink
 		#define mkdir _mkdir
 		#define strdup _strdup
 	#endif
@@ -134,7 +134,7 @@ void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);
 void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg);
 void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName);
 
-template <typename D> int UTIL_CheckValidChar(D *c); 
+template <typename D> int UTIL_CheckValidChar(D *c);
 template <typename D, typename S> unsigned int strncopy(D *dest, const S *src, size_t count);
 unsigned int UTIL_GetUTF8CharBytes(const char *stream);
 unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive);

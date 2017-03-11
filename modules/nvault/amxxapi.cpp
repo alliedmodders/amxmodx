@@ -52,7 +52,7 @@ static cell nvault_open(AMX *amx, cell *params)
 	{
 		if (!g_Vaults[i])
 			continue;
-		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0) 
+		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0)
 			return i;
 	}
 	NVault *v = (NVault *)g_VaultMngr.OpenVault(file);

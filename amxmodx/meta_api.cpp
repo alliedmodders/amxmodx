@@ -35,7 +35,7 @@
 #include <resdk/mod_rehlds_api.h>
 #include <amtl/am-utility.h>
 
-plugin_info_t Plugin_info = 
+plugin_info_t Plugin_info =
 {
 	META_INTERFACE_VERSION,		// ifvers
 	"AMX Mod X",				// name
@@ -162,7 +162,7 @@ bool ColoredMenus(const char *ModName)
 	for (size_t i = 0; i < ModsCount; ++i)
 	{
 		if (strcmp(ModName, pModNames[i]) == 0)
-			return true; // this game modification currently supports colored menus	
+			return true; // this game modification currently supports colored menus
 	}
 
 	return false; // no colored menus are supported for this game modification
@@ -285,7 +285,7 @@ int	C_PrecacheSound(const char *s)
 			PRECACHE_SOUND((char*)(*a).getFilename());
 			ENGINE_FORCE_UNMODIFIED((*a).getForceType(), (*a).getMin(), (*a).getMax(), (*a).getFilename());
 		}
-	
+
 		if (!g_bmod_cstrike)
 		{
 			PRECACHE_SOUND("weapons/cbar_hitbod1.wav");
@@ -310,7 +310,7 @@ int	C_InconsistentFile(const edict_t *player, const char *filename, char *discon
 		if (executeForwards(FF_InconsistentFile, static_cast<cell>(pPlayer->index),
 			filename, disconnect_message) == 1)
 			RETURN_META_VALUE(MRES_SUPERCEDE, FALSE);
-		
+
 		RETURN_META_VALUE(MRES_SUPERCEDE, TRUE);
 	}
 
@@ -455,7 +455,7 @@ int	C_Spawn(edict_t *pent)
 	g_plugins.CALMFromFile(map_pluginsfile_path);
 
 	int loaded = countModules(CountModules_Running); // Call after attachModules so all modules don't have pending stat
-	
+
 	// Set some info about amx version and modules
 	CVAR_SET_STRING(init_amxmodx_version.name, AMXX_VERSION);
 	char buffer[32];
@@ -550,7 +550,7 @@ struct sUserMsg
 	funEventCall func;
 	bool endmsg;
 	bool cstrike;
-} g_user_msg[] = 
+} g_user_msg[] =
 {
 	{"CurWeapon", &gmsgCurWeapon, Client_CurWeapon, false, false},
 	{"Damage", &gmsgDamage, Client_DamageEnd, true, true},
@@ -607,13 +607,13 @@ plugin_init	forward	function from plugins
 void C_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
 	int id;
-	
+
 	for (int i = 0; g_user_msg[i].name;	++i)
 	{
 		if ((*g_user_msg[i].id == 0) && (id = GET_USER_MSG_ID(PLID, g_user_msg[i].name, NULL)) != 0)
 		{
 			*g_user_msg[i].id =	id;
-			
+
 			if (!g_user_msg[i].cstrike || g_bmod_cstrike)
 			{
 				if (g_user_msg[i].endmsg)
@@ -674,7 +674,7 @@ void C_ServerDeactivate()
 {
 	if (!g_activated)
 		RETURN_META(MRES_IGNORED);
-	
+
 	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
 		CPlayer	*pPlayer = GET_PLAYER_POINTER_I(i);
@@ -752,7 +752,7 @@ void C_ServerDeactivate_Post()
 	modules_callPluginsUnloaded();
 
 	ClearMessages();
-	
+
 	// Flush the dynamic admins list
 	for (size_t iter=DynamicAdmins.length();iter--; )
 	{
@@ -807,15 +807,15 @@ void C_ServerDeactivate_Post()
 					}
 				}
 				g_memreport_dir = buffer;
-				
+
 				// g_memreport_dir should be valid now
 				break;
 			}
 		}
-		
+
 		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.chars(), g_memreport_count));
 		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.chars(), g_memreport_count, MEMREPORT_INTERVAL);
-		
+
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
@@ -836,11 +836,11 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 	{
 		bool a = pPlayer->Connect(pszName, pszAddress);
 		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
-		
+
 		if (a)
 		{
 			CPlayer** aa = new CPlayer*(pPlayer);
-			if (aa) 
+			if (aa)
 				g_auth.put(aa);
 		} else {
 			pPlayer->Authorize();
@@ -858,7 +858,7 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 			executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index), authid);
 		}
 	}
-	
+
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
@@ -880,7 +880,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 	{
 		// deprecated
 		executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
-		
+
 		if (DropClientDetour && !pPlayer->disconnecting)
 		{
 			executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
@@ -967,7 +967,7 @@ void C_ClientPutInServer_Post(edict_t *pEntity)
 		++g_players_num;
 		executeForwards(FF_ClientPutInServer, static_cast<cell>(pPlayer->index));
 	}
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1012,10 +1012,10 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 void C_ClientCommand(edict_t *pEntity)
 {
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	
+
 	META_RES result = MRES_IGNORED;
 	cell ret = 0;
-	
+
 	const char* cmd = CMD_ARGV(0);
 	const char* arg = CMD_ARGV(1);
 
@@ -1027,7 +1027,7 @@ void C_ClientCommand(edict_t *pEntity)
 			// Print version
 			static char buf[1024];
 			size_t len = 0;
-			
+
 			sprintf(buf, "%s %s\n", Plugin_info.name, Plugin_info.version);
 			CLIENT_PRINT(pEntity, print_console, buf);
 			len = sprintf(buf, "Authors: \n         David \"BAILOPAN\" Anderson, Pavol \"PM OnoTo\" Marko, Felix \"SniperBeamer\" Geyer\n");
@@ -1057,7 +1057,7 @@ void C_ClientCommand(edict_t *pEntity)
 	/* check for command and if needed also for first argument and call proper function */
 
 	CmdMngr::iterator aa = g_commands.clcmdprefixbegin(cmd);
-	
+
 	if (!aa)
 		aa = g_commands.clcmdbegin();
 
@@ -1089,7 +1089,7 @@ void C_ClientCommand(edict_t *pEntity)
 					pMenu->Close(pPlayer->index);
 
 					RETURN_META(MRES_SUPERCEDE);
-				} 
+				}
 				else if (pPlayer->menu > 0 && !pPlayer->vgui)
 				{
 					pPlayer->menu = 0;
@@ -1098,7 +1098,7 @@ void C_ClientCommand(edict_t *pEntity)
 					RETURN_META(MRES_SUPERCEDE);
 				}
 			}
-			
+
 			int menuid = pPlayer->menu;
 			pPlayer->menu = 0;
 
@@ -1126,12 +1126,12 @@ void C_ClientCommand(edict_t *pEntity)
 						}
 					}
 					/**
-					 * No matter what we marked it as executed, since the callback styles are 
+					 * No matter what we marked it as executed, since the callback styles are
 					 * entirely different.  After all, this is a backwards compat shim.
 					 */
 					func_was_executed = pMenu->func;
 				}
-			}		
+			}
 
 			/* Now, do old menus */
 			MenuMngr::iterator a = g_menucmds.begin();
@@ -1139,15 +1139,15 @@ void C_ClientCommand(edict_t *pEntity)
 			while (a)
 			{
 				g_menucmds.SetWatchIter(a);
-				if ((*a).matchCommand(menuid, bit_key) 
+				if ((*a).matchCommand(menuid, bit_key)
 					&& (*a).getPlugin()->isExecutable((*a).getFunction())
-					&& (func_was_executed == -1 
+					&& (func_was_executed == -1
 						|| !g_forwards.isSameSPForward(func_was_executed, (*a).getFunction()))
 					)
 				{
 					ret = executeForwards((*a).getFunction(), static_cast<cell>(pPlayer->index),
 						static_cast<cell>(pressed_key), 0);
-					
+
 					if (ret & 2) result = MRES_SUPERCEDE;
 					if (ret & 1) RETURN_META(MRES_SUPERCEDE);
 				}
@@ -1197,7 +1197,7 @@ void C_StartFrame_Post(void)
 				}
 				executeForwards(FF_ClientAuthorized, static_cast<cell>((*a)->index), auth);
 				a.remove();
-				
+
 				continue;
 			}
 			++a;
@@ -1208,14 +1208,14 @@ void C_StartFrame_Post(void)
 	if (g_memreport_enabled && g_next_memreport_time <= gpGlobals->time)
 	{
 		g_next_memreport_time = gpGlobals->time + MEMREPORT_INTERVAL;
-		
+
 		if (g_memreport_count == 0)
 		{
 			// make new directory
 			time_t td;
 			time(&td);
 			tm *curTime = localtime(&td);
-			
+
 			int i = 0;
 #if defined(__linux__) || defined(__APPLE__)
 			mkdir(build_pathname("%s/memreports", get_localinfo("amxx_basedir", "addons/amxmodx")), 0700);
@@ -1251,10 +1251,10 @@ void C_StartFrame_Post(void)
 				break;
 			}
 		}
-		
+
 		m_dumpMemoryReport(build_pathname("%s/r%03d.txt", g_memreport_dir.chars(), g_memreport_count));
 		AMXXLOG_Log("Memreport #%d created (file \"%s/r%03d.txt\") (interval %f)", g_memreport_count + 1, g_memreport_dir.chars(), g_memreport_count, MEMREPORT_INTERVAL);
-		
+
 		g_memreport_count++;
 	}
 #endif // MEMORY_TEST
@@ -1282,14 +1282,14 @@ void C_MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict
 		mPlayerIndex = 0;
 		mPlayer	= 0;
 	}
-	
+
 	if (msg_type < 0 || msg_type >= MAX_REG_MSGS)
 		msg_type = 0;
 
 	mState = 0;
 	function = modMsgs[msg_type];
 	endfunction = modMsgsEnd[msg_type];
-	
+
 	g_events.parserInit(msg_type, &gpGlobals->time, mPlayer, mPlayerIndex);
 
 	RETURN_META(MRES_IGNORED);
@@ -1299,7 +1299,7 @@ void C_WriteByte_Post(int iValue)
 {
 	g_events.parseValue(iValue);
 	if (function) (*function)((void *)&iValue);
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1315,7 +1315,7 @@ void C_WriteShort_Post(int iValue)
 {
 	g_events.parseValue(iValue);
 	if (function) (*function)((void *)&iValue);
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1323,7 +1323,7 @@ void C_WriteLong_Post(int iValue)
 {
 	g_events.parseValue(iValue);
 	if (function) (*function)((void *)&iValue);
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1331,7 +1331,7 @@ void C_WriteAngle_Post(float flValue)
 {
 	g_events.parseValue(flValue);
 	if (function) (*function)((void *)&flValue);
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1355,7 +1355,7 @@ void C_WriteEntity_Post(int iValue)
 {
 	g_events.parseValue(iValue);
 	if (function) (*function)((void *)&iValue);
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1363,7 +1363,7 @@ void C_MessageEnd_Post(void)
 {
 	g_events.executeEvents();
 	if (endfunction) (*endfunction)(NULL);
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1372,7 +1372,7 @@ const char *C_Cmd_Args(void)
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
 	if (g_fakecmd.fake)
 		RETURN_META_VALUE(MRES_SUPERCEDE, (g_fakecmd.argc > 1) ? g_fakecmd.args : g_fakecmd.argv[0]);
-	
+
 	// otherwise ignore it
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
@@ -1382,7 +1382,7 @@ const char *C_Cmd_Argv(int argc)
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
 	if (g_fakecmd.fake)
 		RETURN_META_VALUE(MRES_SUPERCEDE, (argc < 3) ? g_fakecmd.argv[argc] : "");
-	
+
 	// otherwise ignore it
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
@@ -1392,7 +1392,7 @@ int	C_Cmd_Argc(void)
 	// if the global "fake" flag is set, which means that engclient_cmd was used, supercede the function
 	if (g_fakecmd.fake)
 		RETURN_META_VALUE(MRES_SUPERCEDE, g_fakecmd.argc);
-	
+
 	// otherwise ignore it
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
@@ -1403,7 +1403,7 @@ void C_SetModel(edict_t *e, const char *m)
 {
 	if (e->v.owner && m[7]=='w' && m[8]=='_' && m[9]=='h')
 		g_grenades.put(e, 1.75, 4, GET_PLAYER_POINTER(e->v.owner));
-	
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -1413,10 +1413,10 @@ void C_TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t
 	if (e && (e->v.flags & (FL_CLIENT | FL_FAKECLIENT)))
 	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER(e);
-		
+
 		if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT)))
 			pPlayer->aiming = ptr->iHitgroup;
-			
+
 		pPlayer->lastTrace = ptr->vecEndPos;
 	}
 
@@ -1515,7 +1515,7 @@ C_DLLEXPORT	int	Meta_Query(const char	*ifvers, plugin_info_t **pPlugInfo,	mutil_
 	*pPlugInfo = &Plugin_info;
 
 	int	mmajor = 0, mminor = 0,	pmajor = 0, pminor = 0;
-		
+
 	sscanf(ifvers, "%d:%d",	&mmajor, &mminor);
 	sscanf(Plugin_info.ifvers, "%d:%d",	&pmajor, &pminor);
 
@@ -1530,7 +1530,7 @@ C_DLLEXPORT	int	Meta_Query(const char	*ifvers, plugin_info_t **pPlugInfo,	mutil_
 			LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
 			return (FALSE);
 		} else if (pmajor == mmajor) {
-			if (pminor > mminor) 
+			if (pminor > mminor)
 			{
 				LOG_ERROR(PLID, "metamod version is incompatible with this plugin; please find a newer version of this plugin");
 				return FALSE;
@@ -1573,21 +1573,21 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	CVAR_REGISTER(&init_amxmodx_mldebug);
 	CVAR_REGISTER(&init_amxmodx_language);
 	CVAR_REGISTER(&init_amxmodx_cl_langs);
-	
+
 	amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
 	amxmodx_language = CVAR_GET_POINTER(init_amxmodx_language.name);
-	
+
 	REG_SVR_COMMAND("amxx", amx_command);
 
 	char gameDir[512];
 	GET_GAME_DIR(gameDir);
 	char *a = gameDir;
 	int i = 0;
-	
+
 	while (gameDir[i])
 		if (gameDir[i++] ==	'/')
 			a = &gameDir[i];
-	
+
 	g_mod_name = a;
 
 	g_coloredmenus = ColoredMenus(g_mod_name.chars()); // whether or not to use colored menus
@@ -1605,7 +1605,7 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	if (amx_config.loadVault())
 	{
 		Vault::iterator	a =	amx_config.begin();
-		
+
 		while (a != amx_config.end())
 		{
 			SET_LOCALINFO((char*)a.key().chars(), (char*)a.value().chars());
@@ -1870,7 +1870,7 @@ C_DLLEXPORT	int	GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine,	int	
 	meta_engfuncs_post.pfnWriteByte = C_WriteByte_Post;
 	meta_engfuncs_post.pfnWriteChar = C_WriteChar_Post;
 	meta_engfuncs_post.pfnWriteShort = C_WriteShort_Post;
-	meta_engfuncs_post.pfnWriteLong = C_WriteLong_Post;	
+	meta_engfuncs_post.pfnWriteLong = C_WriteLong_Post;
 	meta_engfuncs_post.pfnWriteAngle = C_WriteAngle_Post;
 	meta_engfuncs_post.pfnWriteCoord = C_WriteCoord_Post;
 	meta_engfuncs_post.pfnWriteString = C_WriteString_Post;
@@ -1889,7 +1889,7 @@ NEW_DLL_FUNCTIONS gNewDLLFunctionTable;
 C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *interfaceVersion)
 {
 	memset(&gNewDLLFunctionTable, 0, sizeof(NEW_DLL_FUNCTIONS));
-	
+
 	// default metamod does not call this if the gamedll doesn't provide it
 	if (g_engfuncs.pfnQueryClientCvarValue2)
 	{

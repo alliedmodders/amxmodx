@@ -44,7 +44,7 @@ void CLog::CloseFile()
 	if (m_LogFile.length())
 	{
 		FILE *fp = fopen(m_LogFile.chars(), "r");
-		
+
 		if (fp)
 		{
 			fclose(fp);
@@ -61,7 +61,7 @@ void CLog::CloseFile()
 			fprintf(fp, "L %s: %s\n", date, "Log file closed.");
 			fclose(fp);
 		}
-		
+
 		m_LogFile = nullptr;
 	}
 }
@@ -69,7 +69,7 @@ void CLog::CloseFile()
 void CLog::CreateNewFile()
 {
 	CloseFile();
-	
+
 	// build filename
 	time_t td;
 	time(&td);
@@ -78,24 +78,24 @@ void CLog::CreateNewFile()
 	char file[PLATFORM_MAX_PATH];
 	char name[256];
 	int i = 0;
-	
+
 	while (true)
 	{
 		ke::SafeSprintf(name, sizeof(name), "%s/L%02d%02d%03d.log", g_log_dir.chars(), curTime->tm_mon + 1, curTime->tm_mday, i);
 		build_pathname_r(file, sizeof(file), "%s", name);
 		FILE *pTmpFile = fopen(file, "r");			// open for reading to check whether the file exists
-		
+
 		if (!pTmpFile)
 			break;
-		
+
 		fclose(pTmpFile);
 		++i;
 	}
 	m_LogFile = file;
-	
+
 	// Log logfile start
 	FILE *fp = fopen(m_LogFile.chars(), "w");
-	
+
 	if (!fp)
 	{
 		ALERT(at_logged, "[AMXX] Unexpected fatal logging error. AMXX Logging disabled.\n");
@@ -153,7 +153,7 @@ void CLog::MapChange()
 void CLog::Log(const char *fmt, ...)
 {
 	static char file[PLATFORM_MAX_PATH];
-	
+
 	if (m_LogType == 1 || m_LogType == 2)
 	{
 		// get time
@@ -180,7 +180,7 @@ void CLog::Log(const char *fmt, ...)
 			{
 				CreateNewFile();
 				pF = fopen(m_LogFile.chars(), "a+");
-				
+
 				if (!pF)
 				{
 					ALERT(at_logged, "[AMXX] Unexpected fatal logging error (couldn't open %s for a+). AMXX Logging disabled for this map.\n", m_LogFile.chars());
@@ -192,7 +192,7 @@ void CLog::Log(const char *fmt, ...)
 			build_pathname_r(file, sizeof(file), "%s/L%04d%02d%02d.log", g_log_dir.chars(), (curTime->tm_year + 1900), curTime->tm_mon + 1, curTime->tm_mday);
 			pF = fopen(file, "a+");
 		}
-		
+
 		if (pF)
 		{
 			fprintf(pF, "L %s: %s\n", date, msg);
@@ -266,4 +266,3 @@ void CLog::LogError(const char *fmt, ...)
 	// print on server console
 	print_srvconsole("L %s: %s\n", date, msg);
 }
-

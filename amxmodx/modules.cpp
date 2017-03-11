@@ -31,6 +31,7 @@
 #include "trie_natives.h"
 #include "CDataPack.h"
 #include "CGameConfigs.h"
+#include <amtl/os/am-path.h>
 
 CList<CModule, const char*> g_modules;
 CList<CScript, AMX*> g_loadedscripts;
@@ -671,76 +672,40 @@ void get_modname(char* buffer)
 	strcpy(buffer, g_mod_name.chars());
 }
 
-char* build_pathname(const char *fmt, ...)
+char *build_pathname(const char *fmt, ...)
 {
-	static char string[256];
-	int b;
-	int a = b = ke::SafeSprintf(string, sizeof(string), "%s%c", g_mod_name.chars(), PATH_SEP_CHAR);
+	static char string[PLATFORM_MAX_PATH];
+	auto len = ke::path::Format(string, sizeof(string), "%s/", g_mod_name.chars());
 
 	va_list argptr;
 	va_start(argptr, fmt);
-	a += vsnprintf (&string[a], 255 - a, fmt, argptr);
-	string[a] = 0;
+	ke::path::FormatVa(&string[len], sizeof(string) - len, fmt, argptr);
 	va_end(argptr);
-
-	char* path = &string[b];
-
-	while (*path) 
-	{
-		if (*path == ALT_SEP_CHAR)
-		{
-			*path = PATH_SEP_CHAR;
-		}
-		++path;
-	}
 
 	return string;
 }
 
 char *build_pathname_r(char *buffer, size_t maxlen, const char *fmt, ...)
 {
-	ke::SafeSprintf(buffer, maxlen, "%s%c", g_mod_name.chars(), PATH_SEP_CHAR);
-
-	size_t len = strlen(buffer);
-	char *ptr = buffer + len;
+	auto len = ke::path::Format(buffer, maxlen, "%s/", g_mod_name.chars());
 
 	va_list argptr;
 	va_start(argptr, fmt);
-	vsnprintf (ptr, maxlen-len, fmt, argptr);
+	ke::path::FormatVa(&buffer[len], maxlen - len, fmt, argptr);
 	va_end (argptr);
-
-	while (*ptr) 
-	{
-		if (*ptr == ALT_SEP_CHAR)
-		{
-			*ptr = PATH_SEP_CHAR;
-		}
-		++ptr;
-	}
 
 	return buffer;
 }
 
 // build pathname based on addons dir
-char* build_pathname_addons(const char *fmt, ...)
+char *build_pathname_addons(const char *fmt, ...)
 {
-	static char string[256];
+	static char string[PLATFORM_MAX_PATH];
 
 	va_list argptr;
 	va_start(argptr, fmt);
-	vsnprintf (string, 255, fmt, argptr);
+	ke::path::FormatVa(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
-
-	char* path = string;
-
-	while (*path) 
-	{
-		if (*path == ALT_SEP_CHAR)
-		{
-			*path = PATH_SEP_CHAR;
-		}
-		++path;
-	}
 
 	return string;
 }
@@ -822,7 +787,7 @@ bool ConvertModuleName(const char *pathString, char *path)
 		*ptr = '\0';
 	}
 
-	size_t length = ke::SafeSprintf(path, PLATFORM_MAX_PATH, "%s%c%s_amxx", orig_path, PATH_SEP_CHAR, tmpname);
+	auto length = ke::path::Format(path, PLATFORM_MAX_PATH, "%s/%s_amxx", orig_path, tmpname);
 
 #if defined PLATFORM_LINUX
 # if defined AMD64 || PAWN_CELL_SIZE == 64

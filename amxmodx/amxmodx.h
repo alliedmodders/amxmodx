@@ -105,10 +105,8 @@ extern AMX_NATIVE_INFO g_GameConfigNatives[];
 
 #if defined(_WIN32)
 	#define PATH_SEP_CHAR		'\\'
-	#define ALT_SEP_CHAR		'/'
 #else
 	#define PATH_SEP_CHAR		'/'
-	#define ALT_SEP_CHAR		'\\'
 #endif
 
 #ifndef GETPLAYERAUTHID

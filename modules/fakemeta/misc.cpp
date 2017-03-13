@@ -18,7 +18,7 @@ static cell AMX_NATIVE_CALL copy_infokey_buffer(AMX *amx, cell *params)
 {
 	char *infobuffer = reinterpret_cast<char *>(params[1]);
 
-	return MF_SetAmxString(amx, params[2], infobuffer, params[3]);
+	return MF_SetAmxString(amx, params[2], infobuffer ? infobuffer : "", params[3]);
 }
 
 // lookup_sequence(entid, "sequence name", &Float:framerate = 0.0, &bool:loops = false, &Float:groundspeed = 0.0);

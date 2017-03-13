@@ -214,7 +214,7 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
+		if (pPlayer->ingame && !pPlayer->IsBot())
 		{
 			if (len > 126)	// Client console truncates after byte 127. (126 + \n = 127)
 			{
@@ -247,7 +247,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 		{
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 
-			if (pPlayer->ingame)
+			if (pPlayer->ingame && !pPlayer->IsBot())
 			{
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
@@ -280,7 +280,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
+		if (pPlayer->ingame && !pPlayer->IsBot())
 		{
 			g_langMngr.SetDefLang(index);
 
@@ -427,7 +427,7 @@ static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params) /* 3 param */
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 
-			if (pPlayer->ingame)
+			if (pPlayer->ingame && !pPlayer->IsBot())
 				UTIL_ShowMOTD(pPlayer->pEdict, sToShow, ilen, szHead);
 		}
 	} else {
@@ -444,7 +444,7 @@ static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params) /* 3 param */
 
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
+		if (pPlayer->ingame && !pPlayer->IsBot())
 			UTIL_ShowMOTD(pPlayer->pEdict, sToShow, ilen, szHead);
 	}
 
@@ -524,7 +524,7 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 		{
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 
-			if (pPlayer->ingame)
+			if (pPlayer->ingame && !pPlayer->IsBot())
 			{
 				g_langMngr.SetDefLang(i);
 				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 2, len));
@@ -551,7 +551,7 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
+		if (pPlayer->ingame && !pPlayer->IsBot())
 		{
 			if (aut)
 			{
@@ -787,10 +787,15 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 
 	if (index < 1 || index > gpGlobals->maxClients)
 	{
-		return 0;
+		return FALSE;
 	}
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+	if (!pPlayer->ingame)
+	{
+		return FALSE;
+	}
 
 	if (g_bmod_tfc)
 	{
@@ -798,11 +803,11 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 		if (e->v.flags & FL_SPECTATOR ||
 			(!e->v.team || !e->v.playerclass))
 		{
-			return 0;
+			return FALSE;
 		}
 	}
 
-	return ((pPlayer->ingame && pPlayer->IsAlive()) ? 1 : 0);
+	return pPlayer->IsAlive() ? TRUE : FALSE;
 }
 
 static cell AMX_NATIVE_CALL get_amxx_verstring(AMX *amx, cell *params) /* 2 params */
@@ -1106,6 +1111,12 @@ static cell AMX_NATIVE_CALL user_has_weapon(AMX *amx, cell *params)
 	}
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+	if (!pPlayer->ingame)
+	{
+		return 0;
+	}
+
 	edict_t *pEntity = pPlayer->pEdict;
 
 	if (params[3] == -1)
@@ -1344,17 +1355,20 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 	} else {
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		pPlayer->keys = keys;
-		pPlayer->menu = menuid;
-		pPlayer->vgui = false;
+		if (pPlayer->ingame)
+		{
+			pPlayer->keys = keys;
+			pPlayer->menu = menuid;
+			pPlayer->vgui = false;
 
-		if (time == -1)
-			pPlayer->menuexpire = INFINITE;
-		else
-			pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
+			if (time == -1)
+				pPlayer->menuexpire = INFINITE;
+			else
+				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
-		pPlayer->page = 0;
-		UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
+			pPlayer->page = 0;
+			UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
+		}
 	}
 
 	return 1;

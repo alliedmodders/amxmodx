@@ -9,6 +9,11 @@ IRehldsServerStatic* RehldsSvs;
 
 bool RehldsApi_Init()
 {
+	if (!IS_DEDICATED_SERVER())
+	{
+		return false;
+	}
+
 #if defined(PLATFORM_WINDOWS)
 	auto library = "swds";
 #elif defined(PLATFORM_POSIX)

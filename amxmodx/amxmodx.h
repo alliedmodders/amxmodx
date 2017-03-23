@@ -31,7 +31,6 @@
 
 #include "hashing.h"
 #include "CList.h"
-#include "CQueue.h"
 #include "modules.h"
 #include "CPlugin.h"
 #include "CLibrarySys.h"

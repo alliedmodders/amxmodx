@@ -357,7 +357,6 @@
     <ClInclude Include="..\CModule.h" />
     <ClInclude Include="..\CoreConfig.h" />
     <ClInclude Include="..\CPlugin.h" />
-    <ClInclude Include="..\CQueue.h" />
     <ClInclude Include="..\CTask.h" />
     <ClInclude Include="..\CTextParsers.h" />
     <ClInclude Include="..\CvarManager.h" />

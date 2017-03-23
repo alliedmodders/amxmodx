@@ -356,9 +356,6 @@
     <ClInclude Include="..\CPlugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CQueue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>

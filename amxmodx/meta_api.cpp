@@ -65,7 +65,7 @@ extern ke::Vector<CAdminData *> DynamicAdmins;
 
 CLog g_log;
 CForwardMngr g_forwards;
-CList<CPlayer*> g_auth;
+ke::LinkedList<ke::AutoPtr<CPlayer *>> g_auth;
 ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
 ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
 ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
@@ -838,9 +838,9 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 
 		if (a)
 		{
-			CPlayer** aa = new CPlayer*(pPlayer);
-			if (aa)
-				g_auth.put(aa);
+			auto playerToAuth = ke::AutoPtr<CPlayer *>(new CPlayer*(pPlayer));
+			if (playerToAuth)
+				g_auth.append(ke::Move(playerToAuth));
 		} else {
 			pPlayer->Authorize();
 			const char* authid = GETPLAYERAUTHID(pEntity);
@@ -1169,21 +1169,21 @@ void C_StartFrame_Post(void)
 	if (g_auth_time < gpGlobals->time)
 	{
 		g_auth_time = gpGlobals->time + 0.7f;
-		CList<CPlayer*>::iterator a = g_auth.begin();
 
-		while (a)
+		for (auto plIter = g_auth.begin(), end = g_auth.end(); plIter != end; plIter++)
 		{
-			const char*	auth = GETPLAYERAUTHID((*a)->pEdict);
+			auto player = *(*plIter);
+			const char*	auth = GETPLAYERAUTHID((*player)->pEdict);
 
 			if ((auth == 0) || (*auth == 0))
 			{
-				a.remove();
+				g_auth.erase(plIter);
 				continue;
 			}
 
 			if (strcmp(auth, "STEAM_ID_PENDING"))
 			{
-				(*a)->Authorize();
+				(*player)->Authorize();
 				if (g_auth_funcs.size())
 				{
 					List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
@@ -1191,15 +1191,14 @@ void C_StartFrame_Post(void)
 					for (iter=g_auth_funcs.begin(); iter!=end; iter++)
 					{
 						fn = (*iter);
-						fn((*a)->index, auth);
+						fn((*player)->index, auth);
 					}
 				}
-				executeForwards(FF_ClientAuthorized, static_cast<cell>((*a)->index), auth);
-				a.remove();
+				executeForwards(FF_ClientAuthorized, static_cast<cell>((*player)->index), auth);
+				g_auth.erase(plIter);
 
 				continue;
 			}
-			++a;
 		}
 	}
 

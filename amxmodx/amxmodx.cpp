@@ -3026,16 +3026,18 @@ static cell AMX_NATIVE_CALL force_unmodified(AMX *amx, cell *params)
 
 	char* filename = get_amxstring(amx, params[4], 0, a);
 
-	ForceObject* aaa = new ForceObject(filename, (FORCE_TYPE)((int)(params[1])), vec1, vec2, amx);
+	auto object = ke::AutoPtr<ForceObject>(new ForceObject(filename, (FORCE_TYPE)((int)(params[1])), vec1, vec2, amx));
 
-	if (aaa)
+	if (object)
 	{
+		auto forceObjVec = &g_forcegeneric;
+
 		if (stristr(filename, ".wav"))
-			g_forcesounds.put(aaa);
+			forceObjVec = &g_forcesounds;
 		else if (stristr(filename, ".mdl"))
-			g_forcemodels.put(aaa);
-		else
-			g_forcegeneric.put(aaa);
+			forceObjVec = &g_forcemodels;
+
+		forceObjVec->append(ke::Move(object));
 
 		return 1;
 	}

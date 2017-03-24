@@ -66,9 +66,9 @@ extern ke::Vector<CAdminData *> DynamicAdmins;
 CLog g_log;
 CForwardMngr g_forwards;
 CList<CPlayer*> g_auth;
-CList<ForceObject> g_forcemodels;
-CList<ForceObject> g_forcesounds;
-CList<ForceObject> g_forcegeneric;
+ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
+ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
+ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
 CPlayer g_players[33];
 CPlayer* mPlayer;
 CPluginMngr g_plugins;
@@ -265,10 +265,10 @@ int	C_PrecacheModel(const char *s)
 	if (!g_forcedmodules)
 	{
 		g_forcedmodules	= true;
-		for (CList<ForceObject>::iterator a = g_forcemodels.begin(); a; ++a)
+		for (auto &model : g_forcemodels)
 		{
-			PRECACHE_MODEL((char*)(*a).getFilename());
-			ENGINE_FORCE_UNMODIFIED((*a).getForceType(), (*a).getMin(), (*a).getMax(), (*a).getFilename());
+			PRECACHE_MODEL(model->getFilename());
+			ENGINE_FORCE_UNMODIFIED(model->getForceType(), model->getMin(), model->getMax(), model->getFilename());
 		}
 	}
 
@@ -280,10 +280,10 @@ int	C_PrecacheSound(const char *s)
 	if (!g_forcedsounds)
 	{
 		g_forcedsounds = true;
-		for (CList<ForceObject>::iterator a = g_forcesounds.begin(); a; ++a)
+		for (auto &sound : g_forcesounds)
 		{
-			PRECACHE_SOUND((char*)(*a).getFilename());
-			ENGINE_FORCE_UNMODIFIED((*a).getForceType(), (*a).getMin(), (*a).getMax(), (*a).getFilename());
+			PRECACHE_SOUND(sound->getFilename());
+			ENGINE_FORCE_UNMODIFIED(sound->getForceType(), sound->getMin(), sound->getMax(), sound->getFilename());
 		}
 
 		if (!g_bmod_cstrike)
@@ -533,11 +533,10 @@ int	C_Spawn(edict_t *pent)
 	executeForwards(FF_PluginPrecache);
 	g_dontprecache = true;
 
-	for (CList<ForceObject>::iterator a = g_forcegeneric.begin(); a; ++a)
+	for (auto &generic : g_forcegeneric)
 	{
-		PRECACHE_GENERIC((char*)(*a).getFilename());
-		ENGINE_FORCE_UNMODIFIED((*a).getForceType(),
-		(*a).getMin(), (*a).getMax(), (*a).getFilename());
+		PRECACHE_GENERIC(generic->getFilename());
+		ENGINE_FORCE_UNMODIFIED(generic->getForceType(), generic->getMin(), generic->getMax(), generic->getFilename());
 	}
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);

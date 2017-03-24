@@ -1600,52 +1600,38 @@ cell MNF_PrepareCharArray(char *ptr, unsigned int size)
 	return prepareCharArray(ptr, size, false);
 }
 
-inline bool operator ==(func_s &arg1, const char *desc)
-{
-	if (strcmp(arg1.desc, desc) == 0)
-		return true;
-
-	return false;
-}
-
-CList<func_s, const char *> g_functions;
+ke::Vector<ke::AutoPtr<func_s>> g_functions;
 
 // Fnptr Request function for the new interface
 const char *g_LastRequestedFunc = NULL;
 #define REGISTER_FUNC(name, func) \
 	{ \
-		pFunc = new func_s; \
+		auto pFunc = ke::AutoPtr<func_s>(new func_s); \
 		pFunc->pfn = (void *)func; \
 		pFunc->desc = name; \
-		g_functions.put(pFunc); \
+		g_functions.append(ke::Move(pFunc)); \
 	}
 
 void MNF_RegisterFunction(void *pfn, const char *description)
 {
-	func_s *pFunc;
-
 	REGISTER_FUNC(description, pfn);
 }
 
 void *MNF_RegisterFunctionEx(void *pfn, const char *description)
 {
-	func_s *pFunc;
-	CList<func_s, const char *>::iterator iter;
-
-	for (iter = g_functions.begin(); iter; ++iter)
+	for (auto &func : g_functions)
 	{
-		pFunc = &(*iter);
-		if (strcmp(description, pFunc->desc) == 0)
+		if (!strcmp(description, func->desc))
 		{
-			void *pOld = pFunc->pfn;
-			pFunc->pfn = pfn;
+			void *pOld = func->pfn;
+			func->pfn = pfn;
 			return pOld;
 		}
 	}
 
 	MNF_RegisterFunction(pfn, description);
 
-	return NULL;
+	return nullptr;
 }
 
 void Module_UncacheFunctions()
@@ -1774,8 +1760,6 @@ IGameConfigManager *MNF_GetConfigManager()
 
 void Module_CacheFunctions()
 {
-	func_s *pFunc;
-
 	REGISTER_FUNC("BuildPathname", build_pathname)
 	REGISTER_FUNC("BuildPathnameR", build_pathname_r)
 	REGISTER_FUNC("PrintSrvConsole", print_srvconsole)
@@ -1883,20 +1867,15 @@ void Module_CacheFunctions()
 
 void *Module_ReqFnptr(const char *funcName)
 {
-	// code
-	// ^---- really? wow!
-
 	g_LastRequestedFunc = funcName;
 
-	CList<func_s, const char *>::iterator iter;
-
-	for (iter = g_functions.begin(); iter; ++iter)
+	for (auto &func : g_functions)
 	{
-		if (strcmp(funcName, iter->desc) == 0)
-			return iter->pfn;
+		if (!strcmp(funcName, func->desc))
+			return func->pfn;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 Debugger *DisableDebugHandler(AMX *amx)

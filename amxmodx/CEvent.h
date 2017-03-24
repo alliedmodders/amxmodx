@@ -108,11 +108,8 @@ private:
 	int m_ReadVaultSize;
 	void NextParam();			// make sure a new parameter can be added
 
-	typedef CList<ClEvent> ClEventVec;
-	typedef ClEventVec::iterator ClEventVecIter;
-
-	ClEventVec m_Events[MAX_AMX_REG_MSG];
-	ClEventVec *m_ParseFun;		// current Event vector
+	ke::Vector<ke::AutoPtr<ClEvent>> m_Events[MAX_AMX_REG_MSG];
+	ke::Vector<ke::AutoPtr<ClEvent>> *m_ParseFun; // current Event vector
 
 	bool m_ParseNotDone;
 	int m_ParsePos;				// is args. num. - 1

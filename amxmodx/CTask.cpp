@@ -203,35 +203,36 @@ void CTaskMngr::registerTimers(float *pCurrentTime, float *pTimeLimit, float *pT
 void CTaskMngr::registerTask(CPluginMngr::CPlugin *pPlugin, int iFunc, int iFlags, cell iId, float fBase, int iParamsLen, const cell *pParams, int iRepeat)
 {
 	// first, search for free tasks
-	TaskListIter iter = m_Tasks.find(CTaskDescriptor(0, NULL, true));
-	
-	if (iter)
+	for (auto &task : m_Tasks)
 	{
-		// found: reuse it
-		iter->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
-	} else {
-		// not found: make a new one
-		CTask *pTmp = new CTask;
-		
-		if (!pTmp)
+		if (task->isFree() && !task->inExecute())
+		{
+			// found: reuse it
+			task->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
 			return;
-		
-		pTmp->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
-		m_Tasks.put(pTmp);
+		}
 	}
+	// not found: make a new one
+	auto task = ke::AutoPtr<CTask>(new CTask);
+		
+	if (!task)
+		return;
+		
+	task->set(pPlugin, iFunc, iFlags, iId, fBase, iParamsLen, pParams, iRepeat, *m_pTmr_CurrentTime);
+	m_Tasks.append(ke::Move(task));
 }
 
 int CTaskMngr::removeTasks(int iId, AMX *pAmx)
 {
-	CTaskDescriptor descriptor(iId, pAmx);
-	TaskListIter iter = m_Tasks.find(descriptor);
 	int i = 0;
 	
-	while (iter)
+	for (auto &task : m_Tasks)
 	{
-		iter->clear();
-		++i;
-		iter = m_Tasks.find(++iter, descriptor);
+		if (task->match(iId, pAmx))
+		{
+			task->clear();
+			++i;
+		}
 	}
 	
 	return i;
@@ -239,16 +240,16 @@ int CTaskMngr::removeTasks(int iId, AMX *pAmx)
 
 int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 {
-	CTaskDescriptor descriptor(iId, pAmx);
-	TaskListIter iter = m_Tasks.find(descriptor);
 	int i = 0;
 	
-	while (iter)
+	for (auto &task : m_Tasks)
 	{
-		iter->changeBase(fNewBase);
-		iter->resetNextExecTime(*m_pTmr_CurrentTime);
-		++i;
-		iter = m_Tasks.find(++iter, descriptor);
+		if (task->match(iId, pAmx))
+		{
+			task->changeBase(fNewBase);
+			task->resetNextExecTime(*m_pTmr_CurrentTime);
+			++i;
+		}
 	}
 	
 	return i;
@@ -256,16 +257,23 @@ int CTaskMngr::changeTasks(int iId, AMX *pAmx, float fNewBase)
 
 bool CTaskMngr::taskExists(int iId, AMX *pAmx)
 {
-	return m_Tasks.find(CTaskDescriptor(iId, pAmx));
+	for (auto &task : m_Tasks)
+	{
+		if (task->match(iId, pAmx))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void CTaskMngr::startFrame()
 {
-	for (TaskListIter iter = m_Tasks.begin(); iter; ++iter)
+	for (auto &task : m_Tasks)
 	{
-		if (iter->isFree())
+		if (task->isFree())
 			continue;
-		iter->executeIfRequired(*m_pTmr_CurrentTime, *m_pTmr_TimeLimit, *m_pTmr_TimeLeft);
+		task->executeIfRequired(*m_pTmr_CurrentTime, *m_pTmr_TimeLimit, *m_pTmr_TimeLeft);
 	}
 }
 

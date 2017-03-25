@@ -30,7 +30,6 @@
 #endif
 
 #include "hashing.h"
-#include "CList.h"
 #include "modules.h"
 #include "CPlugin.h"
 #include "CLibrarySys.h"
@@ -166,8 +165,8 @@ extern CmdMngr g_commands;
 extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
 extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
 extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
-extern CList<CModule, const char *> g_modules;
-extern CList<CScript, AMX*> g_loadedscripts;
+extern ke::LinkedList<ke::AutoPtr<CModule>> g_modules;
+extern ke::LinkedList<ke::AutoPtr<CScript>> g_loadedscripts;
 extern ke::LinkedList<ke::AutoPtr<CPlayer *>> g_auth;
 extern EventsMngr g_events;
 extern Grenades g_grenades;

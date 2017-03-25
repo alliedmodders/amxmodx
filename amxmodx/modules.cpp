@@ -33,8 +33,8 @@
 #include "CGameConfigs.h"
 #include <amtl/os/am-path.h>
 
-CList<CModule, const char*> g_modules;
-CList<CScript, AMX*> g_loadedscripts;
+ke::LinkedList<ke::AutoPtr<CModule>> g_modules;
+ke::LinkedList<ke::AutoPtr<CScript>> g_loadedscripts;
 
 CModule *g_CurrentlyCalledModule = NULL;	// The module we are in at the moment; NULL otherwise
 
@@ -333,9 +333,15 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	}
 #endif
 
-	CScript* aa = new CScript(amx, *program, filename);
+	auto script = ke::AutoPtr<CScript>(new CScript(amx, *program, filename));
 
-	g_loadedscripts.put(aa);
+	if (!script)
+	{
+		ke::SafeSprintf(error, 64, "Failed to allocate memory for script");
+		return (amx->error = AMX_ERR_MEMORY);
+	}
+
+	g_loadedscripts.append(ke::Move(script));
 
 	set_amxnatives(amx, error);
 
@@ -420,23 +426,19 @@ int CheckModules(AMX *amx, char error[128])
 		/* for binary compat */
 		if (!found)
 		{
-			CList<CModule, const char *>::iterator a = g_modules.begin();
-			while (a)
+			for (auto &module : g_modules)
 			{
-				CModule &cm = (*a);
-				if (cm.getStatusValue() != MODULE_LOADED)
+				if (module->getStatusValue() != MODULE_LOADED)
 				{
-					++a;
 					continue;
 				}
-				if (cm.getInfoNew() &&
-					cm.getInfoNew()->logtag &&
-					!strcasecmp(cm.getInfoNew()->logtag, buffer))
+				if (module->getInfoNew() &&
+					module->getInfoNew()->logtag &&
+					!strcasecmp(module->getInfoNew()->logtag, buffer))
 				{
 					found = true;
 					break;
 				}
-				++a;
 			}
 		}
 
@@ -498,18 +500,16 @@ int CheckModules(AMX *amx, char error[128])
 
 int set_amxnatives(AMX* amx, char error[128])
 {
-	CModule *cm;
-	for (CList<CModule, const char *>::iterator a = g_modules.begin(); a ; ++a)
+	for (auto &module : g_modules)
 	{
-		cm = &(*a);
-		for (size_t i=0; i<cm->m_Natives.length(); i++)
+		for (size_t i = 0; i < module->m_Natives.length(); i++)
 		{
-			amx_Register(amx, cm->m_Natives[i], -1);
+			amx_Register(amx, module->m_Natives[i], -1);
 		}
 
-		for (size_t i = 0; i < cm->m_NewNatives.length(); i++)
+		for (size_t i = 0; i < module->m_NewNatives.length(); i++)
 		{
-			amx_Register(amx, cm->m_NewNatives[i], -1);
+			amx_Register(amx, module->m_NewNatives[i], -1);
 		}
 	}
 
@@ -578,10 +578,14 @@ int unload_amxscript(AMX* amx, void** program)
 	if (opt)
 		delete opt;
 
-	CList<CScript, AMX*>::iterator a = g_loadedscripts.find(amx);
-
-	if (a)
-		a.remove();
+	for (auto scriptIter = g_loadedscripts.begin(), end = g_loadedscripts.end(); scriptIter != end; scriptIter++)
+	{
+		if ((*scriptIter)->getAMX() == amx)
+		{
+			g_loadedscripts.erase(scriptIter);
+			break;
+		}
+	}
 
 	char *prg = (char *)*program;
 
@@ -628,20 +632,20 @@ int unload_amxscript(AMX* amx, void** program)
 
 AMX* get_amxscript(int id, void** code, const char** filename)
 {
-	CList<CScript, AMX*>::iterator a = g_loadedscripts.begin();
-
-	while (a && id--)
-		++a;
-
-	if (a)
+	for (auto &script : g_loadedscripts)
 	{
-		*filename = (*a).getName();
-		*code = (*a).getCode();
+		if (id--)
+		{
+			continue;
+		}
 
-		return (*a).getAMX();
+		*filename = script->getName();
+		*code = script->getCode();
+
+		return script->getAMX();
 	}
 
-	return 0;
+	return nullptr;
 }
 
 const char* GetFileName(AMX *amx)
@@ -652,10 +656,17 @@ const char* GetFileName(AMX *amx)
 	if (pl)
 	{
 		filename = pl->getName();
-	} else {
-		CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
-		if (a)
-			filename = (*a).getName();
+	}
+	else
+	{
+		for (auto &script : g_loadedscripts)
+		{
+			if (script->getAMX() == amx)
+			{
+				filename = script->getName();
+				break;
+			}
+		}
 	}
 
 	return filename;
@@ -663,8 +674,14 @@ const char* GetFileName(AMX *amx)
 
 const char* get_amxscriptname(AMX* amx)
 {
-	CList<CScript, AMX*>::iterator a = g_loadedscripts.find(amx);
-	return a ? (*a).getName() : "";
+	for (auto &script : g_loadedscripts)
+	{
+		if (script->getAMX() == amx)
+		{
+			return script->getName();
+		}
+	}
+	return "";
 }
 
 void get_modname(char* buffer)
@@ -829,18 +846,26 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		fclose(fp);
 	}
 
-	CList<CModule, const char *>::iterator a = g_modules.find(path);
+	for (auto &module : g_modules)
+	{
+		if (!strcmp(module->getFilename(), path))
+		{
+			return false;
+		}
+	}
 
-	if (a)
+	auto module = new CModule(path);
+
+	if (!module)
+	{
 		return false;
+	}
 
-	CModule* cc = new CModule(path);
-
-	cc->queryModule();
+	module->queryModule();
 
 	bool error = true;
 
-	switch (cc->getStatusValue())
+	switch (module->getStatusValue())
 	{
 	case MODULE_BADLOAD:
 		report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", path);
@@ -852,7 +877,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		report_error(1, "[AMXX] Couldn't find \"AMX_Query\" or \"AMXX_Query\" (file \"%s\")", path);
 		break;
 	case MODULE_NOATTACH:
-		report_error(1, "[AMXX] Couldn't find \"%s\" (file \"%s\")", cc->isAmxx() ? "AMXX_Attach" : "AMX_Attach", path);
+		report_error(1, "[AMXX] Couldn't find \"%s\" (file \"%s\")", module->isAmxx() ? "AMXX_Attach" : "AMX_Attach", path);
 		break;
 	case MODULE_OLD:
 		report_error(1, "[AMXX] Module has a different interface version (file \"%s\")", path);
@@ -874,38 +899,38 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		break;
 	}
 
-	g_modules.put(cc);
+	g_modules.append(ke::AutoPtr<CModule>(module));
 
 	if (error)
 	{
 		return false;
 	}
 
-	if (cc->IsMetamod())
+	if (module->IsMetamod())
 	{
 		char *mmpathname = build_pathname_addons(
 							"%s/%s",
 							get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
 							shortname);
 		ConvertModuleName(mmpathname, path);
-		cc->attachMetamod(path, now);
+		module->attachMetamod(path, now);
 	}
 
-	bool retVal = cc->attachModule();
+	bool retVal = module->attachModule();
 
-	if (cc->isAmxx() && !retVal)
+	if (module->isAmxx() && !retVal)
 	{
-		switch (cc->getStatusValue())
+		switch (module->getStatusValue())
 		{
 		case MODULE_FUNCNOTPRESENT:
-			report_error(1, "[AMXX] Module requested a not existing function (file \"%s\")%s%s%s", cc->getFilename(), cc->getMissingFunc() ? " (func \"" : "",
-				cc->getMissingFunc() ? cc->getMissingFunc() : "", cc->getMissingFunc() ? "\")" : "");
+			report_error(1, "[AMXX] Module requested a not existing function (file \"%s\")%s%s%s", module->getFilename(), module->getMissingFunc() ? " (func \"" : "",
+				module->getMissingFunc() ? module->getMissingFunc() : "", module->getMissingFunc() ? "\")" : "");
 			break;
 		case MODULE_INTERROR:
-			report_error(1, "[AMXX] Internal error during module load (file \"%s\")", cc->getFilename());
+			report_error(1, "[AMXX] Internal error during module load (file \"%s\")", module->getFilename());
 			break;
 		case MODULE_BADLOAD:
-			report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", cc->getFilename());
+			report_error(1, "[AMXX] Module is not a valid library (file \"%s\")", module->getFilename());
 			break;
 		}
 
@@ -969,29 +994,22 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 
 void detachModules()
 {
-	CList<CModule, const char *>::iterator a = g_modules.begin();
-
-	while (a)
+	for (auto &module : g_modules)
 	{
-		(*a).detachModule();
-		a.remove();
+		module->detachModule();
 	}
+	g_modules.clear();
 }
 
 void detachReloadModules()
 {
-	CList<CModule, const char *>::iterator a = g_modules.begin();
-
-	while (a)
+	for (auto moduleIter = g_modules.begin(), end = g_modules.end(); moduleIter != end; moduleIter++)
 	{
-		if ((*a).isReloadable() && !(*a).IsMetamod())
+		if ((*moduleIter)->isReloadable() && !(*moduleIter)->IsMetamod())
 		{
-			(*a).detachModule();
-			a.remove();
-
-			continue;
+			(*moduleIter)->detachModule();
+			g_modules.erase(moduleIter);
 		}
-		++a;
 	}
 }
 
@@ -1015,34 +1033,25 @@ const char* strip_name(const char* a)
 // Get the number of running modules
 int countModules(CountModulesMode mode)
 {
-	CList<CModule, const char *>::iterator iter;
-	int num;
+	auto num = 0;
 
 	switch (mode)
 	{
 		case CountModules_All:
-			return g_modules.size();
+			return g_modules.length();
 		case CountModules_Running:
-			iter = g_modules.begin();
-			num = 0;
-
-			while (iter)
+			for (auto &module : g_modules)
 			{
-				if ((*iter).getStatusValue() == MODULE_LOADED)
+				if (module->getStatusValue() == MODULE_LOADED)
 					++num;
-				++iter;
 			}
 
 			return num;
 		case CountModules_Stopped:
-			iter = g_modules.begin();
-			num	= 0;
-
-			while (iter)
+			for (auto &module : g_modules)
 			{
-				if ((*iter).getStatusValue() != MODULE_LOADED)
+				if (module->getStatusValue() != MODULE_LOADED)
 					++num;
-				++iter;
 			}
 
 			return num;
@@ -1054,35 +1063,26 @@ int countModules(CountModulesMode mode)
 // Call all modules' AMXX_PluginsLoaded functions
 void modules_callPluginsLoaded()
 {
-	CList<CModule, const char *>::iterator iter = g_modules.begin();
-
-	while (iter)
+	for (auto &module : g_modules)
 	{
-		(*iter).CallPluginsLoaded();
-		++iter;
+		module->CallPluginsLoaded();
 	}
 }
 
 //same for unloaded
 void modules_callPluginsUnloaded()
 {
-	CList<CModule, const char *>::iterator iter = g_modules.begin();
-
-	while (iter)
+	for (auto &module : g_modules)
 	{
-		(*iter).CallPluginsUnloaded();
-		++iter;
+		module->CallPluginsUnloaded();
 	}
 }
 
 void modules_callPluginsUnloading()
 {
-	CList<CModule, const char *>::iterator iter = g_modules.begin();
-
-	while (iter)
+	for (auto &module : g_modules)
 	{
-		(*iter).CallPluginsUnloading();
-		++iter;
+		module->CallPluginsUnloading();
 	}
 }
 
@@ -1114,44 +1114,42 @@ const char *MNF_GetModname(void)
 
 AMX *MNF_GetAmxScript(int id)
 {
-	CList<CScript, AMX*>::iterator iter = g_loadedscripts.begin();
-
-	while (iter && id--)
-		++iter;
-
-	if (iter == 0)
-		return NULL;
-
-	return (*iter).getAMX();
+	for (auto &script : g_loadedscripts)
+	{
+		if (id--)
+		{
+			continue;
+		}
+		return script->getAMX();
+	}
+	return nullptr;
 }
 
 const char *MNF_GetAmxScriptName(int id)
 {
-	CList<CScript, AMX*>::iterator iter = g_loadedscripts.begin();
-
-	while (iter && id--)
-		++iter;
-
-	if (iter == 0)
-		return NULL;
-
-	return (*iter).getName();
+	for (auto &script : g_loadedscripts)
+	{
+		if (id--)
+		{
+			continue;
+		}
+		return script->getName();
+	}
+	return nullptr;
 }
 
 int MNF_FindAmxScriptByName(const char *name)
 {
-	CList<CScript, AMX*>::iterator iter = g_loadedscripts.begin();
 	bool found = false;
 	int i = 0;
 
-	while (iter)
+	for (auto &script : g_loadedscripts)
 	{
-		if (stricmp((*iter).getName(), name) == 0)
+		if (!stricmp(script->getName(), name))
 		{
 			found = true;
 			break;
 		}
-		++iter;
 		++i;
 	}
 
@@ -1163,19 +1161,16 @@ int MNF_FindAmxScriptByName(const char *name)
 
 int MNF_FindAmxScriptByAmx(const AMX *amx)
 {
-	CList<CScript, AMX*>::iterator iter = g_loadedscripts.begin();
 	bool found = false;
 	int i = 0;
 
-	while (iter)
-
+	for (auto &script : g_loadedscripts)
 	{
-		if (amx == (*iter).getAMX())
+		if (script->getAMX() == amx)
 		{
 			found = true;
 			break;
 		}
-		++iter;
 		++i;
 	}
 
@@ -1276,17 +1271,16 @@ void MNF_OverrideNatives(AMX_NATIVE_INFO *natives, const char *name)
 {
 	//HACKHACK - we should never have had to do this
 	//find a better solution for SourceMod!!!
-	for (CList<CModule, const char *>::iterator a = g_modules.begin(); a ; ++a)
+	for (auto &module : g_modules)
 	{
-		CModule &cm = (*a);
-		if (cm.getStatusValue() != MODULE_LOADED)
+		if (module->getStatusValue() != MODULE_LOADED)
 			continue;
-		const amxx_module_info_s *p = cm.getInfoNew();
+		const amxx_module_info_s *p = module->getInfoNew();
 		if (!p || !p->name)
 			continue;
 		if (strcmp(p->name, name)==0)
 			continue;
-		cm.rewriteNativeLists(natives);
+		module->rewriteNativeLists(natives);
 	}
 }
 

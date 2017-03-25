@@ -3216,9 +3216,9 @@ static cell AMX_NATIVE_CALL is_module_loaded(AMX *amx, cell *params)
 	char *name = get_amxstring(amx, params[1], 0, len);
 	int id = 0;
 
-	for (CList<CModule, const char *>::iterator iter = g_modules.begin(); iter; ++iter)
+	for (auto &module : g_modules)
 	{
-		if (stricmp((*iter).getName(), name) == 0)
+		if (!stricmp(module->getName(), name))
 			return id;
 
 		++id;
@@ -3365,50 +3365,50 @@ static cell AMX_NATIVE_CALL register_byval(AMX *amx, cell *params)
 // native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);
 static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 {
-	CList<CModule, const char *>::iterator moduleIter;
-
 	// find the module
 	int i = params[1];
 
-	for (moduleIter = g_modules.begin(); moduleIter && i; ++moduleIter)
-		--i;
-
-	if (i != 0 || !moduleIter)
-		return -1;			// not found
-
-	// set name, author, version
-	if ((*moduleIter).isAmxx())
+	for (auto &module : g_modules)
 	{
-		const amxx_module_info_s *info = (*moduleIter).getInfoNew();
-		const char *name = info && info->name ? info->name : "unk";
-		const char *author = info && info->author ? info->author : "unk";
-		const char *version = info && info->version ? info->version : "unk";
+		if (i--)
+		{
+			continue;
+		}
 
-		set_amxstring_utf8(amx, params[2], name, strlen(name), params[3]);
-		set_amxstring_utf8(amx, params[4], author, strlen(author), params[5]);
-		set_amxstring_utf8(amx, params[6], version, strlen(version), params[7]);
+		// set name, author, version
+		if (module->isAmxx())
+		{
+			const amxx_module_info_s *info = module->getInfoNew();
+			const char *name = info && info->name ? info->name : "unk";
+			const char *author = info && info->author ? info->author : "unk";
+			const char *version = info && info->version ? info->version : "unk";
+
+			set_amxstring_utf8(amx, params[2], name, strlen(name), params[3]);
+			set_amxstring_utf8(amx, params[4], author, strlen(author), params[5]);
+			set_amxstring_utf8(amx, params[6], version, strlen(version), params[7]);
+		}
+
+		// compatibility problem possible
+		int numParams = params[0] / sizeof(cell);
+
+		if (numParams < 8)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Call to incompatible version");
+			return 0;
+		}
+
+		// set status
+		cell *addr;
+		if (amx_GetAddr(amx, params[8], &addr) != AMX_ERR_NONE)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid reference plugin");
+			return 0;
+		}
+
+		*addr = (cell)module->getStatusValue();
+		return params[1];
 	}
-
-	// compatibility problem possible
-	int numParams = params[0] / sizeof(cell);
-
-	if (numParams < 8)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Call to incompatible version");
-		return 0;
-	}
-
-	// set status
-	cell *addr;
-	if (amx_GetAddr(amx, params[8], &addr) != AMX_ERR_NONE)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid reference plugin");
-		return 0;
-	}
-
-	*addr = (cell)(*moduleIter).getStatusValue();
-
-	return params[1];
+	return -1;
 }
 
 // native log_amx(const msg[], ...);

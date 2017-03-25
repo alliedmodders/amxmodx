@@ -568,22 +568,26 @@ void Debugger::DisplayTrace(const char *message)
 
 const char *Debugger::_GetFilename()
 {
-	if (m_FileName.length() < 1)
-	{
-		const char *filename = "";
-		CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(m_pAmx);
-		if (pl)
-		{
-			filename = pl->getName();
-		} else {
-			CList<CScript,AMX*>::iterator a = g_loadedscripts.find(m_pAmx);
-			if (a)
-				filename = (*a).getName();
-		}
-		m_FileName = filename;
-	}
-
-	return m_FileName.chars();
+    if (m_FileName.length() < 1)
+    {
+        CPluginMngr::CPlugin *pl = g_plugins.findPluginFast(m_pAmx);
+        if (pl)
+        {
+            m_FileName = pl->getName();
+        }
+        else
+        {
+            for (auto &script : g_loadedscripts)
+            {
+                if (script->getAMX() == m_pAmx)
+                {
+                    m_FileName = script->getName();
+                    break;
+                }
+            }
+        }
+    }
+    return m_FileName.chars();
 }
 
 const char *Debugger::_GetVersion()
@@ -605,31 +609,35 @@ const char *Debugger::_GetVersion()
 
 void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLength)
 {
-	const char *filename = "";
-	char native[sNAMEMAX+1];
+    const char *filename = "";
+    char native[sNAMEMAX+1];
+    for (auto &script : g_loadedscripts)
+    {
+        if (script->getAMX() == amx)
+        {
+            filename = script->getName();
+            break;
+        }
+    }
+    size_t len = strlen(filename);
+    for (size_t i=len-1; i<len; i--)
+    {
+        if ((filename[i] == '/' || filename[i] == '\\') && i != len - 1)
+        {
+            filename = &(filename[i+1]);
+            break;
+        }
+    }
 
-	CList<CScript,AMX*>::iterator a = g_loadedscripts.find(amx);
-	if (a)
-		filename = (*a).getName();
-	size_t len = strlen(filename);
-	for (size_t i=len-1; i<len; i--)
-	{
-		if ((filename[i] == '/' || filename[i] == '\\') && i != len - 1)
-		{
-			filename = &(filename[i+1]);
-			break;
-		}
-	}
-
-	if (error == AMX_ERR_EXIT)
-	{
-		ke::SafeSprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - %s", error, filename, GenericError(AMX_ERR_EXIT));
-	} else if (error == AMX_ERR_NATIVE) {
-		amx_GetNative(amx, reinterpret_cast<long>(amx->usertags[UT_NATIVE]), native);
-		ke::SafeSprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") (native \"%s\") - debug not enabled!", error, filename, native);
-	} else {
-		ke::SafeSprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - debug not enabled!", error, filename);
-	}
+    if (error == AMX_ERR_EXIT)
+    {
+        ke::SafeSprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - %s", error, filename, GenericError(AMX_ERR_EXIT));
+    } else if (error == AMX_ERR_NATIVE) {
+        amx_GetNative(amx, reinterpret_cast<long>(amx->usertags[UT_NATIVE]), native);
+        ke::SafeSprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") (native \"%s\") - debug not enabled!", error, filename, native);
+    } else {
+        ke::SafeSprintf(buffer, maxLength, "Run time error %d (plugin \"%s\") - debug not enabled!", error, filename);
+    }
 }
 
 void Debugger::GenericMessage(AMX *amx, int err)

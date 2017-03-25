@@ -350,7 +350,6 @@
     <ClInclude Include="..\CGameConfigs.h" />
     <ClInclude Include="..\CLang.h" />
     <ClInclude Include="..\CLibrarySys.h" />
-    <ClInclude Include="..\CList.h" />
     <ClInclude Include="..\CLogEvent.h" />
     <ClInclude Include="..\CMenu.h" />
     <ClInclude Include="..\CMisc.h" />

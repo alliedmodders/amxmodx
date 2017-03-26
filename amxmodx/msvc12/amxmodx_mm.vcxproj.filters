@@ -392,15 +392,6 @@
     <ClInclude Include="..\optimizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\sh_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sh_stack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sh_tinyhash.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\trie_natives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -411,6 +402,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\textparse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\sh_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\sh_stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\sh_tinyhash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\public\sdk\amxxmodule.h">

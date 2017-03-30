@@ -297,6 +297,7 @@ scripting_files = [
   'include/fun.inc',
   'include/gameconfig.inc',
   'include/geoip.inc',
+  'include/json.inc',
   'include/lang.inc',
   'include/ns.inc',
   'include/ns_const.inc',

@@ -475,7 +475,7 @@ void Logger::log(AMX* amx, int severity, const bool printStackTrace, const bool 
 	static char trace[256];
 	if (printStackTrace) {
 		if (!pDebugger) {
-			LogError(amx, AMX_ERR_DEBUG, "Cannot print stack trace unless plugin is running in debug mode! "
+			AMXXLOG_Log("Warning: Cannot print stack trace unless plugin is running in debug mode! "
 				"To enable debug mode, add \"debug\" after the plugin name in plugins.ini (without quotes).");
 		} else {
 			while (pTrace) {

@@ -34,8 +34,8 @@ enum Logger {
 enum Severity {
     /**
      * Constant used to represent invalid Severities
-	 * 
-	 * @deprecated
+     * 
+     * @deprecated
      */
     Severity_Invalid = -1,
 
@@ -66,8 +66,8 @@ enum Severity {
 
     /**
      * Constant used to represent the warn Severity
-	 * 
-	 * @note duplicate of {@literal #Severity_Warn}
+     * 
+     * @note duplicate of {@literal #Severity_Warn}
      */
     Severity_Warning = Severity_Warn,
 
@@ -78,9 +78,9 @@ enum Severity {
 
     /**
      * Constant used to represent the highest Severity (i.e., the least verbose)
-	 * 
-	 * @note this will not disable logging, it will just make only the most
-	 *       important messages log
+     * 
+     * @note this will not disable logging, it will just make only the most
+     *       important messages log
      */
     Severity_Highest = Severity_Error
 };

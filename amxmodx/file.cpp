@@ -601,7 +601,7 @@ static cell AMX_NATIVE_CALL amx_fputs(AMX *amx, cell *params)
 		++length;
 	}
 
-	if (fp->Write(string, length) != length)
+	if (fp->Write(string, length) != (size_t)length)
 	{
 		return -1;
 	}

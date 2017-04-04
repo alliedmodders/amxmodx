@@ -103,7 +103,7 @@ SMCResult CsItemInfo::ReadSMC_KeyValue(const SMCStates *states, const char *key,
 					CSI_NONE, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER
 				};
 
-				for (int i = 0; i < ARRAY_LENGTH(equipmentsList); ++i)
+				for (size_t i = 0; i < ARRAY_LENGTH(equipmentsList); ++i)
 				{
 					if (m_AliasInfo.itemid == equipmentsList[i])
 					{
@@ -173,7 +173,7 @@ bool CsItemInfo::GetAliasFromId(size_t id, ke::AString &name, ke::AString &altna
 {
 	for (auto iter = m_BuyAliasesList.iter(); !iter.empty(); iter.next())
 	{
-		if (iter->value.itemid == id)
+		if (iter->value.itemid == (int)id)
 		{
 			name = iter->key;
 			altname = iter->value.alt_alias;

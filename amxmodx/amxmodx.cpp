@@ -3166,7 +3166,7 @@ static cell AMX_NATIVE_CALL register_logevent(AMX *amx, cell *params)
 	auto logevent = LogEventHandles.lookup(handle)->m_logevent;
 	auto numparam = *params / sizeof(cell);
 
-	for (auto i = 3; i <= numparam; ++i)
+	for (auto i = 3U; i <= numparam; ++i)
 	{
 		logevent->registerFilter(get_amxstring(amx, params[i], 0, length));
 	}

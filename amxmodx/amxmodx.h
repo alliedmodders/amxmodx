@@ -37,6 +37,7 @@
 #include <amtl/am-string.h>
 #include <amtl/am-vector.h>
 #include <amtl/am-linkedlist.h>
+#include <amtl/am-inlinelist.h>
 #include "CMisc.h"
 #include "CVault.h"
 #include "CModule.h"
@@ -166,7 +167,7 @@ extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
 extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
 extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
 extern ke::LinkedList<ke::AutoPtr<CModule>> g_modules;
-extern ke::LinkedList<ke::AutoPtr<CScript>> g_loadedscripts;
+extern ke::InlineList<CScript> g_loadedscripts;
 extern ke::LinkedList<ke::AutoPtr<CPlayer *>> g_auth;
 extern EventsMngr g_events;
 extern Grenades g_grenades;

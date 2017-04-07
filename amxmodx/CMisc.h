@@ -201,7 +201,7 @@ public:
 // class CScript
 // *****************************************************
 
-class CScript
+class CScript : public ke::InlineListNode<CScript>
 {
 	ke::AString filename;
 	AMX* amx;

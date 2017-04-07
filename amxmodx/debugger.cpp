@@ -577,7 +577,7 @@ const char *Debugger::_GetFilename()
         }
         else
         {
-            for (auto &script : g_loadedscripts)
+            for (auto script : g_loadedscripts)
             {
                 if (script->getAMX() == m_pAmx)
                 {
@@ -611,7 +611,7 @@ void Debugger::FmtGenericMsg(AMX *amx, int error, char buffer[], size_t maxLengt
 {
     const char *filename = "";
     char native[sNAMEMAX+1];
-    for (auto &script : g_loadedscripts)
+    for (auto script : g_loadedscripts)
     {
         if (script->getAMX() == amx)
         {

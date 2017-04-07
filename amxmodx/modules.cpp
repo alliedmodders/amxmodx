@@ -34,7 +34,7 @@
 #include <amtl/os/am-path.h>
 
 ke::LinkedList<ke::AutoPtr<CModule>> g_modules;
-ke::LinkedList<ke::AutoPtr<CScript>> g_loadedscripts;
+ke::InlineList<CScript> g_loadedscripts;
 
 CModule *g_CurrentlyCalledModule = NULL;	// The module we are in at the moment; NULL otherwise
 
@@ -333,7 +333,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	}
 #endif
 
-	auto script = ke::AutoPtr<CScript>(new CScript(amx, *program, filename));
+	auto script = new CScript(amx, *program, filename);
 
 	if (!script)
 	{
@@ -341,7 +341,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		return (amx->error = AMX_ERR_MEMORY);
 	}
 
-	g_loadedscripts.append(ke::Move(script));
+	g_loadedscripts.append(script);
 
 	set_amxnatives(amx, error);
 
@@ -578,11 +578,13 @@ int unload_amxscript(AMX* amx, void** program)
 	if (opt)
 		delete opt;
 
-	for (auto scriptIter = g_loadedscripts.begin(), end = g_loadedscripts.end(); scriptIter != end; scriptIter++)
+	for (auto script : g_loadedscripts)
 	{
-		if ((*scriptIter)->getAMX() == amx)
+		if (script->getAMX() == amx)
 		{
-			g_loadedscripts.erase(scriptIter);
+			g_loadedscripts.remove(script);
+			delete script;
+
 			break;
 		}
 	}
@@ -632,7 +634,7 @@ int unload_amxscript(AMX* amx, void** program)
 
 AMX* get_amxscript(int id, void** code, const char** filename)
 {
-	for (auto &script : g_loadedscripts)
+	for (auto script : g_loadedscripts)
 	{
 		if (id--)
 		{
@@ -659,7 +661,7 @@ const char* GetFileName(AMX *amx)
 	}
 	else
 	{
-		for (auto &script : g_loadedscripts)
+		for (auto script : g_loadedscripts)
 		{
 			if (script->getAMX() == amx)
 			{
@@ -674,7 +676,7 @@ const char* GetFileName(AMX *amx)
 
 const char* get_amxscriptname(AMX* amx)
 {
-	for (auto &script : g_loadedscripts)
+	for (auto script : g_loadedscripts)
 	{
 		if (script->getAMX() == amx)
 		{
@@ -1114,7 +1116,7 @@ const char *MNF_GetModname(void)
 
 AMX *MNF_GetAmxScript(int id)
 {
-	for (auto &script : g_loadedscripts)
+	for (auto script : g_loadedscripts)
 	{
 		if (id--)
 		{
@@ -1127,7 +1129,7 @@ AMX *MNF_GetAmxScript(int id)
 
 const char *MNF_GetAmxScriptName(int id)
 {
-	for (auto &script : g_loadedscripts)
+	for (auto script : g_loadedscripts)
 	{
 		if (id--)
 		{
@@ -1143,7 +1145,7 @@ int MNF_FindAmxScriptByName(const char *name)
 	bool found = false;
 	int i = 0;
 
-	for (auto &script : g_loadedscripts)
+	for (auto script : g_loadedscripts)
 	{
 		if (!stricmp(script->getName(), name))
 		{
@@ -1164,7 +1166,7 @@ int MNF_FindAmxScriptByAmx(const AMX *amx)
 	bool found = false;
 	int i = 0;
 
-	for (auto &script : g_loadedscripts)
+	for (auto script : g_loadedscripts)
 	{
 		if (script->getAMX() == amx)
 		{

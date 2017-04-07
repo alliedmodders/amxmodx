@@ -52,7 +52,7 @@ struct amxx_module_info_s
 
 #define AMXX_INTERFACE_VERSION	4
 
-class CModule 
+class CModule : public ke::InlineListNode<CModule>
 {
 	ke::AString m_Filename;         // Filename
 	

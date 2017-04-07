@@ -3216,7 +3216,7 @@ static cell AMX_NATIVE_CALL is_module_loaded(AMX *amx, cell *params)
 	char *name = get_amxstring(amx, params[1], 0, len);
 	int id = 0;
 
-	for (auto &module : g_modules)
+	for (auto module : g_modules)
 	{
 		if (!stricmp(module->getName(), name))
 			return id;
@@ -3368,7 +3368,7 @@ static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 	// find the module
 	int i = params[1];
 
-	for (auto &module : g_modules)
+	for (auto module : g_modules)
 	{
 		if (i--)
 		{

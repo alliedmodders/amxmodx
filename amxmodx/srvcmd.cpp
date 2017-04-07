@@ -188,7 +188,7 @@ void amx_command()
 		int running = 0;
 		int modules = 0;
 
-		for (auto &module : g_modules)
+		for (auto module : g_modules)
 		{
 			if (module->getStatusValue() == MODULE_LOADED)
 				++running;

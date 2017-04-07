@@ -166,7 +166,7 @@ extern CmdMngr g_commands;
 extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
 extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
 extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
-extern ke::LinkedList<ke::AutoPtr<CModule>> g_modules;
+extern ke::InlineList<CModule> g_modules;
 extern ke::InlineList<CScript> g_loadedscripts;
 extern ke::LinkedList<ke::AutoPtr<CPlayer *>> g_auth;
 extern EventsMngr g_events;

@@ -33,7 +33,7 @@
 #include "CGameConfigs.h"
 #include <amtl/os/am-path.h>
 
-ke::LinkedList<ke::AutoPtr<CModule>> g_modules;
+ke::InlineList<CModule> g_modules;
 ke::InlineList<CScript> g_loadedscripts;
 
 CModule *g_CurrentlyCalledModule = NULL;	// The module we are in at the moment; NULL otherwise
@@ -426,7 +426,7 @@ int CheckModules(AMX *amx, char error[128])
 		/* for binary compat */
 		if (!found)
 		{
-			for (auto &module : g_modules)
+			for (auto module : g_modules)
 			{
 				if (module->getStatusValue() != MODULE_LOADED)
 				{
@@ -500,7 +500,7 @@ int CheckModules(AMX *amx, char error[128])
 
 int set_amxnatives(AMX* amx, char error[128])
 {
-	for (auto &module : g_modules)
+	for (auto module : g_modules)
 	{
 		for (size_t i = 0; i < module->m_Natives.length(); i++)
 		{
@@ -848,7 +848,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		fclose(fp);
 	}
 
-	for (auto &module : g_modules)
+	for (auto module : g_modules)
 	{
 		if (!strcmp(module->getFilename(), path))
 		{
@@ -901,7 +901,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		break;
 	}
 
-	g_modules.append(ke::AutoPtr<CModule>(module));
+	g_modules.append(module);
 
 	if (error)
 	{
@@ -996,22 +996,33 @@ int loadModules(const char* filename, PLUG_LOADTIME now)
 
 void detachModules()
 {
-	for (auto &module : g_modules)
+	auto moduleIter = g_modules.begin(), end = g_modules.end();
+	while (moduleIter != end)
 	{
+		auto module = *moduleIter;
+
 		module->detachModule();
+		moduleIter = g_modules.erase(moduleIter);
+		delete module;
 	}
-	g_modules.clear();
 }
 
 void detachReloadModules()
 {
-	for (auto moduleIter = g_modules.begin(), end = g_modules.end(); moduleIter != end; moduleIter++)
+	auto moduleIter = g_modules.begin(), end = g_modules.end();
+	while (moduleIter != end)
 	{
-		if ((*moduleIter)->isReloadable() && !(*moduleIter)->IsMetamod())
+		auto module = *moduleIter;
+		if (module->isReloadable() && !module->IsMetamod())
 		{
-			(*moduleIter)->detachModule();
-			g_modules.erase(moduleIter);
+			module->detachModule();
+
+			moduleIter = g_modules.erase(moduleIter);
+			delete module;
+
+			continue;
 		}
+		moduleIter++;
 	}
 }
 
@@ -1040,9 +1051,13 @@ int countModules(CountModulesMode mode)
 	switch (mode)
 	{
 		case CountModules_All:
-			return g_modules.length();
+			for (auto module : g_modules)
+			{
+				num++;
+			}
+			return num;
 		case CountModules_Running:
-			for (auto &module : g_modules)
+			for (auto module : g_modules)
 			{
 				if (module->getStatusValue() == MODULE_LOADED)
 					++num;
@@ -1050,7 +1065,7 @@ int countModules(CountModulesMode mode)
 
 			return num;
 		case CountModules_Stopped:
-			for (auto &module : g_modules)
+			for (auto module : g_modules)
 			{
 				if (module->getStatusValue() != MODULE_LOADED)
 					++num;
@@ -1065,7 +1080,7 @@ int countModules(CountModulesMode mode)
 // Call all modules' AMXX_PluginsLoaded functions
 void modules_callPluginsLoaded()
 {
-	for (auto &module : g_modules)
+	for (auto module : g_modules)
 	{
 		module->CallPluginsLoaded();
 	}
@@ -1074,7 +1089,7 @@ void modules_callPluginsLoaded()
 //same for unloaded
 void modules_callPluginsUnloaded()
 {
-	for (auto &module : g_modules)
+	for (auto module : g_modules)
 	{
 		module->CallPluginsUnloaded();
 	}
@@ -1082,7 +1097,7 @@ void modules_callPluginsUnloaded()
 
 void modules_callPluginsUnloading()
 {
-	for (auto &module : g_modules)
+	for (auto module : g_modules)
 	{
 		module->CallPluginsUnloading();
 	}
@@ -1273,7 +1288,7 @@ void MNF_OverrideNatives(AMX_NATIVE_INFO *natives, const char *name)
 {
 	//HACKHACK - we should never have had to do this
 	//find a better solution for SourceMod!!!
-	for (auto &module : g_modules)
+	for (auto module : g_modules)
 	{
 		if (module->getStatusValue() != MODULE_LOADED)
 			continue;

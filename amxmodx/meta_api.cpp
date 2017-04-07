@@ -65,7 +65,7 @@ extern ke::Vector<CAdminData *> DynamicAdmins;
 
 CLog g_log;
 CForwardMngr g_forwards;
-ke::LinkedList<ke::AutoPtr<CPlayer *>> g_auth;
+ke::Vector<ke::AutoPtr<CPlayer *>> g_auth;
 ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
 ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
 ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
@@ -1170,14 +1170,15 @@ void C_StartFrame_Post(void)
 	{
 		g_auth_time = gpGlobals->time + 0.7f;
 
-		for (auto plIter = g_auth.begin(), end = g_auth.end(); plIter != end; plIter++)
+		size_t i = 0;
+		while (i < g_auth.length())
 		{
-			auto player = *(*plIter);
+			auto player = g_auth[i].get();
 			const char*	auth = GETPLAYERAUTHID((*player)->pEdict);
 
 			if ((auth == 0) || (*auth == 0))
 			{
-				g_auth.erase(plIter);
+				g_auth.remove(i);
 				continue;
 			}
 
@@ -1195,10 +1196,11 @@ void C_StartFrame_Post(void)
 					}
 				}
 				executeForwards(FF_ClientAuthorized, static_cast<cell>((*player)->index), auth);
-				g_auth.erase(plIter);
+				g_auth.remove(i);
 
 				continue;
 			}
+			i++;
 		}
 	}
 

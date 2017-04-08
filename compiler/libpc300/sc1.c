@@ -5334,7 +5334,7 @@ static void doreturn(void)
     /* "return <value>" */
     if ((rettype & uRETNONE)!=0)
       error(78);                        /* mix "return;" and "return value;" */
-    ident=doexpr(TRUE,FALSE,TRUE,TRUE,&tag,&sym,TRUE);
+    ident=doexpr(TRUE,FALSE,TRUE,FALSE,&tag,&sym,TRUE);
     needtoken(tTERM);
     if (ident == iARRAY && sym == NULL) {
       /* returning a literal string is not supported (it must be a variable) */
@@ -5495,7 +5495,7 @@ static void doexit(void)
   int tag=0;
 
   if (matchtoken(tTERM)==0){
-    doexpr(TRUE,FALSE,FALSE,TRUE,&tag,NULL,TRUE);
+    doexpr(TRUE,FALSE,FALSE,FALSE,&tag,NULL,TRUE);
     needtoken(tTERM);
   } else {
     ldconst(0,sPRI);
@@ -5511,7 +5511,7 @@ static void dosleep(void)
   int tag=0;
 
   if (matchtoken(tTERM)==0){
-    doexpr(TRUE,FALSE,FALSE,TRUE,&tag,NULL,TRUE);
+    doexpr(TRUE,FALSE,FALSE, FALSE,&tag,NULL,TRUE);
     needtoken(tTERM);
   } else {
     ldconst(0,sPRI);

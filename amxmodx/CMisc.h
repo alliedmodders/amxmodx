@@ -10,7 +10,6 @@
 #ifndef CMISC_H
 #define CMISC_H
 
-#include "CList.h"
 #include "sh_list.h"
 
 // *****************************************************
@@ -202,7 +201,7 @@ public:
 // class CScript
 // *****************************************************
 
-class CScript
+class CScript : public ke::InlineListNode<CScript>
 {
 	ke::AString filename;
 	AMX* amx;
@@ -212,7 +211,6 @@ public:
 	
 	inline AMX* getAMX() { return amx; }
 	inline const char* getName() { return filename.chars(); }
-	inline bool operator==(void* a) { return (amx == (AMX*)a); }
 	inline void* getCode() { return code; }
 };
 

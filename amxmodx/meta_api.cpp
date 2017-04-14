@@ -65,10 +65,10 @@ extern ke::Vector<CAdminData *> DynamicAdmins;
 
 CLog g_log;
 CForwardMngr g_forwards;
-CList<CPlayer*> g_auth;
-CList<ForceObject> g_forcemodels;
-CList<ForceObject> g_forcesounds;
-CList<ForceObject> g_forcegeneric;
+ke::Vector<ke::AutoPtr<CPlayer *>> g_auth;
+ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
+ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
+ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
 CPlayer g_players[33];
 CPlayer* mPlayer;
 CPluginMngr g_plugins;
@@ -265,10 +265,10 @@ int	C_PrecacheModel(const char *s)
 	if (!g_forcedmodules)
 	{
 		g_forcedmodules	= true;
-		for (CList<ForceObject>::iterator a = g_forcemodels.begin(); a; ++a)
+		for (auto &model : g_forcemodels)
 		{
-			PRECACHE_MODEL((char*)(*a).getFilename());
-			ENGINE_FORCE_UNMODIFIED((*a).getForceType(), (*a).getMin(), (*a).getMax(), (*a).getFilename());
+			PRECACHE_MODEL(model->getFilename());
+			ENGINE_FORCE_UNMODIFIED(model->getForceType(), model->getMin(), model->getMax(), model->getFilename());
 		}
 	}
 
@@ -280,10 +280,10 @@ int	C_PrecacheSound(const char *s)
 	if (!g_forcedsounds)
 	{
 		g_forcedsounds = true;
-		for (CList<ForceObject>::iterator a = g_forcesounds.begin(); a; ++a)
+		for (auto &sound : g_forcesounds)
 		{
-			PRECACHE_SOUND((char*)(*a).getFilename());
-			ENGINE_FORCE_UNMODIFIED((*a).getForceType(), (*a).getMin(), (*a).getMax(), (*a).getFilename());
+			PRECACHE_SOUND(sound->getFilename());
+			ENGINE_FORCE_UNMODIFIED(sound->getForceType(), sound->getMin(), sound->getMax(), sound->getFilename());
 		}
 
 		if (!g_bmod_cstrike)
@@ -533,11 +533,10 @@ int	C_Spawn(edict_t *pent)
 	executeForwards(FF_PluginPrecache);
 	g_dontprecache = true;
 
-	for (CList<ForceObject>::iterator a = g_forcegeneric.begin(); a; ++a)
+	for (auto &generic : g_forcegeneric)
 	{
-		PRECACHE_GENERIC((char*)(*a).getFilename());
-		ENGINE_FORCE_UNMODIFIED((*a).getForceType(),
-		(*a).getMin(), (*a).getMax(), (*a).getFilename());
+		PRECACHE_GENERIC(generic->getFilename());
+		ENGINE_FORCE_UNMODIFIED(generic->getForceType(), generic->getMin(), generic->getMax(), generic->getFilename());
 	}
 
 	RETURN_META_VALUE(MRES_IGNORED, 0);
@@ -839,9 +838,9 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 
 		if (a)
 		{
-			CPlayer** aa = new CPlayer*(pPlayer);
-			if (aa)
-				g_auth.put(aa);
+			auto playerToAuth = ke::AutoPtr<CPlayer *>(new CPlayer*(pPlayer));
+			if (playerToAuth)
+				g_auth.append(ke::Move(playerToAuth));
 		} else {
 			pPlayer->Authorize();
 			const char* authid = GETPLAYERAUTHID(pEntity);
@@ -1176,21 +1175,22 @@ void C_StartFrame_Post(void)
 	if (g_auth_time < gpGlobals->time)
 	{
 		g_auth_time = gpGlobals->time + 0.7f;
-		CList<CPlayer*>::iterator a = g_auth.begin();
 
-		while (a)
+		size_t i = 0;
+		while (i < g_auth.length())
 		{
-			const char*	auth = GETPLAYERAUTHID((*a)->pEdict);
+			auto player = g_auth[i].get();
+			const char*	auth = GETPLAYERAUTHID((*player)->pEdict);
 
 			if ((auth == 0) || (*auth == 0))
 			{
-				a.remove();
+				g_auth.remove(i);
 				continue;
 			}
 
 			if (strcmp(auth, "STEAM_ID_PENDING"))
 			{
-				(*a)->Authorize();
+				(*player)->Authorize();
 				if (g_auth_funcs.size())
 				{
 					List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
@@ -1198,15 +1198,15 @@ void C_StartFrame_Post(void)
 					for (iter=g_auth_funcs.begin(); iter!=end; iter++)
 					{
 						fn = (*iter);
-						fn((*a)->index, auth);
+						fn((*player)->index, auth);
 					}
 				}
-				executeForwards(FF_ClientAuthorized, static_cast<cell>((*a)->index), auth);
-				a.remove();
+				executeForwards(FF_ClientAuthorized, static_cast<cell>((*player)->index), auth);
+				g_auth.remove(i);
 
 				continue;
 			}
-			++a;
+			i++;
 		}
 	}
 

@@ -30,14 +30,13 @@
 #endif
 
 #include "hashing.h"
-#include "CList.h"
-#include "CQueue.h"
 #include "modules.h"
 #include "CPlugin.h"
 #include "CLibrarySys.h"
 #include <auto-string.h>
 #include <amtl/am-string.h>
 #include <amtl/am-vector.h>
+#include <amtl/am-inlinelist.h>
 #include "CMisc.h"
 #include "CVault.h"
 #include "CModule.h"
@@ -163,12 +162,12 @@ extern CFrameActionMngr g_frameActionMngr;
 extern CPlayer g_players[33];
 extern CPlayer* mPlayer;
 extern CmdMngr g_commands;
-extern CList<ForceObject> g_forcemodels;
-extern CList<ForceObject> g_forcesounds;
-extern CList<ForceObject> g_forcegeneric;
-extern CList<CModule, const char *> g_modules;
-extern CList<CScript, AMX*> g_loadedscripts;
-extern CList<CPlayer*> g_auth;
+extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
+extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
+extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
+extern ke::Vector<ke::AutoPtr<CPlayer *>> g_auth;
+extern ke::InlineList<CModule> g_modules;
+extern ke::InlineList<CScript> g_loadedscripts;
 extern EventsMngr g_events;
 extern Grenades g_grenades;
 extern LogEventsMngr g_logevents;

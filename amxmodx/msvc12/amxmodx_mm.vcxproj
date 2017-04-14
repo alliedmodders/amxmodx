@@ -316,6 +316,9 @@
     <ClInclude Include="..\..\public\resdk\engine\rehlds_api.h" />
     <ClInclude Include="..\..\public\resdk\engine\rehlds_interfaces.h" />
     <ClInclude Include="..\..\public\resdk\mod_rehlds_api.h" />
+    <ClInclude Include="..\..\public\sh_list.h" />
+    <ClInclude Include="..\..\public\sh_stack.h" />
+    <ClInclude Include="..\..\public\sh_tinyhash.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\crc32.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\keccak.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\md5.h" />
@@ -350,14 +353,12 @@
     <ClInclude Include="..\CGameConfigs.h" />
     <ClInclude Include="..\CLang.h" />
     <ClInclude Include="..\CLibrarySys.h" />
-    <ClInclude Include="..\CList.h" />
     <ClInclude Include="..\CLogEvent.h" />
     <ClInclude Include="..\CMenu.h" />
     <ClInclude Include="..\CMisc.h" />
     <ClInclude Include="..\CModule.h" />
     <ClInclude Include="..\CoreConfig.h" />
     <ClInclude Include="..\CPlugin.h" />
-    <ClInclude Include="..\CQueue.h" />
     <ClInclude Include="..\CTask.h" />
     <ClInclude Include="..\CTextParsers.h" />
     <ClInclude Include="..\CvarManager.h" />
@@ -375,9 +376,6 @@
     <ClInclude Include="..\newmenus.h" />
     <ClInclude Include="..\nongpl_matches.h" />
     <ClInclude Include="..\optimizer.h" />
-    <ClInclude Include="..\sh_list.h" />
-    <ClInclude Include="..\sh_stack.h" />
-    <ClInclude Include="..\sh_tinyhash.h" />
     <ClInclude Include="..\textparse.h" />
     <ClInclude Include="..\trie_natives.h" />
     <ClInclude Include="..\..\public\sdk\amxxmodule.h" />

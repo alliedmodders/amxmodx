@@ -52,7 +52,7 @@ struct amxx_module_info_s
 
 #define AMXX_INTERFACE_VERSION	4
 
-class CModule 
+class CModule : public ke::InlineListNode<CModule>
 {
 	ke::AString m_Filename;         // Filename
 	
@@ -87,7 +87,6 @@ public:
 	inline const char* getName() const { return m_InfoNew.name; }
 	inline const amxx_module_info_s* getInfoNew() const { return &m_InfoNew; }	// new
 	inline int getStatusValue() { return m_Status; }
-	inline bool operator==(const char* fname) { return !strcmp(m_Filename.chars(), fname); }
 	inline bool isReloadable() { return ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)); }
 	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }

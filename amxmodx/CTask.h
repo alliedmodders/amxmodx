@@ -51,41 +51,18 @@ private:
 		inline bool inExecute() const { return m_bInExecute; }
 
 		bool shouldRepeat();
+		
+		inline bool match(int id, AMX *amx)
+		{
+			return (!m_bFree) && (amx ? getAMX() == amx : true) && (m_iId == id);
+		}
 
 		CTask();
 		~CTask();
 	};
 
-	class CTaskDescriptor
-	{
-	public:
-		cell m_iId;
-		AMX *m_pAmx;
-		bool m_bFree;
-
-		CTaskDescriptor(int iId, AMX *pAmx, bool bFree = false)
-		{
-			m_iId = iId;
-			m_pAmx = pAmx;
-			m_bFree = bFree;
-		}
-
-		friend bool operator == (const CTask &left, const CTaskDescriptor &right)
-		{
-			if (right.m_bFree)
-				return (left.isFree() && !left.inExecute());
-			
-			return (!left.isFree()) && 
-					(right.m_pAmx ? left.getAMX() == right.m_pAmx : true) && 
-					(left.getTaskId() == right.m_iId);
-		}
-	};
-
 	/*** CTaskMngr priv members ***/
-	typedef CList<CTask, CTaskDescriptor> TaskList;
-	typedef TaskList::iterator TaskListIter;
-	
-	TaskList m_Tasks;
+	ke::Vector<ke::AutoPtr<CTask>> m_Tasks;
 	
 	float *m_pTmr_CurrentTime;
 	float *m_pTmr_TimeLimit;

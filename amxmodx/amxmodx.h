@@ -10,7 +10,7 @@
 #ifndef AMXMODX_H
 #define AMXMODX_H
 
-#if defined(__linux__) || defined(__APPLE__)
+#if defined PLATFORM_POSIX
 #include <unistd.h>
 #include <stdlib.h>
 #include "sclinux.h"
@@ -23,21 +23,20 @@
 #ifdef _MSC_VER
 	// MSVC8 - replace POSIX functions with ISO C++ conformant ones as they are deprecated
 	#if _MSC_VER >= 1400
-		#define unlink _unlink	
+		#define unlink _unlink
 		#define mkdir _mkdir
 		#define strdup _strdup
 	#endif
 #endif
 
 #include "hashing.h"
-#include "CList.h"
-#include "CQueue.h"
 #include "modules.h"
 #include "CPlugin.h"
 #include "CLibrarySys.h"
 #include <auto-string.h>
 #include <amtl/am-string.h>
 #include <amtl/am-vector.h>
+#include <amtl/am-inlinelist.h>
 #include "CMisc.h"
 #include "CVault.h"
 #include "CModule.h"
@@ -75,7 +74,7 @@ extern AMX_NATIVE_INFO g_TextParserNatives[];
 extern AMX_NATIVE_INFO g_CvarNatives[];
 extern AMX_NATIVE_INFO g_GameConfigNatives[];
 
-#if defined(_WIN32)
+#if defined PLATFORM_WINDOWS
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)
 #define DLPROC(m, func) GetProcAddress(m, func)
 #define DLFREE(m) FreeLibrary(m)
@@ -96,19 +95,11 @@ extern AMX_NATIVE_INFO g_GameConfigNatives[];
 	#endif
 #endif
 
-#if defined(_WIN32)
+#if defined PLATFORM_WINDOWS
 	typedef HINSTANCE DLHANDLE;
 #else
 	typedef void* DLHANDLE;
 	#define INFINITE 0xFFFFFFFF
-#endif
-
-#if defined(_WIN32)
-	#define PATH_SEP_CHAR		'\\'
-	#define ALT_SEP_CHAR		'/'
-#else
-	#define PATH_SEP_CHAR		'/'
-	#define ALT_SEP_CHAR		'\\'
 #endif
 
 #ifndef GETPLAYERAUTHID
@@ -136,7 +127,7 @@ void UTIL_ShowMenu(edict_t* pEntity, int slots, int time, char *menu, int mlen);
 void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg);
 void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName);
 
-template <typename D> int UTIL_CheckValidChar(D *c); 
+template <typename D> int UTIL_CheckValidChar(D *c);
 template <typename D, typename S> unsigned int strncopy(D *dest, const S *src, size_t count);
 unsigned int UTIL_GetUTF8CharBytes(const char *stream);
 unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive);
@@ -171,12 +162,12 @@ extern CFrameActionMngr g_frameActionMngr;
 extern CPlayer g_players[33];
 extern CPlayer* mPlayer;
 extern CmdMngr g_commands;
-extern CList<ForceObject> g_forcemodels;
-extern CList<ForceObject> g_forcesounds;
-extern CList<ForceObject> g_forcegeneric;
-extern CList<CModule, const char *> g_modules;
-extern CList<CScript, AMX*> g_loadedscripts;
-extern CList<CPlayer*> g_auth;
+extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcemodels;
+extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcesounds;
+extern ke::Vector<ke::AutoPtr<ForceObject>> g_forcegeneric;
+extern ke::Vector<ke::AutoPtr<CPlayer *>> g_auth;
+extern ke::InlineList<CModule> g_modules;
+extern ke::InlineList<CScript> g_loadedscripts;
 extern EventsMngr g_events;
 extern Grenades g_grenades;
 extern LogEventsMngr g_logevents;

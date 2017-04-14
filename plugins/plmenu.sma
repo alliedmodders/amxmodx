@@ -37,7 +37,7 @@ new g_clcmdNum;
 
 new g_coloredMenus;
 new bool:g_cstrike = false;
-new bool:g_fakemeta = false, m_iMenu, m_bTeamChanged, Menu_ChooseAppearance;
+new bool:g_fakemeta = false;
 
 new Array:g_bantimes;
 new Array:g_slapsettings;
@@ -127,9 +127,6 @@ public plugin_init()
 	if (LibraryExists("fakemeta", LibType_Library))
 	{
 		g_fakemeta = true;
-		m_iMenu = 205;
-		m_bTeamChanged = 501;
-		Menu_ChooseAppearance = 3;
 	}
 
 	new modname[9];
@@ -831,7 +828,7 @@ public actionTeamMenu(id, key)
 			{
 				if (g_fakemeta)
 				{
-					if (get_pdata_int(player, m_iMenu) == Menu_ChooseAppearance)
+					if (get_ent_data(player, "CBasePlayer", "m_iMenu") == CS_Menu_ChooseAppearance)
 					{
 						// works for both vgui and old style menus, and send menuselect could close other menus (and since get_user_menu fails to return VGUI and old style classes menus...)
 						engclient_cmd(player, "joinclass", "6");
@@ -863,7 +860,7 @@ public actionTeamMenu(id, key)
 				}
 				if (g_fakemeta)
 				{
-					set_pdata_bool(player, m_bTeamChanged, true);
+					set_ent_data(player, "CBasePlayer", "m_bTeamChanged", true);
 				}
 				new limit_setting;
 				if (mp_limitteams)
@@ -906,7 +903,7 @@ public actionTeamMenu(id, key)
 			}
 			if (g_fakemeta)
 			{
-				set_pdata_bool(player, m_bTeamChanged, true);
+				set_ent_data(player, "CBasePlayer", "m_bTeamChanged", true);
 			}
 
 			g_transferingAdmin = 0;

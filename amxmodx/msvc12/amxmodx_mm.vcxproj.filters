@@ -46,6 +46,15 @@
     <Filter Include="Third Party\Hashing\hashers">
       <UniqueIdentifier>{fb5fd616-bb2e-42f1-a113-a61eb9ead739}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ReSDK">
+      <UniqueIdentifier>{5dd87e1c-9be5-43d3-8216-74d36f4f7610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReSDK\common">
+      <UniqueIdentifier>{26cdecf1-06de-459e-9ea0-0bbb4a2b3bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReSDK\engine">
+      <UniqueIdentifier>{04fab577-6f56-40d0-8f69-7ce1b8bf3bb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\amx.cpp">
@@ -291,6 +300,9 @@
     <ClCompile Include="..\CoreConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\public\resdk\mod_rehlds_api.cpp">
+      <Filter>ReSDK</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\amx.h">
@@ -326,9 +338,6 @@
     <ClInclude Include="..\CLang.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CLogEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -342,9 +351,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CPlugin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CTask.h">
@@ -386,15 +392,6 @@
     <ClInclude Include="..\optimizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\sh_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sh_stack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sh_tinyhash.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\trie_natives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -405,6 +402,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\textparse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\sh_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\sh_stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\sh_tinyhash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\public\sdk\amxxmodule.h">
@@ -502,6 +508,18 @@
     </ClInclude>
     <ClInclude Include="..\CFrameAction.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\resdk\common\hookchains.h">
+      <Filter>ReSDK\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\resdk\engine\rehlds_api.h">
+      <Filter>ReSDK\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\resdk\engine\rehlds_interfaces.h">
+      <Filter>ReSDK\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\resdk\mod_rehlds_api.h">
+      <Filter>ReSDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

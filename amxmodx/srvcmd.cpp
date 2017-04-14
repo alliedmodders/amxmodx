@@ -188,16 +188,13 @@ void amx_command()
 		int running = 0;
 		int modules = 0;
 
-		CList<CModule, const char *>::iterator a = g_modules.begin();
-
-		while (a)
+		for (auto module : g_modules)
 		{
-			if ((*a).getStatusValue() == MODULE_LOADED)
+			if (module->getStatusValue() == MODULE_LOADED)
 				++running;
 			++modules;
 
-			print_srvconsole(" [%2d] %-23.22s %-11.10s %-20.19s %-11.10s\n", modules, (*a).getName(), (*a).getVersion(), (*a).getAuthor(), (*a).getStatus());
-			++a;
+			print_srvconsole(" [%2d] %-23.22s %-11.10s %-20.19s %-11.10s\n", modules, module->getName(), module->getVersion(), module->getAuthor(), module->getStatus());
 		}
 
 		print_srvconsole("%d modules, %d correct\n", modules, running);

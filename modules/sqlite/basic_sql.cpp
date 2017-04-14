@@ -59,13 +59,13 @@ static cell AMX_NATIVE_CALL SQL_MakeDbTuple(AMX *amx, cell *params)
 	char path[255];
 	FILE *fp;
 
-	MF_BuildPathnameR(path, sizeof(path)-1, "%s", db);
+	MF_BuildPathnameR(path, sizeof(path), "%s", db);
 	if ((fp=fopen(path, "rb")))
 	{
 		fclose(fp);
 		sql->db = strdup(path);
 	} else {
-		MF_BuildPathnameR(path, sizeof(path)-1, "%s/sqlite3/%s.sq3",
+		MF_BuildPathnameR(path, sizeof(path), "%s/sqlite3/%s.sq3",
 			MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"),
 			db);
 		sql->db = strdup(path);
@@ -601,7 +601,7 @@ static cell AMX_NATIVE_CALL SQL_SetCharset(AMX *amx, cell *params)
 	return 0;
 }
 
-AMX_NATIVE_INFO g_BaseSqlNatives[] = 
+AMX_NATIVE_INFO g_BaseSqlNatives[] =
 {
 	{"SQL_MakeDbTuple",		SQL_MakeDbTuple},
 	{"SQL_FreeHandle",		SQL_FreeHandle},
@@ -630,4 +630,3 @@ AMX_NATIVE_INFO g_BaseSqlNatives[] =
 
 	{NULL,					NULL},
 };
-

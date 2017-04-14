@@ -79,7 +79,9 @@ extern IGameConfig *CommonConfig;
 extern IGameConfig *GamerulesConfig;
 extern IGameConfigManager *ConfigManager;
 
+extern bool HasRegameDll;
 extern HLTypeConversion TypeConversion;
+extern void *GameRulesRH;
 extern void **GameRulesAddress;
 
 #endif //_FAKEMETA_INCLUDE_H

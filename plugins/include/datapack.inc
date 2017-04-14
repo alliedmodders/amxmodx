@@ -120,10 +120,10 @@ native ResetPack(DataPack:pack, bool:clear = false);
  *
  * @param pack      Datapack handle
  *
- * @return          Position in the datapack
+ * @return          Position in the datapack, only usable with calls to SetPackPosition
  * @error           If an invalid handle is provided, an error will be thrown.
  */
-native GetPackPosition(DataPack:pack);
+native DataPackPos:GetPackPosition(DataPack:pack);
 
 /**
  * Sets the datapack read/write position.
@@ -139,7 +139,7 @@ native GetPackPosition(DataPack:pack);
  * @error           If an invalid handle is provided, or the new position is
  *                  out of datapack bounds, an error will be thrown.
  */
-native SetPackPosition(DataPack:pack, position);
+native SetPackPosition(DataPack:pack, DataPackPos:position);
 
 /**
  * Returns if the datapack has reached its end and no more data can be read.

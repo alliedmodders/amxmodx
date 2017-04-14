@@ -589,7 +589,7 @@ const char *CLangMngr::GetLangName(int langId)
 {
 	for (size_t iter = 0; iter < m_Languages.length(); ++iter)
 	{
-		if (iter == langId)
+		if ((int)iter == langId)
 		{
 			return m_Languages[iter]->GetName();
 		}

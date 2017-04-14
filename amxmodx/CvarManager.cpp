@@ -11,10 +11,13 @@
 #include "amxmodx.h"
 #include <CDetour/detours.h>
 #include <auto-string.h>
+#include <resdk/mod_rehlds_api.h>
 
 CvarManager g_CvarManager;
 
-DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, value)
+void (*Cvar_DirectSet_Actual)(struct cvar_s* var, const char *value) = nullptr;
+
+void Cvar_DirectSet_Custom(struct cvar_s *var, const char *value, IRehldsHook_Cvar_DirectSet *chain = nullptr)
 {
 	CvarInfo* info = nullptr;
 
@@ -22,7 +25,7 @@ DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, valu
 		|| strcmp(var->string, value) == 0                // Make sure old and new values are different to not trigger callbacks.
 		|| !g_CvarManager.CacheLookup(var->name, &info))  // No data in cache, nothing to do.
 	{
-		DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
+		chain ? chain->callNext(var, value) : Cvar_DirectSet_Actual(var, value);
 		return;
 	}
 
@@ -56,7 +59,7 @@ DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, valu
 		oldValue = var->string;
 	}
 
-	DETOUR_STATIC_CALL(Cvar_DirectSet)(var, value);
+	chain ? chain->callNext(var, value) : Cvar_DirectSet_Actual(var, value);
 
 	if (!info->binds.empty())
 	{
@@ -100,7 +103,18 @@ DETOUR_DECL_STATIC2(Cvar_DirectSet, void, struct cvar_s*, var, const char*, valu
 	}
 }
 
-CvarManager::CvarManager() : m_AmxmodxCvars(0), m_HookDetour(nullptr)
+void Cvar_DirectSet(struct cvar_s *var, const char *value)
+{
+	Cvar_DirectSet_Custom(var, value);
+}
+
+void Cvar_DirectSet_RH(IRehldsHook_Cvar_DirectSet *chain, cvar_t *var, const char *value)
+{
+	Cvar_DirectSet_Custom(var, value, chain);
+}
+
+
+CvarManager::CvarManager() : m_AmxmodxCvars(0), m_HookDetour(nullptr), m_ReHookEnabled(false)
 {
 }
 
@@ -116,16 +130,61 @@ void CvarManager::CreateCvarHook(void)
 	//   	Cvar_DirectSet(var, value); // <- We want to hook this.
 	// }
 
-	void *functionAddress = nullptr;
+	if (!RehldsHookchains)
+	{
+		void *functionAddress = nullptr;
 
-	if (CommonConfig && CommonConfig->GetMemSig("Cvar_DirectSet", &functionAddress) && functionAddress)
-	{
-		// Disabled by default.
-		m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress);
+		if (CommonConfig && CommonConfig->GetMemSig("Cvar_DirectSet", &functionAddress) && functionAddress)
+		{
+			// Disabled by default.
+			m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress);
+		}
+		else
+		{
+			AMXXLOG_Log("Binding/Hooking cvars have been disabled - %s.", RehldsApi ? "update ReHLDS" : "check your gamedata files");
+		}
 	}
-	else
+}
+
+void CvarManager::EnableHook()
+{
+	if (RehldsHookchains)
 	{
-		AMXXLOG_Log("Binding/Hooking cvars have been disabled - check your gamedata files.");
+		if (!m_ReHookEnabled)
+		{
+			RehldsHookchains->Cvar_DirectSet()->registerHook(Cvar_DirectSet_RH);
+			m_ReHookEnabled = true;
+		}
+	}
+	else if (m_HookDetour)
+	{
+		m_HookDetour->EnableDetour();
+	}
+}
+
+void CvarManager::DisableHook()
+{
+	if (RehldsHookchains)
+	{
+		if (m_ReHookEnabled)
+		{
+			RehldsHookchains->Cvar_DirectSet()->unregisterHook(Cvar_DirectSet_RH);
+			m_ReHookEnabled = false;
+		}
+	}
+	else if (m_HookDetour)
+	{
+		m_HookDetour->DisableDetour();
+	}
+}
+
+void CvarManager::DestroyHook()
+{
+	DisableHook();
+	
+	if (m_HookDetour)
+	{
+		m_HookDetour->Destroy();
 	}
 }
 
@@ -205,9 +264,9 @@ CvarInfo* CvarManager::CreateCvar(const char* name, const char* value, const cha
 
 	// Detour is disabled on map change.
 	// Don't enable it unless there are things to do.
-	if ((info->bound.hasMin || info->bound.hasMax) && m_HookDetour)
+	if ((info->bound.hasMin || info->bound.hasMax))
 	{
-		m_HookDetour->EnableDetour();
+		EnableHook();
 	}
 
 	return info;
@@ -295,11 +354,8 @@ AutoForward* CvarManager::HookCvarChange(cvar_t* var, AMX* amx, cell param, cons
 		return nullptr;
 	}
 
-	// Detour is disabled on map change.
-	if (m_HookDetour)
-	{
-		m_HookDetour->EnableDetour();
-	}
+	// Hook is disabled on map change.
+	EnableHook();
 
 	AutoForward* forward = new AutoForward(forwardId, *callback);
 	info->hooks.append(new CvarHook(g_plugins.findPlugin(amx)->getId(), forward));
@@ -351,11 +407,8 @@ bool CvarManager::BindCvar(CvarInfo* info, CvarBind::CvarType type, AMX* amx, ce
 			break;
 	}
 
-	// Detour is disabled on map change.
-	if (m_HookDetour)
-	{
-		m_HookDetour->EnableDetour();
-	}
+	// Hook is disabled on map change.
+	EnableHook();
 
 	return true;
 }
@@ -367,11 +420,8 @@ void CvarManager::SetCvarMin(CvarInfo* info, bool set, float value, int pluginId
 
 	if (set)
 	{
-		// Detour is disabled on map change.
-		if (m_HookDetour)
-		{
-			m_HookDetour->EnableDetour();
-		}
+		// Hook is disabled on map change.
+		EnableHook();
 
 		info->bound.minVal = value;
 
@@ -393,11 +443,8 @@ void CvarManager::SetCvarMax(CvarInfo* info, bool set, float value, int pluginId
 
 	if (set)
 	{
-		// Detour is disabled on map change.
-		if (m_HookDetour)
-		{
-			m_HookDetour->EnableDetour();
-		}
+		// Hook is disabled on map change.
+		EnableHook();
 
 		info->bound.maxVal = value;
 
@@ -584,12 +631,9 @@ void CvarManager::OnPluginUnloaded()
 		(*cvar)->hooks.clear();
 	}
 
-	// There is no point to enable detour if at next map change
+	// There is no point to enable hook if at next map change
 	// no plugins hook cvars.
-	if (m_HookDetour)
-	{
-		m_HookDetour->DisableDetour();
-	}
+	DisableHook();
 }
 
 void CvarManager::OnAmxxShutdown()
@@ -619,8 +663,5 @@ void CvarManager::OnAmxxShutdown()
 
 	m_Cache.clear();
 
-	if (m_HookDetour)
-	{
-		m_HookDetour->Destroy();
-	}
+	DestroyHook();
 }

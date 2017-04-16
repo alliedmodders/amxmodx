@@ -809,3 +809,24 @@ stock reset_menu(index)
 {
 	show_menu(index, 0, "", 0);
 }
+
+/**
+ * Filters chat input so it can be safely displayed back in chat.
+ *
+ * @note Filters out all the low characters (below 32, which include color codes).
+ *
+ * @param str[]   Input string
+ * @param length  Length of the input string
+ *
+ * @noreturn
+ */
+stock filter_chat_input( str[], length )
+{
+	for( new i = 0; i < length; i++ )
+	{
+		if( 0 < str[ i ] < 32 )
+		{
+			str[ i ] = ' ';
+		}
+	}
+}

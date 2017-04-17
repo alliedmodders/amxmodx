@@ -335,7 +335,11 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 			if (pPlayer->ingame && !pPlayer->IsBot())
 			{
 				g_langMngr.SetDefLang(i);
+				
 				msg = format_amxstring(amx, params, 3, len);
+				memmove(&msg[1], msg, len+1);
+				len++;
+				msg[0] = 0x01;
 
 				if (*msg > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
 				{
@@ -374,6 +378,9 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 			g_langMngr.SetDefLang(index);
 
 			msg = format_amxstring(amx, params, 3, len);
+			memmove(&msg[1], msg, len+1);
+			len++;
+			msg[0] = 0x01;
 
 			if (*msg > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
 			{

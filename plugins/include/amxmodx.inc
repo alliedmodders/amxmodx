@@ -2320,7 +2320,7 @@ native callfunc_begin_i(func, plugin = -1);
  * @param pluginId  Plugin id, if -1 the calling plugin is targeted
  *                  The plugin id can be retrieved using find_plugin_byfile()
  *
- * @return          >0 Function id on success
+ * @return          >=0 Function id on success
  *                  -1 if plugin or function was not found
  */
 native get_func_id(const funcName[], pluginId = -1);

@@ -943,7 +943,7 @@ static cell AMX_NATIVE_CALL dbg_trace_info(AMX *amx, cell *params)
 	pDebugger->GetTraceInfo(pTrace, lLine, function, file);
 
 	set_amxstring(amx, params[3], function ? function : "", params[4]);
-	set_amxstring(amx, params[5], file ? file : "", params[5]);
+	set_amxstring(amx, params[5], file ? file : "", params[6]);
 	*line_addr = (cell)lLine + 1;
 
 	return 1;

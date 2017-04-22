@@ -4,18 +4,19 @@
 #include <logger>
 
 static g_MinVerbosityCvar;
+static g_MinVerbosity;
 
 static temp[2];
 static Trie: cvarMap = Invalid_Trie;
 
-public plugin_init() {
+public plugin_precache() {
     register_plugin(
             .plugin_name = "Logger CVar Manager",
-            .version = getBuildId(),
+            .version = AMXX_VERSION_STR,
             .author = "Tirant");
 
     new defaultValue[32];
-    num_to_str(any:DEFAULT_LOGGER_VERBOSITY, defaultValue, charsmax(defaultValue));
+    num_to_str(any:(DEFAULT_LOGGER_VERBOSITY), defaultValue, charsmax(defaultValue));
 
     g_MinVerbosityCvar = create_cvar(
             .name = "logger_min_verbosity",
@@ -24,27 +25,23 @@ public plugin_init() {
             .description = "Controls the minimum severity a message must have \
                     in order to be logged across all loggers",
             .has_min = true,
-            .min_val = float(any:Severity_None),
+            .min_val = float(any:(Severity_None)),
             .has_max = false);
-    
+    bind_pcvar_num(g_MinVerbosityCvar, g_MinVerbosity);
+    hook_cvar_change(g_MinVerbosityCvar, "onMinVerbosityCvarChanged");
+
     new curValue[32];
     get_pcvar_string(g_MinVerbosityCvar, curValue, charsmax(curValue));
-    LoggerSetVerbosity(All_Loggers, toSeverity(str_to_num(curValue)));
-    hook_cvar_change(g_MinVerbosityCvar, "onMinVerbosityCvarChanged");
-}
-
-getBuildId() {
-    new buildId[32];
-    formatex(buildId, charsmax(buildId), "%s [%s]", VERSION_STRING, __DATE__);
-    return buildId;
+    onMinVerbosityCvarChanged(g_MinVerbosityCvar, "", curValue);
 }
 
 public onMinVerbosityCvarChanged(pcvar, const old_value[], const new_value[]) {
     assert pcvar == g_MinVerbosityCvar;
-    LoggerSetVerbosity(All_Loggers, toSeverity(str_to_num(new_value)));
+    LoggerSetVerbosity(All_Loggers, toSeverity(g_MinVerbosity));
 }
 
 public OnLoggerCreated(
+        const plugin,
         const Logger: logger,
         const Severity: verbosity,
         const name[],
@@ -58,12 +55,11 @@ public OnLoggerCreated(
     formatex(cvarName, charsmax(cvarName), "%s_logger_verbosity", name);
 
     new defaultValue[32];
-    num_to_str(any:verbosity, defaultValue, charsmax(defaultValue));
+    num_to_str(any:(verbosity), defaultValue, charsmax(defaultValue));
 
     new cvarDescription[256];
-    formatex(cvarDescription, charsmax(cvarDescription), "Controls the minimum \
-            severity that the %s logger will log",
-            name);
+    formatex(cvarDescription, charsmax(cvarDescription),
+            "Controls the minimum severity that the %s logger will log", name);
 
     new cvarVerbosity = create_cvar(
             .name = cvarName,
@@ -71,8 +67,9 @@ public OnLoggerCreated(
             .flags = FCVAR_NONE,
             .description = cvarDescription,
             .has_min = true,
-            .min_val = float(any:Severity_None),
+            .min_val = float(any:(Severity_None)),
             .has_max = false);
+    hook_cvar_change(cvarVerbosity, "onVerbosityCvarChanged");
 
     temp[0] = cvarVerbosity;
     if (cvarMap == Invalid_Trie) {
@@ -83,12 +80,11 @@ public OnLoggerCreated(
 
     new curValue[32];
     get_pcvar_string(cvarVerbosity, curValue, charsmax(curValue));
-    onVerbosityCvarChanged(cvarVerbosity, NULL_STRING, curValue);
-    hook_cvar_change(cvarVerbosity, "onVerbosityCvarChanged");
+    onVerbosityCvarChanged(cvarVerbosity, "", curValue);
 }
 
 public onVerbosityCvarChanged(pcvar, const old_value[], const new_value[]) {
-    assert cvarMap != Invalid_Trie;
+    assert cvarMap > Invalid_Trie;
 
     temp[0] = pcvar;
     new Logger: logger;

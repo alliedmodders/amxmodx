@@ -293,6 +293,7 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int 
 	paused_fun = 0;
 	next = 0;
 	id = i;
+	m_Logger = INVALID_LOGGER;
 
 	if (status == ps_running)
 	{

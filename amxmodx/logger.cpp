@@ -399,7 +399,7 @@ void Logger::log(AMX* amx, int severity, const bool printStackTrace, const bool 
 		function = "null";
 	}*/
 
-	CPluginMngr::CPlugin *plugin = (CPluginMngr::CPlugin*)amx->userdata[UD_FINDPLUGIN];
+	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 	char pluginFile[64];
 	getPluginFile(plugin, pluginFile);
 
@@ -600,7 +600,7 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 	print_srvconsole("  traceFormat=%s\n", traceFormat);
 #endif
 
-	int loggerId = LoggerHandles.create(
+	cell loggerId = LoggerHandles.create(
 		verbosity,
 		nameFormat,
 		msgFormat,
@@ -615,11 +615,12 @@ static cell AMX_NATIVE_CALL LoggerCreate(AMX* amx, cell* params) {
 
 	cell loggerHandle = static_cast<cell>(loggerId);
 
-	if (LoggerCreatedForward != -1) {
+	if (LoggerCreatedForward > 0) {
 		char pluginFile[64];
-		CPluginMngr::CPlugin *plugin = (CPluginMngr::CPlugin*)amx->userdata[UD_FINDPLUGIN];
+		CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
 		getPluginFile(plugin, pluginFile);
 		executeForwards(LoggerCreatedForward,
+			static_cast<cell>(plugin->getId()),
 			loggerHandle,
 			static_cast<cell>(verbosity),
 			pluginFile,
@@ -650,22 +651,79 @@ static cell AMX_NATIVE_CALL LoggerDestroy(AMX* amx, cell* params) {
 	return 0;
 }
 
-// native Severity:LoggerGetVerbosity(const Logger:logger);
+cell getPluginLogger(AMX* amx) {
+	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
+	cell loggerId = plugin->getLogger();
+	if (loggerId == INVALID_LOGGER) {
+#ifdef SHOW_LOGGER_DETAILS
+		print_srvconsole("Creating logger...\n");
+#endif
+		loggerId = LoggerHandles.create(
+			LOG_SEVERITY_WARN,
+			"%p_%d",
+			"[%5v] [%t] %n::%f - %s",
+			"%Y-%m-%d",
+			"%H:%M:%S",
+			"",
+			"    at %n::%f : %l");
+		Logger* logger = LoggerHandles.lookup(loggerId);
+		if (LoggerCreatedForward > 0) {
+			char pluginFile[64];
+			getPluginFile(plugin, pluginFile);
+			executeForwards(LoggerCreatedForward,
+				static_cast<cell>(plugin->getId()),
+				loggerId,
+				static_cast<cell>(LOG_SEVERITY_WARN),
+				pluginFile,
+				logger->getNameFormat(),
+				logger->getMessageFormat(),
+				logger->getDateFormat(),
+				logger->getTimeFormat(),
+				logger->getPathFormat(),
+				logger->getTraceFormat());
+		}
+
+		plugin->setLogger(loggerId);
+		return loggerId;
+	}
+
+	return loggerId;
+}
+
+// native Logger: LoggerGetThis();
+static cell AMX_NATIVE_CALL LoggerGetThis(AMX* amx, cell* params) {
+	return getPluginLogger(amx);
+}
+
+// native Logger: LoggerSetThis(const Logger: logger);
+static cell AMX_NATIVE_CALL LoggerSetThis(AMX* amx, cell* params) {
+	if (params[1] <= INVALID_LOGGER) {
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+	}
+
+	CPluginMngr::CPlugin *plugin = g_plugins.findPluginFast(amx);
+	cell oldLoggerId = plugin->getLogger();
+	plugin->setLogger(params[1]);
+	return oldLoggerId;
+}
+
+// native Severity: LoggerGetVerbosity(const Logger: logger);
 static cell AMX_NATIVE_CALL LoggerGetVerbosity(AMX* amx, cell* params) {
 	if (params[1] == ALL_LOGGERS) {
 		return Logger::getMinLoggableVerbosity();
 	}
-
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
 	return logger->getVerbosity();
 }
 
-// native Severity:LoggerSetVerbosity(const Logger:logger, const Severity:verbosity);
+// native Severity: LoggerSetVerbosity(const Logger: logger = This_Logger, const Severity: verbosity);
 static cell AMX_NATIVE_CALL LoggerSetVerbosity(AMX* amx, cell* params) {
 	if (params[2] < LOG_SEVERITY_NONE) {
 		LogError(amx, AMX_ERR_NATIVE, "Invalid logger verbosity level provided (%d)", params[2]);
@@ -676,9 +734,10 @@ static cell AMX_NATIVE_CALL LoggerSetVerbosity(AMX* amx, cell* params) {
 		return Logger::setMinLoggableVerbosity(params[2]);
 	}
 
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -687,9 +746,10 @@ static cell AMX_NATIVE_CALL LoggerSetVerbosity(AMX* amx, cell* params) {
 
 // native LoggerGetNameFormat(const Logger:logger, format[], const len);
 static cell AMX_NATIVE_CALL LoggerGetNameFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -698,9 +758,10 @@ static cell AMX_NATIVE_CALL LoggerGetNameFormat(AMX* amx, cell* params) {
 
 // native LoggerSetNameFormat(const Logger:logger, const format[]);
 static cell AMX_NATIVE_CALL LoggerSetNameFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -720,9 +781,10 @@ static cell AMX_NATIVE_CALL LoggerSetNameFormat(AMX* amx, cell* params) {
 
 // native LoggerGetMessageFormat(const Logger:logger, format[], const len);
 static cell AMX_NATIVE_CALL LoggerGetMessageFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -731,9 +793,10 @@ static cell AMX_NATIVE_CALL LoggerGetMessageFormat(AMX* amx, cell* params) {
 
 // native LoggerSetMessageFormat(const Logger:logger, const format[]);
 static cell AMX_NATIVE_CALL LoggerSetMessageFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -753,9 +816,10 @@ static cell AMX_NATIVE_CALL LoggerSetMessageFormat(AMX* amx, cell* params) {
 
 // native LoggerGetDateFormat(const Logger:logger, format[], const len);
 static cell AMX_NATIVE_CALL LoggerGetDateFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -764,9 +828,10 @@ static cell AMX_NATIVE_CALL LoggerGetDateFormat(AMX* amx, cell* params) {
 
 // native LoggerSetDateFormat(const Logger:logger, const format[]);
 static cell AMX_NATIVE_CALL LoggerSetDateFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -778,9 +843,10 @@ static cell AMX_NATIVE_CALL LoggerSetDateFormat(AMX* amx, cell* params) {
 
 // native LoggerGetTimeFormat(const Logger:logger, format[], const len);
 static cell AMX_NATIVE_CALL LoggerGetTimeFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -789,9 +855,10 @@ static cell AMX_NATIVE_CALL LoggerGetTimeFormat(AMX* amx, cell* params) {
 
 // native LoggerSetTimeFormat(const Logger:logger, const format[]);
 static cell AMX_NATIVE_CALL LoggerSetTimeFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -803,9 +870,10 @@ static cell AMX_NATIVE_CALL LoggerSetTimeFormat(AMX* amx, cell* params) {
 
 // native LoggerGetPathFormat(const Logger:logger, format[], const len);
 static cell AMX_NATIVE_CALL LoggerGetPathFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -814,9 +882,10 @@ static cell AMX_NATIVE_CALL LoggerGetPathFormat(AMX* amx, cell* params) {
 
 // native LoggerSetPathFormat(const Logger:logger, const format[]);
 static cell AMX_NATIVE_CALL LoggerSetPathFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -836,9 +905,10 @@ static cell AMX_NATIVE_CALL LoggerSetPathFormat(AMX* amx, cell* params) {
 
 // native LoggerGetTraceFormat(const Logger:logger, format[], const len);
 static cell AMX_NATIVE_CALL LoggerGetTraceFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -847,9 +917,10 @@ static cell AMX_NATIVE_CALL LoggerGetTraceFormat(AMX* amx, cell* params) {
 
 // native LoggerSetTraceFormat(const Logger:logger, const format[]);
 static cell AMX_NATIVE_CALL LoggerSetTraceFormat(AMX* amx, cell* params) {
-	Logger* logger = LoggerHandles.lookup(params[1]);
+	cell loggerId = (params[1] == THIS_LOGGER) ? getPluginLogger(amx) : params[1];
+	Logger* logger = LoggerHandles.lookup(loggerId);
 	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", loggerId);
 		return 0;
 	}
 
@@ -867,61 +938,149 @@ static cell AMX_NATIVE_CALL LoggerSetTraceFormat(AMX* amx, cell* params) {
 	return 1;
 }
 
-// native LoggerLog(const Logger:logger, const Severity:severity, const format[], any:...);
+// native LoggerLog(const Severity: severity = Severity_Info, const format[], any: ...);
 static cell AMX_NATIVE_CALL LoggerLog(AMX* amx, cell* params) {
+	if (params[1] < Logger::getMinLoggableVerbosity()) {
+		return 0;
+	}
+
+	cell loggerId = getPluginLogger(amx);
+	ASSERT(loggerId > 0);
+	Logger* logger = LoggerHandles.lookup(loggerId);
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
+	int len;
+	char* buffer = format_amxstring(amx, params, 2, len);
+	logger->log(amx, params[1], params[1] >= LOG_SEVERITY_WARN, false, buffer);
+	return 1;
+}
+
+// native LoggerLog2(const Logger: logger = This_Logger, const Severity: severity = Severity_Info, const format[], any: ...);
+static cell AMX_NATIVE_CALL LoggerLog2(AMX* amx, cell* params) {
 	if (params[2] < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
+	Logger* logger;
+	if (params[1] == THIS_LOGGER) {
+		logger = LoggerHandles.lookup(getPluginLogger(amx));
+		ASSERT(logger);
+	} else {
+		logger = LoggerHandles.lookup(params[1]);
+		if (!logger) {
+			LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+			return 0;
+		}
 	}
-
+	
 	if (!logger->isLogging()) {
 		return 0;
 	}
 
 	int len;
 	char* buffer = format_amxstring(amx, params, 3, len);
-	int severityIndex = toIndex(params[2]);
-	logger->log(amx, params[2], severityIndex <= 1, false, buffer);
+	logger->log(amx, params[2], params[2] >= LOG_SEVERITY_WARN, false, buffer);
 	return 1;
 }
 
-// native LoggerLog2(const Logger:logger, const Severity:severity, const bool:printStackTrace, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLog2(AMX* amx, cell* params) {
-	if (params[2] < Logger::getMinLoggableVerbosity()) {
+// native LoggerLogError(const format[], any: ...);
+static cell AMX_NATIVE_CALL LoggerLogError(AMX* amx, cell* params) {
+	if (LOG_SEVERITY_ERROR < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
-	}
+	cell loggerId = getPluginLogger(amx);
+	Logger* logger = LoggerHandles.lookup(loggerId);
+	ASSERT(logger);
 
 	if (!logger->isLogging()) {
 		return 0;
 	}
 
 	int len;
-	char* buffer = format_amxstring(amx, params, 4, len);
-	logger->log(amx, params[2], params[3] == 1, false, buffer);
+	char* buffer = format_amxstring(amx, params, 1, len);
+	logger->log(amx, LOG_SEVERITY_ERROR, true, false, buffer);
 	return 1;
 }
 
-// native LoggerLogError(const Logger:logger, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLogError(AMX* amx, cell* params) {
+// native LoggerLogWarn(const format[], any:...);
+static cell AMX_NATIVE_CALL LoggerLogWarn(AMX* amx, cell* params) {
+	if (LOG_SEVERITY_WARN < Logger::getMinLoggableVerbosity()) {
+		return 0;
+	}
+
+	cell loggerId = getPluginLogger(amx);
+	Logger* logger = LoggerHandles.lookup(loggerId);
+	ASSERT(logger);
+
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
+	int len;
+	char* buffer = format_amxstring(amx, params, 1, len);
+	logger->log(amx, LOG_SEVERITY_WARN, true, false, buffer);
+	return 1;
+}
+
+// native LoggerLogInfo(const format[], any:...);
+static cell AMX_NATIVE_CALL LoggerLogInfo(AMX* amx, cell* params) {
+	if (LOG_SEVERITY_INFO < Logger::getMinLoggableVerbosity()) {
+		return 0;
+	}
+	
+	cell loggerId = getPluginLogger(amx);
+	Logger* logger = LoggerHandles.lookup(loggerId);
+	ASSERT(logger);
+
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
+	int len;
+	char* buffer = format_amxstring(amx, params, 1, len);
+	logger->log(amx, LOG_SEVERITY_INFO, false, false, buffer);
+	return 1;
+}
+
+// native LoggerLogDebug(const Logger:logger, const format[], any:...);
+static cell AMX_NATIVE_CALL LoggerLogDebug(AMX* amx, cell* params) {
+	if (LOG_SEVERITY_DEBUG < Logger::getMinLoggableVerbosity()) {
+		return 0;
+	}
+
+	cell loggerId = getPluginLogger(amx);
+	Logger* logger = LoggerHandles.lookup(loggerId);
+	ASSERT(logger);
+
+	if (!logger->isLogging()) {
+		return 0;
+	}
+
+	int len;
+	char* buffer = format_amxstring(amx, params, 1, len);
+	logger->log(amx, LOG_SEVERITY_DEBUG, false, false, buffer);
+	return 1;
+}
+
+// native LoggerLogError2(const Logger: logger = This_Logger, const format[], any: ...);
+static cell AMX_NATIVE_CALL LoggerLogError2(AMX* amx, cell* params) {
 	if (LOG_SEVERITY_ERROR < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
+	Logger* logger;
+	if (params[1] == THIS_LOGGER) {
+		logger = LoggerHandles.lookup(getPluginLogger(amx));
+		ASSERT(logger);
+	} else {
+		logger = LoggerHandles.lookup(params[1]);
+		if (!logger) {
+			LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+			return 0;
+		}
 	}
 
 	if (!logger->isLogging()) {
@@ -934,16 +1093,22 @@ static cell AMX_NATIVE_CALL LoggerLogError(AMX* amx, cell* params) {
 	return 1;
 }
 
-// native LoggerLogWarn(const Logger:logger, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLogWarn(AMX* amx, cell* params) {
+// native LoggerLogWarn2(const Logger: logger = This_Logger, const format[], any: ...);
+static cell AMX_NATIVE_CALL LoggerLogWarn2(AMX* amx, cell* params) {
 	if (LOG_SEVERITY_WARN < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
+	Logger* logger;
+	if (params[1] == THIS_LOGGER) {
+		logger = LoggerHandles.lookup(getPluginLogger(amx));
+		ASSERT(logger);
+	} else {
+		logger = LoggerHandles.lookup(params[1]);
+		if (!logger) {
+			LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+			return 0;
+		}
 	}
 
 	if (!logger->isLogging()) {
@@ -956,16 +1121,22 @@ static cell AMX_NATIVE_CALL LoggerLogWarn(AMX* amx, cell* params) {
 	return 1;
 }
 
-// native LoggerLogInfo(const Logger:logger, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLogInfo(AMX* amx, cell* params) {
+// native LoggerLogInfo2(const Logger: logger = This_Logger, const format[], any: ...);
+static cell AMX_NATIVE_CALL LoggerLogInfo2(AMX* amx, cell* params) {
 	if (LOG_SEVERITY_INFO < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
+	Logger* logger;
+	if (params[1] == THIS_LOGGER) {
+		logger = LoggerHandles.lookup(getPluginLogger(amx));
+		ASSERT(logger);
+	} else {
+		logger = LoggerHandles.lookup(params[1]);
+		if (!logger) {
+			LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+			return 0;
+		}
 	}
 
 	if (!logger->isLogging()) {
@@ -978,16 +1149,22 @@ static cell AMX_NATIVE_CALL LoggerLogInfo(AMX* amx, cell* params) {
 	return 1;
 }
 
-// native LoggerLogDebug(const Logger:logger, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLogDebug(AMX* amx, cell* params) {
+// native LoggerLogDebug2(const Logger: logger = This_Logger, const format[], any: ...);
+static cell AMX_NATIVE_CALL LoggerLogDebug2(AMX* amx, cell* params) {
 	if (LOG_SEVERITY_DEBUG < Logger::getMinLoggableVerbosity()) {
 		return 0;
 	}
 
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
+	Logger* logger;
+	if (params[1] == THIS_LOGGER) {
+		logger = LoggerHandles.lookup(getPluginLogger(amx));
+		ASSERT(logger);
+	} else {
+		logger = LoggerHandles.lookup(params[1]);
+		if (!logger) {
+			LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
+			return 0;
+		}
 	}
 
 	if (!logger->isLogging()) {
@@ -997,94 +1174,6 @@ static cell AMX_NATIVE_CALL LoggerLogDebug(AMX* amx, cell* params) {
 	int len;
 	char* buffer = format_amxstring(amx, params, 2, len);
 	logger->log(amx, LOG_SEVERITY_DEBUG, false, false, buffer);
-	return 1;
-}
-
-// native LoggerLogError2(const Logger:logger, const bool:printStackTrace = true, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLogError2(AMX* amx, cell* params) {
-	if (LOG_SEVERITY_ERROR < Logger::getMinLoggableVerbosity()) {
-		return 0;
-	}
-
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
-	}
-
-	if (!logger->isLogging()) {
-		return 0;
-	}
-
-	int len;
-	char* buffer = format_amxstring(amx, params, 3, len);
-	logger->log(amx, LOG_SEVERITY_ERROR, params[2] == 1, false, buffer);
-	return 1;
-}
-
-// native LoggerLogWarn2(const Logger:logger, const bool:printStackTrace = true, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLogWarn2(AMX* amx, cell* params) {
-	if (LOG_SEVERITY_WARN < Logger::getMinLoggableVerbosity()) {
-		return 0;
-	}
-
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
-	}
-
-	if (!logger->isLogging()) {
-		return 0;
-	}
-
-	int len;
-	char* buffer = format_amxstring(amx, params, 3, len);
-	logger->log(amx, LOG_SEVERITY_WARN, params[2] == 1, false, buffer);
-	return 1;
-}
-
-// native LoggerLogInfo2(const Logger:logger, const bool:printStackTrace = false, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLogInfo2(AMX* amx, cell* params) {
-	if (LOG_SEVERITY_INFO < Logger::getMinLoggableVerbosity()) {
-		return 0;
-	}
-
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
-	}
-
-	if (!logger->isLogging()) {
-		return 0;
-	}
-
-	int len;
-	char* buffer = format_amxstring(amx, params, 3, len);
-	logger->log(amx, LOG_SEVERITY_INFO, params[2] == 1, false, buffer);
-	return 1;
-}
-
-// native LoggerLogDebug2(const Logger:logger, const bool:printStackTrace = false, const format[], any:...);
-static cell AMX_NATIVE_CALL LoggerLogDebug2(AMX* amx, cell* params) {
-	if (LOG_SEVERITY_DEBUG < Logger::getMinLoggableVerbosity()) {
-		return 0;
-	}
-
-	Logger* logger = LoggerHandles.lookup(params[1]);
-	if (!logger) {
-		LogError(amx, AMX_ERR_NATIVE, "Invalid logger handle provided (%d)", params[1]);
-		return 0;
-	}
-
-	if (!logger->isLogging()) {
-		return 0;
-	}
-
-	int len;
-	char* buffer = format_amxstring(amx, params, 3, len);
-	logger->log(amx, LOG_SEVERITY_DEBUG, params[2] == 1, false, buffer);
 	return 1;
 }
 
@@ -1136,6 +1225,9 @@ void Logger::onMapChange() {
 AMX_NATIVE_INFO logger_Natives[] = {
 	{ "LoggerCreate",			LoggerCreate },
 	{ "LoggerDestroy",			LoggerDestroy },
+
+	{ "LoggerGetThis",			LoggerGetThis },
+	{ "LoggerSetThis",			LoggerSetThis },
 
 	{ "LoggerGetVerbosity",		LoggerGetVerbosity },
 	{ "LoggerSetVerbosity",		LoggerSetVerbosity },

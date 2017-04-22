@@ -12,13 +12,20 @@
  */
 enum Logger {
     /**
-     * Constant used to represent all Logger
-     * {@see logger.inc::#LoggerGetVerbosity()}
+     * Constant used to represent that the Logger function should be performed
+     * on all Logger instances {@see logger.inc::#LoggerGetVerbosity()}
      */
-    All_Loggers = -1,
+    All_Loggers = -2,
 
     /**
-     * Constant used to represent no Logger (i.e., the {@literal Invalid_Logger})
+     * Constant used to represent the Logger associated with the calling plugin.
+     * This Logger will be created automatically and can be retrieved by calling
+     * {@link logger.inc::#LoggerGetThis()}
+     */
+    This_Logger = -1,
+
+    /**
+     * Constant used to represent no Logger (i.e., the {@code Invalid_Logger})
      */
     No_Logger = 0,
 
@@ -67,7 +74,7 @@ enum Severity {
     /**
      * Constant used to represent the warn Severity
      * 
-     * @note duplicate of {@literal #Severity_Warn}
+     * @note duplicate of {@code #Severity_Warn}
      */
     Severity_Warning = Severity_Warn,
 

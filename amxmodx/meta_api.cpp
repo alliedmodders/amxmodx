@@ -520,7 +520,7 @@ int	C_Spawn(edict_t *pent)
 	FF_ChangeLevel = registerForward("server_changelevel", ET_STOP, FP_STRING, FP_DONE);
 	FF_ClientConnectEx = registerForward("client_connectex", ET_STOP, FP_CELL, FP_STRING, FP_STRING, FP_ARRAY, FP_DONE);
 
-	LoggerCreatedForward = registerForward("OnLoggerCreated", ET_IGNORE, FP_CELL, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_DONE);
+	LoggerCreatedForward = registerForward("OnLoggerCreated", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_STRING, FP_DONE);
 
 	CoreCfg.OnAmxxInitialized();
 

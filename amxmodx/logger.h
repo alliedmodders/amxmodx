@@ -8,7 +8,8 @@
 #include "natives_handles.h"
 
 #define INVALID_LOGGER  0
-#define ALL_LOGGERS    -1
+#define THIS_LOGGER    -1
+#define ALL_LOGGERS    -2
 
 #define LOG_SEVERITY_HIGHEST LOG_SEVERITY_ERROR
 #define LOG_SEVERITY_LOWEST  LOG_SEVERITY_DEBUG

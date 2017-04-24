@@ -393,8 +393,11 @@ bool CLangMngr::ReadINI_KeyValue(const char *key, const char *value, bool invali
 	{
 		Data.lastKey = key;
 
-		if (colons_token || (equal_token && value))
+		if (colons_token || equal_token)
 		{
+			if(equal_token && !value) // Support empty value
+				value = "";
+
 			int iKey = GetKeyEntry(key);
 
 			if (iKey == -1)

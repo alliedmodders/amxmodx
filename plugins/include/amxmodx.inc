@@ -1312,7 +1312,7 @@ native get_playersnum(flag = 0);
 /**
  * Stores a filtered list of client indexes to an array.
  *
- * @note Example retrieving all alive CTs: get_players(players, num "ae", "CT")
+ * @note Example retrieving all alive CTs: get_players(players, num, "ae", "CT")
  *
  * @param players   Array to store indexes to
  * @param num       Variable to store number of indexes to

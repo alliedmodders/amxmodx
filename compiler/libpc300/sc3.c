@@ -1160,6 +1160,7 @@ static int hier2(value *lval)
     if (!check_userop(user_inc,lval->tag,0,1,lval,&lval->tag))
       inc(lval);                /* increase variable first */
     rvalue(lval);               /* and read the result into PRI */
+    lval->ident = iEXPRESSION;
     sideeffect=TRUE;
     return FALSE;               /* result is no longer lvalue */
   case tDEC:                    /* --lval */
@@ -1171,6 +1172,7 @@ static int hier2(value *lval)
     if (!check_userop(user_dec,lval->tag,0,1,lval,&lval->tag))
       dec(lval);                /* decrease variable first */
     rvalue(lval);               /* and read the result into PRI */
+    lval->ident = iEXPRESSION;
     sideeffect=TRUE;
     return FALSE;               /* result is no longer lvalue */
   case '~':                     /* ~ (one's complement) */
@@ -1379,6 +1381,7 @@ static int hier2(value *lval)
           inc(lval);            /* increase variable afterwards */
         if (saveresult)
           popreg(sPRI);         /* restore PRI (result of rvalue()) */
+        lval->ident = iEXPRESSION;
         sideeffect=TRUE;
         return FALSE;           /* result is no longer lvalue */
       case tDEC:                /* lval-- */
@@ -1397,6 +1400,7 @@ static int hier2(value *lval)
           dec(lval);            /* decrease variable afterwards */
         if (saveresult)
           popreg(sPRI);         /* restore PRI (result of rvalue()) */
+        lval->ident = iEXPRESSION;
         sideeffect=TRUE;
         return FALSE;
       case tCHAR:               /* char (compute required # of cells */

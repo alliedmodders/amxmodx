@@ -80,8 +80,6 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 
 	char line[512];
 
-	List<ke::AString *>::iterator block_iter;
-
 	while (!feof(fp))
 	{
 		pluginName[0] = '\0';
@@ -116,11 +114,9 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 		}
 
 		bool skip = false;
-		for (block_iter = m_BlockList.begin();
-			 block_iter != m_BlockList.end();
-			 block_iter++)
+		for (const auto &block : m_BlockList)
 		{
-			if ((*block_iter)->compare(pluginName) == 0)
+			if (block->compare(pluginName) == 0)
 			{
 				skip = true;
 				break;
@@ -489,12 +485,8 @@ AutoConfig *CPluginMngr::CPlugin::GetConfig(size_t i)
 
 char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 {
-	List<plcache_entry *>::iterator iter;
-	plcache_entry *pl;
-
-	for (iter=m_plcache.begin(); iter!=m_plcache.end(); iter++)
+	for (const auto *pl : m_plcache)
 	{
-		pl = (*iter);
 		if (pl->path.compare(file) == 0)
 		{
 			bufsize = pl->bufsize;
@@ -502,7 +494,7 @@ char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 		}
 	}
 
-	pl = new plcache_entry;
+	auto *pl = new plcache_entry;
 
 	pl->file = new CAmxxReader(file, sizeof(cell));
 	pl->buffer = NULL;
@@ -539,12 +531,8 @@ char *CPluginMngr::ReadIntoOrFromCache(const char *file, size_t &bufsize)
 
 void CPluginMngr::InvalidateCache()
 {
-	List<plcache_entry *>::iterator iter;
-	plcache_entry *pl;
-
-	for (iter=m_plcache.begin(); iter!=m_plcache.end(); iter++)
+	for (auto *pl : m_plcache)
 	{
-		pl = (*iter);
 		delete [] pl->buffer;
 		delete pl->file;
 		delete pl;
@@ -558,7 +546,7 @@ void CPluginMngr::InvalidateFileInCache(const char *file, bool freebuf)
 	List<plcache_entry *>::iterator iter;
 	plcache_entry *pl;
 
-	for (iter=m_plcache.begin(); iter!=m_plcache.end(); iter++)
+	for (iter=m_plcache.begin(); iter!=m_plcache.end(); ++iter)
 	{
 		pl = (*iter);
 		if (pl->path.compare(file) == 0)

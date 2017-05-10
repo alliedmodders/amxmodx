@@ -307,11 +307,11 @@ CvarInfo* CvarManager::FindCvar(size_t index)
 
 	size_t iter_id = 0;
 
-	for (CvarsList::iterator iter = m_Cvars.begin(); iter != m_Cvars.end(); iter++)
+	for (auto *element : m_Cvars)
 	{
-		if (iter->amxmodx && iter_id++ == index)
+		if (element->amxmodx && iter_id++ == index)
 		{
-			return *(iter);
+			return element;
 		}
 	}
 
@@ -533,10 +533,8 @@ void CvarManager::OnConsoleCommand()
 		print_srvconsole(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n");
 	}
 
-	for (CvarsList::iterator iter = m_Cvars.begin(); iter != m_Cvars.end(); iter++)
+	for (const auto *ci : m_Cvars)
 	{
-		CvarInfo* ci = (*iter);
-
 		// List any cvars having a status either created, hooked or bound by a plugin.
 		bool in_list = ci->amxmodx || !ci->binds.empty() || !ci->hooks.empty() || ci->bound.hasMin || ci->bound.hasMax;
 
@@ -610,25 +608,25 @@ void CvarManager::OnConsoleCommand()
 void CvarManager::OnPluginUnloaded()
 {
 	// Clear only plugin hooks list.
-	for (CvarsList::iterator cvar = m_Cvars.begin(); cvar != m_Cvars.end(); cvar++)
+	for (auto *cvar : m_Cvars)
 	{
-		for (size_t i = 0; i < (*cvar)->binds.length(); ++i)
+		for (size_t i = 0; i < cvar->binds.length(); ++i)
 		{
-			delete (*cvar)->binds[i];
+			delete cvar->binds[i];
 		}
 
-		for (size_t i = 0; i < (*cvar)->hooks.length(); ++i)
+		for (size_t i = 0; i < cvar->hooks.length(); ++i)
 		{
-			delete (*cvar)->hooks[i];
+			delete cvar->hooks[i];
 		}
 
-		if ((*cvar)->amxmodx) // Mark registered cvars so we can refresh default datas at next map.
+		if (cvar->amxmodx) // Mark registered cvars so we can refresh default datas at next map.
 		{
-			(*cvar)->pluginId = -1;
+			cvar->pluginId = -1;
 		}
 
-		(*cvar)->binds.clear();
-		(*cvar)->hooks.clear();
+		cvar->binds.clear();
+		cvar->hooks.clear();
 	}
 
 	// There is no point to enable hook if at next map change

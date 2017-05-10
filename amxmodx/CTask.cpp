@@ -269,7 +269,8 @@ bool CTaskMngr::taskExists(int iId, AMX *pAmx)
 
 void CTaskMngr::startFrame()
 {
-	for(auto i = m_Tasks.length() - 1; i != 0; i--)
+	auto lastSize = m_Tasks.length();
+	for(auto i = 0; i < lastSize; i++)
 	{
 		auto &task = m_Tasks[i];
 

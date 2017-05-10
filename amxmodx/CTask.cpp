@@ -269,8 +269,10 @@ bool CTaskMngr::taskExists(int iId, AMX *pAmx)
 
 void CTaskMngr::startFrame()
 {
-	for (auto &task : m_Tasks)
+	for(auto i = m_Tasks.length() - 1; i != 0; i--)
 	{
+		auto &task = m_Tasks[i];
+
 		if (task->isFree())
 			continue;
 		task->executeIfRequired(*m_pTmr_CurrentTime, *m_pTmr_TimeLimit, *m_pTmr_TimeLeft);

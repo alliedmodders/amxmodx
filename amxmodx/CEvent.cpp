@@ -458,8 +458,11 @@ void EventsMngr::executeEvents()
 	auto parseFun = m_ParseFun;
 	m_ParseFun = nullptr;
 
-	for (auto &event : *parseFun)
+	auto lastSize = parseFun->length();
+	for(auto i = 0u; i < lastSize; i++)
 	{
+		auto &event = parseFun->at(i);
+
 		if (event->m_Done) 
 		{
 			event->m_Done = false;

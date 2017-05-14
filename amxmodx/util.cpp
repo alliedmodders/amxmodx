@@ -476,9 +476,10 @@ unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search
 	return total;
 }
 
-template unsigned int strncopy<char, char>(char *, const char *src, size_t count);
-template unsigned int strncopy<cell, char>(cell *, const char *src, size_t count);
-template unsigned int strncopy<cell, cell>(cell *, const cell *src, size_t count);
+template unsigned int strncopy<char, char>(char *, const char *, size_t);
+template unsigned int strncopy<char, cell>(char *, const cell *, size_t);
+template unsigned int strncopy<cell, char>(cell *, const char *, size_t);
+template unsigned int strncopy<cell, cell>(cell *, const cell *, size_t);
 
 template <typename D, typename S>
 unsigned int strncopy(D *dest, const S *src, size_t count)

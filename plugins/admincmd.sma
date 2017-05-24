@@ -232,12 +232,12 @@ public cmdUnban(id, level, cid)
 
 	get_user_authid(id, authid, charsmax(authid))
 
-	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) )
+	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) )
 	{
 		new storedAdminAuth[32]
 		if( !TrieGetString(g_tempBans, arg, storedAdminAuth, charsmax(storedAdminAuth)) || !equal(storedAdminAuth, authid) )
 		{
-			console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
+			console_print(id, "%L", id, "ADMIN_MUST_TEMPUNBAN");
 			return PLUGIN_HANDLED;
 		}
 	}
@@ -408,14 +408,15 @@ public cmdBan(id, level, cid)
 		return PLUGIN_HANDLED
 
 	new nNum = str_to_num(minutes)
+	new const tempBanMaxTime = get_pcvar_num(p_amx_tempban_maxtime);
 	if( nNum < 0 ) // since negative values result in permanent bans
 	{
 		nNum = 0;
 		minutes = "0";
 	}
-	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (nNum <= 0 || nNum > get_pcvar_num(p_amx_tempban_maxtime)) )
+	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) && (nNum <= 0 || nNum > tempBanMaxTime) )
 	{
-		console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
+		console_print(id, "%L", id, "ADMIN_MUST_TEMPBAN", tempBanMaxTime);
 		return PLUGIN_HANDLED
 	}
 
@@ -494,14 +495,15 @@ public cmdBanIP(id, level, cid)
 		return PLUGIN_HANDLED
 
 	new nNum = str_to_num(minutes)
+	new const tempBanMaxTime = get_pcvar_num(p_amx_tempban_maxtime);
 	if( nNum < 0 ) // since negative values result in permanent bans
 	{
 		nNum = 0;
 		minutes = "0";
 	}
-	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (nNum <= 0 || nNum > get_pcvar_num(p_amx_tempban_maxtime)) )
+	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) && (nNum <= 0 || nNum > tempBanMaxTime) )
 	{
-		console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
+		console_print(id, "%L", id, "ADMIN_MUST_TEMPBAN", tempBanMaxTime);
 		return PLUGIN_HANDLED
 	}
 	

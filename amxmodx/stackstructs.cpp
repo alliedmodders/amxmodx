@@ -229,6 +229,23 @@ static cell AMX_NATIVE_CALL IsStackEmpty(AMX* amx, cell* params)
 	return vec->size() == 0;
 }
 
+// native GetStackBlockSize(Stack:handle); 
+static cell AMX_NATIVE_CALL GetStackBlockSize(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_handle };
+
+	auto vec = ArrayHandles.lookup(params[arg_handle]);
+
+	if (!vec)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid array handle provided (%d)", params[arg_handle]);
+		return -1;
+	}
+
+	return vec->blocksize();
+}
+
+
 // native DestroyStack(&Stack:which);
 static cell AMX_NATIVE_CALL DestroyStack(AMX* amx, cell* params)
 {
@@ -252,14 +269,15 @@ static cell AMX_NATIVE_CALL DestroyStack(AMX* amx, cell* params)
 
 AMX_NATIVE_INFO g_StackNatives[] =
 {
-	{ "CreateStack",     CreateStack     },
-	{ "IsStackEmpty",    IsStackEmpty    },
-	{ "PopStackArray",   PopStackArray   },
-	{ "PopStackCell",    PopStackCell    },
-	{ "PopStackString",  PopStackString  },
-	{ "PushStackArray",  PushStackArray  },
-	{ "PushStackCell",   PushStackCell   },
-	{ "PushStackString", PushStackString },
-	{ "DestroyStack",    DestroyStack    },
-	{ nullptr,           nullptr         },
+	{ "CreateStack",       CreateStack     },
+	{ "IsStackEmpty",      IsStackEmpty    },
+	{ "GetStackBlockSize", GetStackBlockSize },
+	{ "PopStackArray",     PopStackArray   },
+	{ "PopStackCell",      PopStackCell    },
+	{ "PopStackString",    PopStackString  },
+	{ "PushStackArray",    PushStackArray  },
+	{ "PushStackCell",     PushStackCell   },
+	{ "PushStackString",   PushStackString },
+	{ "DestroyStack",      DestroyStack    },
+	{ nullptr,             nullptr         },
 };

@@ -221,6 +221,16 @@ public cmdKick(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
+/**
+ * ';' and '\n' are command delimiters. If a command arg contains these 2
+ * it is not safe to be passed to server_cmd() as it may be trying to execute
+ * a command.
+ */
+isCommandArgSafe(const arg[])
+{
+	return contain(arg, ";") == -1 && contain(arg, "\n") == -1;
+}
+
 public cmdUnban(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 2))
@@ -247,7 +257,13 @@ public cmdUnban(id, level, cid)
 		server_cmd("removeip ^"%s^";writeip", arg)
 		console_print(id, "[AMXX] %L", id, "IP_REMOVED", arg)
 	} else {
-		server_cmd("removeid ^"%s^";writeid", arg)
+		if(!isCommandArgSafe(arg))
+		{
+			console_print(id, "%l", "CL_NOT_FOUND");
+			return PLUGIN_HANDLED;
+		}
+
+		server_cmd("removeid %s;writeid", arg)
 		console_print(id, "[AMXX] %L", id, "AUTHID_REMOVED", arg)
 	}
 
@@ -376,7 +392,13 @@ public cmdAddBan(id, level, cid)
 		server_cmd("addip ^"%s^" ^"%s^";wait;writeip", minutes, arg)
 		console_print(id, "[AMXX] Ip ^"%s^" added to ban list", arg)
 	} else {
-		server_cmd("banid ^"%s^" ^"%s^";wait;writeid", minutes, arg)
+		if(!isCommandArgSafe(arg))
+		{
+			console_print(id, "%l", "CL_NOT_FOUND");
+			return PLUGIN_HANDLED;
+		}
+
+		server_cmd("banid ^"%s^" %s;wait;writeid", minutes, arg)
 		console_print(id, "[AMXX] Authid ^"%s^" added to ban list", arg)
 	}
 

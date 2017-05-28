@@ -35,7 +35,7 @@ const int CFlagManager::LoadFile(const int force)
 	if (!force && !NeedToLoad())
 	{
 		return 0;
-	};
+	}
 
 	this->Clear();
 
@@ -50,7 +50,7 @@ const int CFlagManager::LoadFile(const int force)
 	{
 		AMXXLOG_Log("[AMXX] FlagManager: Cannot open file \"%s\" (FILE pointer null!)", GetFile());
 		return -1;
-	};
+	}
 
 	// Trying to copy this almost exactly as other configs are read...
 	char Line[512];
@@ -75,7 +75,7 @@ const int CFlagManager::LoadFile(const int force)
 			{
 				nonconst++;
 			}
-		};
+		}
 
 		Command[0]='\0';
 		Flags[0]='\0';
@@ -159,7 +159,7 @@ done_with_flags:
 		if (*Command == '"' || *Command == '\0')
 		{
 			continue;
-		};
+		}
 
 		// Done sucking the command and flags out of the line
 		// now insert this command into the linked list
@@ -168,7 +168,7 @@ done_with_flags:
 
 		nonconst = Line;
 		*nonconst = '\0';
-	};
+	}
 
 	fclose(File);
 
@@ -183,7 +183,6 @@ done_with_flags:
  */
 void CFlagManager::AddFromFile(const char *Command, const char *Flags)
 {
-
 	CFlagEntry *Entry=new CFlagEntry;
 
 	Entry->SetName(Command);
@@ -192,8 +191,7 @@ void CFlagManager::AddFromFile(const char *Command, const char *Flags)
 	// Link it
 	m_FlagList.push_back(Entry);
 
-};
-
+}
 
 void CFlagManager::LookupOrAdd(const char *Command, int &Flags, AMX *Plugin)
 {
@@ -202,7 +200,6 @@ void CFlagManager::LookupOrAdd(const char *Command, int &Flags, AMX *Plugin)
 		return;
 	}
 	
-
 	int TempFlags=Flags;
 	if (TempFlags==-1)
 	{
@@ -262,8 +259,14 @@ void CFlagManager::LookupOrAdd(const char *Command, int &Flags, AMX *Plugin)
 	m_FlagList.push_back(Entry);
 
 }
+
 void CFlagManager::WriteCommands(void)
 {
+	if (m_iDisabled)
+	{
+		return;
+	}
+
 	List<CFlagEntry *>::iterator	 iter;
 	List<CFlagEntry *>::iterator	 end;
 	FILE							*File;
@@ -311,7 +314,7 @@ void CFlagManager::WriteCommands(void)
 			(*iter)->SetNeedWritten(0);
 		}
 		++iter;
-	};
+	}
 
 	fclose(File);
 
@@ -331,7 +334,6 @@ void CFlagManager::WriteCommands(void)
 
 int CFlagManager::ShouldIAddThisCommand(const AMX *amx, const cell *params, const char *cmdname) const
 {
-
 	// If flagmanager is disabled then ignore this
 	if (m_iDisabled)
 	{
@@ -375,8 +377,7 @@ int CFlagManager::ShouldIAddThisCommand(const AMX *amx, const cell *params, cons
 
 	// else use it
 	return 1;
-};
-
+}
 
 void CFlagManager::Clear(void)
 {
@@ -394,7 +395,7 @@ void CFlagManager::Clear(void)
 	}
 
 	m_FlagList.clear();
-};
+}
 
 void CFlagManager::CheckIfDisabled(void)
 {
@@ -406,4 +407,4 @@ void CFlagManager::CheckIfDisabled(void)
 	{
 		m_iDisabled=1;
 	}
-};
+}

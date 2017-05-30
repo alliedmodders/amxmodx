@@ -114,7 +114,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 		}
 
 		bool skip = false;
-		for (const auto &block : m_BlockList)
+		for (const auto *block : m_BlockList)
 		{
 			if (block->compare(pluginName) == 0)
 			{

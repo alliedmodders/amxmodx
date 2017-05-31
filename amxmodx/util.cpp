@@ -10,16 +10,15 @@
 #include <time.h>
 #include "amxmodx.h"
 
-int UTIL_ReadFlags(const char *c)
+int UTIL_ReadFlags(const char *c, bool safe)
 {
 	int flags = 0;
 
-	while (*c) {
-		if ('a' <= *c && *c <= 'z') {
-			flags |= (1 << (*c - 'a'));
-		}
+	for (const char *i = c; *i; i++) {
+		if (safe && (*i < 'a' || *i > '~'))
+			continue;
 
-		c++;
+		flags |= 1 << (*i - 'a');
 	}
 
 	return flags;

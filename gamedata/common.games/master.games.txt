@@ -743,6 +743,25 @@
 		"game"  "czero"
 	}
 
+	"gamerules.games/cstrike/offsets-cgamerules.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"gamerules.games/cstrike/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"gamerules.games/cstrike/offsets-chalflifetraining.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+
 
 	//
 	// Day Of Defeat
@@ -1533,6 +1552,16 @@
 		"game"  "dod"
 	}
 
+	"gamerules.games/dod/offsets-cdodteamplay.txt"
+	{
+		"game"  "dod"
+	}
+
+	"gamerules.games/dod/offsets-cspdodrules.txt"
+	{
+		"game"  "dod"
+	}
+
 
 	//
 	// Team Fortress Classic
@@ -2158,6 +2187,20 @@
 		"game"  "tfc"
 	}
 
+	"gamerules.games/tfc/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"gamerules.games/tfc/offsets-chalflifeteamplay.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"gamerules.games/tfc/offsets-cteamfortress.txt"
+	{
+		"game"  "tfc"
+	}
 
 	//
 	// Half-Life: Opposing Force
@@ -3338,6 +3381,25 @@
 		"game"  "gearbox"
 	}
 
+	"gamerules.games/gearbox/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"gamerules.games/gearbox/offsets-chalflifectfplay.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"gamerules.games/gearbox/offsets-chalflifecoopplay.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"gamerules.games/gearbox/offsets-chalflifeteamplay.txt"
+	{
+		"game"  "gearbox"
+	}
 
  	//
 	// Half-Life: Deathmatch
@@ -4032,4 +4094,15 @@
 	{
 		"game"  "valve"
 	}
+
+	"gamerules.games/valve/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "valve"
+	}
+
+	"gamerules.games/valve/offsets-chalflifeteamplay.txt"
+	{
+		"game"  "valve"
+	}
+
 }

@@ -735,6 +735,7 @@ void InitFuncsAddresses()
 
 void InitClassMembers()
 {
+	// CBasePlayer members.
 	CommonConfig->GetOffsetByClass("CBasePlayer", "m_iTeam"          , &TeamDesc   );
 	CommonConfig->GetOffsetByClass("CBasePlayer", "m_iMenu"          , &MenuDesc   );
 	CommonConfig->GetOffsetByClass("CBasePlayer", "m_bHasNightVision", &NvgsDesc   );
@@ -742,12 +743,16 @@ void InitClassMembers()
 	CommonConfig->GetOffsetByClass("CBasePlayer", "m_signals"        , &SignalsDesc);
 	CommonConfig->GetOffsetByClass("CBasePlayer", "m_iAccount"       , &MoneyDesc  );
 
+	// GameRules members.
+	CommonConfig->GetOffsetByClass("CHalfLifeMultiplay", "m_bMapHasBombTarget", &BombTargetDesc);
+
 	if (!TeamDesc.fieldOffset    ||
 		!MenuDesc.fieldOffset    ||
 		!NvgsDesc.fieldOffset    ||
 		!DefuserDesc.fieldOffset ||
 		!SignalsDesc.fieldOffset ||
-		!MoneyDesc.fieldOffset)
+		!MoneyDesc.fieldOffset   ||
+		!BombTargetDesc.fieldOffset)
 	{
 		MF_Log("Invalid or missing entity gamedata files - forwards CS_OnBuy[Attempt] have been disabled");
 		ToggleHook_BuyCommands(false);

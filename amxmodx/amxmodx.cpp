@@ -4440,11 +4440,11 @@ static cell AMX_NATIVE_CALL CreateLangKey(AMX *amx, cell *params)
 {
 	int len;
 	const char *key = get_amxstring(amx, params[1], 0, len);
-	int suki = g_langMngr.GetKeyEntry(key);
+	int key_index = g_langMngr.GetKeyEntry(key);
 
-	if (suki != -1)
+	if (key_index != -1)
 	{
-		return suki;
+		return key_index;
 	}
 
 	return g_langMngr.AddKeyEntry(key);
@@ -4454,14 +4454,14 @@ static cell AMX_NATIVE_CALL AddTranslation(AMX *amx, cell *params)
 {
 	int len;
 	const char *lang = get_amxstring(amx, params[1], 0, len);
-	int suki = params[2];
+	int key_index = params[2];
 	const char *phrase = get_amxstring(amx, params[3], 1, len);
 
 	ke::Vector<sKeyDef> queue;
 	sKeyDef def;
 
 	def.definition = new ke::AutoString(phrase);
-	def.key = suki;
+	def.key = key_index;
 
 	queue.append(def);
 

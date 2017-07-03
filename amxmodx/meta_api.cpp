@@ -120,6 +120,9 @@ int mState;
 int g_srvindex;
 
 CDetour *DropClientDetour;
+bool g_isDropClientHookEnabled = false;
+bool g_isDropClientHookAvailable = false;
+void SV_DropClient_RH(IRehldsHook_SV_DropClient *chain, IGameClient *cl, bool crash, const char *format);
 
 cvar_t init_amxmodx_version = {"amxmodx_version", "", FCVAR_SERVER | FCVAR_SPONLY};
 cvar_t init_amxmodx_modules = {"amxmodx_modules", "", FCVAR_SPONLY};
@@ -623,9 +626,20 @@ void C_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 		}
 	}
 
-	if (DropClientDetour)
+	if (g_isDropClientHookAvailable)
 	{
-		DropClientDetour->EnableDetour();
+		if (!g_isDropClientHookEnabled)
+		{
+			if (RehldsApi)
+			{
+				RehldsHookchains->SV_DropClient()->registerHook(SV_DropClient_RH);
+			}
+			else
+			{
+				DropClientDetour->EnableDetour();
+			}
+			g_isDropClientHookEnabled = true;
+		}
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -683,7 +697,7 @@ void C_ServerDeactivate()
 			// deprecated
 			executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
 
-			if (DropClientDetour && !pPlayer->disconnecting)
+			if (g_isDropClientHookAvailable && !pPlayer->disconnecting)
 			{
 				executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
 			}
@@ -696,16 +710,27 @@ void C_ServerDeactivate()
 			pPlayer->Disconnect();
 			--g_players_num;
 
-			if (!wasDisconnecting && DropClientDetour)
+			if (!wasDisconnecting && g_isDropClientHookAvailable)
 			{
 				executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
 			}
 		}
 	}
 
-	if (DropClientDetour)
+	if (g_isDropClientHookAvailable)
 	{
-		DropClientDetour->DisableDetour();
+		if (g_isDropClientHookEnabled)
+		{
+			if (RehldsApi)
+			{
+				RehldsHookchains->SV_DropClient()->unregisterHook(SV_DropClient_RH);
+			}
+			else
+			{
+				DropClientDetour->DisableDetour();
+			}
+			g_isDropClientHookEnabled = false;
+		}
 	}
 
 	g_players_num	= 0;
@@ -880,7 +905,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 		// deprecated
 		executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
 
-		if (DropClientDetour && !pPlayer->disconnecting)
+		if (g_isDropClientHookAvailable && !pPlayer->disconnecting)
 		{
 			executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
 		}
@@ -895,7 +920,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 
 	pPlayer->Disconnect();
 
-	if (!wasDisconnecting && DropClientDetour)
+	if (!wasDisconnecting && g_isDropClientHookAvailable)
 	{
 		executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
 	}
@@ -1637,6 +1662,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	if (RehldsApi_Init())
 	{
 		RehldsHookchains->SV_DropClient()->registerHook(SV_DropClient_RH);
+		g_isDropClientHookAvailable = true;
+		g_isDropClientHookEnabled = true;
 	}
 	else
 	{
@@ -1645,6 +1672,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
 		{
 			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+			g_isDropClientHookAvailable = true;
+			g_isDropClientHookEnabled = true;
 		}
 		else
 		{
@@ -1700,13 +1729,21 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	ClearLibraries(LibSource_Plugin);
 	ClearLibraries(LibSource_Module);
 
-	if (DropClientDetour)
+	if (g_isDropClientHookAvailable)
 	{
-		DropClientDetour->Destroy();
-	}
-	else if (RehldsApi)
-	{
-		RehldsHookchains->SV_DropClient()->unregisterHook(SV_DropClient_RH);
+		if (RehldsApi)
+		{
+			if (g_isDropClientHookEnabled)
+			{
+				RehldsHookchains->SV_DropClient()->unregisterHook(SV_DropClient_RH);
+			}
+		}
+		else
+		{
+			DropClientDetour->Destroy();
+		}
+		g_isDropClientHookAvailable = false;
+		g_isDropClientHookEnabled = false;
 	}
 
 	return (TRUE);

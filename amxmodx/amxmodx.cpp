@@ -2626,32 +2626,40 @@ static cell AMX_NATIVE_CALL server_exec(AMX *amx, cell *params)
 	return 1;
 }
 
-int sendFakeCommand(AMX *amx, cell *params, bool fwd = false)
+int sendFakeCommand(AMX *amx, cell *params, bool send_forward = false)
 {
-	int ilen;
-	const char* szCmd = get_amxstring(amx, params[2], 0, ilen);
-	const char* sArg1 = get_amxstring(amx, params[3], 1, ilen);
+	enum args { arg_count, arg_index, arg_command, arg_argument1, arg_argument2 };
 
-	if (ilen == 0)
-		sArg1 = 0;
+	char command[128 * 2];
+	auto command_length = strncopy(command, get_amxaddr(amx, params[arg_command]), sizeof(command));
 
-	const char* sArg2 = get_amxstring(amx, params[4], 2, ilen);
+	if (!command_length)
+	{
+		return 0;
+	}
 
-	if (ilen == 0)
-		sArg2 = 0;
+	char argument1[128];
+	char argument2[128];
+	auto argument1_length = strncopy(argument1, get_amxaddr(amx, params[arg_argument1]), sizeof(argument1));
+	auto argument2_length = strncopy(argument2, get_amxaddr(amx, params[arg_argument2]), sizeof(argument2));
 
-	if (params[1] == 0)
+	const char *pArgument1 = argument1_length ? argument1 : nullptr;
+	const char *pArgument2 = argument2_length ? argument2 : nullptr;
+
+	int index = params[arg_index];
+
+	if (index == 0)
 	{
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 
 			if (pPlayer->ingame /*&& pPlayer->initialized */)
-				UTIL_FakeClientCommand(pPlayer->pEdict, szCmd, sArg1, sArg2, fwd);
+				UTIL_FakeClientCommand(pPlayer->pEdict, command, pArgument1, pArgument2, send_forward);
 		}
-	} else {
-		int index = params[1];
-
+	} 
+	else 
+	{
 		if (index < 1 || index > gpGlobals->maxClients)
 		{
 			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
@@ -2661,17 +2669,20 @@ int sendFakeCommand(AMX *amx, cell *params, bool fwd = false)
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
 		if (/*pPlayer->initialized && */pPlayer->ingame)
-			UTIL_FakeClientCommand(pPlayer->pEdict, szCmd, sArg1, sArg2, fwd);
+			UTIL_FakeClientCommand(pPlayer->pEdict, command, pArgument1, pArgument2, send_forward);
 	}
 
 	return 1;
 }
-static cell AMX_NATIVE_CALL engclient_cmd(AMX *amx, cell *params) /* 4 param */
+
+// native engclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "");
+static cell AMX_NATIVE_CALL engclient_cmd(AMX *amx, cell *params)
 {
 	return sendFakeCommand(amx, params);
 }
 
-static cell AMX_NATIVE_CALL amxclient_cmd(AMX *amx, cell *params) /* 4 param */
+// native amxclient_cmd(index, const command[], const arg1[] = "", const arg2[] = "");
+static cell AMX_NATIVE_CALL amxclient_cmd(AMX *amx, cell *params)
 {
 	return sendFakeCommand(amx, params, true);
 }

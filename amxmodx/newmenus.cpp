@@ -90,8 +90,8 @@ bool CloseNewMenus(CPlayer *pPlayer)
 	return true;
 }
 
-Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
-m_NeverExit(false), m_AutoColors(g_coloredmenus), m_NumberFormat("%d."), thisId(0), func(fid), 
+Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), m_NumberFormat("%d."),
+m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
 isDestroying(false), pageCallback(-1), items_per_page(7)
 {
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);

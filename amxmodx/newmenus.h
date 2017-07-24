@@ -31,6 +31,7 @@
 #define MPROP_PADMENU	9
 #define MPROP_SET_NUMBER_COLOR	10
 #define MPROP_PAGE_CALLBACK 11
+#define MPROP_NUMBER_FORMAT 12
 
 typedef int (*MENUITEM_CALLBACK)(int, int, int);
 
@@ -115,6 +116,7 @@ public:
 	ke::AutoString m_Text;
 	ke::AString m_OptNames[4];
 	ke::AString m_ItemColor;
+	ke::AString m_NumberFormat;
 
 	bool m_NeverExit;
 	bool m_ForceExit;

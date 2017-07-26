@@ -198,10 +198,10 @@ const bool RB_Void_Int_Int_Int = false;
 const int PC_Void_Int_Int_Int = 3;
 void Hook_Void_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2, int i3);
 
-const bool RT_Void_ItemInfo = true;
-const bool RB_Void_ItemInfo = false;
-const int PC_Void_ItemInfo = 1;
-void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo);
+const bool RT_Int_ItemInfo = false;
+const bool RB_Int_ItemInfo = false;
+const int PC_Int_ItemInfo = 1;
+int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo);
 
 
 const bool RT_Float_Void = false;

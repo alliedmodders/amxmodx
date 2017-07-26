@@ -665,7 +665,7 @@ cell Call_Void_Int_Int_Int(AMX *amx, cell *params)
 	return 1;
 }
 
-cell Call_Void_ItemInfo(AMX *amx, cell *params)
+cell Call_Int_ItemInfo(AMX *amx, cell *params)
 {
 	SETUP(1);
 
@@ -677,11 +677,10 @@ cell Call_Void_ItemInfo(AMX *amx, cell *params)
 		return 0;
 	}
 #if defined(_WIN32)
-	reinterpret_cast<void (__fastcall *)(void*, int, void *)>(__func)(pv, 0, ptr);
+	return reinterpret_cast<int (__fastcall *)(void*, int, void *)>(__func)(pv, 0, ptr);
 #elif defined(__linux__) || defined(__APPLE__)
-	reinterpret_cast<void (*)(void *, void *)>(__func)(pv, ptr);
+	return reinterpret_cast<int (*)(void *, void *)>(__func)(pv, ptr);
 #endif
-	return 1;
 }
 
 cell Call_Float_Void(AMX *amx, cell *params)

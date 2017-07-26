@@ -514,7 +514,7 @@ hook_t hooklist[] =
 
 	{ V("ts_weapon_alternateattack", Void_Void) },
 
-	{ V("item_getiteminfo", Void_ItemInfo) }
+	{ V("item_getiteminfo", Int_ItemInfo) }
 };
 
 

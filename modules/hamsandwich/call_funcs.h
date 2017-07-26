@@ -75,7 +75,7 @@ cell Call_Void_Entvar_Float(AMX *amx, cell *params);
 
 cell Call_Void_Int_Int_Int(AMX *amx, cell *params);
 
-cell Call_Void_ItemInfo(AMX *amx, cell *params);
+cell Call_Int_ItemInfo(AMX *amx, cell *params);
 
 cell Call_Float_Void(AMX *amx, cell *params);
 

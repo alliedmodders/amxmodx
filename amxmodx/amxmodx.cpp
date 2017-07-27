@@ -2011,6 +2011,19 @@ static cell AMX_NATIVE_CALL log_message(AMX *amx, cell *params) /* 1 param */
 	return len;
 }
 
+static cell AMX_NATIVE_CALL elog_message(AMX *amx, cell *params) /* 1 param */
+{
+	int len;
+	g_langMngr.SetDefLang(LANG_SERVER);
+	char* message = format_amxstring(amx, params, 1, len);
+
+	message[len++] = '\n';
+	message[len] = 0;
+
+	g_pEngTable->pfnAlertMessage(at_logged, "%s", message);
+	return len;
+}
+
 static cell AMX_NATIVE_CALL log_to_file(AMX *amx, cell *params) /* 1 param */
 {
 	int ilen;
@@ -4782,6 +4795,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"lang_exists",				lang_exists},
 	{"log_amx",					log_amx},
 	{"log_message",				log_message},
+	{"elog_message",			elog_message},
 	{"log_to_file",				log_to_file},
 	{"md5",						amx_md5},
 	{"md5_file",				amx_md5_file},

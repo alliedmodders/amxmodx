@@ -856,10 +856,28 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 
 	if (*params / sizeof(cell) >= 3 && params[3] != 0)
 	{
-		if (!Server)
+		if (!HasReHlds && !Server)
 		{
 			MF_Log("cs_set_user_model is disabled with update_index parameter set");
 			return 0;
+		}
+
+		if (!ModelsList.elements())
+		{
+			auto numResources = HasReHlds ? RehldsData->GetResourcesNum() : Server->num_resources;
+
+			if (numResources)
+			{
+				for (auto i = 0; i < numResources; ++i) // Saves all the precached models into a list.
+				{
+					auto resource = HasReHlds ? RehldsData->GetResource(i) : &Server->resourcelist[i];
+
+					if (resource->type == t_model)
+					{
+						ModelsList.insert(resource->szFileName, resource->nIndex);
+					}
+				}
+			}
 		}
 
 		GET_OFFSET("CBasePlayer", m_modelIndexPlayer);

@@ -37,30 +37,6 @@ int AmxxCheckGame(const char *game)
 	return AMXX_GAME_BAD;
 }
 
-void SV_ActivateServer_RH(IRehldsHook_SV_ActivateServer *chain, int runPhysics)
-{
-	chain->callNext(runPhysics);
-
-	auto numResources = RehldsData->GetResourcesNum();
-
-	if (!numResources)
-	{
-		return;
-	}
-
-	ModelsList.clear();
-
-	for (auto i = 0; i < numResources; ++i) // Saves all the precached models into a list.
-	{
-		auto resource = RehldsData->GetResource(i);
-
-		if (resource->type == t_model)
-		{
-			ModelsList.insert(resource->szFileName, i);
-		}
-	}
-}
-
 void OnAmxxAttach()
 {
 	MF_AddNatives(CstrikeNatives);
@@ -85,11 +61,6 @@ void OnAmxxAttach()
 	}
 
 	InitializeHacks();
-
-	if (HasReHlds)
-	{
-		RehldsHookchains->SV_ActivateServer()->registerHook(SV_ActivateServer_RH);
-	}
 }
 
 void OnPluginsLoaded()
@@ -130,6 +101,8 @@ void OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	ToggleHook_ClientCommands(HasInternalCommandForward || HasOnBuyAttemptForward || HasOnBuyForward);
 	ToggleHook_BuyCommands(HasOnBuyForward);
 	ToggleHook_GiveDefaultItems(false);
+
+	ModelsList.clear();
 
 	RETURN_META(MRES_IGNORED);
 }

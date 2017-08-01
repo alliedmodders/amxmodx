@@ -1289,6 +1289,19 @@ native log_amx(const string[], any:...);
 native log_message(const message[], any:...);
 
 /**
+ * Logs a message hookable by plugins to the current server log file.
+ *
+ * @note The log will include a timestamp with the message.
+ * @note The message can be hooked using "register_logevent".
+ *
+ * @param string    Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          Number of printed characters
+ */
+native elog_message(const message[], any:...);
+
+/**
  * Logs a message to the specified file
  *
  * @note The log will include a timestamp with the message.

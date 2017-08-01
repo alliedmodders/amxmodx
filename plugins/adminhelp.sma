@@ -39,9 +39,9 @@ public plugin_init()
 	register_concmd(HelpCommand  , "@ConsoleCommand_Help"  , ADMIN_ALL, "HELP_CMD_INFO"  , .info_ml = true);
 	register_concmd(SearchCommand, "@ConsoleCommand_Search", ADMIN_ALL, "SEARCH_CMD_INFO", .info_ml = true);
 
-	bind_pcvar_num(register_cvar("amx_help_display_msg"     , "1") , CvarDisplayClientMessage);
-	bind_pcvar_num(register_cvar("amx_help_display_msg_time", "15"), CvarDisplayMessageTime);
-	bind_pcvar_num(register_cvar("amx_help_amount_per_page" , "10"), CvarHelpAmount);
+	bind_pcvar_num(create_cvar("amx_help_display_msg"     , "1" , .has_min = true, .min_val = 0.0, .has_max = true, .max_val = 1.0), CvarDisplayClientMessage);
+	bind_pcvar_num(create_cvar("amx_help_display_msg_time", "15", .has_min = true, .min_val = 0.0), CvarDisplayMessageTime);
+	bind_pcvar_num(create_cvar("amx_help_amount_per_page" , "10", .has_min = true, .min_val = 0.0), CvarHelpAmount);
 }
 
 public OnConfigsExecuted()
@@ -101,9 +101,14 @@ ProcessHelp(id, start_argindex, bool:do_search, const main_command[], const sear
 
 	new clcmdsnum = get_concmdsnum(user_flags, id);
 
+	if (CvarHelpAmount <= 0)
+	{
+		CvarHelpAmount = MaxDefaultEntries;
+	}
+
 	new start  = clamp(read_argv_int(start_argindex), .min = 1, .max = clcmdsnum) - 1; // Zero-based list;
 	new amount = !id ? read_argv_int(start_argindex + 1) : CvarHelpAmount;
-	new end    = min(start + (amount > 0 ? amount : MaxDefaultEntries), clcmdsnum);
+	new end    = min(start + (amount > 0 ? amount : CvarHelpAmount), clcmdsnum);
 
 	console_print(id, "^n----- %l -----", "HELP_COMS");
 

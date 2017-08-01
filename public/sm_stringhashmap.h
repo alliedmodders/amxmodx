@@ -107,8 +107,7 @@ class StringHashMap
 public:
 	StringHashMap()
 		: internal_(ke::SystemAllocatorPolicy()),
-		  memory_used_(0),
-		  mod_count_(0)
+		  memory_used_(0)
 	{
 		if (!internal_.init())
 			internal_.allocPolicy().reportOutOfMemory();
@@ -163,7 +162,6 @@ public:
 		Insert i = internal_.findForAdd(key);
 		if (i.found())
 			return false;
-		mod_count_++;
 		if (!internal_.add(i, aKey, value))
 			return false;
 		memory_used_ += key.length() + 1;
@@ -177,31 +175,23 @@ public:
 		if (!r.found())
 			return false;
 		memory_used_ -= key.length() + 1;
-		mod_count_++;
 		internal_.remove(r);
 		return true;
 	}
 
 	void remove(Result &r)
 	{
-		mod_count_++;
 		internal_.remove(r);
 	}
 
 	void clear()
 	{
-		mod_count_++;
 		internal_.clear();
 	}
 
 	iterator iter()
 	{
 		return internal_.iter();
-	}
-
-	iterator* iter_p()
-	{
-		return new iterator(iter());
 	}
 
 	size_t mem_usage() const
@@ -226,28 +216,20 @@ public:
 	// functions as the combined variants above are safer.
 	bool add(Insert &i)
 	{
-		mod_count_++;
 		return internal_.add(i);
 	}
 
 	// Only value needs to be set after.
 	bool add(Insert &i, const char *aKey)
 	{
-		mod_count_++;
 		if (!internal_.add(i, aKey))
 			return false;
 		return true;
 	}
 
-	size_t mod_count() const
-	{
-		return mod_count_;
-	}
-
 private:
 	Internal internal_;
 	size_t memory_used_;
-	size_t mod_count_;
 };
 
 //}

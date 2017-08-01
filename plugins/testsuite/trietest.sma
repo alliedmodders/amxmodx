@@ -367,7 +367,7 @@ public trietest()
 				// TrieSetString(t, "monkey", "island");
 				// TrieDeleteKey(t, "full");
 				// TrieClear(t);
-		
+
 				TrieIterNext(iter);
 			}
 
@@ -495,6 +495,36 @@ public trietest()
 					}
 				}
 			}
+		}
+
+		TrieClear(t);
+		TrieSetCell(t, "1", 1);
+		TrieSetCell(t, "2", 2);
+		TrieSetCell(t, "3", 3);
+
+		new totalSum = 0;
+		new element1, element2;
+		new TrieIter:iter1, TrieIter:iter2;
+
+		iter1 = TrieIterCreate(t)
+		for (; !TrieIterEnded(iter1); TrieIterNext(iter1))
+		{
+			iter2 = TrieIterCreate(t);
+			for(; !TrieIterEnded(iter2); TrieIterNext(iter2))
+			{
+				TrieIterGetCell(iter1, element1);
+				TrieIterGetCell(iter2, element2);
+
+				totalSum += element1 * element2;
+			}
+			TrieIterDestroy(iter2);
+		}
+		TrieIterDestroy(iter1);
+
+		if (totalSum != 36)
+		{
+			server_print("Sum should be 36, got %d", totalSum);
+			ok = false;
 		}
 
 		TrieIterDestroy(iter);

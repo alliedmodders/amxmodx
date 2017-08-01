@@ -510,12 +510,8 @@ static cell AMX_NATIVE_CALL TrieIterCreate(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto index = TrieIterHandles.create();
+	auto index = TrieIterHandles.create(handle);
 	auto iter  = TrieIterHandles.lookup(index);
-
-	iter->trie = handle;
-	iter->iter.assign(handle->map.iter_p());
-	iter->mod_count = handle->map.mod_count();
 
 	return static_cast<cell>(index);
 }
@@ -529,7 +525,7 @@ static cell AMX_NATIVE_CALL TrieIterEnded(AMX *amx, cell *params)
 
 	CHECK_ITER_HANDLE(handle)
 
-	return handle->iter->empty();
+	return handle->iter.empty();
 }
 
 // native TrieIterNext(TrieIter:handle)
@@ -541,12 +537,12 @@ static cell AMX_NATIVE_CALL TrieIterNext(AMX *amx, cell *params)
 
 	CHECK_ITER_HANDLE(handle)
 
-	if (handle->iter->empty())
+	if (handle->iter.empty())
 	{
 		return 0;
 	}
 
-	handle->iter->next();
+	handle->iter.next();
 
 	return 1;
 }
@@ -560,15 +556,15 @@ static cell AMX_NATIVE_CALL TrieIterGetKey(AMX *amx, cell *params)
 
 	CHECK_ITER_HANDLE(handle)
 
-	auto iter = handle->iter.get();
+	auto& iter = handle->iter;
 
-	if (iter->empty())
+	if (iter.empty())
 	{
 		*get_amxaddr(amx, params[arg_output]) = '\0';
 		return 0;
 	}
 
-	return set_amxstring_utf8(amx, params[arg_output], (*iter)->key.chars(), (*iter)->key.length(), params[arg_outputsize]);
+	return set_amxstring_utf8(amx, params[arg_output], iter->key.chars(), iter->key.length(), params[arg_outputsize]);
 }
 
 // native TrieIterGetSize(TrieIter:handle)
@@ -592,14 +588,14 @@ static cell AMX_NATIVE_CALL TrieIterGetCell(AMX *amx, cell *params)
 
 	CHECK_ITER_HANDLE(handle)
 
-	auto iter = handle->iter.get();
+	auto& iter = handle->iter;
 
-	if (iter->empty() || !(*iter)->value.isCell())
+	if (iter.empty() || !iter->value.isCell())
 	{
 		return false;
 	}
 
-	*get_amxaddr(amx, params[arg_outputvalue]) = (*iter)->value.cell_();
+	*get_amxaddr(amx, params[arg_outputvalue]) = iter->value.cell_();
 
 	return true;
 }
@@ -619,16 +615,16 @@ static cell AMX_NATIVE_CALL TrieIterGetString(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto iter = handle->iter.get();
+	auto& iter = handle->iter;
 
-	if (iter->empty() || !(*iter)->value.isString())
+	if (iter.empty() || !iter->value.isString())
 	{
 		return false;
 	}
 
 	auto refsize = get_amxaddr(amx, params[arg_refsize]);
 
-	*refsize = set_amxstring_utf8(amx, params[arg_output], (*iter)->value.chars(), strlen((*iter)->value.chars()), params[arg_outputsize]);
+	*refsize = set_amxstring_utf8(amx, params[arg_output], iter->value.chars(), strlen(iter->value.chars()), params[arg_outputsize]);
 
 	return true;
 }
@@ -650,9 +646,9 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 		return 0;
 	}
 
-	auto iter = handle->iter.get();
+	auto& iter = handle->iter;
 
-	if (iter->empty() || !(*iter)->value.isArray())
+	if (iter.empty() || !iter->value.isArray())
 	{
 		return false;
 	}
@@ -660,14 +656,14 @@ static cell AMX_NATIVE_CALL TrieIterGetArray(AMX *amx, cell *params)
 	auto pOutput = get_amxaddr(amx, params[arg_output]);
 	auto pSize   = get_amxaddr(amx, params[arg_refsize]);
 
-	if (!(*iter)->value.array() || !outputSize)
+	if (!iter->value.array() || !outputSize)
 	{
 		*pSize = 0;
 		return false;
 	}
 
-	auto length = (*iter)->value.arrayLength();
-	auto base   = (*iter)->value.array();
+	auto length = iter->value.arrayLength();
+	auto base   = iter->value.array();
 
 	if (length > size_t(outputSize))
 	{

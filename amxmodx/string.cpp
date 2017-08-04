@@ -657,11 +657,11 @@ static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params)
 
 	if (params[arg_numbytes] > 0)
 	{
-		return strncmp(string1Folded, string2Folded, params[arg_numbytes]) == 0 ? TRUE : FALSE;
+		return static_cast<cell>(strncmp(string1Folded, string2Folded, params[arg_numbytes]) == 0);
 	}
 	else
 	{
-		return strcmp(string1Folded, string2Folded) == 0 ? TRUE : FALSE;
+		return static_cast<cell>(strcmp(string1Folded, string2Folded) == 0);
 	}
 }
 
@@ -1635,7 +1635,7 @@ static cell AMX_NATIVE_CALL is_string_category(AMX *amx, cell *params)
 	*outputSize = utf8iscategory(input, inputMaxLength, params[arg_flags]);
 
 	// If function consumed input, then it's a success.
-	return *outputSize == inputMaxLength ? TRUE : FALSE;
+	return static_cast<cell>(*outputSize == inputMaxLength);
 }
 
 AMX_NATIVE_INFO string_Natives[] =

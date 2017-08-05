@@ -113,6 +113,8 @@ extern AMX_NATIVE_INFO g_GameConfigNatives[];
 #define SETCLIENTLISTENING  (*g_engfuncs.pfnVoice_SetClientListening)
 #define SETCLIENTMAXSPEED   (*g_engfuncs.pfnSetClientMaxspeed)
 
+#define MAX_BUFFER_LENGTH 16384
+
 char* UTIL_SplitHudMessage(register const char *src);
 int UTIL_ReadFlags(const char* c);
 
@@ -130,10 +132,15 @@ void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName);
 template <typename D> int UTIL_CheckValidChar(D *c);
 template <typename D, typename S> unsigned int strncopy(D *dest, const S *src, size_t count);
 unsigned int UTIL_GetUTF8CharBytes(const char *stream);
-unsigned int UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive);
+size_t UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, const char *replace, bool caseSensitive);
+size_t UTIL_ReplaceAll(char *subject, size_t maxlength, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive);
 char *UTIL_ReplaceEx(char *subject, size_t maxLen, const char *search, size_t searchLen, const char *replace, size_t replaceLen, bool caseSensitive);
 void UTIL_TrimLeft(char *buffer);
 void UTIL_TrimRight(char *buffer);
+
+char* utf8stristr(const char *string1, const char *string2);
+int utf8strncasecmp(const char *string1, const char *string2, size_t n);
+int utf8strcasecmp(const char *string1, const char *string2);
 
 #define GET_PLAYER_POINTER(e)   (&g_players[ENTINDEX(e)])
 //#define GET_PLAYER_POINTER(e)   (&g_players[(((int)e-g_edict_point)/sizeof(edict_t))])

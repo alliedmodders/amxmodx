@@ -60,8 +60,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\third_party;..\..\third_party\zlib;..\..\third_party\hashing;..\..\public\sdk;..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\third_party;..\..\third_party\zlib;..\..\third_party\hashing;..\..\third_party\utf8rewind;..\..\public\sdk;..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;UTF8PROC_EXPORTS;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StructMemberAlignment>4Bytes</StructMemberAlignment>
@@ -110,8 +110,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\third_party;..\..\third_party\zlib;..\..\third_party\hashing;..\..\third_party;..\..\third_party\hashing;..\..\public\sdk;..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\third_party;..\..\third_party\zlib;..\..\third_party\hashing;..\..\third_party\utf8rewind;..\..\third_party;..\..\third_party\hashing;..\..\public\sdk;..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;UTF8PROC_EXPORTS;NDEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;JIT;ASM32;PAWN_CELL_SIZE=32;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -179,6 +179,42 @@
     <ClCompile Include="..\..\third_party\hashing\hashing.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">$(IntDir)hashing\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">$(IntDir)hashing\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\casemapping.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\codepoint.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\composition.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\database.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\decomposition.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\seeking.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\internal\streaming.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\unicodedatabase.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\utf8rewind\utf8rewind.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">CompileAsCpp</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\third_party\zlib\adler32.c">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">$(IntDir)zlib\</ObjectFileName>
@@ -326,6 +362,16 @@
     <ClInclude Include="..\..\third_party\hashing\hashers\sha256.h" />
     <ClInclude Include="..\..\third_party\hashing\hashers\sha3.h" />
     <ClInclude Include="..\..\third_party\hashing\hashing.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\base.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\casemapping.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\codepoint.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\composition.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\database.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\decomposition.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\seeking.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\internal\streaming.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\unicodedatabase.h" />
+    <ClInclude Include="..\..\third_party\utf8rewind\utf8rewind.h" />
     <ClInclude Include="..\..\third_party\zlib\crc32.h" />
     <ClInclude Include="..\..\third_party\zlib\deflate.h" />
     <ClInclude Include="..\..\third_party\zlib\gzguts.h" />
@@ -390,6 +436,8 @@
     <None Include="..\..\plugins\include\cvars.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
     <None Include="..\..\plugins\include\gameconfig.inc" />
+    <None Include="..\..\plugins\include\string_const.inc" />
+    <None Include="..\..\plugins\include\string_stocks.inc" />
     <None Include="..\..\plugins\include\textparse_ini.inc" />
     <None Include="..\..\plugins\include\textparse_smc.inc" />
     <None Include="..\amxdefn.asm" />

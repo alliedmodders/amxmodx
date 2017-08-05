@@ -2891,7 +2891,8 @@ enum Ham
 	Ham_SC_IsMonster,
 
 	/**
-	 * Description:		Whether entity uses PhysX feature.
+	 * Description:		(!) This function is no more available in the mod.
+	 *                  Whether entity uses PhysX feature.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_IsPhysX, this)
@@ -2992,7 +2993,8 @@ enum Ham
 	Ham_SC_OnDestroy,
 
 	/**
-	 * Description:		Returns false if the entity is somehow invalid.
+	 * Description:		(!) This function is no more available in the mod.
+	 *                  Returns false if the entity is somehow invalid.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_IsValidEntity, this)
@@ -3016,7 +3018,8 @@ enum Ham
 	Ham_SC_SetupFriendly,
 
 	/**
-	 * Description:		Tries to revive a monster.
+	 * Description:		(!) This function is no more available in the mod.
+	 *                  Tries to revive a monster.
 	 * Forward params:	function(this)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_ReviveThink, this)
@@ -3303,7 +3306,7 @@ enum Ham
 	Ham_SC_CheckRevival,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_MedicCallSound, this)
@@ -3312,10 +3315,10 @@ enum Ham
 
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this)
 	 * Return type:		None.
-	 * Execute params:	ExecuteHam(Ham_SC_MedicCallSound, this)
+	 * Execute params:	ExecuteHam(Ham_SC_Player_MenuInputPerformed, this)
 	 */
 	Ham_SC_Player_MenuInputPerformed,
 
@@ -3440,7 +3443,7 @@ enum Ham
 	Ham_SC_Player_LogPlayerStats,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, idPlayer, Float:time)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_Player_DisableCollision, this, idPlayer, Float:time)
@@ -3448,7 +3451,7 @@ enum Ham
 	Ham_SC_Player_DisableCollisionWithPlayer,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, idPlayer, bool:testIntersection)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_Player_EnableCollision, this, idPlayer, bool:testIntersection)
@@ -3456,7 +3459,7 @@ enum Ham
 	Ham_SC_Player_EnableCollisionWithPlayer,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, idPlayer)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_Player_CanTouchPlayer, this, idPlayer)
@@ -3741,6 +3744,7 @@ enum HamError
 
 	HAM_INVALID_FUNC,			// The function is not valid
 	HAM_FUNC_NOT_CONFIGURED,	// This function is not configured in hamdata.ini
+	HAM_FUNC_NOT_AVAILABLE,		// This function is not more available in the mod
 
 	HAM_ERR_END
 };

@@ -24,7 +24,12 @@ extern HLTypeConversion TypeConversion;
 	if (x < 0 || x >= HAM_LAST_ENTRY_DONT_USE_ME_LOL) {												\
 		char msg[1024];																				\
 		ke::SafeSprintf(msg, sizeof(msg), "Function out of bounds.  Got: %d  Max: %d", x, HAM_LAST_ENTRY_DONT_USE_ME_LOL - 1);	\
-		FailPlugin(amx, x, HAM_INVALID_FUNC, msg);							\
+		FailPlugin(amx, x, HAM_INVALID_FUNC, msg);													\
+		return 0;																					\
+	} else if (hooklist[x].isremoved) {																\
+		char msg[1024];																				\
+		ke::SafeSprintf(msg, sizeof(msg), "Function %s is no more available in the mod.", hooklist[x].name);	\
+		FailPlugin(amx, x, HAM_FUNC_NOT_AVAILABLE, msg);											\
 		return 0;																					\
 	} else if (hooklist[x].isset == 0) {															\
 		char msg[1024];																				\
@@ -32,6 +37,8 @@ extern HLTypeConversion TypeConversion;
 		FailPlugin(amx, x, HAM_FUNC_NOT_CONFIGURED, msg);											\
 		return 0;																					\
 	}
+
+
 
 
 #define CHECK_ENTITY(x)																	\

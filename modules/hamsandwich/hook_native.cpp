@@ -37,7 +37,8 @@ bool gDoForwards=true;
 ke::Vector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 CHamSpecialBotHandler SpecialbotHandler;
 
-#define V(__KEYNAME, __STUFF__) 0, 0, __KEYNAME, RT_##__STUFF__, RB_##__STUFF__, PC_##__STUFF__, reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
+#define V(__KEYNAME, __STUFF__) 0, 0, __KEYNAME, false, RT_##__STUFF__, RB_##__STUFF__, PC_##__STUFF__, reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
+#define V_REMOVED(__KEYNAME) 0, 0, __KEYNAME, true, RT_Void_Void, RB_Void_Void, PC_Void_Void, nullptr, 0, 0
 
 hook_t hooklist[] =
 {
@@ -402,7 +403,7 @@ hook_t hooklist[] =
 	/* Sven co-op */
 	{ V("sc_getclassification",		Int_Int) },
 	{ V("sc_ismonster",				Int_Void) },
-	{ V("sc_isphysx",				Int_Void) },
+	{ V_REMOVED("sc_isphysx") },
 	{ V("sc_ispointentity",			Int_Void) },
 	{ V("sc_ismachine",				Int_Void) },
 	{ V("sc_criticalremove",		Int_Void) },
@@ -414,10 +415,10 @@ hook_t hooklist[] =
 	{ V("sc_getdamagepoints",		Void_Entvar_Entvar_Float) },
 	{ V("sc_oncreate",				Void_Void) },
 	{ V("sc_ondestroy",				Void_Void) },
-	{ V("sc_isvalidentity",			Bool_Void) },
+	{ V_REMOVED("sc_isvalidentity") },
 	{ V("sc_shouldfadeondeath",		Int_Void) },
 	{ V("sc_setupfriendly",			Void_Void) },
-	{ V("sc_revivethink",			Void_Void) },
+	{ V_REMOVED("sc_revivethink") },
 	{ V("sc_revive",				Void_Void) },
 	{ V("sc_startmonster",			Void_Void) },
 	{ V("sc_checkrangeattack1_move",Int_Float_Float) },
@@ -454,8 +455,8 @@ hook_t hooklist[] =
 	{ V("sc_checkrevival",			Void_Void) },
 	{ V("sc_mediccallsound",		Void_Void) },
 
-	{ V("sc_player_menuinputperformed",		Void_Bool) },
-	{ V("sc_player_ismenuinputdone",Bool_Void) },
+	{ V_REMOVED("sc_player_menuinputperformed") },
+	{ V_REMOVED("sc_player_ismenuinputdone") },
 	{ V("sc_player_specialspawn",	Void_Void) },
 	{ V("sc_player_isvalidinfoentity",	Bool_Void) },
 	{ V("sc_player_levelend",		Void_Void) },
@@ -470,9 +471,9 @@ hook_t hooklist[] =
 	{ V("sc_player_resetview",		Void_Void) },
 	{ V("sc_player_getlogfrequency",Float_Void) },
 	{ V("sc_player_logplayerstats",	Bool_Void) },
-	{ V("sc_player_disablecollisionwithplayer",	Void_Cbase_Float) },
-	{ V("sc_player_enablecollisionwithplayer",	Void_Cbase_Bool) },
-	{ V("sc_player_cantouchplayer",	Bool_Cbase) },
+	{ V_REMOVED("sc_player_disablecollisionwithplayer") },
+	{ V_REMOVED("sc_player_enablecollisionwithplayer") },
+	{ V_REMOVED("sc_player_cantouchplayer") },
 
 	{ V("sc_item_materialize",		Void_Void) },
 

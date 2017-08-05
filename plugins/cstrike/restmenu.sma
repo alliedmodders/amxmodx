@@ -11,952 +11,665 @@
 // Restrict Weapons Plugin
 //
 
-// Uncomment if you want to have seperate settings for each map
-//#define MAPSETTINGS
-
 #include <amxmodx>
 #include <amxmisc>
+#include <cstrike>
 
-#define MAXMENUPOS 34
+new const PluginName[] = "Restrict Weapons";
 
-new g_Position[MAX_PLAYERS + 1]
-new g_Modified
-new g_blockPos[112]
-new g_saveFile[64]
-new g_Restricted[] = "* This item is restricted *"
-new g_szWeapRestr[27] = "00000000000000000000000000"
-new g_szEquipAmmoRestr[10] = "000000000"
-new g_InBuyMenu[MAX_PLAYERS + 1]
-new g_RegisteredMenus[10]
+const MaxAliasNameLength    = 16;
+const MaxItemNameLength     = 32;
+const MaxMenuTitleLength    = 48;
+const MaxCommandAliasLength = 12;
+const MaxConfigFileLength   = 48;
+const MaxConsoleLength      = 128;
+const MaxMapLength          = 32;
 
-new g_menuStrings[6][] =
+new bool:BlockedItems[CSI_MAX_COUNT];
+new bool:ModifiedItem;
+new bool:ConfigsExecuted;
+
+new MenuPosition[MAX_PLAYERS + 1];
+new MenuHandle  [MAX_PLAYERS + 1] = { -1, ... };
+new ConfigFilePath[PLATFORM_MAX_PATH];
+
+new RestrictedBotWeapons[] = "00000000000000000000000000";
+new RestrictedBotEquipAmmos[] = "000000000";
+
+new CvarPointerAllowMapSettings;
+new CvarPointerRestrictedWeapons;
+new CvarPointerRestrictedEquipAmmos;
+
+enum MenuTitle
 {
-	"BuyPistol",
-	"BuyShotgun",
-	"BuySubMachineGun",
-	"BuyRifle",
-	"BuyMachineGun",
-	"BuyItem"
+	m_Title[MaxMenuTitleLength],
+	m_Alias[MaxCommandAliasLength],
+};
+
+#define TITLE(%0)  "MENU_TITLE_" + #%0
+
+new const MenuInfos[][MenuTitle] =
+{
+	{ TITLE(HANDGUNS)    , "pistol"  },
+	{ TITLE(SHOTGUNS)    , "shotgun" },
+	{ TITLE(SUBMACHINES) , "sub"     },
+	{ TITLE(RIFLES)      , "rifle"   },
+	{ TITLE(SNIPERS)     , "sniper"  },
+	{ TITLE(MACHINE)     , "machine" },
+	{ TITLE(EQUIPMENT)   , "equip"   },
+	{ TITLE(AMMUNITION)  , "ammo"    },
 }
 
-new g_menusNames[7][] =
+enum MenuItem
 {
-	"pistol", 
-	"shotgun", 
-	"sub", 
-	"rifle", 
-	"machine", 
-	"equip", 
-	"ammo"
-}
+	m_Index,
+	m_Name[MaxItemNameLength],
+};
 
-new g_MenuTitle[7][] =
+#define ITEM(%0)  { CSI_%0, "MENU_ITEM_" + #%0 }
+#define ITEM_NONE { CSI_NONE, "" }
+
+new const ItemsInfos[][][MenuItem] =
 {
-	"Handguns", 
-	"Shotguns", 
-	"Sub-Machine Guns", 
-	"Assault & Sniper Rifles", 
-	"Machine Guns", 
-	"Equipment", 
-	"Ammunition"
-}
+	{ ITEM(USP)    , ITEM(GLOCK18) , ITEM(DEAGLE)   , ITEM(P228)     , ITEM(ELITE)       , ITEM(FIVESEVEN), ITEM_NONE , ITEM_NONE    },
+	{ ITEM(M3)     , ITEM(XM1014)  , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+	{ ITEM(MP5NAVY), ITEM(TMP)     , ITEM(P90)      , ITEM(MAC10)    , ITEM(UMP45)       , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+	{ ITEM(AK47)   , ITEM(SG552)   , ITEM(M4A1)     , ITEM(GALIL)    , ITEM(FAMAS)       , ITEM(AUG)      , ITEM_NONE , ITEM_NONE    },
+	{ ITEM(SCOUT)  , ITEM(AWP)     , ITEM(G3SG1)    , ITEM(SG550)    , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+	{ ITEM(M249)   , ITEM_NONE     , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+	{ ITEM(VEST)   , ITEM(VESTHELM), ITEM(FLASHBANG), ITEM(HEGRENADE), ITEM(SMOKEGRENADE), ITEM(DEFUSER)  , ITEM(NVGS), ITEM(SHIELD) },
+	{ ITEM(PRIAMMO), ITEM(SECAMMO) , ITEM_NONE      , ITEM_NONE      , ITEM_NONE         , ITEM_NONE      , ITEM_NONE , ITEM_NONE    },
+};
 
-new g_menusSets[7][2] =
-{
-	{0, 6}, {6, 8}, {8, 13}, {13, 23}, {23, 24}, {24, 32}, {32, 34}
-}
-
-new g_AliasBlockNum
-new g_AliasBlock[MAXMENUPOS]
-
-// First position is a position of menu (0 for ammo, 1 for pistols, 6 for equipment etc.)
-// Second is a key for TERRORIST (all is key are minus one, 1 is 0, 2 is 1 etc.)
-// Third is a key for CT
-// Position with -1 doesn't exist
-
-new g_Keys[MAXMENUPOS][3] =
-{
-	{1, 1, 1},	// H&K USP .45 Tactical
-	{1, 0, 0},	// Glock18 Select Fire
-	{1, 3, 3},	// Desert Eagle .50AE
-	{1, 2, 2},	// SIG P228
-	{1, 4, -1}, // Dual Beretta 96G Elite
-	{1, -1, 4}, // FN Five-Seven
-	{2, 0, 0},	// Benelli M3 Super90
-	{2, 1, 1},	// Benelli XM1014
-	{3, 1, 1},	// H&K MP5-Navy
-	{3, -1, 0}, // Steyr Tactical Machine Pistol
-	{3, 3, 3},	// FN P90
-	{3, 0, -1}, // Ingram MAC-10
-	{3, 2, 2},	// H&K UMP45
-	{4, 1, -1}, // AK-47
-	{4, 0, -1}, // Gali
-	{4, -1, 0}, // Famas
-	{4, 3, -1}, // Sig SG-552 Commando
-	{4, -1, 2}, // Colt M4A1 Carbine
-	{4, -1, 3}, // Steyr Aug
-	{4, 2, 1},	// Steyr Scout
-	{4, 4, 5},	// AI Arctic Warfare/Magnum
-	{4, 5, -1}, // H&K G3/SG-1 Sniper Rifle
-	{4, -1, 4}, // Sig SG-550 Sniper
-	{5, 0, 0},	// FN M249 Para
-	{6, 0, 0},	// Kevlar Vest
-	{6, 1, 1},	// Kevlar Vest & Helmet
-	{6, 2, 2},	// Flashbang
-	{6, 3, 3},	// HE Grenade
-	{6, 4, 4},	// Smoke Grenade
-	{6, -1, 6}, // Defuse Kit
-	{6, 5, 5},	// NightVision Goggles
-	{6, -1, 7},	// Tactical Shield
-	{0, 5, 5},	// Primary weapon ammo
-	{0, 6, 6}	// Secondary weapon ammo
-}
-
-new g_WeaponNames[MAXMENUPOS][] =
-{
-	"H&K USP .45 Tactical", 
-	"Glock18 Select Fire", 
-	"Desert Eagle .50AE", 
-	"SIG P228", 
-	"Dual Beretta 96G Elite", 
-	"FN Five-Seven", 
-	"Benelli M3 Super90", 
-	"Benelli XM1014", 
-	"H&K MP5-Navy", 
-	"Steyr Tactical Machine Pistol", 
-	"FN P90", 
-	"Ingram MAC-10", 
-	"H&K UMP45", 
-	"AK-47", 
-	"Gali", 
-	"Famas", 
-	"Sig SG-552 Commando", 
-	"Colt M4A1 Carbine", 
-	"Steyr Aug", 
-	"Steyr Scout", 
-	"AI Arctic Warfare/Magnum", 
-	"H&K G3/SG-1 Sniper Rifle", 
-	"Sig SG-550 Sniper", 
-	"FN M249 Para", 
-	"Kevlar Vest", 
-	"Kevlar Vest & Helmet", 
-	"Flashbang", 
-	"HE Grenade", 
-	"Smoke Grenade", 
-	"Defuse Kit", 
-	"NightVision Goggles", 
-	"Tactical Shield", 
-	"Primary weapon ammo", 
-	"Secondary weapon ammo"
-}
-
-new g_MenuItem[MAXMENUPOS][] =
-{
-	"\yHandguns^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\yShotguns^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\ySub-Machine Guns^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\yAssault Rifles^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\ySniper Rifles^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\yMachine Guns^n\w^n%d. %s\y\R%L^n\w^n", 
-
-	"\yEquipment^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w^n", 
-
-	"\yAmmunition^n\w^n%d. %s\y\R%L^n\w", 
-	"%d. %s\y\R%L^n\w"
-}
-
-new g_Aliases[MAXMENUPOS][] =
-{
-	"usp",		//Pistols
-	"glock", 
-	"deagle", 
-	"p228", 
-	"elites", 
-	"fn57", 
-
-	"m3",		//Shotguns
-	"xm1014", 
-
-	"mp5",		//SMG
-	"tmp", 
-	"p90", 
-	"mac10", 
-	"ump45", 
-
-	"ak47",		//Rifles
-	"galil", 
-	"famas", 
-	"sg552", 
-	"m4a1", 
-	"aug", 
-	"scout", 
-	"awp", 
-	"g3sg1", 
-	"sg550", 
-
-	"m249",		//Machine Gun
-
-	"vest",		//Equipment
-	"vesthelm", 
-	"flash", 
-	"hegren", 
-	"sgren", 
-	"defuser", 
-	"nvgs", 
-	"shield", 
-
-	"primammo", //Ammo
-	"secammo"
-}
-
-new g_Aliases2[MAXMENUPOS][] =
-{
-	"km45",		//Pistols
-	"9x19mm", 
-	"nighthawk", 
-	"228compact", 
-	"elites", 
-	"fiveseven", 
-
-	"12gauge",	//Shotguns
-	"autoshotgun", 
-
-	"smg",		//SMG
-	"mp", 
-	"c90", 
-	"mac10", 
-	"ump45", 
-
-	"cv47",		//Rifles
-	"defender", 
-	"clarion", 
-	"krieg552", 
-	"m4a1", 
-	"bullpup", 
-	"scout", 
-	"magnum", 
-	"d3au1", 
-	"krieg550", 
-
-	"m249",		//Machine Gun
-
-	"vest",		//Equipment
-	"vesthelm", 
-	"flash", 
-	"hegren", 
-	"sgren", 
-	"defuser", 
-	"nvgs", 
-	"shield", 
-	"primammo", //Ammo
-	"secammo"
-}
-
-#define AUTOBUYLENGTH 511
-new g_Autobuy[MAX_PLAYERS + 1][AUTOBUYLENGTH + 1]
-//new g_Rebuy[MAX_PLAYERS + 1][AUTOBUYLENGTH + 1]
-
-bool:IsOurMenuID(id)
-{
-	for (new i=1; i<=g_RegisteredMenus[0]; i++)
-	{
-		if (g_RegisteredMenus[i] == id)
-		{
-			return true
-		}
-	}
-	
-	return false
-}
-
-setWeapon(a, action)
-{
-	new b, m = g_Keys[a][0] * 8
-	
-	if (g_Keys[a][1] != -1)
-	{
-		b = m + g_Keys[a][1]
-		
-		if (action == 2)
-			g_blockPos[b] = 1 - g_blockPos[b]
-		else
-			g_blockPos[b] = action
-	}
-
-	if (g_Keys[a][2] != -1)
-	{
-		b = m + g_Keys[a][2] + 56
-		
-		if (action == 2)
-			g_blockPos[b] = 1 - g_blockPos[b]
-		else
-			g_blockPos[b] = action
-	}
-
-	for (new i = 0; i < g_AliasBlockNum; ++i)
-		if (g_AliasBlock[i] == a)
-		{
-			if (!action || action == 2)
-			{
-				--g_AliasBlockNum
-				
-				for (new j = i; j < g_AliasBlockNum; ++j)
-					g_AliasBlock[j] = g_AliasBlock[j + 1]
-			}
-			
-			return
-		}
-
-	if (action && g_AliasBlockNum < MAXMENUPOS)
-		g_AliasBlock[g_AliasBlockNum++] = a
-}
-
-findMenuId(name[])
-{
-	for (new i = 0; i < sizeof(g_menusNames) ; ++i)
-		if (equali(name, g_menusNames[i]))
-			return i
-	
-	return -1
-}
-
-findAliasId(name[])
-{
-	for (new i = 0; i < MAXMENUPOS ; ++i)
-		if (equali(name, g_Aliases[i]))
-			return i
-	
-	return -1
-}
-
-switchCommand(id, action)
-{
-	new c = read_argc()
-
-	if (c < 3)
-	{
-		for (new x = 0; x < MAXMENUPOS; x++)
-			setWeapon(x, action)		
-
-		console_print(id, "%L", id, action ? "EQ_WE_RES" : "EQ_WE_UNRES")
-		g_Modified = true
-	} else {
-		new arg[32], a
-		new bool:found = false
-		
-		for (new b = 2; b < c; ++b)
-		{
-			read_argv(b, arg, charsmax(arg))
-			
-			if ((a = findMenuId(arg)) != -1)
-			{
-				c = g_menusSets[a][1]
-				
-				for (new i = g_menusSets[a][0]; i < c; ++i)
-					setWeapon(i, action)
-				
-				console_print(id, "%s %L %L", g_MenuTitle[a], id, (a < 5) ? "HAVE_BEEN" : "HAS_BEEN", id, action ? "RESTRICTED" : "UNRESTRICTED")
-				g_Modified = found = true
-			}
-			else if ((a = findAliasId(arg)) != -1)
-			{
-				g_Modified = found = true
-				setWeapon(a, action)
-				console_print(id, "%s %L %L", g_WeaponNames[a], id, "HAS_BEEN", id, action ? "RESTRICTED" : "UNRESTRICTED")
-			}
-		}
-
-		if (!found)
-			console_print(id, "%L", id, "NO_EQ_WE")
-	}
-}
-
-positionBlocked(a)
-{
-	new m = g_Keys[a][0] * 8
-	new d = (g_Keys[a][1] == -1) ? 0 : g_blockPos[m + g_Keys[a][1]]
-	
-	d += (g_Keys[a][2] == -1) ? 0 : g_blockPos[m + g_Keys[a][2] + 56]
-	
-	return d
-}
-
-public cmdRest(id, level, cid)
-{
-	if (!cmd_access(id, level, cid, 1))
-		return PLUGIN_HANDLED
-
-	new cmd[8]
-	
-	read_argv(1, cmd, charsmax(cmd))
-	
-	if (equali("on", cmd))
-		switchCommand(id, 1)
-	else if (equali("off", cmd))
-		switchCommand(id, 0)
-	else if (equali("list", cmd))
-	{
-		new arg1[8]
-		new	start = read_argv(2, arg1, charsmax(arg1)) ? str_to_num(arg1) : 1
-		
-		if (--start < 0)
-			start = 0
-		
-		if (start >= MAXMENUPOS)
-			start = MAXMENUPOS - 1
-		
-		new end = start + 10
-		
-		if (end > MAXMENUPOS)
-			end = MAXMENUPOS
-		
-		new lName[16], lValue[16], lStatus[16], lOnOff[16]
-		
-		format(lName, charsmax(lName), "%L", id, "NAME")
-		format(lValue, charsmax(lValue), "%L", id, "VALUE")
-		format(lStatus, charsmax(lStatus), "%L", id, "STATUS")
-		
-		console_print(id, "^n----- %L: -----", id, "WEAP_RES")
-		console_print(id, "     %-32.31s   %-10.9s   %-9.8s", lName, lValue, lStatus)
-		
-		if (start != -1)
-		{
-			for (new a = start; a < end; ++a)
-			{
-				format(lOnOff, charsmax(lOnOff), "%L", id, positionBlocked(a) ? "ON" : "OFF")
-				console_print(id, "%3d: %-32.31s   %-10.9s   %-9.8s", a + 1, g_WeaponNames[a], g_Aliases[a], lOnOff)
-			}
-		}
-		
-		console_print(id, "----- %L -----", id, "REST_ENTRIES_OF", start + 1, end, MAXMENUPOS)
-		
-		if (end < MAXMENUPOS)
-			console_print(id, "----- %L -----", id, "REST_USE_MORE", end + 1)
-		else
-			console_print(id, "----- %L -----", id, "REST_USE_BEGIN")
-	}
-	else if (equali("save", cmd))
-	{
-		if (saveSettings(g_saveFile))
-		{
-			console_print(id, "%L", id, "REST_CONF_SAVED", g_saveFile)
-			g_Modified = false
-		}
-		else
-			console_print(id, "%L", id, "REST_COULDNT_SAVE", g_saveFile)
-	}
-	else if (equali("load", cmd))
-	{
-		setc(g_blockPos, sizeof(g_blockPos), 0)	// Clear current settings
-		new arg1[64]
-
-		if (read_argv(2, arg1, charsmax(arg1)))
-		{
-			new configsdir[32]
-			get_configsdir(configsdir, charsmax(configsdir))
-
-			format(arg1, charsmax(arg1), "%s/%s", configsdir, arg1)
-		}
-		
-		if (loadSettings(arg1))
-		{
-			console_print(id, "%L", id, "REST_CONF_LOADED", arg1)
-			g_Modified = true
-		}
-		else
-			console_print(id, "%L", id, "REST_COULDNT_LOAD", arg1)
-	} else {
-		console_print(id, "%L", id, "COM_REST_USAGE")
-		console_print(id, "%L", id, "COM_REST_COMMANDS")
-		console_print(id, "%L", id, "COM_REST_ON")
-		console_print(id, "%L", id, "COM_REST_OFF")
-		console_print(id, "%L", id, "COM_REST_ONV")
-		console_print(id, "%L", id, "COM_REST_OFFV")
-		console_print(id, "%L", id, "COM_REST_LIST")
-		console_print(id, "%L", id, "COM_REST_SAVE")
-		console_print(id, "%L", id, "COM_REST_LOAD")
-		console_print(id, "%L", id, "COM_REST_VALUES")
-		console_print(id, "%L", id, "COM_REST_TYPE")
-	}
-
-	return PLUGIN_HANDLED
-}
-
-displayMenu(id, pos)
-{
-	if (pos < 0)
-		return
-
-	new menubody[512], start = pos * 7
-
-	if (start >= MAXMENUPOS)
-		start = pos = g_Position[id] = 0
-
-	new len = format(menubody, charsmax(menubody), "\y%L\R%d/5^n^n\w", id, "REST_WEAP", pos + 1)
-	new end = start + 7, keys = MENU_KEY_0|MENU_KEY_8, k = 0
-
-	if (end > MAXMENUPOS)
-		end = MAXMENUPOS
-
-	for (new a = start; a < end; ++a)
-	{
-		keys |= (1<<k)
-		len += format(menubody[len], charsmax(menubody) - len, g_MenuItem[a], ++k, g_WeaponNames[a], id, positionBlocked(a) ? "ON" : "OFF")
-	}
-
-	len += format(menubody[len], charsmax(menubody) - len, "^n8. %L \y\R%s^n\w", id, "SAVE_SET", g_Modified ? "*" : "")
-
-	if (end != MAXMENUPOS)
-	{
-		format(menubody[len], charsmax(menubody) - len, "^n9. %L...^n0. %L", id, "MORE", id, pos ? "BACK" : "EXIT")
-		keys |= MENU_KEY_9
-	}
-	else
-		format(menubody[len], charsmax(menubody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT")
-
-	show_menu(id, keys, menubody, -1, "Restrict Weapons")
-}
-
-public actionMenu(id, key)
-{
-	switch (key)
-	{
-		case 7:
-		{
-			if (saveSettings(g_saveFile))
-			{
-				g_Modified = false
-				client_print(id, print_chat, "* %L", id, "CONF_SAV_SUC")
-			}
-			else
-				client_print(id, print_chat, "* %L", id, "CONF_SAV_FAIL")
-
-			displayMenu(id, g_Position[id])
-		}
-		case 8: displayMenu(id, ++g_Position[id])
-		case 9: displayMenu(id, --g_Position[id])
-		default:
-		{
-			setWeapon(g_Position[id] * 7 + key, 2)
-			g_Modified = true
-			displayMenu(id, g_Position[id])
-
-			new a = g_Position[id] * 7 + key
-			new sz[1]
-
-			if (a < 24)
-			{
-				sz[0] = g_szWeapRestr[a + 1]
-				g_szWeapRestr[a + 1] = (sz[0] == '0') ? '1' : '0'  // primary and secondary weapons
-			}
-			else if ((a >= 24) && (a < 31))
-			{
-				sz[0] = g_szEquipAmmoRestr[a - 24]
-				g_szEquipAmmoRestr[a - 24] = (sz[0] == '0') ? '1' : '0'  // equipments
-			}
-			else if (a == 31)
-			{
-				sz[0] = g_szWeapRestr[25]
-				g_szWeapRestr[25] = (sz[0] == '0') ? '1' : '0'  // shield
-			}
-			else if ((a > 31) && (a < 34))
-			{
-				sz[0] = g_szEquipAmmoRestr[a - 25]
-				g_szEquipAmmoRestr[a - 25] = (sz[0] == '0') ? '1' : '0'   // primary and secondary ammo
-			}
-			set_cvar_string("amx_restrweapons", g_szWeapRestr)
-			set_cvar_string("amx_restrequipammo", g_szEquipAmmoRestr)
-		}
-	}
-
-	return PLUGIN_HANDLED
-}
-
-public CS_InternalCommand(id, const cmd[])
-{
-	new a = 0
-
-	do
-	{
-		if (equali(g_Aliases[g_AliasBlock[a]], cmd) || equali(g_Aliases2[g_AliasBlock[a]], cmd))
-		{
-			client_print(id, print_center, "%s", g_Restricted)
-			return PLUGIN_HANDLED
-		}
-	} while (++a < g_AliasBlockNum)
-	
-	return PLUGIN_CONTINUE
-}
-
-public client_command(id)
-{
-	if (g_AliasBlockNum)
-	{
-		new arg[13]
-
-		if (read_argv(0, arg, charsmax(arg)) > 11)		/* Longest buy command has 11 chars so if command is longer then don't care */
-		{
-			return PLUGIN_CONTINUE
-		}
-		
-		if (equali(arg, "menuselect") && is_user_connected(id))
-		{
-			new menu, newmenu
-			new inMenu = player_menu_info(id, menu, newmenu)
-			
-			if (!inMenu && g_InBuyMenu[id])
-			{
-				new key[12], num
-				
-				read_argv(1, key, charsmax(key))
-				num = str_to_num(key) - 1
-				
-				return checkRest(id, g_InBuyMenu[id], num)
-			} else if ((!menu || newmenu != -1) 
-					 || !IsOurMenuID(menu)) {
-				g_InBuyMenu[id] = 0
-			}
-
-			return PLUGIN_CONTINUE
-		}
-
-		new a = 0
-
-		do
-		{
-			if (equali(g_Aliases[g_AliasBlock[a]], arg) || equali(g_Aliases2[g_AliasBlock[a]], arg))
-			{
-				client_print(id, print_center, "%s", g_Restricted)
-				return PLUGIN_HANDLED
-			}
-		} while (++a < g_AliasBlockNum)
-	}
-	
-	return PLUGIN_CONTINUE
-}
-
-public blockcommand(id)
-{
-	client_print(id, print_center, "%s", g_Restricted)
-	return PLUGIN_HANDLED
-}
-
-public cmdMenu(id, level, cid)
-{
-	if (cmd_access(id, level, cid, 1))
-	{
-		displayMenu(id, g_Position[id] = 0)
-	}
-	
-	return PLUGIN_HANDLED
-}
-
-checkRest(id, menu, key)
-{
-	new team = get_user_team(id)
-	
-	if (team != 1 && team != 2)
-	{
-		return PLUGIN_HANDLED
-	}
-		
-	new pos = (menu * 8 + key) + (get_user_team(id) - 1) * 56
-	
-	if (pos < 0 || pos >= 112)
-	{
-		return PLUGIN_CONTINUE
-	}
-	
-	if (g_blockPos[pos])
-	{
-		engclient_cmd(id, "menuselect", "10")
-		client_print(id, print_center, "%s", g_Restricted)
-		
-		return PLUGIN_HANDLED
-	}
-	
-	return PLUGIN_CONTINUE
-}
-
-public ammoRest1(id)		return checkRest(id, 0, 5)
-public ammoRest2(id)        return checkRest(id, 0, 6)
-public menuBuy(id, key)     return checkRest(id, 0, key)
-public menuPistol(id, key)  return checkRest(id, 1, key)
-public menuShotgun(id, key) return checkRest(id, 2, key)
-public menuSub(id, key)     return checkRest(id, 3, key)
-public menuRifle(id, key)   return checkRest(id, 4, key)
-public menuMachine(id, key) return checkRest(id, 5, key)
-public menuItem(id, key)    return checkRest(id, 6, key)
-
-saveSettings(filename[])
-{
-	if (file_exists(filename))
-		delete_file(filename)
-
-	if (!write_file(filename, "; Generated by Restrict Weapons Plugin. Do not modify!^n; value name"))
-		return 0
-
-	new text[64]
-
-	for (new a = 0; a < MAXMENUPOS; ++a)
-	{
-		if (positionBlocked(a))
-		{
-			format(text, charsmax(text), "%-16.15s ; %s", g_Aliases[a], g_WeaponNames[a])
-			write_file(filename, text)
-		}
-	}
-
-	return 1
-}
-
-loadSettings(filename[])
-{
-	if (!file_exists(filename))
-		return 0
-
-	new text[16]
-	new a, pos = 0
-
-	format(g_szEquipAmmoRestr, charsmax(g_szEquipAmmoRestr), "000000000")
-	format(g_szWeapRestr, charsmax(g_szWeapRestr), "00000000000000000000000000")
-
-	while (read_file(filename, pos++, text, charsmax(text), a))
-	{
-		if (text[0] == ';' || !a)
-			continue	// line is a comment
-		
-		parse(text, text, charsmax(text))
-		
-		if ((a = findAliasId(text)) != -1)
-		{
-			setWeapon(a, 1)
-			if (a < 24) g_szWeapRestr[a + 1] = '1' // primary and secondary weapons
-			else if ((a >= 24) && (a < 31)) g_szEquipAmmoRestr[a - 24] = '1'  // equipments
-			else if (a == 31) g_szWeapRestr[25] = '1'  // shield
-			else if ((a > 31) && (a < 34)) g_szEquipAmmoRestr[a - 25] = '1'  // primary and secondary ammo
-		}
-	}
-	set_cvar_string("amx_restrweapons", g_szWeapRestr)
-	set_cvar_string("amx_restrequipammo", g_szEquipAmmoRestr)
-
-	return 1
-}
-
-// JGHG
-public fn_setautobuy(id)
-{
-	// Empty user's autobuy prefs. (unnecessary?)
-	g_Autobuy[id][0] = '^0'
-
-	new argCount = read_argc()
-	new arg[128]
-	new autobuyLen = 0
-	
-	for (new i = 1; i < argCount; i++)		// Start at parameter 1; parameter 0 is just "cl_setautobuy"
-	{
-		read_argv(i, arg, charsmax(arg))
-		// Add this parameter to user's autobuy prefs
-		autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, "%s", arg)
-		
-		// If we detect more parameters, add a space
-		if (i + 1 < argCount)
-			autobuyLen += format(g_Autobuy[id][autobuyLen], AUTOBUYLENGTH - autobuyLen, " ")
-	}
-
-	if (g_AliasBlockNum)
-	{
-		// Strip any blocked items
-		new strippedItems[AUTOBUYLENGTH + 1]
-	
-		if (!StripBlockedItems(g_Autobuy[id], strippedItems))
-			return PLUGIN_CONTINUE				// don't touch anything if we didn't strip anything...
-
-		//server_print("Stripped items: ^"%s^"", strippedItems)
-		engclient_cmd(id, "cl_setautobuy", strippedItems)
-
-		return PLUGIN_HANDLED
-	}
-	
-	return PLUGIN_CONTINUE
-}
-
-// Returns true if this strips any items, else false.
-StripBlockedItems(inString[AUTOBUYLENGTH + 1], outString[AUTOBUYLENGTH + 1])
-{
-	// First copy string
-	format(outString, AUTOBUYLENGTH, inString)
-
-	// After that convert all chars in string to lower case (fix by VEN)
-	strtolower(outString)
-
-	// Then strip those that are blocked.
-	for (new i = 0; i < g_AliasBlockNum; i++)
-	{
-		while (containi(outString, g_Aliases[g_AliasBlock[i]]) != -1)
-			replace(outString, AUTOBUYLENGTH, g_Aliases[g_AliasBlock[i]], "")
-		while (containi(outString, g_Aliases2[g_AliasBlock[i]]) != -1)
-			replace(outString, AUTOBUYLENGTH, g_Aliases2[g_AliasBlock[i]], "")
-	}
-
-	// We COULD trim white space from outString here, but I don't think it really is necessary currently...
-	if (strlen(outString) < strlen(inString))
-		return true							// outstring is shorter: we stripped items, return true
-
-	return false							// else end here, return false, no items were stripped
-}
-
-public fn_autobuy(id)
-{
-	// Don't do anything if no items are blocked.
-	if (!g_AliasBlockNum)
-		return PLUGIN_CONTINUE
-
-	// Strip any blocked items
-	new strippedItems[AUTOBUYLENGTH + 1]
-	
-	if (!StripBlockedItems(g_Autobuy[id], strippedItems))
-		return PLUGIN_CONTINUE				// don't touch anything if we didn't strip anything...
-
-	engclient_cmd(id, "cl_setautobuy", strippedItems)
-	
-	return PLUGIN_HANDLED
-}
-
-public HookEvent_ShowMenu(id)
-{
-	new menustring[24]
-	
-	read_data(4, menustring, charsmax(menustring))
-	
-	/* Early breakouts */
-	new curidx
-	if (menustring[curidx++] != '#')
-	{
-		g_InBuyMenu[id] = 0
-		return
-	}
-	
-	/* Strip D */
-	if (menustring[curidx] == 'D')
-	{
-		curidx++
-	}
-	
-	/* Strip AS_ */
-	if (menustring[curidx] == 'A'
-	    && menustring[curidx+1] == 'S'
-	    && menustring[curidx+2] == '_')
-	{
-		curidx += 3
-	}
-	
-	/* Strip any team tags */
-	if (menustring[curidx] == 'C'
-	    && menustring[curidx+1] == 'T'
-	    && menustring[curidx+2] == '_')
-	{
-		curidx += 3
-	} else if (menustring[curidx] == 'T'
-			 && menustring[curidx+1] == '_') {
-		curidx += 2
-	}
-	
-	if (menustring[curidx] != 'B')
-	{
-		g_InBuyMenu[id] = 0
-		return
-	}
-	
-	for (new i=0; i<sizeof(g_menuStrings); i++)
-	{
-		if (equali(menustring[curidx], g_menuStrings[i]))
-		{
-			g_InBuyMenu[id] = i+1
-			return
-		}
-	}
-	
-	g_InBuyMenu[id] = 0
-}
-
-RegisterMenuID(const menuname[])
-{
-	new id = register_menuid(menuname, 1)
-	g_RegisteredMenus[++g_RegisteredMenus[0]] = id
-	return id
-}
 
 public plugin_init()
 {
-	register_plugin("Restrict Weapons", AMXX_VERSION_STR, "AMXX Dev Team")
-	register_dictionary("restmenu.txt")
-	register_dictionary("common.txt")
-	register_clcmd("buyammo1", "ammoRest1")
-	register_clcmd("buyammo2", "ammoRest2")
-	register_clcmd("cl_setautobuy", "fn_setautobuy")
-	register_clcmd("cl_autobuy", "fn_autobuy")
-	register_clcmd("amx_restmenu", "cmdMenu", ADMIN_CFG, "- displays weapons restriction menu")
-	register_menucmd(register_menuid("#Buy", 1), 511, "menuBuy")
-	register_menucmd(register_menuid("Restrict Weapons"), 1023, "actionMenu")
-	register_menucmd(RegisterMenuID("BuyPistol"), 511, "menuPistol")
-	register_menucmd(RegisterMenuID("BuyShotgun"), 511, "menuShotgun")
-	register_menucmd(RegisterMenuID("BuySub"), 511, "menuSub")
-	register_menucmd(RegisterMenuID("BuyRifle"), 511, "menuRifle")
-	register_menucmd(RegisterMenuID("BuyMachine"), 511, "menuMachine")
-	register_menucmd(RegisterMenuID("BuyItem"), 511, "menuItem")
-	register_menucmd(-28, 511, "menuBuy")
-	register_menucmd(-29, 511, "menuPistol")
-	register_menucmd(-30, 511, "menuShotgun")
-	register_menucmd(-32, 511, "menuSub")
-	register_menucmd(-31, 511, "menuRifle")
-	register_menucmd(-33, 511, "menuMachine")
-	register_menucmd(-34, 511, "menuItem")
-	register_concmd("amx_restrict", "cmdRest", ADMIN_CFG, "- displays help for weapons restriction")
+	register_plugin(PluginName, AMXX_VERSION_STR, "AMXX Dev Team");
 
-	register_cvar("amx_restrweapons", "00000000000000000000000000")
-	register_cvar("amx_restrequipammo", "000000000")
-	
-	register_event("ShowMenu", "HookEvent_ShowMenu", "b")
+	register_dictionary("restmenu.txt");
+	register_dictionary("common.txt");
 
-	new configsDir[64];
-	get_configsdir(configsDir, charsmax(configsDir));
-#if defined MAPSETTINGS
-	new mapname[32]
-	get_mapname(mapname, charsmax(mapname))
-	format(g_saveFile, charsmax(g_saveFile), "%s/weaprest_%s.ini", configsDir, mapname)
-#else
-	format(g_saveFile, charsmax(g_saveFile), "%s/weaprest.ini", configsDir)
-#endif
-	loadSettings(g_saveFile)
+	register_clcmd( "amx_restmenu", "@ClientCommand_MainMenu" , ADMIN_CFG, .info = "REG_CMD_MENU", .info_ml = true);
+	register_concmd("amx_restrict", "@ConsoleCommand_Restrict", ADMIN_CFG, .info = "REG_CMD_REST", .info_ml = true);
+
+	CvarPointerAllowMapSettings     = register_cvar("amx_restrmapsettings", "0");
+	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"    , RestrictedBotWeapons);
+	CvarPointerRestrictedEquipAmmos = register_cvar("amx_restrequipammo"  , RestrictedBotEquipAmmos);
 }
+
+public OnConfigsExecuted()
+{
+	new const configFile[] = "weaprest";
+	new const configFileExt[] = "ini";
+
+	new configsDir[PLATFORM_MAX_PATH];
+	get_configsdir(configsDir, charsmax(configsDir));
+
+	if (get_pcvar_bool(CvarPointerAllowMapSettings))
+	{
+		new mapName[MaxMapLength];
+		get_mapname(mapName, charsmax(mapName));
+
+		formatex(ConfigFilePath, charsmax(ConfigFilePath), "%s/%s_%s.%s", configsDir, configFile, mapName, configFileExt);
+	}
+	else
+	{
+		formatex(ConfigFilePath, charsmax(ConfigFilePath), "%s/%s.%s", configsDir, configFile, configFileExt);
+	}
+
+	loadSettings(ConfigFilePath);
+
+	ConfigsExecuted = true;
+}
+
+public CS_OnBuyAttempt(player, itemid)
+{
+	if (BlockedItems[itemid])
+	{
+		return blockcommand(player);
+	}
+
+	return PLUGIN_CONTINUE;
+}
+
+public blockcommand(const id) // Might be used by others plugins, so keep this for backward compatibility.
+{
+	client_print(id, print_center, "%l", "RESTRICTED_ITEM");
+	return PLUGIN_HANDLED;
+}
+
+@ClientCommand_MainMenu(const id, const level, const cid)
+{
+	if (cmd_access(id, level, cid, 1))
+	{
+		displayMenu(id, MenuPosition[id] = -1);
+	}
+
+	return PLUGIN_HANDLED;
+}
+
+@ConsoleCommand_Restrict(const id, const level, const cid)
+{
+	if (!cmd_access(id, level, cid, 1))
+	{
+		return PLUGIN_HANDLED;
+	}
+
+	new const argumentsCount = read_argc();
+
+	if (argumentsCount <= 1) // Main command only, no arguments.
+	{
+		goto usage;
+	}
+
+	new action[8];
+	new argumentIndex;
+	new const actionLength = read_argv(++argumentIndex, action, charsmax(action)) - trim(action);
+
+	if (!actionLength || !isalpha(action[0])) // Empty argument or first character is not a letter.
+	{
+		goto usage;
+	}
+
+	new const ch1 = char_to_lower(action[0]);
+	new const ch2 = char_to_lower(action[1]);
+
+	if (ch1 == 'o' && (ch2 == 'n' || ch2 == 'f'))  // [on]/[of]f
+	{
+		new const bool:restricted = (ch2 == 'n');
+		new bool:valid;
+
+		if (argumentsCount <= argumentIndex + 1) // No arguments, all items are concerned.
+		{
+			arrayset(BlockedItems, restricted, sizeof BlockedItems);
+			console_print(id, "%l", restricted ? "EQ_WE_RES" : "EQ_WE_UNRES");
+
+			ModifiedItem = valid = true;
+			refreshMenus(level);
+		}
+		else // Either item type or specific alias
+		{
+			new commands[MaxConsoleLength];
+			new itemName[MaxItemNameLength];
+			new argument[MaxAliasNameLength];
+			new position, class;
+			new itemid, slot;
+			new commandLength;
+
+			while (argumentIndex < argumentsCount)
+			{
+				// Ignore if the argument is empty or the first character is not a letter.
+				if ((commandLength = read_argv(++argumentIndex, commands, charsmax(commands)) - trim(commands)) <= 0 || !isalpha(commands[0]))
+				{
+					continue;
+				}
+
+				strtolower(commands);
+				position = 0;
+
+				// In case argument contains several input between quotes.
+				while (position != commandLength && (position = argparse(commands, position, argument, charsmax(argument))) != -1)
+				{
+					if ((class = findMenuAliasId(argument)) != -1)
+					{
+						for (slot = 0; slot < sizeof ItemsInfos[] && (itemid = ItemsInfos[class][slot][m_Index]) != CSI_NONE; ++slot)
+						{
+							BlockedItems[itemid] = restricted;
+						}
+
+						console_print(id, "%l %l %l", MenuInfos[class], (class < 6) ? "HAVE_BEEN" : "HAS_BEEN", restricted ? "RESTRICTED" : "UNRESTRICTED");
+						ModifiedItem = valid = true;
+					}
+					else if ((itemid = cs_get_item_id(argument)) != CSI_NONE)
+					{
+						BlockedItems[itemid] = restricted;
+						findItemFullName(itemid, itemName, charsmax(itemName));
+
+						console_print(id, "%l %l %l", itemName, "HAS_BEEN", restricted ? "RESTRICTED" : "UNRESTRICTED");
+						ModifiedItem = valid = true;
+					}
+				}
+			}
+
+			if (!valid)
+			{
+				console_print(id, "%l", "NO_EQ_WE");
+			}
+			else
+			{
+				refreshMenus(level);
+			}
+		}
+
+		if (ConfigsExecuted && valid)
+		{
+			show_activity_key("ADMIN_UPD_RES_1", "ADMIN_UPD_RES_2", fmt("%n", id));
+			log_amx("%L", LANG_SERVER, "ADMIN_CMD_UPDATEDCFG", id);
+		}
+	}
+	else if (ch1 == 'l' && ch2 == 'i')  // [li]st
+	{
+		// Items list.
+		if (argumentsCount > argumentIndex + 1) // Available arguments.
+		{
+			new const selection = read_argv_int(++argumentIndex) - 1; // Index starts from 0.
+
+			if (0 <= selection <= charsmax(ItemsInfos))
+			{
+				console_print(id, "^n----- %l: %l -----^n", "WEAP_RES", MenuInfos[selection][m_Title]);
+
+				SetGlobalTransTarget(id);
+
+				new alias[MaxAliasNameLength];
+				new itemid;
+
+				console_print(id, "  %-32.31s   %-10.9s   %-9.8s", fmt("%l", "NAME"), fmt("%l", "VALUE"), fmt("%l", "STATUS"));
+				console_print(id, "");
+
+				for (new slot = 0; slot < sizeof ItemsInfos[] && (itemid = ItemsInfos[selection][slot][m_Index]) != CSI_NONE; ++slot)
+				{
+					cs_get_item_alias(itemid, alias, charsmax(alias));
+
+					console_print(id, "  %-32.31s   %-10.9s   %-9.8s", fmt("%l", ItemsInfos[selection][slot][m_Name]), alias
+																	 , fmt("%l", BlockedItems[itemid] ? "ON" : "OFF"));
+				}
+
+				console_print(id, "");
+				return PLUGIN_HANDLED;
+			}
+		}
+
+		console_print(id, "^n----- %l -----^n", "WEAP_RES");
+
+		// Item types list.
+		for (new class = 0; class < sizeof MenuInfos; ++class)
+		{
+			console_print(id, "%3d: %l", class + 1, MenuInfos[class][m_Title]);
+		}
+
+		console_print(id, "^n----- %l -----^n", "REST_USE_HOW");
+	}
+	else if (ch1 == 's')  // [s]ave
+	{
+		// If 'save' is used in a per-map config file, the plugin config file is not yet known as it depends on
+		// amx_restrmapsettings cvar value read after per-map configs are processed. Postponing the saving a little.
+		if (!ConfigsExecuted)
+		{
+			const taskId = 424242;
+
+			if (!task_exists(taskId))
+			{
+				set_task(0.1, "@Task_SaveConfig", taskId);
+			}
+
+			return PLUGIN_HANDLED;
+		}
+
+		new bool:saved = saveSettings(ConfigFilePath);
+
+		if (saved)
+		{
+			ModifiedItem = false;
+			refreshMenus(level, .displaySaveMessage = true);
+
+			if (ConfigsExecuted)
+			{
+				log_amx("%L", LANG_SERVER, "ADMIN_CMD_SAVEDCFG", id, ConfigFilePath);
+			}
+		}
+
+		console_print(id, "%l^n", saved ? "REST_CONF_SAVED" : "REST_COULDNT_SAVE", ConfigFilePath);
+	}
+	else if (ch1 == 'l' && ch2 == 'o')  // [lo]ad
+	{
+		if (argumentsCount <= argumentIndex + 1) // No argument
+		{
+			goto usage;
+		}
+
+		new argument[MaxConfigFileLength];
+		read_argv(++argumentIndex, argument, charsmax(argument)) - trim(argument);
+
+		new filepath[PLATFORM_MAX_PATH];
+		new length = get_configsdir(filepath, charsmax(filepath));
+		formatex(filepath[length], charsmax(filepath) - length, "/%s", argument);
+
+		new bool:loaded = loadSettings(filepath);
+
+		if (loaded)
+		{
+			arrayset(BlockedItems, false, sizeof BlockedItems);
+
+			ModifiedItem = true;
+			refreshMenus(level);
+
+			if (ConfigsExecuted)
+			{
+				show_activity_key("ADMIN_UPD_RES_1", "ADMIN_UPD_RES_2", fmt("%n", id));
+				log_amx("%L", LANG_SERVER, "ADMIN_CMD_LOADEDCFG", id, ConfigFilePath);
+			}
+		}
+
+		console_print(id, "%l^n", loaded ? "REST_CONF_LOADED" : "REST_COULDNT_LOAD", filepath);
+	}
+	else
+	{
+		usage:
+		console_print(id, "%l", "COM_REST_USAGE");
+		console_print(id, "^n%l", "COM_REST_COMMANDS");
+		console_print(id, "%l", "COM_REST_ON");
+		console_print(id, "%l", "COM_REST_OFF");
+		console_print(id, "%l", "COM_REST_ONV");
+		console_print(id, "%l", "COM_REST_OFFV");
+		console_print(id, "%l", "COM_REST_LIST");
+		console_print(id, "%l", "COM_REST_SAVE");
+		console_print(id, "%l^n", "COM_REST_LOAD");
+		console_print(id, "%l^n", "COM_REST_VALUES");
+		console_print(id, "%l^n", "COM_REST_TYPE");
+	}
+
+	return PLUGIN_HANDLED;
+}
+
+@Task_SaveConfig()
+{
+	server_cmd("amx_restrict save");
+}
+
+displayMenu(const id, const position)
+{
+	SetGlobalTransTarget(id);
+
+	new menuTitle[MaxMenuTitleLength * 2];
+	formatex(menuTitle, charsmax(menuTitle), "      \y%l", "REST_WEAP");
+
+	new const menu = MenuHandle[id] = menu_create(menuTitle, "@OnMenuAction");
+
+	if (position < 0)  // Main menu
+	{
+		for (new class = 0; class < sizeof MenuInfos; ++class)
+		{
+			menu_additem(menu, fmt("%l", MenuInfos[class][m_Title]));
+		}
+	}
+	else // Sub-menus
+	{
+		menu_setprop(menu, MPROP_TITLE, fmt("%s  > \d%l", menuTitle, MenuInfos[position][m_Title]));
+
+		for (new slot = 0, data[MenuItem], index; slot < sizeof ItemsInfos[]; ++slot)
+		{
+			data = ItemsInfos[position][slot];
+
+			if ((index = data[m_Index]))
+			{
+				menu_additem(menu, fmt("%l\R%s%l", data[m_Name], BlockedItems[index] ? "\y" : "\r", BlockedItems[index] ? "ON" : "OFF"));
+				continue;
+			}
+
+			menu_addblank2(menu);
+		}
+	}
+
+	menu_addblank(menu, .slot = false);
+	menu_additem(menu, fmt("%s%l \y\R%s", ModifiedItem ? "\y" : "\d", "SAVE_SET", ModifiedItem ? "*" : ""));
+
+	if (position >= 0) // Inside a sub-menu
+	{
+		menu_addblank(menu, .slot = false);
+		menu_additem(menu, fmt("%l", "BACK"));
+	}
+	else // Main menu
+	{
+		menu_setprop(menu, MPROP_EXITNAME, fmt("%l", "EXIT"));
+		menu_setprop(menu, MPROP_EXIT, MEXIT_FORCE);                // Force an EXIT item since pagination is disabled.
+	}
+
+	menu_setprop(menu, MPROP_PERPAGE, 0);                           // Disable pagination.
+	menu_setprop(menu, MPROP_NUMBER_COLOR, "      \r");             // Small QoL change to avoid menu overlapping with left icons.
+
+	menu_display(id, menu);
+
+	return menu;
+}
+
+@OnMenuAction(const id, const menu, const key)
+{
+	new position = MenuPosition[id];
+
+	if (key >= 0)
+	{
+		switch (key + 1)
+		{
+			case 1 .. sizeof ItemsInfos[]:
+			{
+				if (position < 0)  // We are right now in the main menu, go to sub-menu.
+				{
+					position = key;
+				}
+				else  // We are in a sub-menu.
+				{
+					ModifiedItem = true;
+
+					new const itemid = ItemsInfos[any:position][key][m_Index];
+					BlockedItems[itemid] = !BlockedItems[itemid];
+
+					restrictPodbotItem(itemid, .toggle = true);
+					updatePodbotCvars();
+				}
+			}
+			case sizeof ItemsInfos[] + 1:  // Save option.
+			{
+				if (saveSettings(ConfigFilePath))
+				{
+					show_activity_key("ADMIN_UPD_RES_1", "ADMIN_UPD_RES_2", fmt("%n", id));
+					log_amx("%L", LANG_SERVER, "ADMIN_MENU_SAVEDCFG", id ,ConfigFilePath);
+
+					ModifiedItem = false;
+				}
+
+				client_print(id, print_chat, "* %l", ModifiedItem ? "CONF_SAV_FAIL" : "CONF_SAV_SUC");
+			}
+			default:
+			{
+				position = -1;  // Back to main menu.
+			}
+		}
+	}
+
+	MenuHandle[id] = -1;
+
+	menu_destroy(menu);
+
+	if (position != MenuPosition[id] || key >= 0)
+	{
+		displayMenu(id, MenuPosition[id] = position);
+	}
+
+	return PLUGIN_HANDLED;
+}
+
+findAdminsWithMenu(playersList[MAX_PLAYERS], &playersCount, const commandLevel = -1)
+{
+	new player, adminsCount;
+	new menu, newmenu;
+
+	get_players(playersList, playersCount, "ch");
+
+	for (new i = 0; i < playersCount, (player = playersList[i]); ++i)
+	{
+		if (player_menu_info(player, menu, newmenu) && newmenu != -1 && newmenu == MenuHandle[player])
+		{
+			if (commandLevel == -1 || access(player, commandLevel)) // extra safety
+			{
+				playersList[adminsCount++] = player;
+			}
+		}
+	}
+
+	playersCount = adminsCount;
+}
+
+refreshMenus(const commandLevel = 0, const bool:displaySaveMessage = false)
+{
+	new playersList[MAX_PLAYERS], playersCount;
+	findAdminsWithMenu(playersList, playersCount, commandLevel);
+
+	if (!playersCount)
+	{
+		return;
+	}
+
+	for (new i = 0, player; i < playersCount, (player = playersList[i]); ++i)
+	{
+		MenuHandle[player] = displayMenu(player, MenuPosition[player]);
+
+		if (displaySaveMessage)
+		{
+			client_print(playersList[i], print_chat, "* %l (amx_restrict)", "CONF_SAV_SUC");
+		}
+	}
+}
+
+bool:saveSettings(const filename[])
+{
+	new const fp = fopen(filename, "wt");
+
+	if (!fp)
+	{
+		return false;
+	}
+
+	fprintf(fp, "%L", LANG_SERVER, "CONFIG_FILE_HEADER", PluginName);
+
+	new alias[MaxAliasNameLength];
+	new itemid;
+	new bool:showCategory;
+
+	for (new class = 0, slot; class < sizeof ItemsInfos; ++class)
+	{
+		showCategory = true;
+
+		for (slot = 0; slot < sizeof ItemsInfos[]; ++slot)
+		{
+			if ((itemid = ItemsInfos[class][slot][m_Index]) == CSI_NONE)
+			{
+				break;
+			}
+
+			if (BlockedItems[itemid])
+			{
+				if (showCategory)
+				{
+					showCategory = false;
+					fprintf(fp, "^n; %l^n; -^n", MenuInfos[class][m_Title]);
+				}
+
+				cs_get_item_alias(itemid, alias, charsmax(alias));
+				fprintf(fp, "%-16.15s ; %L^n", alias, LANG_SERVER, ItemsInfos[class][slot][m_Name]);
+			}
+		}
+	}
+
+	fclose(fp);
+
+	return true;
+}
+
+bool:loadSettings(const filename[])
+{
+	new const fp = fopen(filename, "rt");
+
+	if (!fp)
+	{
+		return false;
+	}
+
+	new lineRead[MaxAliasNameLength], alias[MaxAliasNameLength];
+	new itemid, ch;
+
+	arrayset(RestrictedBotEquipAmmos, '0', charsmax(RestrictedBotEquipAmmos));
+	arrayset(RestrictedBotWeapons, '0', charsmax(RestrictedBotWeapons));
+
+	while (!feof(fp))
+	{
+		if (fgets(fp, lineRead, charsmax(lineRead)) - trim(lineRead) <= 0)
+		{
+			continue;
+		}
+
+		if ((ch = lineRead[0]) == ';' || ch == '/' || ch == '#')
+		{
+			continue;
+		}
+
+		if (parse(lineRead, alias, charsmax(alias)) == 1 && (itemid = cs_get_item_id(alias)) != CSI_NONE)
+		{
+			BlockedItems[itemid] = true;
+			restrictPodbotItem(itemid);
+		}
+	}
+
+	fclose (fp);
+
+	updatePodbotCvars();
+
+	return true;
+}
+
+findMenuAliasId(const name[])
+{
+	for (new i = 0; i < sizeof MenuInfos; ++i)
+	{
+		if (equal(name, MenuInfos[i][m_Alias]))
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+findItemFullName(const itemid, name[], const maxlen)
+{
+	for (new class = 0, slot; class < sizeof ItemsInfos; ++class)
+	{
+		for (slot = 0; slot < sizeof ItemsInfos[]; ++slot)
+		{
+			if (ItemsInfos[class][slot][m_Index] == itemid)
+			{
+				copy(name, maxlen, ItemsInfos[class][slot][m_Name]);
+				return;
+			}
+		}
+	}
+}
+
+restrictPodbotItem(const itemid, const bool:toggle = false)
+{
+	new const translatedItems[CSI_MAX_COUNT] =
+	{
+		// CSI ids -> string indexes of pb_restrweapons and pb_restrequipammo cvars. See podbot.cfg.
+		-1, 4, -1, 20, 3, 8, -1, 12, 19, 4, 5, 6, 13, 23, 17, 18, 1, 2, 21, 9, 24, 7, 16, 10, 22, 2, 3, 15, 14, 0, 11, 0, 1, 5, 6, 25, 7, 8
+	};
+
+	new const index = translatedItems[itemid];
+
+	if (index >= 0)
+	{
+		if ((itemid <= CSI_LAST_WEAPON && !(1 << itemid & CSI_ALL_GRENADES)) || itemid == CSI_SHIELD)
+		{
+			RestrictedBotWeapons[index] = toggle && RestrictedBotWeapons[index] == '1' ? '0' : '1';
+		}
+		else
+		{
+			RestrictedBotEquipAmmos[index] = toggle && RestrictedBotEquipAmmos[index] == '1' ? '0' : '1';
+		}
+	}
+}
+
+updatePodbotCvars()
+{
+	set_pcvar_string(CvarPointerRestrictedWeapons, RestrictedBotWeapons);
+	set_pcvar_string(CvarPointerRestrictedEquipAmmos, RestrictedBotEquipAmmos);
+}
+

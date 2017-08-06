@@ -1831,7 +1831,7 @@ cell Call_Void_Cbase_Bool(AMX *amx, cell *params)
 	CHECK_ENTITY(id3);
 
 	void *p8 = TypeConversion.id_to_cbase(id3);
-	bool b4 = *MF_GetAmxAddr(amx, params[4]) ? true : false;
+	bool b4 = *MF_GetAmxAddr(amx, params[4]) != 0;
 
 #if defined(_WIN32)
 	reinterpret_cast<void (__fastcall *)(void*, int, void *, bool)>(__func)(pv, 0, p8, b4);

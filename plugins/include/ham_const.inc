@@ -3236,9 +3236,9 @@ enum Ham
 
 	/**
 	 * Description:		-
-	 * Forward params:	function(this, idleader)
+	 * Forward params:	function(this, idleader, bool:noSound)
 	 * Return type:		None.
-	 * Execute params:	ExecuteHam(Ham_SC_StartPlayerFollowing, this, idleader)
+	 * Execute params:	ExecuteHam(Ham_SC_StartPlayerFollowing, this, idleader, bool:noSound)
 	 */
 	Ham_SC_StartPlayerFollowing,
 

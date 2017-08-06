@@ -443,7 +443,7 @@ hook_t hooklist[] =
 	{ V("sc_checktimebaseddamage",	Void_Void) },
 	{ V("sc_ismoving",				Int_Void) },
 	{ V("sc_isplayerfollowing",		Int_Void) },
-	{ V("sc_startplayerfollowing",	Void_Cbase) },
+	{ V("sc_startplayerfollowing",	Void_Cbase_Bool) },
 	{ V("sc_stopplayerfollowing",	Void_Int) },
 	{ V("sc_usesound",				Void_Void) },
 	{ V("sc_unusesound",			Void_Void) },

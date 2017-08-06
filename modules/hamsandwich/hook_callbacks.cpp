@@ -2371,6 +2371,42 @@ int Hook_Int_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
 	return ret;
 }
 
+int Hook_Int_pVector_pVector(Hook *hook, void *pthis, Vector *v1, Vector *v2)
+{
+	int ret=0;
+	int origret=0;
+
+	PUSH_INT()
+
+	MAKE_VECTOR()
+
+	P_PTRVECTOR(v1)
+	P_PTRVECTOR(v2)
+
+	PRE_START()
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v2), 3, false)
+	PRE_END()
+
+#if defined(_WIN32)
+	origret=reinterpret_cast<int (__fastcall*)(void*, int, Vector*, Vector*)>(hook->func)(pthis, 0, v1, v2);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret=reinterpret_cast<int (*)(void*, Vector*, Vector*)>(hook->func)(pthis, v1, v2);
+#endif
+
+	POST_START()
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v2), 3, false)
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+
+	return ret;
+}
+
+
 int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 {
 	int ret=0;

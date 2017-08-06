@@ -254,6 +254,11 @@ int Create_Void_Str_Float_Float_Float_Int_Cbase(AMX *amx, const char *func)
 	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_STRING, FP_FLOAT, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_DONE);
 }
 
+int Create_Void_Str_Float_Float_Float_Bool_Cbase(AMX *amx, const char *func)
+{
+	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_STRING, FP_FLOAT, FP_FLOAT, FP_FLOAT, FP_CELL, FP_CELL, FP_DONE);
+}
+
 int Create_Int_Vector_Vector_Float_Float(AMX *amx, const char *func)
 {
 	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_ARRAY, FP_ARRAY, FP_FLOAT, FP_FLOAT, FP_DONE);

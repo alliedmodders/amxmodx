@@ -1481,6 +1481,7 @@ enum Ham
 	/**
 	 * Description:		-
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
+	 *					This function has different version for Sven Coop, see Ham_SC_PlayScriptedSentence instead.
 	 * Forward params:	function(this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_PlayScriptedSentence, this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
@@ -3776,6 +3777,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_CanPlaySentence2, this, bool:disregardState);
 	 */
 	Ham_SC_CanPlaySentence2,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_PlayScriptedSentence, this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
+	 */
+	Ham_SC_PlayScriptedSentence,
 
 
 	/**

@@ -517,10 +517,11 @@ hook_t hooklist[] =
 
 	{ V("item_getiteminfo", Int_ItemInfo) },
 
-	{ V("sc_addpoints",			Void_Int_Bool) },
-	{ V("sc_addpointstoteam",	Void_Int_Bool) },
-	{ V("sc_canplaysequence",	Bool_Bool_Int) },
-	{ V("sc_canplaysentence2",	Bool_Bool) },
+	{ V("sc_addpoints",				Void_Int_Bool) },
+	{ V("sc_addpointstoteam",		Void_Int_Bool) },
+	{ V("sc_canplaysequence",		Bool_Bool_Int) },
+	{ V("sc_canplaysentence2",		Bool_Bool) },
+	{ V("sc_playscriptedsentence",	Void_Str_Float_Float_Float_Bool_Cbase) },
 };
 
 

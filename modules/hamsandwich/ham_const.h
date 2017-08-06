@@ -492,6 +492,7 @@ enum
 	Ham_SC_AddPointsToTeam,
 	Ham_SC_CanPlaySequence,
 	Ham_SC_CanPlaySentence2,
+	Ham_SC_PlayScriptedSentence,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

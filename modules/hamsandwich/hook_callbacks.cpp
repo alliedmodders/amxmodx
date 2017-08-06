@@ -1606,6 +1606,42 @@ void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const ch
 	POP()
 }
 
+void Hook_Void_Str_Float_Float_Float_Bool_Cbase(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3, bool i1, void *cb)
+{
+	ke::AString a;
+
+	PUSH_VOID()
+
+	a = sz1;
+	int iEnt=TypeConversion.cbase_to_id(cb);
+
+	MAKE_VECTOR()
+
+		P_STR(a)
+		P_FLOAT(f1)
+		P_FLOAT(f2)
+		P_FLOAT(f3)
+		P_BOOL(i1)
+		P_CBASE(cb, iEnt)
+
+	PRE_START()
+		,a.chars(), f1, f2, f3, i1, iEnt
+	PRE_END()
+
+#if defined(_WIN32)
+		reinterpret_cast<int (__fastcall*)(void*, int, const char *, float, float, float, bool, void *)>(hook->func)(pthis, 0, a.chars(), f1, f2, f3, i1, cb);
+#elif defined(__linux__) || defined(__APPLE__)
+		reinterpret_cast<int (*)(void*, const char *, float, float, float, bool, void *)>(hook->func)(pthis, a.chars(), f1, f2, f3, i1, cb);
+#endif
+
+	POST_START()
+		,a.chars(), f1, f2, f3, i1, iEnt
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+
 int Hook_Int_Vector_Vector_Float_Float(Hook *hook, void *pthis, Vector v1, Vector v2, float f1, float f2)
 {
 	int ret=0;

@@ -111,6 +111,8 @@ int Create_Void_Str_Float_Float_Float(AMX* amx, const char* func);
 
 int Create_Void_Str_Float_Float_Float_Int_Cbase(AMX *amx, const char *func);
 
+int Create_Void_Str_Float_Float_Float_Bool_Cbase(AMX *amx, const char *func);
+
 int Create_Int_Vector_Vector_Float_Float(AMX *amx, const char *func);
 
 int Create_Int_Short(AMX* amx, const char* func);

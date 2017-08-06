@@ -293,6 +293,11 @@ const bool RB_Void_Str_Float_Float_Float_Int_Cbase = false;
 const int PC_Void_Str_Float_Float_Float_Int_Cbase = 6;
 void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3, int i1, void *cb);
 
+const bool RT_Void_Str_Float_Float_Float_Bool_Cbase = true;
+const bool RB_Void_Str_Float_Float_Float_Bool_Cbase = false;
+const int PC_Void_Str_Float_Float_Float_Bool_Cbase = 6;
+void Hook_Void_Str_Float_Float_Float_Bool_Cbase(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3, bool i1, void *cb);
+
 const bool RT_Int_Vector_Vector_Float_Float= false;
 const bool RB_Int_Vector_Vector_Float_Float = false;
 const int PC_Int_Vector_Vector_Float_Float = 8;

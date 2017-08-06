@@ -502,7 +502,7 @@ hook_t hooklist[] =
 
 	{ V("sc_takehealth",Int_Float_Int_Int) },
 	{ V("sc_takearmor", Int_Float_Int_Int) },
-	{ V("sc_giveammo", Int_Int_Str_Int_Int) },
+	{ V("sc_giveammo", Int_Int_Str_Int_Bool) },
 	{ V("sc_checkattacker", Int_Cbase) },
 	{ V("sc_player_isconnected", Int_Void) },
 

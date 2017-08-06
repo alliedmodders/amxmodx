@@ -37,6 +37,8 @@ cell Call_Void_Int_Int(AMX *amx, cell *params);
 
 cell Call_Void_Int_Bool(AMX *amx, cell *params);
 
+cell Call_Void_Bool_Bool(AMX *amx, cell *params);
+
 cell Call_Int_Int_Str_Int(AMX *amx, cell *params);
 
 cell Call_Int_Int_Str_Int_Int(AMX *amx, cell *params);

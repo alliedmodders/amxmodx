@@ -3244,9 +3244,9 @@ enum Ham
 
 	/**
 	 * Description:		-
-	 * Forward params:	function(this, bool:clearSchedule)
+	 * Forward params:	function(this, bool:clearSchedule, bool:noSound)
 	 * Return type:		None.
-	 * Execute params:	ExecuteHam(Ham_SC_StopPlayerFollowing, this, bool:clearSchedule)
+	 * Execute params:	ExecuteHam(Ham_SC_StopPlayerFollowing, this, bool:clearSchedule, bool:noSound)
 	 */
 	Ham_SC_StopPlayerFollowing,
 

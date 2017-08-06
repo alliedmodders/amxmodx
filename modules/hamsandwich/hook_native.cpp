@@ -444,7 +444,7 @@ hook_t hooklist[] =
 	{ V("sc_ismoving",				Int_Void) },
 	{ V("sc_isplayerfollowing",		Int_Void) },
 	{ V("sc_startplayerfollowing",	Void_Cbase_Bool) },
-	{ V("sc_stopplayerfollowing",	Void_Int) },
+	{ V("sc_stopplayerfollowing",	Void_Bool_Bool) },
 	{ V("sc_usesound",				Void_Void) },
 	{ V("sc_unusesound",			Void_Void) },
 	{ V("sc_ridemonster",			Void_Cbase) },

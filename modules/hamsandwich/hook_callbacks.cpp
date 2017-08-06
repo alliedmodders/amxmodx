@@ -455,6 +455,32 @@ void Hook_Void_Int_Bool(Hook *hook, void *pthis, int i1, bool i2)
 	POP()
 }
 
+void Hook_Void_Bool_Bool(Hook *hook, void *pthis, bool i1, bool i2)
+{
+	PUSH_VOID()
+
+	MAKE_VECTOR()
+
+	P_BOOL(i1)
+	P_BOOL(i2)
+
+	PRE_START()
+		, i1, i2
+	PRE_END()
+#if defined(_WIN32)
+	reinterpret_cast<void(__fastcall*)(void*, int, bool, bool)>(hook->func)(pthis, 0, i1, i2);
+#elif defined(__linux__) || defined(__APPLE__)
+	reinterpret_cast<void(*)(void*, bool, bool)>(hook->func)(pthis, i1, i2);
+#endif
+
+	POST_START()
+		, i1, i2
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+
 int Hook_Int_Int_Str_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i2)
 {
 	int ret=0;

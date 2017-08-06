@@ -35,6 +35,8 @@ int Create_Int_Cbase(AMX *amx, const char *func);
 
 int Create_Void_Int_Int(AMX *amx, const char *func);
 
+int Create_Void_Int_Bool(AMX *amx, const char *func);
+
 int Create_Int_Int_Str_Int(AMX *amx, const char *func);
 
 int Create_Int_Int_Str_Int_Int(AMX *amx, const char *func);

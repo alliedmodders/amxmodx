@@ -207,7 +207,9 @@ enum Ham
 
 	/**
 	 * Description:		Typically adds points to the entity.
-	 *					This function is not supported by Team Fortress Classic mod.
+	 *					This function is not supported for the following mods:
+	 *						Team Fortress Classic.
+	 *						Sven-Coop 5.0-, see Ham_SC_AddPoints instead.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_AddPoints, this, points, bool:cangonegative);
@@ -216,7 +218,9 @@ enum Ham
 
 	/**
 	 * Description:		Typically adds points to everybody on the entity's team.
-	 *					This function is not supported by Team Fortress Classic mod.
+	 *					This function is not supported for the following mods:
+	 *						Team Fortress Classic.
+	 *						Sven-Coop 5.0-, see Ham_SC_AddPointsToTeam instead.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
@@ -3727,6 +3731,29 @@ enum Ham
 	 *					Use CreateHamItemInfo() to pass a new ItemInfo handle.
 	 */
 	Ham_Item_GetItemInfo,
+
+
+	/**
+	 * LATE ADDITIONS (2017)
+	 */
+
+	/**
+	 * Description:		Typically adds points to the entity.
+	 *					This function is not supported by Team Fortress Classic mod.
+	 * Forward params:	function(this, points, bool:cangonegative);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_AddPoints, this, points, bool:cangonegative);
+	 */
+	Ham_SC_AddPoints,
+
+	/**
+	 * Description:		Typically adds points to everybody on the entity's team.
+	 *					This function is not supported by Team Fortress Classic mod.
+	 * Forward params:	function(this, points, bool:cangonegative);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
+	 */
+	Ham_SC_AddPointsToTeam,
 
 
 	/**

@@ -70,6 +70,11 @@ const bool RB_Void_Int_Int = false;
 const int PC_Void_Int_Int = 2;
 void Hook_Void_Int_Int(Hook *hook, void *pthis, int i1, int i2);
 
+const bool RT_Void_Int_Bool = true;
+const bool RB_Void_Int_Bool = false;
+const int PC_Void_Int_Bool = 2;
+void Hook_Void_Int_Bool(Hook *hook, void *pthis, int i1, bool i2);
+
 const bool RT_Int_Int_Str_Int = false;
 const bool RB_Int_Int_Str_Int = false;
 const int PC_Int_Int_Str_Int = 3;

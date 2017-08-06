@@ -484,6 +484,14 @@ enum
 
 	Ham_Item_GetItemInfo,
 
+	//
+	// New addition - 20117
+	//
+
+	Ham_SC_AddPoints,
+	Ham_SC_AddPointsToTeam,
+
+
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };
 

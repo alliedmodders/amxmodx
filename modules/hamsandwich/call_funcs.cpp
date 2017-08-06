@@ -248,6 +248,21 @@ cell Call_Void_Int_Int(AMX *amx, cell *params)
 	return 1;
 }
 
+cell Call_Void_Int_Bool(AMX *amx, cell *params)
+{
+	SETUP(2);
+
+	int i3  = *MF_GetAmxAddr(amx, params[3]);
+	bool i4 = *MF_GetAmxAddr(amx, params[4]) != 0;
+
+#if defined(_WIN32)
+	reinterpret_cast<void(__fastcall *)(void*, int, int, bool)>(__func)(pv, 0, i3, i4);
+#elif defined(__linux__) || defined(__APPLE__)
+	reinterpret_cast<void(*)(void *, int, bool)>(__func)(pv, i3, i4);
+#endif
+	return 1;
+}
+
 cell Call_Int_Int_Str_Int(AMX *amx, cell *params)
 {
 	SETUP(3);

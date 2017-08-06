@@ -230,7 +230,7 @@ hook_t hooklist[] =
 	{ V("checkmeleeattack2",		Int_Float_Float) },
 	{ V("schedulechange",			Void_Void) },
 	{ V("canplaysequence",			Int_Int_Int) },
-	{ V("canplaysentence",			Int_Int) },
+	{ V("canplaysentence2",			Int_Int) },
 	{ V("playsentence",				Void_Str_Float_Float_Float) },
 	{ V("playscriptedsentence",		Void_Str_Float_Float_Float_Int_Cbase) },
 	{ V("sentencestop",				Void_Void) },

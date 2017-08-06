@@ -203,7 +203,7 @@ enum
 	Ham_CheckMeleeAttack2,
 	Ham_ScheduleChange,
 	Ham_CanPlaySequence,
-	Ham_CanPlaySentence,
+	Ham_CanPlaySentence2,
 	Ham_PlaySentence,
 	Ham_PlayScriptedSentence,
 	Ham_SentenceStop,

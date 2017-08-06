@@ -1461,9 +1461,9 @@ enum Ham
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
 	 * Forward params:	function(this, bool:disregardState);
 	 * Return type:		Integer (boolean).
-	 * Execute params:	ExecuteHam(Ham_CanPlaySentence, this, bool:disregardState);
+	 * Execute params:	ExecuteHam(Ham_CanPlaySentence2, this, bool:disregardState);
 	 */
-	Ham_CanPlaySentence,
+	Ham_CanPlaySentence2,
 
 	/**
 	 * Description:		-

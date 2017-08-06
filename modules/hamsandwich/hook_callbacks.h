@@ -96,6 +96,11 @@ const bool RB_Int_Int = false;
 const int PC_Int_Int = 1;
 int  Hook_Int_Int(Hook *hook, void *pthis, int i1);
 
+const bool RT_Bool_Bool = false;
+const bool RB_Bool_Bool = false;
+const int PC_Bool_Bool = 1;
+bool  Hook_Bool_Bool(Hook *hook, void *pthis, bool i1);
+
 const bool RT_Int_Entvar = false;
 const bool RB_Int_Entvar = false;
 const int PC_Int_Entvar = 1;
@@ -272,6 +277,11 @@ const bool RT_Int_Int_Int = false;
 const bool RB_Int_Int_Int = false;
 const int PC_Int_Int_Int = 2;
 int Hook_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2);
+
+const bool RT_Bool_Bool_Int = false;
+const bool RB_Bool_Bool_Int = false;
+const int PC_Bool_Bool_Int = 2;
+bool Hook_Bool_Bool_Int(Hook *hook, void *pthis, bool i1, int i2);
 
 const bool RT_Void_Str_Float_Float_Float = true;
 const bool RB_Void_Str_Float_Float_Float = false;

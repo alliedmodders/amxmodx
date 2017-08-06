@@ -1450,6 +1450,8 @@ enum Ham
 	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
 	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
+	 *					This function has different versions for the following mod:
+	 *						Sven Coop: see Ham_SC_CanPlaySequence
 	 * Forward params:	function(this, bool:disregardState, interruptLevel);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_CanPlaySequence, this, bool:disregardState, interruptLevel);
@@ -1459,6 +1461,8 @@ enum Ham
 	/**
 	 * Description:		-
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
+	 *					This function has different versions for the following mod:
+	 *						Sven Coop: see Ham_SC_CanPlaySentence2
 	 * Forward params:	function(this, bool:disregardState);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_CanPlaySentence2, this, bool:disregardState);
@@ -3754,6 +3758,24 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
 	 */
 	Ham_SC_AddPointsToTeam,
+
+	/**
+	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is
+	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
+	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.
+	 * Forward params:	function(this, bool:disregardState, interruptLevel);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_CanPlaySequence, this, bool:disregardState, interruptLevel);
+	 */
+	Ham_SC_CanPlaySequence,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, bool:disregardState);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_CanPlaySentence2, this, bool:disregardState);
+	 */
+	Ham_SC_CanPlaySentence2,
 
 
 	/**

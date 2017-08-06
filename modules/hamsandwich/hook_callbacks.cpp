@@ -593,6 +593,38 @@ int Hook_Int_Int(Hook *hook, void *pthis, int i1)
 	return ret;
 }
 
+bool Hook_Bool_Bool(Hook *hook, void *pthis, bool i1)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+	MAKE_VECTOR()
+	
+	P_BOOL(i1)
+
+	PRE_START()
+		,i1
+	PRE_END()
+
+#if defined(_WIN32)
+	origret = reinterpret_cast<int (__fastcall*)(void*, int, bool)>(hook->func)(pthis, 0, i1);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret = reinterpret_cast<int (*)(void*, bool)>(hook->func)(pthis, i1);
+#endif
+
+	POST_START()
+		,i1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+
+	return ret;
+}
+
+
 int Hook_Int_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
 {
 	int ret=0;
@@ -1459,6 +1491,39 @@ int Hook_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2)
 		origret=reinterpret_cast<int (__fastcall*)(void*, int, int, int)>(hook->func)(pthis, 0, i1, i2);
 #elif defined(__linux__) || defined(__APPLE__)
 		origret=reinterpret_cast<int (*)(void*, int, int)>(hook->func)(pthis, i1, i2);
+#endif
+
+	POST_START()
+		,i1, i2
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+
+	return ret;
+}
+
+bool Hook_Bool_Bool_Int(Hook *hook, void *pthis, bool i1, int i2)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+
+	MAKE_VECTOR()
+
+	P_BOOL(i1)
+	P_INT(i2)
+
+	PRE_START()
+		,i1, i2
+	PRE_END()
+
+#if defined(_WIN32)
+	origret = reinterpret_cast<int (__fastcall*)(void*, int, bool, int)>(hook->func)(pthis, 0, i1, i2);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret = reinterpret_cast<int (*)(void*, bool, int)>(hook->func)(pthis, i1, i2);
 #endif
 
 	POST_START()

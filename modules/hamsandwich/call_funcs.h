@@ -45,6 +45,8 @@ cell Call_Int_Int_Str_Int_Bool(AMX *amx, cell *params);
 
 cell Call_Int_Int(AMX *amx, cell *params);
 	
+cell Call_Bool_Bool(AMX *amx, cell *params);
+
 cell Call_Int_Entvar(AMX *amx, cell *params);
 
 cell Call_Int_Entvar_Entvar_Float_Int(AMX *amx, cell *params);
@@ -102,6 +104,8 @@ cell Call_Int_Float_Float(AMX *amx, cell *params);
 cell Call_Int_Float(AMX *amx, cell *params);
 
 cell Call_Int_Int_Int(AMX *amx, cell *params);
+
+cell Call_Bool_Bool_Int(AMX *amx, cell *params);
 
 cell Call_Void_Str_Float_Float_Float(AMX *amx, cell *params);
 

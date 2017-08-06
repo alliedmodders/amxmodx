@@ -45,6 +45,8 @@ int Create_Int_Int_Str_Int_Bool(AMX *amx, const char *func);
 
 int Create_Int_Int(AMX *amx, const char *func);
 
+int Create_Bool_Bool(AMX *amx, const char *func);
+
 int Create_Int_Entvar(AMX *amx, const char *func);
 
 int Create_Int_Entvar_Entvar_Float_Int(AMX *amx, const char *func);
@@ -102,6 +104,8 @@ int Create_Int_Float_Float(AMX* amx, const char* func);
 int Create_Int_Float(AMX* amx, const char* func);
 
 int Create_Int_Int_Int(AMX* amx, const char* func);
+
+int Create_Bool_Bool_Int(AMX* amx, const char* func);
 
 int Create_Void_Str_Float_Float_Float(AMX* amx, const char* func);
 

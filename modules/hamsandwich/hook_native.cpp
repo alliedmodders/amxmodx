@@ -519,6 +519,8 @@ hook_t hooklist[] =
 
 	{ V("sc_addpoints",			Void_Int_Bool) },
 	{ V("sc_addpointstoteam",	Void_Int_Bool) },
+	{ V("sc_canplaysequence",	Bool_Bool_Int) },
+	{ V("sc_canplaysentence2",	Bool_Bool) },
 };
 
 

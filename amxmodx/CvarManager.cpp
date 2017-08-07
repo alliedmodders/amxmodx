@@ -529,7 +529,7 @@ void CvarManager::OnConsoleCommand()
 	if (!indexToSearch)
 	{
 		print_srvconsole("\nManaged cvars:\n");
-		print_srvconsole("       %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", "NAME", "VALUE", "PLUGIN", "BOUND", "HOOKED", "BOUNDED");
+		print_srvconsole("       %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", "NAME", "VALUE", "PLUGIN", "HOOKED", "MIN", "MAX");
 		print_srvconsole(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n");
 	}
 
@@ -544,11 +544,13 @@ void CvarManager::OnConsoleCommand()
 		{
 			if (!indexToSearch)
 			{
-				print_srvconsole(" [%3d] %-24.23s %-24.23s %-18.17s %-8.7s %-8.7s %-8.7s\n", ++index, ci->name.chars(), ci->var->string,
+				print_srvconsole(" [%3d] %-24.23s %-24.23s %-18.17s %-8.7s ", ++index, ci->name.chars(), ci->var->string,
 								 ci->plugin.length() ? ci->plugin.chars() : "-",
-								 ci->binds.empty() ? "no" : "yes",
-								 ci->hooks.empty() ? "no" : "yes",
-								 ci->bound.hasMin || ci->bound.hasMax ? "yes" : "no");
+								 ci->hooks.empty() ? "no" : "yes");
+
+				(ci->bound.hasMin) ? print_srvconsole("%-8.2f ", ci->bound.minVal) : print_srvconsole("%-8.7s ", "-");
+				(ci->bound.hasMax) ? print_srvconsole("%-8.2f ", ci->bound.maxVal) : print_srvconsole("%-8.7s ", "-");
+				print_srvconsole("\n");
 			}
 			else
 			{

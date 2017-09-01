@@ -1001,13 +1001,13 @@ public cmdPlugins(id, level, cid)
 	
 	if (EndPLID < num)
 	{
-		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_MORE", EndPLID + 1);
+		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_MORE", "amx_help", EndPLID + 1);
 		replace_all(Temp,charsmax(Temp),"amx_help","amx_plugins");
 		console_print(id,"%s",Temp);
 	}
 	else
 	{
-		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_BEGIN");
+		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_BEGIN", "amx_help");
 		replace_all(Temp,charsmax(Temp),"amx_help","amx_plugins");
 		console_print(id,"%s",Temp);
 	}

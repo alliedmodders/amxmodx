@@ -43,11 +43,11 @@ class NativeHandle
 			return m_handles.length();
 		}
 
-		T *lookup(int handle)
+		T *lookup(size_t handle)
 		{
 			--handle;
 
-			if (handle < 0 || handle >= static_cast<int>(m_handles.length()))
+			if (handle >= m_handles.length())
 			{
 				return nullptr;
 			}
@@ -56,7 +56,7 @@ class NativeHandle
 		}
 
 		template <typename... Targs>
-		int create(Targs... Fargs)
+		size_t create(Targs... Fargs)
 		{
 			for (size_t i = 0; i < m_handles.length(); ++i)
 			{
@@ -64,7 +64,7 @@ class NativeHandle
 				{
 					m_handles[i] = ke::AutoPtr<T>(new T(Fargs...));
 
-					return static_cast<int>(i) + 1;
+					return i + 1;
 				}
 			}
 
@@ -73,7 +73,7 @@ class NativeHandle
 			return m_handles.length();
 		}
 
-		int clone(T *data)
+		size_t clone(T *data)
 		{
 			for (size_t i = 0; i < m_handles.length(); ++i)
 			{
@@ -81,7 +81,7 @@ class NativeHandle
 				{
 					m_handles[i] = ke::AutoPtr<T>(data);
 
-					return static_cast<int>(i) + 1;
+					return i + 1;
 				}
 			}
 
@@ -90,11 +90,11 @@ class NativeHandle
 			return m_handles.length();
 		}
 
-		bool destroy(int handle)
+		bool destroy(size_t handle)
 		{
 			handle--;
 
-			if (handle < 0 || handle >= static_cast<int>(m_handles.length()))
+			if (handle >= m_handles.length())
 			{
 				return false;
 			}

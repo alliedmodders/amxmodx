@@ -25,7 +25,7 @@
 #define MODULE_NAME "TSExtended"
 #define MODULE_VERSION "1.2.0"
 #define MODULE_AUTHOR "SNMetamorph"
-#define MODULE_URL "https://forums.alliedmods.net/member.php?u=270536"
+#define MODULE_URL "https://forums.alliedmods.net/showthread.php?t=300922"
 #define MODULE_LOGTAG "TSE"
 #define MODULE_LIBRARY "tse"
 #define MODULE_LIBCLASS "tse"

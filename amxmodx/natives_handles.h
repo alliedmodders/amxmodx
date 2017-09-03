@@ -92,7 +92,7 @@ class NativeHandle
 
 		bool destroy(size_t handle)
 		{
-			handle--;
+			--handle;
 
 			if (handle >= m_handles.length())
 			{

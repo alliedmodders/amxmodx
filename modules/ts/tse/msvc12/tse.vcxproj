@@ -64,12 +64,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(METAMOD);..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-	  <Optimization>Disabled</Optimization>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>false</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

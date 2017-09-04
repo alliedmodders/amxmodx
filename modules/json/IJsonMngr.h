@@ -452,7 +452,7 @@ namespace AMXX
 			 *
 			 * @return                True if succeed, false otherwise
 			 */
-			virtual bool ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dot_not = false) = 0;
+			virtual bool ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Gets string data from the object.
@@ -466,7 +466,7 @@ namespace AMXX
 			 *
 			 * @return                String data
 			 */
-			virtual const char *ObjectGetString(JS_Handle object, const char *name, bool dot_not = false) = 0;
+			virtual const char *ObjectGetString(JS_Handle object, const char *name, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Gets a number from the object.
@@ -480,7 +480,7 @@ namespace AMXX
 			 *
 			 * @return                Number
 			 */
-			virtual double ObjectGetNum(JS_Handle object, const char *name, bool dot_not = false) = 0;
+			virtual double ObjectGetNum(JS_Handle object, const char *name, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Gets a boolean value from the object.
@@ -494,7 +494,7 @@ namespace AMXX
 			 *
 			 * @return                Boolean value
 			 */
-			virtual bool ObjectGetBool(JS_Handle object, const char *name, bool dot_not = false) = 0;
+			virtual bool ObjectGetBool(JS_Handle object, const char *name, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Gets count of the keys in the object.
@@ -534,11 +534,11 @@ namespace AMXX
 			 * @param object          JSON handle
 			 * @param name            Key name
 			 * @param type            Type of value, if JSONTypeError type will not be checked
-			 * @param dot_not         True to use dot notation, false to not
+			 * @param dotfunc         True to use dot notation, false to not
 			 *
 			 * @return                True if has, false if not
 			 */
-			virtual bool ObjectHasValue(JS_Handle object, const char *name, JSONType type = JSONTypeError, bool dot_not = false) = 0;
+			virtual bool ObjectHasValue(JS_Handle object, const char *name, JSONType type = JSONTypeError, bool dotfunc = false) = 0;
 
 			//Set functions
 
@@ -556,7 +556,7 @@ namespace AMXX
 			 *
 			 * @return                True if succeed, false otherwise
 			 */
-			virtual bool ObjectSetValue(JS_Handle object, const char *name, JS_Handle value, bool dot_not = false) = 0;
+			virtual bool ObjectSetValue(JS_Handle object, const char *name, JS_Handle value, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Sets string data in the object.
@@ -572,7 +572,7 @@ namespace AMXX
 			 *
 			 * @return                True if succeed, false otherwise
 			 */
-			virtual bool ObjectSetString(JS_Handle object, const char *name, const char *string, bool dot_not = false) = 0;
+			virtual bool ObjectSetString(JS_Handle object, const char *name, const char *string, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Sets a number in the object.
@@ -588,7 +588,7 @@ namespace AMXX
 			 *
 			 * @return                True if succeed, false otherwise
 			 */
-			virtual bool ObjectSetNum(JS_Handle object, const char *name, double number, bool dot_not = false) = 0;
+			virtual bool ObjectSetNum(JS_Handle object, const char *name, double number, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Sets a boolean value in the object.
@@ -604,7 +604,7 @@ namespace AMXX
 			 *
 			 * @return                True if succeed, false otherwise
 			 */
-			virtual bool ObjectSetBool(JS_Handle object, const char *name, bool boolean, bool dot_not = false) = 0;
+			virtual bool ObjectSetBool(JS_Handle object, const char *name, bool boolean, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Sets a null in the object.
@@ -619,7 +619,7 @@ namespace AMXX
 			 *
 			 * @return                True if succeed, false otherwise
 			 */
-			virtual bool ObjectSetNull(JS_Handle object, const char *name, bool dot_not = false) = 0;
+			virtual bool ObjectSetNull(JS_Handle object, const char *name, bool dotfunc = false) = 0;
 
 			//Remove functions
 
@@ -628,7 +628,6 @@ namespace AMXX
 			 *
 			 * @note                  If dot notation is used some values may be inaccessible
 			 *                        because valid names in JSON can contain dots.
-			 * @note                  It also removes the old value if any.
 			 *
 			 * @param object          JSON handle
 			 * @param name            Key name
@@ -636,7 +635,7 @@ namespace AMXX
 			 *
 			 * @return                True if succeed, false otherwise
 			 */
-			virtual bool ObjectRemove(JS_Handle object, const char *name, bool dot_not = false) = 0;
+			virtual bool ObjectRemove(JS_Handle object, const char *name, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Removes all keys and their values in the object.

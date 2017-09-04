@@ -42,7 +42,7 @@
 #define STARTING_CAPACITY         15
 #define ARRAY_MAX_CAPACITY    122880 /* 15*(2^13) */
 #define OBJECT_MAX_CAPACITY      960 /* 15*(2^6)  */
-#define MAX_NESTING               19
+#define MAX_NESTING             2048
 #define DOUBLE_SERIALIZATION_FORMAT "%f"
 
 #define SIZEOF_TOKEN(a)       (sizeof(a) - 1)
@@ -669,8 +669,13 @@ static JSON_Value * parse_object_value(const char **string, size_t nesting) {
     }
     while (**string != '\0') {
         new_key = get_quoted_string(string);
+        if (new_key == NULL) {
+            json_value_free(output_value);
+            return NULL;
+        }
         SKIP_WHITESPACES(string);
-        if (new_key == NULL || **string != ':') {
+        if (**string != ':') {
+            parson_free(new_key);
             json_value_free(output_value);
             return NULL;
         }

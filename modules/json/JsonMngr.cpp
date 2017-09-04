@@ -31,11 +31,11 @@ JS_Handle JSONMngr::_MakeHandle(void *value, JSONHandleType type, bool must_be_f
 	if (!m_OldHandles.empty())
 	{
 		id = m_OldHandles.popFrontCopy();
-		m_Handles[id] = ke::MakeUnique<JSONHandle>();
+		m_Handles[id] = ke::AutoPtr<JSONHandle>();
 	}
 	else
 	{
-		m_Handles.append(ke::MakeUnique<JSONHandle>());
+		m_Handles.append(ke::AutoPtr<JSONHandle>());
 		id = m_Handles.length() - 1;
 	}
 
@@ -74,7 +74,7 @@ JS_Handle JSONMngr::_MakeHandle(void *value, JSONHandleType type, bool must_be_f
 	return id;
 }
 
-void JSONMngr::_FreeHandle(ke::UniquePtr<JSONHandle> &ptr)
+void JSONMngr::_FreeHandle(ke::AutoPtr<JSONHandle> &ptr)
 {
 	if (ptr->m_bMustBeFreed && ptr->m_pValue)
 	{

@@ -73,14 +73,14 @@ static cell AMX_NATIVE_CALL dbi_connect(AMX *amx, cell *params)
 	int err;
 	char error[512];
 	/** if there is an older database, read there instead of the new path */
-	MF_BuildPathnameR(path, sizeof(path)-1, "%s", info.database);
+	MF_BuildPathnameR(path, sizeof(path), "%s", info.database);
 	FILE *fp = fopen(path, "rb");
 	if (fp)
 	{
 		fclose(fp);
 		info.database = path;
 	} else {
-		MF_BuildPathnameR(path, sizeof(path)-1, "%s/sqlite3/%s.sq3",
+		MF_BuildPathnameR(path, sizeof(path), "%s/sqlite3/%s.sq3",
 			MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"),
 			info.database);
 		info.database = path;
@@ -439,14 +439,14 @@ static cell AMX_NATIVE_CALL dbi_field_name(AMX *amx, cell *params)
 	return 1;
 }
 
-AMX_NATIVE_INFO g_OldCompatNatives[] = 
+AMX_NATIVE_INFO g_OldCompatNatives[] =
 {
 	{ "dbi_connect",		dbi_connect },
 	{ "dbi_query",			dbi_query },
 	{ "dbi_query2",			dbi_query2 },
-	{ "dbi_field",			dbi_field },	
-	{ "dbi_nextrow",		dbi_nextrow },	
-	{ "dbi_close",			dbi_close },	
+	{ "dbi_field",			dbi_field },
+	{ "dbi_nextrow",		dbi_nextrow },
+	{ "dbi_close",			dbi_close },
 	{ "dbi_error",			dbi_error },
 	{ "dbi_type",			dbi_type },
 	{ "dbi_free_result",	dbi_free_result },

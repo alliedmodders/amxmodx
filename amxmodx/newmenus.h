@@ -30,6 +30,7 @@
 #define MPROP_NOCOLORS	8
 #define MPROP_PADMENU	9
 #define MPROP_SET_NUMBER_COLOR	10
+#define MPROP_PAGE_CALLBACK 11
 
 typedef int (*MENUITEM_CALLBACK)(int, int, int);
 
@@ -123,6 +124,7 @@ public:
 	int thisId;
 	int func;
 	bool isDestroying;
+	int pageCallback;
 public:
 	unsigned int items_per_page;
 };

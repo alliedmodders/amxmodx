@@ -17,6 +17,7 @@ class AMXXConfig(object):
     self.versionlib = None
     self.zlib = None
     self.hashing = None
+    self.utf8rewind = None
     self.csx_app = None
     self.stdcxx_path = None
 
@@ -164,6 +165,7 @@ class AMXXConfig(object):
     cxx.includes += [os.path.join(builder.sourcePath, 'third_party')]
     cxx.includes += [os.path.join(builder.sourcePath, 'third_party', 'hashing')]
     cxx.includes += [os.path.join(builder.sourcePath, 'third_party', 'zlib')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'third_party', 'utf8rewind')]
 
   def configure_gcc(self, cxx):
     cxx.cflags += [
@@ -386,6 +388,10 @@ AMXX.zlib = builder.RunScript(
 
 AMXX.hashing = builder.RunScript(
   'third_party/hashing/AMBuilder'
+)
+
+AMXX.utf8rewind = builder.RunScript(
+  'third_party/utf8rewind/AMBuilder'
 )
 
 builder.RunBuildScripts(

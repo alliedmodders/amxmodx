@@ -1080,9 +1080,12 @@ void Hook_Void_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2, int i3)
 	KILL_VECTOR()
 	POP()
 }
-void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
+int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 {
-	PUSH_VOID()
+	int ret = 0;
+	int origret = 0;
+
+	PUSH_INT()
 
 	MAKE_VECTOR()
 	
@@ -1092,9 +1095,9 @@ void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 		,iteminfo
 	PRE_END()
 #if defined(_WIN32)
-	reinterpret_cast<void (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, iteminfo);
+	origret = reinterpret_cast<int (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, iteminfo);
 #elif defined(__linux__) || defined(__APPLE__)
-	reinterpret_cast<void (*)(void*, void *)>(hook->func)(pthis, iteminfo);
+	origret = reinterpret_cast<int (*)(void*, void *)>(hook->func)(pthis, iteminfo);
 #endif
 
 	POST_START()
@@ -1103,6 +1106,9 @@ void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 
 	KILL_VECTOR()
 	POP()
+
+	CHECK_RETURN()
+	return ret;
 }
 
 float Hook_Float_Void(Hook *hook, void *pthis)

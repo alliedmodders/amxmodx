@@ -14,6 +14,7 @@
 #include <sm_stringhashmap.h>
 #include <sm_memtable.h>
 #include "natives_handles.h"
+#include <amtl/am-uniqueptr.h>
 
 enum EntryType
 {
@@ -138,9 +139,128 @@ private:
 	cell data_;
 };
 
+
+template <typename T>
+class StringHashMapCustom
+{
+	typedef StringHashMap<T> Internal;
+
+public:
+	StringHashMapCustom() : mod_count_(0)
+	{}
+
+public:
+	typedef typename Internal::Result Result;
+	typedef typename Internal::Insert Insert;
+	typedef typename Internal::iterator iterator;
+
+public:
+	size_t elements() const
+	{
+		return internal_.elements();
+	}
+
+	iterator iter()
+	{
+		return internal_.iter();
+	}
+
+	bool contains(const char *aKey)
+	{
+		return internal_.contains(aKey);
+	}
+
+	bool replace(const char *aKey, const T &value)
+	{
+		return internal_.contains(aKey, value);
+	}
+
+	bool insert(const char *aKey, const T &value)
+	{
+		if (internal_.insert(aKey, value))
+		{
+			mod_count_++;
+			return true;
+		}
+		return false;
+	}
+
+	bool remove(const char *aKey)
+	{
+		if (internal_.remove(aKey))
+		{
+			mod_count_++;
+			return true;
+		}
+		return false;
+	}
+
+	void clear()
+	{
+		mod_count_++;
+		internal_.clear();
+	}
+
+	void remove(Result &r)
+	{
+		mod_count_++;
+		internal_.remove(r);
+	}
+
+	Result find(const char *aKey)
+	{
+		return internal_.find(aKey);
+	}
+
+	Insert findForAdd(const char *aKey)
+	{
+		return internal_.findForAdd(aKey);
+	}
+
+	bool add(Insert &i, const char *aKey)
+	{
+		if (internal_.add(i, aKey))
+		{
+			mod_count_++;
+			return true;
+		}
+		return false;
+	}
+
+	bool add(Insert &i)
+	{
+		if (internal_.add(i))
+		{
+			mod_count_++;
+			return true;
+		}
+		return false;
+	}
+
+public:
+	size_t mod_count() const
+	{
+		return mod_count_;
+	}
+	
+private:
+	Internal internal_;
+	size_t mod_count_;
+};
+
 struct CellTrie
 {
-	StringHashMap<Entry> map;
+	StringHashMapCustom<Entry> map;
+};
+
+struct CellTrieIter
+{
+	CellTrieIter(CellTrie *_trie) : trie(_trie), iter(_trie->map.iter()), mod_count(_trie->map.mod_count())
+	{}
+
+	CellTrie *trie;
+	StringHashMapCustom<Entry>::iterator iter;
+	size_t mod_count;
 };
 
 struct TrieSnapshot
@@ -160,6 +280,7 @@ struct TrieSnapshot
 };
 
 extern NativeHandle<CellTrie> TrieHandles;
+extern NativeHandle<CellTrieIter> TrieIterHandles;
 extern NativeHandle<TrieSnapshot> TrieSnapshotHandles;
 extern AMX_NATIVE_INFO trie_Natives[];
 

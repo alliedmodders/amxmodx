@@ -326,7 +326,7 @@ enum CsWeaponClassType
 /**
  * Weapon infos.
  */
-typedef struct
+struct WeaponInfoStruct
 {
 	int id;
 	int cost;
@@ -336,8 +336,8 @@ typedef struct
 	int maxRounds;
 	int ammoType;
 	char *entityName;
-}
-WeaponInfoStruct;
+	const char *ammoName;
+};
 
 /**
  * Weapon infos for use with cs_get_weapon_info().

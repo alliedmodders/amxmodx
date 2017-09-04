@@ -369,6 +369,24 @@ stock xs_vec_sub(const Float:in1[], const Float:in2[], Float:out[])
 	out[2] = in1[2] - in2[2];
 }
 
+// Adds the second vector scaled by a scalar to the first
+// tested
+stock xs_vec_add_scaled(const Float:in1[], const Float:in2[], Float:scalar, Float:out[])
+{
+	out[0] = in1[0] + in2[0] * scalar;
+	out[1] = in1[1] + in2[1] * scalar;
+	out[2] = in1[2] + in2[2] * scalar;
+}
+
+// Subtracts the second vector scaled by a scalar to the first
+// tested
+stock xs_vec_sub_scaled(const Float:in1[], const Float:in2[], Float:scalar, Float:out[])
+{
+	out[0] = in1[0] - in2[0] * scalar;
+	out[1] = in1[1] - in2[1] * scalar;
+	out[2] = in1[2] - in2[2] * scalar;
+}
+
 // Are vectors equal?
 // untested, but should work
 stock bool:xs_vec_equal(const Float:vec1[], const Float:vec2[])
@@ -407,6 +425,30 @@ stock xs_vec_div_scalar(const Float:vec[], Float:scalar, Float:out[])
 stock Float:xs_vec_len(const Float:vec[])
 {
 	return xs_sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
+}
+
+// Compute 2D vector length
+// tested
+stock Float:xs_vec_len_2d(const Float:vec[])
+{
+	return xs_sqrt(vec[0]*vec[0] + vec[1]*vec[1]);
+}
+
+// Compute distance between two vectors
+// tested
+stock Float:xs_vec_distance(const Float:vec1[], const Float:vec2[])
+{
+	return xs_sqrt((vec1[0]-vec2[0]) * (vec1[0]-vec2[0]) +
+	               (vec1[1]-vec2[1]) * (vec1[1]-vec2[1]) +
+	               (vec1[2]-vec2[2]) * (vec1[2]-vec2[2]));
+}
+
+// Compute distance between two 2D vectors
+// tested
+stock Float:xs_vec_distance_2d(const Float:vec1[], const Float:vec2[])
+{
+	return xs_sqrt((vec1[0]-vec2[0]) * (vec1[0]-vec2[0]) +
+	               (vec1[1]-vec2[1]) * (vec1[1]-vec2[1]));
 }
 
 // Normalize vec

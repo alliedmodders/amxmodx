@@ -204,16 +204,16 @@ int EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags,
 		return 0;
 	}
 
-	auto event = new ClEvent(plugin, func, flags);
+	auto event = ke::AutoPtr<ClEvent>(new ClEvent(plugin, func, flags));
 
-	int handle = EventHandles.create(event);
+	int handle = EventHandles.create(event.get());
 	
 	if (!handle)
 	{
 		return 0;
 	}
 
-	m_Events[msgid].put(event);
+	m_Events[msgid].append(ke::Move(event));
 
 	return handle;
 }
@@ -226,40 +226,40 @@ void EventsMngr::parserInit(int msg_type, float* timer, CPlayer* pPlayer, int in
 	m_ParseNotDone = false;
 
 	// don't parse if nothing to do
-	if (!m_Events[msg_type].size())
+	if (!m_Events[msg_type].length())
 		return;
 
 	m_ParseMsgType = msg_type;
 	m_Timer = timer;
 
-	for (ClEventVecIter iter = m_Events[msg_type].begin(); iter; ++iter)
+	for (auto &event : m_Events[msg_type])
 	{
-		if ((*iter).m_Done)
+		if (event->m_Done)
 			continue;
 
-		if (!(*iter).m_Plugin->isExecutable((*iter).m_Func))
+		if (!event->m_Plugin->isExecutable(event->m_Func))
 		{
-			(*iter).m_Done = true;
+			event->m_Done = true;
 			continue;
 		}
 
 		if (pPlayer)
 		{
-			if (!(*iter).m_FlagClient || (pPlayer->IsBot() ? !(*iter).m_FlagBot : !(*iter).m_FlagPlayer) || (pPlayer->IsAlive() ? !(*iter).m_FlagAlive : !(*iter).m_FlagDead))
+			if (!event->m_FlagClient || (pPlayer->IsBot() ? !event->m_FlagBot : !event->m_FlagPlayer) || (pPlayer->IsAlive() ? !event->m_FlagAlive : !event->m_FlagDead))
 			{
-				(*iter).m_Done = true;
+				event->m_Done = true;
 				continue;
 			}
 		}
-		else if (!(*iter).m_FlagWorld)
+		else if (!event->m_FlagWorld)
 		{
-			(*iter).m_Done = true;
+			event->m_Done = true;
 			continue;
 		}
 
-		if ((*iter).m_FlagOnce && (*iter).m_Stamp == (float)(*timer))
+		if (event->m_FlagOnce && event->m_Stamp == *timer)
 		{
-			(*iter).m_Done = true;
+			event->m_Done = true;
 			continue;
 		}
 		
@@ -292,16 +292,16 @@ void EventsMngr::parseValue(int iValue)
 
 	// loop through the registered funcs, and decide whether they have to be called or not
 	// if they shouldnt, their m_Done is set to true
-	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
+	for (auto &event : *m_ParseFun)
 	{
-		if ((*iter).m_Done)
+		if (event->m_Done)
 			continue;		// already skipped; don't bother with parsing
 
 		// loop through conditions
 		bool execute = false;
 		bool anyConditions = false;
 		
-		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
+		for (auto condIter = event->m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
 			{
@@ -320,7 +320,7 @@ void EventsMngr::parseValue(int iValue)
 		}
 		
 		if (anyConditions && !execute)
-			(*iter).m_Done = true;		// don't execute
+			event->m_Done = true;		// don't execute
 	}
 }
 
@@ -339,16 +339,16 @@ void EventsMngr::parseValue(float fValue)
 
 	// loop through the registered funcs, and decide whether they have to be called or not
 	// if they shouldnt, their m_Done is set to true
-	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
+	for (auto &event : *m_ParseFun)
 	{
-		if ((*iter).m_Done)
+		if (event->m_Done)
 			continue;		// already skipped; don't bother with parsing
 
 		// loop through conditions
 		bool execute = false;
 		bool anyConditions = false;
 		
-		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
+		for (auto condIter = event->m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
 			{
@@ -367,7 +367,7 @@ void EventsMngr::parseValue(float fValue)
 		}
 		
 		if (anyConditions && !execute)
-			(*iter).m_Done = true;		// don't execute
+			event->m_Done = true;		// don't execute
 	}
 }
 
@@ -386,16 +386,16 @@ void EventsMngr::parseValue(const char *sz)
 
 	// loop through the registered funcs, and decide whether they have to be called or not
 	// if they shouldnt, their m_Done is set to true
-	for (ClEventVecIter iter = m_ParseFun->begin(); iter; ++iter)
+	for (auto &event : *m_ParseFun)
 	{
-		if ((*iter).m_Done)
+		if (event->m_Done)
 			continue;		// already skipped; don't bother with parsing
 
 		// loop through conditions
 		bool execute = false;
 		bool anyConditions = false;
 		
-		for (ClEvent::cond_t *condIter = (*iter).m_Conditions; condIter; condIter = condIter->next)
+		for (auto condIter = event->m_Conditions; condIter; condIter = condIter->next)
 		{
 			if (condIter->paramId == m_ParsePos)
 			{
@@ -413,7 +413,7 @@ void EventsMngr::parseValue(const char *sz)
 		}
 		
 		if (anyConditions && !execute)
-			(*iter).m_Done = true;		// don't execute
+			event->m_Done = true;		// don't execute
 	}
 }
 
@@ -455,22 +455,25 @@ void EventsMngr::executeEvents()
 	}
 
 	// Reset this here so we don't trigger re-entrancy for unregistered messages
-	ClEventVec *parseFun = m_ParseFun;
-	m_ParseFun = NULL;
+	auto parseFun = m_ParseFun;
+	m_ParseFun = nullptr;
 
-	for (ClEventVecIter iter = parseFun->begin(); iter; ++iter)
+	auto lastSize = parseFun->length();
+	for(auto i = 0u; i < lastSize; i++)
 	{
-		if ((*iter).m_Done) 
+		auto &event = parseFun->at(i);
+
+		if (event->m_Done) 
 		{
-			(*iter).m_Done = false;
+			event->m_Done = false;
 			continue;
 		}
 		
-		(*iter).m_Stamp = (float)*m_Timer;
+		event->m_Stamp = *m_Timer;
 
-		if ((*iter).m_State == FSTATE_ACTIVE)
+		if (event->m_State == FSTATE_ACTIVE)
 		{
-			executeForwards((*iter).m_Func, static_cast<cell>(m_ReadVault ? m_ReadVault[0].iValue : 0));
+			executeForwards(event->m_Func, static_cast<cell>(m_ReadVault ? m_ReadVault[0].iValue : 0));
 		}
 	}
 	

@@ -75,7 +75,7 @@ int Create_Void_Entvar_Float(AMX *amx, const char *func);
 
 int Create_Void_Int_Int_Int(AMX *amx, const char *func);
 
-int Create_Void_ItemInfo(AMX *amx, const char *func);
+int Create_Int_ItemInfo(AMX *amx, const char *func);
 
 int Create_Float_Void(AMX *amx, const char *func);
 

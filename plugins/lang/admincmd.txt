@@ -1,4 +1,4 @@
-[en]
+﻿[en]
 ADMIN_KICK_1 = ADMIN: kick %s
 ADMIN_KICK_2 = ADMIN %s: kick %s
 IP_REMOVED = Ip "%s" removed from ban list
@@ -72,6 +72,8 @@ CHANGED_NICK = Changed nick of %s to "%s"
 ADMIN_EXTEND_1 = ADMIN: extend map for %d minutes
 ADMIN_EXTEND_2 = ADMIN %s: extend map for %d minutes
 MAP_EXTENDED = Map "%s" has been extended for %d minutes
+ADMIN_MUST_TEMPBAN = You can only temporarily ban players, for up to %d minutes
+ADMIN_MUST_TEMPUNBAN = You can only unban players that you have recently banned
 
 [de]
 ADMIN_KICK_1 = ADMIN: kickt %s

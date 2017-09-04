@@ -14,6 +14,7 @@
 #include "CstrikeItemsInfos.h"
 #include "CstrikeHacks.h"
 #include <amtl/am-utility.h>
+#include <resdk/mod_regamedll_api.h>
 
 CsItemInfo ItemsManager;
 ItemInfo WeaponsList[MAX_WEAPONS];
@@ -102,7 +103,7 @@ SMCResult CsItemInfo::ReadSMC_KeyValue(const SMCStates *states, const char *key,
 					CSI_NONE, CSI_VEST, CSI_VESTHELM, CSI_FLASHBANG, CSI_HEGRENADE, CSI_SMOKEGRENADE, CSI_NVGS, CSI_DEFUSER
 				};
 
-				for (int i = 0; i < ARRAY_LENGTH(equipmentsList); ++i)
+				for (size_t i = 0; i < ARRAY_LENGTH(equipmentsList); ++i)
 				{
 					if (m_AliasInfo.itemid == equipmentsList[i])
 					{
@@ -172,7 +173,7 @@ bool CsItemInfo::GetAliasFromId(size_t id, ke::AString &name, ke::AString &altna
 {
 	for (auto iter = m_BuyAliasesList.iter(); !iter.empty(); iter.next())
 	{
-		if (iter->value.itemid == id)
+		if (iter->value.itemid == (int)id)
 		{
 			name = iter->key;
 			altname = iter->value.alt_alias;
@@ -270,6 +271,11 @@ int CsItemInfo::GetItemPrice(int itemId)
 	if (id != Equipments::None)
 	{
 		return m_EquipmentsPrice[static_cast<size_t>(id)];
+	}
+
+	if (HasReGameDll)
+	{
+		return ReGameApi->GetWeaponInfo(itemId == CSI_SHIELD ? CSI_SHIELDGUN : itemId)->cost;
 	}
 
 	return GetWeaponInfo(itemId == CSI_SHIELD ? CSI_SHIELDGUN : itemId)->cost;

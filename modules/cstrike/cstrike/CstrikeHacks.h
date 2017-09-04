@@ -19,6 +19,7 @@
 #include <CDetour/detours.h>
 #include <engine_strucs.h>
 #include "CstrikeDatas.h"
+#include <resdk/cstrike/regamedll_api.h>
 
 void InitializeHacks();
 void InitFuncsAddresses();
@@ -30,8 +31,9 @@ void CtrlDetours_ClientCommand(bool set);
 void CtrlDetours_BuyCommands(bool set);
 void CtrlDetours_Natives(bool set);
 
-void ToggleDetour_ClientCommands(bool enable);
-void ToggleDetour_BuyCommands(bool enable);
+void ToggleHook_ClientCommands(bool enable);
+void ToggleHook_BuyCommands(bool enable);
+void ToggleHook_GiveDefaultItems(bool enable);
 
 extern AMX_NATIVE_INFO CstrikeNatives[];
 
@@ -60,10 +62,10 @@ enum class HashType
 };
 
 typedef edict_t* (*CreateNamedEntityFunc)(string_t iszClassname);
-typedef void*    (*UTIL_FindEntityByStringFunc)(void* pStartEntity, const char *szKeyword, const char *szValue);
+typedef class CBaseEntity* (*UTIL_FindEntityByStringFunc)(class CBaseEntity *pStartEntity, const char *szKeyword, const char *szValue);
 typedef WeaponInfoStruct* (*GetWeaponInfoFunc)(int id);
-typedef void (*AddEntityHashValueFunc)(struct entvars_s *pev, const char *value, HashType fieldType);
-typedef void (*RemoveEntityHashValueFunc)(struct entvars_s *pev, const char *value, HashType fieldType);
+typedef void (*AddEntityHashValueFunc)(entvars_s *pev, const char *value, hash_types_e fieldType);
+typedef void (*RemoveEntityHashValueFunc)(entvars_t *pev, const char *value, hash_types_e fieldType);
 
 extern CreateNamedEntityFunc       CS_CreateNamedEntity;
 extern UTIL_FindEntityByStringFunc CS_UTIL_FindEntityByString;
@@ -79,8 +81,12 @@ extern bool NoKnivesMode;
 extern server_static_t *ServerStatic;
 extern server_t *Server;
 extern void **GameRules;
+extern void *GameRulesRH;
 
 extern int *UseBotArgs;
 extern const char **BotArgs;
+
+extern bool HasReHlds;
+extern bool HasReGameDll;
 
 #endif // CSTRIKE_HACKS_H

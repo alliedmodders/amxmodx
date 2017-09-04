@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include "amxxapi.h"
 #include "NVault.h"
-#include <sm_queue.h>
 
 #ifdef WIN32
 #define MKDIR(p) mkdir(p)
@@ -31,7 +30,7 @@
 #endif
 
 ke::Vector<NVault *> g_Vaults;
-Queue<int> g_OldVaults;
+ke::Deque<int> g_OldVaults;
 
 VaultMngr g_VaultMngr;
 
@@ -46,13 +45,13 @@ static cell nvault_open(AMX *amx, cell *params)
 	int len, id=-1;
 	char *name = MF_GetAmxString(amx, params[1], 0, &len);
 	char path[255], file[255];
-	MF_BuildPathnameR(path, sizeof(path)-1, "%s/vault", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
+	MF_BuildPathnameR(path, sizeof(path), "%s/vault", MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data"));
 	sprintf(file, "%s/%s.vault", path, name);
 	for (size_t i=0; i<g_Vaults.length(); i++)
 	{
 		if (!g_Vaults[i])
 			continue;
-		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0) 
+		if (strcmp(g_Vaults.at(i)->GetFilename(), file) == 0)
 			return i;
 	}
 	NVault *v = (NVault *)g_VaultMngr.OpenVault(file);
@@ -63,8 +62,7 @@ static cell nvault_open(AMX *amx, cell *params)
 	}
 	if (!g_OldVaults.empty())
 	{
-		id = g_OldVaults.first();
-		g_OldVaults.pop();
+		id = g_OldVaults.popFrontCopy();
 	}
 	if (id != -1)
 	{
@@ -210,7 +208,7 @@ static cell nvault_close(AMX *amx, cell *params)
 	pVault->Close();
 	delete pVault;
 	g_Vaults[id] = NULL;
-	g_OldVaults.push(id);
+	g_OldVaults.append(id);
 
 	return 1;
 }
@@ -268,7 +266,7 @@ void OnPluginsUnloaded()
 	}
 	g_Vaults.clear();
 	while (!g_OldVaults.empty())
-		g_OldVaults.pop();
+		g_OldVaults.popFront();
 }
 
 AMX_NATIVE_INFO nVault_natives[] = {

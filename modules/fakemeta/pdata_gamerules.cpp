@@ -25,7 +25,7 @@ static cell AMX_NATIVE_CALL get_gamerules_int(AMX *amx, cell *params)
 	int element = params[3];
 	CHECK_DATA(data, element, BaseFieldType::Integer);
 
-	return PvData::GetInt(*GameRulesAddress, data, element);
+	return PvData::GetInt(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
 }
 
 // native set_gamerules_int(const class[], const member[], any:value, element = 0);
@@ -45,7 +45,7 @@ static cell AMX_NATIVE_CALL set_gamerules_int(AMX *amx, cell *params)
 		return 0;
 	}
 
-	PvData::SetInt(*GameRulesAddress, data, params[3], element);
+	PvData::SetInt(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, params[3], element);
 
 	return 0;
 }
@@ -62,7 +62,7 @@ static cell AMX_NATIVE_CALL get_gamerules_float(AMX *amx, cell *params)
 	int element = params[3];
 	CHECK_DATA(data, element, BaseFieldType::Float);
 
-	return PvData::GetFloat(*GameRulesAddress, data, element);
+	return PvData::GetFloat(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
 }
 
 // native set_gamerules_float(const class[], const member[], Float:value, element = 0);
@@ -76,7 +76,7 @@ static cell AMX_NATIVE_CALL set_gamerules_float(AMX *amx, cell *params)
 	int element = params[4];
 	CHECK_DATA(data, element, BaseFieldType::Float);
 
-	PvData::SetFloat(*GameRulesAddress, data, amx_ctof(params[3]), element);
+	PvData::SetFloat(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, amx_ctof(params[3]), element);
 
 	return 1;
 }
@@ -93,7 +93,7 @@ static cell AMX_NATIVE_CALL get_gamerules_vector(AMX *amx, cell *params)
 	int element = params[4];
 	CHECK_DATA(data, element, BaseFieldType::Vector);
 
-	PvData::GetVector(*GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
+	PvData::GetVector(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
 
 	return 1;
 }
@@ -109,7 +109,7 @@ static cell AMX_NATIVE_CALL set_gamerules_vector(AMX *amx, cell *params)
 	int element = params[4];
 	CHECK_DATA(data, element, BaseFieldType::Vector);
 
-	PvData::GetVector(*GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
+	PvData::GetVector(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, MF_GetAmxAddr(amx, params[3]), element);
 
 	return 1;
 }
@@ -126,7 +126,7 @@ static cell AMX_NATIVE_CALL get_gamerules_entity(AMX *amx, cell *params)
 	int element = params[3];
 	CHECK_DATA(data, element, BaseFieldType::Entity);
 
-	return PvData::GetEntity(*GameRulesAddress, data, element);
+	return PvData::GetEntity(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
 }
 
 // native set_gamerules_entity(const class[], const member[], value, element = 0);
@@ -147,7 +147,7 @@ static cell AMX_NATIVE_CALL set_gamerules_entity(AMX *amx, cell *params)
 	int element = params[4];
 	CHECK_DATA(data, element, BaseFieldType::Entity);
 
-	PvData::SetEntity(*GameRulesAddress, data, params[3], element);
+	PvData::SetEntity(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, params[3], element);
 
 	return 0;
 }
@@ -167,7 +167,7 @@ static cell AMX_NATIVE_CALL get_gamerules_string(AMX *amx, cell *params)
 	auto buffer = params[3];
 	auto maxlen = params[4];
 
-	auto string = PvData::GetString(*GameRulesAddress, data, element);
+	auto string = PvData::GetString(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, element);
 
 	if (data.fieldSize)
 	{
@@ -191,7 +191,7 @@ static cell AMX_NATIVE_CALL set_gamerules_string(AMX *amx, cell *params)
 	int length;
 	const char *value = MF_GetAmxString(amx, params[3], 0, &length);
 
-	return PvData::SetString(*GameRulesAddress, data, value, length, element);
+	return PvData::SetString(HasRegameDll ? GameRulesRH : *GameRulesAddress, data, value, length, element);
 }
 
 

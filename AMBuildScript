@@ -208,6 +208,8 @@ class AMXXConfig(object):
       cxx.cflags += ['-Wno-sometimes-uninitialized']
       if builder.target_platform == 'linux' and cxx.version >= '3.6':
         cxx.cxxflags += ['-Wno-inconsistent-missing-override']
+      if builder.target_platform == 'linux' and cxx.version >= '4.0':
+        cxx.cxxflags += ['-Wno-address-of-packed-member']
 
     if have_gcc:
       cxx.cflags += ['-Wno-parentheses']

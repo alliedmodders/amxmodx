@@ -58,3 +58,11 @@ UINT FireModes[6] = {
 	TSE_FM_FREESEMI,
 	TSE_FM_FREEFULL
 };
+
+UINT GetFiremodeByMask(UINT mask)
+{
+	for (int i = 0; i < 6; i++)
+		if (mask == FireModes[i])
+			return i;
+	return -1;
+}

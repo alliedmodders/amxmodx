@@ -145,20 +145,20 @@ native tse_getuserstamina(idx);
 // Sets user stamina count, on error returns 0
 native tse_setuserstamina(idx, Float:val);
 
-// Returns float value of effects physics speed (speed of sparks, bullets, broken glass pieces and other particles), on error returns -1
+// Returns float value of effects physics speed (speed of sparks, bullets, surrounding players sounds, broken glass pieces and other particles), on error returns -1
 native tse_geteffectsphysspd(idx);
 
 // Sets float value of effects physics speed, on error returns 0
 native tse_seteffectsphysspd(idx, Float:val);
 
-// Returns float value of player physics speed (speed of animation, movement, stunting, throwed knives), on error returns -1
+// Returns float value of player physics speed (speed of animation, movement, surrounding particles sounds, stunting, throwed knives), on error returns -1
 native tse_getuserphysspd(idx);
 
 // Sets float value of player physics speed, on error returns 0
 native tse_setuserphysspd(idx, Float:val);
 
 /* 
-*  Sets weapon shoot params for specified weapon, on error returns 0 
+*  Sets weapon shooting params for specified weapon of specified player, on error returns 0 
 *  weapid - weapon ID (TSE_WPN_*)
 *  Float:acc - float value of accuracy
 *  Float:vkick - float value of vertical kick
@@ -175,7 +175,7 @@ native tse_getusercurritems(idx);
 // Sets player current items (TSE_ITEM_*), on error returns 0
 native tse_setusercurritems(idx, val);
 
-// Returns player current weapon ID (TSE_WPN_*), on error return -1
+// Returns player current weapon ID (TSE_WPN_*), on error returns -1
 native tse_getusercurrweap(idx);
 
 // Returns player weapon entity (weapon_tsgun), if it not found returns 0
@@ -183,6 +183,9 @@ native tse_getuserweapent(idx);
 
 // Sets player's weapon fire mode (TSE_FM_*), on error returns 0
 native tse_setweapfiremode(idx, weap, mode);
+
+// Gets player's weapon fire mode (TSE_FM_*), on error returns -1
+native tse_getweapfiremode(idx, weap);
 
 /* 
 * Sets player weapon attachments (TSE_ATM_*), on error returns 0

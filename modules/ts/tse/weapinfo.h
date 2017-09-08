@@ -33,3 +33,4 @@ struct Weapon
 
 extern Weapon WeaponsList[];
 extern UINT FireModes[6];
+extern UINT GetFiremodeByMask(UINT mask);

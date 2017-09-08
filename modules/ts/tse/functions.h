@@ -344,6 +344,17 @@ static cell AMX_NATIVE_CALL tse_setweapfiremode(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL tse_getweapfiremode(AMX *amx, cell *params)
+{
+	byte pid = params[1];
+	if (!IsPlayerValid(amx, pid)) return -1;
+	if (!Player(pid)->IsAlive()) return -1;
+	byte weapon = params[2];
+	if (weapon < 1 || weapon > MAXWEAPS) return -1;
+	if (!WeaponsList[weapon].offsets.clip) return -1;
+	return GetFiremodeByMask(Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip - 1) - WeaponsList[weapon].offsets.fmbase - 1);
+}
+
 static cell AMX_NATIVE_CALL tse_setweapatcments(AMX *amx, cell *params)
 {
 	byte pid = params[1];
@@ -486,6 +497,7 @@ AMX_NATIVE_INFO weap_funcs[] = {
 	{ "tse_getuserweapent", tse_getuserweapent },
 	{ "tse_getusercurrweap", tse_getusercurrweap },
 	{ "tse_setweapfiremode", tse_setweapfiremode },
+	{ "tse_getweapfiremode", tse_getweapfiremode }, 
 	{ "tse_setweapatcments", tse_setweapatcments },
 	{ "tse_setweapclip", tse_setweapclip },
 	{ "tse_setweapammo", tse_setweapammo },

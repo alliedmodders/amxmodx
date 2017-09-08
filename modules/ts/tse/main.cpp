@@ -9,12 +9,15 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-#if defined DEBUGMODE
 #define PRINT (g_fn_PrintSrvConsole)
-char * MessageBeginType = "";
-#endif
 
-// test
+// Variables
+HookMsg *HMDecl;
+bool IsDebugMode = true;
+int OnPlayerStunt;
+int OnPlayerMeleeHit;
+int OnPlayerPickupPwup;
+
 void OnAmxxAttach()
 {
 	MF_AddNatives(pl_funcs);
@@ -96,45 +99,41 @@ void PlayerPreThink_Post(edict_t *player)
 
 int RegUserMsg_Post(const char *msgname, int size)
 {
-	for (int i = 1; DeclaresMsgs[i].name; ++i)
+	int msgid = META_RESULT_ORIG_RET(int);
+	msgbinds[msgid] = msgname;
+	HookMsg *msgdecl = GetMsgDeclareByName(msgname);
+	if (msgdecl->name && !msgdecl->id)
 	{
-		if (!*DeclaresMsgs[i].idptr && strcmp(DeclaresMsgs[i].name, msgname) == 0)
-		{
-			int id = META_RESULT_ORIG_RET(int);
-			*DeclaresMsgs[i].idptr = id;
-			if (DeclaresMsgs[i].endmsg)
-				GameMsgsEnd[id] = DeclaresMsgs[i].callback;
-			else
-				GameMsgs[id] = DeclaresMsgs[i].callback;
-			#if defined DEBUGMODE
-			PRINT("%s registered with ID %d\n", msgname, id);
-			#endif
-			break;
-		}
+		msgdecl->id = msgid;
+		if (msgdecl->endmsg)
+			GameMsgsEnd[msgid] = msgdecl->callback;
+		else
+			GameMsgs[msgid] = msgdecl->callback;
+		if (IsDebugMode)
+			PRINT("%s registered with ID %d\n", msgdecl->name, msgdecl->id);
 	}
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed)
 {
-	if (ed) {
-		MsgPlayerIndex = ENTINDEX(ed);
-		MsgPlayer = Player(MsgPlayerIndex);
-	}
-	else {
-		MsgPlayerIndex = 0;
+	if (ed)
+		MsgPlayer = Player(ENTINDEX(ed));
+	else
 		MsgPlayer = NULL;
-	}
 	MsgState = 0;
 	if (msg_type < 0 || msg_type >= MAX_REG_MSGS)
 		msg_type = 0;
 	MFunction = GameMsgs[msg_type];
 	MFunctionEnd = GameMsgsEnd[msg_type];
-	#if defined DEBUGMODE
-	MessageBeginType = (char *)GetMsgDeclareByID(msg_type).name;
-	if ((char *)GetMsgDeclareByID(msg_type).name != NULL)
-		PRINT("Hooked MSG_BEGIN of %s\n", MessageBeginType);
-	#endif
+	MsgID = msg_type;
+	if (IsDebugMode) {
+		HMDecl = GetMsgDeclareByID(msg_type);
+		if (!HMDecl->name && msgbinds[msg_type])
+			PRINT("MSG_BEGIN of %s\n", msgbinds[msg_type]);
+		//else
+			//PRINT("Hooked MSG_BEGIN of %s\n", msgbinds[msg_type]);
+	}
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -175,9 +174,8 @@ void HookMsg_PwUp(void* data)
 {
 	switch (MsgState++) {
 		case 0: {
-			if (!MsgPlayer->HooksInfo.PwupFlag) {
+			if (!MsgPlayer->HooksInfo.PwupFlag)
 				MsgPlayer->HooksInfo.PwupType = *(USHORT *)data;
-			}
 			break;
 		}
 		case 1: {
@@ -200,88 +198,65 @@ void HookMsg_TSState(void* data)
 }
 
 void WriteByte_Post(int val) {
-	#if defined DEBUGMODE
-	for (int i = 1; DeclaresMsgs[i].name; ++i)
-		if (MessageBeginType == DeclaresMsgs[i].name)
+	if (IsDebugMode)
+		if (!HMDecl->name && msgbinds[MsgID])
 			PRINT("BYTE | %d\n", val);
-	#endif
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteChar_Post(int val) {
-	#if defined DEBUGMODE
-	for (int i = 1; DeclaresMsgs[i].name; ++i) {
-		if (MessageBeginType == DeclaresMsgs[i].name)
+	if (IsDebugMode) 
+		if (!HMDecl->name && msgbinds[MsgID])
 			PRINT("CHAR | %d\n", val);
-	}
-	#endif
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteShort_Post(int val) {
-	#if defined DEBUGMODE
-	for (int i = 1; DeclaresMsgs[i].name; ++i) {
-		if (MessageBeginType == DeclaresMsgs[i].name)
+	if (IsDebugMode)
+		if (!HMDecl->name && msgbinds[MsgID])
 			PRINT("SHORT | %d\n", val);
-	}
-	#endif
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteLong_Post(int val) {
-	#if defined DEBUGMODE
-	for (int i = 1; DeclaresMsgs[i].name; ++i) {
-		if (MessageBeginType == DeclaresMsgs[i].name)
+	if (IsDebugMode)
+		if (!HMDecl->name && msgbinds[MsgID])
 			PRINT("LONG | %d\n", val);
-	}
-	#endif
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteAngle_Post(float val) {
-	#if defined DEBUGMODE
-	for (int i = 1; DeclaresMsgs[i].name; ++i) {
-		if (MessageBeginType == DeclaresMsgs[i].name)
+	if (IsDebugMode)
+		if (!HMDecl->name && msgbinds[MsgID])
 			PRINT("ANGLE | %f\n", val);
-	}
-    #endif
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteCoord_Post(float val) {
-	#if defined DEBUGMODE
-	for (int i = 1; DeclaresMsgs[i].name; ++i) {
-		if (MessageBeginType == DeclaresMsgs[i].name)
+	if (IsDebugMode)
+		if (!HMDecl->name && msgbinds[MsgID])
 			PRINT("COORD | %f\n", val);
-	}
-	#endif
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteString_Post(const char *sz) {
-	#if defined DEBUGMODE
-	for (int i = 1; DeclaresMsgs[i].name; ++i) {
-		if (MessageBeginType == DeclaresMsgs[i].name)
+	if (IsDebugMode)
+		if (!HMDecl->name && msgbinds[MsgID])
 			PRINT("STRING | %s\n", sz);
-	}
-	#endif
 	if (MFunction) (*MFunction)((void *)sz);
 	RETURN_META(MRES_IGNORED);
 }
 
 void WriteEntity_Post(int val) {
-	#if defined DEBUGMODE
-	for (int i = 1; DeclaresMsgs[i].name; ++i) {
-		if (MessageBeginType == DeclaresMsgs[i].name)
+	if (IsDebugMode)
+		if (!HMDecl->name && msgbinds[MsgID])
 			PRINT("ENTITY | %d\n", val);
-	}
-	#endif
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
 }

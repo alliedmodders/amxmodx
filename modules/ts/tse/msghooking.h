@@ -10,35 +10,30 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-struct UserMsg {
+struct HookMsg {
 	const char *name;
-	int *idptr;
+	int id;
 	void (*callback)(void*);
 	bool endmsg;
 };
-extern UserMsg DeclaresMsgs[];
-extern UserMsg GetMsgDeclareByID(int id);
+extern HookMsg DeclaresMsgs[];
+extern HookMsg *GetMsgDeclareByID(int id);
+extern HookMsg *GetMsgDeclareByName(const char * name);
+extern const char *msgbinds[MAX_REG_MSGS];
 
-extern void(*MFunction)(void*);
-extern void(*MFunctionEnd)(void*);
-extern void(*GameMsgs[MAX_REG_MSGS])(void*);
-extern void(*GameMsgsEnd[MAX_REG_MSGS])(void*);
+extern void (*MFunction)(void*);
+extern void (*MFunctionEnd)(void*);
+extern void (*GameMsgs[MAX_REG_MSGS])(void*);
+extern void (*GameMsgsEnd[MAX_REG_MSGS])(void*);
 
 extern CPlayer *MsgPlayer;
 extern int MsgState;
-extern int MsgPlayerIndex;
-
-extern int MsgID_WeaponInfo;
-extern int MsgID_TSState;
-extern int MsgID_PwUp;
+extern int MsgID;
 
 extern void HookMsg_WeaponInfo(void*);
 extern void HookMsg_TSState(void*);
 extern void HookMsg_PwUp(void*);
 
-extern int OnPlayerStunt;
-extern int OnPlayerMeleeHit;
-extern int OnPlayerPickupPwup;
 
 
 

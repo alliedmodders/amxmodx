@@ -9,36 +9,37 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-UserMsg DeclaresMsgs[] = {
-	{ NULL, nullptr, nullptr, false },
-	{ "WeaponInfo", &MsgID_WeaponInfo, &HookMsg_WeaponInfo, false },
-	{ "TSState", &MsgID_TSState, &HookMsg_TSState, false },
-	{ "PwUp", &MsgID_PwUp, &HookMsg_PwUp, false }
+HookMsg DeclaresMsgs[] = {
+	{ NULL, NULL, nullptr, false },
+	{ "WeaponInfo", NULL, &HookMsg_WeaponInfo, false },
+	{ "TSState", NULL, &HookMsg_TSState, false },
+	{ "PwUp", NULL, &HookMsg_PwUp, false }
 };
+const char *msgbinds[MAX_REG_MSGS];
 
-UserMsg GetMsgDeclareByID(int id)
+HookMsg *GetMsgDeclareByID(int id)
 {
 	for (int i = 1; DeclaresMsgs[i].name; ++i)
-		if (DeclaresMsgs[i].idptr != nullptr && *DeclaresMsgs[i].idptr == id)
-			return DeclaresMsgs[i];
-	return DeclaresMsgs[NULL];
+		if (DeclaresMsgs[i].id == id)
+			return &DeclaresMsgs[i];
+	return &DeclaresMsgs[NULL];
+}
+
+HookMsg *GetMsgDeclareByName(const char * name)
+{
+	for (int i = 1; DeclaresMsgs[i].name; ++i)
+		if (strcmp(DeclaresMsgs[i].name, name) == 0)
+			return &DeclaresMsgs[i];
+	return &DeclaresMsgs[NULL];
 }
 
 CPlayer *MsgPlayer;
 int MsgState = 0;
-int MsgPlayerIndex;
-
-int MsgID_WeaponInfo;
-int MsgID_TSState;
-int MsgID_PwUp;
+int MsgID;
 
 void HookMsg_WeaponInfo(void*);
 void HookMsg_TSState(void*);
 void HookMsg_PwUp(void*);
-
-int OnPlayerStunt;
-int OnPlayerMeleeHit;
-int OnPlayerPickupPwup;
 
 void (*MFunction)(void*);
 void (*MFunctionEnd)(void*);

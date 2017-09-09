@@ -10,10 +10,12 @@
 //     https://alliedmods.net/amxmodx-license
 
 #define PRINT (g_fn_PrintSrvConsole)
+void CmdHandling();
 
 // Variables
 HookMsg *HMDecl;
-bool IsDebugMode = true;
+bool IsDebugMode = false;
+bool hmlist[MAX_REG_MSGS];
 int OnPlayerStunt;
 int OnPlayerMeleeHit;
 int OnPlayerPickupPwup;
@@ -22,6 +24,7 @@ void OnAmxxAttach()
 {
 	MF_AddNatives(pl_funcs);
 	MF_AddNatives(weap_funcs);
+	REG_SVR_COMMAND("tse", CmdHandling);
 }
 
 void OnPluginsLoaded()
@@ -36,6 +39,51 @@ void ServerActivate_Post(edict_t *plEdict, int edictcount, int clmax)
 	for (byte i = 1; i <= gpGlobals->maxClients; ++i)
 		Player(i)->Init(plEdict + i, i);
 	RETURN_META(MRES_IGNORED);
+}
+
+void CmdHandling()
+{
+	const char *cmd = CMD_ARGV(1);
+	if (strcmp(cmd, "version") == 0)
+	{
+		PRINT("%s | %s\n", MODULE_NAME, MODULE_VERSION);
+		PRINT("Author: SNMetamorph\n");
+		PRINT("Compiled: %s\n", __TIMESTAMP__);
+		PRINT("Module URL: %s\n", MODULE_URL);
+		PRINT("Credits: \n");
+		PRINT("    AMX Mod X Development Team\n");
+		PRINT("    Twilight Suzuka\n");
+		PRINT("    XxAvalanchexX\n");
+		PRINT("    KliPPy\n");
+		PRINT("    WildCard65\n");
+	}
+	else if (strcmp(cmd, "debugmode") == 0)
+	{
+		IsDebugMode = !IsDebugMode;
+		PRINT("[%s] The debug mode was switched %s.\n", MODULE_LOGTAG, IsDebugMode ? "on" : "off");
+	}
+	else if (strcmp(cmd, "incmsg") == 0)
+	{
+		const char *mname = CMD_ARGV(2);
+		int msgid = GetMsgIDByName(mname);
+		if (msgid != NULL) {
+			hmlist[msgid] = true;
+			PRINT("[%s] Message \"%s\" (ID: %d) successfully included to hooking list.\n", MODULE_LOGTAG, mname, msgid);
+		}	
+		else
+			PRINT("[%s] Including failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
+	}
+	else if (strcmp(cmd, "excmsg") == 0)
+	{
+		const char *mname = CMD_ARGV(2);
+		int msgid = GetMsgIDByName(mname);
+		if (msgid != NULL) {
+			hmlist[msgid] = false;
+			PRINT("[%s] Message \"%s\" (ID: %d) successfully excluded from hooking list.\n", MODULE_LOGTAG, mname, msgid);
+		}
+		else
+			PRINT("[%s] Excluding failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
+	}
 }
 
 void PlayerPreThink_Post(edict_t *player)
@@ -128,11 +176,8 @@ void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t
 	MFunctionEnd = GameMsgsEnd[msg_type];
 	MsgID = msg_type;
 	if (IsDebugMode) {
-		HMDecl = GetMsgDeclareByID(msg_type);
-		if (!HMDecl->name && msgbinds[msg_type])
-			PRINT("MSG_BEGIN of %s\n", msgbinds[msg_type]);
-		//else
-			//PRINT("Hooked MSG_BEGIN of %s\n", msgbinds[msg_type]);
+		if (hmlist[msg_type])
+			PRINT("%s -> %s\n", msgbinds[msg_type], MsgPlayer ? STRING(MsgPlayer->PlayerEdict->v.netname) : "?");
 	}
 	RETURN_META(MRES_IGNORED);
 }
@@ -199,7 +244,7 @@ void HookMsg_TSState(void* data)
 
 void WriteByte_Post(int val) {
 	if (IsDebugMode)
-		if (!HMDecl->name && msgbinds[MsgID])
+		if (hmlist[MsgID])
 			PRINT("BYTE | %d\n", val);
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
@@ -207,7 +252,7 @@ void WriteByte_Post(int val) {
 
 void WriteChar_Post(int val) {
 	if (IsDebugMode) 
-		if (!HMDecl->name && msgbinds[MsgID])
+		if (hmlist[MsgID])
 			PRINT("CHAR | %d\n", val);
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
@@ -215,7 +260,7 @@ void WriteChar_Post(int val) {
 
 void WriteShort_Post(int val) {
 	if (IsDebugMode)
-		if (!HMDecl->name && msgbinds[MsgID])
+		if (hmlist[MsgID])
 			PRINT("SHORT | %d\n", val);
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
@@ -223,7 +268,7 @@ void WriteShort_Post(int val) {
 
 void WriteLong_Post(int val) {
 	if (IsDebugMode)
-		if (!HMDecl->name && msgbinds[MsgID])
+		if (hmlist[MsgID])
 			PRINT("LONG | %d\n", val);
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
@@ -231,7 +276,7 @@ void WriteLong_Post(int val) {
 
 void WriteAngle_Post(float val) {
 	if (IsDebugMode)
-		if (!HMDecl->name && msgbinds[MsgID])
+		if (hmlist[MsgID])
 			PRINT("ANGLE | %f\n", val);
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
@@ -239,7 +284,7 @@ void WriteAngle_Post(float val) {
 
 void WriteCoord_Post(float val) {
 	if (IsDebugMode)
-		if (!HMDecl->name && msgbinds[MsgID])
+		if (hmlist[MsgID])
 			PRINT("COORD | %f\n", val);
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);
@@ -247,7 +292,7 @@ void WriteCoord_Post(float val) {
 
 void WriteString_Post(const char *sz) {
 	if (IsDebugMode)
-		if (!HMDecl->name && msgbinds[MsgID])
+		if (hmlist[MsgID])
 			PRINT("STRING | %s\n", sz);
 	if (MFunction) (*MFunction)((void *)sz);
 	RETURN_META(MRES_IGNORED);
@@ -255,7 +300,7 @@ void WriteString_Post(const char *sz) {
 
 void WriteEntity_Post(int val) {
 	if (IsDebugMode)
-		if (!HMDecl->name && msgbinds[MsgID])
+		if (hmlist[MsgID])
 			PRINT("ENTITY | %d\n", val);
 	if (MFunction) (*MFunction)((void *)&val);
 	RETURN_META(MRES_IGNORED);

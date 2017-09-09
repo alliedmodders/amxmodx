@@ -19,7 +19,7 @@ const char *msgbinds[MAX_REG_MSGS];
 
 HookMsg *GetMsgDeclareByID(int id)
 {
-	for (int i = 1; DeclaresMsgs[i].name; ++i)
+	for (int i = 1; DeclaresMsgs[i].name; i++)
 		if (DeclaresMsgs[i].id == id)
 			return &DeclaresMsgs[i];
 	return &DeclaresMsgs[NULL];
@@ -27,10 +27,19 @@ HookMsg *GetMsgDeclareByID(int id)
 
 HookMsg *GetMsgDeclareByName(const char * name)
 {
-	for (int i = 1; DeclaresMsgs[i].name; ++i)
+	for (int i = 1; DeclaresMsgs[i].name; i++)
 		if (strcmp(DeclaresMsgs[i].name, name) == 0)
 			return &DeclaresMsgs[i];
 	return &DeclaresMsgs[NULL];
+}
+
+int GetMsgIDByName(const char * name)
+{
+	for (int i = 0; i < MAX_REG_MSGS; i++)
+		if (msgbinds[i])
+			if (strcmp(msgbinds[i], name) == 0)
+				return i;
+	return NULL;
 }
 
 CPlayer *MsgPlayer;

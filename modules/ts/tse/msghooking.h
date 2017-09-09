@@ -20,6 +20,7 @@ extern HookMsg DeclaresMsgs[];
 extern HookMsg *GetMsgDeclareByID(int id);
 extern HookMsg *GetMsgDeclareByName(const char * name);
 extern const char *msgbinds[MAX_REG_MSGS];
+extern int GetMsgIDByName(const char * name);
 
 extern void (*MFunction)(void*);
 extern void (*MFunctionEnd)(void*);

@@ -23,7 +23,7 @@
 *   to add multiple entries.
 */
 #define MODULE_NAME "TSExtended"
-#define MODULE_VERSION "1.2.0"
+#define MODULE_VERSION "1.2.4"
 #define MODULE_AUTHOR "SNMetamorph"
 #define MODULE_URL "https://forums.alliedmods.net/showthread.php?t=300922"
 #define MODULE_LOGTAG "TSE"

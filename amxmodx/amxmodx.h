@@ -116,7 +116,7 @@ extern AMX_NATIVE_INFO g_GameConfigNatives[];
 #define MAX_BUFFER_LENGTH 16384
 
 char* UTIL_SplitHudMessage(register const char *src);
-int UTIL_ReadFlags(const char* c);
+int UTIL_ReadFlags(const char *c, bool safe = false);
 
 void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg);
 void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1 = NULL, const char *arg2 = NULL, bool fwd = false);

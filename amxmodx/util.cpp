@@ -11,13 +11,17 @@
 #include "amxmodx.h"
 #include <utf8rewind.h>
 
-int UTIL_ReadFlags(const char* c) 
+int UTIL_ReadFlags(const char *c, bool safe)
 {
 	int flags = 0;
-	
-	while (*c)
-		flags |= (1<<(*c++ - 'a'));
-	
+
+	for (const char *i = c; *i; i++) {
+		if (safe && (*i < 'a' || *i > '~'))
+			continue;
+
+		flags |= 1 << (*i - 'a');
+	}
+
 	return flags;
 }
 

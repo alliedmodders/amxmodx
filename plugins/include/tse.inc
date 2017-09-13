@@ -139,6 +139,9 @@ native tse_getusercash(idx);
 // Sets value of player cash, on error returns 0
 native tse_setusercash(idx, val);
 
+// Gets if player has a kevlar (returns 1), or not (returns 0), on error returns -1
+native tse_getuserkevlar(idx);
+
 // Returns user stamina count, on error returns -1
 native tse_getuserstamina(idx);
 

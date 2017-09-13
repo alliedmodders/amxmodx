@@ -47,6 +47,14 @@ static cell AMX_NATIVE_CALL tse_setusercash(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL tse_getuserkevlar(AMX *amx, cell *params)
+{
+	byte pid = params[1];
+	if (!IsPlayerValid(amx, pid)) return -1;
+	if (!Player(pid)->IsAlive()) return -1;
+	return (bool)(Player(pid)->GetPDataInt(628) != 0);
+}
+
 static cell AMX_NATIVE_CALL tse_getuserstamina(AMX *amx, cell *params) 
 {
 	byte pid = params[1];
@@ -270,6 +278,7 @@ AMX_NATIVE_INFO pl_funcs[] = {
 	{ "tse_setuserslots", tse_setuserslots },
 	{ "tse_getusercash", tse_getusercash },
 	{ "tse_setusercash", tse_setusercash },
+	{ "tse_getuserkevlar", tse_getuserkevlar },
 	{ "tse_getuserstamina", tse_getuserstamina },
 	{ "tse_setuserstamina", tse_setuserstamina },
 	{ "tse_getuserstamina", tse_getuserstamina },

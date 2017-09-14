@@ -13,6 +13,18 @@
 void CmdHandling();
 
 // Variables
+const char * deststypes[10] = {
+	"Broadcast (unreliable)",
+	NULL,
+	"All",
+	"Init",
+	"PVS (unreliable)",
+	"PAS (unreliable)",
+	"PVS",
+	"PAS",
+	NULL,
+	"HLTV"
+};
 HookMsg *HMDecl;
 bool IsDebugMode = false;
 bool hmlist[MAX_REG_MSGS];
@@ -177,7 +189,7 @@ void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t
 	MsgID = msg_type;
 	if (IsDebugMode) {
 		if (hmlist[msg_type])
-			PRINT("%s -> %s\n", msgbinds[msg_type], MsgPlayer ? STRING(MsgPlayer->PlayerEdict->v.netname) : "?");
+			PRINT("%s -> %s\n", msgbinds[msg_type], MsgPlayer ? STRING(MsgPlayer->PlayerEdict->v.netname) : deststypes[msg_dest]);
 	}
 	RETURN_META(MRES_IGNORED);
 }

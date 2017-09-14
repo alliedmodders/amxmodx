@@ -16,7 +16,7 @@ void CmdHandling();
 const char * deststypes[10] = {
 	"Broadcast (unreliable)",
 	NULL,
-	"All",
+	"Broadcast",
 	"Init",
 	"PVS (unreliable)",
 	"PAS (unreliable)",

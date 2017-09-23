@@ -39,6 +39,12 @@
     <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\dllfuncs.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\memory.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CPlayer.cpp">
@@ -55,6 +61,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dllfuncs.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="..\memory.cpp">
+      <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

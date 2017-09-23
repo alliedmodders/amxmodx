@@ -63,7 +63,7 @@
       <WarningLevel>Level3</WarningLevel>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(METAMOD);..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(HLSDK)\public;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(METAMOD)\metamod;..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
@@ -75,6 +75,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h" />
+    <ClInclude Include="..\dllfuncs.h" />
+    <ClInclude Include="..\memory.h" />
     <ClInclude Include="..\misc.h" />
     <ClInclude Include="..\msghooking.h" />
     <ClInclude Include="..\functions.h" />
@@ -85,6 +87,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp" />
     <ClCompile Include="..\CPlayer.cpp" />
+    <ClCompile Include="..\dllfuncs.cpp" />
+    <ClCompile Include="..\memory.cpp" />
     <ClCompile Include="..\msghooking.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\weapinfo.cpp" />

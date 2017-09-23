@@ -1,6 +1,5 @@
 #include "amxxmodule.h"
 #include "dllfuncs.h"
-#pragma once
 
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
 // Copyright (C) The AMX Mod X Development Team.
@@ -10,10 +9,18 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-// Platform-specific inclusions
-#if defined(__linux__)
 
-#else
-	#include <windows.h>
-#endif
+// Declare function pointers
+int (*GetPlayersCount)() = nullptr;
+CBasePlayer* (*GetCBasePlayerPtr)(int) = nullptr;
+int (*GivePlayerCash)(int, int) = nullptr;
 
+void InitFuncPointers()
+{
+	#if defined(__linux__)
+		// Linux offsets (from ts_i386.so)
+	#else
+		// Windows offsets (from mp.dll)
+	    GetPlayersCount = (int(*)())FindPatternAddress((size_t)gamedll.codebase, gamedll.end, (byte *)"\xA1\x14\xE7\x04\x09\x56\x57", "x?x??xx"); // example function
+	#endif
+}

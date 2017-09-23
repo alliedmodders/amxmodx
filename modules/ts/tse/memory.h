@@ -9,3 +9,21 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
+// Platform-specific inclusions
+#if defined(__linux__)
+
+#else
+	#include <windows.h>
+#endif
+
+struct libwrapper
+{
+	size_t size;
+	size_t end;
+	void *codebase;
+	void *base;
+};
+
+extern libwrapper gamedll;
+extern bool FindGameDllAddress();
+extern void *FindPatternAddress(size_t startaddr, size_t endaddr, byte *pattern, char *mask);

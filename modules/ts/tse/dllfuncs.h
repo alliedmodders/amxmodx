@@ -17,4 +17,7 @@
 	#include <windows.h>
 #endif
 
+extern void InitFuncPointers();
+
+extern int (*GetPlayersCount)();
 

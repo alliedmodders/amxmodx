@@ -1,5 +1,6 @@
 #include "amxxmodule.h"
 #include "functions.h"
+#include "dllfuncs.h"
 
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
 // Copyright (C) The AMX Mod X Development Team.
@@ -13,7 +14,8 @@
 void CmdHandling();
 
 // Variables
-const char * deststypes[10] = {
+const char * deststypes[10] = 
+{
 	"Broadcast (unreliable)",
 	NULL,
 	"Broadcast",
@@ -44,6 +46,8 @@ void OnPluginsLoaded()
 	OnPlayerStunt = MF_RegisterForward("client_onstunt", ET_IGNORE, FP_CELL, FP_CELL, FP_DONE); 
 	OnPlayerMeleeHit = MF_RegisterForward("client_onmeleehit", ET_STOP, FP_CELL, FP_FLOAT, FP_FLOAT, FP_DONE);
 	OnPlayerPickupPwup = MF_RegisterForward("client_onpickuppwup", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	if (FindGameDllAddress())
+		InitFuncPointers();
 }
 
 void ServerActivate_Post(edict_t *plEdict, int edictcount, int clmax) 
@@ -77,24 +81,47 @@ void CmdHandling()
 	else if (strcmp(cmd, "incmsg") == 0)
 	{
 		const char *mname = CMD_ARGV(2);
-		int msgid = GetMsgIDByName(mname);
-		if (msgid != NULL) {
-			hmlist[msgid] = true;
-			PRINT("[%s] Message \"%s\" (ID: %d) successfully included to hooking list.\n", MODULE_LOGTAG, mname, msgid);
-		}	
-		else
-			PRINT("[%s] Including failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
+		if (strcmp(mname, "ALL") == 0) {
+			for (int i = 0; i < MAX_REG_MSGS; i++)
+			{
+				if (msgbinds[i]) {
+					hmlist[i] = true;
+					PRINT("[%s] Message \"%s\" recursively added to hooking list.\n", MODULE_LOGTAG, msgbinds[i]);
+				}
+			}
+		}
+		else {
+			int msgid = GetMsgIDByName(mname);
+			if (msgid != NULL) {
+				hmlist[msgid] = true;
+				PRINT("[%s] Message \"%s\" (ID: %d) successfully included to hooking list.\n", MODULE_LOGTAG, mname, msgid);
+			}
+			else
+				PRINT("[%s] Including failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
+		}
 	}
 	else if (strcmp(cmd, "excmsg") == 0)
 	{
 		const char *mname = CMD_ARGV(2);
-		int msgid = GetMsgIDByName(mname);
-		if (msgid != NULL) {
-			hmlist[msgid] = false;
-			PRINT("[%s] Message \"%s\" (ID: %d) successfully excluded from hooking list.\n", MODULE_LOGTAG, mname, msgid);
+		if (strcmp(mname, "ALL") == 0) {
+			for (int i = 0; i < MAX_REG_MSGS; i++)
+				if (msgbinds[i]) 
+					hmlist[i] = false;
+			PRINT("[%s] Hooking list was cleaned up.\n", MODULE_LOGTAG);
 		}
-		else
-			PRINT("[%s] Excluding failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
+		else {
+			int msgid = GetMsgIDByName(mname);
+			if (msgid != NULL) {
+				hmlist[msgid] = false;
+				PRINT("[%s] Message \"%s\" (ID: %d) successfully excluded from hooking list.\n", MODULE_LOGTAG, mname, msgid);
+			}
+			else
+				PRINT("[%s] Excluding failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
+		}
+	}
+	else if (strcmp(cmd, "test") == 0)
+	{
+		PRINT("Count of players: %d\n", GetPlayersCount());
 	}
 }
 
@@ -187,10 +214,9 @@ void MessageBegin_Post(int msg_dest, int msg_type, const float *pOrigin, edict_t
 	MFunction = GameMsgs[msg_type];
 	MFunctionEnd = GameMsgsEnd[msg_type];
 	MsgID = msg_type;
-	if (IsDebugMode) {
+	if (IsDebugMode)
 		if (hmlist[msg_type])
 			PRINT("%s -> %s\n", msgbinds[msg_type], MsgPlayer ? STRING(MsgPlayer->PlayerEdict->v.netname) : deststypes[msg_dest]);
-	}
 	RETURN_META(MRES_IGNORED);
 }
 

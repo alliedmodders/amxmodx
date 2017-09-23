@@ -46,9 +46,9 @@ CPlayer *MsgPlayer;
 int MsgState = 0;
 int MsgID;
 
-void HookMsg_WeaponInfo(void*);
-void HookMsg_TSState(void*);
-void HookMsg_PwUp(void*);
+//void HookMsg_WeaponInfo(void*);
+//void HookMsg_TSState(void*);
+//void HookMsg_PwUp(void*);
 
 void (*MFunction)(void*);
 void (*MFunctionEnd)(void*);

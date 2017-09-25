@@ -39,6 +39,8 @@ void OnAmxxAttach()
 	MF_AddNatives(pl_funcs);
 	MF_AddNatives(weap_funcs);
 	REG_SVR_COMMAND("tse", CmdHandling);
+	if (FindGameLibAddress())
+		InitFuncPointers();
 }
 
 void OnPluginsLoaded()
@@ -46,8 +48,6 @@ void OnPluginsLoaded()
 	OnPlayerStunt = MF_RegisterForward("client_onstunt", ET_IGNORE, FP_CELL, FP_CELL, FP_DONE); 
 	OnPlayerMeleeHit = MF_RegisterForward("client_onmeleehit", ET_STOP, FP_CELL, FP_FLOAT, FP_FLOAT, FP_DONE);
 	OnPlayerPickupPwup = MF_RegisterForward("client_onpickuppwup", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-	if (FindGameDllAddress())
-		InitFuncPointers();
 }
 
 void ServerActivate_Post(edict_t *plEdict, int edictcount, int clmax) 
@@ -63,7 +63,7 @@ void CmdHandling()
 	if (strcmp(cmd, "version") == 0)
 	{
 		PRINT("%s | %s\n", MODULE_NAME, MODULE_VERSION);
-		PRINT("Author: SNMetamorph\n");
+		PRINT("Author: %s\n", MODULE_AUTHOR);
 		PRINT("Compiled: %s\n", __TIMESTAMP__);
 		PRINT("Module URL: %s\n", MODULE_URL);
 		PRINT("Credits: \n");

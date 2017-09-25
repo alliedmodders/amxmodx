@@ -10,7 +10,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 libwrapper gamedll;
-bool FindGameDllAddress()
+bool FindGameLibAddress()
 {
 	#if defined(__linux__)
 
@@ -32,7 +32,7 @@ bool FindGameDllAddress()
 	#endif
 }
 
-void *FindPatternAddress(size_t startaddr, size_t endaddr, byte * pattern, char *mask)
+void *FindPatternAddress(size_t startaddr, size_t endaddr, byte *pattern, char *mask)
 {
 	for (size_t i = startaddr; i < endaddr - strlen(mask); i++)
 	{

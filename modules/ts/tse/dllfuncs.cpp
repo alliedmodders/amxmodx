@@ -12,8 +12,6 @@
 
 // Declare function pointers
 int (*GetPlayersCount)() = nullptr;
-CBasePlayer* (*GetCBasePlayerPtr)(int) = nullptr;
-int (*GivePlayerCash)(int, int) = nullptr;
 
 void InitFuncPointers()
 {

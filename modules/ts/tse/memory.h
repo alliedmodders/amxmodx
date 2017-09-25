@@ -25,5 +25,5 @@ struct libwrapper
 };
 
 extern libwrapper gamedll;
-extern bool FindGameDllAddress();
+extern bool FindGameLibAddress();
 extern void *FindPatternAddress(size_t startaddr, size_t endaddr, byte *pattern, char *mask);

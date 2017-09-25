@@ -11,6 +11,7 @@
 #define _NATIVES_NATIVES_HANDLES_H_
 
 #include <amtl/am-vector.h>
+#include <amtl/am-autoptr.h>
 
 // Note: All handles start at 1. 0 and below are invalid handles.
 //       This way, a plugin that doesn't initialize a vector or
@@ -22,7 +23,7 @@ class NativeHandle
 {
 	private:
 
-		ke::Vector<T*> m_handles;
+		ke::Vector<ke::AutoPtr<T>> m_handles;
 
 	public:
 
@@ -34,14 +35,6 @@ class NativeHandle
 
 		void clear()
 		{
-			for (size_t i = 0; i < m_handles.length(); ++i)
-			{
-				if (m_handles[i])
-				{
-					delete m_handles[i];
-				}
-			}
-
 			m_handles.clear();
 		}
 
@@ -50,58 +43,58 @@ class NativeHandle
 			return m_handles.length();
 		}
 
-		T *lookup(int handle)
+		T *lookup(size_t handle)
 		{
 			--handle;
 
-			if (handle < 0 || handle >= static_cast<int>(m_handles.length()))
+			if (handle >= m_handles.length())
 			{
 				return nullptr;
 			}
 
-			return m_handles[handle];
+			return m_handles[handle].get();
 		}
 
 		template <typename... Targs>
-		int create(Targs... Fargs)
+		size_t create(Targs... Fargs)
 		{
 			for (size_t i = 0; i < m_handles.length(); ++i)
 			{
 				if (!m_handles[i])
 				{
-					m_handles[i] = new T(Fargs...);
+					m_handles[i] = ke::AutoPtr<T>(new T(Fargs...));
 
-					return static_cast<int>(i) + 1;
+					return i + 1;
 				}
 			}
 
-			m_handles.append(new T(Fargs...));
+			m_handles.append(ke::AutoPtr<T>(new T(Fargs...)));
 
 			return m_handles.length();
 		}
 
-		int clone(T *data)
+		size_t clone(T *data)
 		{
 			for (size_t i = 0; i < m_handles.length(); ++i)
 			{
 				if (!m_handles[i])
 				{
-					m_handles[i] = data;
+					m_handles[i] = ke::AutoPtr<T>(data);
 
-					return static_cast<int>(i) + 1;
+					return i + 1;
 				}
 			}
 
-			m_handles.append(data);
+			m_handles.append(ke::AutoPtr<T>(data));
 
 			return m_handles.length();
 		}
 
-		bool destroy(int handle)
+		bool destroy(size_t handle)
 		{
-			handle--;
+			--handle;
 
-			if (handle < 0 || handle >= static_cast<int>(m_handles.length()))
+			if (handle >= m_handles.length())
 			{
 				return false;
 			}
@@ -111,7 +104,6 @@ class NativeHandle
 				return false;
 			}
 
-			delete m_handles[handle];
 			m_handles[handle] = nullptr;
 
 			return true;

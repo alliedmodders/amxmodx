@@ -6,10 +6,14 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-// Configuration
+// 
+// Module Config
+//
 
 #ifndef __MODULECONFIG_H__
 #define __MODULECONFIG_H__
+
+#include <amxmodx_version.h>
 
 /** Module info
 * -The logtag is the tag that the module's log messages will be

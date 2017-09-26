@@ -51,7 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\;$(METAMOD);$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;..\..\..\..\public\memtools;..\sdk;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

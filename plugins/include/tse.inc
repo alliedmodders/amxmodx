@@ -7,15 +7,17 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-// Require module loading
-#if AMXX_VERSION_NUM >= 175
- #pragma reqlib tse
- #if !defined AMXMODX_NOAUTOLOAD
-  #pragma loadlib tse
- #endif
-#else
- #pragma library tse
+#if defined _tse_included
+	#endinput
 #endif
+#define _tse_included
+
+// Require module loading
+#pragma reqlib tse
+#if !defined AMXMODX_NOAUTOLOAD
+	#pragma loadlib tse
+#endif
+
 
 // Items
 enum {

@@ -114,7 +114,7 @@ static cell AMX_NATIVE_CALL tse_getusercurritems(AMX *amx, cell *params)
 	byte pid = params[1];
 	if (!IsPlayerValid(amx, pid)) return -1;
 	if (!Player(pid)->IsAlive()) return -1;
-	switch ((UINT)Player(pid)->GetPDataInt(462))
+	switch ((uint32_t)Player(pid)->GetPDataInt(462))
 	{
 		case 65536:
 			return 1;
@@ -183,7 +183,7 @@ static cell AMX_NATIVE_CALL tse_setuserstatus(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL tse_createpwup(AMX *amx, cell *params)
 {
-	USHORT type = params[1];
+	uint16_t type = params[1];
 	if (type < 1 || type > 256) return -1;
 	cell *coordptr = MF_GetAmxAddr(amx, params[2]);
 	short ttl = params[3];
@@ -195,7 +195,7 @@ static cell AMX_NATIVE_CALL tse_giveuserpwup(AMX *amx, cell *params)
 	byte pid = params[1];
 	if (!IsPlayerValid(amx, pid)) return 0;
 	if (!Player(pid)->IsAlive()) return 0;
-	USHORT type = params[2];
+	uint16_t type = params[2];
 	if (type < 1 || type > 256) return 0;
 	byte duration = params[3];
 	if (duration < 0 || duration > 256) return 0;
@@ -342,7 +342,7 @@ static cell AMX_NATIVE_CALL tse_setweapfiremode(AMX *amx, cell *params)
 	if (weapon < 1 || weapon > MAXWEAPS) return 0;
 	if (mode < 0 || mode > 5) return 0;
 	if (!WeaponsList[weapon].offsets.clip) return 0;
-	UINT ofstval = 1 + WeaponsList[weapon].offsets.fmbase + FireModes[mode];
+	uint32_t ofstval = 1 + WeaponsList[weapon].offsets.fmbase + FireModes[mode];
 	if (Player(pid)->CurrentWeapon == weapon)
 	{
 		Player(pid)->SetWeapPDataInt(603, ofstval);
@@ -478,7 +478,7 @@ static cell AMX_NATIVE_CALL tse_createweap(AMX *amx, cell *params)
 {
 	byte weapid = params[1];
 	cell *coordptr = MF_GetAmxAddr(amx, params[2]);
-	USHORT clips = params[3];
+	uint16_t clips = params[3];
 	byte atcments = params[4];
 	short ttl = params[5];
 	return ENTINDEX(CreateWeapon(weapid, Vector(*(float *)((void *)&coordptr[0]), *(float *)((void *)&coordptr[1]), *(float *)((void *)&coordptr[2])), ttl, clips, atcments));
@@ -491,7 +491,7 @@ static cell AMX_NATIVE_CALL tse_giveuserweap(AMX *amx, cell *params)
 	if (!Player(pid)->IsAlive()) return 0;
 	int weapid = params[2];
 	if (weapid < 1 || weapid > MAXWEAPS) return 0;
-	USHORT clips = params[3];
+	uint16_t clips = params[3];
 	byte atcments = params[4];
 	edict_t *weapent = CreateWeapon(weapid, Player(pid)->PlayerEdict->v.origin, 120, clips, atcments);
 	MDLL_Use(weapent, Player(pid)->PlayerEdict);

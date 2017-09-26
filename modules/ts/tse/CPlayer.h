@@ -21,13 +21,13 @@ struct CPlayer {
 	struct PlayerWeapon 
 	{
 		short ammo;
-		UINT clip, mode, attachments;
+		uint32_t clip, mode, attachments;
 	}; 
 	struct HInfo
 	{
 		byte State, OldState;
 		bool IsStateChecked = false, IsPwupTaken = false, PwupFlag = false;
-		USHORT PwupType;
+		uint16_t PwupType;
 		byte PwupDuration;
 		float KnockTime = -1.0;
 		float KnockDamage = -1.0;
@@ -49,8 +49,8 @@ struct CPlayer {
 	void Init(edict_t *ple, int plindex);
 	void UpdateHUD();
 	edict_t *GetWeaponEdict();
-	USHORT GetPowerup(int *duration), GetPowerup();
-	void GivePowerup(USHORT type, byte duration);
+	uint16_t GetPowerup(int *duration), GetPowerup();
+	void GivePowerup(uint16_t type, byte duration);
 	inline bool IsAlive() { return (this->PlayerEdict->v.deadflag == DEAD_NO && this->PlayerEdict->v.health > 0); };
 	inline bool IsOnGround() { return (this->GetPDataInt(27) != 0); };
 	inline long GetFreeSlots() { return this->GetPDataInt(333); };
@@ -69,8 +69,8 @@ struct CPlayer {
 
 // other methods
 extern CPlayer PlayersArray[33];
-edict_t *CreateWeapon(int id, Vector coord, short ttl, USHORT clips, byte atcments);
-edict_t *CreatePowerup(USHORT type, Vector coord, short ttl);
+edict_t *CreateWeapon(int id, Vector coord, short ttl, uint16_t clips, byte atcments);
+edict_t *CreatePowerup(uint16_t type, Vector coord, short ttl);
 
 inline byte IsPlayerValid(AMX *amx, int pl) {
 	if (pl < 1 || pl > gpGlobals->maxClients) {

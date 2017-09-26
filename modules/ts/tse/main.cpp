@@ -254,7 +254,7 @@ void HookMsg_PwUp(void* data)
 	switch (MsgState++) {
 		case 0: {
 			if (!MsgPlayer->HooksInfo.PwupFlag)
-				MsgPlayer->HooksInfo.PwupType = *(USHORT *)data;
+				MsgPlayer->HooksInfo.PwupType = *(uint16_t *)data;
 			break;
 		}
 		case 1: {

@@ -19,7 +19,7 @@
 struct WeaponOffsets
 {
 	short ammo, clip;
-	ULONG fmbase;
+	uint64_t fmbase;
 	short reloadtime;
 };
 
@@ -32,5 +32,5 @@ struct Weapon
 };
 
 extern Weapon WeaponsList[];
-extern UINT FireModes[6];
-extern UINT GetFiremodeByMask(UINT mask);
+extern uint32_t FireModes[6];
+extern uint32_t GetFiremodeByMask(uint32_t mask);

@@ -23,22 +23,22 @@ void CPlayer::UpdateHUD()
 	MESSAGE_END();
 }
 
-void CPlayer::GivePowerup(USHORT type, byte duration)
+void CPlayer::GivePowerup(uint16_t type, byte duration)
 {
 	this->SetPDataInt(453, type);
 	this->SetPDataInt(455, duration);
 }
 
-USHORT CPlayer::GetPowerup(int *duration)
+uint16_t CPlayer::GetPowerup(int *duration)
 {
 	if (duration)
 		*duration = this->GetPDataInt(455);
-	return (USHORT)this->GetPDataInt(453);
+	return (uint16_t)this->GetPDataInt(453);
 }
 
-USHORT CPlayer::GetPowerup()
+uint16_t CPlayer::GetPowerup()
 {
-	return (USHORT)this->GetPDataInt(453);
+	return (uint16_t)this->GetPDataInt(453);
 }
 
 edict_t *CPlayer::GetWeaponEdict()
@@ -50,7 +50,7 @@ edict_t *CPlayer::GetWeaponEdict()
 	return 0;
 }
 
-edict_t *CreateWeapon(int id, Vector coord, short ttl, USHORT clips, byte atcments) {
+edict_t *CreateWeapon(int id, Vector coord, short ttl, uint16_t clips, byte atcments) {
 	edict_t *ent = CREATE_NAMED_ENTITY((string_t)MAKE_STRING("ts_groundweapon"));
 	if (FNullEnt(ent)) return NULL;
 
@@ -90,7 +90,7 @@ edict_t *CreateWeapon(int id, Vector coord, short ttl, USHORT clips, byte atcmen
 	return ent;
 }
 
-edict_t *CreatePowerup(USHORT type, Vector coord, short ttl) {
+edict_t *CreatePowerup(uint16_t type, Vector coord, short ttl) {
 	edict_t *ent = CREATE_NAMED_ENTITY((string_t)MAKE_STRING("ts_powerup"));
 	if (FNullEnt(ent)) return NULL;
 

@@ -50,7 +50,7 @@ Weapon WeaponsList[] = {
 	{ "Akimbo Skorpions", "throwing_knife", { 61, 584, (1 << 10) + (1 << 11) }, 2 }
 };
 
-UINT FireModes[6] = {
+uint32_t FireModes[6] = {
 	TSE_FM_FULLAUTO,
 	TSE_FM_SEMIAUTO,
 	TSE_FM_BURST,
@@ -59,7 +59,7 @@ UINT FireModes[6] = {
 	TSE_FM_FREEFULL
 };
 
-UINT GetFiremodeByMask(UINT mask)
+uint32_t GetFiremodeByMask(uint32_t mask)
 {
 	for (int i = 0; i < 6; i++)
 		if (mask == FireModes[i])

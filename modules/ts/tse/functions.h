@@ -441,12 +441,10 @@ static cell AMX_NATIVE_CALL tse_getweapinfo(AMX *amx, cell *params)
 	if (!WeaponsList[weapon].offsets.clip) return 0;
 	cell *clip = MF_GetAmxAddr(amx, params[3]);
 	cell *ammo = MF_GetAmxAddr(amx, params[4]);
-	cell *mode = MF_GetAmxAddr(amx, params[5]);
-	cell *attachs = MF_GetAmxAddr(amx, params[6]);
-	cell *active_attachs = MF_GetAmxAddr(amx, params[7]);
+	cell *attachs = MF_GetAmxAddr(amx, params[5]);
+	cell *active_attachs = MF_GetAmxAddr(amx, params[6]);
 	*clip = Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip);
 	*ammo = Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.ammo);
-	*mode = Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip - 1);
 	*attachs = Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip + 3);
 	*active_attachs = Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip + 4);
 	return 1;

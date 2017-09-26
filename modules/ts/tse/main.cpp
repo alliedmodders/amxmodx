@@ -119,10 +119,6 @@ void CmdHandling()
 				PRINT("[%s] Excluding failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
 		}
 	}
-	else if (strcmp(cmd, "test") == 0)
-	{
-		PRINT("Count of players: %d\n", GetPlayersCount());
-	}
 }
 
 void PlayerPreThink_Post(edict_t *player)

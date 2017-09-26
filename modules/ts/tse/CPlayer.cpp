@@ -122,8 +122,8 @@ void CPlayer::Init(edict_t* ple, int plindex)
 }
 
 long CPlayer::GetPDataInt(long idx)
-{
-	#if defined(__linux__)
+{	
+	#ifndef WIN32
 		idx += 5;
 	#endif
 	return *((int *)this->PlayerEdict->pvPrivateData + idx);
@@ -131,7 +131,7 @@ long CPlayer::GetPDataInt(long idx)
 
 float CPlayer::GetPDataFloat(long idx)
 {
-	#if defined(__linux__)
+	#ifndef WIN32
 		idx += 5;
 	#endif
 	return *((float *)this->PlayerEdict->pvPrivateData + idx);
@@ -139,7 +139,7 @@ float CPlayer::GetPDataFloat(long idx)
 
 void CPlayer::SetPDataInt(long idx, long val)
 {
-	#if defined(__linux__)
+	#ifndef WIN32
 		idx += 5;
 	#endif
 	*((int *)this->PlayerEdict->pvPrivateData + idx) = val;
@@ -147,7 +147,7 @@ void CPlayer::SetPDataInt(long idx, long val)
 
 void CPlayer::SetPDataFloat(long idx, float val)
 {
-	#if defined(__linux__)
+	#ifndef WIN32
 		idx += 5;
 	#endif
 	*((float *)this->PlayerEdict->pvPrivateData + idx) = val;
@@ -155,7 +155,7 @@ void CPlayer::SetPDataFloat(long idx, float val)
 
 long CPlayer::GetWeapPDataInt(long idx)
 {
-	#if defined(__linux__)
+	#ifndef WIN32
 		idx += 4;
 	#endif
 	return *((int *)this->GetWeaponEdict()->pvPrivateData + idx);
@@ -163,7 +163,7 @@ long CPlayer::GetWeapPDataInt(long idx)
 
 float CPlayer::GetWeapPDataFloat(long idx)
 {
-	#if defined(__linux__)
+	#ifndef WIN32
 		idx += 4;
 	#endif
 	return *((float *)this->GetWeaponEdict()->pvPrivateData + idx);
@@ -171,7 +171,7 @@ float CPlayer::GetWeapPDataFloat(long idx)
 
 void CPlayer::SetWeapPDataInt(long idx, long val)
 {
-	#if defined(__linux__)
+	#ifndef WIN32
 		idx += 4;
 	#endif
 	*((int *)this->GetWeaponEdict()->pvPrivateData + idx) = val;
@@ -179,7 +179,7 @@ void CPlayer::SetWeapPDataInt(long idx, long val)
 
 void CPlayer::SetWeapPDataFloat(long idx, float val)
 {
-	#if defined(__linux__)
+	#ifndef WIN32
 		idx += 4;
 	#endif
 	*((int *)this->GetWeaponEdict()->pvPrivateData + idx) = val;

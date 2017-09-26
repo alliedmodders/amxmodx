@@ -15,10 +15,10 @@ int (*GetPlayersCount)() = nullptr;
 
 void InitFuncPointers()
 {
-	#if defined(__linux__)
-		// Linux offsets (from ts_i386.so)
-	#else
+	#ifdef WIN32
 		// Windows offsets (from mp.dll)
-	    GetPlayersCount = (int(*)())FindPatternAddress((size_t)gamedll.codebase, gamedll.end, (byte *)"\xA1\x14\xE7\x04\x09\x56\x57", "x?x??xx"); // example CountPlayers() function
+		GetPlayersCount = (int(*)())FindPatternAddress((size_t)gamelib.codebase, gamelib.end, (byte *)"\xA1\x14\xE7\x04\x09\x56\x57", "x?x??xx"); // example CountPlayers() function
+	#else
+		// Linux offsets (from ts_i386.so)
 	#endif
 }

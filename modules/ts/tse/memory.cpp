@@ -9,12 +9,10 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-libwrapper gamedll;
+libwrapper gamelib;
 bool FindGameLibAddress()
 {
-	#if defined(__linux__)
-
-	#else
+	#ifdef WIN32
 		MEMORY_BASIC_INFORMATION meminfo;
 		VirtualQuery((void *)MDLL_FUNC->pfnGetGameDescription(), &meminfo, sizeof(meminfo));
 		IMAGE_DOS_HEADER *dos = (IMAGE_DOS_HEADER*)meminfo.AllocationBase;
@@ -23,12 +21,14 @@ bool FindGameLibAddress()
 		if (pe->Signature != IMAGE_NT_SIGNATURE)
 			return false;
 
-		gamedll.base = (void *)meminfo.AllocationBase;
-		gamedll.size = pe->OptionalHeader.SizeOfImage;
-		gamedll.codebase = (void *)((size_t)gamedll.base + (size_t)pe->OptionalHeader.BaseOfCode);
-		gamedll.end = (size_t)gamedll.base + gamedll.size;
+		gamelib.base = (void *)meminfo.AllocationBase;
+		gamelib.size = pe->OptionalHeader.SizeOfImage;
+		gamelib.codebase = (void *)((size_t)gamelib.base + (size_t)pe->OptionalHeader.BaseOfCode);
+		gamelib.end = (size_t)gamelib.base + gamelib.size;
 
 		return true;
+	#else
+		
 	#endif
 }
 

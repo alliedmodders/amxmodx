@@ -11,10 +11,10 @@
 //     https://alliedmods.net/amxmodx-license
 
 // Platform-specific inclusions
-#if defined(__linux__)
-
-#else
+#ifdef WIN32
 	#include <windows.h>
+#else
+	
 #endif
 
 extern void InitFuncPointers();

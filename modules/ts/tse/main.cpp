@@ -63,7 +63,7 @@ void CmdHandling()
 	if (strcmp(cmd, "version") == 0)
 	{
 		PRINT("%s | %s\n", MODULE_NAME, MODULE_VERSION);
-		PRINT("Author: %s\n", MODULE_AUTHOR);
+		PRINT("Author: SNMetamorph\n");
 		PRINT("Compiled: %s\n", __TIMESTAMP__);
 		PRINT("Module URL: %s\n", MODULE_URL);
 		PRINT("Credits: \n");

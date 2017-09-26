@@ -23,12 +23,12 @@
 *   to add multiple entries.
 */
 #define MODULE_NAME "TSExtended"
-#define MODULE_VERSION "1.2.8"
-#define MODULE_AUTHOR "SNMetamorph"
+#define MODULE_VERSION AMXX_VERSION
+#define MODULE_AUTHOR "AMX Mod X Dev Team"
 #define MODULE_URL "https://forums.alliedmods.net/showthread.php?t=300922"
 #define MODULE_LOGTAG "TSE"
 #define MODULE_LIBRARY "tse"
-#define MODULE_LIBCLASS "tse"
+#define MODULE_LIBCLASS ""
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE
 

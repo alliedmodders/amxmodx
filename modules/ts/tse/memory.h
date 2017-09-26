@@ -10,10 +10,10 @@
 //     https://alliedmods.net/amxmodx-license
 
 // Platform-specific inclusions
-#if defined(__linux__)
-
-#else
+#ifdef WIN32
 	#include <windows.h>
+#else
+	
 #endif
 
 struct libwrapper
@@ -24,6 +24,6 @@ struct libwrapper
 	void *base;
 };
 
-extern libwrapper gamedll;
+extern libwrapper gamelib;
 extern bool FindGameLibAddress();
 extern void *FindPatternAddress(size_t startaddr, size_t endaddr, byte *pattern, char *mask);

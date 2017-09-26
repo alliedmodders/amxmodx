@@ -69,7 +69,7 @@ static cell AMX_NATIVE_CALL tse_setuserstamina(AMX *amx, cell *params)
 	if (!IsPlayerValid(amx, pid)) return 0;
 	if (!Player(pid)->IsAlive()) return 0;
 	Player(pid)->SetMeleeStamina(amx_ctof(params[2]));
-	MESSAGE_BEGIN(MSG_ONE, g_engfuncs.pfnRegUserMsg("KFuPower", -1), 0, Player(pid)->PlayerEdict);
+	MESSAGE_BEGIN(MSG_ONE, GetMsgIDByName("KFuPower"), 0, Player(pid)->PlayerEdict);
 		WRITE_BYTE((byte)round(amx_ctof(params[2])));
 	MESSAGE_END();
 	return 1;
@@ -309,7 +309,7 @@ static cell AMX_NATIVE_CALL tse_sendweapparams(AMX *amx, cell *params)
 	if (!IsPlayerValid(amx, pid)) return 0;
 	char paramsstr[128];
 	sprintf(paramsstr, "%i %f %f %f %f %i", params[2], amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6]), params[7]);
-	MESSAGE_BEGIN(MSG_ONE, g_engfuncs.pfnRegUserMsg("CustomWP", -1), 0, Player(pid)->PlayerEdict);
+	MESSAGE_BEGIN(MSG_ONE, GetMsgIDByName("CustomWP"), 0, Player(pid)->PlayerEdict);
 		WRITE_STRING(paramsstr);
 	MESSAGE_END();
 	return 1;
@@ -380,7 +380,7 @@ static cell AMX_NATIVE_CALL tse_setweapatcments(AMX *amx, cell *params)
 		Player(pid)->Weapons[weapon].attachments = attachments;
 		Player(pid)->UpdateHUD();
 		if (isactive) {
-			MESSAGE_BEGIN(MSG_ONE, g_engfuncs.pfnRegUserMsg("ActItems", -1), 0, Player(pid)->PlayerEdict);
+			MESSAGE_BEGIN(MSG_ONE, GetMsgIDByName("ActItems"), 0, Player(pid)->PlayerEdict);
 				WRITE_BYTE(1);
 				WRITE_BYTE(attachments);
 			MESSAGE_END();

@@ -1,4 +1,5 @@
 #include "amxxmodule.h"
+#include "msghooking.h"
 #include "CPlayer.h"
 
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
@@ -13,7 +14,7 @@ CPlayer PlayersArray[33];
 
 void CPlayer::UpdateHUD()
 {
-	MESSAGE_BEGIN(MSG_ONE, g_engfuncs.pfnRegUserMsg("WeaponInfo", -1), 0, this->PlayerEdict);
+	MESSAGE_BEGIN(MSG_ONE, GetMsgIDByName("WeaponInfo"), 0, this->PlayerEdict);
 		WRITE_BYTE(this->CurrentWeapon);
 		WRITE_BYTE(this->Weapons[this->CurrentWeapon].clip);
 		WRITE_SHORT(this->Weapons[this->CurrentWeapon].ammo);

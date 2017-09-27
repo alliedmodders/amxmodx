@@ -31,11 +31,11 @@ JS_Handle JSONMngr::_MakeHandle(void *value, JSONHandleType type, bool must_be_f
 	if (!m_OldHandles.empty())
 	{
 		id = m_OldHandles.popFrontCopy();
-		m_Handles[id] = ke::AutoPtr<JSONHandle>();
+		m_Handles[id] = ke::AutoPtr<JSONHandle>(new JSONHandle);
 	}
 	else
 	{
-		m_Handles.append(ke::AutoPtr<JSONHandle>());
+		m_Handles.append(ke::AutoPtr<JSONHandle>(new JSONHandle));
 		id = m_Handles.length() - 1;
 	}
 

@@ -193,7 +193,6 @@ static cell AMX_NATIVE_CALL amxx_json_free(AMX *amx, cell *params)
 	auto value = MF_GetAmxAddr(amx, params[1]);
 	if (!JsonMngr->IsValidHandle(*value))
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON value! %d", *value);
 		return 0;
 	}
 

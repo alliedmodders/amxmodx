@@ -417,6 +417,7 @@ builder.RunBuildScripts(
     'modules/tfcx/AMBuilder',
     'modules/ts/tsfun/AMBuilder',
     'modules/ts/tsx/AMBuilder',
+	'modules/ts/tse/AMBuilder',
   ],
   { 'AMXX': AMXX }
 )

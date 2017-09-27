@@ -11,12 +11,13 @@
 // JSON Class
 //
 
+#include <amxxmodule.h>
 #include <parson.h>
 #include <amtl/am-vector.h>
 #include <amtl/am-autoptr.h>
 #include <amtl/am-uniqueptr.h>
 #include <amtl/am-deque.h>
-#include "amxxmodule.h"
+
 #include "IJsonMngr.h"
 
 using namespace AMXX;

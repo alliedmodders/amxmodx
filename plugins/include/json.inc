@@ -23,18 +23,18 @@
 
 enum JSONType
 {
-    JSONError   = -1,
-    JSONNull    = 1,
-    JSONString  = 2,
-    JSONNumber  = 3,
-    JSONObject  = 4,
-    JSONArray   = 5,
-    JSONBoolean = 6
+	JSONError   = -1,
+	JSONNull    = 1,
+	JSONString  = 2,
+	JSONNumber  = 3,
+	JSONObject  = 4,
+	JSONArray   = 5,
+	JSONBoolean = 6
 };
 
 enum JSON
 {
-    Invalid_JSON = -1
+	Invalid_JSON = -1
 }
 
 /*

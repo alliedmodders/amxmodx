@@ -39,11 +39,9 @@
  * don't have to. */
 #define sscanf THINK_TWICE_ABOUT_USING_SSCANF
 
-#define STARTING_CAPACITY         15
-#define ARRAY_MAX_CAPACITY    122880 /* 15*(2^13) */
-#define OBJECT_MAX_CAPACITY      960 /* 15*(2^6)  */
-#define MAX_NESTING             2048
-#define DOUBLE_SERIALIZATION_FORMAT "%f"
+#define STARTING_CAPACITY 16
+#define MAX_NESTING       2048
+#define FLOAT_FORMAT      "%1.17g"
 
 #define SIZEOF_TOKEN(a)       (sizeof(a) - 1)
 #define SKIP_CHAR(str)        ((*str)++)
@@ -354,9 +352,6 @@ static JSON_Status json_object_add(JSON_Object *object, const char *name, JSON_V
     }
     if (object->count >= object->capacity) {
         size_t new_capacity = MAX(object->capacity * 2, STARTING_CAPACITY);
-        if (new_capacity > OBJECT_MAX_CAPACITY) {
-            return JSONFailure;
-        }
         if (json_object_resize(object, new_capacity) == JSONFailure) {
             return JSONFailure;
         }
@@ -443,9 +438,6 @@ static JSON_Array * json_array_init(JSON_Value *wrapping_value) {
 static JSON_Status json_array_add(JSON_Array *array, JSON_Value *value) {
     if (array->count >= array->capacity) {
         size_t new_capacity = MAX(array->capacity * 2, STARTING_CAPACITY);
-        if (new_capacity > ARRAY_MAX_CAPACITY) {
-            return JSONFailure;
-        }
         if (json_array_resize(array, new_capacity) == JSONFailure) {
             return JSONFailure;
         }
@@ -527,14 +519,16 @@ static int parse_utf16(const char **unprocessed, char **processed) {
         return JSONFailure;
     }
     if (cp < 0x80) {
-        *processed_ptr = (char)cp; /* 0xxxxxxx */
+        processed_ptr[0] = (char)cp; /* 0xxxxxxx */
     } else if (cp < 0x800) {
-        *processed_ptr++ = ((cp >> 6) & 0x1F) | 0xC0; /* 110xxxxx */
-        *processed_ptr   = ((cp     ) & 0x3F) | 0x80; /* 10xxxxxx */
+        processed_ptr[0] = ((cp >> 6) & 0x1F) | 0xC0; /* 110xxxxx */
+        processed_ptr[1] = ((cp)      & 0x3F) | 0x80; /* 10xxxxxx */
+        processed_ptr += 1;
     } else if (cp < 0xD800 || cp > 0xDFFF) {
-        *processed_ptr++ = ((cp >> 12) & 0x0F) | 0xE0; /* 1110xxxx */
-        *processed_ptr++ = ((cp >> 6)  & 0x3F) | 0x80; /* 10xxxxxx */
-        *processed_ptr   = ((cp     )  & 0x3F) | 0x80; /* 10xxxxxx */
+        processed_ptr[0] = ((cp >> 12) & 0x0F) | 0xE0; /* 1110xxxx */
+        processed_ptr[1] = ((cp >> 6)  & 0x3F) | 0x80; /* 10xxxxxx */
+        processed_ptr[2] = ((cp)       & 0x3F) | 0x80; /* 10xxxxxx */
+        processed_ptr += 2;
     } else if (cp >= 0xD800 && cp <= 0xDBFF) { /* lead surrogate (0xD800..0xDBFF) */
         lead = cp;
         unprocessed_ptr += 4; /* should always be within the buffer, otherwise previous sscanf would fail */
@@ -545,11 +539,12 @@ static int parse_utf16(const char **unprocessed, char **processed) {
         if (!parse_succeeded || trail < 0xDC00 || trail > 0xDFFF) { /* valid trail surrogate? (0xDC00..0xDFFF) */
             return JSONFailure;
         }
-        cp = ((((lead-0xD800)&0x3FF)<<10)|((trail-0xDC00)&0x3FF))+0x010000;
-        *processed_ptr++ = (((cp >> 18) & 0x07) | 0xF0); /* 11110xxx */
-        *processed_ptr++ = (((cp >> 12) & 0x3F) | 0x80); /* 10xxxxxx */
-        *processed_ptr++ = (((cp >> 6)  & 0x3F) | 0x80); /* 10xxxxxx */
-        *processed_ptr   = (((cp     )  & 0x3F) | 0x80); /* 10xxxxxx */
+        cp = ((((lead - 0xD800) & 0x3FF) << 10) | ((trail - 0xDC00) & 0x3FF)) + 0x010000;
+        processed_ptr[0] = (((cp >> 18) & 0x07) | 0xF0); /* 11110xxx */
+        processed_ptr[1] = (((cp >> 12) & 0x3F) | 0x80); /* 10xxxxxx */
+        processed_ptr[2] = (((cp >> 6)  & 0x3F) | 0x80); /* 10xxxxxx */
+        processed_ptr[3] = (((cp)       & 0x3F) | 0x80); /* 10xxxxxx */
+        processed_ptr += 3;
     } else { /* trail surrogate before lead surrogate */
         return JSONFailure;
     }
@@ -926,13 +921,7 @@ static int json_serialize_to_buffer_r(const JSON_Value *value, char *buf, int le
             if (buf != NULL) {
                 num_buf = buf;
             }
-            if (num == ((double)(int)num)) { /*  check if num is integer */
-                written = sprintf(num_buf, "%d", (int)num);
-	    } else if (num == ((double)(unsigned int)num)) {
-                written = sprintf(num_buf, "%u", (unsigned int)num);
-            } else {
-                written = sprintf(num_buf, DOUBLE_SERIALIZATION_FORMAT, num);
-            }
+            written = sprintf(num_buf, FLOAT_FORMAT, num);
             if (written < 0) {
                 return -1;
             }
@@ -1312,8 +1301,12 @@ JSON_Value * json_value_init_string(const char *string) {
 }
 
 JSON_Value * json_value_init_number(double number) {
-    JSON_Value *new_value = (JSON_Value*)parson_malloc(sizeof(JSON_Value));
-    if (!new_value) {
+    JSON_Value *new_value = NULL;
+    if ((number * 0.0) != 0.0) { /* nan and inf test */
+        return NULL;
+    }
+    new_value = (JSON_Value*)parson_malloc(sizeof(JSON_Value));
+    if (new_value == NULL) {
         return NULL;
     }
     new_value->parent = NULL;
@@ -1552,7 +1545,7 @@ JSON_Status json_array_remove(JSON_Array *array, size_t ix) {
         return JSONFailure;
     }
     json_value_free(json_array_get_value(array, ix));
-    to_move_bytes = (json_array_get_count(array) - 1 - ix) * sizeof(JSON_Value**);
+    to_move_bytes = (json_array_get_count(array) - 1 - ix) * sizeof(JSON_Value*);
     memmove(array->items + ix, array->items + ix + 1, to_move_bytes);
     array->count -= 1;
     return JSONSuccess;

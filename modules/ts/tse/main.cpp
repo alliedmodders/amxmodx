@@ -9,8 +9,10 @@
 //     https://alliedmods.net/amxmodx-license
 
 #include "amxxmodule.h"
-#include "functions.h"
 #include "dllfuncs.h"
+#include "msghooking.h"
+#include "functions.h"
+#include "misc.h"
 
 #define PRINT (g_fn_PrintSrvConsole)
 void CmdHandling();

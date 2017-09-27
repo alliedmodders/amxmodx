@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\moduleconfig.h">
       <Filter>Module SDK Base</Filter>
     </ClInclude>
@@ -48,6 +45,9 @@
     <ClInclude Include="..\memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CPlayer.cpp">
@@ -69,6 +69,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

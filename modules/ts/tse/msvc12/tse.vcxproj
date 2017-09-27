@@ -76,10 +76,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h" />
     <ClInclude Include="..\dllfuncs.h" />
+    <ClInclude Include="..\functions.h" />
     <ClInclude Include="..\memory.h" />
     <ClInclude Include="..\misc.h" />
     <ClInclude Include="..\msghooking.h" />
-    <ClInclude Include="..\functions.h" />
     <ClInclude Include="..\moduleconfig.h" />
     <ClInclude Include="..\CPlayer.h" />
     <ClInclude Include="..\weapinfo.h" />
@@ -88,6 +88,7 @@
     <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp" />
     <ClCompile Include="..\CPlayer.cpp" />
     <ClCompile Include="..\dllfuncs.cpp" />
+    <ClCompile Include="..\functions.cpp" />
     <ClCompile Include="..\memory.cpp" />
     <ClCompile Include="..\msghooking.cpp" />
     <ClCompile Include="..\main.cpp" />

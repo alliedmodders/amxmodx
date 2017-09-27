@@ -659,7 +659,7 @@ static cell AMX_NATIVE_CALL amxx_json_object_get_name(AMX *amx, cell *params)
 //native JSON:amxx_json_object_get_value_at(const JSON:object, index);
 static cell AMX_NATIVE_CALL amxx_json_object_get_value_at(AMX *amx, cell *params)
 {
- 	auto object = params[1];
+	auto object = params[1];
 	if (!JsonMngr->IsValidHandle(object, Handle_Object))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON object! %d", object);
@@ -691,7 +691,7 @@ static cell AMX_NATIVE_CALL amxx_json_object_has_value(AMX *amx, cell *params)
 //native bool:json_object_set_value(JSON:object, const name[], JSON:value, bool:dotfunc = false);
 static cell AMX_NATIVE_CALL amxx_json_object_set_value(AMX *amx, cell *params)
 {
- 	auto object = params[1];
+	auto object = params[1];
 	if (!JsonMngr->IsValidHandle(object, Handle_Object))
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON object! %d", object);
@@ -840,7 +840,7 @@ static cell AMX_NATIVE_CALL amxx_json_serial_to_string(AMX *amx, cell *params)
 	}
 
 	auto result = JsonMngr->SerialToString(value, params[4] != 0);
- 	auto written = (result) ? MF_SetAmxStringUTF8Char(amx, params[2], result, strlen(result), params[3]) : 0;
+	auto written = (result) ? MF_SetAmxStringUTF8Char(amx, params[2], result, strlen(result), params[3]) : 0;
 
 	JsonMngr->FreeString(result);
 

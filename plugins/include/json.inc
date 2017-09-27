@@ -21,6 +21,9 @@
 	#pragma loadlib json
 #endif
 
+/*
+ * JSON types
+ */
 enum JSONType
 {
 	JSONError   = -1,
@@ -32,6 +35,9 @@ enum JSONType
 	JSONBoolean = 6
 };
 
+/*
+ * JSON invalid handle
+ */
 enum JSON
 {
 	Invalid_JSON = -1

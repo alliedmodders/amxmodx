@@ -30,7 +30,7 @@ bool FindGameLibAddress()
 
 		return true;
 	#else
-		
+		return false;
 	#endif
 }
 

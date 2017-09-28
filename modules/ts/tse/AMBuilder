@@ -10,10 +10,8 @@ binary.compiler.defines += [
 binary.sources = [
   '../../../public/sdk/amxxmodule.cpp',
   'CPlayer.cpp',
-  'dllfuncs.cpp',
   'functions.cpp',
   'main.cpp',
-  'memory.cpp',
   'msghooking.cpp',
   'weapinfo.cpp',
 ]

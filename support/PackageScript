@@ -11,6 +11,7 @@ ModPackages = {
   'tfc': 'tfc',
   'tfcx': 'tfc',
   'ts': 'ts',
+  'tse': 'ts',
 }
 
 folder_list = [

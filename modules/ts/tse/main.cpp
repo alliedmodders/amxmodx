@@ -96,7 +96,7 @@ void CmdHandling()
 		}
 		else {
 			int msgid = GetMsgIDByName(mname);
-			if (msgid != NULL) {
+			if (msgid) {
 				hmlist[msgid] = true;
 				PRINT("[%s] Message \"%s\" (ID: %d) successfully included to hooking list.\n", MODULE_LOGTAG, mname, msgid);
 			}
@@ -115,7 +115,7 @@ void CmdHandling()
 		}
 		else {
 			int msgid = GetMsgIDByName(mname);
-			if (msgid != NULL) {
+			if (msgid) {
 				hmlist[msgid] = false;
 				PRINT("[%s] Message \"%s\" (ID: %d) successfully excluded from hooking list.\n", MODULE_LOGTAG, mname, msgid);
 			}
@@ -177,7 +177,7 @@ void PlayerPreThink_Post(edict_t *player)
 	// client_onpickuppwup processing
 	if (pl->HooksInfo.IsPwupTaken) {
 		pl->HooksInfo.IsPwupTaken = false;
-		if (pl->HooksInfo.PwupDuration != NULL && pl->HooksInfo.PwupType != NULL)
+		if (pl->HooksInfo.PwupDuration && pl->HooksInfo.PwupType)
 			MF_ExecuteForward(OnPlayerPickupPwup, static_cast<cell>(pl->PlayerIndex), static_cast<cell>(pl->HooksInfo.PwupType), static_cast<cell>(pl->HooksInfo.PwupDuration));
 	}
 

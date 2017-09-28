@@ -12,7 +12,7 @@
 #include "weapinfo.h"
 
 Weapon WeaponsList[] = {
-	{ "Kung Fu", "kung_fu", { NULL, NULL, NULL }, 3, 1 },
+	{ "Kung Fu", "kung_fu", NULL, 3, 1 },
 	{ "Glock-18", "glock-18", { 50, 80, (1 << 8), 82 }, 1 },
 	{ "Beretta 92F", "beretta", { 50, 94, (1 << 8) }, 1 },
 	{ "Mini-Uzi", "mini-uzi", { 50, 108, (1 << 8) }, 1 },
@@ -36,8 +36,8 @@ Weapon WeaponsList[] = {
 	{ "Golden Colts", "golden_colts", { 51, 360, (1 << 9) }, 1 },
 	{ "Glock-20C", "glock-20c", { 58, 374, (1 << 11) + (1 << 8) }, 1 },
 	{ "UMP", "ump", { 51, 388, (1 << 9) }, 1 },
-	{ "M61 Grenade", "m61_grenade", { 402, 402, NULL }, 1 },
-	{ "Combat Knife", "combat_knife", { 416, 416, NULL }, 1, 1 },
+	{ "M61 Grenade", "m61_grenade", { 402, 402 }, 1 },
+	{ "Combat Knife", "combat_knife", { 416, 416 }, 1, 1 },
 	{ "Mossberg 500", "mossberg_500", { 52, 430, (1 << 9) + (1 << 8) }, 1 },
 	{ "M16A4", "m16a4", { 53, 444, (1 << 10) }, 1 },
 	{ "Ruger-MK1", "ruger-mk1", { 59, 458, (1 << 11) + (1 << 9) }, 1 },
@@ -46,8 +46,8 @@ Weapon WeaponsList[] = {
 	{ "Raging Bull", "raging_bull", { 56, 486, (1 << 11) + (1 << 10) }, 1 },
 	{ "M60E3", "m60e3", { 61, 500, (1 << 10) }, 1 },
 	{ "Sawed-off", "sawed-off", { 53, 514, (1 << 9) + (1 << 8) }, 1 },
-	{ "Katana", "katana", { NULL, NULL, NULL }, 2, 1 },
-	{ "Seal Knife", "seal_knife", { 556, 556, NULL }, 1, 1 },
+	{ "Katana", "katana", NULL, 2, 1 },
+	{ "Seal Knife", "seal_knife", { 556, 556 }, 1, 1 },
 	{ "Contender G2", "contender", { 62, 570, (1 << 11) + (1 << 10) + (1 << 8) }, 3 },
 	{ "Akimbo Skorpions", "throwing_knife", { 61, 584, (1 << 10) + (1 << 11) }, 2 }
 };

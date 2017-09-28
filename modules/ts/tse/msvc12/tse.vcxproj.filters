@@ -35,12 +35,6 @@
     <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h">
       <Filter>Module SDK Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\dllfuncs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -60,12 +54,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp">
       <Filter>Module SDK Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dllfuncs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\memory.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\functions.cpp">
       <Filter>Source Files</Filter>

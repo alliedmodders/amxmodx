@@ -9,7 +9,6 @@
 //     https://alliedmods.net/amxmodx-license
 
 #include "amxxmodule.h"
-#include "dllfuncs.h"
 #include "msghooking.h"
 #include "functions.h"
 #include "misc.h"
@@ -43,8 +42,7 @@ void OnAmxxAttach()
 	MF_AddNatives(pl_funcs);
 	MF_AddNatives(weap_funcs);
 	REG_SVR_COMMAND("tse", CmdHandling);
-	if (FindGameLibAddress())
-		InitFuncPointers();
+	// initializing game dll lib
 }
 
 void OnPluginsLoaded()

@@ -200,7 +200,7 @@ static cell AMX_NATIVE_CALL tse_giveuserpwup(AMX *amx, cell *params)
 	uint16_t type = params[2];
 	if (type < 1 || type > 256) return 0;
 	byte duration = params[3];
-	if (duration < 0 || duration > 256) return 0;
+	if (duration < 0 || duration > 255) return 0;
 	Player(pid)->HooksInfo.PwupFlag = true;
 	Player(pid)->GivePowerup(type, duration);
 	return 1;

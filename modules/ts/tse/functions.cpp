@@ -211,7 +211,7 @@ static cell AMX_NATIVE_CALL tse_getuserpwup(AMX *amx, cell *params)
 	byte pid = params[1];
 	if (!IsPlayerValid(amx, pid)) return 0;
 	if (!Player(pid)->IsAlive()) return 0;
-	if (params[2] != NULL) {
+	if (params[2]) {
 		cell *durationptr = MF_GetAmxAddr(amx, params[2]);
 		*durationptr = Player(pid)->GetPDataInt(455);
 	}
@@ -459,7 +459,7 @@ static cell AMX_NATIVE_CALL tse_isuserhasweap(AMX *amx, cell *params)
 	if (!Player(pid)->IsAlive()) return -1;
 	byte weapon = params[2];
 	if (!WeaponsList[weapon].offsets.clip) return -1;
-	if (WeaponsList[weapon].offsets.fmbase != NULL)
+	if (WeaponsList[weapon].offsets.fmbase)
 	{
 		if (Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip - 1) > 0)
 			return 1;

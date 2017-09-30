@@ -140,27 +140,27 @@ class JSONMngr : public IJSONMngr
 	// Wrappers for Object API
 
 	// Get functions
-	bool ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dot_not) override;
-	const char *ObjectGetString(JS_Handle object, const char *name, bool dot_not) override;
-	double ObjectGetNum(JS_Handle object, const char *name, bool dot_not) override;
-	bool ObjectGetBool(JS_Handle object, const char *name, bool dot_not) override;
+	bool ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dotfunc) override;
+	const char *ObjectGetString(JS_Handle object, const char *name, bool dotfunc) override;
+	double ObjectGetNum(JS_Handle object, const char *name, bool dotfunc) override;
+	bool ObjectGetBool(JS_Handle object, const char *name, bool dotfunc) override;
 	inline size_t ObjectGetCount(JS_Handle object) override
 	{
 		return json_object_get_count(m_Handles[object]->m_pObject);
 	}
 	const char *ObjectGetName(JS_Handle object, size_t index) override;
 	bool ObjectGetValueAt(JS_Handle object, size_t index, JS_Handle *handle) override;
-	bool ObjectHasValue(JS_Handle object, const char *name, JSONType type, bool dot_not) override;
+	bool ObjectHasValue(JS_Handle object, const char *name, JSONType type, bool dotfunc) override;
 
 	// Set functions
-	bool ObjectSetValue(JS_Handle object, const char *name, JS_Handle value, bool dot_not) override;
-	bool ObjectSetString(JS_Handle object, const char *name, const char *string, bool dot_not) override;
-	bool ObjectSetNum(JS_Handle object, const char *name, double number, bool dot_not) override;
-	bool ObjectSetBool(JS_Handle object, const char *name, bool boolean, bool dot_not) override;
-	bool ObjectSetNull(JS_Handle object, const char *name, bool dot_not) override;
+	bool ObjectSetValue(JS_Handle object, const char *name, JS_Handle value, bool dotfunc) override;
+	bool ObjectSetString(JS_Handle object, const char *name, const char *string, bool dotfunc) override;
+	bool ObjectSetNum(JS_Handle object, const char *name, double number, bool dotfunc) override;
+	bool ObjectSetBool(JS_Handle object, const char *name, bool boolean, bool dotfunc) override;
+	bool ObjectSetNull(JS_Handle object, const char *name, bool dotfunc) override;
 
 	// Remove functions
-	bool ObjectRemove(JS_Handle object, const char *name, bool dot_not) override;
+	bool ObjectRemove(JS_Handle object, const char *name, bool dotfunc) override;
 	inline bool ObjectClear(JS_Handle object) override
 	{
 		return json_object_clear(m_Handles[object]->m_pObject) == JSONSuccess;

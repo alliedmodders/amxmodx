@@ -288,10 +288,10 @@ bool JSONMngr::ArrayAppendValue(JS_Handle array, JS_Handle value)
 	return json_array_append_value(m_Handles[array]->m_pArray, JSValue) == JSONSuccess;
 }
 
-bool JSONMngr::ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dot_not)
+bool JSONMngr::ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto JSValue = (!dot_not) ? json_object_get_value(JSObject, name) :
+	auto JSValue = (!dotfunc) ? json_object_get_value(JSObject, name) :
 					json_object_dotget_value(JSObject, name);
 
 	if (!JSValue)
@@ -303,26 +303,26 @@ bool JSONMngr::ObjectGetValue(JS_Handle object, const char *name, JS_Handle *han
 	return true;
 }
 
-const char *JSONMngr::ObjectGetString(JS_Handle object, const char *name, bool dot_not)
+const char *JSONMngr::ObjectGetString(JS_Handle object, const char *name, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto string = (!dot_not) ? json_object_get_string(JSObject, name) :
+	auto string = (!dotfunc) ? json_object_get_string(JSObject, name) :
 					json_object_dotget_string(JSObject, name);
 
 	return (string) ? string : "";
 }
 
-double JSONMngr::ObjectGetNum(JS_Handle object, const char *name, bool dot_not)
+double JSONMngr::ObjectGetNum(JS_Handle object, const char *name, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	return (!dot_not) ? json_object_get_number(JSObject, name) :
+	return (!dotfunc) ? json_object_get_number(JSObject, name) :
 					json_object_dotget_number(JSObject, name);
 }
 
-bool JSONMngr::ObjectGetBool(JS_Handle object, const char *name, bool dot_not)
+bool JSONMngr::ObjectGetBool(JS_Handle object, const char *name, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto result = (!dot_not) ? json_object_get_boolean(JSObject, name) :
+	auto result = (!dotfunc) ? json_object_get_boolean(JSObject, name) :
 					json_object_dotget_boolean(JSObject, name);
 
 	return result == 1;
@@ -346,25 +346,25 @@ bool JSONMngr::ObjectGetValueAt(JS_Handle object, size_t index, JS_Handle *handl
 	return true;
 }
 
-bool JSONMngr::ObjectHasValue(JS_Handle object, const char *name, JSONType type, bool dot_not)
+bool JSONMngr::ObjectHasValue(JS_Handle object, const char *name, JSONType type, bool dotfunc)
 {
 	int result;
 	auto JSObject = m_Handles[object]->m_pObject;
 
 	if (type == JSONTypeError)
 	{
-		result = (!dot_not) ? json_object_has_value(JSObject, name) :
+		result = (!dotfunc) ? json_object_has_value(JSObject, name) :
 					json_object_dothas_value(JSObject, name);
 	}
 	else
 	{
-		result = (!dot_not) ? json_object_has_value_of_type(JSObject, name, type) :
+		result = (!dotfunc) ? json_object_has_value_of_type(JSObject, name, type) :
 					json_object_dothas_value_of_type(JSObject, name, type);
 	}
 	return result == 1;
 }
 
-bool JSONMngr::ObjectSetValue(JS_Handle object, const char *name, JS_Handle value, bool dot_not)
+bool JSONMngr::ObjectSetValue(JS_Handle object, const char *name, JS_Handle value, bool dotfunc)
 {
 	auto JSValue = m_Handles[value]->m_pValue;
 
@@ -381,52 +381,52 @@ bool JSONMngr::ObjectSetValue(JS_Handle object, const char *name, JS_Handle valu
 	}
 
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto JSResult = (!dot_not) ? json_object_set_value(JSObject, name, JSValue) :
+	auto JSResult = (!dotfunc) ? json_object_set_value(JSObject, name, JSValue) :
 					json_object_dotset_value(JSObject, name, JSValue);
 
 	return JSResult == JSONSuccess;
 }
 
-bool JSONMngr::ObjectSetString(JS_Handle object, const char *name, const char *string, bool dot_not)
+bool JSONMngr::ObjectSetString(JS_Handle object, const char *name, const char *string, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto JSResult = (!dot_not) ? json_object_set_string(JSObject, name, string) :
+	auto JSResult = (!dotfunc) ? json_object_set_string(JSObject, name, string) :
 					json_object_dotset_string(JSObject, name, string);
 
 	return JSResult == JSONSuccess;
 }
 
-bool JSONMngr::ObjectSetNum(JS_Handle object, const char *name, double number, bool dot_not)
+bool JSONMngr::ObjectSetNum(JS_Handle object, const char *name, double number, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto JSResult = (!dot_not) ? json_object_set_number(JSObject, name, number) :
+	auto JSResult = (!dotfunc) ? json_object_set_number(JSObject, name, number) :
 					json_object_dotset_number(JSObject, name, number);
 
 	return JSResult == JSONSuccess;
 }
 
-bool JSONMngr::ObjectSetBool(JS_Handle object, const char *name, bool boolean, bool dot_not)
+bool JSONMngr::ObjectSetBool(JS_Handle object, const char *name, bool boolean, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto JSResult = (!dot_not) ? json_object_set_boolean(JSObject, name, boolean) :
+	auto JSResult = (!dotfunc) ? json_object_set_boolean(JSObject, name, boolean) :
 					json_object_dotset_boolean(JSObject, name, boolean);
 
 	return JSResult == JSONSuccess;
 }
 
-bool JSONMngr::ObjectSetNull(JS_Handle object, const char *name, bool dot_not)
+bool JSONMngr::ObjectSetNull(JS_Handle object, const char *name, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto JSResult = (!dot_not) ? json_object_set_null(JSObject, name) :
+	auto JSResult = (!dotfunc) ? json_object_set_null(JSObject, name) :
 					json_object_dotset_null(JSObject, name);
 
 	return JSResult == JSONSuccess;
 }
 
-bool JSONMngr::ObjectRemove(JS_Handle object, const char *name, bool dot_not)
+bool JSONMngr::ObjectRemove(JS_Handle object, const char *name, bool dotfunc)
 {
 	auto JSObject = m_Handles[object]->m_pObject;
-	auto JSResult = (!dot_not) ? json_object_remove(JSObject, name) :
+	auto JSResult = (!dotfunc) ? json_object_remove(JSObject, name) :
 					json_object_dotremove(JSObject, name);
 
 	return JSResult == JSONSuccess;

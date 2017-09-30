@@ -43,15 +43,6 @@ enum JSON
 	Invalid_JSON = -1
 }
 
-/*
- * Overloaded operators for convenient comparing
- */
-native bool:operator==(const JSON:value1, const JSON:value2) = json_equals;
-stock bool:operator!=(const JSON:value1, const JSON:value2)
-{
-	return !(value1 == value2);
-}
-
 /**
  * Helper macros for checking type
  */

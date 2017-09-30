@@ -1,4 +1,4 @@
-# vim: set ts=8 sts=2 sw=2 tw=99 et ft=python: 
+# vim: set ts=8 sts=2 sw=2 tw=99 et ft=python:
 import os
 
 builder.SetBuildFolder('packages')
@@ -251,6 +251,7 @@ scripting_files = [
   'testsuite/fwdtest1.sma',
   'testsuite/fwdtest2.sma',
   'testsuite/hashing_test.sma',
+  'testsuite/json_test.sma',
   'testsuite/logtest.sma',
   'testsuite/menutest.sma',
   'testsuite/native_test.sma',
@@ -297,6 +298,7 @@ scripting_files = [
   'include/fun.inc',
   'include/gameconfig.inc',
   'include/geoip.inc',
+  'include/json.inc',
   'include/lang.inc',
   'include/ns.inc',
   'include/ns_const.inc',
@@ -399,17 +401,17 @@ for datafile in datafiles:
     source = os.path.join(builder.sourcePath, 'plugins', 'lang', datafile),
     output_path = folder_map['base/addons/amxmodx/data/lang']
   )
-  
-  
+
+
 CopyFiles('gamedata/modules.games', 'base/addons/amxmodx/data/gamedata/modules.games',
-  [ 
+  [
     'master.games.txt',
     'game.cstrike.txt',
   ]
 )
 
 CopyFiles('gamedata/common.games', 'base/addons/amxmodx/data/gamedata/common.games',
-  [ 
+  [
     'master.games.txt',
     'functions.engine.txt',
     'globalvars.engine.txt',
@@ -417,7 +419,7 @@ CopyFiles('gamedata/common.games', 'base/addons/amxmodx/data/gamedata/common.gam
 )
 
 CopyFiles('gamedata/common.games/hostages.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/hostages.games/cstrike',
-  [ 
+  [
     'offsets-chostageimprov.txt',
     'offsets-chostagemanager.txt',
     'offsets-hostagefollowstate.txt',
@@ -426,7 +428,7 @@ CopyFiles('gamedata/common.games/hostages.games/cstrike', 'base/addons/amxmodx/d
 )
 
 CopyFiles('gamedata/common.games/others.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/others.games/cstrike',
-  [ 
+  [
     'offsets-csound.txt',
     'offsets-cunifiedsignals.txt',
     'offsets-cvoicegamemgr.txt',
@@ -434,7 +436,7 @@ CopyFiles('gamedata/common.games/others.games/cstrike', 'base/addons/amxmodx/dat
 )
 
 CopyFiles('gamedata/common.games/entities.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/entities.games/cstrike',
-  [ 
+  [
     'offsets-cairtank.txt',
     'offsets-cak47.txt',
     'offsets-cambientgeneric.txt',
@@ -550,7 +552,7 @@ CopyFiles('gamedata/common.games/entities.games/cstrike', 'base/addons/amxmodx/d
 )
 
 CopyFiles('gamedata/common.games/entities.games/dod', 'base/addons/amxmodx/data/gamedata/common.games/entities.games/dod',
-  [ 
+  [
     'offsets-c30cal.txt',
     'offsets-calliedbarney.txt',
     'offsets-calliedgrunt.txt',
@@ -712,7 +714,7 @@ CopyFiles('gamedata/common.games/entities.games/dod', 'base/addons/amxmodx/data/
 )
 
 CopyFiles('gamedata/common.games/entities.games/tfc', 'base/addons/amxmodx/data/gamedata/common.games/entities.games/tfc',
-  [ 
+  [
     'offsets-cactanimating.txt',
     'offsets-cairtank.txt',
     'offsets-cambientgeneric.txt',
@@ -841,7 +843,7 @@ CopyFiles('gamedata/common.games/entities.games/tfc', 'base/addons/amxmodx/data/
 )
 
 CopyFiles('gamedata/common.games/entities.games/gearbox', 'base/addons/amxmodx/data/gamedata/common.games/entities.games/gearbox',
-  [ 
+  [
     'offsets-cactanimating.txt',
     'offsets-cagrunt.txt',
     'offsets-cairtank.txt',
@@ -1081,7 +1083,7 @@ CopyFiles('gamedata/common.games/entities.games/gearbox', 'base/addons/amxmodx/d
 )
 
 CopyFiles('gamedata/common.games/entities.games/valve', 'base/addons/amxmodx/data/gamedata/common.games/entities.games/valve',
-  [ 
+  [
     'offsets-cactanimating.txt',
     'offsets-cagrunt.txt',
     'offsets-cairtank.txt',
@@ -1224,13 +1226,13 @@ CopyFiles('gamedata/common.games/entities.games/valve', 'base/addons/amxmodx/dat
 )
 
 CopyFiles('gamedata/common.games/gamerules.games', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games',
-  [ 
+  [
     'master.games.txt',
   ]
 )
 
 CopyFiles('gamedata/common.games/gamerules.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/cstrike',
-  [ 
+  [
     'offsets-cgamerules.txt',
     'offsets-chalflifemultiplay.txt',
     'offsets-chalflifetraining.txt',
@@ -1238,14 +1240,14 @@ CopyFiles('gamedata/common.games/gamerules.games/cstrike', 'base/addons/amxmodx/
 )
 
 CopyFiles('gamedata/common.games/gamerules.games/dod', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/dod',
-  [ 
+  [
     'offsets-cdodteamplay.txt',
     'offsets-cspdodrules.txt',
   ]
 )
 
 CopyFiles('gamedata/common.games/gamerules.games/gearbox', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/gearbox',
-  [ 
+  [
     'offsets-chalflifecoopplay.txt',
     'offsets-chalflifectfplay.txt',
     'offsets-chalflifemultiplay.txt',
@@ -1254,7 +1256,7 @@ CopyFiles('gamedata/common.games/gamerules.games/gearbox', 'base/addons/amxmodx/
 )
 
 CopyFiles('gamedata/common.games/gamerules.games/tfc', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/tfc',
-  [ 
+  [
     'offsets-chalflifemultiplay.txt',
     'offsets-chalflifeteamplay.txt',
     'offsets-cteamfortress.txt',
@@ -1262,7 +1264,7 @@ CopyFiles('gamedata/common.games/gamerules.games/tfc', 'base/addons/amxmodx/data
 )
 
 CopyFiles('gamedata/common.games/gamerules.games/valve', 'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/valve',
-  [ 
+  [
     'offsets-chalflifemultiplay.txt',
     'offsets-chalflifeteamplay.txt',
   ]

@@ -30,109 +30,109 @@ class JSONMngr : public IJSONMngr
 	virtual ~JSONMngr();
 
 	// Handles
-	virtual bool IsValidHandle(JS_Handle id, JSONHandleType type = Handle_Value);
-	virtual void Free(JS_Handle id);
-	virtual inline JSONType GetHandleJSONType(JS_Handle value)
+	bool IsValidHandle(JS_Handle id, JSONHandleType type = Handle_Value) override;
+	void Free(JS_Handle id) override;
+	inline JSONType GetHandleJSONType(JS_Handle value) override
 	{
 		return static_cast<JSONType>(json_value_get_type(m_Handles[value]->m_pValue));
 	}
 
 	// Parsing
-	virtual bool Parse(const char *string, JS_Handle *handle, bool is_file, bool with_comments);
+	bool Parse(const char *string, JS_Handle *handle, bool is_file, bool with_comments) override;
 
 	// Comapring
-	virtual inline bool AreValuesEquals(JS_Handle value1, JS_Handle value2)
+	inline bool AreValuesEquals(JS_Handle value1, JS_Handle value2) override
 	{
 		// to avoid ms compiler warning
 		return json_value_equals(m_Handles[value1]->m_pValue, m_Handles[value2]->m_pValue) == 1;
 	}
 
 	// Validating
-	virtual inline bool IsValueValid(JS_Handle schema, JS_Handle value)
+	inline bool IsValueValid(JS_Handle schema, JS_Handle value) override
 	{
 		return json_validate(m_Handles[schema]->m_pValue, m_Handles[value]->m_pValue) == JSONSuccess;
 	}
 
 	// Accessing parent value
-	virtual bool GetValueParent(JS_Handle value, JS_Handle *parent);
+	bool GetValueParent(JS_Handle value, JS_Handle *parent) override;
 
 	// Init functions
-	virtual bool InitObject(JS_Handle *handle);
-	virtual bool InitArray(JS_Handle *handle);
-	virtual bool InitString(const char *string, JS_Handle *handle);
-	virtual bool InitNum(double number, JS_Handle *handle);
-	virtual bool InitBool(bool boolean, JS_Handle *handle);
-	virtual bool InitNull(JS_Handle *handle);
+	bool InitObject(JS_Handle *handle) override;
+	bool InitArray(JS_Handle *handle) override;
+	bool InitString(const char *string, JS_Handle *handle) override;
+	bool InitNum(double number, JS_Handle *handle) override;
+	bool InitBool(bool boolean, JS_Handle *handle) override;
+	bool InitNull(JS_Handle *handle) override;
 
 	// Copying
-	virtual bool DeepCopyValue(JS_Handle value, JS_Handle *handle);
+	bool DeepCopyValue(JS_Handle value, JS_Handle *handle) override;
 
 	// Convert functions
-	virtual const char *ValueToString(JS_Handle value);
-	virtual inline double ValueToNum(JS_Handle value)
+	const char *ValueToString(JS_Handle value) override;
+	inline double ValueToNum(JS_Handle value) override
 	{
 		return json_value_get_number(m_Handles[value]->m_pValue);
 	}
-	virtual inline bool ValueToBool(JS_Handle value)
+	inline bool ValueToBool(JS_Handle value) override
 	{
 		return json_value_get_boolean(m_Handles[value]->m_pValue) == 1;
 	}
 
 	// Wrappers for Array API
-	virtual bool ArrayGetValue(JS_Handle array, size_t index, JS_Handle *handle);
-	virtual const char *ArrayGetString(JS_Handle array, size_t index);
-	virtual inline bool ArrayGetBool(JS_Handle array, size_t index)
+	bool ArrayGetValue(JS_Handle array, size_t index, JS_Handle *handle) override;
+	const char *ArrayGetString(JS_Handle array, size_t index) override;
+	inline bool ArrayGetBool(JS_Handle array, size_t index) override
 	{
 		return json_array_get_boolean(m_Handles[array]->m_pArray, index) == 1;
 	}
-	virtual bool ArrayReplaceValue(JS_Handle array, size_t index, JS_Handle value);
-	virtual bool ArrayAppendValue(JS_Handle array, JS_Handle value);
+	bool ArrayReplaceValue(JS_Handle array, size_t index, JS_Handle value) override;
+	bool ArrayAppendValue(JS_Handle array, JS_Handle value) override;
 
-	virtual inline double ArrayGetNum(JS_Handle array, size_t index)
+	inline double ArrayGetNum(JS_Handle array, size_t index) override
 	{
 		return json_array_get_number(m_Handles[array]->m_pArray, index);
 	}
-	virtual inline size_t ArrayGetCount(JS_Handle array)
+	inline size_t ArrayGetCount(JS_Handle array) override
 	{
 		return json_array_get_count(m_Handles[array]->m_pArray);
 	}
-	virtual inline bool ArrayReplaceString(JS_Handle array, size_t index, const char *string)
+	inline bool ArrayReplaceString(JS_Handle array, size_t index, const char *string) override
 	{
 		return json_array_replace_string(m_Handles[array]->m_pArray, index, string) == JSONSuccess;
 	}
-	virtual inline bool ArrayReplaceNum(JS_Handle array, size_t index, double number)
+	inline bool ArrayReplaceNum(JS_Handle array, size_t index, double number) override
 	{
 		return json_array_replace_number(m_Handles[array]->m_pArray, index, number) == JSONSuccess;
 	}
-	virtual inline bool ArrayReplaceBool(JS_Handle array, size_t index, bool boolean)
+	inline bool ArrayReplaceBool(JS_Handle array, size_t index, bool boolean) override
 	{
 		return json_array_replace_boolean(m_Handles[array]->m_pArray, index, boolean) == JSONSuccess;
 	}
-	virtual inline bool ArrayReplaceNull(JS_Handle array, size_t index)
+	inline bool ArrayReplaceNull(JS_Handle array, size_t index) override
 	{
 		return json_array_replace_null(m_Handles[array]->m_pArray, index) == JSONSuccess;
 	}
-	virtual inline bool ArrayAppendString(JS_Handle array, const char *string)
+	inline bool ArrayAppendString(JS_Handle array, const char *string) override
 	{
 		return json_array_append_string(m_Handles[array]->m_pArray, string) == JSONSuccess;
 	}
-	virtual inline bool ArrayAppendNum(JS_Handle array, double number)
+	inline bool ArrayAppendNum(JS_Handle array, double number) override
 	{
 		return json_array_append_number(m_Handles[array]->m_pArray, number) == JSONSuccess;
 	}
-	virtual inline bool ArrayAppendBool(JS_Handle array, bool boolean)
+	inline bool ArrayAppendBool(JS_Handle array, bool boolean) override
 	{
 		return json_array_append_boolean(m_Handles[array]->m_pArray, boolean) == JSONSuccess;
 	}
-	virtual inline bool ArrayAppendNull(JS_Handle array)
+	inline bool ArrayAppendNull(JS_Handle array) override
 	{
 		return json_array_append_null(m_Handles[array]->m_pArray) == JSONSuccess;
 	}
-	virtual inline bool ArrayRemove(JS_Handle array, size_t index)
+	inline bool ArrayRemove(JS_Handle array, size_t index) override
 	{
 		return json_array_remove(m_Handles[array]->m_pArray, index) == JSONSuccess;
 	}
-	virtual inline bool ArrayClear(JS_Handle array)
+	inline bool ArrayClear(JS_Handle array) override
 	{
 		return json_array_clear(m_Handles[array]->m_pArray) == JSONSuccess;
 	}
@@ -140,38 +140,38 @@ class JSONMngr : public IJSONMngr
 	// Wrappers for Object API
 
 	// Get functions
-	virtual bool ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dot_not);
-	virtual const char *ObjectGetString(JS_Handle object, const char *name, bool dot_not);
-	virtual double ObjectGetNum(JS_Handle object, const char *name, bool dot_not);
-	virtual bool ObjectGetBool(JS_Handle object, const char *name, bool dot_not);
-	virtual inline size_t ObjectGetCount(JS_Handle object)
+	bool ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dot_not) override;
+	const char *ObjectGetString(JS_Handle object, const char *name, bool dot_not) override;
+	double ObjectGetNum(JS_Handle object, const char *name, bool dot_not) override;
+	bool ObjectGetBool(JS_Handle object, const char *name, bool dot_not) override;
+	inline size_t ObjectGetCount(JS_Handle object) override
 	{
 		return json_object_get_count(m_Handles[object]->m_pObject);
 	}
-	virtual const char *ObjectGetName(JS_Handle object, size_t index);
-	virtual bool ObjectGetValueAt(JS_Handle object, size_t index, JS_Handle *handle);
-	virtual bool ObjectHasValue(JS_Handle object, const char *name, JSONType type, bool dot_not);
+	const char *ObjectGetName(JS_Handle object, size_t index) override;
+	bool ObjectGetValueAt(JS_Handle object, size_t index, JS_Handle *handle) override;
+	bool ObjectHasValue(JS_Handle object, const char *name, JSONType type, bool dot_not) override;
 
 	// Set functions
-	virtual bool ObjectSetValue(JS_Handle object, const char *name, JS_Handle value, bool dot_not);
-	virtual bool ObjectSetString(JS_Handle object, const char *name, const char *string, bool dot_not);
-	virtual bool ObjectSetNum(JS_Handle object, const char *name, double number, bool dot_not);
-	virtual bool ObjectSetBool(JS_Handle object, const char *name, bool boolean, bool dot_not);
-	virtual bool ObjectSetNull(JS_Handle object, const char *name, bool dot_not);
+	bool ObjectSetValue(JS_Handle object, const char *name, JS_Handle value, bool dot_not) override;
+	bool ObjectSetString(JS_Handle object, const char *name, const char *string, bool dot_not) override;
+	bool ObjectSetNum(JS_Handle object, const char *name, double number, bool dot_not) override;
+	bool ObjectSetBool(JS_Handle object, const char *name, bool boolean, bool dot_not) override;
+	bool ObjectSetNull(JS_Handle object, const char *name, bool dot_not) override;
 
 	// Remove functions
-	virtual bool ObjectRemove(JS_Handle object, const char *name, bool dot_not);
-	virtual inline bool ObjectClear(JS_Handle object)
+	bool ObjectRemove(JS_Handle object, const char *name, bool dot_not) override;
+	inline bool ObjectClear(JS_Handle object) override
 	{
 		return json_object_clear(m_Handles[object]->m_pObject) == JSONSuccess;
 	}
 
 	// Serialization API
-	virtual size_t SerialSize(JS_Handle value, bool pretty);
-	virtual bool SerialToBuffer(JS_Handle value, char *buffer, size_t size, bool pretty);
-	virtual bool SerialToFile(JS_Handle value, const char *filepath, bool pretty);
-	virtual char *SerialToString(JS_Handle value, bool pretty);
-	virtual inline void FreeString(char *string)
+	size_t SerialSize(JS_Handle value, bool pretty) override;
+	bool SerialToBuffer(JS_Handle value, char *buffer, size_t size, bool pretty) override;
+	bool SerialToFile(JS_Handle value, const char *filepath, bool pretty) override;
+	char *SerialToString(JS_Handle value, bool pretty) override;
+	inline void FreeString(char *string) override
 	{
 		json_free_serialized_string(string);
 	}

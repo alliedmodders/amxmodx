@@ -13,7 +13,7 @@
 
 Weapon WeaponsList[] = {
 	{ "Kung Fu", "kung_fu", {}, 3, 1 },
-	{ "Glock-18", "glock-18", { 50, 80, (1 << 8), 82 }, 1 },
+	{ "Glock-18", "glock-18", { 50, 80, (1 << 8) }, 1 },
 	{ "Beretta 92F", "beretta", { 50, 94, (1 << 8) }, 1 },
 	{ "Mini-Uzi", "mini-uzi", { 50, 108, (1 << 8) }, 1 },
 	{ "BENELLI-M3", "benelli_m3", { 52, 122, (1 << 8) + (1 << 9) }, 1 },

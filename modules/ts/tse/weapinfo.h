@@ -30,7 +30,6 @@ struct WeaponOffsets
 {
 	short ammo, clip;
 	uint64_t fmbase;
-	short reloadtime;
 };
 
 struct Weapon

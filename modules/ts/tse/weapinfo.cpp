@@ -25,7 +25,7 @@ Weapon WeaponsList[] = {
 	{ "Akimbo MK23", "akimbo_mk23", { 51, 192, (1 << 9) }, 1 },
 	{ "USAS-12", "usas-12", { 52, 220, (1 << 9) + (1 << 8) }, 1 },
 	{ "Desert Eagle", "desert_eagle", { 54, 234, (1 << 10) + (1 << 8) }, 1 },
-	{ "AK47", "ak47", { 53, 248, (1 << 10) + (1 << 9) }, 1 },
+	{ "AK47", "ak47", { 55, 248, (1 << 10) + (1 << 9) }, 1 },
 	{ "Five-seveN", "five-seven", { 56, 262, (1 << 10) + (1 << 9) + (1 << 8) }, 1 },
 	{ "STEYR-AUG", "steyr-aug", { 53, 276, (1 << 10) }, 1 },
 	{ "Akimbo Mini-Uzi", "akimbo_mini-uzi", { 50, 290, (1 << 8) }, 1 },

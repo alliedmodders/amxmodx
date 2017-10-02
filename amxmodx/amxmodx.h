@@ -296,8 +296,6 @@ void copy_amxmemory(cell* dest, cell* src, int len);
 void get_modname(char*);
 void print_srvconsole(const char *fmt, ...);
 void report_error(int code, const char* fmt, ...);
-void* alloc_amxmemory(void**, int size);
-void free_amxmemory(void **ptr);
 // get_localinfo
 const char* get_localinfo(const char* name, const char* def);
 extern "C" void LogError(AMX *amx, int err, const char *fmt, ...);

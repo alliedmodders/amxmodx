@@ -76,18 +76,6 @@ void print_srvconsole(const char *fmt, ...)
 	SERVER_PRINT(string);
 }
 
-void* alloc_amxmemory(void** p, int size)
-{
-	*p = new unsigned char[size];
-	return *p;
-}
-
-void free_amxmemory(void **ptr)
-{
-	delete[] (unsigned char *)(*ptr);
-	*ptr = 0;
-}
-
 #if defined BINLOG_ENABLED
 void BinLog_LogNative(AMX *amx, int native, int params)
 {

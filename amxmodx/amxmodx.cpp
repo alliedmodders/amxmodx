@@ -2670,8 +2670,8 @@ int sendFakeCommand(AMX *amx, cell *params, bool send_forward = false)
 			if (pPlayer->ingame /*&& pPlayer->initialized */)
 				UTIL_FakeClientCommand(pPlayer->pEdict, command, pArgument1, pArgument2, send_forward);
 		}
-	} 
-	else 
+	}
+	else
 	{
 		if (index < 1 || index > gpGlobals->maxClients)
 		{
@@ -3963,7 +3963,7 @@ static cell AMX_NATIVE_CALL lang_exists(AMX *amx, cell *params)
 	return g_langMngr.LangExists(get_amxstring(amx, params[1], 1, len)) ? 1 : 0;
 }
 
-cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params)
 {
 	return 1;
 }

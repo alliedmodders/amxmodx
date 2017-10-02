@@ -300,7 +300,6 @@ void* alloc_amxmemory(void**, int size);
 void free_amxmemory(void **ptr);
 // get_localinfo
 const char* get_localinfo(const char* name, const char* def);
-cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params);
 extern "C" void LogError(AMX *amx, int err, const char *fmt, ...);
 
 enum ModuleCallReason

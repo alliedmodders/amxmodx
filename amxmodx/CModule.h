@@ -57,7 +57,6 @@ class CModule : public ke::InlineListNode<CModule>
 	ke::AString m_Filename;         // Filename
 
 	bool m_Metamod;					// Using metamod?
-	bool m_Amxx;					// Using new module interface?
 
 	amxx_module_info_s m_InfoNew;	// module info (new module interface)
 	DLHANDLE m_Handle;				// handle
@@ -79,14 +78,13 @@ public:
 	bool attachMetamod(const char *mmfile, PLUG_LOADTIME now);
 
 	const char* getStatus() const;
-	inline const char* getType() const { return m_Amxx ? "amxx" : (m_Metamod ? "amx&mm" : "amx"); }
+	inline const char* getType() const { return m_Metamod ? "amxx&mm" : "amxx"; }
 	inline const char* getAuthor() const { return m_InfoNew.author; }
 	inline const char* getVersion() const { return m_InfoNew.version; }
 	inline const char* getName() const { return m_InfoNew.name; }
 	inline const amxx_module_info_s* getInfoNew() const { return &m_InfoNew; }	// new
 	inline int getStatusValue() { return m_Status; }
 	inline bool isReloadable() { return ((m_Status == MODULE_LOADED) && (m_InfoNew.reload != 0)); }
-	inline bool isAmxx() const { return m_Amxx; }
 	inline const char *getMissingFunc() const { return m_MissingFunc; }
 	inline const char *getFilename() { return m_Filename.chars(); }
 	inline bool IsMetamod() { return m_Metamod; }

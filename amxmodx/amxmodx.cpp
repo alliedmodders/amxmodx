@@ -3400,17 +3400,14 @@ static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 		}
 
 		// set name, author, version
-		if (module->isAmxx())
-		{
-			const amxx_module_info_s *info = module->getInfoNew();
-			const char *name = info && info->name ? info->name : "unk";
-			const char *author = info && info->author ? info->author : "unk";
-			const char *version = info && info->version ? info->version : "unk";
+		const amxx_module_info_s *info = module->getInfoNew();
+		const char *name = info && info->name ? info->name : "unk";
+		const char *author = info && info->author ? info->author : "unk";
+		const char *version = info && info->version ? info->version : "unk";
 
-			set_amxstring_utf8(amx, params[2], name, strlen(name), params[3]);
-			set_amxstring_utf8(amx, params[4], author, strlen(author), params[5]);
-			set_amxstring_utf8(amx, params[6], version, strlen(version), params[7]);
-		}
+		set_amxstring_utf8(amx, params[2], name, strlen(name), params[3]);
+		set_amxstring_utf8(amx, params[4], author, strlen(author), params[5]);
+		set_amxstring_utf8(amx, params[6], version, strlen(version), params[7]);
 
 		// compatibility problem possible
 		int numParams = params[0] / sizeof(cell);

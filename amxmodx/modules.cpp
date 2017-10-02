@@ -876,10 +876,10 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 		report_error(1, "[AMXX] Couldn't find info about module (file \"%s\")", path);
 		break;
 	case MODULE_NOQUERY:
-		report_error(1, "[AMXX] Couldn't find \"AMX_Query\" or \"AMXX_Query\" (file \"%s\")", path);
+		report_error(1, "[AMXX] Couldn't find \"AMXX_Query\" (file \"%s\")", path);
 		break;
 	case MODULE_NOATTACH:
-		report_error(1, "[AMXX] Couldn't find \"%s\" (file \"%s\")", module->isAmxx() ? "AMXX_Attach" : "AMX_Attach", path);
+		report_error(1, "[AMXX] Couldn't find \"AMXX_Attach\" (file \"%s\")", path);
 		break;
 	case MODULE_OLD:
 		report_error(1, "[AMXX] Module has a different interface version (file \"%s\")", path);
@@ -920,7 +920,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 
 	bool retVal = module->attachModule();
 
-	if (module->isAmxx() && !retVal)
+	if (!retVal)
 	{
 		switch (module->getStatusValue())
 		{

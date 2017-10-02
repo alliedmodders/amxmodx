@@ -49,7 +49,7 @@ void CModule::clear(bool clearFilename)
 	m_Metamod = false;
 	m_Handle = NULL;
 	m_Status = MODULE_NONE;
-	
+
 	if (clearFilename)
 	{
 		m_Filename = "unknown";
@@ -153,7 +153,7 @@ bool CModule::attachModule()
 
 		if (!AttachFunc_New)
 			return false;
-		
+
 		g_ModuleCallReason = ModuleCall_Attach;
 		g_CurrentlyCalledModule = this;
 		int retVal = (*AttachFunc_New)(Module_ReqFnptr);
@@ -213,7 +213,7 @@ bool CModule::queryModule()
 
 	// Try new interface first
 	QUERYMOD_NEW queryFunc_New = (QUERYMOD_NEW)DLPROC(m_Handle, "AMXX_Query");
-	
+
 	if (queryFunc_New)
 	{
 		m_Amxx = true;
@@ -223,7 +223,7 @@ bool CModule::queryModule()
 		int retVal = (*queryFunc_New)(&ifVers, &m_InfoNew);
 		g_CurrentlyCalledModule = NULL;
 		g_ModuleCallReason = ModuleCall_NotCalled;
-		
+
 		switch (retVal)
 		{
 			case AMXX_PARAM:
@@ -244,7 +244,7 @@ bool CModule::queryModule()
 						if (retVal == AMXX_OK)
 						{
 							m_InfoNew.library = m_InfoNew.logtag;
-							if (StrCaseStr(m_InfoNew.library, "sql") 
+							if (StrCaseStr(m_InfoNew.library, "sql")
 								|| StrCaseStr(m_InfoNew.library, "dbi"))
 							{
 								m_InfoNew.libclass = "DBI";
@@ -323,7 +323,7 @@ bool CModule::detachModule()
 	if (m_Amxx)
 	{
 		DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
-		
+
 		if (detachFunc_New)
 		{
 			g_ModuleCallReason = ModuleCall_Detach;
@@ -334,16 +334,14 @@ bool CModule::detachModule()
 		}
 	}
 
-#ifndef FAKEMETA
 	if (IsMetamod())
 	{
 		UnloadMetamodPlugin(m_Handle);
 	}
-#endif
-	
+
 	DLFREE(m_Handle);
 	clear();
-	
+
 	return true;
 }
 
@@ -388,10 +386,10 @@ void CModule::CallPluginsLoaded()
 		return;
 
 	PLUGINSLOADED_NEW func = (PLUGINSLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsLoaded");
-	
+
 	if (!func)
 		return;
-	
+
 	func();
 }
 
@@ -414,6 +412,6 @@ const char* CModule::getStatus() const
 		case MODULE_BADGAME:	return "bad game";
 		default:				break;
 	}
-	
+
 	return "unknown";
 }

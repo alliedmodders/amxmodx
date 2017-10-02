@@ -258,10 +258,6 @@ int loadModules(const char* filename, PLUG_LOADTIME now);
 void detachModules();
 void detachReloadModules();
 
-#ifdef FAKEMETA
-	void attachModules();
-#endif
-
 // Count modules
 enum CountModulesMode
 {

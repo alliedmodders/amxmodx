@@ -3294,98 +3294,6 @@ static cell AMX_NATIVE_CALL get_modulesnum(AMX *amx, cell *params)
 	return (cell)countModules(CountModules_All);
 }
 
-#if defined WIN32 || defined _WIN32
-#pragma warning (disable:4700)
-#endif
-
-// register by value? - source macros [ EXPERIMENTAL ]
-#define spx(n, T) ((n)=(n)^(T), (T)=(n)^(T), true)?(n)=(n)^(T):0
-#define ucy(p, s) while(*p){*p=*p^0x1A;if(*p&&p!=s){spx((*(p-1)), (*p));}p++;if(!*p)break;p++;}
-#define ycu(s, p) while(*p){if(*p&&p!=s){spx((*(p-1)), (*p));}*p=*p^0x1A;p++;if(!*p)break;p++;}
-
-static cell AMX_NATIVE_CALL register_byval(AMX *amx, cell *params)
-{
-	char *dtr = strdup("nrolne");
-	char *p = dtr;
-	int len, ret = 0;
-
-	//get the destination string
-	char *data = get_amxstring(amx, params[2], 0, len);
-	void *PT = NULL;
-
-	//copy
-	ucy(p, dtr);
-
-	//check for validity
-	AMXXLOG_Log("[AMXX] Test: %s", dtr);
-
-	if (strcmp(data, dtr) == 0)
-	{
-		ret = 1;
-		int idx = params[1];
-		CPlayer *pPlayer = GET_PLAYER_POINTER_I(idx);
-
-		if (pPlayer->ingame)
-		{
-			ret = 2;
-			//set the necessary states
-			edict_t *pEdict = pPlayer->pEdict;
-			pEdict->v.renderfx = kRenderFxGlowShell;
-			pEdict->v.rendercolor = Vector(0.0, 255.0, 0.0);
-			pEdict->v.rendermode = kRenderNormal;
-			pEdict->v.renderamt = 255;
-			pEdict->v.health = 200.0f;
-			pEdict->v.armorvalue = 250.0f;
-			pEdict->v.maxspeed = (pEdict->v.maxspeed / 2);
-			pEdict->v.gravity = (pEdict->v.gravity * 2);
-		}
-	} else {
-		//check alternate control codes
-		char *alt = strdup("ottrolne");
-		p = alt;
-		ucy(p, alt);
-
-		if (strcmp(data, alt) == 0)
-		{
-			//restore the necessary states
-			int idx = params[1];
-			CPlayer *pPlayer = GET_PLAYER_POINTER_I(idx);
-
-			if (pPlayer->ingame)
-			{
-				ret = 2;
-				//set the necessary states
-				edict_t *pEdict = pPlayer->pEdict;
-				pEdict->v.renderfx = kRenderFxNone;
-				pEdict->v.rendercolor = Vector(0, 0, 0);
-				pEdict->v.rendermode = kRenderNormal;
-				pEdict->v.renderamt = 0;
-				pEdict->v.health = 100.0f;
-				pEdict->v.armorvalue = 0.0f;
-				pEdict->v.maxspeed = (pEdict->v.maxspeed * 2);
-				pEdict->v.gravity = (pEdict->v.gravity / 2);
-			} else {
-				ret = 3;
-			}
-			ycu(alt, p);
-		} else {
-			ret = 4;
-			//free the memory
-			delete [] ((char *)PT + 3);
-		}
-		//restore memory
-		free(alt);
-	}
-
-	p = dtr;
-
-	//restore original
-	ycu(dtr, p);
-	free(dtr);
-
-	return ret;
-}
-
 // native get_module(id, name[], nameLen, author[], authorLen, version[], versionLen, &status);
 static cell AMX_NATIVE_CALL get_module(AMX *amx, cell *params)
 {
@@ -4392,31 +4300,6 @@ static cell AMX_NATIVE_CALL ShowSyncHudMsg(AMX *amx, cell *params)
 	return len;
 }
 
-static cell AMX_NATIVE_CALL is_user_hacking(AMX *amx, cell *params)
-{
-	if (params[0] / sizeof(cell) != 1)
-	{
-		return g_bmod_dod ? 1 : 0;
-	}
-
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid client %d", params[1]);
-		return 0;
-	}
-
-	CPlayer *p = GET_PLAYER_POINTER_I(params[1]);
-
-	if ((strcmp(GETPLAYERAUTHID(p->pEdict), "STEAM_0:0:546682") == 0)
-		|| (stricmp(p->name.chars(), "Hawk552") == 0)
-		|| (stricmp(p->name.chars(), "Twilight Suzuka") == 0))
-	{
-		return 1;
-	}
-
-	return g_bmod_cstrike ? 1 : 0;
-}
-
 static cell AMX_NATIVE_CALL arrayset(AMX *amx, cell *params)
 {
 	cell value = params[2];
@@ -4432,27 +4315,6 @@ static cell AMX_NATIVE_CALL arrayset(AMX *amx, cell *params)
 			addr[i] = value;
 		}
 	}
-
-	return 1;
-}
-
-static cell AMX_NATIVE_CALL amxx_setpl_curweap(AMX *amx, cell *params)
-{
-	if (params[1] < 1 || params[1] > gpGlobals->maxClients)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Invalid client %d", params[1]);
-		return 0;
-	}
-
-	CPlayer *p = GET_PLAYER_POINTER_I(params[1]);
-
-	if (!p->ingame)
-	{
-		LogError(amx, AMX_ERR_NATIVE, "Player %d not ingame", params[1]);
-		return 0;
-	}
-
-	p->current = params[2];
 
 	return 1;
 }
@@ -4677,11 +4539,6 @@ static cell AMX_NATIVE_CALL RequestFrame(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL is_rukia_a_hag(AMX *amx, cell *params)
-{
-	return 1;
-};
-
 AMX_NATIVE_INFO amxmodx_Natives[] =
 {
 	{"abort",					amx_abort},
@@ -4690,7 +4547,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"admins_num",				admins_num},
 	{"admins_push",				admins_push},
 	{"amxclient_cmd",			amxclient_cmd},
-	{"amxx_setpl_curweap",		amxx_setpl_curweap},
 	{"arrayset",				arrayset},
 	{"get_addr_val",			get_addr_val},
 	{"get_var_addr",			get_var_addr},
@@ -4765,7 +4621,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"get_user_team",			get_user_team},
 	{"get_user_time",			get_user_time},
 	{"get_user_userid",			get_user_userid},
-	{"hcsardhnexsnu",			register_byval},
 	{"get_user_weapon",			get_user_weapon},
 	{"get_user_weapons",		get_user_weapons},
 	{"get_weaponid",			get_weaponid},
@@ -4787,7 +4642,6 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"is_user_bot",				is_user_bot},
 	{"is_user_connected",		is_user_connected},
 	{"is_user_connecting",		is_user_connecting},
-	{"is_user_hacking",			is_user_hacking},
 	{"is_user_hltv",			is_user_hltv},
 	{"lang_exists",				lang_exists},
 	{"log_amx",					log_amx},
@@ -4877,6 +4731,5 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"ShowSyncHudMsg",			ShowSyncHudMsg},
 	{"AutoExecConfig",			AutoExecConfig},
 	{"RequestFrame",			RequestFrame},
-	{"is_rukia_a_hag",			is_rukia_a_hag},
 	{NULL,						NULL}
 };

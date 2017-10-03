@@ -107,7 +107,7 @@ native menu_additem(menu, const name[], const info[]="", paccess=0, callback=-1)
  * @param paccess		Access required by the player viewing the menu.
  * @param callback		If set to a valid ID from menu_makecallback(), the
  *						callback will be invoked before drawing the item.
- * @param dp_data		If true, item's data will be treat as DataPack and be destroyed
+ * @param dp_data		If true, item's data will be treated as DataPack and be destroyed
  *						along with the menu.
  * @noreturn
  * @error				Invalid menu resource.
@@ -209,7 +209,7 @@ native menu_item_setcmd(menu, item, const info[]);
  * @param menu			Menu resource identifier.
  * @param item			Item identifier.
  * @param data			New item data.
- * @param dp_data		If true, item's data will be treat as DataPack and be destroyed
+ * @param dp_data		If true, item's data will be treated as DataPack and be destroyed
  *						along with the menu.
  * @return				1 on success, 0 on failure.
  * @error				Invalid menu resource.

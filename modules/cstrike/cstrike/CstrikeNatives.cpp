@@ -1681,7 +1681,7 @@ static cell AMX_NATIVE_CALL cs_set_c4_defusing(AMX* amx, cell* params)
 // cs_create_entity(const classname[])
 static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
 {
-	if (CS_CreateNamedEntity <= 0)
+	if (!CS_CreateNamedEntity)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_create_entity() is disabled. Check your amxx logs.");
 		return 0;
@@ -1703,7 +1703,7 @@ static cell AMX_NATIVE_CALL cs_create_entity(AMX* amx, cell* params)
 // cs_find_ent_by_class(start_index, const classname[])
 static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
 {
-	if (CS_UTIL_FindEntityByString <= 0)
+	if (!CS_UTIL_FindEntityByString)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_find_ent_by_class() is disabled. Check your amxx logs.");
 		return 0;
@@ -1726,7 +1726,7 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_class(AMX* amx, cell* params)
 // cs_find_ent_by_owner(start_index, const classname[], owner)
 static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
 {
-	if (CS_UTIL_FindEntityByString <= 0)
+	if (!CS_UTIL_FindEntityByString)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_find_ent_by_owner() is disabled. Check your amxx logs.");
 		return 0;
@@ -1762,7 +1762,7 @@ static cell AMX_NATIVE_CALL cs_find_ent_by_owner(AMX* amx, cell* params)
 // cs_set_ent_class(index, const classname[])
 static cell AMX_NATIVE_CALL cs_set_ent_class(AMX* amx, cell* params)
 {
-	if (AddEntityHashValue <= 0 || RemoveEntityHashValue <= 0)
+	if (!AddEntityHashValue || !RemoveEntityHashValue)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_set_ent_class() is disabled. Check your amxx logs.");
 		return 0;
@@ -1894,7 +1894,7 @@ static cell AMX_NATIVE_CALL cs_get_translated_item_alias(AMX* amx, cell* params)
 // native cs_get_weapon_info(weapon_id, CsWeaponInfo:type);
 static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 {
-	if (!HasReGameDll && GetWeaponInfo <= 0)
+	if (!HasReGameDll && !GetWeaponInfo)
 	{
 		MF_LogError(amx, AMX_ERR_NATIVE, "Native cs_get_weapon_info() is disabled. Check your amxx logs.");
 		return 0;

@@ -809,15 +809,22 @@ static cell AMX_NATIVE_CALL menu_items(AMX *amx, cell *params)
 //page indices start at 0!
 static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 {
-	GETMENU(params[2]);
-	
+	auto handle = params[2];
+	GETMENU(handle);
+
 	int player = params[1];
 	int page = params[3];
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(player);
-	
+
 	if (!CloseNewMenus(pPlayer))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
+		return 0;
+	}
+
+	if (!g_NewMenus[handle])
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d (was previously destroyed).", handle);
 		return 0;
 	}
 

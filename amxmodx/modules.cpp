@@ -1014,23 +1014,6 @@ void detachReloadModules()
 	}
 }
 
-const char* strip_name(const char* a)
-{
-	const char* ret = a;
-
-	while (*a)
-	{
-		if (*a == '/' || *a == '\\')
-		{
-			ret = ++a;
-			continue;
-		}
-		++a;
-	}
-
-	return ret;
-}
-
 // Get the number of running modules
 int countModules(CountModulesMode mode)
 {

@@ -120,16 +120,12 @@ isDestroying(false), pageCallback(-1), items_per_page(7)
 
 Menu::~Menu()
 {
-	menuitem *pItem;
-
-	for (size_t i = 0; i < m_Items.length(); i++)
+	for (auto &item : m_Items)
 	{
-		pItem = m_Items[i];
+		if (item->isDataDataPack && item->data > 0)
+			DataPackHandles.destroy(item->data);
 
-		if (pItem->isDataDataPack && pItem->data > 0)
-			DataPackHandles.destroy(pItem->data);
-
-		delete pItem;
+		delete item;
 	}
 
 	unregisterSPForward(this->func);

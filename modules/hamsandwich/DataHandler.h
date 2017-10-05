@@ -210,7 +210,7 @@ public:
 		return 0;
 	};
 
-	int SetEntity(cell *data)
+	int SetEntity(cell *data, bool updateIndex = false)
 	{
 		if (!IsSet())
 		{
@@ -219,7 +219,7 @@ public:
 		if (IsType(RET_CBASE))
 		{
 			*(reinterpret_cast<void **>(m_data))= TypeConversion.id_to_cbase(*data);
-			if (m_index != 0)
+			if (updateIndex && m_index)
 			{
 				*m_index=*data;
 			}
@@ -229,7 +229,7 @@ public:
 		else if (IsType(RET_ENTVAR))
 		{
 			*(reinterpret_cast<entvars_t **>(m_data))= TypeConversion.id_to_entvars(*data);
-			if (m_index != 0)
+			if (updateIndex && m_index)
 			{
 				*m_index=*data;
 			}
@@ -239,7 +239,7 @@ public:
 		else if (IsType(RET_EDICT))
 		{
 			*(reinterpret_cast<edict_t **>(m_data)) = TypeConversion.id_to_edict(*data);
-			if (m_index != 0)
+			if (updateIndex && m_index)
 			{
 				*m_index = *data;
 			}

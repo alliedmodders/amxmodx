@@ -238,20 +238,32 @@ static cell AMX_NATIVE_CALL SetHamParamVector(AMX *amx, cell *params)
 	int ret=dat->SetVector(MF_GetAmxAddr(amx, params[2]));
 	PARSE_RETURN();
 }
-static cell AMX_NATIVE_CALL SetHamParamEntity(AMX *amx, cell *params)
+
+cell SetParamEntity(AMX *amx, cell *params, bool updateIndex)
 {
 	CHECK_STACK(ParamStack);
 	ke::Vector<Data *> *vec = ParamStack.front();
-	if (vec->length() < (unsigned)params[1]) 
-	{ 
-		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid parameter number, got %d, expected %d", params[1], vec->length()); 
-		return 0; 
-	} 
-	Data *dat=vec->at(params[1] - 1);
+	if (vec->length() < (unsigned)params[1])
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid parameter number, got %d, expected %d", params[1], vec->length());
+		return 0;
+	}
+	Data *dat = vec->at(params[1] - 1);
 
-	int ret=dat->SetEntity(&params[2]);
+	int ret = dat->SetEntity(&params[2], updateIndex);
 	PARSE_RETURN();
 }
+
+static cell AMX_NATIVE_CALL SetHamParamEntity(AMX *amx, cell *params)
+{
+	return SetParamEntity(amx, params, false);
+}
+
+static cell AMX_NATIVE_CALL SetHamParamEntity2(AMX *amx, cell *params)
+{
+	return SetParamEntity(amx, params, true);
+}
+
 static cell AMX_NATIVE_CALL SetHamParamString(AMX *amx, cell *params)
 {
 	CHECK_STACK(ParamStack);
@@ -483,6 +495,7 @@ AMX_NATIVE_INFO ReturnNatives[] =
 	{ "SetHamParamFloat",			SetHamParamFloat },
 	{ "SetHamParamVector",			SetHamParamVector },
 	{ "SetHamParamEntity",			SetHamParamEntity },
+	{ "SetHamParamEntity2",			SetHamParamEntity2 },
 	{ "SetHamParamString",			SetHamParamString },
 	{ "SetHamParamTraceResult",		SetHamParamTraceResult },
 	{ "SetHamParamItemInfo",		SetHamParamItemInfo },

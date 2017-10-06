@@ -36,8 +36,7 @@ struct Weapon
 {
 	char name[24], logname[24];
 	WeaponOffsets offsets;
-	int bonus;
-	bool melee, custom;
+	bool melee;
 };
 
 extern Weapon WeaponsList[];

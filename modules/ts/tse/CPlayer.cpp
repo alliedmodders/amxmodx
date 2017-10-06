@@ -47,14 +47,14 @@ edict_t *CPlayer::GetWeaponEdict()
 {
 	edict_t *weapon = NULL;
 	while ((weapon = g_engfuncs.pfnFindEntityByString(weapon, "classname", "weapon_tsgun")) != 0)
-	if (weapon->v.owner == this->PlayerEdict)
-		return weapon;
-	return 0;
+		if (weapon->v.owner == this->PlayerEdict)
+			return weapon;
+	return nullptr;
 }
 
 edict_t *CreateWeapon(int id, Vector coord, short ttl, uint16_t clips, byte atcments) {
 	edict_t *ent = CREATE_NAMED_ENTITY((string_t)MAKE_STRING("ts_groundweapon"));
-	if (FNullEnt(ent)) return NULL;
+	if (FNullEnt(ent)) return nullptr;
 
 	KeyValueData params;
 	char buffer[24];
@@ -94,7 +94,7 @@ edict_t *CreateWeapon(int id, Vector coord, short ttl, uint16_t clips, byte atcm
 
 edict_t *CreatePowerup(uint16_t type, Vector coord, short ttl) {
 	edict_t *ent = CREATE_NAMED_ENTITY((string_t)MAKE_STRING("ts_powerup"));
-	if (FNullEnt(ent)) return NULL;
+	if (FNullEnt(ent)) return nullptr;
 
 	KeyValueData params;
 	char buffer[24];

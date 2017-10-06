@@ -208,6 +208,10 @@ class AMXXConfig(object):
       cxx.cflags += ['-Wno-sometimes-uninitialized']
       if builder.target_platform == 'linux' and cxx.version >= '3.6':
         cxx.cxxflags += ['-Wno-inconsistent-missing-override']
+      if builder.target_platform == 'linux' and cxx.version >= '3.9':
+        cxx.cxxflags += ['-Wno-varargs']
+      if builder.target_platform == 'linux' and cxx.version >= '4.0':
+        cxx.cxxflags += ['-Wno-address-of-packed-member']
 
     if have_gcc:
       cxx.cflags += ['-Wno-parentheses']
@@ -408,6 +412,7 @@ builder.RunBuildScripts(
     'modules/fun/AMBuilder',
     'modules/geoip/AMBuilder',
     'modules/hamsandwich/AMBuilder',
+    'modules/json/AMBuilder',
     'modules/mysqlx/AMBuilder',
     'modules/ns/AMBuilder',
     'modules/nvault/AMBuilder',

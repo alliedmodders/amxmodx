@@ -318,19 +318,19 @@ static cell AMX_NATIVE_CALL GetHamItemInfo(AMX *amx, cell *params)
 			return pItem->iPosition;
 
 		case ItemInfo_pszAmmo1:
-			return MF_SetAmxString( amx, params[3], pItem->pszAmmo1 > 0 ? pItem->pszAmmo1 : "", params[4] );
+			return MF_SetAmxString( amx, params[3], pItem->pszAmmo1 ? pItem->pszAmmo1 : "", params[4] );
 
 		case ItemInfo_iMaxAmmo1:
 			return pItem->iMaxAmmo1;
 
 		case ItemInfo_pszAmmo2:
-			return MF_SetAmxString( amx, params[3], pItem->pszAmmo2 > 0 ? pItem->pszAmmo2 : "", params[4] );
+			return MF_SetAmxString( amx, params[3], pItem->pszAmmo2 ? pItem->pszAmmo2 : "", params[4] );
 
 		case ItemInfo_iMaxAmmo2:
 			return pItem->iMaxAmmo2;
 
 		case ItemInfo_pszName:
-			return MF_SetAmxString( amx, params[3], pItem->pszName > 0 ? pItem->pszName : "", params[4] );
+			return MF_SetAmxString( amx, params[3], pItem->pszName ? pItem->pszName : "", params[4] );
 
 		case ItemInfo_iMaxClip:
 			return pItem->iMaxClip;

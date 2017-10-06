@@ -652,8 +652,8 @@ static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params)
 	string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 	string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
-	string2Folded[string1Length] = '\0';
-	string1Folded[string2Length] = '\0';
+	string1Folded[string1Length] = '\0';
+	string2Folded[string2Length] = '\0';
 
 	if (params[arg_numbytes] > 0)
 	{
@@ -1427,8 +1427,8 @@ static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
 		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
-		string2Folded[string1Length] = '\0';
-		string1Folded[string2Length] = '\0';
+		string1Folded[string1Length] = '\0';
+		string2Folded[string2Length] = '\0';
 
 		string1 = string1Folded;
 		string2 = string2Folded;
@@ -1456,8 +1456,8 @@ static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
 		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
 
-		string2Folded[string1Length] = '\0';
-		string1Folded[string2Length] = '\0';
+		string1Folded[string1Length] = '\0';
+		string2Folded[string2Length] = '\0';
 
 		string1 = string1Folded;
 		string2 = string2Folded;

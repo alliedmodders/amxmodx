@@ -15,6 +15,7 @@
 #include "CPlayer.h"
 #include "misc.h"
 
+
 static cell AMX_NATIVE_CALL tse_getuserslots(AMX *amx, cell *params) 
 {
 	byte pid = params[1];
@@ -120,13 +121,10 @@ static cell AMX_NATIVE_CALL tse_getusercurritems(AMX *amx, cell *params)
 	{
 		case 65536:
 			return 1;
-			break;
 		case 16777216:
 			return 2;
-			break;
 		case 16842752:
 			return 3;
-			break;
 	}
 	return 0;
 }
@@ -189,7 +187,7 @@ static cell AMX_NATIVE_CALL tse_createpwup(AMX *amx, cell *params)
 	if (type < 1 || type > 256) return -1;
 	cell *coordptr = MF_GetAmxAddr(amx, params[2]);
 	short ttl = params[3];
-	return ENTINDEX(CreatePowerup(type, Vector(*(float *)((void *)&coordptr[0]), *(float *)((void *)&coordptr[1]), *(float *)((void *)&coordptr[2])), ttl));
+	return ENTINDEX(CreatePowerup(type, Vector(*(float *)&coordptr[0], *(float *)&coordptr[1], *(float *)&coordptr[2]), ttl));
 }
 
 static cell AMX_NATIVE_CALL tse_giveuserpwup(AMX *amx, cell *params)
@@ -310,7 +308,7 @@ static cell AMX_NATIVE_CALL tse_sendweapparams(AMX *amx, cell *params)
 	byte pid = params[1];
 	if (!IsPlayerValid(amx, pid)) return 0;
 	char paramsstr[128];
-	sprintf(paramsstr, "%i %f %f %f %f %i", params[2], amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6]), params[7]);
+	snprintf(paramsstr, 128, "%i %f %f %f %f %i", params[2], amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6]), params[7]);
 	MESSAGE_BEGIN(MSG_ONE, GetMsgIDByName("CustomWP"), 0, Player(pid)->PlayerEdict);
 		WRITE_STRING(paramsstr);
 	MESSAGE_END();

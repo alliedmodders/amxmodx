@@ -46,7 +46,7 @@ Weapon WeaponsList[] = {
 	{ "Raging Bull", "raging_bull", { 56, 486, (1 << 11) + (1 << 10) }},
 	{ "M60E3", "m60e3", { 61, 500, (1 << 10) }},
 	{ "Sawed-off", "sawed-off", { 53, 514, (1 << 9) + (1 << 8) }},
-	{ "Katana", "katana", {}, 1},
+	{ "Katana", "katana", {}, 1 },
 	{ "Seal Knife", "seal_knife", { 556, 556 }, 1 },
 	{ "Contender G2", "contender", { 62, 570, (1 << 11) + (1 << 10) + (1 << 8) }},
 	{ "Akimbo Skorpions", "throwing_knife", { 61, 584, (1 << 10) + (1 << 11) }}

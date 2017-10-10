@@ -557,7 +557,7 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 	glinfo.bCheckLights = true;
 
 	//Reset LastLights and store custom lighting
-	memcpy(glinfo.szLastLights, szLights, ke::Min(iLength, 127));
+	ke::SafeStrcpy(glinfo.szLastLights, sizeof(glinfo.szLastLights), szLights);
 
 	LightStyleDetour->DisableDetour();
 	LIGHT_STYLE(0, szLights);

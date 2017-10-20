@@ -19,16 +19,14 @@
 static cell AMX_NATIVE_CALL tse_getuserslots(AMX *amx, cell *params) 
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	return Player(pid)->GetFreeSlots();
 }
 
 static cell AMX_NATIVE_CALL tse_setuserslots(AMX *amx, cell *params) 
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	Player(pid)->SetFreeSlots(params[2]);
 	return 1;
 }
@@ -36,16 +34,14 @@ static cell AMX_NATIVE_CALL tse_setuserslots(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getusercash(AMX *amx, cell *params) 
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	return Player(pid)->GetCash();
 }
 
 static cell AMX_NATIVE_CALL tse_setusercash(AMX *amx, cell *params) 
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	Player(pid)->SetCash(params[2]);
 	return 1;
 }
@@ -53,24 +49,21 @@ static cell AMX_NATIVE_CALL tse_setusercash(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getuserkevlar(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	return (bool)(Player(pid)->GetPDataInt(628) != 0);
 }
 
 static cell AMX_NATIVE_CALL tse_getuserstamina(AMX *amx, cell *params) 
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	return Player(pid)->GetMeleeStamina();
 }
 
 static cell AMX_NATIVE_CALL tse_setuserstamina(AMX *amx, cell *params) 
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	Player(pid)->SetMeleeStamina(amx_ctof(params[2]));
 	MESSAGE_BEGIN(MSG_ONE, GetMsgIDByName("KFuPower"), 0, Player(pid)->PlayerEdict);
 		WRITE_BYTE((byte)round(amx_ctof(params[2])));
@@ -81,16 +74,14 @@ static cell AMX_NATIVE_CALL tse_setuserstamina(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_geteffectsphysspd(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	return Player(pid)->GetEffectsPhysicsSpeed();
 }
 
 static cell AMX_NATIVE_CALL tse_seteffectsphysspd(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	Player(pid)->SetEffectsPhysicsSpeed(amx_ctof(params[2]));
 	return 1;
 }
@@ -98,16 +89,14 @@ static cell AMX_NATIVE_CALL tse_seteffectsphysspd(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getuserphysspd(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	return Player(pid)->GetPlayerPhysicsSpeed();
 }
 
 static cell AMX_NATIVE_CALL tse_setuserphysspd(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	Player(pid)->SetPlayerPhysicsSpeed(amx_ctof(params[2]));
 	return 1;
 }
@@ -115,8 +104,7 @@ static cell AMX_NATIVE_CALL tse_setuserphysspd(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getusercurritems(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	switch ((uint32_t)Player(pid)->GetPDataInt(462))
 	{
 		case 65536:
@@ -132,8 +120,7 @@ static cell AMX_NATIVE_CALL tse_getusercurritems(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_setusercurritems(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	switch (params[2])
 	{
 		case 0: {
@@ -159,8 +146,7 @@ static cell AMX_NATIVE_CALL tse_setusercurritems(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getuserstate(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	if (!Player(pid)->HooksInfo.State) return -1;
 	return Player(pid)->HooksInfo.State;
 }
@@ -193,8 +179,7 @@ static cell AMX_NATIVE_CALL tse_createpwup(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_giveuserpwup(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	uint16_t type = params[2];
 	if (type < 1 || type > 256) return 0;
 	byte duration = params[3];
@@ -207,8 +192,7 @@ static cell AMX_NATIVE_CALL tse_giveuserpwup(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getuserpwup(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	if (params[2]) {
 		cell *durationptr = MF_GetAmxAddr(amx, params[2]);
 		*durationptr = Player(pid)->GetPDataInt(455);
@@ -219,16 +203,14 @@ static cell AMX_NATIVE_CALL tse_getuserpwup(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getuseractivepwup(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	return Player(pid)->GetPDataInt(452);
 }
 
 static cell AMX_NATIVE_CALL tse_setfakepwup(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	byte pwup = params[2];
 	float duration = amx_ctof(params[3]);
 	Player(pid)->SetPDataInt(453, pwup);
@@ -251,8 +233,7 @@ static cell AMX_NATIVE_CALL tse_setfakepwup(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_setuserpwupduration(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	byte duration = params[2];
 	Player(pid)->SetPDataInt(455, duration);
 	return 1;
@@ -261,8 +242,7 @@ static cell AMX_NATIVE_CALL tse_setuserpwupduration(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_configmeleeatk(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	float damage = amx_ctof(params[2]);
 	float duration = amx_ctof(params[3]);
 	Player(pid)->SetPDataFloat(483, damage);
@@ -314,16 +294,14 @@ static cell AMX_NATIVE_CALL tse_sendweapparams(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getuserweapent(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	return ENTINDEX(Player(pid)->GetWeaponEdict());
 }
 
 static cell AMX_NATIVE_CALL tse_getusercurrweap(AMX *amx, cell *params)
 { 
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	int weapon = Player(pid)->CurrentWeapon;
 	return weapon;
 }
@@ -331,8 +309,7 @@ static cell AMX_NATIVE_CALL tse_getusercurrweap(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_setweapfiremode(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	byte weapon = params[2];
 	byte mode = params[3];
 	if (weapon < 1 || weapon > MAXWEAPS) return 0;
@@ -352,8 +329,7 @@ static cell AMX_NATIVE_CALL tse_setweapfiremode(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getweapfiremode(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	byte weapon = params[2];
 	if (weapon < 1 || weapon > MAXWEAPS) return -1;
 	if (!WeaponsList[weapon].offsets.clip) return -1;
@@ -363,8 +339,7 @@ static cell AMX_NATIVE_CALL tse_getweapfiremode(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_setweapatcments(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	byte weapon = params[2];
 	byte attachments = params[3];
 	byte isactive = params[4];
@@ -394,8 +369,7 @@ static cell AMX_NATIVE_CALL tse_setweapatcments(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_setweapclip(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	byte weapon = params[2];
 	if (!WeaponsList[weapon].offsets.clip) return 0;
 	byte clip = params[3];
@@ -406,8 +380,7 @@ static cell AMX_NATIVE_CALL tse_setweapclip(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_setweapammo(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	byte weapon = params[2];
 	if (!WeaponsList[weapon].offsets.clip) return 0;
 	byte ammo = params[3];
@@ -418,8 +391,7 @@ static cell AMX_NATIVE_CALL tse_setweapammo(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_setweapready(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	byte weapon = params[2];
 	if (!WeaponsList[weapon].offsets.clip) return 0;
 	int isready = params[3];
@@ -430,8 +402,7 @@ static cell AMX_NATIVE_CALL tse_setweapready(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_getweapinfo(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	byte weapon = params[2];
 	if (weapon < 1 || weapon > MAXWEAPS) return 0;
 	if (!WeaponsList[weapon].offsets.clip) return 0;
@@ -449,8 +420,7 @@ static cell AMX_NATIVE_CALL tse_getweapinfo(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_isuserhasweap(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return -1;
-	if (!Player(pid)->IsAlive()) return -1;
+	CHECK_PLAYER_NGTV(pid);
 	byte weapon = params[2];
 	if (!WeaponsList[weapon].offsets.clip) return -1;
 	byte offset = WeaponsList[weapon].offsets.fmbase != 0 ? 1 : 0;
@@ -470,8 +440,7 @@ static cell AMX_NATIVE_CALL tse_createweap(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL tse_giveuserweap(AMX *amx, cell *params)
 {
 	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
+	CHECK_PLAYER_ZERO(pid);
 	int weapid = params[2];
 	if (weapid < 1 || weapid > MAXWEAPS) return 0;
 	uint16_t clips = params[3];

@@ -11,7 +11,29 @@
 #include "amxxmodule.h"
 #pragma once
 
+inline bool IsPlayerValid(AMX *amx, int pl) {
+	if (pl < 1 || pl > gpGlobals->maxClients) {
+		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", pl);
+		return 0;
+	}
+	else {
+		if (!MF_IsPlayerIngame(pl) || FNullEnt(MF_GetPlayerEdict(pl))) {
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", pl);
+			return 0;
+		}
+	}
+	return 1;
+}
+
 #define Player(i) (&PlayersArray[i])
+#define CHECK_PLAYER_ZERO(player) \
+	if (!IsPlayerValid(amx, player)) return 0; \
+	if (!Player(player)->IsAlive()) return 0; \
+
+#define CHECK_PLAYER_NGTV(player) \
+	if (!IsPlayerValid(amx, player)) return -1; \
+	if (!Player(player)->IsAlive()) return -1; \
+
 
 struct CPlayer {
 	// variables
@@ -74,18 +96,5 @@ extern CPlayer PlayersArray[33];
 edict_t *CreateWeapon(int id, Vector coord, short ttl, uint16_t clips, byte atcments);
 edict_t *CreatePowerup(uint16_t type, Vector coord, short ttl);
 
-inline bool IsPlayerValid(AMX *amx, int pl) {
-	if (pl < 1 || pl > gpGlobals->maxClients) {
-		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", pl);
-		return 0;
-	}
-	else {
-		if (!MF_IsPlayerIngame(pl) || FNullEnt(MF_GetPlayerEdict(pl))) {
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", pl);
-			return 0;
-		}
-	}
-	return 1;
-}
 
 

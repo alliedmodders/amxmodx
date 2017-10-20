@@ -441,8 +441,8 @@ int CForwardMngr::registerSPForward(int func, AMX *amx, int numParams, const For
 		
 		if (pForward->getFuncsNum() == 0)
 		{
-			return -1;
 			delete pForward;
+			return -1;
 		}
 					 
 		m_SPForwards.append(pForward);

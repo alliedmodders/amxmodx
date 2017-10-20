@@ -234,6 +234,17 @@ static cell AMX_NATIVE_CALL tse_setfakepwup(AMX *amx, cell *params)
 	Player(pid)->SetPDataInt(453, pwup);
 	Player(pid)->SetPDataInt(452, pwup);
 	Player(pid)->SetPDataFloat(454, Player(pid)->GetTime() + duration);
+	if (pwup == TSE_PWUP_SLOWMO || pwup == TSE_PWUP_SLOWPAUSE) 
+	{
+		float speed = amx_ctof(params[4]);
+		float auradist = amx_ctof(params[5]);
+		if (speed != -1.0 && auradist != -1.0) 
+		{
+			Player(pid)->SetPDataFloat(90, speed);
+			Player(pid)->SetPDataFloat(91, auradist);
+			Player(pid)->SetPDataFloat(86, auradist);
+		}
+	}
 	return 1;
 }
 
@@ -246,20 +257,6 @@ static cell AMX_NATIVE_CALL tse_setuserpwupduration(AMX *amx, cell *params)
 	Player(pid)->SetPDataInt(455, duration);
 	return 1;
 }
-
-static cell AMX_NATIVE_CALL tse_configslowing(AMX *amx, cell *params)
-{
-	byte pid = params[1];
-	if (!IsPlayerValid(amx, pid)) return 0;
-	if (!Player(pid)->IsAlive()) return 0;
-	float speed = amx_ctof(params[2]);
-	float auradist = amx_ctof(params[3]);
-	Player(pid)->SetPDataFloat(90, speed);
-	Player(pid)->SetPDataFloat(91, auradist);
-	Player(pid)->SetPDataFloat(86, auradist);
-	return 1;
-}
-
 
 static cell AMX_NATIVE_CALL tse_configmeleeatk(AMX *amx, cell *params)
 {
@@ -298,7 +295,6 @@ AMX_NATIVE_INFO pl_funcs[] = {
 	{ "tse_getuseractivepwup", tse_getuseractivepwup },
 	{ "tse_setfakepwup", tse_setfakepwup },
 	{ "tse_setuserpwupduration", tse_setuserpwupduration },
-	{ "tse_configslowing", tse_configslowing },
 	{ "tse_configmeleeatk", tse_configmeleeatk },
 	{ NULL, NULL }
 };
@@ -457,21 +453,8 @@ static cell AMX_NATIVE_CALL tse_isuserhasweap(AMX *amx, cell *params)
 	if (!Player(pid)->IsAlive()) return -1;
 	byte weapon = params[2];
 	if (!WeaponsList[weapon].offsets.clip) return -1;
-	if (WeaponsList[weapon].offsets.fmbase)
-	{
-		if (Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip - 1) > 0)
-			return 1;
-		else
-			return 0;
-	}
-	else
-	{
-		if (Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip) > 0)
-			return 1;
-		else
-			return 0;
-	}
-	return -1;
+	byte offset = WeaponsList[weapon].offsets.fmbase != 0 ? 1 : 0;
+	return Player(pid)->GetWeapPDataInt(WeaponsList[weapon].offsets.clip - offset) > 0;
 }
 
 static cell AMX_NATIVE_CALL tse_createweap(AMX *amx, cell *params)

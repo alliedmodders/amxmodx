@@ -245,15 +245,10 @@ native tse_getuseractivepwup(idx);
 native tse_setuserpwupduration(idx, duration);
 
 // Sets user fake powerup effect (as though user had a speficied powerup and user activated it), on error returns 0
-native tse_setfakepwup(idx, pwupid, Float:duration);
-
-/* Configures fake powerup options (player and effects physical speed, aura distance)
-*  WARNING: THIS FUNCTION WORKS ONLY WITH FUNCTION tse_setfakepwup AND POWERUP TYPE TSE_PWUP_SLOWMO OR TS_PWUP_SLOWPAUSE ONLY!
-*  Using example:   
-* 	   tse_setfakepwup(pl, TSE_PWUP_SLOWMO, 10.0);
-*      tse_configslowing(pl, 0.25, 1.50);
-*/
-native tse_configslowing(idx, Float:speed, Float:auradist);
+// WARNING: Parameters 'slowspeed' and 'slowauradist' only make sense if powerup type equals to TSE_PWUP_SLOWMO or TS_PWUP_SLOWPAUSE.
+// slowspeed - player and effects physical speed
+// auradist - aura distance
+native tse_setfakepwup(idx, pwuptype, Float:duration, Float:slowspeed=-1.0, Float:slowauradist=-1.0);
 
 /* Configures player melee hit damage and duration
 *  WARNING: WORKS ONLY WITH FORWARD client_onmeleehit

@@ -22,7 +22,6 @@
 #define TSE_PWUP_GRENADE		32
 #define TSE_PWUP_HEALTH			64
 #define TSE_PWUP_ARMOR			128
-#define TSE_PWUP_SUPERJMP		256
 
 
 #define TSE_STN_NONE   0

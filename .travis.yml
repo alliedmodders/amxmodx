@@ -18,9 +18,9 @@ compiler:
 before_script:
   - CHECKOUT_DIR=$PWD && cd .. 
   - chmod a+x $CHECKOUT_DIR/support/checkout-deps.sh 
-  - $CHECKOUT_DIR/support/checkout-deps.sh --no-mysql && cd $CHECKOUT_DIR
+  - $CHECKOUT_DIR/support/checkout-deps.sh && cd $CHECKOUT_DIR
 script:
   - mkdir build && cd build
   - PATH="~/.local/bin:$PATH"
-  - CC=clang-3.7 CXX=clang-3.7 python ../configure.py --enable-optimize --no-mysql
+  - CC=clang-3.7 CXX=clang-3.7 python ../configure.py --enable-optimize
   - ambuild

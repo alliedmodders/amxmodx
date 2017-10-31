@@ -88,7 +88,7 @@ class AMXXConfig(object):
 
     mysql_path = builder.options.mysql_path
     if not len(mysql_path):
-      mysql_path = os.getenv('MYSQL5', '')
+      mysql_path = os.getenv('MYSQL55', '')
 
     if len(mysql_path):
       self.mysql_path = os.path.join(builder.originalCwd, mysql_path)
@@ -96,7 +96,7 @@ class AMXXConfig(object):
         raise Exception('Metamod path does not exist: {0}'.format(mysql_path))
     else:
       try_paths = [
-        os.path.join(builder.sourcePath, '..', 'mysql-5.0'),
+        os.path.join(builder.sourcePath, '..', 'mysql-5.5'),
       ]
       for try_path in try_paths:
         if os.path.exists(try_path):

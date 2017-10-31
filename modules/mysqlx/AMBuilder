@@ -26,7 +26,7 @@ if AMXX.mysql_path:
     ]
   elif builder.target_platform is 'windows':
     binary.compiler.linkflags += [
-      os.path.join(AMXX.mysql_path, 'lib', 'opt', 'mysqlclient.lib'),
+      os.path.join(AMXX.mysql_path, 'lib', 'mysqlclient.lib'),
       'ws2_32.lib'
     ]
     if binary.compiler.vendor == 'msvc' and binary.compiler.version >= 1900:

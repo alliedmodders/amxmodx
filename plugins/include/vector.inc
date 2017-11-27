@@ -26,20 +26,20 @@
 /**
  * Calculates the distance between two input vectors.
  * 
- * @param origin1		The first vector
- * @param origin2		The second vector
+ * @param origin1       The first vector
+ * @param origin2       The second vector
  * 	
- * @return 				The distance between two input vectors
+ * @return              The distance between two input vectors
  */
 native get_distance(const origin1[3], const origin2[3]);
 
 /**
  * Calculates the distance between two input float vectors.
  * 
- * @param origin1		The first vector
- * @param origin2		The second vector
+ * @param origin1       The first vector
+ * @param origin2       The second vector
  * 	
- * @return 				The distance between two input vectors
+ * @return              The distance between two input vectors
  */
 native Float:get_distance_f(const Float:Origin1[3], const Float:Origin2[3]);
 
@@ -47,23 +47,23 @@ native Float:get_distance_f(const Float:Origin1[3], const Float:Origin2[3]);
  * Calculates velocity in the direction a player is looking.
  * 
  * @note output vector is a unit vector (a vector with length of 1 unit).
- * 		 iVelocity parameter tells how long should the output vector be.
+ *       iVelocity parameter tells how long should the output vector be.
  * 
- * @param iIndex		Client index
- * @param iVelocity 	Multiply @vRetValue length by this much
- * @param vRetValue		Store the calculated velocity in this vector.
+ * @param iIndex        Client index
+ * @param iVelocity     Multiply @vRetValue length by this much
+ * @param vRetValue     Store the calculated velocity in this vector.
  * 	
  * @noreturn
- * @error 				If client is not connected or client index is not
- * 						within the range of 1 to MaxClients.
+ * @error               If client is not connected or client index is not
+ *                      within the range of 1 to MaxClients.
  */
 native velocity_by_aim(iIndex, iVelocity, Float:vRetValue[3]);
 
 /**
  * Changes a vector into an angle vector.
  * 
- * @param fVector		Input vector
- * @param vReturn		Output angle vector
+ * @param fVector       Input vector
+ * @param vReturn       Output angle vector
  * 	
  * @noreturn
  */
@@ -72,9 +72,9 @@ native vector_to_angle(const Float:fVector[3], Float:vReturn[3]);
 /**
  * Changes an angle vector into a vector.
  * 
- * @param vector	 	Input angle vector
- * @param FRU			One of the ANGLEVECTOR_* constants
- * @param ret			Output vector
+ * @param vector        Input angle vector
+ * @param FRU           One of the ANGLEVECTOR_* constants
+ * @param ret           Output vector
  * 	
  * @noreturn
  */
@@ -83,27 +83,27 @@ native angle_vector(const Float:vector[3], FRU, Float:ret[3]);
 /**
  * Calculates the length of a vector.
  * 
- * @param vVector		Input vector
+ * @param vVector       Input vector
  * 	
- * @return 				Length of the input vector
+ * @return              Length of the input vector
  */
 native Float:vector_length(const Float:vVector[3]);
 
 /**
  * Calculates the distance between two vectors.
  * 
- * @param vVector		The first vector
- * @param vVector2		The second vector
+ * @param vVector       The first vector
+ * @param vVector2      The second vector
  * 	
- * @return 				Distance between two input vectors
+ * @return              Distance between two input vectors
  */
 native Float:vector_distance(const Float:vVector[3], const Float:vVector2[3]);
 
 /**
  * Converts an integer vector to a floating point vector.
  * 
- * @param IVec			Input integer vector
- * @param FVec			Output float vector
+ * @param IVec          Input integer vector
+ * @param FVec          Output float vector
  * 	
  * @noreturn
  */
@@ -119,8 +119,8 @@ stock IVecFVec(const IVec[3], Float:FVec[3])
 /**
  * Converts a floating point vector into an integer vector.
  * 
- * @param FVec			Input float vector
- * @param IVec			Output integer vector
+ * @param FVec          Input float vector
+ * @param IVec          Output integer vector
  * 	
  * @noreturn
  */

@@ -28,11 +28,11 @@
 /**
  * Opens a vault by name. Creates a vault if it doesn't exist yet.
  *
- * @param name			Name of the vault. The vault will be created in
- * 						/amxmodx/data/vault directory.
+ * @param name          Name of the vault. The vault will be created in
+ *                      ${amxx_datadir}/vault directory.
  *
  * @return              The vault handle to be used in other natives.
- * 						INVALID_HANDLE (-1) if not successfully opened.
+ *                      INVALID_HANDLE (-1) if not successfully opened.
  */
 native nvault_open(const name[]);
 
@@ -40,32 +40,32 @@ native nvault_open(const name[]);
  * Retrieves a value from the given key
  * 
  * @note An example of retrieving a string:
- * 		 nvault_get(vaultHandle, "myKey", myString, charsmax(myString));
+ *       nvault_get(vaultHandle, "myKey", myString, charsmax(myString));
  *
- * @param vault			A vault handle returned from nvault_open()
- * @param key			A key to get the value from
- * @param ...			If three argument are given, gets a float value and
- * 						puts it in the third argument by reference.
- * 						If four arguments are given, gets a string from the
- * 						vault and copies it to the third argument, up to 
- * 						4th argument characters.
+ * @param vault         A vault handle returned from nvault_open()
+ * @param key           A key to get the value from
+ * @param ...           If three argument are given, gets a float value and
+ *                      puts it in the third argument by reference.
+ *                      If four arguments are given, gets a string from the
+ *                      vault and copies it to the third argument, up to 
+ *                      4th argument characters.
  *
  * @noreturn
- * @error				On invalid vault handle.
+ * @error               On invalid vault handle.
  */
 native nvault_get(vault, const key[], any:...);
 
 /**
  * Retrieves full information about a vault entry
  *
- * @param vault			A vault handle returned from nvault_open()
- * @param key			A key to get information from
- * @param value			A string where the value should be stored
- * @param maxlen		Maximum length of the @value string
- * @param timestamp		The timestamp of the entry
+ * @param vault         A vault handle returned from nvault_open()
+ * @param key           A key to get information from
+ * @param value         A string where the value should be stored
+ * @param maxlen        Maximum length of the @value string
+ * @param timestamp     The timestamp of the entry
  *
- * @return 				1 if an entry was found, 0 otherwise.
- * @error				On invalid vault handle.
+ * @return              1 if an entry was found, 0 otherwise.
+ * @error               On invalid vault handle.
  */
 native nvault_lookup(vault, const key[], value[], maxlen, &timestamp);
 
@@ -73,12 +73,12 @@ native nvault_lookup(vault, const key[], value[], maxlen, &timestamp);
  * Sets value of a vault entry. A new entry is created if one with the
  * given key doesn't exist. Also updates the timestamp.
  *
- * @param vault			A vault handle returned from nvault_open()
- * @param key			A key to set the value for
- * @param value			A value to set
+ * @param vault         A vault handle returned from nvault_open()
+ * @param key           A key to set the value for
+ * @param value         A value to set
  *
  * @noreturn
- * @error				On invalid vault handle.
+ * @error               On invalid vault handle.
  */
 native nvault_set(vault, const key[], const value[]);
 
@@ -87,12 +87,12 @@ native nvault_set(vault, const key[], const value[]);
  * key doesn't exist. Entries created with this native are permanent, they
  * have no timestamp and can't be erased with nvault_prune().
  *
- * @param vault			A vault handle returned from nvault_open()
- * @param key			A key to set the permanent value for
- * @param value			A permanent value to set
+ * @param vault         A vault handle returned from nvault_open()
+ * @param key           A key to set the permanent value for
+ * @param value         A permanent value to set
  *
  * @noreturn
- * @error				On invalid vault handle.
+ * @error               On invalid vault handle.
  */
 native nvault_pset(vault, const key[], const value[]);
 
@@ -101,35 +101,35 @@ native nvault_pset(vault, const key[], const value[]);
  * This will not erase values set with nvault_pset().
  * 
  * @note An example of pruning all entries that are older than 24 hours:
- * 		 nvault_prune(vaultHandle, 0, get_systime() - (60 * 60 * 24));
+ *       nvault_prune(vaultHandle, 0, get_systime() - (60 * 60 * 24));
  *
- * @param vault			A vault handle returned from nvault_open()
- * @param start			The timestamp to start erasing from
- * @param end			The timestamp to erase to
+ * @param vault         A vault handle returned from nvault_open()
+ * @param start         The timestamp to start erasing from
+ * @param end           The timestamp to erase to
  *
  * @noreturn
- * @error				On invalid vault handle.
+ * @error               On invalid vault handle.
  */
 native nvault_prune(vault, start, end);
 
 /**
  * Closes a vault.
  *
- * @param vault			A vault handle returned from nvault_open()
+ * @param vault         A vault handle returned from nvault_open()
  *
  * @noreturn
- * @error				On invalid vault handle.
+ * @error               On invalid vault handle.
  */
 native nvault_close(vault);
 
 /**
  * Removes an entry from the vault by its key.
  *
- * @param vault			A vault handle returned from nvault_open()
- * @param key			The key to remove from the vault
+ * @param vault         A vault handle returned from nvault_open()
+ * @param key           The key to remove from the vault
  *
  * @noreturn
- * @error				On invalid vault handle.
+ * @error               On invalid vault handle.
  */
 native nvault_remove(vault, const key[]);
 
@@ -138,11 +138,11 @@ native nvault_remove(vault, const key[]);
  * If timestamp is equal to -1, it will use the current time.
  * It will create an empty entry if an entry with the given key isn't found.
  *
- * @param vault			A vault handle returned from nvault_open()
- * @param key			The key to search for
- * @param timestamp		Update an entry's timestamp to this one. Default is -1.
+ * @param vault         A vault handle returned from nvault_open()
+ * @param key           The key to search for
+ * @param timestamp     Update an entry's timestamp to this one. Default is -1.
  *
  * @noreturn
- * @error				On invalid vault handle.
+ * @error               On invalid vault handle.
  */
 native nvault_touch(vault, const key[], timestamp=-1);

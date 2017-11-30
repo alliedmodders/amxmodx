@@ -31,6 +31,7 @@
 #include <textparse_ini>
 #include <cvars>
 #include <gameconfig>
+#include <commandline>
 
 /**
  * Called just after server activation.

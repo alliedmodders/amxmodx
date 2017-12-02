@@ -1264,7 +1264,11 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			return 2;
 		}
 
-		UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10");
+		if (g_bmod_cstrike)
+		{
+			GET_OFFSET("CBasePlayer", m_iMenu);
+			set_pdata<int>(pPlayer->pEdict, m_iMenu, 0);
+		}
 
 		return 0;
 	};

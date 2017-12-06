@@ -54,7 +54,7 @@
     </Filter>
     <Filter Include="ReSDK\engine">
       <UniqueIdentifier>{04fab577-6f56-40d0-8f69-7ce1b8bf3bb9}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Third Party\UTF8Rewind">
       <UniqueIdentifier>{270f3524-564f-4154-bb35-242a6faac09e}</UniqueIdentifier>
     </Filter>
@@ -160,6 +160,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\optimizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+	<ClCompile Include="..\cpuinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\power.cpp">
@@ -425,6 +428,9 @@
     <ClInclude Include="..\optimizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+	<ClInclude Include="..\cpuinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\trie_natives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -600,9 +606,6 @@
     <None Include="..\amxjitsn.asm">
       <Filter>Assembly</Filter>
     </None>
-    <None Include="..\helpers-x86.asm">
-      <Filter>Assembly</Filter>
-    </None>
     <None Include="..\natives-amd64.asm">
       <Filter>Assembly</Filter>
     </None>
@@ -693,10 +696,5 @@
     <None Include="..\..\plugins\include\string_stocks.inc">
       <Filter>Pawn Includes</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="..\Jit\helpers-x86.obj">
-      <Filter>Assembly\Builds</Filter>
-    </Object>
   </ItemGroup>
 </Project>

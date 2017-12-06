@@ -84,6 +84,7 @@ CLangMngr g_langMngr;
 ke::AString g_log_dir;
 ke::AString g_mod_name;
 XVars g_xvars;
+CPUInfo* g_cpuInfo;
 
 bool g_bmod_tfc;
 bool g_bmod_cstrike;
@@ -483,9 +484,11 @@ int	C_Spawn(edict_t *pent)
 	// Set server flags
 	memset(g_players[0].flags, -1, sizeof(g_players[0].flags));
 
-	g_opt_level = atoi(get_localinfo("optimizer", "7"));
-	if (!g_opt_level)
-		g_opt_level = 7;
+	g_optimizerFlags = atoi(get_localinfo("optimizer", "7"));
+	if (!g_optimizerFlags)
+		g_optimizerFlags = OPT_FLOAT1_JIT | OPT_FLOAT2_JIT | OPT_VECTOR_JIT;
+
+	CheckOptimizerCPU();
 
 	// ###### Load AMX Mod X plugins
 	g_plugins.loadPluginsFromFile(get_localinfo("amxx_plugins", "addons/amxmodx/configs/plugins.ini"));

@@ -230,14 +230,14 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 			sprintf(error, "Plugin not compiled with debug option");
 			return (amx->error = AMX_ERR_INIT);
 		}
-	} else {
-#ifdef JIT
-		//if (hdr->file_version == CUR_FILE_VERSION)
-		amx->flags |= AMX_FLAG_JITC;
-#endif
 	}
+	#ifdef JIT
+	else {
+		amx->flags |= AMX_FLAG_JITC;
+	}
+	#endif
 
-	if (g_opt_level != 65536)
+	if (g_optimizerFlags != OPT_DISABLE && !will_be_debugged)
 	{
 		SetupOptimizer(amx);
 	}
@@ -269,16 +269,15 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 		Debugger *pDebugger = new Debugger(amx, pDbg);
 		amx->userdata[UD_DEBUGGER] = pDebugger;
-	} else {
+	} 
 #ifdef JIT
+	else {
 		//set this again because amx_Init() erases it!
 		amx->flags |= AMX_FLAG_JITC;
 		amx->flags &= (~AMX_FLAG_DEBUG);
 		amx->sysreq_d = 0;
-#endif
 	}
 
-#ifdef JIT
 	if (amx->flags & AMX_FLAG_JITC)
 	{
 		char *np = new char[amx->code_size];

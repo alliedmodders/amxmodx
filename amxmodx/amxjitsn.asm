@@ -1914,106 +1914,87 @@ OP_BREAK:
 OP_FLOAT_MUL:
 		GO_ON	j_float_mul, OP_FLOAT_DIV
 	j_float_mul:
-		fld     dword [esi+4]
-		fmul    dword [esi+8]
-		sub     esp, 4
-		fstp    dword [esp]
-		pop     eax
+		movss	xmm0, dword [esi+4]
+		mulss	xmm0, dword [esi+8]
+		movd	eax, xmm0
 	CHECKCODESIZE j_float_mul
 	
 OP_FLOAT_DIV:
 		GO_ON	j_float_div, OP_FLOAT_ADD
 	j_float_div:
-		fld     dword [esi+4]
-		fdiv    dword [esi+8]
-		sub     esp, 4
-		fstp    dword [esp]
-		pop     eax
+		movss	xmm0, dword [esi+4]
+		divss	xmm0, dword [esi+8]
+		movd	eax, xmm0
 	CHECKCODESIZE j_float_div
 	
 OP_FLOAT_ADD:
 		GO_ON	j_float_add, OP_FLOAT_SUB
 	j_float_add:
-		fld     dword [esi+4]
-		fadd    dword [esi+8]
-		sub     esp, 4
-		fstp    dword [esp]
-		pop     eax
+		movss	xmm0, dword [esi+4]
+		addss	xmm0, dword [esi+8]
+		movd	eax, xmm0
 	CHECKCODESIZE j_float_add
 	
 OP_FLOAT_SUB:
 		GO_ON	j_float_sub, OP_FLOAT_TO
 	j_float_sub:
-		fld     dword [esi+4]
-		fsub    dword [esi+8]
-		sub     esp, 4
-		fstp	  dword [esp]
-		pop     eax
+		movss	xmm0, dword [esi+4]
+		subss	xmm0, dword [esi+8]
+		movd	eax, xmm0
 	CHECKCODESIZE j_float_sub
 	
 OP_FLOAT_TO:
 		GO_ON   j_float_to, OP_FLOAT_ROUND
 	j_float_to:
-		fild    dword [esi+4]
-		sub     esp, 4
-		fstp    dword [esp]
-		pop     eax
+		cvtsi2ss	xmm0, dword [esi+4]
+		movd	eax, xmm0
 	CHECKCODESIZE j_float_to
 	
 OP_FLOAT_ROUND:
 		GO_ON   j_float_round, OP_FLOAT_CMP
 	j_float_round:
-		;get the float control word
-		push    0
-		mov     ebp,esp
-		fstcw   [ebp]
-		mov     eax,[ebp]
-		push    eax
-		;clear the top bits
-		xor     ah,ah
-		;get the control method
-		push    edx
-		mov     edx,[esi+8]
-		and     edx,3	;sanity check
-		shl     edx,2	;shift it to right position
-		;set the bits
-		or      ah,dl	;set bits 15,14 of FCW to rounding method
-		or      ah,3	;set precision to 64bit
-
-		;calculate
-		sub     esp,4
-		fld     dword [esi+4]
-		test    edx,edx
-		jnz     .skip_correct
-		;nearest mode
-		;correct so as to AVOID bankers rounding
-		or      ah, 4   ;set rounding mode to floor
-		fadd    dword [g_round_nearest]
-
-	.skip_correct:
-		mov     [ebp], eax
-		fldcw   [ebp]
-		frndint
-		fistp   dword [esp]
-		pop     eax
-	.done:
-		pop     edx
-		;restore bits
-		pop     ebp
-		mov     [esp], ebp
-		fldcw   [esp]
-		pop      ebp
+		cmp dword [esi+8], 0
+		jne .Floor
+	;if (arg2 == 0)			ROUND
+	;{
+		cvtss2si	eax, dword [esi+4]
+	;}
+		jmp .Done
+	.Floor:
+		cmp dword [esi+8], 1
+		jne .Ceil
+	;else if (arg2 == 1)	FLOOR
+	;{
+		cvttss2si		eax, dword [esi+4]
+		mov				ebp, dword [esi+4]
+		shr				ebp, 31
+		sub				eax, ebp
+	;}
+		jmp .Done
+	.Ceil:
+		cmp dword [esi+8], 2
+		jne .Zero
+	;else if (arg2 == 2)	CEIL
+	;{
+		movss		xmm0, dword [esi+4]
+		addss		xmm0, dword [g_round_nearest]
+		cvtss2si	eax, xmm0
+	;}
+		jmp .Done
+	.Zero:
+	;else					ZERO
+	;{
+		cvttss2si	eax, dword [esi+4]
+	;}
+	.Done:
 	CHECKCODESIZE j_float_round
 	
 OP_FLOAT_CMP:
 		GO_ON	j_float_cmp, OP_INVALID
 	j_float_cmp:
-		fld     dword [esi+8]
-		fld     dword [esi+4]
-		fucompp
-		fnstsw  ax
-		fwait
-		sahf
+		movss	xmm0, dword [esi+8]
+		movss	xmm1, dword [esi+4]
+		ucomiss	xmm1, xmm0
 		cmovz   eax, [g_flagsjit+4]
 		cmova   eax, [g_flagsjit+8]
 		cmovb   eax, [g_flagsjit+0]

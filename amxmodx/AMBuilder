@@ -14,20 +14,17 @@ if builder.target_platform == 'mac':
     binary.Dep('JIT/amxexecn-darwin.o'),
     binary.Dep('JIT/amxjitsn-darwin.o'),
     binary.Dep('JIT/natives-darwin-x86.o'),
-    binary.Dep('JIT/helpers-darwin-x86.o'),
   ]
 elif builder.target_platform == 'linux':
   jit_objects = [
     binary.Dep('JIT/amxexecn.o'),
     binary.Dep('JIT/amxjitsn.o'),
     binary.Dep('JIT/natives-x86.o'),
-    binary.Dep('JIT/helpers-x86.o'),
   ]
 elif builder.target_platform == 'windows':
   jit_objects = [
     binary.Dep('JIT/amxexecn.obj'),
     binary.Dep('JIT/amxjitsn.obj'),
-    binary.Dep('JIT/helpers-x86.obj'),
     binary.Dep('JIT/natives-x86.obj'),
   ]
 
@@ -74,6 +71,7 @@ binary.sources = [
   'newmenus.cpp',
   'debugger.cpp',
   'optimizer.cpp',
+  'cpuinfo.cpp',
   'format.cpp',
   'messages.cpp',
   'libraries.cpp',

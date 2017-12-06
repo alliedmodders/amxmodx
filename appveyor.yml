@@ -7,12 +7,20 @@ install:
 - git clone https://github.com/alliedmodders/ambuild
 - git clone https://github.com/alliedmodders/metamod-hl1
 - git clone https://github.com/alliedmodders/hlsdk
-- cd ambuild
+- ps: Start-FileDownload 'http://cdn.mysql.com/archives/mysql-5.5/mysql-5.5.54-win32.zip'
+- 7z x mysql-5.5.54-win32.zip -o"mysql"
+- cd mysql
+- ren mysql-5.5.54-win32 mysql-5.5
+- move /Y mysql-5.5 ..\
+- cd ..\ambuild
 - c:\python27\python setup.py install
 - cd ..\amxmodx
+cache:
+  - c:\projects\*.zip -> appveyor.yml
+  - c:\projects\mysql-5.5 -> appveyor.yml
 build_script:
 - '"%VS120COMNTOOLS%\vsvars32.bat"'
 - mkdir build
 - cd build
-- c:\python27\python ../configure.py --enable-optimize --no-mysql
+- c:\python27\python ../configure.py --enable-optimize
 - c:\python27\scripts\ambuild

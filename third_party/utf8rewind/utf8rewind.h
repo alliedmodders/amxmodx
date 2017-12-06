@@ -69,6 +69,12 @@
 #include <string.h>
 #include <wchar.h>
 
+#if defined(LINUX) || defined(OSX)
+  #include <strings.h>
+  #include <unistd.h>
+  #include <sys/types.h>
+#endif
+
 /*!
 	\addtogroup version
 	\{

@@ -81,7 +81,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MACHINE:I386 /EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>0.1</Version>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -94,6 +94,7 @@
       <ImportLibrary>.\jitdebug/amxmodx_mm.lib</ImportLibrary>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">
@@ -132,7 +133,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MACHINE:I386 /EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>..\JIT\amxjitsn.obj;..\JIT\amxexecn.obj;..\JIT\natives-x86.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\extra\lib_win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -145,6 +146,7 @@
       <ImportLibrary>.\jitrelease/amxmodx_mm.lib</ImportLibrary>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

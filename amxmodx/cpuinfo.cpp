@@ -1,4 +1,4 @@
-#include "CPUInfo.h"
+#include "cpuinfo.h"
 
 
 #ifdef _WIN32

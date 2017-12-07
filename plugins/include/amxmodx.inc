@@ -497,6 +497,8 @@ native console_cmd(id, const cmd[], any:...);
 /**
  * Registers a function to be called on a given game event.
  *
+ * @note Please consider using register_event_ex() instead which allows you to
+ *       use named constants for flags instead of letters.
  * @note Examples for event conditions:
  *       "2=c4" - Second parameter of message must be the string "c4"
  *       "3>10" - Third parameter of message must be greater than 10
@@ -539,9 +541,53 @@ native console_cmd(id, const cmd[], any:...);
 native register_event(const event[], const function[], const flags[], const cond[] = "", ...);
 
 /**
- * Enables a function hook of a game event which has been previously registered with register_event().
+ * Registers a function to be called on a given game event.
  *
- * @param handle    Value returned from register_event()
+ * @note Examples for event conditions:
+ *       "2=c4" - Second parameter of message must be the string "c4"
+ *       "3>10" - Third parameter of message must be greater than 10
+ *       "3!4" - Third parameter of message must not be equal to 4
+ *       "2&Buy" - Second parameter of message must contain "Buy" substring
+ *       "2!Buy" - Second parameter of message must not equal "Buy"
+ * @note Due to a long-standing bug that would break compatibility with older
+ *       plugins, the client id should be checked for alive/dead state if using
+ *       flags "d" or "e".
+ * @note If multiple conditions are specified for a single parameter, only one
+ *       of them has to hold true for the event function to be called.
+ *
+ * @param event     Name of event that should be hooked
+ * @param function  Name of callback function
+ * @param flags     Flags used for filtering events (enum RegisterEventFlags); the valid flags are:
+ *                    RegisterEvent_Global - Global event (sent to every client)
+ *                    RegisterEvent_Single - Event sent to single client
+ *                    RegisterEvent_OnceForMultiple - Call only once when repeated to multiple clients
+ *                    RegisterEvent_OnlyDead - Call only if sent to dead client
+ *                    RegisterEvent_OnlyAlive - Call only if sent to alive client
+ *                    RegisterEvent_OnlyHuman - Call only if sent to human client (RegisterEvent_Single required)
+ *                    RegisterEvent_OnlyBots - Call only if sent to bot (RegisterEvent_Single required)
+ * @param cond      Condition string used for filtering events, built as:
+ *                  "<argument number><comparison operator><value>"
+ *                  Argument number is the argument position to be filtered
+ *                  The comparison operator may be:
+ *                    "=" for equality comparison (all argument types)
+ *                    "!" for inequality comparison (all argument types)
+ *                    "&" for bitwise and (int argument) or substring
+ *                        comparison (string argument)
+ *                    "<" for less than comparison (int/float arguments)
+ *                    ">" for greater than comparison (int/float arguments)
+ *                  The argument is compared to the specified value accordingly
+ * @param ...       Any number of additional conditions
+ *
+ * @return          Event handle
+ * @error           If an invalid event name or callback function is provided,
+ *                  an error will be thrown.
+ */
+native register_event_ex(const event[], const function[], RegisterEventFlags:flags, const cond[] = "", ...);
+
+/**
+ * Enables a function hook of a game event which has been previously registered with register_event_ex().
+ *
+ * @param handle    Value returned from register_event_ex()
  *
  * @noreturn
  * @error           If an invalid handle is provided, an error will be thrown.
@@ -549,9 +595,9 @@ native register_event(const event[], const function[], const flags[], const cond
 native enable_event(handle);
 
 /**
- * Disables a function hook of a game event which has been previously registered with register_event().
+ * Disables a function hook of a game event which has been previously registered with register_event_ex().
  *
- * @param handle    Value returned from register_event()
+ * @param handle    Value returned from register_event_ex()
  *
  * @noreturn
  * @error           If an invalid handle is provided, an error will be thrown.
@@ -739,7 +785,7 @@ native show_menu(index, keys, const menu[], time = -1, const title[] = "");
 /**
  * Retrieves values from a client message.
  *
- * @note For use within callbacks registered with register_event()
+ * @note For use within callbacks registered with register_event_ex()
  * @note Usage examples:
  *       value = read_data(1);
  *       read_data(2, floatvalue);
@@ -767,7 +813,7 @@ native read_data(value, any:...);
 /**
  * Returns the number of values in the client message.
  *
- * @note For use within callbacks registered with register_event()
+ * @note For use within callbacks registered with register_event_ex()
  *
  * @return      Number of values in client message
  */
@@ -776,7 +822,7 @@ native read_datanum();
 /**
  * Returns the message id of the client message.
  *
- * @note For use within callbacks registered with register_event()
+ * @note For use within callbacks registered with register_event_ex()
  *
  * @return      Message id of the client message
  */
@@ -1325,7 +1371,9 @@ native get_playersnum(flag = 0);
 /**
  * Stores a filtered list of client indexes to an array.
  *
- * @note Example retrieving all alive CTs: get_players(players, num, "ae", "CT")
+ * @note Please consider using get_players_ex() instead which allows you to
+ *       use named constants for flags instead of letters.
+ * @note Example retrieving all alive CTs: get_players(players, num "ae", "CT")
  *
  * @param players   Array to store indexes to
  * @param num       Variable to store number of indexes to
@@ -1431,6 +1479,8 @@ native get_flags(flags, output[], len);
 /**
  * Find a player given a filter.
  *
+ * @note Please consider using find_player_ex() instead which allows you to
+ *       use named constants for flags instead of letters.
  * @note If matching by userid, do not also specify the "a", "b" or "c" flags,
  *       or the function may not return a correct result.
  *
@@ -1453,6 +1503,32 @@ native get_flags(flags, output[], len);
  * @return          Client index, or 0 if no client was found
  */
 native find_player(const flags[], ...);
+
+/**
+ * Find a player given a filter.
+ *
+ * @note If matching by userid, do not also specify FindPlayer_MatchName, FindPlayer_MatchNameSubstring
+ *       or FindPlayer_MatchAuthId, or the function may not return a correct result.
+ *
+ * @param flags     Filtering flags (enum FindPlayerFlags); valid flags are:
+ *                    FindPlayer_MatchName - match with name
+ *                    FindPlayer_MatchNameSubstring - match with name substring
+ *                    FindPlayer_MatchAuthId - match with authid
+ *                    FindPlayer_MatchIP - match with ip
+ *                    FindPlayer_MatchTeam - match with team name
+ *                    FindPlayer_ExcludeDead - do not include dead clients
+ *                    FindPlayer_ExcludeAlive - do not include alive clients
+ *                    FindPlayer_ExcludeBots - do not include bots
+ *                    FindPlayer_ExcludeHuman - do not include human clients
+ *                    FindPlayer_LastMatched - return last matched client instead of the first
+ *                    FindPlayer_MatchUserId - match with userid
+ *                    FindPlayer_CaseInsensitive - match case insensitively
+ *                    FindPlayer_IncludeConnecting - include connecting clients
+ * @param ...       String to match against (integer if FindPlayer_MatchUserId is specified)
+ *
+ * @return          Client index, or 0 if no client was found
+ */
+native find_player_ex(FindPlayerFlags:flags, ...);
 
 /**
  * Removes double-quotes from the beginning and end of a string.
@@ -1664,6 +1740,9 @@ native parse_time(const input[], const format[], time = -1);
 
 /**
  * Calls a function after a specified time has elapsed.
+ *
+ * @note Please consider using set_task_ex() instead which allows you to
+ *       use named constants for flags instead of letters.
  *
  * @param time          Time interval to assign
  * @param function      Function to execute

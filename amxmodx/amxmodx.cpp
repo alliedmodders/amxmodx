@@ -8,6 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #include <time.h>
+#include <amtl/am-utility.h>
 #include "amxmodx.h"
 #include "CMenu.h"
 #include "newmenus.h"
@@ -1814,6 +1815,24 @@ static cell AMX_NATIVE_CALL register_event(AMX *amx, cell *params)
 	return handle;
 }
 
+// native register_event_ex(const event[], const function[], RegisterEventFlags:flags, const cond[] = "", ...);
+static cell AMX_NATIVE_CALL register_event_ex(AMX *amx, cell *params)
+{
+	cell amx_addr;
+	cell *phys_addr;
+	char strFlags[8];
+
+	amx_Allot(amx, ARRAY_LENGTH(strFlags), &amx_addr, &phys_addr);
+	UTIL_GetFlags(strFlags, params[3]);
+	set_amxstring(amx, amx_addr, strFlags, ARRAY_LENGTH(strFlags) - 1);
+
+	params[3] = amx_addr;
+	cell ret = register_event(amx, params);
+	amx_Release(amx, amx_addr);
+
+	return ret;
+}
+
 static cell AMX_NATIVE_CALL enable_event(AMX *amx, cell *params)
 {
 	auto handle = EventHandles.lookup(params[1]);
@@ -2368,6 +2387,24 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 	}
 
 	return result;
+}
+
+// native find_player_ex(FindPlayerFlags:flags, ...);
+static cell AMX_NATIVE_CALL find_player_ex(AMX *amx, cell *params)
+{
+	cell amx_addr;
+	cell *phys_addr;
+	char strFlags[14];
+
+	amx_Allot(amx, ARRAY_LENGTH(strFlags), &amx_addr, &phys_addr);
+	UTIL_GetFlags(strFlags, params[1]);
+	set_amxstring(amx, amx_addr, strFlags, ARRAY_LENGTH(strFlags) - 1);
+
+	params[1] = amx_addr;
+	cell ret = find_player(amx, params);
+	amx_Release(amx, amx_addr);
+
+	return ret;
 }
 
 static cell AMX_NATIVE_CALL get_maxplayers(AMX *amx, cell *params)
@@ -4571,6 +4608,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"engclient_cmd",			engclient_cmd},
 	{"engclient_print",			engclient_print},
 	{"find_player",				find_player},
+	{"find_player_ex",			find_player_ex},
 	{"find_plugin_byfile",		find_plugin_byfile},
 	{"force_unmodified",		force_unmodified},
 	{"format_time",				format_time},
@@ -4680,6 +4718,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"register_concmd",			register_concmd},
 	{"register_dictionary",		register_dictionary},
 	{"register_event",			register_event},
+	{"register_event_ex",		register_event_ex},
 	{"enable_event",			enable_event},
 	{"disable_event",			disable_event},
 	{"register_logevent",		register_logevent},

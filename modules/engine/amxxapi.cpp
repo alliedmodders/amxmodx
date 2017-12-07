@@ -232,8 +232,7 @@ DETOUR_DECL_STATIC2(LightStyle, void, int, style, const char *, val) // void (*p
 	DETOUR_STATIC_CALL(LightStyle)(style, val);
 
 	if (!style && strcmp(val, glinfo.szRealLights)) {
-		memset(glinfo.szRealLights, 0x0, 128);
-		memcpy(glinfo.szRealLights, val, ke::Min(strlen(val), (size_t)127));
+		ke::SafeStrcpy(glinfo.szRealLights, sizeof(glinfo.szRealLights), val);
 	}
 
 	if (glinfo.bCheckLights && strcmp(val, glinfo.szLastLights))

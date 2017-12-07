@@ -93,6 +93,8 @@
       <ImportLibrary>.\Release/fun.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
       <SubSystem>Windows</SubSystem>
+      <AdditionalOptions>/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
+      <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -138,6 +140,8 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalOptions>/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
+      <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

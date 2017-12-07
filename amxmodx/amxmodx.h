@@ -258,10 +258,6 @@ int loadModules(const char* filename, PLUG_LOADTIME now);
 void detachModules();
 void detachReloadModules();
 
-#ifdef FAKEMETA
-	void attachModules();
-#endif
-
 // Count modules
 enum CountModulesMode
 {
@@ -300,11 +296,8 @@ void copy_amxmemory(cell* dest, cell* src, int len);
 void get_modname(char*);
 void print_srvconsole(const char *fmt, ...);
 void report_error(int code, const char* fmt, ...);
-void* alloc_amxmemory(void**, int size);
-void free_amxmemory(void **ptr);
 // get_localinfo
 const char* get_localinfo(const char* name, const char* def);
-cell AMX_NATIVE_CALL require_module(AMX *amx, cell *params);
 extern "C" void LogError(AMX *amx, int err, const char *fmt, ...);
 
 enum ModuleCallReason

@@ -92,6 +92,8 @@
       <ImportLibrary>.\Release/dodfun_amxx.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
       <SubSystem>Windows</SubSystem>
+      <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
+      <AdditionalOptions>/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -136,6 +138,8 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
+      <AdditionalOptions>/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -811,14 +811,29 @@ stock reset_menu(index)
 }
 
 /**
- * This is a wrapper around set_task that adds proper names for flags.
- * SetTaskFlags can be found in amxconst.inc and they exactly match those of set_task.
+ * Calls a function after a specified time has elapsed.
  *
- * @note Look at set_task for documentation.
+ * @param time          Time interval to assign
+ * @param function      Function to execute
+ * @param id            Task id to assign
+ * @param parameter     Data to pass through to callback
+ * @param len           Size of data
+ * @param flags         Optional flags (enum SetTaskFlags); valid flags are:
+ *                        SetTask_Once - Execute callback once (Default)
+ *                        SetTask_RepeatTimes - repeat timer a set amount of times
+ *                        SetTask_Repeat - loop indefinitely until timer is stopped
+ *                        SetTask_AfterMapStart - time interval is treated as absolute
+ *                            time after map start
+ *                        SetTask_BeforeMapChange - time interval is treated as absolute
+ *                            time before map change
+ * @param repeat        If the SetTask_RepeatTimes flag is set, the task will be repeated this
+ *                      many times
  *
  * @noreturn
+ * @error               If an invalid callback function is provided, an error is
+ *                      thrown.
  */
-stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = "", len = 0, SetTaskFlags:flags = SetTaskFlags:0, repeat = 0)
+stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = "", len = 0, SetTaskFlags:flags = SetTask_Once, repeat = 0)
 {
 	new strFlags[2]; // There should never be a need to set more than 1 flag
 	get_flags(_:flags, strFlags, charsmax(strFlags));
@@ -826,14 +841,29 @@ stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = 
 }
 
 /**
- * This is a wrapper around get_players that adds proper names for flags.
- * GetPlayersFlags can be found in amxconst.inc and they exactly match those of get_players.
+ * Stores a filtered list of client indexes to an array.
  *
- * @note Look at get_players for documentation.
+ * @note Example retrieving all alive CTs:
+ *       get_players_ex(players, num, GetPlayers_ExcludeDead | GetPlayers_MatchTeam, "CT")
+ *
+ * @param players   Array to store indexes to
+ * @param num       Variable to store number of indexes to
+ * @param flags     Optional filtering flags (enum GetPlayersFlags); valid flags are:
+ *                    GetPlayers_None - No filter (Default)
+ *                    GetPlayers_ExcludeDead - do not include dead clients
+ *                    GetPlayers_ExcludeAlive - do not include alive clients
+ *                    GetPlayers_ExcludeBots - do not include bots
+ *                    GetPlayers_ExcludeHuman - do not include human clients
+ *                    GetPlayers_MatchTeam - match with team
+ *                    GetPlayers_MatchNameSubstring - match with part of name
+ *                    GetPlayers_CaseInsensitive - match case insensitive
+ *                    GetPlayers_ExcludeHLTV - do not include HLTV proxies
+ *                    GetPlayers_IncludeConnecting - include connecting clients
+ * @param team      String to match against if the "e" or "f" flag is specified
  *
  * @noreturn
  */
-stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags, const team[] = "")
+stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
 {
 	new strFlags[10];
 	get_flags(_:flags, strFlags, charsmax(strFlags));

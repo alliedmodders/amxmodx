@@ -8,6 +8,7 @@
 //     https://alliedmods.net/amxmodx-license
 
 #include <time.h>
+#include <amtl/am-utility.h>
 #include "amxmodx.h"
 #include "CMenu.h"
 #include "newmenus.h"
@@ -1814,6 +1815,7 @@ static cell AMX_NATIVE_CALL register_event(AMX *amx, cell *params)
 	return handle;
 }
 
+// native register_event_ex(const event[], const function[], RegisterEventFlags:flags, const cond[] = "", ...);
 static cell AMX_NATIVE_CALL register_event_ex(AMX *amx, cell *params)
 {
 	cell amx_addr;
@@ -2387,6 +2389,7 @@ static cell AMX_NATIVE_CALL find_player(AMX *amx, cell *params) /* 1 param */
 	return result;
 }
 
+// native find_player_ex(FindPlayerFlags:flags, ...);
 static cell AMX_NATIVE_CALL find_player_ex(AMX *amx, cell *params)
 {
 	cell amx_addr;

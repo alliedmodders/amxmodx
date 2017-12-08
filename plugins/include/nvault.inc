@@ -22,7 +22,7 @@
 #endif
 
 /**
- * All timestamps are in UNIX epoch form.
+ * @global All timestamps are in UNIX epoch form.
  */
 
 /**
@@ -70,8 +70,9 @@ native nvault_get(vault, const key[], any:...);
 native nvault_lookup(vault, const key[], value[], maxlen, &timestamp);
 
 /**
- * Sets value of a vault entry. A new entry is created if one with the
- * given key doesn't exist. Also updates the timestamp.
+ * Sets value of a vault entry and updates the timestamp.
+ *
+ * @note A new entry is created if one with the given key doesn't exist.
  *
  * @param vault         A vault handle returned from nvault_open()
  * @param key           A key to set the value for
@@ -83,9 +84,10 @@ native nvault_lookup(vault, const key[], value[], maxlen, &timestamp);
 native nvault_set(vault, const key[], const value[]);
 
 /**
- * Sets value of a vault entry, and a new one is created if one with the given
- * key doesn't exist. Entries created with this native are permanent, they
- * have no timestamp and can't be erased with nvault_prune().
+ * Sets value of a vault entry and makes it permanent (non-erasable with nvault_prune()).
+ *
+ * @note A new entry is created if one with the given key doesn't exist.
+ * @note Permanent entries have no timestamp.
  *
  * @param vault         A vault handle returned from nvault_open()
  * @param key           A key to set the permanent value for
@@ -98,8 +100,8 @@ native nvault_pset(vault, const key[], const value[]);
 
 /**
  * Prunes the vault for entries that are within the given timestamps.
- * This will not erase values set with nvault_pset().
  * 
+ * @note This will not erase values set with nvault_pset().
  * @note An example of pruning all entries that are older than 24 hours:
  *       nvault_prune(vaultHandle, 0, get_systime() - (60 * 60 * 24));
  *
@@ -135,8 +137,9 @@ native nvault_remove(vault, const key[]);
 
 /**
  * "Touches" an entry in the vault, updating its timestamp.
- * If timestamp is equal to -1, it will use the current time.
- * It will create an empty entry if an entry with the given key isn't found.
+ * 
+ * @note If timestamp is equal to -1, it will use the current time.
+ * @note An empty entry is created if one with the given key doesn't exist.
  *
  * @param vault         A vault handle returned from nvault_open()
  * @param key           The key to search for

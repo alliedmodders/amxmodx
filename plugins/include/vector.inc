@@ -44,13 +44,10 @@ native get_distance(const origin1[3], const origin2[3]);
 native Float:get_distance_f(const Float:Origin1[3], const Float:Origin2[3]);
 
 /**
- * Calculates velocity in the direction a player is looking.
- * 
- * @note output vector is a unit vector (a vector with length of 1 unit).
- *       iVelocity parameter tells how long should the output vector be.
+ * Calculates velocity in the direction player is looking.
  * 
  * @param iIndex        Client index
- * @param iVelocity     Multiply @vRetValue length by this much
+ * @param iVelocity     Multiply vRetValue length by this much
  * @param vRetValue     Store the calculated velocity in this vector.
  * 	
  * @noreturn

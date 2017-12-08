@@ -50,6 +50,7 @@ native set_client_listen(receiver, sender, listen);
  * Sets player's godmode
  *
  * @param index         Client index
+ * @param godmode       1 to enable godmode, 0 to disable
  *
  * @noreturn
  * @error               If player is not connected or not within the range
@@ -126,7 +127,6 @@ native set_user_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render
 
  /**
  * Gives an item to a player.
- * This event is announced with proper message to all players. (?)
  *
  * @param index         Client index
  * @param item          Classname of the item to give. Should start with either
@@ -134,7 +134,7 @@ native set_user_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render
  *
  * @noreturn
  * @error               If player is not connected or not within the range
- *                      of 1 to MaxClients.
+ *                      of 1 to MaxClients or item creation fails.
  */
 native give_item(index, const item[]);
 
@@ -181,7 +181,7 @@ native get_user_hitzones(index, target);
  * Sets player's maximum movement speed
  *
  * @param index         Client index
- * @param speed        The maximum speed player will be able to run at
+ * @param speed         The maximum speed player will be able to run at
  *
  * @noreturn
  * @error               If player is not connected or not within the range
@@ -226,10 +226,7 @@ native Float:get_user_gravity(index);
 /**
  * Spawns an entity
  *
- * @note This shouldn't be used to respawn players.
- *       Use other modules (perhaps Hamsandwich) instead.
- *
- * @param index      Entity index
+ * @param index         Entity index
  *
  * @noreturn
  * @error               If player is not connected or not within the range
@@ -286,7 +283,7 @@ native set_user_footsteps(id, set = 1);
 /**
  * Strips all weapons from a player, including their knife.
  *
- * @param index        Client index
+ * @param index         Client index
  *
  * @noreturn
  * @error               If player is not connected or not within the range

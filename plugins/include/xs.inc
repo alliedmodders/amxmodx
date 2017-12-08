@@ -8,45 +8,41 @@
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
 
-//
-// XS Library
-//  Version 0.1
-//
-// MACROS THAT YOU CAN DEFINE BEFORE INCLUDING XS.INC:
-//  XS_FLEQ_TOLERANCE:
-//   Tolerance that is used for XS_FLEQ float nearly-equal comparisions
-//    DEFAULT: 0.000005
-//   XS_DEBUG
-//    Turn debug logging on
-//     DEFAULT: 0
-//   XS_LOGBUFFER_SIZE
-//    Buffer size for logging
-//     DEFAULT: 512
-//   XS_TASK_MAXPARAMS
-//    Maximal parameter count for managed tasks
-//     DEFAULT: 8
-//   XS_TASK_MAXPARAMSIZE
-//    Maximal size of string parameter for tasks
-//   Has to be power of 2 and has to be >= 8
-//     DEFAULT: 512
-//  XS_TASK_MANAGEDIDS
-//   Number of managed IDs for tasks.
-//     DEFAULT: 2048
-//   XS_REPLACEBUF_SIZE
-//    DEFAULT: 3072
-//
-//
-//  NOTES:
-//   On AMX, VexdUM is required for some math functions
-//
-//   xs__ / XS__ (2 underscores) stuff is meant to be intern
-//
-//  untested: never tested
-//  half-tested: succesfully used in other applications; not extensively tested in xs though
-//  tested: fully tested
-//
-//  If you have any useful functions / ideas for functions, please tell me.
-//
+/**
+ *  XS Library
+ *  Version 0.1
+ *  
+ * MACROS THAT YOU CAN DEFINE BEFORE INCLUDING XS.INC:
+ * XS_FLEQ_TOLERANCE:
+ *  Tolerance that is used for XS_FLEQ float nearly-equal comparisions
+ *  DEFAULT: 0.000005
+ * XS_DEBUG
+ *  Turn debug logging on
+ *  DEFAULT: 0
+ * XS_LOGBUFFER_SIZE
+ *  Buffer size for logging
+ *  DEFAULT: 512
+ * XS_TASK_MAXPARAMS
+ *  Maximal parameter count for managed tasks
+ *  DEFAULT: 8
+ * XS_TASK_MAXPARAMSIZE
+ *  Maximal size of string parameter for tasks
+ *  Has to be power of 2 and has to be >= 8
+ *  DEFAULT: 512
+ * XS_TASK_MANAGEDIDS
+ *  Number of managed IDs for tasks.
+ *  DEFAULT: 2048
+ * XS_REPLACEBUF_SIZE
+ *  DEFAULT: 3072
+ * 
+ * NOTES:
+ *  On AMX, VexdUM is required for some math functions
+ *  xs__ / XS__ (2 underscores) stuff is meant to be intern
+ *  untested: never tested
+ *  half-tested: succesfully used in other applications; not extensively tested in xs though
+ *  tested: fully tested
+ *  If you have any useful functions / ideas for functions, please tell me.
+*/
 
 #if defined _xs_included
   #endinput
@@ -153,72 +149,137 @@ new xs__global_null = 0;
 
 /****** BASIC STUFF ******/
 
-// Returns -1 if num is negative, 0 if num is 0, 1 if num is positive
-// tested
+/**
+ * Gets the sign of a value.
+ * 
+ * @param num           Number to get the sign from.
+ * 
+ * @return              -1 if the number is negative,
+ *                      0 if the number is equal to 0,
+ *                      1 if the number is positive.
+ */
 stock xs_sign(num)
 {
 	return (num < 0) ? -1 : ((num == 0) ? 0 : 1);
 }
 
-// Returns -1 if num is negative, 0 if num is 0, 1 if num is positive
-// tested
+/**
+ * Gets the sign of a float value.
+ * 
+ * @param num           Number to get the sign from.
+ * 
+ * @return              -1 if the number is negative,
+ *                      0 if the number is equal to 0,
+ *                      1 if the number is positive.
+ */
 stock xs_fsign(Float:num)
 {
 	return (num < 0.0) ? -1 : ((num == 0.0) ? 0 : 1);
 }
 
-// Returns absolute value
-// tested
+/**
+ * Gets the absolute value of a number.
+ * 
+ * @param num			Number to get the absolute value from.
+ * 
+ * @return              Absolute value of the input number.
+ */
 stock xs_abs(num)
 {
 	return (num < 0) ? -num : num;
 }
 
-// is power of 2? (== can be expressed as 1<<i)
-// tested
+/**
+ * Checks if the number is a power of 2.
+ * 
+ * @param x             Number to check.
+ * 
+ * @return              1 if it is a power of 2, 0 otherwise.
+ */
 stock xs_is_2power(x)
 {
 	return (x!=0) && ((x&(x-1))==0);
 }
 
-// degrees to radians
-// tested
+/**
+ * Converts degrees to radians.
+ * 
+ * @param x             Input degrees.
+ * 
+ * @return              Degrees converted to radians.
+ */
 stock Float:xs_deg2rad(Float:x)
 {
 	return x * 0.017453292519943;
 }
 
-// tested
+/**
+ * Converts radians to degrees.
+ * 
+ * @param x             Input radians.
+ * 
+ * @return              Radians converted to degrees.
+ */
 stock Float:xs_rad2deg(Float:x)
 {
 	return x * 57.29577951308232;
 }
 
-// untested, should work though
+/**
+ * Converts gradians to radians.
+ * 
+ * @param x             Input gradians.
+ * 
+ * @return              Gradians converted to radians.
+ */
 stock Float:xs_gra2rad(Float:x)
 {
 	return x * 0.015707963267948;
 }
 
-// untested, should work though
+/**
+ * Converts radians to gradians.
+ * 
+ * @param x             Input radians.
+ * 
+ * @return              Radians converted to gradians.
+ */
 stock Float:xs_rad2gra(Float:x)
 {
 	return x * 63.66197723675813;
 }
 
-// Only works when there is no whitespace between %1, the comma and %2...
-// tested
+/**
+ * Checks if two floating point values are nearly equal.
+ * 
+ * @param %1            The first value to compare.
+ * @param %2            The second value to compare.
+ * 
+ * @return              1 if they are nearly equal, 0 otherwise.
+ */
 #define XS_FLEQ(%1,%2) (((%1) <= ((%2) + XS_FLEQ_TOLERANCE)) && ((%1) >= ((%2) - XS_FLEQ_TOLERANCE)))
 
-// 1/sqrt
-// tested
+/**
+ * Calculates the reciprocal of the square root of the input value.
+ * 
+ * @param x             The input value.
+ * 
+ * @return              The reciprocal of the square root of the input value.
+ */
 stock Float:xs_rsqrt(Float:x)
 {
 	return 1.0 / floatsqroot(x);
 }
 
-// sqrt
-// tested
+/**
+ * Calculates the square root of the input value.
+ * 
+ * @note This is an alias for floatsqroot().
+ * 
+ * @param x             The input value.
+ * 
+ * @return              The square root of the input value.
+ */
 stock Float:xs_sqrt(Float:x)
 {
 	return floatsqroot(x);
@@ -299,13 +360,23 @@ stock xs__internalseed=0x546875;
 
 #define XS__IL_RMULT 1103515245
 
-// tested
+/**
+ * Sets the seed for the random number generation.
+ * 
+ * @param x             The seed to set.
+ * 
+ * @noreturn
+ */
 stock xs_seed(seed)
 {
 	xs__internalseed = seed;
 }
 
-// tested
+/**
+ * Retrieves a random integer.
+ * 
+ * @return              A random integer.
+ */
 stock xs_irand()
 {
 	new lo, hi, ll, lh, hh, hl;
@@ -322,13 +393,26 @@ stock xs_irand()
 	return result;
 }
 
-// tested
+/**
+ * Retrieves a random float.
+ * 
+ * @return              A random float.
+ */
 stock Float:xs_frand()
 {
 	return float(xs_irand()) / float(xs_get_maxnum());		// -1/2 should be the biggest possible positive number
 }
 
-// tested
+/**
+ * Retrieves a random integer between the specified values.
+ * 
+ * @note @pmax has to be greater than @pmin!
+ * 
+ * @param pmin          The minimum value.
+ * @param pmax          The maximum value.
+ * 
+ * @return              A random integer.
+ */
 stock xs_irand_range(pmin, pmax)
 {
 	xs_assert_dbg(pmax - pmin >= 0, "xs_irand_range: pmin > pmax");
@@ -342,8 +426,16 @@ stock xs_irand_range(pmin, pmax)
 
 // *** vectors
 
-// Set vec components to values
-// tested
+/**
+ * Sets vector's components to specified values.
+ * 
+ * @param vec           The vector to set values to.
+ * @param x             The X component to be set.
+ * @param y             The Y component to be set.
+ * @param z             The Z component to be set.
+ * 
+ * @noreturn
+ */
 stock xs_vec_set(Float:vec[], Float:x, Float:y, Float:z)
 {
 	vec[0] = x;
@@ -351,8 +443,15 @@ stock xs_vec_set(Float:vec[], Float:x, Float:y, Float:z)
 	vec[2] = z;
 }
 
-// Add vec
-// tested
+/**
+ * Adds two vectors.
+ * 
+ * @param in1           The first vector to add.
+ * @param in2           The second vector to add.
+ * @param out           The output vector. Can be one of the input vectors.
+ * 
+ * @noreturn
+ */
 stock xs_vec_add(const Float:in1[], const Float:in2[], Float:out[])
 {
 	out[0] = in1[0] + in2[0];
@@ -360,8 +459,15 @@ stock xs_vec_add(const Float:in1[], const Float:in2[], Float:out[])
 	out[2] = in1[2] + in2[2];
 }
 
-// Subtract vec
-// untested, but should work
+/**
+ * Subtracts one vector from another one.
+ * 
+ * @param in1           Vector to subtract from.
+ * @param in2           Vector to subtract from the first one.
+ * @param out           The output vector. Can be one of the input vectors.
+ * 
+ * @noreturn
+ */
 stock xs_vec_sub(const Float:in1[], const Float:in2[], Float:out[])
 {
 	out[0] = in1[0] - in2[0];
@@ -369,8 +475,16 @@ stock xs_vec_sub(const Float:in1[], const Float:in2[], Float:out[])
 	out[2] = in1[2] - in2[2];
 }
 
-// Adds the second vector scaled by a scalar to the first
-// tested
+/**
+ * Adds the second vector scaled by a scalar to the first.
+ * 
+ * @param in1           Vector to add to.
+ * @param in2           Vector to scale and add.
+ * @param scalar        Scalar to scale the second vector with.
+ * @param out           The output vector. Can be one of the input vectors.
+ * 
+ * @noreturn
+ */
 stock xs_vec_add_scaled(const Float:in1[], const Float:in2[], Float:scalar, Float:out[])
 {
 	out[0] = in1[0] + in2[0] * scalar;
@@ -378,8 +492,16 @@ stock xs_vec_add_scaled(const Float:in1[], const Float:in2[], Float:scalar, Floa
 	out[2] = in1[2] + in2[2] * scalar;
 }
 
-// Subtracts the second vector scaled by a scalar to the first
-// tested
+/**
+ * Subtracts the second vector scaled by a scalar from the first one.
+ * 
+ * @param in1           Vector to subtract from.
+ * @param in2           Vector to scale and subtract.
+ * @param scalar        Scalar to scale the second vector with.
+ * @param out           The output vector. Can be one of the input vectors.
+ * 
+ * @noreturn
+ */
 stock xs_vec_sub_scaled(const Float:in1[], const Float:in2[], Float:scalar, Float:out[])
 {
 	out[0] = in1[0] - in2[0] * scalar;
@@ -387,22 +509,47 @@ stock xs_vec_sub_scaled(const Float:in1[], const Float:in2[], Float:scalar, Floa
 	out[2] = in1[2] - in2[2] * scalar;
 }
 
-// Are vectors equal?
-// untested, but should work
+/**
+ * Checks if two vectors are equal.
+ * 
+ * @note If you need to check if two vectors are nearly equal,
+ * 		 take a look at xs_vec_nearlyequal().
+ * 
+ * @param vec1          The first input vector to check.
+ * @param vec2          The second input vector to check.
+ * 
+ * @return              1 if vectors are equal, 0 otherwise.
+ */
 stock bool:xs_vec_equal(const Float:vec1[], const Float:vec2[])
 {
 	return (vec1[0] == vec2[0]) && (vec1[1] == vec2[1]) && (vec1[2] == vec2[2]);
 }
 
-// Are vectors nearly equal?
-// tested
+/**
+ * Checks if two vectors are nearly equal.
+ * 
+ * @note If you need to check if two vectors are exactly equal,
+ * 		 take a look at xs_vec_equal().
+ * 
+ * @param vec1          The first input vector to check.
+ * @param vec2          The second input vector to check.
+ * 
+ * @return              1 if vectors are equal, 0 otherwise.
+ */
 stock bool:xs_vec_nearlyequal(const Float:vec1[], const Float:vec2[])
 {
 	return XS_FLEQ(vec1[0], vec2[0]) && XS_FLEQ(vec1[1], vec2[1]) && XS_FLEQ(vec1[2], vec2[2]);
 }
 
-// multiply vector by scalar
-// tested
+/**
+ * Multiply a vector by a scalar value.
+ * 
+ * @param vec           The vector to be multiplied.
+ * @param scalar        The scalar value to multiply the vector with.
+ * @param out           The output vector. Can be the same as the input vector.
+ * 
+ * @noreturn
+ */
 stock xs_vec_mul_scalar(const Float:vec[], Float:scalar, Float:out[])
 {
 	out[0] = vec[0] * scalar;
@@ -410,8 +557,15 @@ stock xs_vec_mul_scalar(const Float:vec[], Float:scalar, Float:out[])
 	out[2] = vec[2] * scalar;
 }
 
-// divide vector by scalar
-// untested, but should work
+/**
+ * Divide a vector by a scalar value.
+ * 
+ * @param vec           The vector to be divided.
+ * @param scalar        The scalar value to divide the vector with.
+ * @param out           The output vector. Can be the same as the input vector.
+ * 
+ * @noreturn
+ */
 stock xs_vec_div_scalar(const Float:vec[], Float:scalar, Float:out[])
 {
 	new Float:__tmp = 1.0 / scalar;
@@ -420,22 +574,38 @@ stock xs_vec_div_scalar(const Float:vec[], Float:scalar, Float:out[])
 	out[2] = vec[2] * __tmp;
 }
 
-// Compute vector length
-// tested
+/**
+ * Computes the length of a vector.
+ * 
+ * @param vec           The vector to compute the length of.
+ * 
+ * @return              The length of the input vector.
+ */
 stock Float:xs_vec_len(const Float:vec[])
 {
 	return xs_sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
 }
 
-// Compute 2D vector length
-// tested
+/**
+ * Computes the length of a 2D vector.
+ * 
+ * @param vec           The vector to compute the length of.
+ * 
+ * @return              The length of the input vector.
+ */
 stock Float:xs_vec_len_2d(const Float:vec[])
 {
 	return xs_sqrt(vec[0]*vec[0] + vec[1]*vec[1]);
 }
 
-// Compute distance between two vectors
-// tested
+/**
+ * Computes the distance between two vectors (points).
+ * 
+ * @param vec1          First vector.
+ * @param vec2          Second vector.
+ * 
+ * @return              The distance between two vectors.
+ */
 stock Float:xs_vec_distance(const Float:vec1[], const Float:vec2[])
 {
 	return xs_sqrt((vec1[0]-vec2[0]) * (vec1[0]-vec2[0]) +
@@ -443,16 +613,29 @@ stock Float:xs_vec_distance(const Float:vec1[], const Float:vec2[])
 	               (vec1[2]-vec2[2]) * (vec1[2]-vec2[2]));
 }
 
-// Compute distance between two 2D vectors
-// tested
+/**
+ * Computes the distance between two 2D vectors (points).
+ * 
+ * @param vec1          First vector.
+ * @param vec2          Second vector.
+ * 
+ * @return              The distance between two vectors.
+ */
 stock Float:xs_vec_distance_2d(const Float:vec1[], const Float:vec2[])
 {
 	return xs_sqrt((vec1[0]-vec2[0]) * (vec1[0]-vec2[0]) +
 	               (vec1[1]-vec2[1]) * (vec1[1]-vec2[1]));
 }
 
-// Normalize vec
-// tested
+/**
+ * Normalizes a vector. Normalized vector is a vector with the length of 1 unit,
+ * but with the same direction as the original vector.
+ * 
+ * @param vec           The vector to be normalized.
+ * @param out           The output vector. Can be the same as the input vector.
+ * 
+ * @noreturn
+ */
 stock xs_vec_normalize(const Float:vec[], Float:out[])
 {
 	new Float:invlen = xs_rsqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
@@ -461,8 +644,15 @@ stock xs_vec_normalize(const Float:vec[], Float:out[])
 	out[2] = vec[2] * invlen;
 }
 
-// Store the cross product of vec1 and vec2 in out
-// tested
+/**
+ * Computes the cross product of two vectors.
+ * 
+ * @param vec1          The first vector operand of the cross operation.
+ * @param vec2          The second vector operand of the cross operation.
+ * @param out           The output vector. *Can't* be one of the input vectors.
+ * 
+ * @noreturn
+ */
 stock xs_vec_cross(const Float:vec1[], const Float:vec2[], Float:out[])
 {
 	out[0] = vec1[1]*vec2[2] - vec1[2]*vec2[1];
@@ -470,15 +660,27 @@ stock xs_vec_cross(const Float:vec1[], const Float:vec2[], Float:out[])
 	out[2] = vec1[0]*vec2[1] - vec1[1]*vec2[0];
 }
 
-// Compute vec1 dot vec2
-// tested
+/**
+ * Computes the dot product of two vectors.
+ * 
+ * @param vec1          The first vector operand of the dot operation.
+ * @param vec2          The second vector operand of the dot operation.
+ * 
+ * @return              The dot product of two input vectors.
+ */
 stock Float:xs_vec_dot(const Float:vec1[], const Float:vec2[])
 {
 	return vec1[0]*vec2[0] + vec1[1]*vec2[1] + vec1[2]*vec2[2];
 }
 
-// Negate vec into out
-// untested, but should work
+/**
+ * Negates a vector.
+ * 
+ * @param vec           The vector to negate.
+ * @param out           The output vector. Can be the same as the input vector.
+ * 
+ * @noreturn
+ */
 stock xs_vec_neg(const Float:vec[], Float:out[])
 {
 	out[0] = -vec[0];
@@ -486,8 +688,14 @@ stock xs_vec_neg(const Float:vec[], Float:out[])
 	out[2] = -vec[2];
 }
 
-// Copy vec
-// untested, but should work
+/**
+ * Copies a vector into another one.
+ * 
+ * @param vecIn         The vector to copy.
+ * @param vecOut        The output vector where to copy the input vector.
+ * 
+ * @noreturn
+ */
 stock xs_vec_copy(const Float:vecIn[], Float:vecOut[])
 {
 	vecOut[0] = vecIn[0];
@@ -495,15 +703,28 @@ stock xs_vec_copy(const Float:vecIn[], Float:vecOut[])
 	vecOut[2] = vecIn[2];
 }
 
-// Compute angle between vec1 and vec2
-// tested
+/**
+ * Computes the angle between two vectors.
+ * 
+ * @param vec1          The first vector.
+ * @param vec2          The second vector.
+ * 
+ * @return              The angle between two input vectors in degrees.
+ */
 stock Float:xs_vec_angle(const Float:vec1[], const Float:vec2[])
 {
 	return xs_rad2deg(xs_acos(xs_vec_dot(vec1, vec2), radian));
 }
 
-// Reflect vec about normal
-// untested
+/**
+ * Reflects a vector about a normal.
+ * 
+ * @param vec           The vector to be reflected.
+ * @param normal        The normal vector about which to reflect.
+ * @param out           The output reflected vector.
+ * 
+ * @noreturn
+ */
 stock xs_vec_reflect(const Float:vec[], const Float:normal[], Float:out[])
 {
 	// normalize(vec) - (normal * 2.0 * (tmp . normal)) * length(vec)
@@ -524,7 +745,16 @@ stock xs_vec_reflect(const Float:vec[], const Float:normal[], Float:out[])
 	xs_vec_sub(tmp1, tmp2, out);
 }
 
-// Turn a 3D vector into a 2D vector
+/**
+ * Turns a 3D vector into a 2D vector.
+ * 
+ * @note This function just ignores the Z (3rd) component of a 3D vector.
+ * 
+ * @param vec           A 3D vector to turn into a 2D vector.
+ * @param out           The output 2D vector.
+ * 
+ * @noreturn
+ */
 stock xs_vec_make2d(const Float:vec[3], Float:out[2])
 {
 	out[0] = vec[0];
@@ -541,8 +771,17 @@ stock xs_vec_make2d(const Float:vec[3], Float:out[2])
 #define XS_PLANE_D 3
 
 
-// Set a plane to specific values
-// tested
+/**
+ * Sets a plane to the specified values.
+ * 
+ * @param plane         The plane to set the values to. It's a 4D vector.
+ * @param a             The first component of a plane to be set.
+ * @param b             The second component of a plane to be set.
+ * @param c             The third component of a plane to be set.
+ * @param d             The fouth component of a plane to be set.
+ * 
+ * @noreturn
+ */
 stock xs_plane_set(Float:plane[], Float:a, Float:b, Float:c, Float:d)
 {
 	plane[XS_PLANE_A] = a;
@@ -551,8 +790,16 @@ stock xs_plane_set(Float:plane[], Float:a, Float:b, Float:c, Float:d)
 	plane[XS_PLANE_D] = d;
 }
 
-// Construct a plane out of 3 points
-// tested
+/**
+ * Constructs a plane out of 4 points in space.
+ * 
+ * @param plane         The output plane to store the newly created plane.
+ * @param p1            The first point of a plane.
+ * @param p2            The second point of a plane.
+ * @param p3            The third point of a plane.
+ * 
+ * @noreturn
+ */
 stock xs_plane_3p(Float:plane[], const Float:p1[], const Float:p2[], const Float:p3[])
 {
 	new Float:normalA[3], Float:normalB[3];
@@ -580,7 +827,17 @@ stock xs_plane_3p(Float:plane[], const Float:p1[], const Float:p2[], const Float
 	
 }
 
-// untested, but should work
+/**
+ * Checks if two planes are equal.
+ *
+ * @note If you have to check if two planes are just nearly equal,
+ *       take a look at xs_plane_nearlyequal().
+ * 
+ * @param plane1        The first plane to check.
+ * @param plane2        The second plane to check.
+ * 
+ * @return              1 if planes are equal, 0 otherwise.
+ */
 stock bool:xs_plane_equal(const Float:plane1[], const Float:plane2[])
 {
 	if (	(plane1[0] == plane2[0]) &&
@@ -591,7 +848,17 @@ stock bool:xs_plane_equal(const Float:plane1[], const Float:plane2[])
 	return false;
 }
 
-// untested, but should work
+/**
+ * Checks if two planes are nearly equal.
+ *
+ * @note If you have to check if two planes are exactly equal,
+ *       take a look at xs_plane_equal().
+ * 
+ * @param plane1        The first plane to check.
+ * @param plane2        The second plane to check.
+ * 
+ * @return              1 if planes are nearly equal, 0 otherwise.
+ */
 stock bool:xs_plane_nearlyequal(const Float:plane1[], const Float:plane2[])
 {
 	if (	XS_FLEQ(plane1[0], plane2[0]) &&
@@ -602,18 +869,32 @@ stock bool:xs_plane_nearlyequal(const Float:plane1[], const Float:plane2[])
 	return false;
 }
 
-// Compute distance between plane and point
-// tested
+/**
+ * Computes the distance between a plane and a point.
+ * 
+ * @param plane         The plane to check the distance from.
+ * @param point         The point to check the distance to.
+ * 
+ * @return              The distance between the input plane and point.
+ */
 stock Float:xs_plane_dst2point(const Float:plane[], const Float:point[])
 {
 	// return normal dot point + D
 	return xs_vec_dot(plane, point) + plane[XS_PLANE_D];
 }
 
-// Checks whether plane intersects with the ray starting and rayStart and going to rayDir direction.
-// If yes, returns true and sets out to the intersection point
-// Otherwise, returns false
-// tested
+/**
+ * Checks whether a plane intersects with the ray starting at @rayStart and
+ * going to @rayDir direction.
+ * If it does intersect, outputs the intersection point in @out.
+ * 
+ * @param plane         The plane to check intersection with.
+ * @param rayStart      The starting point of the ray.
+ * @param rayDir        Direction in which the ray is going.
+ * @param out           The vector to copy the intersection point to, if it exists.
+ * 
+ * @return              true if they intersect, false otherwise.
+ */
 stock bool:xs_plane_rayintersect(const Float:plane[], const Float:rayStart[], const Float:rayDir[], Float:out[])
 {
 	new Float:a = xs_vec_dot(plane, rayDir);
@@ -640,15 +921,28 @@ stock bool:xs_plane_rayintersect(const Float:plane[], const Float:rayStart[], co
 	return true;
 }
 
-// Is point on plane?
-// tested
+/**
+ * Checks if a point is on a specified plane.
+ * 
+ * @param plane         The plane to check.
+ * @param point         The point to check.
+ * 
+ * @return              true if the point is on the plane, false otherwise.
+ */
 stock bool:xs_point_onplane(const Float:plane[], const Float:point[])
 {
 	return XS_FLEQ(xs_plane_dst2point(plane, point), 0.0);
 }
 
-// Project point on plane
-// tested
+/**
+ * Projects a point on the plane. Stores the projected point in @out.
+ * 
+ * @param plane         The plane to project the point onto.
+ * @param point         The point to project onto the plane.
+ * @param out           The vector to copy the projected point into.
+ * 
+ * @noreturn
+ */
 stock xs_projpoint_onplane(const Float:plane[], const Float:point[], Float:out[])
 {
 	new Float:__tmp[3];
@@ -658,8 +952,14 @@ stock xs_projpoint_onplane(const Float:plane[], const Float:point[], Float:out[]
 	xs_vec_sub(point, __tmp, out);
 }
 
-// Copy plane
-// untested, but should work
+/**
+ * Copies a plane.
+ * 
+ * @param planeIn       The plane to copy.
+ * @param planeOut      The plane to store the copy into.
+ * 
+ * @noreturn
+ */
 stock xs_plane_copy(const Float:planeIn[], Float:planeOut[])
 {
 	planeOut[0] = planeIn[0];
@@ -669,14 +969,22 @@ stock xs_plane_copy(const Float:planeIn[], Float:planeOut[])
 }
 
 /****** HL ENGINE SPECIFIC STUFF ******/
-// Compute forward, right and up vector from angles
-// half-tested
 
 // angle indexes
 #define	XS_PITCH				0		// up / down
 #define	XS_YAW					1		// left / right
 #define	XS_ROLL					2		// fall over
 
+/**
+ * Computes forward, right and up vectors from given angles.
+ * 
+ * @param angles        Angles to compute vectors from.
+ * @param fwd           The vector to store the forward vector into.
+ * @param right         The vector to store the right vector into.
+ * @param up            The vector to store the up vector into.
+ * 
+ * @noreturn
+ */
 stock xs_anglevectors(const Float:angles[3], Float:fwd[3], Float:right[3], Float:up[3])
 {
 	// sin (s) and cos (c) for yaw (y), pitch (p) and roll (r)
@@ -703,7 +1011,14 @@ stock xs_anglevectors(const Float:angles[3], Float:fwd[3], Float:right[3], Float
 }
 /****** STRING FUNCS *******/
 
-// tested
+/**
+ * Finds a character in a string and returns its position in the string.
+ * 
+ * @param str           The string to search in.
+ * @param chr           The character to search for in the string.
+ * 
+ * @return              The character position if found, -1 otherwise.
+ */
 stock xs_strchr(const str[], chr)
 {
 	for (new i = 0; str[i] != 0; ++i)
@@ -714,11 +1029,17 @@ stock xs_strchr(const str[], chr)
 	return -1;
 }
 
-// by JGHG, adapted
-// removes charstotrim number of charactes from stringtotrim's
-//  - beginning if fromleft is true
-//  - end if fromleft is false
-// tested
+/**
+ * Remove @charstotrim number of characters from @stringtotrim,
+ * either from the beginning or the end of the string.
+ * 
+ * @param stringtotrim  The string to be trimmed.
+ * @param charstostrim  The number of characters to trim.
+ * @param fromleft      If set to true, the string will be trimmer from the left.
+ *                      If false, it will be trimmed from the right.
+ * 
+ * @noreturn
+ */
 stock xs_strtrim(stringtotrim[], charstotrim, bool:fromleft = true)
 {
 	if (charstotrim <= 0)
@@ -744,12 +1065,20 @@ stock xs_strtrim(stringtotrim[], charstotrim, bool:fromleft = true)
 	}
 }
 
-// by xeroblood, adapted
-// copies characters from oldmsg to newmsg, starting at start and ending at end (_includes_ end).
-// terminates newmsg with 0
-// if outlen is positive, it specifies the maximal number of characters to be copied.
-// otherwise, assumes that newmsg is at least end-start+1 characters long.
-// tested
+/**
+ * Copies characters from @oldmsg to @newmsg, starting at @start and ending
+ * at @end (includes the end character).
+ * 
+ * @param oldmsg        The string to copy from.
+ * @param newmsg        The string to copy to.
+ * @param start         Starting position of the @oldmsg string to copy from.
+ * @param end           Ending position of the @oldmsg string to copy from.
+ * @param outlen        If positive, specifies the maximum number of characters
+ *                      to be copied. Otherwise, the function assumes that
+ *                      newmsg is at least @end - @start + 1 characters long.
+ * 
+ * @noreturn
+ */
 stock xs_strmid(const oldmsg[], newmsg[], start, end, outlen=-1)
 {
 	new len = strlen(oldmsg);
@@ -769,9 +1098,18 @@ stock xs_strmid(const oldmsg[], newmsg[], start, end, outlen=-1)
 	newmsg[j] = 0;
 }
 
-// by xeroblood, adapted
-// maxelems: maximal number of elements in output, elemsize: maximal size of one element
-// tested
+/**
+ * "Explodes" a string, breaking it at the @delimeter character and putting
+ * each exploded part into the @output array.
+ * 
+ * @param input         The input string to be exploded.
+ * @param output        The output array of string where exploded string will be stored.
+ * @param delimeter     The character to break the string at.
+ * @param maxelems      Maximum amount of elements in @output.
+ * @param elemsize      Maximum size of each string in the @output array.
+ * 
+ * @return              The number of strings successfully exploded.
+ */
 stock xs_explode(const input[], output[][], delimiter, maxelems, elemsize)
 {
 	new nIdx = 0;
@@ -799,7 +1137,18 @@ stock xs_explode(const input[], output[][], delimiter, maxelems, elemsize)
 	return nIdx;
 }
 
-// returns number of cells written.
+/**
+ * The opposite of xs_explode(). Takes an array of strings and puts them together
+ * in a single string, delimeted by the @delimeter character.
+ * 
+ * @param output        The string to store the impoded string into.
+ * @param outsize       The size of the output buffer.
+ * @param delimeter     The character to put between imploded strings.
+ * @param input         The array of strings to implode.
+ * @param elemsnum      The number of strings in the input array.
+ * 
+ * @return              The number of characters in the final output buffer.
+ */
 stock xs_implode(output[], outsize, delimiter, const input[][], elemsnum)
 {
 	new pos = 0;
@@ -824,8 +1173,17 @@ stock xs_implode(output[], outsize, delimiter, const input[][], elemsnum)
 
 
 stock xs__replace_buf[XS_REPLACEBUF_SIZE];
-// Replace all occurencies of what in text with with
-// Returns number of (also partially if trimmed by len) replaced items.
+
+/**
+ * Replaces all occurencies of @what in @text with @with.
+ * 
+ * @param text          The text to search in.
+ * @param len           The maximum size of the @text buffer.
+ * @param what          What to search for.
+ * @param with          What to replace occurencies with.
+ * 
+ * @return              Returns the number of replaced items.
+ */
 stock xs_replace(text[], len, const what[], const with[])
 {
 	new occur = 0;
@@ -864,8 +1222,16 @@ stock xs_replace(text[], len, const what[], const with[])
 	return occur;
 }
 
-// replaces all occurencies of what in text with with
-// Returns number of replaced items.
+/**
+ * Replaces all occurencies of @what character in @text with @with character.
+ * 
+ * @param text          The text to search in.
+ * @param len           The maximum size of the @text buffer.
+ * @param what          What character to search for.
+ * @param with          What charactear to replace occurencies with.
+ * 
+ * @return              The number of replaced characters.
+ */
 stock xs_replace_char(text[], len, what, with)
 {
 	// let the xs_replace function do the work
@@ -879,8 +1245,16 @@ stock xs_replace_char(text[], len, what, with)
 }
 
 /****** MISC FUNCS *******/
-// sets namestr to name of the command identified by cid
-// half-tested
+
+/**
+ * Retrieves the name of a command identified by its ID.
+ * 
+ * @param cid           The command ID.
+ * @param namestr       The buffer where to store command's name.
+ * @param namelen       The maximum size of the output buffer.
+ * 
+ * @noreturn
+ */
 stock xs_concmd_name(cid, namestr[], namelen)
 {
 	new dummy1;
@@ -888,8 +1262,13 @@ stock xs_concmd_name(cid, namestr[], namelen)
 	get_concmd(cid, namestr, namelen, dummy1, dummy2, 0, 0);
 }
 
-// Checks whether there are at least num free visible slots
-// half-tested
+/**
+ * Checks whether there are at least @num free visible slots.
+ * 
+ * @param num           The number of slots to check.
+ * 
+ * @return              true if there are at least that many free, false otherwise.
+ */
 stock bool:xs_freevisibleslots(num)
 {	
 	new maxplayers = get_cvar_num("sv_visiblemaxplayers");
@@ -899,9 +1278,13 @@ stock bool:xs_freevisibleslots(num)
 	return (get_playersnum(1) <= maxplayers-num) ? true : false;
 }
 
-// Returns biggest possible positive number
 stock xs__maxnum = 0;
-// tested
+
+/**
+ * Returns the biggest possible positive number.
+ * 
+ * @return              The biggest possible positive number.
+ */
 stock xs_get_maxnum()
 {
 	if (!xs__maxnum)
@@ -917,7 +1300,11 @@ stock xs_get_maxnum()
 	return xs__maxnum;
 }
 
-// tested
+/**
+ * Returns the smallest possible negative number.
+ * 
+ * @return              The smallest possible negative number.
+ */
 stock xs_get_minnum()
 {
 	return xs_get_maxnum() + 1;

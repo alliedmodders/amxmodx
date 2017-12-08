@@ -42,7 +42,7 @@ enum Handle
  * @param pass          Database password
  * @param db            Database name to use
  * @param timeout       Specifies how long connections should wait before giving up.
- *                      If 0, the default (which is undefined) is used.
+ *                      If <= 0, the default of 60s is used.
  * 	
  * @return              A newly created tuple handle to be used in connection routines.
  */
@@ -72,6 +72,7 @@ native SQL_FreeHandle(Handle:h);
  * 	
  * @return              Returns an SQL connection handle, which must be freed.
  *                      Returns Empty_Handle on failure.
+ * @error               Invalid info tuple handle.
  */
 native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
 
@@ -80,9 +81,9 @@ native Handle:SQL_Connect(Handle:cn_tuple, &errcode, error[], maxlength);
  * Sets the character set of the current connection. 
  * Like SET NAMES .. in mysql, but stays after connection problems.
  * 
- * If a connection tuple is supplied, this should be called before SQL_Connect or SQL_ThreadQuery.
- * Also note the change will remain until you call this function with another value.
- * This native does nothing in SQLite. 
+ * @note If a connection tuple is supplied, this should be called before SQL_Connect or SQL_ThreadQuery.
+ * @note The change will remain until you call this function with another value.
+ * @note This native does nothing in SQLite. 
  *
  * Example: "utf8", "latin1"
  *
@@ -111,8 +112,8 @@ native Handle:SQL_PrepareQuery(Handle:db, const fmt[], any:...);
 
 /**
  * Back-quotes characters in a string for database querying.
- * Note: The buffer's maximum size should be 2*strlen(string) to catch
- * all scenarios.
+ * 
+ * @note The buffer's maximum size should be 2*strlen(string) to catch all scenarios.
  *
  * @param db            Database handle for localization, or Empty_Handle 
  *                      for when a handle is not available.
@@ -121,6 +122,7 @@ native Handle:SQL_PrepareQuery(Handle:db, const fmt[], any:...);
  * @param string        String to backquote (should not overlap buffer).
  * 
  * @return              Length of new string, or -1 on failure.
+ * @error               Invalid database handle.
  */
 native SQL_QuoteString(Handle:db, buffer[], buflen, const string[]);
 
@@ -141,6 +143,9 @@ native SQL_QuoteString(Handle:db, buffer[], buflen, const string[]);
 native SQL_QuoteStringFmt(Handle:db, buffer[], buflen, const fmt[], any:...);
 
 
+/**
+ * Threaded query states. Used to check the state of a complete threaded query.
+ */
 #define TQUERY_CONNECT_FAILED	-2
 #define TQUERY_QUERY_FAILED	-1
 #define TQUERY_SUCCESS		0
@@ -160,13 +165,18 @@ native SQL_QuoteStringFmt(Handle:db, buffer[], buflen, const fmt[], any:...);
  *       connection, however, the interface is more complicated and 
  *       asynchronous. Furthermore, a new connection/disconnection is 
  *       made for each query to simplify driver support.
- * @note The handle does no need to be freed.
+ * @note The handle does not need to be freed.
  *
  * @param db_tuple      Tuple handle, returned from SQL_MakeDbTuple().
  * @param handler       A function to be called when the query finishes. It has to be public.
  * @param query         The query string.
  * @param data          Additional data array that will be passed to the handler function.
  * @param dataSize      The size of the additional data array. 
+ *
+ * @noreturn
+ * @error               Thread worker was unable to start.
+ *                      Invalid info tuple handle.
+ *                      Handler function not found.
  */
 native SQL_ThreadQuery(Handle:db_tuple, const handler[], const query[], const data[]="", dataSize=0);
 
@@ -180,6 +190,7 @@ native SQL_ThreadQuery(Handle:db_tuple, const handler[], const query[], const da
  * @param query         Handle of a prepared query to be executed.
  * 
  * @return              1 if the query succeeded, 0 if the query failed.
+ * @error               Invalid query handle.
  */
 native SQL_Execute(Handle:query);
 
@@ -197,11 +208,12 @@ native SQL_QueryError(Handle:query, error[], maxlength);
 
 
 /**
- * Check whether there are more results to be read.
+ * Checks whether there are more results to be read.
  *
  * @param query         Handle of a query to check.
  * 
  * @return              1 if there are more results, 0 otherwise.
+ * @error               Invalid query handle.
  */
 native SQL_MoreResults(Handle:query);
 
@@ -213,21 +225,25 @@ native SQL_MoreResults(Handle:query);
  * @param column        Which column to check for NULL.
  * 
  * @return              1 if the column is NULL, 0 otherwise.
+ * @error               Invalid query handle.
+ *                      No result set in this query.
+ *                      Invalid column.
  */
 native SQL_IsNull(Handle:query, column);
 
 
 /**
  * Retrieves the current result.
- * A successful query starts at the first result, so you should not call
- * SQL_NextRow() first.
+ * 
+ * @note A successful query starts at the first result, so you should not call
+ *       SQL_NextRow() first.
  * 
  * @note Example how to get different types of values:
- *       new num = SQL_ReadResult(query, 0)
- *       new Float:num2
- *       new string[32]
- *       SQL_ReadResult(query, 1, num2)
- *       SQL_ReadResult(query, 2, str, 31)
+ *         new num = SQL_ReadResult(query, 0)
+ *         new Float:num2
+ *         new string[32]
+ *         SQL_ReadResult(query, 1, num2)
+ *         SQL_ReadResult(query, 2, string, charsmax(string))
  *
  * @param query         Handle of a query to read results from.
  * @param column        Which column to get the value from.
@@ -237,6 +253,7 @@ native SQL_IsNull(Handle:query, column);
  *                      with a maximum string length in the second argument.
  * 
  * @return              If no extra arguments are passed, returns an integer value.
+ * @error               Invalid query handle.
  */
 native SQL_ReadResult(Handle:query, column, any:...);
 
@@ -247,6 +264,8 @@ native SQL_ReadResult(Handle:query, column, any:...);
  * @param query         Handle of a query.
  * 
  * @noreturn
+ * @error               Invalid query handle.
+ *                      No result set in this query.
  */
 native SQL_NextRow(Handle:query);
 
@@ -257,6 +276,7 @@ native SQL_NextRow(Handle:query);
  * @param query         Handle of a query to check.
  * 
  * @return              The number of affected rows.
+ * @error               Invalid query handle.
  */
 native SQL_AffectedRows(Handle:query);
 
@@ -267,6 +287,7 @@ native SQL_AffectedRows(Handle:query);
  * @param query         Handle of a query to check.
  * 
  * @return              The number of retrieved rows by the query.
+ * @error               Invalid query handle.
  */
 native SQL_NumResults(Handle:query);
 
@@ -277,6 +298,8 @@ native SQL_NumResults(Handle:query);
  * @param query         Handle of a query to check.
  * 
  * @return              The number of retrieved columns by the query.
+ * @error               Invalid query handle.
+ *                      No result set in this query.    
  */
 native SQL_NumColumns(Handle:query);
 
@@ -290,7 +313,9 @@ native SQL_NumColumns(Handle:query);
  * @param maxlength     Maximum length of the output buffer.
  * 
  * @noreturn
- * @error               If a bad column index is supplied.
+ * @error               Invalid query handle.
+ *                      No result set in this query.
+ *                      Invalid column index.
  */
 native SQL_FieldNumToName(Handle:query, num, name[], maxlength);
 
@@ -301,8 +326,9 @@ native SQL_FieldNumToName(Handle:query, num, name[], maxlength);
  * @param query         Handle of a query.
  * @param name          Name to search for.
  * 
- * @return              Greater than -1 if a column is found with the given name.
- *                      -1 if it was not found.
+ * @return              Column index if found (>= 0); -1 otherwise.
+ * @error               Invalid query handle.
+ *                      No result set in this query.
  */
 native SQL_FieldNameToNum(Handle:query, const name[]);
 
@@ -313,6 +339,8 @@ native SQL_FieldNameToNum(Handle:query, const name[]);
  * @param query         Handle of a query to rewind the result set of.
  * 
  * @noreturn
+ * @error               Invalid query handle.
+ *                      No result set in this query.   
  */
 native SQL_Rewind(Handle:query);
 
@@ -323,7 +351,7 @@ native SQL_Rewind(Handle:query);
  * @param query         Handle of a query.
  * 
  * @return              The insert ID of the latest INSERT query.
- *                      Returns 0 if none.
+ * @error               Invalid query handle.
  */
 native SQL_GetInsertId(Handle:query);
 
@@ -371,6 +399,7 @@ native SQL_SetAffinity(const driver[]);
  * @param maxlength     The maximum length of the output buffer.
  * 
  * @noreturn
+ * @error               Invalid query handle.
  */
 native SQL_GetQueryString(Handle:query, buffer[], maxlength);
 
@@ -386,6 +415,8 @@ native SQL_GetQueryString(Handle:query, buffer[], maxlength);
  * @param query         Query Handle.
  * 
  * @return              True on success, false on failure.
+ * @error               Invalid query handle.
+ *                      No result set in this query.
  */
 native bool:SQL_NextResultSet(Handle:query);
 
@@ -448,7 +479,8 @@ stock SQL_SimpleQuery(Handle:db, const query[], error[]="", maxlength=0, &rows=0
 
 /**
  * Use this for executing a query where you don't care about the result.
- * Differs from SQL_SimpleQuery() because the query can be formated.
+ * 
+ * @note Differs from SQL_SimpleQuery() because the query can be formated.
  *
  * @param db            Connection handle returned from SQL_Connect().
  * @param error         If an error occurs, it will be placed into this buffer.

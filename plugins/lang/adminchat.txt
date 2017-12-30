@@ -194,16 +194,16 @@ COL_MAROON = maro
 PRINT_ALL = (TOTI) %s :   %s
 
 [hu]
-COL_WHITE = feher
+COL_WHITE = fehér
 COL_RED = piros
-COL_GREEN = zold
-COL_BLUE = kek
-COL_YELLOW = csarga
+COL_GREEN = zöld
+COL_BLUE = kék
+COL_YELLOW = csárga
 COL_MAGENTA = magenta
 COL_CYAN = cyan
-COL_ORANGE = nsarga
-COL_OCEAN = ocean
-COL_MAROON = maroon
+COL_ORANGE = nsárga
+COL_OCEAN = óceán
+COL_MAROON = barna
 PRINT_ALL = (MIND) %s :   %s
 
 [lt]

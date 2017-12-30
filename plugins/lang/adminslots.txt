@@ -44,7 +44,7 @@ DROPPED_RES = Izklu4en poneje mqstoto e rezervirano
 DROPPED_RES = Ai primit kick pentru rezervare slot.
 
 [hu]
-DROPPED_RES = Nincs szabad hely.
+DROPPED_RES = Helyfenntartás miatt kidobva.
 
 [lt]
 DROPPED_RES = Atjungtas, nes nera laisvos vietos

@@ -44,7 +44,7 @@ STOP_FLOOD = Sprete da pretovarvate servara!
 STOP_FLOOD = Nu mai flooda server-ul!
 
 [hu]
-STOP_FLOOD = Ne irj ilyen sokat!
+STOP_FLOOD = Ne floodolj és ne spamelj!
 
 [lt]
 STOP_FLOOD = Nustok greitai rasyti!

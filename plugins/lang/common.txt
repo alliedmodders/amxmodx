@@ -330,25 +330,25 @@ OFF = Dezactivat
 
 [hu]
 BACK = Vissza
-EXIT = Kilepes
-MORE = Tobb
+EXIT = Kilépés
+MORE = Több
 NONE = Egyiksem
 ADMIN = ADMIN
-PLAYER = Jatekos
+PLAYER = Játékos
 ERROR = hiba
 YES = Igen
 NO = Nem
 BAN = ban
-KICK = kirugas
-NO_ACC_COM = Nincs elerhetoseged ehhez a parancshoz.
-USAGE = Hasznalat
-MORE_CL_MATCHT = here are more clients matching to your argument
-CL_NOT_FOUND = Nincs ilyen nevu jatekos
-CLIENT_IMM = "%s" ellen all
-CANT_PERF_DEAD = Ezt az akciot nem hajthatod vegre "%s"-on mert halott
-CANT_PERF_BOT = Ezt az akciot nem hajthatod vegre "%s"-on mert bot
-ON = Be
-OFF = Ki
+KICK = kirúgás
+NO_ACC_COM = Nincs elérhetőséged ehhez a parancshoz.
+USAGE = Használat
+MORE_CL_MATCHT = Több játékosra is egyezik a megadott feltétel
+CL_NOT_FOUND = Nincs ilyen nevű játékos
+CLIENT_IMM = "%s" immunitás joggal rendelkezik
+CANT_PERF_DEAD = Ezt a műveletet nem hajthatod végre "%s"-on mert halott
+CANT_PERF_BOT = Ezt a műveletet nem hajthatod végre "%s"-on mert bot
+ON = BE
+OFF = KI
 
 [lt]
 BACK = Atgal

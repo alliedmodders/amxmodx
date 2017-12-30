@@ -74,9 +74,9 @@ PLAYED_MAP = Harta Actuala
 FRIEND_FIRE = Friendly-Fire
 
 [hu]
-NEXT_MAP = A kovetkezo palya:
-PLAYED_MAP = Jatszott Palya
-FRIEND_FIRE = Csapattars Sebzes
+NEXT_MAP = A következő pálya:
+PLAYED_MAP = Jelenlegi Pálya
+FRIEND_FIRE = Csapattárs Sebzés
 
 [lt]
 NEXT_MAP = Kitas zemelapis:

@@ -333,6 +333,7 @@ extern int FF_InconsistentFile;
 extern int FF_ClientAuthorized;
 extern int FF_ChangeLevel;
 extern int FF_ClientConnectEx;
+extern int FF_ClientFlagsUpdated;
 
 extern bool g_coloredmenus;
 

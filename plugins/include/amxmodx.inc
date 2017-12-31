@@ -160,6 +160,16 @@ forward client_connect(id);
 forward client_connectex(id, const name[], const ip[], reason[128]);
 
 /**
+ * Called after the client's admin flags are changed.
+ *
+ * @param id        Client index
+ * @param flags     New client flags
+ *
+ * @noreturn
+ */
+forward client_flags_updated(id, flags);
+
+/**
  * Called when the client gets a valid SteamID.
  *
  * @note This may occur before or after client_putinserver has been called.
@@ -1814,7 +1824,7 @@ native task_exists(id = 0, outside = 0);
  * @error           If the index is not within the range of 0 to MaxClients, an
  *                  error will be thrown.
  */
-native set_user_flags(index, flags = -1, id = 0);
+native set_user_flags(index, flags = -1, id = 0, override = false);
 
 /**
  * Returns the client's admin flags as a bitflag sum.
@@ -1826,6 +1836,7 @@ native set_user_flags(index, flags = -1, id = 0);
  *
  * @param index     Client index, 0 to set flags of server
  * @param id        Flag set id, ranging from 0 to 31
+ * @param override  If set to true, all other flags will be removed
  *
  * @noreturn
  * @error           If the index is not within the range of 0 to MaxClients, an

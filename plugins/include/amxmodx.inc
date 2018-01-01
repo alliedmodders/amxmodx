@@ -1819,6 +1819,7 @@ native task_exists(id = 0, outside = 0);
  * @param index     Client index, 0 to set flags of server
  * @param flags     Admin flags
  * @param id        Flag set id, ranging from 0 to 31
+ * @param override  If set to true, all other flags will be removed
  *
  * @noreturn
  * @error           If the index is not within the range of 0 to MaxClients, an
@@ -1836,7 +1837,6 @@ native set_user_flags(index, flags = -1, id = 0, bool:override = false);
  *
  * @param index     Client index, 0 to set flags of server
  * @param id        Flag set id, ranging from 0 to 31
- * @param override  If set to true, all other flags will be removed
  *
  * @noreturn
  * @error           If the index is not within the range of 0 to MaxClients, an

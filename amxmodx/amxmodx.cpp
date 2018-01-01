@@ -2248,6 +2248,7 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 {
 	int iNum = 0;
 	int ilen;
+	int pflags = 0;
 	char* sptemp = get_amxstring(amx, params[3], 0, ilen);
 	int flags = UTIL_ReadFlags(sptemp);
 
@@ -2268,6 +2269,12 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 				team = g_teamsIds.findTeamIdCase(sptemp);
 		}
 	}
+	
+	if ((flags & 512) || (flags & 1024))
+	{
+		sptemp = get_amxstring(amx, params[4], 0, ilen);
+		pflags = UTIL_ReadFlags(sptemp);
+	}
 
 	for (int i = 1; i <= gpGlobals->maxClients; ++i)
 	{
@@ -2281,6 +2288,10 @@ static cell AMX_NATIVE_CALL get_players(AMX *amx, cell *params) /* 4 param */
 			if ((flags & 16) && (pPlayer->teamId != team))
 				continue;
 			if ((flags & 128) && (pPlayer->pEdict->v.flags & FL_PROXY))
+				continue;
+			if ((flags & 512) && ((pPlayer->flags[0] & pflags) != pflags))
+				continue;
+			if ((flags & 1024) && (!(pPlayer->flags[0] & pflags)))
 				continue;
 			if (flags & 32)
 			{

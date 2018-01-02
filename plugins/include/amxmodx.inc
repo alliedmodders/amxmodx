@@ -163,11 +163,13 @@ forward client_connectex(id, const name[], const ip[], reason[128]);
  * Called after the client's admin flags are changed.
  *
  * @param id        Client index
- * @param flags     New client flags
+ * @param oldflags  Old client flags
+ * @param newflags  New client flags
+ * @param set       Flag set id
  *
  * @noreturn
  */
-forward client_flags_updated(id, flags);
+forward client_flags_updated(id, oldflags, newflags, set);
 
 /**
  * Called when the client gets a valid SteamID.

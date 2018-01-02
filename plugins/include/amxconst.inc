@@ -492,7 +492,9 @@ enum GetPlayersFlags (<<= 1)
 	GetPlayers_MatchNameSubstring, // Match with part of name
 	GetPlayers_CaseInsensitive,    // Match case insensitive
 	GetPlayers_ExcludeHLTV,        // Do not include HLTV proxies
-	GetPlayers_IncludeConnecting   // Include connecting clients
+	GetPlayers_IncludeConnecting,  // Include connecting clients
+	GetPlayers_MatchAllFlags,      // Match with all of the specified admin flags
+	GetPlayers_MatchAnyFlags       // Match with any of the specified admin flags
 };
 
 /**

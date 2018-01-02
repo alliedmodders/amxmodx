@@ -859,13 +859,15 @@ stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = 
  *                    GetPlayers_CaseInsensitive - match case insensitive
  *                    GetPlayers_ExcludeHLTV - do not include HLTV proxies
  *                    GetPlayers_IncludeConnecting - include connecting clients
- * @param team      String to match against if the "e" or "f" flag is specified
+ *                    GetPlayers_MatchAllFlags - match with all of the specified admin flags
+ *                    GetPlayers_MatchAnyFlags - match with any of the specified admin flags
+ * @param string    String to match against if the "e", "f", "j" or "k" flag is specified
  *
  * @noreturn
  */
-stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
+stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags = GetPlayers_None, const string[] = "")
 {
 	new strFlags[10];
 	get_flags(_:flags, strFlags, charsmax(strFlags));
-	get_players(players, num, strFlags, team);
+	get_players(players, num, strFlags, string);
 }

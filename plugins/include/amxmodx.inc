@@ -1827,7 +1827,7 @@ native task_exists(id = 0, outside = 0);
  * @error           If the index is not within the range of 0 to MaxClients, an
  *                  error will be thrown.
  */
-native set_user_flags(index, flags = -1, id = 0, override = false);
+native set_user_flags(index, flags = -1, id = 0, bool:override = false);
 
 /**
  * Returns the client's admin flags as a bitflag sum.

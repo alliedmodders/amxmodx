@@ -2868,7 +2868,8 @@ static cell AMX_NATIVE_CALL set_user_flags(AMX *amx, cell *params) /* 4 param */
 	else
 		pPlayer->flags[id] |= flag;
 		
-	executeForwards(FF_ClientFlagsUpdated, static_cast<cell>(pPlayer->index), oldflags, pPlayer->flags[id], id);
+	if(oldflags != pPlayer->flags[id])
+		executeForwards(FF_ClientFlagsUpdated, static_cast<cell>(pPlayer->index), oldflags, pPlayer->flags[id], id);
 
 	return 1;
 }
@@ -2896,7 +2897,9 @@ static cell AMX_NATIVE_CALL remove_user_flags(AMX *amx, cell *params) /* 3 param
 	int oldflags = pPlayer->flags[id];
 
 	pPlayer->flags[id] &= ~flag;
-	executeForwards(FF_ClientFlagsUpdated, static_cast<cell>(pPlayer->index), oldflags, pPlayer->flags[id], id);
+	
+	if(oldflags != pPlayer->flags[id])
+		executeForwards(FF_ClientFlagsUpdated, static_cast<cell>(pPlayer->index), oldflags, pPlayer->flags[id], id);
 	
 	return 1;
 }

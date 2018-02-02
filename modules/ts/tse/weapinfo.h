@@ -42,3 +42,6 @@ struct Weapon
 extern Weapon WeaponsList[];
 extern uint32_t FireModes[6];
 extern uint32_t GetFiremodeByMask(uint32_t mask);
+
+extern IGameConfig *MainConfig;
+extern IGameConfig *CommonConfig;

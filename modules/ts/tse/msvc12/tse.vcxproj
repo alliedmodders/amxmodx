@@ -52,6 +52,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;..\..\..\..\public\memtools;..\sdk;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;$(HLSDK)\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_USRDLL;TSE_EXPORTS;HAVE_STDINT_H;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -65,6 +66,7 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(HLSDK)\public;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(METAMOD)\metamod;..\;..\..\..\..\public;..\..\..\..\public\sdk;..\..\..\..\public\amtl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_USRDLL;TSE_EXPORTS;HAVE_STDINT_H;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -76,6 +78,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\public\sdk\amxxmodule.h" />
     <ClInclude Include="..\functions.h" />
+    <ClInclude Include="..\gameinfo.h" />
     <ClInclude Include="..\misc.h" />
     <ClInclude Include="..\msghooking.h" />
     <ClInclude Include="..\moduleconfig.h" />
@@ -86,6 +89,7 @@
     <ClCompile Include="..\..\..\..\public\sdk\amxxmodule.cpp" />
     <ClCompile Include="..\CPlayer.cpp" />
     <ClCompile Include="..\functions.cpp" />
+    <ClCompile Include="..\gameinfo.cpp" />
     <ClCompile Include="..\msghooking.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\weapinfo.cpp" />

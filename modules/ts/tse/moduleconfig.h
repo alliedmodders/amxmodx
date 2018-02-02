@@ -34,6 +34,7 @@
 #define MODULE_LOGTAG "TSE"
 #define MODULE_LIBRARY "tse"
 #define MODULE_LIBCLASS ""
+
 // If you want the module not to be reloaded on mapchange, remove / comment out the next line
 #define MODULE_RELOAD_ON_MAPCHANGE
 
@@ -71,7 +72,7 @@
 * Return AMXX_GAME_OK if this module can load on the game, AMXX_GAME_BAD if it cannot.
 * syntax: int AmxxCheckGame(const char *game)
 */
-//#define FN_AMXX_CHECKGAME AmxxCheckGame
+#define FN_AMXX_CHECKGAME AmxxCheckGame
 
 /** AMXX attach
 * Do native functions init here (MF_AddNatives)
@@ -79,7 +80,7 @@
 #define FN_AMXX_ATTACH OnAmxxAttach
 
 /** AMXX Detach (unload) */
-//#define FN_AMXX_DETACH OnAmxxDetach
+#define FN_AMXX_DETACH OnAmxxDetach
 
 /** All plugins loaded
 * Do forward functions init here (MF_RegisterForward)

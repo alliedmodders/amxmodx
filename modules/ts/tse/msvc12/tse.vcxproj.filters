@@ -38,6 +38,9 @@
     <ClInclude Include="..\functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\gameinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CPlayer.cpp">
@@ -56,6 +59,9 @@
       <Filter>Module SDK Base</Filter>
     </ClCompile>
     <ClCompile Include="..\functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gameinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -17,7 +17,7 @@
 void CmdHandling();
 
 // Variables
-const char * deststypes[10] = 
+const char *deststypes[10] = 
 {
 	"Broadcast (unreliable)",
 	NULL,
@@ -30,24 +30,48 @@ const char * deststypes[10] =
 	NULL,
 	"HLTV"
 };
+
 HookMsg *HMDecl;
 bool IsDebugMode = false;
 bool hmlist[MAX_REG_MSGS];
+
 int OnPlayerStunt;
 int OnPlayerMeleeHit;
 int OnPlayerPickupPwup;
+
+IGameConfigManager *ConfigManager;
+IGameConfig	*MainConfig;
+
+int AmxxCheckGame(const char *game)
+{
+	if (strcasecmp(game, "ts") == 0)
+		return AMXX_GAME_OK;
+	return AMXX_GAME_BAD;
+}
 
 void OnAmxxAttach()
 {
 	MF_AddNatives(pl_funcs);
 	MF_AddNatives(weap_funcs);
 	REG_SVR_COMMAND("tse", CmdHandling);
-	// initializing game dll lib
+	ConfigManager = MF_GetConfigManager();
+
+	char error[256] = "";
+	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)) && *error)
+	{
+		MF_Log("Could not read module.games gamedata: %s", error);
+		return;
+	}
+}
+
+void OnAmxxDetach()
+{
+	ConfigManager->CloseGameConfigFile(MainConfig);
 }
 
 void OnPluginsLoaded()
 {
-	OnPlayerStunt = MF_RegisterForward("client_onstunt", ET_IGNORE, FP_CELL, FP_CELL, FP_DONE); 
+	OnPlayerStunt = MF_RegisterForward("client_onstunt", ET_IGNORE, FP_CELL, FP_CELL, FP_DONE);
 	OnPlayerMeleeHit = MF_RegisterForward("client_onmeleehit", ET_STOP, FP_CELL, FP_FLOAT, FP_FLOAT, FP_DONE);
 	OnPlayerPickupPwup = MF_RegisterForward("client_onpickuppwup", ET_IGNORE, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }
@@ -78,7 +102,7 @@ void CmdHandling()
 	else if (strcmp(cmd, "debugmode") == 0)
 	{
 		IsDebugMode = !IsDebugMode;
-		PRINT("[%s] The debug mode was switched %s.\n", MODULE_LOGTAG, IsDebugMode ? "on" : "off");
+		PRINT("The debug mode was switched %s.\n", IsDebugMode ? "on" : "off");
 	}
 	else if (strcmp(cmd, "incmsg") == 0)
 	{
@@ -88,7 +112,7 @@ void CmdHandling()
 			{
 				if (msgbinds[i]) {
 					hmlist[i] = true;
-					PRINT("[%s] Message \"%s\" recursively added to hooking list.\n", MODULE_LOGTAG, msgbinds[i]);
+					PRINT("Message \"%s\" recursively added to hooking list.\n", msgbinds[i]);
 				}
 			}
 		}
@@ -96,10 +120,10 @@ void CmdHandling()
 			int msgid = GetMsgIDByName(mname);
 			if (msgid) {
 				hmlist[msgid] = true;
-				PRINT("[%s] Message \"%s\" (ID: %d) successfully included to hooking list.\n", MODULE_LOGTAG, mname, msgid);
+				PRINT("Message \"%s\" (ID: %d) successfully included to hooking list.\n", mname, msgid);
 			}
 			else
-				PRINT("[%s] Including failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
+				PRINT("Including failed - cannot to find message with name \"%s\".\n", mname);
 		}
 	}
 	else if (strcmp(cmd, "excmsg") == 0)
@@ -109,16 +133,16 @@ void CmdHandling()
 			for (int i = 0; i < MAX_REG_MSGS; i++)
 				if (msgbinds[i]) 
 					hmlist[i] = false;
-			PRINT("[%s] Hooking list was cleaned up.\n", MODULE_LOGTAG);
+			PRINT("Hooking list was cleaned up.\n");
 		}
 		else {
 			int msgid = GetMsgIDByName(mname);
 			if (msgid) {
 				hmlist[msgid] = false;
-				PRINT("[%s] Message \"%s\" (ID: %d) successfully excluded from hooking list.\n", MODULE_LOGTAG, mname, msgid);
+				PRINT("Message \"%s\" (ID: %d) successfully excluded from hooking list.\n", mname, msgid);
 			}
 			else
-				PRINT("[%s] Excluding failed - cannot to find message with name \"%s\".\n", MODULE_LOGTAG, mname);
+				PRINT("Excluding failed - cannot to find message with name \"%s\".\n", mname);
 		}
 	}
 }

@@ -149,7 +149,7 @@ public cmdRandom(id,level,cid) {
   else {
     new cur=0;
     new i=1;
-	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER);
 	
     while (i<MaxClients) {
       if (is_user_connected(i)) {

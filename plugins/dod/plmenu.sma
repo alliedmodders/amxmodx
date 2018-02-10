@@ -203,6 +203,7 @@ displayBanMenu(id,pos)
 
 	new end = start + 7
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -212,7 +213,7 @@ displayBanMenu(id,pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, charsmax(name))
 
-		if (is_user_bot(i) || access(i, ADMIN_IMMUNITY))
+		if (is_user_bot(i) || (access(i, ADMIN_IMMUNITY) && !super))
 		{
 			++b
 			
@@ -341,6 +342,7 @@ displaySlapMenu(id,pos)
     
 	new end = start + 7
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
   
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -350,7 +352,7 @@ displaySlapMenu(id,pos)
 		get_user_name(i,name,charsmax(name))
 		get_user_team(i,team,charsmax(team))
 		
-		if (!is_user_alive(i) || access(i, ADMIN_IMMUNITY))
+		if (!is_user_alive(i) || (access(i, ADMIN_IMMUNITY) && !super))
 		{
 			++b
 		
@@ -450,6 +452,7 @@ displayKickMenu(id, pos)
 
 	new end = start + 8
 	new keys = MENU_KEY_0
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -459,7 +462,7 @@ displayKickMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, charsmax(name))
 
-		if (access(i, ADMIN_IMMUNITY))
+		if (access(i, ADMIN_IMMUNITY) && !super)
 		{
 			++b
 		
@@ -551,6 +554,7 @@ displayTeamMenu(id, pos)
 
 	new end = start + 7
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -561,7 +565,7 @@ displayTeamMenu(id, pos)
 		get_user_name(i, name, charsmax(name))
 		iteam = get_user_team(i, team, charsmax(team))
 		
-		if ((iteam == (g_menuOption[id] ? 1 : 2)) || access(i, ADMIN_IMMUNITY))
+		if ((iteam == (g_menuOption[id] ? 1 : 2)) || (access(i, ADMIN_IMMUNITY) && !super))
 		{
 			++b
 			
@@ -660,6 +664,7 @@ displayClcmdMenu(id, pos)
 
 	new end = start + 7
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -669,7 +674,7 @@ displayClcmdMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, charsmax(name))
 
-		if (!g_menuSelectNum[id] || access(i, ADMIN_IMMUNITY))
+		if (!g_menuSelectNum[id] || (access(i, ADMIN_IMMUNITY) && !super))
 		{
 			++b
 			

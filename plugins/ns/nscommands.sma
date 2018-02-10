@@ -149,9 +149,11 @@ public cmdRandom(id,level,cid) {
   else {
     new cur=0;
     new i=1;
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
+	
     while (i<MaxClients) {
       if (is_user_connected(i)) {
-        if (!(get_user_flags(i) & ADMIN_IMMUNITY)) {
+        if (!(get_user_flags(i) & ADMIN_IMMUNITY) || super) {
           if (g_Team[i] == 0) {
             cur++;
           }

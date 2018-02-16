@@ -306,6 +306,9 @@
     <ClCompile Include="..\CoreConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\public\resdk\mod_rehlds_api.cpp">
       <Filter>ReSDK</Filter>
     </ClCompile>
@@ -581,7 +584,11 @@
     <ClInclude Include="..\..\public\resdk\mod_rehlds_api.h">
       <Filter>ReSDK</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\CFrameAction.h">
+=======
+    <ClInclude Include="..\logger.h">
+>>>>>>> a4f3d94... Implemented support for a customizable logger
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -691,6 +698,15 @@
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\string_stocks.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\logger_const.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\logger_stocks.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\logger.inc">
       <Filter>Pawn Includes</Filter>
     </None>
   </ItemGroup>

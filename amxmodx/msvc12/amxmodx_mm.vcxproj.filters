@@ -584,11 +584,10 @@
     <ClInclude Include="..\..\public\resdk\mod_rehlds_api.h">
       <Filter>ReSDK</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="..\CFrameAction.h">
-=======
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\logger.h">
->>>>>>> a4f3d94... Implemented support for a customizable logger
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

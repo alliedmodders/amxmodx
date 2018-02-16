@@ -19,6 +19,13 @@
 #define LOG_SEVERITY_DEBUG	 1
 #define LOG_SEVERITY_NONE	 0
 
+#define LOG_FORMAT_NAME		0
+#define LOG_FORMAT_MESSAGE	1
+#define LOG_FORMAT_DATE		2
+#define LOG_FORMAT_TIME		3
+#define LOG_FORMAT_PATH		4
+#define LOG_FORMAT_TRACE	5
+
 class Logger {
 private:
 	static int m_MinLoggableVerbosity;
@@ -39,6 +46,7 @@ public:
 	static void onMapChange();
 
 private:
+	int m_PluginId;
 	int m_Verbosity;
 	ke::AString m_NameFormat;
 	ke::AString m_MessageFormat;
@@ -48,7 +56,8 @@ private:
 	ke::AString m_TraceFormat;
 
 public:
-	Logger(int verbosity,
+	Logger(int pluginId,
+		int verbosity,
 		const char *nameFormat,
 		const char *messageFormat,
 		const char *dateFormat,
@@ -62,11 +71,15 @@ public:
 		m_TimeFormat(timeFormat),
 		m_PathFormat(pathFormat),
 		m_TraceFormat(traceFormat) {
+		m_PluginId = pluginId;
 		setVerbosity(verbosity);
 	};
 
 public:
+	int getPluginId() const;
+
 	bool isLogging() const;
+
 	int getVerbosity() const;
 	int setVerbosity(int verbosity);
 

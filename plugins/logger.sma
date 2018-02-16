@@ -1,5 +1,7 @@
 #define VERSION_STRING "1.0.0"
 
+#define DEBUG_GLOBAL_VERBOSITY
+
 #include <amxmodx>
 #include <logger>
 
@@ -16,7 +18,7 @@ public plugin_precache() {
             .author = "Tirant");
 
     new defaultValue[32];
-    num_to_str(any:(DEFAULT_LOGGER_VERBOSITY), defaultValue, charsmax(defaultValue));
+    num_to_str(any:(InfoLevel), defaultValue, charsmax(defaultValue));
 
     g_MinVerbosityCvar = create_cvar(
             .name = "logger_min_verbosity",
@@ -25,7 +27,7 @@ public plugin_precache() {
             .description = "Controls the minimum severity a message must have \
                     in order to be logged across all loggers",
             .has_min = true,
-            .min_val = float(any:(Severity_None)),
+            .min_val = float(any:(UnsetLevel)),
             .has_max = false);
     bind_pcvar_num(g_MinVerbosityCvar, g_MinVerbosity);
     hook_cvar_change(g_MinVerbosityCvar, "onMinVerbosityCvarChanged");
@@ -37,13 +39,13 @@ public plugin_precache() {
 
 public onMinVerbosityCvarChanged(pcvar, const old_value[], const new_value[]) {
     assert pcvar == g_MinVerbosityCvar;
-    LoggerSetVerbosity(All_Loggers, toSeverity(g_MinVerbosity));
+    SetGlobalLoggerVerbosity(toVerbosity(g_MinVerbosity));
 }
 
 public OnLoggerCreated(
         const plugin,
         const Logger: logger,
-        const Severity: verbosity,
+        const LoggerVerbosity: verbosity,
         const name[],
         const nameFormat[],
         const msgFormat[],
@@ -52,7 +54,7 @@ public OnLoggerCreated(
         const pathFormat[],
         const traceFormat[]) {
     new cvarName[32];
-    formatex(cvarName, charsmax(cvarName), "%s_logger_verbosity", name);
+    formatex(cvarName, charsmax(cvarName), "%s_log_verbosity", name);
 
     new defaultValue[32];
     num_to_str(any:(verbosity), defaultValue, charsmax(defaultValue));
@@ -67,7 +69,7 @@ public OnLoggerCreated(
             .flags = FCVAR_NONE,
             .description = cvarDescription,
             .has_min = true,
-            .min_val = float(any:(Severity_None)),
+            .min_val = float(any:(UnsetLevel)),
             .has_max = false);
     hook_cvar_change(cvarVerbosity, "onVerbosityCvarChanged");
 
@@ -76,7 +78,7 @@ public OnLoggerCreated(
         cvarMap = TrieCreate();
     }
 
-    TrieSetCell(cvarMap, temp, logger);
+    TrieSetCell(cvarMap, temp, plugin);
 
     new curValue[32];
     get_pcvar_string(cvarVerbosity, curValue, charsmax(curValue));
@@ -87,8 +89,8 @@ public onVerbosityCvarChanged(pcvar, const old_value[], const new_value[]) {
     assert cvarMap > Invalid_Trie;
 
     temp[0] = pcvar;
-    new Logger: logger;
-    assert TrieGetCell(cvarMap, temp, logger);
-    assert logger > Invalid_Logger;
-    LoggerSetVerbosity(logger, toSeverity(str_to_num(new_value)));
+    new plugin;
+    assert TrieGetCell(cvarMap, temp, plugin);
+    LoadLogger(plugin);
+    SetLoggerVerbosity(toVerbosity(str_to_num(new_value)));
 }

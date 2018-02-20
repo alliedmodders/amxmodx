@@ -30,4 +30,6 @@ run.options.add_option('--mysql', type='string', dest='mysql_path', default='',
                        help='Path to MySQL')
 run.options.add_option('--disable-auto-versioning', action='store_true', dest='disable_auto_versioning',
                        default=False, help='Disable the auto versioning script')
+run.options.add_option('--nasm', type='string', dest='nasm_path',
+                       default='nasm', help='Path to NASM')
 run.Configure()

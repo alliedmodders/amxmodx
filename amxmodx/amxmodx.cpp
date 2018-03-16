@@ -480,9 +480,9 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 11 param *
 	g_hudset.r2 = 255;
 	g_hudset.g2 = 255;
 	g_hudset.b2 = 250;
-	g_hudset.r1 = static_cast<byte>(params[1]);
-	g_hudset.g1 = static_cast<byte>(params[2]);
-	g_hudset.b1 = static_cast<byte>(params[3]);
+	g_hudset.r1 = params[1] < 0 ? RANDOM_LONG(abs(params[1]), 255) : static_cast<byte>(params[1]);
+	g_hudset.g1 = params[2] < 0 ? RANDOM_LONG(abs(params[2]), 255) : static_cast<byte>(params[2]);
+	g_hudset.b1 = params[3] < 0 ? RANDOM_LONG(abs(params[3]), 255) : static_cast<byte>(params[3]);
 	g_hudset.x = amx_ctof(params[4]);
 	g_hudset.y = amx_ctof(params[5]);
 	g_hudset.effect = params[6];
@@ -574,9 +574,9 @@ static cell AMX_NATIVE_CALL set_dhudmessage(AMX *amx, cell *params) /* 10 param 
 	g_hudset.r2 = 255;
 	g_hudset.g2 = 255;
 	g_hudset.b2 = 250;
-	g_hudset.r1 = static_cast<byte>(params[1]);
-	g_hudset.g1 = static_cast<byte>(params[2]);
-	g_hudset.b1 = static_cast<byte>(params[3]);
+	g_hudset.r1 = params[1] < 0 ? RANDOM_LONG(abs(params[1]), 255) : static_cast<byte>(params[1]);
+	g_hudset.g1 = params[2] < 0 ? RANDOM_LONG(abs(params[2]), 255) : static_cast<byte>(params[2]);
+	g_hudset.b1 = params[3] < 0 ? RANDOM_LONG(abs(params[3]), 255) : static_cast<byte>(params[3]);
 	g_hudset.x = amx_ctof(params[4]);
 	g_hudset.y = amx_ctof(params[5]);
 	g_hudset.effect = params[6];

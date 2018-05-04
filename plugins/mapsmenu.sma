@@ -116,8 +116,8 @@ public checkVotes(id)
 		g_choosed = g_voteSelected[id][a]
 		new tempMap[32];
 		ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
-		client_print(0, print_chat, "%L %s", LANG_PLAYER, "VOTE_SUCCESS", tempMap);
-		log_amx("Vote: %L %s", "en", "VOTE_SUCCESS", tempMap);
+		client_print(0, print_chat, "%L", LANG_PLAYER, "VOTE_SUCCESS", iResult, iRatio, tempMap);
+		log_amx("Vote: %L", "en", "VOTE_SUCCESS", iResult, iRatio, tempMap);
 	}
 	
 	if (g_choosed != -1)
@@ -148,8 +148,8 @@ public checkVotes(id)
 			set_task(2.0, "delayedChange", 0, tempMap, strlen(tempMap) + 1)
 		}
 	} else {
-		client_print(0, print_chat, "%L", LANG_PLAYER, "VOTE_FAILED")
-		log_amx("Vote: %L", "en", "VOTE_FAILED")
+		client_print(0, print_chat, "%L", LANG_PLAYER, "VOTE_FAILED", iResult, iRatio)
+		log_amx("Vote: %L", "en", "VOTE_FAILED", iResult, iRatio)
 	}
 	
 	remove_task(34567 + id)

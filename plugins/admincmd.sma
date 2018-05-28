@@ -185,38 +185,70 @@ public cmdKick(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 
-	new arg[32]
+	new arg[32], players[MAX_PLAYERS], lang[32];
 	read_argv(1, arg, charsmax(arg))
-	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
+	new plnum = cmd_targetex(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_SAFETY, players, lang, charsmax(lang))
 	
-	if (!player)
+	if (!plnum)
 		return PLUGIN_HANDLED
 	
-	new authid[32], authid2[32], name2[MAX_NAME_LENGTH], name[MAX_NAME_LENGTH], userid2, reason[32]
+	if (plnum == 1)
+	{
+		new authid[32], authid2[32], name2[MAX_NAME_LENGTH], name[MAX_NAME_LENGTH], userid2, reason[32]
 	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_name(player, name2, charsmax(name2))
-	get_user_name(id, name, charsmax(name))
-	userid2 = get_user_userid(player)
-	read_argv(2, reason, charsmax(reason))
-	remove_quotes(reason)
-	
-	log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, reason)
+		get_user_authid(id, authid, charsmax(authid))
+		get_user_authid(players[0], authid2, charsmax(authid2))
+		get_user_name(players[0], name2, charsmax(name2))
+		get_user_name(id, name, charsmax(name))
+		userid2 = get_user_userid(players[0])
+		read_argv(2, reason, charsmax(reason))
+		remove_quotes(reason)
+		
+		log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, reason)
 
-	show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", name, name2);
+		show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", name, name2);
 
-	if (is_user_bot(player))
-		server_cmd("kick #%d", userid2)
+		if (is_user_bot(players[0]))
+			server_cmd("kick #%d", userid2)
+		else
+		{
+			if (reason[0])
+				server_cmd("kick #%d ^"%s^"", userid2, reason)
+			else
+				server_cmd("kick #%d", userid2)
+		}
+		
+		console_print(id, "[AMXX] Client ^"%s^" kicked", name2)
+	}
 	else
 	{
-		if (reason[0])
-			server_cmd("kick #%d ^"%s^"", userid2, reason)
-		else
-			server_cmd("kick #%d", userid2)
+		new authid[32], name[MAX_NAME_LENGTH], reason[32];
+		get_user_authid(id, authid, charsmax(authid));
+		get_user_name(id, name, charsmax(name));
+		read_argv(2, reason, charsmax(reason));
+		remove_quotes(reason);
+		
+		log_amx("Cmd: ^"%s<%d><%s><>^" kick %l (reason ^"%s^")", name, get_user_userid(id), authid, lang, reason);
+		
+		show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", name, lang);
+		
+		new userid2;
+		for (new i = 0; i < plnum; ++i)
+		{
+			userid2 = get_user_userid(players[i]);
+			if (is_user_bot(players[i]))
+				server_cmd("kick #%d", userid2)
+			else
+			{
+				if (reason[0])
+					server_cmd("kick #%d ^"%s^"", userid2, reason)
+				else
+					server_cmd("kick #%d", userid2)
+			}
+		}
+		
+		console_print(id, "[AMXX] %l", "CLIENTS_KICKED", lang);
 	}
-	
-	console_print(id, "[AMXX] Client ^"%s^" kicked", name2)
 	
 	return PLUGIN_HANDLED
 }
@@ -418,15 +450,15 @@ public cmdBan(id, level, cid)
 	if (!cmd_access(id, level, cid, 3))
 		return PLUGIN_HANDLED
 
-	new target[32], minutes[8], reason[64]
+	new target[32], minutes[8], reason[64], players[MAX_PLAYERS];
 	
-	read_argv(1, target, charsmax(target))
-	read_argv(2, minutes, charsmax(minutes))
-	read_argv(3, reason, charsmax(reason))
+	read_argv(1, target, charsmax(target));
+	read_argv(2, minutes, charsmax(minutes));
+	read_argv(3, reason, charsmax(reason));
 	
-	new player = cmd_target(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF)
+	new plnum = cmd_targetex(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF | CMDTARGET_NO_MULTIPLE_TARGETS, players);
 	
-	if (!player)
+	if (!plnum)
 		return PLUGIN_HANDLED
 
 	new nNum = str_to_num(minutes)
@@ -443,11 +475,11 @@ public cmdBan(id, level, cid)
 	}
 
 	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
-	new userid2 = get_user_userid(player)
+	new userid2 = get_user_userid(players[0])
 
-	get_user_authid(player, authid2, charsmax(authid2))
+	get_user_authid(players[0], authid2, charsmax(authid2))
 	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(player, name2, charsmax(name2))
+	get_user_name(players[0], name2, charsmax(name2))
 	get_user_name(id, name, charsmax(name))
 	
 	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
@@ -456,11 +488,11 @@ public cmdBan(id, level, cid)
 	
 	new temp[64], banned[16]
 	if (nNum)
-		formatex(temp, charsmax(temp), "%L", player, "FOR_MIN", minutes)
+		formatex(temp, charsmax(temp), "%L", players[0], "FOR_MIN", minutes)
 	else
-		formatex(temp, charsmax(temp), "%L", player, "PERM")
+		formatex(temp, charsmax(temp), "%L", players[0], "PERM")
 
-	formatex(banned, charsmax(banned), "%L", player, "BANNED")
+	formatex(banned, charsmax(banned), "%L", players[0], "BANNED")
 
 	if (reason[0])
 		server_cmd("kick #%d ^"%s (%s %s)^";wait;banid %s %s;wait;writeid", userid2, reason, banned, temp, minutes, authid2)
@@ -472,11 +504,11 @@ public cmdBan(id, level, cid)
 
 	new msg[256];
 	new len;
-	new players[MAX_PLAYERS], pnum, plr
-	get_players(players, pnum, "ch")
+	new plrs[MAX_PLAYERS], pnum, plr
+	get_players(plrs, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
-		plr = players[i]
+		plr = plrs[i]
 
 		len = formatex(msg, charsmax(msg), "%L", plr, "BAN");
 		len += formatex(msg[len], charsmax(msg) - len, " %s ", name2);
@@ -505,15 +537,15 @@ public cmdBanIP(id, level, cid)
 	if (!cmd_access(id, level, cid, 3))
 		return PLUGIN_HANDLED
 	
-	new target[32], minutes[8], reason[64]
+	new target[32], minutes[8], reason[64], players[MAX_PLAYERS];
 	
-	read_argv(1, target, charsmax(target))
-	read_argv(2, minutes, charsmax(minutes))
-	read_argv(3, reason, charsmax(reason))
+	read_argv(1, target, charsmax(target));
+	read_argv(2, minutes, charsmax(minutes));
+	read_argv(3, reason, charsmax(reason));
 	
-	new player = cmd_target(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF)
+	new plnum = cmd_targetex(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF | CMDTARGET_NO_MULTIPLE_TARGETS, players);
 	
-	if (!player)
+	if (!plnum)
 		return PLUGIN_HANDLED
 
 	new nNum = str_to_num(minutes)
@@ -530,11 +562,11 @@ public cmdBanIP(id, level, cid)
 	}
 	
 	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
-	new userid2 = get_user_userid(player)
+	new userid2 = get_user_userid(players[0])
 	
-	get_user_authid(player, authid2, charsmax(authid2))
+	get_user_authid(players[0], authid2, charsmax(authid2))
 	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(player, name2, charsmax(name2))
+	get_user_name(players[0], name2, charsmax(name2))
 	get_user_name(id, name, charsmax(name))
 	
 	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
@@ -543,13 +575,13 @@ public cmdBanIP(id, level, cid)
 
 	new temp[64], banned[16]
 	if (nNum)
-		formatex(temp, charsmax(temp), "%L", player, "FOR_MIN", minutes)
+		formatex(temp, charsmax(temp), "%L", players[0], "FOR_MIN", minutes)
 	else
-		formatex(temp, charsmax(temp), "%L", player, "PERM")
-	format(banned, 15, "%L", player, "BANNED")
+		formatex(temp, charsmax(temp), "%L", players[0], "PERM")
+	format(banned, 15, "%L", players[0], "BANNED")
 
 	new address[32]
-	get_user_ip(player, address, charsmax(address), 1)
+	get_user_ip(players[0], address, charsmax(address), 1)
 
 	if (reason[0])
 		server_cmd("kick #%d ^"%s (%s %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip", userid2, reason, banned, temp, minutes, address)
@@ -560,11 +592,11 @@ public cmdBanIP(id, level, cid)
 
 	new msg[256];
 	new len;
-	new players[MAX_PLAYERS], pnum, plr
-	get_players(players, pnum, "ch")
+	new plrs[MAX_PLAYERS], pnum, plr
+	get_players(plrs, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
-		plr = players[i]
+		plr = plrs[i]
 
 		len = formatex(msg, charsmax(msg), "%L", plr, "BAN");
 		len += formatex(msg[len], charsmax(msg) - len, " %s ", name2);
@@ -593,30 +625,46 @@ public cmdSlay(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 	
-	new arg[32]
+	new arg[32], players[MAX_PLAYERS], lang[32];
+	read_argv(1, arg, charsmax(arg));
+	new plnum = cmd_targetex(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE, players, lang, charsmax(lang));
 	
-	read_argv(1, arg, charsmax(arg))
-	
-	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE)
-	
-	if (!player)
+	if (!plnum)
 		return PLUGIN_HANDLED
-	
-	user_kill(player)
-	
-	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
-	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_name(player, name2, charsmax(name2))
-	
-	log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
+	if (plnum == 1)
+	{
+		user_kill(players[0])
+		
+		new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
+		
+		get_user_authid(id, authid, charsmax(authid))
+		get_user_name(id, name, charsmax(name))
+		get_user_authid(players[0], authid2, charsmax(authid2))
+		get_user_name(players[0], name2, charsmax(name2))
+		
+		log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(players[0]), authid2)
 
-	show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
+		show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
 
-	console_print(id, "[AMXX] %L", id, "CLIENT_SLAYED", name2)
-	
+		console_print(id, "[AMXX] %L", id, "CLIENT_SLAYED", name2)
+	}
+	else
+	{
+		for (new i = 0; i < plnum; ++i)
+		{
+			user_kill(players[i]);
+		}
+		
+		new authid[32], name[MAX_NAME_LENGTH];
+		get_user_authid(id, authid, charsmax(authid));
+		get_user_name(id, name, charsmax(name));
+		
+		log_amx("Cmd: ^"%s<%d><%s><>^" slay %l", name, get_user_userid(id), authid, lang);
+		
+		show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, lang);
+		
+		console_print(id, "[AMXX] %l", "CLIENTS_SLAYED", lang);
+	}
 	return PLUGIN_HANDLED
 }
 
@@ -625,32 +673,51 @@ public cmdSlap(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 
-	new arg[32]
+	new arg[32], players[MAX_PLAYERS], lang[32];
+	read_argv(1, arg, charsmax(arg));
+	new plnum = cmd_targetex(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE, players, lang, charsmax(lang));
 	
-	read_argv(1, arg, charsmax(arg))
-	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE)
-	
-	if (!player)
+	if (!plnum)
 		return PLUGIN_HANDLED
 
-	new spower[32], authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
+	new spower[32];
+	read_argv(2, spower, charsmax(spower));
+	new damage = clamp(str_to_num(spower), 0);
 	
-	read_argv(2, spower, charsmax(spower))
+	if (plnum == 1)
+	{
+		new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
 	
-	new damage = clamp( str_to_num(spower), 0)
+		user_slap(players[0], damage)
 	
-	user_slap(player, damage)
+		get_user_authid(id, authid, charsmax(authid))
+		get_user_name(id, name, charsmax(name))
+		get_user_authid(players[0], authid2, charsmax(authid2))
+		get_user_name(players[0], name2, charsmax(name2))
 	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_name(player, name2, charsmax(name2))
-	
-	log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, damage, name2, get_user_userid(player), authid2)
+		log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, damage, name2, get_user_userid(players[0]), authid2)
 
-	show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, damage);
+		show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, damage);
 
-	console_print(id, "[AMXX] %L", id, "CLIENT_SLAPED", name2, damage)
+		console_print(id, "[AMXX] %L", id, "CLIENT_SLAPED", name2, damage)
+	}
+	else
+	{
+		for (new i = 0; i < plnum; ++i)
+		{
+			user_slap(players[i], damage);
+		}
+		
+		new authid[32], name[MAX_NAME_LENGTH];
+		get_user_authid(id, authid, charsmax(authid));
+		get_user_name(id, name, charsmax(name));
+		
+		log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage %l", name, get_user_userid(id), authid, damage, lang);
+		
+		show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, lang, damage);
+		
+		console_print(id, "[AMXX] %l", "CLIENTS_SLAPED", lang, damage);
+	}
 	
 	return PLUGIN_HANDLED
 }
@@ -1307,24 +1374,24 @@ public cmdNick(id, level, cid)
 	if (!cmd_access(id, level, cid, 3))
 		return PLUGIN_HANDLED
 
-	new arg1[32], arg2[32], authid[32], name[32], authid2[32], name2[32]
+	new arg1[32], arg2[32], authid[32], name[32], authid2[32], name2[32], players[MAX_PLAYERS];
 
-	read_argv(1, arg1, charsmax(arg1))
-	read_argv(2, arg2, charsmax(arg2))
+	read_argv(1, arg1, charsmax(arg1));
+	read_argv(2, arg2, charsmax(arg2));
 
-	new player = cmd_target(id, arg1, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
+	new plnum = cmd_targetex(id, arg1, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_NO_MULTIPLE_TARGETS, players);
 	
-	if (!player)
+	if (!plnum)
 		return PLUGIN_HANDLED
 
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_name(player, name2, charsmax(name2))
+	get_user_authid(players[0], authid2, charsmax(authid2))
+	get_user_name(players[0], name2, charsmax(name2))
 
-	set_user_info(player, "name", arg2)
+	set_user_info(players[0], "name", arg2)
 
-	log_amx("Cmd: ^"%s<%d><%s><>^" change nick to ^"%s^" ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, arg2, name2, get_user_userid(player), authid2)
+	log_amx("Cmd: ^"%s<%d><%s><>^" change nick to ^"%s^" ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, arg2, name2, get_user_userid(players[0]), authid2)
 
 	show_activity_key("ADMIN_NICK_1", "ADMIN_NICK_2", name, name2, arg2);
 

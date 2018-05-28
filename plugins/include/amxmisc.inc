@@ -12,6 +12,10 @@
 #endif
 #define _amxmisc_included
 
+#if !defined _fakemeta_included
+	#include <fakemeta>
+#endif
+
 #if !defined _amxmodx_included
 	#include <amxmodx>
 #endif
@@ -118,10 +122,13 @@ stock access(id, level)
 /**
  * cmd_target flags
  */
-#define CMDTARGET_OBEY_IMMUNITY (1<<0) // Obey immunity
-#define CMDTARGET_ALLOW_SELF    (1<<1) // Allow self targeting
-#define CMDTARGET_ONLY_ALIVE    (1<<2) // Target must be alive
-#define CMDTARGET_NO_BOTS       (1<<3) // Target can't be a bot
+#define CMDTARGET_OBEY_IMMUNITY       (1<<0) // Obey immunity
+#define CMDTARGET_ALLOW_SELF          (1<<1) // Allow self targeting
+#define CMDTARGET_ONLY_ALIVE          (1<<2) // Target must be alive
+#define CMDTARGET_NO_BOTS             (1<<3) // Target can't be a bot
+#define CMDTARGET_NO_SPEC             (1<<4) // Target can't be spectator
+#define CMDTARGET_SAFETY              (1<<5) // Allow only safety commands (@aim @bots @me @spec @spectating name)
+#define CMDTARGET_NO_MULTIPLE_TARGETS (1<<6) // Allow targeting only one target
 
 /**
  * Processes a generic target pattern and tries to match it to a client based
@@ -197,6 +204,333 @@ stock cmd_target(id, const arg[], flags = CMDTARGET_OBEY_IMMUNITY)
 	}
 
 	return player;
+}
+
+/**
+ * Same as above, but allow a more complex and flexible targeting system.
+ * cmd_target allows targeting a single client, if you want to target more use this function.
+ * Any special targeting type must be preceded by @, otherwise it will be treated as single-client and will call cmd_target. 
+ * New targeting types are: @all, @alive, @aim, @bots, @dead, @humans, @me, @!me, @ct, @t, @spec, @spectating. 
+ *
+ * @all        : target all players from server. 
+ * @alive      : target all alive player from server.
+ * @aim        : target the player that the admin is currently looking at.
+ * @bots       : target only bots.
+ * @dead       : target only dead players. 
+ * @humans     : target only human players.
+ * @me         : target the admin that write the command. 
+ * @!me        : target everyone in the server except the admin that use the command. 
+ * @ct         : target anyone from CT team.
+ * @t          : target anyone from TERRORIST team.
+ * @spec       : target anyone from SPECTATOR team.
+ * @spectating : target the player that the admin is currently spectating.
+ *
+ * @note Unlike cmd_target, here the pattern flags(CMDTARGET_*) are applied before any other check is performed.
+ * @note The array is filled only with fully valid players that passed all filterings. It works in get_players style.
+ * @note Work with clasic targeting ways: name/ip/authid/userid. This are checked after the special ones(@*).
+ * @note Some commands does not work on dead and/or spectator players(like amx_slay). In such case, a message is send to the admin.
+ * @note They are case-sensitive.
+ *
+ * @example new ArrayPlayers[MAX_PLAYERS], Num = cmd_target_ex(params), id; for(new i; i < Num; i++) { id = ArrayPlayers[i]; other_code_here }
+ * @example amx_slay @dead is not valid and will throw an error. amx_slay @alive is fully valid.
+ *
+ * @param id       	        	Client index of admin performing an action
+ * @param target    	        Target pattern
+ * @param cmd_flags             Filtering flags, see CMDTARGET_* constants above
+ * @param players_list          The array that will be filled with all players that match the patter specified 
+ * @param size                  The dimension of the array, you can use this to limit the number of players retured
+ *
+ * @return                      The number of players that are added into array. You need this to loop all players. It will return 0 in case no match is possible
+ */
+stock cmd_targetex(id, const target[], cmd_flags, players_list[MAX_PLAYERS], lang[] = "", len = -1)
+{
+	//server_print("cmd_targetex : intra in functie");
+	new players[32], flags[10], team[10], bool:parse_players, player, ignored_player, num;
+	if(target[0] == '@')	
+	{
+		//server_print("cmd_targetex : are @");
+		switch(target[1])
+		{
+			case 'a':
+			{
+				if(equal(target[1], "all"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					if(cmd_flags & CMDTARGET_SAFETY)
+					{
+						console_print(id, "%l", "CANT_PERF_SAFETY");
+						return 0;
+					}
+					if(cmd_flags & CMDTARGET_ONLY_ALIVE || cmd_flags & CMDTARGET_NO_SPEC)
+					{
+						copy(flags, charsmax(flags), "a")
+					}
+					
+					if( len > 0 )
+					{
+						copy(lang, len, "ALL");
+					}
+					
+					parse_players = true;
+				}
+				else if(equal(target[1], "alive"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					if(cmd_flags & CMDTARGET_SAFETY)
+					{
+						console_print(id, "%l", "CANT_PERF_SAFETY");
+						return 0;
+					}
+					parse_players = true;
+					copy(flags, charsmax(flags), "a");
+					
+					if( len > 0 )
+					{
+						copy(lang, len, "ALIVE");
+					}
+				}
+				else if(equal(target[1], "aim"))
+				{
+					new aim_target, body;
+					get_user_aiming(id, aim_target, body);
+					
+					if(1 <= aim_target <= MaxClients)
+					{
+						player = aim_target;
+					}
+				}
+			}
+			case 'b':
+			{
+				if(equal(target[1], "bots"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					parse_players = true;
+					copy(flags, charsmax(flags), "d");
+					if( len > 0 )
+					{
+						copy(lang, len, "BOTS");
+					}
+				}
+			}
+			case 'd':
+			{
+				if(!(cmd_flags & CMDTARGET_ONLY_ALIVE) && equal(target[1], "dead"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					if(cmd_flags & CMDTARGET_SAFETY)
+					{
+						console_print(id, "%l", "CANT_PERF_SAFETY");
+						return 0;
+					}
+					parse_players = true;
+					copy(flags, charsmax(flags), "b");
+					if( len > 0 )
+					{
+						copy(lang, len, "DEAD");
+					}
+				}
+			}
+			case 'h':
+			{
+				if(equal(target[1], "humans"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					if(cmd_flags & CMDTARGET_SAFETY)
+					{
+						console_print(id, "%l", "CANT_PERF_SAFETY");
+						return 0;
+					}
+					parse_players = true;
+					copy(flags, charsmax(flags), "c");
+					if( len > 0 )
+					{
+						copy(lang, len, "HUMANS");
+					}
+				}
+			}
+			case 'm':
+			{
+				if(equal(target[1], "me"))
+				{
+					player = id;
+				}
+			}
+			case '!':
+			{
+				if(equal(target[1], "!me"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					if(cmd_flags & CMDTARGET_SAFETY)
+					{
+						console_print(id, "%l", "CANT_PERF_SAFETY");
+						return 0;
+					}
+					parse_players = true;
+					ignored_player = id;
+					if( len > 0 )
+					{
+						copy(lang, len, "NOT_ME");
+					}
+				}
+			}
+			case 'c':
+			{
+				if(equal(target[1], "ct"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					if(cmd_flags & CMDTARGET_SAFETY)
+					{
+						console_print(id, "%l", "CANT_PERF_SAFETY");
+						return 0;
+					}
+					parse_players = true;
+					copy(flags, charsmax(flags), "e");
+					copy(team, charsmax(team), "CT");
+					if( len > 0 )
+					{
+						copy(lang, len, "CT_TEAM");
+					}
+				}
+			}
+			case 't':
+			{
+				if( equal(target[1], "t"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					if(cmd_flags & CMDTARGET_SAFETY)
+					{
+						console_print(id, "%l", "CANT_PERF_SAFETY");
+						return 0;
+					}
+					parse_players = true;
+					copy(flags, charsmax(flags), "e");
+					copy(team, charsmax(team), "TERRORIST");
+					if( len > 0 )
+					{
+						copy(lang, len, "T_TEAM");
+					}
+				}
+			}
+			case 's':
+			{
+				if(!(cmd_flags & CMDTARGET_NO_SPEC) && equal(target[1], "spec"))
+				{
+					if(cmd_flags & CMDTARGET_NO_MULTIPLE_TARGETS)
+					{
+						console_print(id, "%l", "CANT_PERF_MULTIPLE");
+						return 0;
+					}
+					parse_players = true;
+					copy(flags, charsmax(flags), "e");
+					copy(team, charsmax(team), "SPECTATOR");
+					if( len > 0 )
+					{
+						copy(lang, len, "SPECTATORS");
+					}
+				}
+				else if(equal(target[1], "spectating"))
+				{
+					new spectated_player = pev(id, pev_iuser2);
+					if(1 <= spectated_player <= MaxClients)
+					{
+						player = spectated_player;
+					}
+				} 
+			}
+		}
+	}
+	
+	if(parse_players)
+	{
+		//server_print("cmd_targetex : parseaza");
+		if(flags[0] != EOS)
+		{
+			if(team[0] != EOS)
+			{
+				get_players(players, num, flags, team);
+			}
+			else 
+			{
+				get_players(players, num, flags);
+			}
+		}
+		else 
+		{
+			get_players(players, num);
+		}
+		
+		new entry;
+		for(new i; i < num; i++)
+		{
+			player = players[i];
+
+			if(ignored_player != player)
+			{
+				if(cmd_flags & CMDTARGET_OBEY_IMMUNITY)
+				{
+					if((get_user_flags(player) & ADMIN_IMMUNITY) && ((cmd_flags & CMDTARGET_ALLOW_SELF) ? (id != player) : true))
+					{
+						continue;
+					}
+				}
+				
+				if(entry < charsmax(players_list))
+				{
+					players_list[entry++] = player;
+				}
+			}
+		}
+		return entry;
+	}
+	else 
+	{
+		//server_print("cmd_targetex : nu parseaza");
+		if(!player)
+		{
+			//server_print("cmd_targetex : cmd_target");
+			player = cmd_target(id, target, cmd_flags);
+			
+			if(!player)
+			{
+				return 0;
+			}
+		}
+		players_list[0] = player;
+		return 1;
+	}
 }
 
 /**

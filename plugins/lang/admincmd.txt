@@ -1,6 +1,8 @@
 ﻿[en]
 ADMIN_KICK_1 = ADMIN: kick %s
 ADMIN_KICK_2 = ADMIN %s: kick %s
+CLIENT_KICKED = Client "%s" kicked
+CLIENTS_KICKED = %l kicked
 IP_REMOVED = Ip "%s" removed from ban list
 AUTHID_REMOVED = Authid "%s" removed from ban list
 ADMIN_UNBAN_1 = ADMIN: unban %s
@@ -14,10 +16,16 @@ PERM = permanently
 CLIENT_BANNED = Client "%s" banned
 ADMIN_SLAY_1 = ADMIN: slay %s
 ADMIN_SLAY_2 = ADMIN %s: slay %s
+ADMIN_SLAY_GROUP_1 = ADMIN : slay all %s
+ADMIN_SLAY_GROUP_2 = ADMIN %s: slay all %s
 CLIENT_SLAYED = Client "%s" slayed
+CLIENTS_SLAYED = %l slayed
 ADMIN_SLAP_1 = ADMIN: slap %s with %d damage
 ADMIN_SLAP_2 = ADMIN %s: slap %s with %d damage
+ADMIN_SLAP_GROUP_1 = ADMIN : slap all %s
+ADMIN_SLAP_GROUP_2 = ADMIN %s: slap all %s
 CLIENT_SLAPED = Client "%s" slaped with %d damage
+CLIENTS_SLAPED = %l slaped with %d damage
 MAP_NOT_FOUND = Map with that name not found or map is invalid
 ADMIN_MAP_1 = ADMIN: changelevel %s
 ADMIN_MAP_2 = ADMIN %s: changelevel %s

@@ -157,7 +157,7 @@ native Float:floatcos(Float:value, anglemode:mode=radian);
  */
 native Float:floattan(Float:value, anglemode:mode=radian);
 
- /**
+/**
  * Returns the hyperbolic sine of a given angle
  *
  * @note For available units of measurements(modes) look at the anglemode enum
@@ -170,7 +170,7 @@ native Float:floattan(Float:value, anglemode:mode=radian);
  */
 native Float:floatsinh(Float:angle, anglemode:mode=radian);
 
- /**
+/**
  * Returns the hyperbolic cosine of a given angle
  *
  * @note For available units of measurements(modes) look at the anglemode enum
@@ -183,7 +183,7 @@ native Float:floatsinh(Float:angle, anglemode:mode=radian);
  */
 native Float:floatcosh(Float:angle, anglemode:mode=radian);
 
- /**
+/**
  * Returns the hyperbolic tangent of a given angle
  *
  * @note For available units of measurements(modes) look at the anglemode enum
@@ -196,7 +196,7 @@ native Float:floatcosh(Float:angle, anglemode:mode=radian);
  */
 native Float:floattanh(Float:angle, anglemode:mode=radian);
 
- /**
+/**
  * Returns the absolute value of a floating point value
  *
  * @param value         The floating point value to get the absolute value from
@@ -208,7 +208,7 @@ native Float:floatabs(Float:value);
 /* Return the angle of a sine, cosine or tangent.
  * The output angle may be in radians, degrees, or grades. */
 
-  /**
+/**
  * Returns the angle of the given tangent
  *
  * @note For available units of measurements(modes) look at the anglemode enum
@@ -220,7 +220,7 @@ native Float:floatabs(Float:value);
  */
 native Float:floatatan(Float:angle, {anglemode,_}:radix);
 
-  /**
+/**
  * Returns the angle of the given cosine
  *
  * @note For available units of measurements(modes) look at the anglemode enum
@@ -232,7 +232,7 @@ native Float:floatatan(Float:angle, {anglemode,_}:radix);
  */
 native Float:floatacos(Float:angle, {anglemode,_}:radix);
 
-  /**
+/**
  * Returns the angle of the given sine
  *
  * @note For available units of measurements(modes) look at the anglemode enum
@@ -244,7 +244,7 @@ native Float:floatacos(Float:angle, {anglemode,_}:radix);
  */
 native Float:floatasin(Float:angle, {anglemode,_}:radix);
 
- /**
+/**
  * Computes the principal value of arctangent of y/x
  *
  * @note Someone should verify this native, not sure what it actually does.
@@ -362,7 +362,7 @@ forward operator%(Float:oper1, oper2);
 forward operator%(oper1, Float:oper2);
 
 
- /**
+/**
  * Returns whichever value is the smaller one
  *
  * @param ValueA        The first value
@@ -380,7 +380,7 @@ stock Float:floatmin(Float:ValueA, Float:ValueB)
 	return ValueB;
 }
 
- /**
+/**
  * Returns whichever value is the greater one
  *
  * @param ValueA        The first value
@@ -398,7 +398,7 @@ stock Float:floatmax(Float:ValueA, Float:ValueB)
 	return ValueB;
 }
 
- /**
+/**
  * Clamps a value between a minimum and a maximum floating point value
  *
  * @param Value         The value to be clamped

@@ -178,7 +178,7 @@ forward client_authorized(id, const authid[]);
 #pragma deprecated Use client_disconnected() instead.
 forward client_disconnect(id);
 
- /**
+/**
  * Called when a client is disconnected from the server.
  *
  * @note This will be called in some additional cases that client_disconnect doesn't cover, 

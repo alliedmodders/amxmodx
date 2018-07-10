@@ -269,22 +269,22 @@ RES_WEAP = Restrictioneaza Arme
 TELE_PLAYER = Teleporteaza Jucator
 
 [hu]
-KICK_PLAYER = Jatekos kirugasa
-BAN_PLAYER = Jatekos ban
-SLAP_SLAY = Jatekos Megutes/Megoles
-TEAM_PLAYER = Jatekos csapatvaltasa ^n
-CHANGEL = Palyavaltas
-VOTE_MAPS = Szavazas palyara ^n
-SPECH_STUFF = Beszed menu
-CLIENT_COM = Jatekos parancsok
+KICK_PLAYER = Játékos kirúgása
+BAN_PLAYER = Játékos ban
+SLAP_SLAY = Játékos Megütes/Megölés
+TEAM_PLAYER = Játékos csapatváltása ^n
+CHANGEL = Pályaváltás
+VOTE_MAPS = Szavazás pályára ^n
+SPECH_STUFF = Beszéd menü
+CLIENT_COM = Játekos parancsok
 SERVER_COM = Szerver parancsok
-CVARS_SET = Cvars Beallitasok
-CONFIG = Configuracio
-LANG_SET = Nyelv Beallitasok
-STATS_SET = Stat beallitasok ^n
-PAUSE_PLUG = Pillanat alj Pluginok
-RES_WEAP = Felfuggesztett fegyverek
-TELE_PLAYER = Teleport jatekos
+CVARS_SET = Cvar Beállítások
+CONFIG = Configuráció
+LANG_SET = Nyelv Beállítások
+STATS_SET = Stat beállítások ^n
+PAUSE_PLUG = Pillanat állj Pluginok
+RES_WEAP = Felfüggesztett fegyverek
+TELE_PLAYER = Játékos teleportálása
 
 [lt]
 KICK_PLAYER = Ismesti zaideja

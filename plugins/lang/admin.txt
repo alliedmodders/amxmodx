@@ -194,17 +194,17 @@ PRIV_SET = Privilegii acordate
 NO_ENTRY = Acest nume este rezervat pe server.
 
 [hu]
-LOADED_ADMIN = 1 admin betoltve a file-bol.
-LOADED_ADMINS =  %d admin betoltve a filebol.
+LOADED_ADMIN = 1 admin betöltve a fájlból.
+LOADED_ADMINS =  %d admin betöltve a fájlból.
 SQL_CANT_CON = SQL hiba: nem lehet csatlakozni: '%s'
-SQL_CANT_LOAD_ADMINS = SQL hiba: nem lehet az adminokat betolteni: '%s'
+SQL_CANT_LOAD_ADMINS = SQL hiba: nem lehet az adminokat betölteni: '%s'
 NO_ADMINS = Nincsenek adminok.
-SQL_LOADED_ADMIN = 1 admin betoltve a adatbazisbol
-SQL_LOADED_ADMINS = %d admin betoltve a adatbazisbol
-INV_PAS = Hibas jelszo!
-PAS_ACC = Jelszo elfogadva
-PRIV_SET = Beallitasok
-NO_ENTRY = Neked nincs bejegyzesed a szerveren...
+SQL_LOADED_ADMIN = 1 admin betöltve a adatbázisból.
+SQL_LOADED_ADMINS = %d admin betöltve a adatbázisból.
+INV_PAS = Hibas jelszó!
+PAS_ACC = Jelszó elfogadva.
+PRIV_SET = Beállítások
+NO_ENTRY = Nincs hozzáférésed a szerverhez...
 
 [lt]
 LOADED_ADMIN = Uzkrautas 1 adminas is failo

@@ -108,7 +108,7 @@ ADMIN_TELEPORT_1 = ADMIN: %s teleport
 ADMIN_TELEPORT_2 = ADMIN %s: %s teleport
 TELE_MENU = Teleport Menu
 CUR_LOC = Mostani hely
-SAVE_LOC = Hely mentese
+SAVE_LOC = Hely mentése
 
 [lt]
 ADMIN_TELEPORT_1 = ADMINAS: teleportavo %s

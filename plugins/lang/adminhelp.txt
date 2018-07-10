@@ -139,13 +139,16 @@ TIME_INFO_1 = Timp Ramas: %d:%02d. Urmatoarea Harta: %s
 TIME_INFO_2 = Nici o Limita a Timpului. Urmatoarea Harta: %s
 
 [hu]
-HELP_COMS = AMX Mod X segitseg: Parancsok
-HELP_ENTRIES = Bejegyzes %d - %d of %d
-HELP_USE_MORE = Irj '%s %d' -t tobbhoz
-HELP_USE_BEGIN = Irj '%s 1' -t az elso oldalhoz
-TYPE_HELP = Irj '%s' '%s' -t a konzolba hogy lathasd a parancsokat
-TIME_INFO_1 = Hatralevo ido: %d:%02d perc. kovetkezo palya: %s
-TIME_INFO_2 = Nincs idohatar. A kovetkezo palya: %s
+HELP_COMS = AMX Mod X segítség: Parancsok
+HELP_ENTRIES = Bejegyzés %d - %d of %d
+HELP_USE_MORE = Írj 'amx_help %d' -t többhöz
+HELP_USE_BEGIN = Yrj 'amx_help 1' -t az első oldalhoz
+TYPE_HELP = Írj 'amx_help' -t a konzolba hogy láthasd a parancsokat
+TIME_INFO_1 = Hátrálévő idő: %d:%02d perc. következő pálya: %s
+TIME_INFO_2 = Nincs időhatár. A következő pálya: %s
+HELP_CMD_INFO = <bejegyzés száma.> [megjeneítendő bejegyzések száma (csak szerver)] - információt nyújt az elérhető parancsokhoz
+SEARCH_CMD_INFO = <egyezés> <bejegyzés száma> [megjeneítendő bejegyzések száma (csak szerver)] - információt nyújt az egyező parancsokhoz
+NO_MATCHING_RESULTS = ^nNem található egyezés^n
 
 [lt]
 HELP_COMS = AMX Mod X Pagalba: Komandos

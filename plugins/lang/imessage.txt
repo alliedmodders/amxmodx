@@ -44,7 +44,7 @@ INF_REACH = Dostignat e limitut za ingormacionni suobshteniq!
 INF_REACH = Limita mesajelor informative a fost atinsa!
 
 [hu]
-INF_REACH = Informacio uzenetek limit elerve!
+INF_REACH = Információs üzenetek limitje elérve!
 
 [lt]
 INF_REACH = Informacijos zinuciu limitas pasiektas

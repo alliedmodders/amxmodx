@@ -134,13 +134,13 @@ SECOND = secunda
 SECONDS = secunde
 
 [hu]
-THE_TIME = Az ido
-TIME_LEFT = Hatralevo ido
-NO_T_LIMIT = NIncs idohatar
+THE_TIME = Az idő
+TIME_LEFT = Hátralévő idő
+NO_T_LIMIT = Nincs időhatár
 MINUTE = perc
 MINUTES = perc
-SECOND = masodperc
-SECONDS = masodperc
+SECOND = másodperc
+SECONDS = másodperc
 
 [lt]
 THE_TIME = Laikas

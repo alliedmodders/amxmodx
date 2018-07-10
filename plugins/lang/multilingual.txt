@@ -164,15 +164,15 @@ TYPE_LANGMENU = Scrie 'amx_langmenu' in consola pentru afisarea unui menu cu lim
 LANG_MENU_DISABLED = Menu limbaj dezactivat.
 
 [hu]
-LANG_NOT_EXISTS = A nyelv nem letezik
-PERSO_LANG = Szemelyi nyelv
-LANG_MENU = Nyelv menu
+LANG_NOT_EXISTS = A nyelv nem létezik
+PERSO_LANG = Személyi nyelv
+LANG_MENU = Nyelv menü
 SERVER_LANG = Szerver nyelv
-SAVE_LANG = Nyelv mentese
-SET_LANG_SERVER = A szerver nyelve "%s"-ra lett alitva.
-SET_LANG_USER = A nyelved "%s"-ra lett allitva.
-TYPE_LANGMENU = Irj 'amx_langmenu'-t a konzolba hogy nyelvet valaszthass.
-LANG_MENU_DISABLED = Nyelv menu letiltva.
+SAVE_LANG = Nyelv mentése
+SET_LANG_SERVER = A szerver nyelve "%s"-ra lett állítva.
+SET_LANG_USER = A nyelved "%s"-ra lett állítva.
+TYPE_LANGMENU = Írj 'amx_langmenu'-t a konzolba hogy nyelvet választhass.
+LANG_MENU_DISABLED = Nyelv menü letiltva.
 
 [lt]
 LANG_NOT_EXISTS = Kalba neegzistuoja

@@ -284,23 +284,23 @@ NO_CMDS = Nici o comanda valabila
 CANT_PERF_PLAYER = Aceasta comanda nu poate fi executata pe jucatorul "%s"
 
 [hu]
-ADMIN_BAN_1 = ADMIN: %s banolva
-ADMIN_BAN_2 = ADMIN %s: %s banolva
-BAN_MENU = Ban Menu
-BAN_FOR_MIN = Banolva %d percre
-BAN_PERM = Orokos ban
-SLAP_SLAY_MENU = Utes/Oles Menu
-SLAP_WITH_DMG = Megutve %d sebzessel
-SLAY = Megoles
-KICK_MENU = kick Menu
-ADMIN_TRANSF_1 = ADMIN: %s atallitva %s-nak
-ADMIN_TRANSF_2 = ADMIN %s: %s atallitva %s-nak
-TEAM_MENU = CSapat Menu
-TRANSF_TO = Atallitva %s-nek
-TRANSF_SILENT = transfer átutalás
-CL_CMD_MENU = Client Cmds Menu
-NO_CMDS = Nincs elerheto parancs
-CANT_PERF_PLAYER = Ezt az akciot nem hajthatod vegre "%s"-on jatekos
+ADMIN_BAN_1 = ADMIN: %s bannolva
+ADMIN_BAN_2 = ADMIN %s: %s bannolva
+BAN_MENU = Ban Menü
+BAN_FOR_MIN = Bannolva %d percre
+BAN_PERM = Örökös ban
+SLAP_SLAY_MENU = Ütés/Ölés Menü
+SLAP_WITH_DMG = Megütve %d sebzéssel
+SLAY = Megölés
+KICK_MENU = Kick Menü
+ADMIN_TRANSF_1 = ADMIN: %s átállítva %s-nak
+ADMIN_TRANSF_2 = ADMIN %s: %s átállítva %s-nak
+TEAM_MENU = Csapat Menü
+TRANSF_TO = Átállítva %s-nek
+TRANSF_SILENT = Csendes Átállítás
+CL_CMD_MENU = Kliens parancsok Menü
+NO_CMDS = Nincs elérhető parancs
+CANT_PERF_PLAYER = Nem végrehajtható "%s" játékoson
 
 [lt]
 ADMIN_BAN_1 = ADMINAS: isbanino %s

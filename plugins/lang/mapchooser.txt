@@ -134,13 +134,13 @@ EXTED_MAP = Prelungirea hartii actuale %s
 TIME_CHOOSE = E timpul sa alegeti harta urmatoare...
 
 [hu]
-CHO_FIN_EXT = A valasztas veget ert. A mostani palya meg %.0f percig lesz.
-CHO_FIN_NEXT = A valasztas veget ert. A kovetkezo palya a %s lesz.
-CHOSE_EXT = %s meg maradni szeretne
+CHO_FIN_EXT = A választás véget ért. A mostani pálya még %.0f percig lesz.
+CHO_FIN_NEXT = A választás véget ért. A következő pálya a %s lesz.
+CHOSE_EXT = %s még maradni szeretne
 X_CHOSE_X = %s a %s-ra szavazott
-CHOOSE_NEXTM = Valaszd ki a kovetkezo palyat.
+CHOOSE_NEXTM = Válaszd ki a következő pályát.
 EXTED_MAP = Maradjunk a %s-n!
-TIME_CHOOSE = Itt az ido hogy kivalaszd a kovetkezo palyat.
+TIME_CHOOSE = Itt az idő hogy kiválaszd a következő pályát.
 
 [lt]
 CHO_FIN_EXT = Pasirinkimai baigti. Sis zemelapis dar bus %.0f minutes

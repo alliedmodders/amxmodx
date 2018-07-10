@@ -2,7 +2,7 @@
 DROPPED_RES = Dropped due to slot reservation
 
 [de]
-DROPPED_RES = Sorry, dieser Slot ist reserviert.
+DROPPED_RES = Sorry, dieser Slot ist reserviert
 
 [sr]
 DROPPED_RES = Server je pun, nemate pristup rezervisanim mestima
@@ -11,7 +11,7 @@ DROPPED_RES = Server je pun, nemate pristup rezervisanim mestima
 DROPPED_RES = Reservasyon nedeniyle atildiniz
 
 [fr]
-DROPPED_RES = Desole, un admin vient de prendre sa place reservee, tu as ete ejecte du serveur.
+DROPPED_RES = Desole, un admin vient de prendre sa place reservee, tu as ete ejecte du serveur
 
 [sv]
 DROPPED_RES = Nerkopplad pga platsreservation
@@ -38,10 +38,10 @@ DROPPED_RES = Vyhozen, slot je rezervovan
 DROPPED_RES = Pudotettiin palvelimelta slotvarauksen takia (adminslot)
 
 [bg]
-DROPPED_RES = Izklu4en poneje mqstoto e rezervirano
+DROPPED_RES = Premahnat poradi rezervaciq na slot
 
 [ro]
-DROPPED_RES = Ai primit kick pentru rezervare slot.
+DROPPED_RES = Ai primit kick pentru rezervare slot
 
 [hu]
 DROPPED_RES = Nincs szabad hely.
@@ -53,7 +53,7 @@ DROPPED_RES = Atjungtas, nes nera laisvos vietos
 DROPPED_RES = Prepac,ale slot je rezervovany
 
 [mk]
-DROPPED_RES = Serverot e poln, nemate pristap vo rezerviranite mesta
+DROPPED_RES = Otstranet poradi rezervacija na slot
 
 [hr]
 DROPPED_RES = Server je pun, nemate pristup rezerviranim mjestima

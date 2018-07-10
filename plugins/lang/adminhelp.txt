@@ -121,13 +121,13 @@ TIME_INFO_1 = Aikaa jaljella: %d:%02d minuuttia. Seuraava mappi: %s
 TIME_INFO_2 = Ei aikarajaa. Seuraava mappi: %s
 
 [bg]
-HELP_COMS = AMX Mod X Help: Comandi
+HELP_COMS = AMX Mod X Help: Komandi
 HELP_ENTRIES = Vkarani %d - %d ot %d
-HELP_USE_MORE = Izpolzvaite '%s %d' za pove4e
-HELP_USE_BEGIN = izpolzvaite '%s 1' za na4alo
-TYPE_HELP = napi6ete '%s' '%s' v consolata za da vidite pove4e comandi
-TIME_INFO_1 = Ostava6to vreme: %d:%02d min. Sledva6tata karta: %s
-TIME_INFO_2 = Nqma limit na vremeto. Sledva6tata karta: %s
+HELP_USE_MORE = Izpolzvaite '%s %d' za poveche
+HELP_USE_BEGIN = Izpolzvaite '%s 1' za nachalo
+TYPE_HELP = Napishete '%s' '%s' v konzolata  za da vidite povehe komandi
+TIME_INFO_1 = Ostavashto vreme: %d:%02d min. Sledvashta karta: %s
+TIME_INFO_2 = Nqma limit na vremeto. Sledvashta karta: %s
 
 [ro]
 HELP_COMS = Ajutor AMX Mod X: Comenzi
@@ -166,13 +166,13 @@ TIME_INFO_1 = Ostava este: %d:%02d min. Dalsia mapa: %s
 TIME_INFO_2 = Neni casovy limit. Dalsia mapa: %s
 
 [mk]
-HELP_COMS = AMX Mod X Pomos - Dozvoleni komandi se:
+HELP_COMS = AMX Mod X Pomosh - Komandi
 HELP_ENTRIES = Komandi %d - %d od %d
-HELP_USE_MORE = Napisi '%s %d' za uste komandi
-HELP_USE_BEGIN = Napisi '%s 1' za od pocetok
-TYPE_HELP = Napisi '%s' '%s' vo konzolata za da gi vidis dozvolenite komandi
-TIME_INFO_1 = Preostanato Vreme: %d:%02d min. Sledna Mapa: %s
-TIME_INFO_2 = Nema vremensko ogranicuvanje. Sledna Mapa: %s
+HELP_USE_MORE = Napishi '%s %d' za ushte komandi
+HELP_USE_BEGIN = Napishi '%s 1' za vrakjanje na pochetok
+TYPE_HELP = Napishi '%s' '%s' vo konzolata za da gi vidish site komandi
+TIME_INFO_1 = Preostanato vreme: %d:%02d min. Sledna mapa: %s
+TIME_INFO_2 = Nema ogranichuvanje na vremeto. Sledna mapa: %s
 
 [hr]
 HELP_COMS = AMX Mod X Pomoc: Naredbe

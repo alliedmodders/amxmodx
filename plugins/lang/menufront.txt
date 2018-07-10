@@ -233,22 +233,22 @@ RES_WEAP = Kiella aseita
 TELE_PLAYER = Teleporttaa pelaaja
 
 [bg]
-KICK_PLAYER = Kickni Igra4
-BAN_PLAYER = Banni Igra4
-SLAP_SLAY = Slapni/Slayni Igra4
-TEAM_PLAYER = Smeni Otbora na Igra4 ^n
-CHANGEL = Smeni karta
+KICK_PLAYER = Kickni Igrach
+BAN_PLAYER = Banni Igrach
+SLAP_SLAY = Slapni/Slayni Igrach
+TEAM_PLAYER = Smeni otbora na igrach ^n
+CHANGEL = Smeni kartata
 VOTE_MAPS = Glasuvai za karta ^n
-SPECH_STUFF = Ne6ta za govorene
-CLIENT_COM = klient Comandi
-SERVER_COM = Server Comandi
-CVARS_SET = Nastroiki za Cvars
-CONFIG = Configuracia
+SPECH_STUFF = Komandi za govorene
+CLIENT_COM = Klientski komandi
+SERVER_COM = Serverni komandi
+CVARS_SET = Nastroiki za cvarove
+CONFIG = Konfiguraciq
 LANG_SET = Ezikovi nastroiki
-STATS_SET = Nastroiki za Statistikite ^n
-PAUSE_PLUG = Pause Plugini
-RES_WEAP = Blokirai Orajia
-TELE_PLAYER = Teleportirai Igra4i
+STATS_SET = Nastroiki za statistikite ^n
+PAUSE_PLUG = Postavi plugini na pauza
+RES_WEAP = Zabrani orujiq
+TELE_PLAYER = Teleportirai igrachi
 
 [ro]
 KICK_PLAYER = Kick Jucator
@@ -323,22 +323,22 @@ RES_WEAP = Obmedzit zbrane
 TELE_PLAYER = Teleportovat hraca
 
 [mk]
-KICK_PLAYER = Kikni igrac
-BAN_PLAYER = Baniraj igrac
-SLAP_SLAY = Slap/Slay igrac
-TEAM_PLAYER = Promeni go timot na igracite ^n
-CHANGEL = Promeni mapa
+KICK_PLAYER = Kikni igrach
+BAN_PLAYER = Baniraj igrach
+SLAP_SLAY = Slapni/Slayni igrach
+TEAM_PLAYER = Promeni go timot na igrach ^n
+CHANGEL = Promeni ja mapata
 VOTE_MAPS = Glasanje za mapa ^n
-SPECH_STUFF = Glasovni Komandi
+SPECH_STUFF = Glasovni komandi
 CLIENT_COM = Komandi za klientite
 SERVER_COM = Komandi za serverot
 CVARS_SET = Podesuvanje na serverot
 CONFIG = Gotovi konfiguracii za serverot
 LANG_SET = Izbor na jazik
 STATS_SET = Podesuvanje na statistikata ^n
-PAUSE_PLUG = Pauza na plaginite
-RES_WEAP = Ogranicuvanje na oruzja
-TELE_PLAYER = Teleportiranje na igraci
+PAUSE_PLUG = Pauza na pluginite
+RES_WEAP = Ogranichuvanje na oruzhja
+TELE_PLAYER = Teleportiranje na igrachi
 
 [hr]
 KICK_PLAYER = Kick igraca

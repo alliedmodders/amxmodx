@@ -68,11 +68,6 @@ enum TransKey
  * @return			Key index
  */
 native TransKey:CreateLangKey(const key[]);
-
-/**
- * 
- * Returns -1 on not found.
- */
  
 /**
  * Finds a translation key index without adding on failure.

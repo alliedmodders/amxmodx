@@ -1246,31 +1246,48 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 
 static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 {
+	auto closeMenu = [amx](int index) -> int
+	{
+		auto pPlayer = GET_PLAYER_POINTER_I(index);
+
+		if (!pPlayer->ingame)
+		{
+			return 1;
+		}
+
+		pPlayer->keys = 0;
+		pPlayer->menu = 0;
+
+		// Fire newmenu callback so closing it can be handled by the plugin
+		if (!CloseNewMenus(pPlayer))
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
+			return 2;
+		}
+
+		if (g_bmod_cstrike)
+		{
+			GET_OFFSET("CBasePlayer", m_iMenu);
+			set_pdata<int>(pPlayer->pEdict, m_iMenu, 0);
+		}
+
+		return 0;
+	};
+
+	int index = params[1];
+
 	// If show_menu is called from within a newmenu callback upon receiving MENU_EXIT
 	// it is possible for this native to recurse. We need to close newmenus right away
 	// because the recursive call would otherwise modify/corrupt the static get_amxstring
 	// buffer mid execution. This will either display incorrect text or result in UTIL_ShowMenu
 	// running into an infinite loop.
-	int index = params[1];
 	if (index == 0)
 	{
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
-			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-
-			if (pPlayer->ingame)
+			if (closeMenu(i) == 2)
 			{
-				pPlayer->keys = 0;
-				pPlayer->menu = 0;
-
-				// Fire newmenu callback so closing it can be handled by the plugin
-				if (!CloseNewMenus(pPlayer))
-				{
-					LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
-					return 0;
-				}
-
-				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
+				return 0;
 			}
 		}
 	}
@@ -1282,23 +1299,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			return 0;
 		}
 
-		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-
-		if (pPlayer->ingame)
-		{
-			pPlayer->keys = 0;
-			pPlayer->menu = 0;
-
-			// Fire newmenu callback so closing it can be handled by the plugin
-			if (!CloseNewMenus(pPlayer))
-			{
-				LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
-				return 0;
-			}
-
-			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
-		}
-		else
+		if (closeMenu(index))
 		{
 			return 0;
 		}

@@ -663,6 +663,9 @@ native disable_logevent(handle);
  *       specific channel to avoid possible flickering due to auto-channeling.
  * @note For the hudmessage coordinates x and y, -1.0 will center the message
  *       on the respective axis.
+ * @note Using a negative value for any of the color components will generate a
+ *       random value for that component ranging from the absolute value of the
+ *       specified number to the maximum RGB value of 255.
  * @note These parameters stay until the next call to set_hudmessage overwrites
  *       them. Multiple calls to show_hudmessage will therefore re-use the same
  *       parameters. The parameters are not stored per-plugin, so other plugins
@@ -710,6 +713,9 @@ native show_hudmessage(index, const message[], any:...);
  *
  * @note For the hudmessage coordinates x and y, -1.0 will center the message
  *       on the respective axis.
+ * @note Using a negative value for any of the color components will generate a
+ *       random value for that component ranging from the absolute value of the
+ *       specified number to the maximum RGB value of 255.
  * @note These parameters stay until the next call to set_dhudmessage overwrites
  *       them. Multiple calls to show_dhudmessage will therefore re-use the same
  *       parameters. The parameters are not stored per-plugin, so other plugins

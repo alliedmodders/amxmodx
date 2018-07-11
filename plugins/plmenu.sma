@@ -19,6 +19,8 @@
 #include <cstrike>
 #include <fakemeta>
 
+#define m_bHasChangeTeamThisRound 501
+
 new g_menuPosition[MAX_PLAYERS + 1];
 new g_menuPlayers[MAX_PLAYERS + 1][MAX_PLAYERS];
 new g_menuPlayersNum[MAX_PLAYERS + 1];
@@ -823,7 +825,7 @@ public actionTeamMenu(id, key)
 			log_amx("Cmd: ^"%s<%d><%s><>^" transfer ^"%s<%d><%s><>^" (team ^"%s^")", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2, g_CSTeamNames[destTeamSlot]);
 
 			show_activity_key("ADMIN_TRANSF_1", "ADMIN_TRANSF_2", name, name2, g_CSTeamNames[destTeamSlot]);
-
+			set_pdata_bool(player,m_bHasChangeTeamThisRound,false);
 			if (destTeamSlot == 2)
 			{
 				if (g_fakemeta)

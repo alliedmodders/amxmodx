@@ -587,7 +587,7 @@ native register_event_ex(const event[], const function[], RegisterEventFlags:fla
 /**
  * Enables a function hook of a game event which has been previously registered with register_event_ex().
  *
- * @param handle    Value returned from register_event_ex()
+ * @param handle    Value returned from register_event() or register_event_ex()
  *
  * @noreturn
  * @error           If an invalid handle is provided, an error will be thrown.
@@ -597,7 +597,7 @@ native enable_event(handle);
 /**
  * Disables a function hook of a game event which has been previously registered with register_event_ex().
  *
- * @param handle    Value returned from register_event_ex()
+ * @param handle    Value returned from register_event() or register_event_ex()
  *
  * @noreturn
  * @error           If an invalid handle is provided, an error will be thrown.

@@ -535,10 +535,10 @@ ADMIN_VOTE_MAP_1 = %s: Pálya szavazás
 ADMIN_VOTE_MAP_2 = %s %s: Pálya szavazás
 VOTING_STARTED = Szavazás indítva...
 VOTING_FORBIDDEN = A szavazás letiltva.
-ADMIN_VOTE_CUS_1 = %s: szavazás custom
-ADMIN_VOTE_CUS_2 = %s %s: szavazás custom
+ADMIN_VOTE_CUS_1 = %s: egyedi szavazás
+ADMIN_VOTE_CUS_2 = %s %s: egyedi szavazás
 VOTE = Szavazás
-ACTION_PERFORMED = A műveletet nem lehet "%s"-boton végrehajtani
+ACTION_PERFORMED = A műveletet nem lehet "%s" boton végrehajtani
 ADMIN_VOTE_FOR_1 = %s: szavazás %s vagy %s
 ADMIN_VOTE_FOR_2 = %s %s: szavazás %s vagy %s
 

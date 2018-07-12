@@ -74,9 +74,9 @@ MSG_FREQ = Frecventa afisarii messajului Rulant: %d:%02d minute
 MSG_DISABLED = Mesajul Rulant dezactivat
 
 [hu]
-MIN_FREQ = A minimum idő erre az üzenetre %d perc
+MIN_FREQ = A minimum idő erre az üzenetre %d másodperc
 MSG_FREQ = Mozgó üzenet: %d:%02d percenként
-MSG_DISABLED = A gördülő üzenet letiltva
+MSG_DISABLED = A gördülő üzenet kikapcsolva
 
 [lt]
 MIN_FREQ = Minimalus daznumas siai zinutei yra %d sekundes

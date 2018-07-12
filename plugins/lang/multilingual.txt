@@ -169,8 +169,8 @@ PERSO_LANG = Személyi nyelv
 LANG_MENU = Nyelv menü
 SERVER_LANG = Szerver nyelv
 SAVE_LANG = Nyelv mentése
-SET_LANG_SERVER = A szerver nyelve "%s"-ra lett állítva.
-SET_LANG_USER = A nyelved "%s"-ra lett állítva.
+SET_LANG_SERVER = A szerver nyelve mostantól: "%s".
+SET_LANG_USER = A nyelved mostantól: "%s".
 TYPE_LANGMENU = Írj 'amx_langmenu'-t a konzolba hogy nyelvet választhass.
 LANG_MENU_DISABLED = Nyelv menü letiltva.
 

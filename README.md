@@ -15,5 +15,5 @@ Development
 -----------
 - [Issue tracker](https://bugs.alliedmods.net): Issues that require back and forth communication
 - [Building AMXX](https://wiki.alliedmods.net/Building_AMX_Mod_X): Instructions on how to build AMXX itself using [AMBuild](https://github.com/alliedmodders/ambuild)
-- [AMX Mod X API](https://www.amxmodx.org/api/): AMX Mod X API reference generated from include files
+- [AMX Mod X API](https://amxmodx.org/api/): AMX Mod X API reference generated from include files
 - [AMXX scripting](https://wiki.alliedmods.net/Category:Scripting_(AMX_Mod_X)): Pawn examples and introduction to the language

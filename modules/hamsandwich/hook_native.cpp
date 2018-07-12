@@ -534,9 +534,13 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	CHECK_FUNCTION(func);
 
-	char *function=MF_GetAmxString(amx, params[3], 0, NULL);
+	// Fixes a buffer issue by copying locally the string.
+	// REMOVE_ENTITY invokes pfnOnFreeEntPrivateData which plugins can hook and `function` string is used after that
+	// but it is pointing to the AMXX static buffer. Basically, hooking this forward and doing stuff inside could invalid all RegisterHam calls.
+	ke::AString function(MF_GetAmxString(amx, params[3], 0, NULL));
+
 	char *classname=MF_GetAmxString(amx, params[2], 1, NULL);
-	
+
 	// Check the entity
 
 	// create an entity, assign it the gamedll's class, hook it and destroy it
@@ -548,7 +552,7 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	{
 		REMOVE_ENTITY(Entity);
 
-		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname,function);
+		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname,function.chars());
 
 		return 0;
 	}
@@ -558,18 +562,18 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	if (vtable == NULL)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve vtable for \"%s\", hook for \"%s\" not active.",classname,function);
+		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve vtable for \"%s\", hook for \"%s\" not active.",classname,function.chars());
 
 		return 0;
 	}
 
 	// Verify that the function is valid
 	// Don't fail the plugin if this fails, just emit a normal error
-	int fwd=hooklist[func].makefunc(amx, function);
+	int fwd=hooklist[func].makefunc(amx, function.chars());
 
 	if (fwd == -1)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Function %s not found.", function);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Function %s not found.", function.chars());
 
 		return 0;
 	}
@@ -588,7 +592,7 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	// We've passed all tests...
 	if (strcmp(classname, "player") == 0 && enableSpecialBot)
 	{
-		SpecialbotHandler.RegisterHamSpecialBot(amx, func, function, post, pfwd);
+		SpecialbotHandler.RegisterHamSpecialBot(amx, func, function.chars(), post, pfwd);
 	}
 
 	int **ivtable=(int **)vtable;

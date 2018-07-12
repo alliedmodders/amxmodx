@@ -168,17 +168,17 @@ PRIV_SET = Etuoikeudet laitettu
 NO_ENTRY = Sinulla ei ole merkintaa palvelimella...
 
 [bg]
-LOADED_ADMIN = Nameren e edin administrator ot fila.
-LOADED_ADMINS = Namereni sa %d administratori ot fila
-SQL_CANT_CON = SQL gre6ka: nemoje da se cannectnete: '%s'
-SQL_CANT_LOAD_ADMINS = SQL gre6ka: nemoje da nameri administratori: '%s'
-NO_ADMINS = Nemoje da nameri administratori.
-SQL_LOADED_ADMIN = Nameren e edin administrator ot database
-SQL_LOADED_ADMINS = Namereni %d administratori ot database
-INV_PAS = Greshna Parola!
+LOADED_ADMIN = Nameren e 1 administrator ot faila.
+LOADED_ADMINS = Namereni sa %d administratori ot faila
+SQL_CANT_CON = SQL greshka: ne moje da se svurje s: '%s'
+SQL_CANT_LOAD_ADMINS = SQL greshka: ne moje da zaredqt administratorite: '%s'
+NO_ADMINS = Nqma namereni administratori.
+SQL_LOADED_ADMIN = Nameren e 1 administrator ot bazata danni
+SQL_LOADED_ADMINS = Namereni sa %d administratori ot bazata danni
+INV_PAS = Greshna parola!
 PAS_ACC = Parolata e prieta
 PRIV_SET = Priviligiite sa nastroeni
-NO_ENTRY = Nqmate vhod kam servara...
+NO_ENTRY = Nqmate dostup do servera...
 
 [ro]
 LOADED_ADMIN = 1 administrator a fost incarcat din fisier
@@ -233,17 +233,17 @@ PRIV_SET = Privilegium nastavene
 NO_ENTRY = Nemas ziadny zaznam na servery...
 
 [mk]
-LOADED_ADMIN = Vcitan e 1 administrator od fajlot
-LOADED_ADMINS = Vcitani se %d administratori od fajlot
-SQL_CANT_CON = SQL greska: ne e mozno da se vospostavi vrska so: '%s'
-SQL_CANT_LOAD_ADMINS = SQL greska: ne e mozno da se vcitaat administratorite: '%s'
+LOADED_ADMIN = Vchitan e 1 administrator od fajlot
+LOADED_ADMINS = Vchitani se %d administratori od fajlot
+SQL_CANT_CON = SQL greshka: ne e mozhno da se vospostavi vrska so: '%s'
+SQL_CANT_LOAD_ADMINS = SQL greshka: ne e mozhno da se vchitaat administratorite: '%s'
 NO_ADMINS = Nema najdeni administratori.
-SQL_LOADED_ADMIN = Vcitan e 1 administrator od bazata na podatoci
-SQL_LOADED_ADMINS = Vcitani se %d administratori od bazata na podatoci
-INV_PAS = Pogresna lozinka!
+SQL_LOADED_ADMIN = Vchitan e 1 administrator od bazata na podatoci
+SQL_LOADED_ADMINS = Vchitani se %d administratori od bazata na podatoci
+INV_PAS = Pogreshna lozinka!
 PAS_ACC = Lozinkata e prifatena
 PRIV_SET = Privilegiite se podeseni
-NO_ENTRY = Nemate pristap vo serverot...
+NO_ENTRY = Nemate pristap do serverot...
 
 [hr]
 LOADED_ADMIN = Ucitan 1 administrator iz datoteke

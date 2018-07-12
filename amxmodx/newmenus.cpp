@@ -316,11 +316,6 @@ bool Menu::Display(int player, page_t page)
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
 
-	pPlayer->keys = 0;
-	pPlayer->menu = 0;
-
-	UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
-
 	pPlayer->keys = keys;
 	pPlayer->menu = menuId;
 	pPlayer->newmenu = thisId;
@@ -826,6 +821,12 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d (was previously destroyed).", handle);
 		return 0;
+	}
+
+	if (g_bmod_cstrike)
+	{
+		GET_OFFSET("CBasePlayer", m_iMenu);
+		set_pdata<int>(pPlayer->pEdict, m_iMenu, 0);
 	}
 
 	int time = -1;

@@ -168,7 +168,7 @@ native delete_file(const file[], bool:use_valve_fs = false, const valve_path_id[
  */
 native file_exists(const file[], bool:use_valve_fs = false);
 
- /**
+/**
   * Renames a file.
   *
   * @param oldname      New path to the file

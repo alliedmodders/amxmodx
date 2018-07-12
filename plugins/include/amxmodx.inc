@@ -178,7 +178,7 @@ forward client_authorized(id, const authid[]);
 #pragma deprecated Use client_disconnected() instead.
 forward client_disconnect(id);
 
- /**
+/**
  * Called when a client is disconnected from the server.
  *
  * @note This will be called in some additional cases that client_disconnect doesn't cover, 
@@ -587,7 +587,7 @@ native register_event_ex(const event[], const function[], RegisterEventFlags:fla
 /**
  * Enables a function hook of a game event which has been previously registered with register_event_ex().
  *
- * @param handle    Value returned from register_event_ex()
+ * @param handle    Value returned from register_event() or register_event_ex()
  *
  * @noreturn
  * @error           If an invalid handle is provided, an error will be thrown.
@@ -597,7 +597,7 @@ native enable_event(handle);
 /**
  * Disables a function hook of a game event which has been previously registered with register_event_ex().
  *
- * @param handle    Value returned from register_event_ex()
+ * @param handle    Value returned from register_event() or register_event_ex()
  *
  * @noreturn
  * @error           If an invalid handle is provided, an error will be thrown.

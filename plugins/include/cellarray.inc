@@ -239,7 +239,7 @@ native ArraySetString(Array:which, item, const input[]);
 native ArrayPushArray(Array:which, const any:input[], size = -1);
 
 /**
- * Creates a new item ath the end of the array and sets the item's single cell
+ * Creates a new item at the end of the array and sets the item's single cell
  * value.
  *
  * @param which         Array handle

@@ -751,8 +751,6 @@ void C_ServerDeactivate_Post()
 
 	modules_callPluginsUnloading();
 
-	detachReloadModules();
-
 	CoreCfg.Clear();
 
 	g_auth.clear();
@@ -775,6 +773,8 @@ void C_ServerDeactivate_Post()
 
 	ClearPluginLibraries();
 	modules_callPluginsUnloaded();
+
+	detachReloadModules();
 
 	ClearMessages();
 

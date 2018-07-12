@@ -116,13 +116,13 @@ SECOND = sekunti
 SECONDS = sekuntia
 
 [bg]
-THE_TIME = 4asa
-TIME_LEFT = Ostanalo Vreme
+THE_TIME = Chasut
+TIME_LEFT = Ostanalo vreme
 NO_T_LIMIT = Nqma limit na vremeto
 MINUTE = minuta
 MINUTES = minuti
-SECOND = secunda
-SECONDS = secundi
+SECOND = sekunda
+SECONDS = sekundi
 
 [ro]
 THE_TIME = Ora
@@ -162,8 +162,8 @@ SECONDS = sekund
 
 [mk]
 THE_TIME = Vreme
-TIME_LEFT = Preostanato Vreme
-NO_T_LIMIT = Nema Ogranicuvanje Na Vremeto
+TIME_LEFT = Preostanato vreme
+NO_T_LIMIT = Nema ogranicuvanje na vremeto
 MINUTE = minuta
 MINUTES = minuti
 SECOND = sekunda

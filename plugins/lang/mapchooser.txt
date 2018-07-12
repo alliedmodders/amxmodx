@@ -116,13 +116,13 @@ EXTED_MAP = Jatka mappia %s
 TIME_CHOOSE = On aika valita seruaava mappi...
 
 [bg]
-CHO_FIN_EXT = Izbiraneto priklu4i. Nastoq6tata karta 6te e odaljena za o6te %.0f minuti
-CHO_FIN_NEXT = Izbiraneto priklu4i. Sledva6tata karta 6te e %s
-CHOSE_EXT = %s izbra odaljenie na nastoq6tata karta
+CHO_FIN_EXT = Izbiraneto prikluchi. Nastoqshtata karta shte e udaljena za ushte %.0f minuti
+CHO_FIN_NEXT = Izbiraneto prikluchi. Sledvashtata karta shte e %s
+CHOSE_EXT = %s izbra udaljenie na nastoqshtata karta
 X_CHOSE_X = %s izbra %s
-CHOOSE_NEXTM = AMX Izberete sledva6tata karta
-EXTED_MAP = Odalji kartata %s
-TIME_CHOOSE = Vreme e da se izbere sledva6tata karta...
+CHOOSE_NEXTM = AMX Izberete sledvashta karta
+EXTED_MAP = Udalji kartata %s
+TIME_CHOOSE = Vreme e da se izbere sledvashtata karta...
 
 [ro]
 CHO_FIN_EXT = Votarea s-a incheiat. Harta actuala va fi prelungita %.0f minute
@@ -161,12 +161,12 @@ EXTED_MAP = Predlzuje mapu %s
 TIME_CHOOSE = Je cas pre volbu dalsej mapy...
 
 [mk]
-CHO_FIN_EXT = Izborot e zavrsen. Segasnata mapa ke bide prodolzena za %.0f minuti
-CHO_FIN_NEXT = Izborot e zavrsen. Slednata mapa ke bide %s
-CHOSE_EXT = %s izbra prodolzuvanje na mapata
+CHO_FIN_EXT = Izborot e zavrshen. Segashnata mapa kje bide prodolzhena za %.0f minuti
+CHO_FIN_NEXT = Izborot e zavrshen. Slednata mapa kje bide %s
+CHOSE_EXT = %s izbra prodolzjuvanje na mapata
 X_CHOSE_X = %s ja izbra mapata %s
-CHOOSE_NEXTM = AMX izberete sledna mapa
-EXTED_MAP = Prodolzi ja mapata %s
+CHOOSE_NEXTM = AMX Izberete sledna mapa
+EXTED_MAP = Prodolzhi ja mapata %s
 TIME_CHOOSE = Vreme e da se izbere sledna mapa...
 
 [hr]

@@ -255,6 +255,11 @@ SC_FUNC void setfiledirect(char *name)
   } /* if */
 }
 
+SC_FUNC void setfileconst(char *name)
+{
+  add_string_constant("__FILE__",name,sGLOBAL);
+}
+
 SC_FUNC void setlinedirect(int line)
 {
   if (sc_status==statFIRST && sc_listing) {

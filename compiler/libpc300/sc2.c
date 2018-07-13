@@ -169,6 +169,7 @@ static char *extensions[] = { ".inc", ".p", ".pawn" };
   assert(sc_status == statFIRST || strcmp(get_inputfile(fcurrent), inpfname) == 0);
   setfiledirect(inpfname);      /* (optionally) set in the list file */
   listline=-1;                  /* force a #line directive when changing the file */
+  setfileconst(inpfname);
   sc_is_utf8=(short)scan_utf8(inpf,name);
   return TRUE;
 }

@@ -585,9 +585,9 @@ int pc_compile(int argc, char *argv[])
             sc_needsemicolon ? "true" : "false",
             sc_tabsize);
     pc_writeasm(outf,string);
-    setfiledirect(inpfname);
   } /* if */
   /* do the first pass through the file (or possibly two or more "first passes") */
+  setfiledirect(inpfname);
   sc_parsenum=0;
   inpfmark=pc_getpossrc(inpf_org);
   do {
@@ -612,6 +612,7 @@ int pc_compile(int argc, char *argv[])
     fline=skipinput;            /* reset line number */
     sc_reparse=FALSE;           /* assume no extra passes */
     sc_status=statFIRST;        /* resetglobals() resets it to IDLE */
+	setfileconst(inpfname);
     if (strlen(incfname)>0) {
       if (strcmp(incfname,sDEF_PREFIX)==0) {
         plungefile(incfname,FALSE,TRUE);    /* parse "default.inc" */
@@ -678,6 +679,7 @@ int pc_compile(int argc, char *argv[])
   lexinit();                    /* clear internal flags of lex() */
   sc_status=statWRITE;          /* allow to write --this variable was reset by resetglobals() */
   writeleader(&glbtab);
+  setfileconst(inpfname);
   insert_dbgfile(inpfname);     /* attach to debug information */
   insert_inputfile(inpfname);   /* save for the error system */
   if (strlen(incfname)>0) {
@@ -4578,6 +4580,48 @@ SC_FUNC symbol *add_constant(char *name,cell val,int vclass,int tag)
   assert(sym!=NULL);            /* fatal error 103 must be given on error */
   if (sc_status == statIDLE)
     sym->usage |= uPREDEF;
+  return sym;
+}
+
+/*  add_string_constant
+ *
+ *  Adds a string constant to the symbol table.
+ */
+SC_FUNC symbol * add_string_constant(char * name,
+  const char * val, int vclass) {
+  symbol * sym;
+
+  /* Test whether a global or local symbol with the same name exists. Since
+   * constants are stored in the symbols table, this also finds previously
+   * defind constants. */
+  sym = findglb(name);
+  if (sym == NULL)
+    sym = findloc(name);
+  if (sym != NULL) {
+    int redef = 0;
+    if (sym -> ident != iARRAY) {
+      error(21, name); /* symbol already defined */
+      return NULL;
+    } /* if */
+  } else {
+    sym = addsym(name, 0, iARRAY, vclass, 0, uDEFINE);
+    sym -> fnumber = fcurrent;
+    sym -> usage |= uSTOCK;
+  } /* if */
+  sym -> addr = (litidx + glb_declared) * sizeof(cell);
+  sym -> usage |= (uDEFINE | uPREDEF);
+  /* Store this constant only if it's used somewhere. This can be detected
+   * in the second stage. */
+  if (sc_status == statWRITE && (sym -> usage & uREAD) != 0) {
+    assert(litidx == 0);
+    begdseg();
+    while ( * val != '\0')
+      litadd( * val++);
+    litadd(0);
+    glb_declared += litidx;
+    dumplits();
+    litidx = 0;
+  }
   return sym;
 }
 

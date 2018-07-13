@@ -612,7 +612,7 @@ int pc_compile(int argc, char *argv[])
     fline=skipinput;            /* reset line number */
     sc_reparse=FALSE;           /* assume no extra passes */
     sc_status=statFIRST;        /* resetglobals() resets it to IDLE */
-	setfileconst(inpfname);
+    setfileconst(inpfname);
     if (strlen(incfname)>0) {
       if (strcmp(incfname,sDEF_PREFIX)==0) {
         plungefile(incfname,FALSE,TRUE);    /* parse "default.inc" */

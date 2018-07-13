@@ -518,6 +518,7 @@ SC_FUNC constvalue *append_constval(constvalue *table,const char *name,cell val,
 SC_FUNC constvalue *find_constval(constvalue *table,char *name,short index);
 SC_FUNC void delete_consttable(constvalue *table);
 SC_FUNC symbol *add_constant(char *name,cell val,int vclass,int tag);
+SC_FUNC symbol *add_string_constant(char *name, const char *val, int vclass);
 SC_FUNC void exporttag(int tag);
 SC_FUNC void sc_attachdocumentation(symbol *sym);
 SC_FUNC int get_actual_compound(symbol *sym);
@@ -572,6 +573,7 @@ SC_FUNC void begcseg(void);
 SC_FUNC void begdseg(void);
 SC_FUNC void setline(int chkbounds);
 SC_FUNC void setfiledirect(char *name);
+SC_FUNC void setfileconst(char *name);
 SC_FUNC void setlinedirect(int line);
 SC_FUNC void setlabel(int index);
 SC_FUNC void markexpr(optmark type,const char *name,cell offset);

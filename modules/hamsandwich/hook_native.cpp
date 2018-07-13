@@ -534,25 +534,24 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	CHECK_FUNCTION(func);
 
-	// Fixes a buffer issue by copying locally the string.
-	// REMOVE_ENTITY invokes pfnOnFreeEntPrivateData which plugins can hook and `function` string is used after that
+	// Fixes a buffer issue by copying locally the strings.
+	// REMOVE_ENTITY invokes pfnOnFreeEntPrivateData which plugins can hook and `function` and `classname` strings are used after that
 	// but it is pointing to the AMXX static buffer. Basically, hooking this forward and doing stuff inside could invalid all RegisterHam calls.
 	ke::AString function(MF_GetAmxString(amx, params[3], 0, NULL));
-
-	char *classname=MF_GetAmxString(amx, params[2], 1, NULL);
+	ke::AString classname(MF_GetAmxString(amx, params[2], 1, NULL));
 
 	// Check the entity
 
 	// create an entity, assign it the gamedll's class, hook it and destroy it
 	edict_t *Entity=CREATE_ENTITY();
 
-	CALL_GAME_ENTITY(PLID,classname,&Entity->v);
+	CALL_GAME_ENTITY(PLID,classname.chars(),&Entity->v);
 
 	if (Entity->pvPrivateData == NULL)
 	{
 		REMOVE_ENTITY(Entity);
 
-		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname,function.chars());
+		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname.chars(),function.chars());
 
 		return 0;
 	}
@@ -562,7 +561,7 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	if (vtable == NULL)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve vtable for \"%s\", hook for \"%s\" not active.",classname,function.chars());
+		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve vtable for \"%s\", hook for \"%s\" not active.",classname.chars(),function.chars());
 
 		return 0;
 	}
@@ -590,7 +589,7 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	pfwd->AddRef();
 
 	// We've passed all tests...
-	if (strcmp(classname, "player") == 0 && enableSpecialBot)
+	if (strcmp(classname.chars(), "player") == 0 && enableSpecialBot)
 	{
 		SpecialbotHandler.RegisterHamSpecialBot(amx, func, function.chars(), post, pfwd);
 	}
@@ -619,7 +618,7 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	}
 
 	// If we got here, the function is not hooked
-	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
+	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname.chars());
 	hooks[func].append(hook);
 
 	if (post)

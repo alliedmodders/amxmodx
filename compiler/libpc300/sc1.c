@@ -4587,40 +4587,40 @@ SC_FUNC symbol *add_constant(char *name,cell val,int vclass,int tag)
  *
  *  Adds a string constant to the symbol table.
  */
-SC_FUNC symbol * add_string_constant(char * name,
-  const char * val, int vclass) {
-  symbol * sym;
+SC_FUNC symbol *add_string_constant(char *name,const char *val,int vclass)
+{
+  symbol *sym;
 
   /* Test whether a global or local symbol with the same name exists. Since
    * constants are stored in the symbols table, this also finds previously
    * defind constants. */
-  sym = findglb(name);
+  sym=findglb(name);
   if (sym == NULL)
-    sym = findloc(name);
+    sym=findloc(name);
   if (sym != NULL) {
     int redef = 0;
-    if (sym -> ident != iARRAY) {
-      error(21, name); /* symbol already defined */
+    if (sym->ident!=iARRAY) {
+      error(21,name); /* symbol already defined */
       return NULL;
     } /* if */
   } else {
-    sym = addsym(name, 0, iARRAY, vclass, 0, uDEFINE);
-    sym -> fnumber = fcurrent;
-    sym -> usage |= uSTOCK;
+    sym=addsym(name, 0, iARRAY, vclass, 0, uDEFINE);
+    sym->fnumber = fcurrent;
+    sym->usage |= uSTOCK;
   } /* if */
-  sym -> addr = (litidx + glb_declared) * sizeof(cell);
-  sym -> usage |= (uDEFINE | uPREDEF);
+  sym->addr = (litidx + glb_declared) * sizeof(cell);
+  sym->usage |= (uDEFINE|uPREDEF);
   /* Store this constant only if it's used somewhere. This can be detected
    * in the second stage. */
-  if (sc_status == statWRITE && (sym -> usage & uREAD) != 0) {
+  if (sc_status == statWRITE && (sym->usage & uREAD) != 0) {
     assert(litidx == 0);
     begdseg();
-    while ( * val != '\0')
-      litadd( * val++);
+    while (*val!='\0')
+      litadd(*val++);
     litadd(0);
-    glb_declared += litidx;
+    glb_declared+=litidx;
     dumplits();
-    litidx = 0;
+    litidx=0;
   }
   return sym;
 }

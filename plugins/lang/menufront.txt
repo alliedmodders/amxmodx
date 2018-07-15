@@ -233,22 +233,22 @@ RES_WEAP = Kiella aseita
 TELE_PLAYER = Teleporttaa pelaaja
 
 [bg]
-KICK_PLAYER = Kickni Igra4
-BAN_PLAYER = Banni Igra4
-SLAP_SLAY = Slapni/Slayni Igra4
-TEAM_PLAYER = Smeni Otbora na Igra4 ^n
-CHANGEL = Smeni karta
+KICK_PLAYER = Kickni Igrach
+BAN_PLAYER = Banni Igrach
+SLAP_SLAY = Slapni/Slayni Igrach
+TEAM_PLAYER = Smeni otbora na igrach ^n
+CHANGEL = Smeni kartata
 VOTE_MAPS = Glasuvai za karta ^n
-SPECH_STUFF = Ne6ta za govorene
-CLIENT_COM = klient Comandi
-SERVER_COM = Server Comandi
-CVARS_SET = Nastroiki za Cvars
-CONFIG = Configuracia
+SPECH_STUFF = Komandi za govorene
+CLIENT_COM = Klientski komandi
+SERVER_COM = Serverni komandi
+CVARS_SET = Nastroiki za cvarove
+CONFIG = Konfiguraciq
 LANG_SET = Ezikovi nastroiki
-STATS_SET = Nastroiki za Statistikite ^n
-PAUSE_PLUG = Pause Plugini
-RES_WEAP = Blokirai Orajia
-TELE_PLAYER = Teleportirai Igra4i
+STATS_SET = Nastroiki za statistikite ^n
+PAUSE_PLUG = Postavi plugini na pauza
+RES_WEAP = Zabrani orujiq
+TELE_PLAYER = Teleportirai igrachi
 
 [ro]
 KICK_PLAYER = Kick Jucator
@@ -269,22 +269,22 @@ RES_WEAP = Restrictioneaza Arme
 TELE_PLAYER = Teleporteaza Jucator
 
 [hu]
-KICK_PLAYER = Jatekos kirugasa
-BAN_PLAYER = Jatekos ban
-SLAP_SLAY = Jatekos Megutes/Megoles
-TEAM_PLAYER = Jatekos csapatvaltasa ^n
-CHANGEL = Palyavaltas
-VOTE_MAPS = Szavazas palyara ^n
-SPECH_STUFF = Beszed menu
-CLIENT_COM = Jatekos parancsok
+KICK_PLAYER = Játékos kirúgása
+BAN_PLAYER = Játékos ban
+SLAP_SLAY = Játékos Megütes/Megölés
+TEAM_PLAYER = Játékos csapatváltása ^n
+CHANGEL = Pályaváltás
+VOTE_MAPS = Szavazás pályára ^n
+SPECH_STUFF = Beszéd menü
+CLIENT_COM = Játekos parancsok
 SERVER_COM = Szerver parancsok
-CVARS_SET = Cvars Beallitasok
-CONFIG = Configuracio
-LANG_SET = Nyelv Beallitasok
-STATS_SET = Stat beallitasok ^n
-PAUSE_PLUG = Pillanat alj Pluginok
-RES_WEAP = Felfuggesztett fegyverek
-TELE_PLAYER = Teleport jatekos
+CVARS_SET = Cvar Beállítások
+CONFIG = Configuráció
+LANG_SET = Nyelv Beállítások
+STATS_SET = Stat beállítások ^n
+PAUSE_PLUG = Pillanat állj Pluginok
+RES_WEAP = Felfüggesztett fegyverek
+TELE_PLAYER = Játékos teleportálása
 
 [lt]
 KICK_PLAYER = Ismesti zaideja
@@ -323,22 +323,22 @@ RES_WEAP = Obmedzit zbrane
 TELE_PLAYER = Teleportovat hraca
 
 [mk]
-KICK_PLAYER = Kikni igrac
-BAN_PLAYER = Baniraj igrac
-SLAP_SLAY = Slap/Slay igrac
-TEAM_PLAYER = Promeni go timot na igracite ^n
-CHANGEL = Promeni mapa
+KICK_PLAYER = Kikni igrach
+BAN_PLAYER = Baniraj igrach
+SLAP_SLAY = Slapni/Slayni igrach
+TEAM_PLAYER = Promeni go timot na igrach ^n
+CHANGEL = Promeni ja mapata
 VOTE_MAPS = Glasanje za mapa ^n
-SPECH_STUFF = Glasovni Komandi
+SPECH_STUFF = Glasovni komandi
 CLIENT_COM = Komandi za klientite
 SERVER_COM = Komandi za serverot
 CVARS_SET = Podesuvanje na serverot
 CONFIG = Gotovi konfiguracii za serverot
 LANG_SET = Izbor na jazik
 STATS_SET = Podesuvanje na statistikata ^n
-PAUSE_PLUG = Pauza na plaginite
-RES_WEAP = Ogranicuvanje na oruzja
-TELE_PLAYER = Teleportiranje na igraci
+PAUSE_PLUG = Pauza na pluginite
+RES_WEAP = Ogranichuvanje na oruzhja
+TELE_PLAYER = Teleportiranje na igrachi
 
 [hr]
 KICK_PLAYER = Kick igraca

@@ -1,4 +1,4 @@
-﻿[en]
+[en]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s
 BAN_MENU = Ban Menu
@@ -249,20 +249,20 @@ CANT_PERF_PLAYER = Tuota toimintoa ei voida suorittaa pelaaja "%s"
 ADMIN_BAN_1 = ADMINISTRATOR: banna %s
 ADMIN_BAN_2 = ADMINISTRATOR %s: banna %s
 BAN_MENU = Ban Menu
-BAN_FOR_MIN = Ban za %d minuti
-BAN_PERM = Banni za vinagi
+BAN_FOR_MIN = Banni za %d minuti
+BAN_PERM = Banni zavinagi
 SLAP_SLAY_MENU = Slap/Slay Menu
-SLAP_WITH_DMG = Slapni s %d damage
-SLAY = Slay
+SLAP_WITH_DMG = Slapni s %d shteta
+SLAY = Slayni
 KICK_MENU = Kick Menu
-ADMIN_TRANSF_1 = ADMINISTRATOR: transferira %s kam %s
-ADMIN_TRANSF_2 = ADMINISTRATOR %s: transferira %s kam %s
+ADMIN_TRANSF_1 = ADMINISTRATOR: transferira %s kum %s
+ADMIN_TRANSF_2 = ADMINISTRATOR %s: transferira %s kum %s
 TEAM_MENU = Otborno Menu
-TRANSF_TO = Transferirai kam %s
-TRANSF_SILENT = Стилър трансфер
-CL_CMD_MENU = Klient Comandno Menu
-NO_CMDS = Nqma nikakvi pozvoleni comandi
-CANT_PERF_PLAYER = Tazi comanda nemoje da se izpolzva na igra4 "%s"
+TRANSF_TO = Transferirai kum %s
+TRANSF_SILENT = Tih transfer
+CL_CMD_MENU = Menu s klientski komandi
+NO_CMDS = Nqma dostupni komandi
+CANT_PERF_PLAYER = Tazi comanda ne moje da se izpolzva vurhu igracha "%s"
 
 [ro]
 ADMIN_BAN_1 = ADMIN: ban %s
@@ -284,23 +284,23 @@ NO_CMDS = Nici o comanda valabila
 CANT_PERF_PLAYER = Aceasta comanda nu poate fi executata pe jucatorul "%s"
 
 [hu]
-ADMIN_BAN_1 = ADMIN: %s banolva
-ADMIN_BAN_2 = ADMIN %s: %s banolva
-BAN_MENU = Ban Menu
-BAN_FOR_MIN = Banolva %d percre
-BAN_PERM = Orokos ban
-SLAP_SLAY_MENU = Utes/Oles Menu
-SLAP_WITH_DMG = Megutve %d sebzessel
-SLAY = Megoles
-KICK_MENU = kick Menu
-ADMIN_TRANSF_1 = ADMIN: %s atallitva %s-nak
-ADMIN_TRANSF_2 = ADMIN %s: %s atallitva %s-nak
-TEAM_MENU = CSapat Menu
-TRANSF_TO = Atallitva %s-nek
-TRANSF_SILENT = transfer átutalás
-CL_CMD_MENU = Client Cmds Menu
-NO_CMDS = Nincs elerheto parancs
-CANT_PERF_PLAYER = Ezt az akciot nem hajthatod vegre "%s"-on jatekos
+ADMIN_BAN_1 = ADMIN: %s bannolva
+ADMIN_BAN_2 = ADMIN %s: %s bannolva
+BAN_MENU = Ban Menü
+BAN_FOR_MIN = Bannolva %d percre
+BAN_PERM = Örökös ban
+SLAP_SLAY_MENU = Ütés/Ölés Menü
+SLAP_WITH_DMG = Megütve %d sebzéssel
+SLAY = Megölés
+KICK_MENU = Kick Menü
+ADMIN_TRANSF_1 = ADMIN: %s átállítva %s-nak
+ADMIN_TRANSF_2 = ADMIN %s: %s átállítva %s-nak
+TEAM_MENU = Csapat Menü
+TRANSF_TO = Átállítva %s-nek
+TRANSF_SILENT = Csendes Átállítás
+CL_CMD_MENU = Kliens parancsok Menü
+NO_CMDS = Nincs elérhető parancs
+CANT_PERF_PLAYER = Nem végrehajtható "%s" játékoson
 
 [lt]
 ADMIN_BAN_1 = ADMINAS: isbanino %s
@@ -340,22 +340,22 @@ NO_CMDS = Ziadny cmds
 CANT_PERF_PLAYER = Tato operacia nejde previest na hrac "%s"
 
 [mk]
-ADMIN_BAN_1 = ADMIN: ban %s
-ADMIN_BAN_2 = ADMIN %s: ban %s
+ADMIN_BAN_1 = ADMIN: banira %s
+ADMIN_BAN_2 = ADMIN %s: banira %s
 BAN_MENU = Ban Meni
-BAN_FOR_MIN = Ban na %d minuti
-BAN_PERM = Ban zasekogas
+BAN_FOR_MIN = Ban za %d minuti
+BAN_PERM = Ban zasekogash
 SLAP_SLAY_MENU = Slap/Slay Meni
-SLAP_WITH_DMG = Udri mu samar so %d steta
-SLAY = Nasilno ubij go
+SLAP_WITH_DMG = Udri mu shamar so %d shteta
+SLAY = Slayni
 KICK_MENU = Kick Meni
-ADMIN_TRANSF_1 = ADMIN: napravi transfer na %s vo %s
-ADMIN_TRANSF_2 = ADMIN %s: napravi transfer na %s vo %s
+ADMIN_TRANSF_1 = ADMIN: izvrshi transfer na %s vo %s
+ADMIN_TRANSF_2 = ADMIN %s: izvrshi transfer na %s vo %s
 TEAM_MENU = Meni za timot
 TRANSF_TO = Transfer vo %s
 CL_CMD_MENU = Meni so komandi za klientite
 NO_CMDS = Nema dostapni komandi
-CANT_PERF_PLAYER = Komandata ne moze da bide izvrsena na igrac "%s"
+CANT_PERF_PLAYER = Komandata ne mozhe da bide izvrshena na igrachot "%s"
 
 [hr]
 ADMIN_BAN_1 = ADMIN: banao %s

@@ -103,7 +103,7 @@ native AddTranslation(const lang[3], TransKey:key, const phrase[]);
  *
  * @return 				1 on success, 0 otherwise
  */
-native LookupLangKey(Output[], OutputSize, const Key[], &id);
+native LookupLangKey(Output[], OutputSize, const Key[], id);
 
 /**
  * Sets the global language target.

@@ -4494,7 +4494,7 @@ static cell AMX_NATIVE_CALL admins_lookup(AMX *amx, cell *params)
 	// unknown property
 	return 0;
 };
-// LookupLangKey(Output[], OutputSize, const Key[], const &id)
+// LookupLangKey(Output[], OutputSize, const Key[], const id)
 static cell AMX_NATIVE_CALL LookupLangKey(AMX *amx, cell *params)
 {
 	int len;

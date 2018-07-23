@@ -37,7 +37,7 @@
 native nvault_open(const name[]);
 
 /**
- * Retrieves a value from the given key
+ * Retrieves a value from the given key.
  * 
  * @note An example of retrieving a string:
  *       nvault_get(vaultHandle, "myKey", myString, charsmax(myString));
@@ -50,13 +50,17 @@ native nvault_open(const name[]);
  *                      vault and copies it to the third argument, up to 
  *                      4th argument characters.
  *
- * @noreturn
+ * @return              0 if an invalid vault handle is given.
+ *                      Result as integer if only the first two arguments
+ *                      of the function are used.
+ *                      1 if only the first three arguments are used.
+ *                      String length if all four parameters are used.
  * @error               On invalid vault handle.
  */
 native nvault_get(vault, const key[], any:...);
 
 /**
- * Retrieves full information about a vault entry
+ * Retrieves full information about a vault entry.
  *
  * @param vault         A vault handle returned from nvault_open()
  * @param key           A key to get information from
@@ -78,7 +82,7 @@ native nvault_lookup(vault, const key[], value[], maxlen, &timestamp);
  * @param key           A key to set the value for
  * @param value         A value to set
  *
- * @noreturn
+ * @return              0 if an invalid vault handle was given, 1 on success.
  * @error               On invalid vault handle.
  */
 native nvault_set(vault, const key[], const value[]);
@@ -93,7 +97,7 @@ native nvault_set(vault, const key[], const value[]);
  * @param key           A key to set the permanent value for
  * @param value         A permanent value to set
  *
- * @noreturn
+ * @return              0 if an invalid vault handle was given, 1 on success.
  * @error               On invalid vault handle.
  */
 native nvault_pset(vault, const key[], const value[]);
@@ -109,7 +113,8 @@ native nvault_pset(vault, const key[], const value[]);
  * @param start         The timestamp to start erasing from
  * @param end           The timestamp to erase to
  *
- * @noreturn
+ * @return              0 if an invalid vault handle was given.
+ *                      Number of erased values on success.
  * @error               On invalid vault handle.
  */
 native nvault_prune(vault, start, end);
@@ -119,7 +124,7 @@ native nvault_prune(vault, start, end);
  *
  * @param vault         A vault handle returned from nvault_open()
  *
- * @noreturn
+ * @return              0 if an invalid vault handle was given, 1 on success.
  * @error               On invalid vault handle.
  */
 native nvault_close(vault);
@@ -130,7 +135,7 @@ native nvault_close(vault);
  * @param vault         A vault handle returned from nvault_open()
  * @param key           The key to remove from the vault
  *
- * @noreturn
+ * @return              0 if an invalid vault handle was given, 1 on success.
  * @error               On invalid vault handle.
  */
 native nvault_remove(vault, const key[]);
@@ -145,7 +150,7 @@ native nvault_remove(vault, const key[]);
  * @param key           The key to search for
  * @param timestamp     Update an entry's timestamp to this one. Default is -1.
  *
- * @noreturn
+ * @return              0 if an invalid vault handle was given, 1 on success.
  * @error               On invalid vault handle.
  */
 native nvault_touch(vault, const key[], timestamp=-1);

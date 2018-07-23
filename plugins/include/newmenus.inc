@@ -82,6 +82,11 @@
 #define MPROP_PAGE_CALLBACK	11	
 
 /**
+ * Whether to show the page number in menu title (param1 = bool, true = default)
+ */
+#define MPROP_SHOWPAGE 12
+
+/**
  * @deprecated
  */
 #define MEXIT_NORMAL	0		/* DEPRECATED, do not use (has no effect) */

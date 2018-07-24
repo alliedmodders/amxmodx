@@ -16,6 +16,8 @@
 	#include <amxmodx>
 #endif
 
+static bool:activity_color, activity_sender;
+
 /**
  * Returns if the client has any admin flags set
  *
@@ -212,82 +214,54 @@ stock cmd_target(id, const arg[], flags = CMDTARGET_OBEY_IMMUNITY)
  */
 stock show_activity(id, const name[], const fmt[], any:...)
 {
-	static __amx_show_activity;
-	if (__amx_show_activity == 0)
-	{
-		__amx_show_activity = get_cvar_pointer("amx_show_activity");
+	static buffer[192], prefix[10];
+	vformat(buffer, charsmax(buffer), fmt, 4)
+	get_activity_prefix(id, prefix, charsmax(prefix))
 
-		// if still not found, then register the cvar as a dummy
-		if (__amx_show_activity == 0)
+	switch(get_activity_value())
+	{
+		case 1: send_activity_message(0, "%L: %s", LANG_PLAYER, prefix, buffer);
+		case 2: send_activity_message(0, "%L %s: %s", LANG_PLAYER, prefix, name, buffer);
+		case 3:
 		{
-			__amx_show_activity = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
-		}
-	}
+			static players[MAX_PLAYERS], player, pnum;
+			get_players(players, pnum, "ch");
 
-	new prefix[10];
-	if (is_user_admin(id))
-	{
-		copy(prefix, charsmax(prefix), "ADMIN");
-	}
-	else
-	{
-		copy(prefix, charsmax(prefix), "PLAYER");
-	}
-	new buffer[512];
-	vformat(buffer, charsmax(buffer), fmt, 4);
-
-	switch (get_pcvar_num(__amx_show_activity))
-	{
-		case 5: // hide name only to admins, show nothing to normal users
-		{
-			for (new i = 1; i <= MaxClients; i++)
+			for(new i; i < pnum; i++)
 			{
-				if (is_user_connected(i))
-				{
-					if (is_user_admin(i))
-					{
-						client_print(i, print_chat, "%L: %s", i, prefix, buffer);
-					}
-				}
+				player = players[i];
+
+				if(is_user_admin(player))
+					send_activity_message(player, "%L %s: %s", player, prefix, name, buffer);
+				else
+					send_activity_message(player, "%L: %s", player, prefix, buffer);
 			}
 		}
-		case 4: // show name only to admins, show nothing to normal users
+		case 4:
 		{
-			for (new i = 1; i <= MaxClients; i++)
+			static players[MAX_PLAYERS], player, pnum;
+			get_players(players, pnum, "ch");
+
+			for(new i; i < pnum; i++)
 			{
-				if (is_user_connected(i))
-				{
-					if (is_user_admin(i))
-					{
-						client_print(i, print_chat, "%L %s: %s", i, prefix, name, buffer);
-					}
-				}
+				player = players[i];
+
+				if(is_user_admin(player))
+					send_activity_message(player, "%L %s: %s", player, prefix, name, buffer);
 			}
 		}
-		case 3: // show name only to admins, hide name from normal users
+		case 5:
 		{
-			for (new i = 1; i <= MaxClients; i++)
+			static players[MAX_PLAYERS], player, pnum;
+			get_players(players, pnum, "ch");
+
+			for(new i; i < pnum; i++)
 			{
-				if (is_user_connected(i))
-				{
-					if (is_user_admin(i))
-					{
-						client_print(i, print_chat, "%L %s: %s", i, prefix, name, buffer);
-					}
-					else
-					{
-						client_print(i, print_chat, "%L: %s", i, prefix, buffer);
-					}
-				}
+				player = players[i];
+
+				if(is_user_admin(player))
+					send_activity_message(player, "%L: %s", player, prefix, buffer);
 			}
-		}
-		case 2: // show name to all
-		{
-			client_print(0, print_chat, "%L %s: %s", LANG_PLAYER, prefix , name , buffer);
-		}
-		case 1: // hide name to all
-		{
-			client_print(0, print_chat, "%L: %s", LANG_PLAYER, prefix, buffer);
 		}
 	}
 }
@@ -306,76 +280,39 @@ stock show_activity(id, const name[], const fmt[], any:...)
  */
 stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
 {
-	if (idtarget == 0 || !is_user_connected(idtarget))
-	{
+	if(!is_user_connected(idtarget))
 		return;
-	}
 
-	static __amx_show_activity;
-	if (__amx_show_activity == 0)
-	{
-		__amx_show_activity = get_cvar_pointer("amx_show_activity");
-
-		// if still not found, then register the cvar as a dummy
-		if (__amx_show_activity == 0)
-		{
-			__amx_show_activity = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
-		}
-	}
-
-	static prefix[10];
-	if (is_user_admin(idadmin))
-	{
-		copy(prefix, charsmax(prefix), "ADMIN");
-	}
-	else
-	{
-		copy(prefix, charsmax(prefix), "PLAYER");
-	}
-
-	static buffer[512];
+	static buffer[192], prefix[10];
 	vformat(buffer, charsmax(buffer), fmt, 5);
+	get_activity_prefix(idadmin, prefix, charsmax(prefix));
 
-	switch (get_pcvar_num(__amx_show_activity))
+	switch(get_activity_value())
 	{
-		case 5: // hide name only to admins, show nothing to normal users
+		case 1: send_activity_message(idtarget, "%L: %s", idtarget, prefix, buffer);
+		case 2: send_activity_message(idtarget, "%L %s: %s", idtarget, prefix, name, buffer);
+		case 3:
 		{
-			if (is_user_admin(idtarget))
-			{
-				client_print(idtarget, print_chat, "%L: %s", idtarget, prefix, buffer);
-			}
-		}
-		case 4: // show name only to admins, show nothing to normal users
-		{
-			if (is_user_admin(idtarget))
-			{
-				client_print(idtarget, print_chat, "%L %s: %s", idtarget, prefix, name, buffer);
-			}
-		}
-		case 3: // show name only to admins, hide name from normal users
-		{
-			if (is_user_admin(idtarget))
-			{
-				client_print(idtarget, print_chat, "%L %s: %s", idtarget, prefix, name, buffer);
-			}
+			if(is_user_admin(idtarget))
+				send_activity_message(idtarget, "%L %s: %s", idtarget, prefix, name, buffer);
 			else
-			{
-				client_print(idtarget, print_chat, "%L: %s", idtarget, prefix, buffer);
-			}
+				send_activity_message(idtarget, "%L: %s", idtarget, prefix, buffer);
 		}
-		case 2: // show name to all
+		case 4:
 		{
-			client_print(idtarget, print_chat, "%L %s: %s", idtarget, prefix, name, buffer);
+			if(is_user_admin(idtarget))
+				send_activity_message(idtarget, "%L %s: %s", idtarget, prefix, name, buffer);
 		}
-		case 1: // hide name to all
+		case 5:
 		{
-			client_print(idtarget, print_chat, "%L: %s", idtarget, prefix, buffer);
+			if(is_user_admin(idtarget))
+				send_activity_message(idtarget, "%L: %s", idtarget, prefix, buffer);
 		}
 	}
 }
 
 /**
- * Standard method to show activity to one single client with normal language keys.
+ * Standard method to show activity to all clients with normal language keys.
  * These keys need to be in the format of standard AMXX keys:
  *   eg: ADMIN_KICK_1 = ADMIN: kick %s
  *       ADMIN_KICK_2 = ADMIN %s: kick %s
@@ -390,108 +327,294 @@ stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
  */
 stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___AdminName[], any:...)
 {
-// The variable gets used via vformat, but the compiler doesn't know that, so it still cries.
-#pragma unused ___AdminName
-	static __amx_show_activity;
-	if (__amx_show_activity == 0)
+	#pragma unused ___AdminName
+	static buffer[192], key[192], players[MAX_PLAYERS], pnum, player;
+	get_players(players, pnum, "ch");
+
+	switch(get_activity_value())
 	{
-		__amx_show_activity = get_cvar_pointer("amx_show_activity");
-
-		// if still not found, then register the cvar as a dummy
-		if (__amx_show_activity == 0)
+		case 1:
 		{
-			__amx_show_activity = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
-		}
-	}
-
-	new buffer[512];
-	new keyfmt[256];
-	new i;
-
-	switch (get_pcvar_num(__amx_show_activity))
-	{
-		case 5: // hide name to admins, display nothing to normal players
-		{
-			while (i++ < MaxClients)
+			for(new i; i < pnum; i++)
 			{
-				if (is_user_connected(i))
-				{
-					if (is_user_admin(i))
-					{
-						LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithoutName, i);
+				player = players[i];
+				LookupLangKey(key, charsmax(key), KeyWithoutName, player);
+				vformat(buffer, charsmax(buffer), key, 4);
+				send_activity_message(player, buffer);
+			}
+		}
+		case 2:
+		{
+			for(new i; i < pnum; i++)
+			{
+				player = players[i];
+				LookupLangKey(key, charsmax(key), KeyWithName, player);
+				vformat(buffer, charsmax(buffer), key, 3);
+				send_activity_message(player, buffer);
+			}
+		}
+		case 3:
+		{
+			for(new i; i < pnum; i++)
+			{
+				player = players[i];
 
-						// skip the "adminname" argument if not showing name
-						vformat(buffer, charsmax(buffer), keyfmt, 4);
-						client_print(i, print_chat, "%s", buffer);
-					}
+				if(is_user_admin(player))
+				{
+					LookupLangKey(key, charsmax(key), KeyWithName, player);
+					vformat(buffer, charsmax(buffer), key, 3);
+				}
+				else
+				{
+					LookupLangKey(key, charsmax(key), KeyWithoutName, player);
+					vformat(buffer, charsmax(buffer), key, 4);
+				}
+
+				send_activity_message(player, buffer);
+			}
+		}
+		case 4:
+		{
+			for(new i; i < pnum; i++)
+			{
+				player = players[i];
+
+				if(is_user_admin(player))
+				{
+					LookupLangKey(key, charsmax(key), KeyWithName, player);
+					vformat(buffer, charsmax(buffer), key, 3);
+					send_activity_message(player, buffer);
 				}
 			}
 		}
-		case 4: // show name only to admins, display nothing to normal players
+		case 5:
 		{
-			while (i++ < MaxClients)
+			for(new i; i < pnum; i++)
 			{
-				if (is_user_connected(i))
-				{
-					if (is_user_admin(i))
-					{
-						LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithName, i);
-						vformat(buffer, charsmax(buffer), keyfmt, 3);
-						client_print(i, print_chat, "%s", buffer);
-					}
-				}
-			}
-		}
-		case 3: // show name only to admins, hide name from normal users
-		{
-			while (i++ < MaxClients)
-			{
-				if (is_user_connected(i))
-				{
-					if (is_user_admin(i))
-					{
-						LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithName, i);
-						vformat(buffer, charsmax(buffer), keyfmt, 3);
-					}
-					else
-					{
-						LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithoutName, i);
+				player = players[i];
 
-						// skip the "adminname" argument if not showing name
-						vformat(buffer, charsmax(buffer), keyfmt, 4);
-					}
-					client_print(i, print_chat, "%s", buffer);
-				}
-			}
-		}
-		case 2: // show name to all users
-		{
-			while (i++ < MaxClients)
-			{
-				if (is_user_connected(i))
+				if(is_user_admin(player))
 				{
-					LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithName, i);
-					vformat(buffer, charsmax(buffer), keyfmt, 3);
-					client_print(i, print_chat, "%s", buffer);
-				}
-			}
-		}
-		case 1: // hide name from all users
-		{
-			while (i++ < MaxClients)
-			{
-				if (is_user_connected(i))
-				{
-					LookupLangKey(keyfmt, charsmax(keyfmt), KeyWithoutName, i);
-
-					// skip the "adminname" argument if not showing name
-					vformat(buffer, charsmax(buffer), keyfmt, 4);
-					client_print(i, print_chat, "%s", buffer);
+					LookupLangKey(key, charsmax(key), KeyWithoutName, player);
+					vformat(buffer, charsmax(buffer), key, 4);
+					send_activity_message(player, buffer);
 				}
 			}
 		}
 	}
 }
+
+/**
+ * Displays a chat message that obeys the amx_show_activity cvar to a single client or everybody.
+ *
+ * @note The admin name needs to be marked with "$an" in the message in
+ *       order for it to get replaced. The name will get replaced with
+ *       a blank string ("") if the client isn't supposed to see it.
+ *
+ * @param id        Client index, use 0 to display to all clients
+ * @param name      Admin name
+ * @param fmt       Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @return          
+ */
+stock show_activity_custom(id, const name[], const fmt[], any:...)
+{
+	static buffer[192];
+	vformat(buffer, charsmax(buffer), fmt, 4);
+
+	if(!id)
+	{
+		static players[MAX_PLAYERS], player, pnum;
+		get_players(players, pnum);
+
+		if(!pnum)
+			return
+
+		switch(get_activity_value())
+		{
+			case 1:
+			{
+				replace_activity_name(name, buffer, charsmax(buffer), false);
+
+				for(new i; i < pnum; i++)
+					send_activity_message(players[i], buffer);
+			}
+			case 2:
+			{
+				replace_activity_name(name, buffer, charsmax(buffer), true);
+
+				for(new i; i < pnum; i++)
+					send_activity_message(players[i], buffer);
+			}
+			case 3:
+			{
+				for(new i; i < pnum; i++)
+				{
+					player = players[i];
+					replace_activity_name(name, buffer, charsmax(buffer), bool:is_user_admin(player));
+					send_activity_message(players[i], buffer);
+				}
+			}
+			case 4:
+			{
+				for(new i; i < pnum; i++)
+				{
+					player = players[i];
+
+					if(is_user_admin(id))
+					{
+						replace_activity_name(name, buffer, charsmax(buffer), true);
+						send_activity_message(players[i], buffer);
+					}
+				}
+			}
+			case 5:
+			{
+				for(new i; i < pnum; i++)
+				{
+					player = players[i];
+
+					if(is_user_admin(id))
+					{
+						replace_activity_name(name, buffer, charsmax(buffer), false);
+						send_activity_message(players[i], buffer);
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		switch(get_activity_value())
+		{
+			case 1:
+			{
+				replace_activity_name(name, buffer, charsmax(buffer), false);
+				send_activity_message(id, buffer);
+			}
+			case 2:
+			{
+				replace_activity_name(name, buffer, charsmax(buffer), true);
+				send_activity_message(id, buffer);
+			}
+			case 3:
+			{
+				replace_activity_name(name, buffer, charsmax(buffer), bool:is_user_admin(id));
+				send_activity_message(id, buffer);
+			}
+			case 4:
+			{
+				if(is_user_admin(id))
+				{
+					replace_activity_name(name, buffer, charsmax(buffer), true);
+					send_activity_message(id, buffer);
+				}
+			}
+			case 5:
+			{
+				if(is_user_admin(id))
+				{
+					replace_activity_name(name, buffer, charsmax(buffer), false);
+					send_activity_message(id, buffer);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Sends an amx_show_activity based message that obeys the colored chat
+ * message rules set by the set_activity_color() function.
+ *
+ * @param id        Client index to display message to
+ * @param fmt       Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @noreturn
+ */
+stock send_activity_message(id, const fmt[], any:...)
+{
+	new buffer[192];
+	vformat(buffer, charsmax(buffer), fmt, 3)
+
+	if(activity_color)
+		client_print_color(id, activity_sender, buffer);
+	else
+		client_print(id, print_chat, buffer);
+}
+
+/**
+ * Replaces the admin name placeholder for show_activity() functions inside a string.
+ *
+ * @param name          Admin name that will be replaced
+ * @param buffer        Buffer where the name will be replaced
+ * @param len           Maximum buffer length
+ * @param display       If set to true, it will replace the placeholder with
+ *                      the actual name, otherwise it will simply remove it.
+ * @param placeholder   String that holds the admin name
+ *
+ * @noreturn
+ */
+stock replace_activity_name(const name[], buffer[], len, bool:display, placeholder[] = ACTIVITY_ADMIN_NAME)
+	replace_all(buffer, len, placeholder, display ? name : "");
+
+/**
+ * Sets color chat rules for show_activity() functions.
+ *
+ * @note The use method of this function is similar to set_hudmessage()
+ *       where you need to use the function before using show_hudmessage().
+ *       In this case, you need to use set_activity_color() before using any
+ *       of the show_activity() functions in order for it to have an effect.
+ * @note If you plan to use the same rules all the time, you can use this
+ *       function inside of plugin_init() or some other forward. This way you
+ *       won't have to write set_activity_color() before every show_activity() function.
+ *
+ * @param color     Set this to true if you want to use colored chat messages
+ * @param sender    Sender id or print_team_* constant
+ *
+ * @noreturn
+ */
+stock set_activity_color(bool:color, sender = print_team_default)
+{
+	activity_color = color;
+	activity_sender = sender;
+}
+
+/**
+ * Returns the integer value of the amx_show_activity cvar.
+ * Also prepares the cvar for use with show_activity() functions.
+ *
+ * @note If the amx_show_activity cvar doesn't exist, it will create a dummy cvar.
+ *
+ * @return          Cvar value, converted to int
+ */
+stock get_activity_value()
+{
+	static activity_pointer;
+
+	if(!activity_pointer)
+	{
+		activity_pointer = get_cvar_pointer("amx_show_activity");
+
+		if(!activity_pointer)
+			activity_pointer = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
+	}
+
+	return get_pcvar_num(activity_pointer);
+}
+
+/**
+ * Returns the language key for PLAYER or ADMIN depending on the client's admin status.
+ *
+ * @param id        Client index
+ * @param prefix    Buffer to store the prefix in
+ * @param len       Maximum buffer length
+ *
+ * @noreturn
+ */
+stock get_activity_prefix(id, prefix[], len)
+	copy(prefix, len, is_user_admin(id) ? "ADMIN" : "PLAYER");
 
 /**
  * Returns if the mod running on the server supports colored menus.

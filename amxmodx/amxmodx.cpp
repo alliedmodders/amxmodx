@@ -2615,11 +2615,11 @@ static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL engine_changelevel(AMX *amx, cell *params)
 {
 	int length;
-	const char* new_map = get_amxstring(amx, params[1], 0, length);
+	ke::AString new_map(get_amxstring(amx, params[1], 0, length));
 
 	// Same as calling "changelevel" command but will trigger "server_changelevel" AMXX forward as well.
 	// Filling second param will call "changelevel2" command, but this is not usable in multiplayer game.
-	g_pEngTable->pfnChangeLevel(new_map, NULL);
+	g_pEngTable->pfnChangeLevel(new_map.chars(), NULL);
 
 	return 1;
 }

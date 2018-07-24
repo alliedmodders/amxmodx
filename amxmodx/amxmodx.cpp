@@ -338,7 +338,7 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
 
-				if (*msg > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
+				if (static_cast<byte>(*msg) > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
 				{
 					memmove(msg + 1, msg, ke::Min(len++, 191));
 					*msg = 1;
@@ -376,7 +376,7 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 
 			msg = format_amxstring(amx, params, 3, len);
 
-			if (*msg > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
+			if (static_cast<byte>(*msg) > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
 			{
 				memmove(msg + 1, msg, ke::Min(len++, 191));
 				*msg = 1;
@@ -2615,11 +2615,11 @@ static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL engine_changelevel(AMX *amx, cell *params)
 {
 	int length;
-	const char* new_map = get_amxstring(amx, params[1], 0, length);
+	ke::AString new_map(get_amxstring(amx, params[1], 0, length));
 
 	// Same as calling "changelevel" command but will trigger "server_changelevel" AMXX forward as well.
 	// Filling second param will call "changelevel2" command, but this is not usable in multiplayer game.
-	g_pEngTable->pfnChangeLevel(new_map, NULL);
+	g_pEngTable->pfnChangeLevel(new_map.chars(), NULL);
 
 	return 1;
 }

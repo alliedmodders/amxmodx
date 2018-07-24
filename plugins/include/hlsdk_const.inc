@@ -625,7 +625,7 @@
 #define TRAIN_MEDIUM  0x03
 #define TRAIN_FAST    0x04
 #define TRAIN_BACK    0x05
- 
+
 /**
  * Valve Mod Weapon Constants
  */
@@ -660,7 +660,7 @@
 #define ITEM_FLAG_NOAUTORELOAD      (1<<1)
 #define ITEM_FLAG_NOAUTOSWITCHEMPTY (1<<2)
 #define ITEM_FLAG_LIMITINWORLD      (1<<3)
-#define ITEM_FLAG_EXHAUSTIBLE		(1<<4)
+#define ITEM_FLAG_EXHAUSTIBLE       (1<<4)
 
 
 #define FEV_NOTHOST     (1<<0)  // Skip local host for event send.

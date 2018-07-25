@@ -214,54 +214,27 @@ stock cmd_target(id, const arg[], flags = CMDTARGET_OBEY_IMMUNITY)
  */
 stock show_activity(id, const name[], const fmt[], any:...)
 {
-	static buffer[192], prefix[10];
-	vformat(buffer, charsmax(buffer), fmt, 4)
-	get_activity_prefix(id, prefix, charsmax(prefix))
+	if(!get_activity_value())
+		return;
 
-	switch(get_activity_value())
+	static players[MAX_PLAYERS], pnum;
+	get_players(players, pnum, "ch");
+
+	if(!pnum)
+		return;
+
+	static buffer[192], prefix[10], player;
+	vformat(buffer, charsmax(buffer), fmt, 4);
+	get_activity_prefix(id, prefix, charsmax(prefix));
+
+	for(new i; i < pnum; i++)
 	{
-		case 1: send_activity_message(0, "%L: %s", LANG_PLAYER, prefix, buffer);
-		case 2: send_activity_message(0, "%L %s: %s", LANG_PLAYER, prefix, name, buffer);
-		case 3:
+		player = players[i];
+
+		switch(can_see_admin_name(player))
 		{
-			static players[MAX_PLAYERS], player, pnum;
-			get_players(players, pnum, "ch");
-
-			for(new i; i < pnum; i++)
-			{
-				player = players[i];
-
-				if(is_user_admin(player))
-					send_activity_message(player, "%L %s: %s", player, prefix, name, buffer);
-				else
-					send_activity_message(player, "%L: %s", player, prefix, buffer);
-			}
-		}
-		case 4:
-		{
-			static players[MAX_PLAYERS], player, pnum;
-			get_players(players, pnum, "ch");
-
-			for(new i; i < pnum; i++)
-			{
-				player = players[i];
-
-				if(is_user_admin(player))
-					send_activity_message(player, "%L %s: %s", player, prefix, name, buffer);
-			}
-		}
-		case 5:
-		{
-			static players[MAX_PLAYERS], player, pnum;
-			get_players(players, pnum, "ch");
-
-			for(new i; i < pnum; i++)
-			{
-				player = players[i];
-
-				if(is_user_admin(player))
-					send_activity_message(player, "%L: %s", player, prefix, buffer);
-			}
+			case 0: send_activity_message(player, "%L: %s", LANG_PLAYER, prefix, buffer);
+			case 1: send_activity_message(player, "%L %s: %s", LANG_PLAYER, prefix, name, buffer);
 		}
 	}
 }
@@ -280,34 +253,17 @@ stock show_activity(id, const name[], const fmt[], any:...)
  */
 stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
 {
-	if(!is_user_connected(idtarget))
+	if(!is_user_connected(idtarget) || !get_activity_value())
 		return;
 
 	static buffer[192], prefix[10];
 	vformat(buffer, charsmax(buffer), fmt, 5);
 	get_activity_prefix(idadmin, prefix, charsmax(prefix));
 
-	switch(get_activity_value())
+	switch(can_see_admin_name(idtarget))
 	{
-		case 1: send_activity_message(idtarget, "%L: %s", idtarget, prefix, buffer);
-		case 2: send_activity_message(idtarget, "%L %s: %s", idtarget, prefix, name, buffer);
-		case 3:
-		{
-			if(is_user_admin(idtarget))
-				send_activity_message(idtarget, "%L %s: %s", idtarget, prefix, name, buffer);
-			else
-				send_activity_message(idtarget, "%L: %s", idtarget, prefix, buffer);
-		}
-		case 4:
-		{
-			if(is_user_admin(idtarget))
-				send_activity_message(idtarget, "%L %s: %s", idtarget, prefix, name, buffer);
-		}
-		case 5:
-		{
-			if(is_user_admin(idtarget))
-				send_activity_message(idtarget, "%L: %s", idtarget, prefix, buffer);
-		}
+		case 0: send_activity_message(idtarget, "%L: %s", idtarget, prefix, buffer);
+		case 1: send_activity_message(idtarget, "%L %s: %s", idtarget, prefix, name, buffer);
 	}
 }
 
@@ -328,77 +284,35 @@ stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
 stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___AdminName[], any:...)
 {
 	#pragma unused ___AdminName
-	static buffer[192], key[192], players[MAX_PLAYERS], pnum, player;
+
+	if(!get_activity_value())
+		return;
+
+	static players[MAX_PLAYERS], pnum;
 	get_players(players, pnum, "ch");
 
-	switch(get_activity_value())
+	if(!pnum)
+		return;
+
+	static buffer[192], key[192], player;
+
+	for(new i; i < pnum; i++)
 	{
-		case 1:
+		player = players[i];
+
+		switch(can_see_admin_name(player))
 		{
-			for(new i; i < pnum; i++)
+			case 0:
 			{
-				player = players[i];
 				LookupLangKey(key, charsmax(key), KeyWithoutName, player);
 				vformat(buffer, charsmax(buffer), key, 4);
 				send_activity_message(player, buffer);
 			}
-		}
-		case 2:
-		{
-			for(new i; i < pnum; i++)
+			case 1:
 			{
-				player = players[i];
 				LookupLangKey(key, charsmax(key), KeyWithName, player);
 				vformat(buffer, charsmax(buffer), key, 3);
 				send_activity_message(player, buffer);
-			}
-		}
-		case 3:
-		{
-			for(new i; i < pnum; i++)
-			{
-				player = players[i];
-
-				if(is_user_admin(player))
-				{
-					LookupLangKey(key, charsmax(key), KeyWithName, player);
-					vformat(buffer, charsmax(buffer), key, 3);
-				}
-				else
-				{
-					LookupLangKey(key, charsmax(key), KeyWithoutName, player);
-					vformat(buffer, charsmax(buffer), key, 4);
-				}
-
-				send_activity_message(player, buffer);
-			}
-		}
-		case 4:
-		{
-			for(new i; i < pnum; i++)
-			{
-				player = players[i];
-
-				if(is_user_admin(player))
-				{
-					LookupLangKey(key, charsmax(key), KeyWithName, player);
-					vformat(buffer, charsmax(buffer), key, 3);
-					send_activity_message(player, buffer);
-				}
-			}
-		}
-		case 5:
-		{
-			for(new i; i < pnum; i++)
-			{
-				player = players[i];
-
-				if(is_user_admin(player))
-				{
-					LookupLangKey(key, charsmax(key), KeyWithoutName, player);
-					vformat(buffer, charsmax(buffer), key, 4);
-					send_activity_message(player, buffer);
-				}
 			}
 		}
 	}
@@ -420,105 +334,39 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
  */
 stock show_activity_custom(id, const name[], const fmt[], any:...)
 {
+	if(!get_activity_value())
+		return;
+
 	static buffer[192];
 	vformat(buffer, charsmax(buffer), fmt, 4);
 
 	if(!id)
 	{
-		static players[MAX_PLAYERS], player, pnum;
+		static players[MAX_PLAYERS], pnum;
 		get_players(players, pnum);
 
 		if(!pnum)
 			return
 
-		switch(get_activity_value())
+		static player;
+
+		for(new i; i < pnum; i++)
 		{
-			case 1:
-			{
-				replace_activity_name(name, buffer, charsmax(buffer), false);
+			player = players[i];
 
-				for(new i; i < pnum; i++)
-					send_activity_message(players[i], buffer);
-			}
-			case 2:
+			if(can_see_admin_name(player) != -1)
 			{
-				replace_activity_name(name, buffer, charsmax(buffer), true);
-
-				for(new i; i < pnum; i++)
-					send_activity_message(players[i], buffer);
-			}
-			case 3:
-			{
-				for(new i; i < pnum; i++)
-				{
-					player = players[i];
-					replace_activity_name(name, buffer, charsmax(buffer), bool:is_user_admin(player));
-					send_activity_message(players[i], buffer);
-				}
-			}
-			case 4:
-			{
-				for(new i; i < pnum; i++)
-				{
-					player = players[i];
-
-					if(is_user_admin(id))
-					{
-						replace_activity_name(name, buffer, charsmax(buffer), true);
-						send_activity_message(players[i], buffer);
-					}
-				}
-			}
-			case 5:
-			{
-				for(new i; i < pnum; i++)
-				{
-					player = players[i];
-
-					if(is_user_admin(id))
-					{
-						replace_activity_name(name, buffer, charsmax(buffer), false);
-						send_activity_message(players[i], buffer);
-					}
-				}
+				replace_activity_data(player, name, buffer, charsmax(buffer));
+				send_activity_message(player, buffer);
 			}
 		}
 	}
 	else
 	{
-		switch(get_activity_value())
+		if(can_see_admin_name(id) != -1)
 		{
-			case 1:
-			{
-				replace_activity_name(name, buffer, charsmax(buffer), false);
-				send_activity_message(id, buffer);
-			}
-			case 2:
-			{
-				replace_activity_name(name, buffer, charsmax(buffer), true);
-				send_activity_message(id, buffer);
-			}
-			case 3:
-			{
-				replace_activity_name(name, buffer, charsmax(buffer), bool:is_user_admin(id));
-				send_activity_message(id, buffer);
-			}
-			case 4:
-			{
-				if(is_user_admin(id))
-				{
-					replace_activity_name(name, buffer, charsmax(buffer), true);
-					send_activity_message(id, buffer);
-				}
-			}
-			case 5:
-			{
-				if(is_user_admin(id))
-				{
-					replace_activity_name(name, buffer, charsmax(buffer), false);
-					send_activity_message(id, buffer);
-				}
-			}
+			replace_activity_data(id, name, buffer, charsmax(buffer));
+			send_activity_message(id, buffer);
 		}
 	}
 }
@@ -545,22 +393,69 @@ stock send_activity_message(id, const fmt[], any:...)
 }
 
 /**
- * Replaces the admin name placeholder for show_activity() functions inside a string.
+ * Checks whether or not the client can see the admin name according to the amx_show_activity cvar.
  *
+ * @note The valid values of amx_show_activity are:
+ *       0 = don't display the message at all
+ *       1 = don't show the admin name to anyone
+ *       2 = show the admin name to everyone
+ *       3 = show the admin name only to admins, hide it from normal users
+ *       4 = show the admin name only to admins, show nothing to normal users
+ *       5 = hide the admin name only from admins, show nothing to normal users
+ *
+ * @param id        Client index
+ *
+ * @return          1 if the client should see the admin name.
+ *                  0 if the client shouldn't see the admin name.
+ *                  -1 if the client shouldn't see the message at all.
+ */
+stock can_see_admin_name(id)
+{
+	switch(get_activity_value())
+	{
+		case 0: return -1
+		case 1: return 0
+		case 2: return 1
+		case 3: return is_user_admin(id) ? 1 : 0
+		case 4: return is_user_admin(id) ? 1 : -1
+		case 5: return is_user_admin(id) ? 0 : -1
+	}
+
+	return -1
+}
+
+/**
+ * Replaces the admin name and client prefix placeholders for show_activity() functions inside a string.
+ *
+ * @note If the client isn't supposed to see the admin name, the name
+ *       will simply get removed by the string (replace with "").
+ *
+ * @param id            Client index
  * @param name          Admin name that will be replaced
  * @param buffer        Buffer where the name will be replaced
  * @param len           Maximum buffer length
- * @param display       If set to true, it will replace the placeholder with
- *                      the actual name, otherwise it will simply remove it.
- * @param placeholder   String that holds the admin name
+ * @param str_name      String that holds the admin name
+ * @param str_prefix    String that holds the client prefix
  *
  * @noreturn
  */
-stock replace_activity_name(const name[], buffer[], len, bool:display, placeholder[] = ACTIVITY_ADMIN_NAME)
-	replace_all(buffer, len, placeholder, display ? name : "");
+stock replace_activity_data(id, const name[], buffer[], len, str_name[] = ACTIVITY_STR_NAME, str_prefix[] = ACTIVITY_STR_PREFIX)
+{
+	if(contain(buffer, str_prefix) != -1)
+	{
+		static prefix[10];
+		get_activity_prefix(id, prefix, charsmax(prefix));
+		replace_all(buffer, len, str_prefix, prefix);
+	}
+
+	static cansee; cansee = can_see_admin_name(id);
+
+	if(cansee != -1)
+		replace_all(buffer, len, str_name, cansee ? name : "");
+}
 
 /**
- * Sets color chat rules for show_activity() functions.
+ * Sets chat color rules for show_activity() functions.
  *
  * @note The use method of this function is similar to set_hudmessage()
  *       where you need to use the function before using show_hudmessage().
@@ -587,7 +482,7 @@ stock set_activity_color(bool:color, sender = print_team_default)
  *
  * @note If the amx_show_activity cvar doesn't exist, it will create a dummy cvar.
  *
- * @return          Cvar value, converted to int
+ * @return          Cvar value in the range from 0 to 5.
  */
 stock get_activity_value()
 {
@@ -598,10 +493,10 @@ stock get_activity_value()
 		activity_pointer = get_cvar_pointer("amx_show_activity");
 
 		if(!activity_pointer)
-			activity_pointer = register_cvar("amx_show_activity", "2", FCVAR_PROTECTED);
+			activity_pointer = register_cvar("amx_show_activity", "2");
 	}
 
-	return get_pcvar_num(activity_pointer);
+	return clamp(get_pcvar_num(activity_pointer), 0, 5);
 }
 
 /**

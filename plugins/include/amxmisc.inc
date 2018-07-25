@@ -413,15 +413,15 @@ stock can_see_admin_name(id)
 {
 	switch(get_activity_value())
 	{
-		case 0: return -1
-		case 1: return 0
-		case 2: return 1
-		case 3: return is_user_admin(id) ? 1 : 0
-		case 4: return is_user_admin(id) ? 1 : -1
-		case 5: return is_user_admin(id) ? 0 : -1
+		case 0: return -1;
+		case 1: return 0;
+		case 2: return 1;
+		case 3: return is_user_admin(id) ? 1 : 0;
+		case 4: return is_user_admin(id) ? 1 : -1;
+		case 5: return is_user_admin(id) ? 0 : -1;
 	}
 
-	return -1
+	return -1;
 }
 
 /**

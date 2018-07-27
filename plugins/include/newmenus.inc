@@ -368,6 +368,19 @@ native menu_addtext2( menu, const text[] );
 native menu_setprop(menu, prop, ...);
 
 /**
+ * Gets a menu property.
+ *
+ * @note MPROP_EXIT requires 2 additional integer parameters to be passed.
+ *
+ * @param menu			Menu resource identifier.
+ * @param prop			MPROP_ constant.
+ * @param ...			Property parameters.
+ * @return				Menu property if the property type is an integer.
+ * @error				Invalid menu resource or property.
+ */
+native menu_getprop(menu, prop, ...);
+
+/**
  * Cancels a player's menu, effectively forcing the player to select MENU_EXIT.
  * The menu will still exist on their screen but any results are invalidated,
  * and the callback is invoked.

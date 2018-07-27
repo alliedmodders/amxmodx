@@ -370,8 +370,6 @@ native menu_setprop(menu, prop, ...);
 /**
  * Gets a menu property.
  *
- * @note MPROP_EXIT requires 2 additional integer parameters to be passed.
- *
  * @param menu			Menu resource identifier.
  * @param prop			MPROP_ constant.
  * @param ...			Property parameters.

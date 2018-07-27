@@ -1122,14 +1122,14 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		}
 		case MPROP_EXITNAME:
 		{
-			if (len < 4)
-			{
-				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
-				return 0;
-			}
+			if(pMenu->m_NeverExit == false && pMenu->m_ForceExit == false)
+				return 1;
+			else if(pMenu->m_NeverExit == false && pMenu->m_ForceExit == true)
+				return 2;
+			else if(pMenu->m_NeverExit == true && pMenu->m_ForceExit == false)
+				return -1;
 
-			set_amxstring(amx, params[3], pMenu->m_OptNames[abs(MENU_EXIT)].chars(), params[4]);
-			break;
+			return 0;
 		}
 		case MPROP_TITLE:
 		{

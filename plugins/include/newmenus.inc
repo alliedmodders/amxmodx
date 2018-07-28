@@ -359,22 +359,29 @@ native menu_addtext2( menu, const text[] );
 /**
  * Sets a menu property.
  *
- * @param menu			Menu resource identifier.
- * @param prop			MPROP_ constant.
- * @param ...			Property parameters.
- * @return				1 on success, 0 on failure.
- * @error				Invalid menu resource or property.
+ * @param menu          Menu resource identifier.
+ * @param prop          MPROP_ constant.
+ * @param ...	          Property parameters.
+ * @return              1 on success, 0 on failure.
+ * @error				        Invalid menu resource or property.
  */
 native menu_setprop(menu, prop, ...);
 
 /**
  * Gets a menu property.
  *
- * @param menu			Menu resource identifier.
- * @param prop			MPROP_ constant.
- * @param ...			Property parameters.
- * @return				Menu property if the property type is an integer.
- * @error				Invalid menu resource or property.
+ * @note If the value of the property is a string, you should pass
+ *       two additional parameters - one for the buffer and another one
+ *       for the buffer length. Integer values are directly returned by
+ *       the function, so no extra parameters are required.
+ *       Example #1: menu_getprop(iMenu, MPROP_TITLE, szTitle, charsmax(szTitle))
+ *       Example #2: new iPerPage = menu_getprop(iMenu, MPROP_PERPAGE)
+ *
+ * @param menu          Menu resource identifier.
+ * @param prop          MPROP_ constant.
+ * @param ...			      Property parameters.
+ * @return				      Menu property if the property type is an integer.
+ * @error				        Invalid menu resource, invalid property or invalid amount of parameters.
  */
 native menu_getprop(menu, prop, ...);
 
@@ -383,8 +390,8 @@ native menu_getprop(menu, prop, ...);
  * The menu will still exist on their screen but any results are invalidated,
  * and the callback is invoked.
  *
- * @param player		Client index.
+ * @param player		    Client index.
  * @noreturn
- * @error				Invalid client index.
+ * @error				        Invalid client index.
  */
 native menu_cancel(player);

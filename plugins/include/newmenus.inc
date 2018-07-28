@@ -377,11 +377,11 @@ native menu_setprop(menu, prop, ...);
  *       Example #1: menu_getprop(iMenu, MPROP_TITLE, szTitle, charsmax(szTitle))
  *       Example #2: new iPerPage = menu_getprop(iMenu, MPROP_PERPAGE)
  *
- * @param menu          Menu resource identifier.
- * @param prop          MPROP_ constant.
+ * @param menu			Menu resource identifier.
+ * @param prop			MPROP_ constant.
  * @param ...			Property parameters.
- * @return			    Menu property if the property type is an integer.
- * @error			    Invalid menu resource, invalid property or invalid amount of parameters.
+ * @return				Menu property if the property type is an integer.
+ * @error				Invalid menu resource, invalid property or invalid amount of parameters.
  */
 native menu_getprop(menu, prop, ...);
 

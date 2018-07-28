@@ -12,8 +12,11 @@
 //
 
 #include "fakemeta_amxx.h"
+#include <engine_strucs.h>
 
 TraceResult g_tr;
+
+ke::AString LightStyleBuffers[MAX_LIGHTSTYLES];
 
 //by mahnsawce from his NS module
 static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
@@ -595,8 +598,13 @@ static cell AMX_NATIVE_CALL engfunc(AMX *amx, cell *params)
 	case	EngFunc_LightStyle:			// void )			(int style, const char* val);
 		cRet = MF_GetAmxAddr(amx,params[2]);
 		iparam1=cRet[0];
-		temp = MF_GetAmxString(amx,params[3],0,&len);
-		(*g_engfuncs.pfnLightStyle)(iparam1,temp);
+		if (iparam1 < 0 || iparam1 >= ARRAYSIZE(LightStyleBuffers))
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid style %d", iparam1);
+			return 0;
+		}
+		LightStyleBuffers[iparam1] = MF_GetAmxString(amx, params[3], 0, &len);
+		(*g_engfuncs.pfnLightStyle)(iparam1, LightStyleBuffers[iparam1].chars());
 		return 1;
 
 

@@ -516,4 +516,30 @@ enum FindPlayerFlags (<<= 1)
 	FindPlayer_IncludeConnecting   // Include connecting clients
 }
 
+/**
+ * Constants for client statistics
+ */
+enum
+{
+	STATS_KILLS = 0,
+	STATS_DEATHS,
+	STATS_HEADSHOTS,
+	STATS_TEAMKILLS,
+	STATS_SHOTS,
+	STATS_HITS,
+	STATS_DAMAGE,
+	STATS_RANK
+}
+
+/**
+ * Constants for objective based statistics
+ */
+enum
+{
+	STATS_TOTAL_DEFUSIONS = 0,
+	STATS_BOMBS_DEFUSED,
+	STATS_BOMBS_PLANTED,
+	STATS_BOMB_EXPLOSIONS
+}
+
 #include <cstrike_const> // To keep backward compatibility

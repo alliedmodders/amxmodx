@@ -19,6 +19,8 @@
  *       amxconst.inc, this function also works on custom weapons.
  * @note For a list of possible body hitplaces see the HIT_* constants in
  *       amxconst.inc
+ * @note For a list of possible stat constants see the STATS_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
  *          1 - Deaths
@@ -47,6 +49,8 @@ native get_user_wstats(index, wpnindex, stats[8], bodyhits[8]);
  * @note For a list of default CS weapon ids see the CSW_* constants in
  *       amxconst.inc, this function also works on custom weapons.
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATS_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -80,6 +84,8 @@ native get_user_wrstats(index, wpnindex, stats[8], bodyhits[8]);
  *       deaths/teamkills.
  * @note For a list of possible body hitplaces see the HIT_* constants in
  *       amxconst.inc
+ * @note For a list of possible stat constants see the STATS_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
  *          1 - Deaths
@@ -106,6 +112,8 @@ native get_user_stats(index, stats[8], bodyhits[8]);
  *
  * @note For a list of possible body hitplaces see the HIT_* constants in
  *       amxconst.inc
+ * @note For a list of possible stat constants see the STATS_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
  *          1 - Deaths
@@ -130,6 +138,8 @@ native get_user_rstats(index, stats[8], bodyhits[8]);
  * current round.
  *
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATS_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -160,6 +170,8 @@ native get_user_vstats(index, victim, stats[8], bodyhits[8], wpnname[] = "", len
  * current round.
  *
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATS_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -206,6 +218,8 @@ native reset_user_wstats(index);
  *       deaths/teamkills.
  * @note For a list of possible body hitplaces see the HIT_* constants in
  *       amxconst.inc
+ * @note For a list of possible stat constants see the STATS_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
  *          1 - Deaths
@@ -240,6 +254,8 @@ native get_statsnum();
  * Retrieves the client's objective statistics from the permanent storage.
  *
  * @note The permanent storage is updated on every respawn or client disconnect.
+ * @note For a list of possible stat constants see the STATS_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - total defusions
  *          1 - bomb defused
@@ -261,6 +277,8 @@ native get_user_stats2(index, stats[4]);
  * iterative, incremental access.
  *
  * @note The permanent storage is updated on every respawn or client disconnect.
+ * @note For a list of possible stat constants see the STATS_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - total defusions
  *          1 - bomb defused

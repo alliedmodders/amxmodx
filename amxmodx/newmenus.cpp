@@ -1144,15 +1144,14 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		}
 		case MPROP_EXITALL:
 		{
-			if (len < 4)
-			{
-				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
-				return 0;
-			}
-
-			params[3] = pMenu->m_NeverExit;
-			params[4] = pMenu->m_ForceExit;
-			break;
+			if(pMenu->m_NeverExit == false && pMenu->m_ForceExit == false)
+				return 1;
+			else if(pMenu->m_NeverExit == false && pMenu->m_ForceExit == true)
+				return 2;
+			else if(pMenu->m_NeverExit == true && pMenu->m_ForceExit == false)
+				return -1;
+			
+			return 0;
 		}
 		case MPROP_ORDER:
 		{

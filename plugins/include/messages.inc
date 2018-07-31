@@ -26,8 +26,8 @@
  * You may also refer to the messages_const.inc file for examples.
  *
  * @note Each message starts with a message_begin() or message_begin_f() function
- *       and ends with message_end(). The specific message go in between these two
- *       by using the write_*() functions found in messages.inc.
+ *       and ends with message_end(). The specific message arguments go in between
+ *       these two by using the write_*() functions found in messages.inc.
  * @note If a message_end() function is not added in the end, the server
  *       will crash when another message is going to be sent.
  *
@@ -50,8 +50,8 @@ native message_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
  * You may also refer to the messages_const.inc file for examples.
  *
  * @note Each message starts with a message_begin() or message_begin_f() function
- *       and ends with message_end(). The specific message go in between these two
- *       by using the write_*() functions found in messages.inc.
+ *       and ends with message_end(). The specific message arguments go in between
+ *       these two by using the write_*() functions found in messages.inc.
  * @note If a message_end() function is not added in the end, the server
  *       will crash when another message is going to be sent.
  * @note This function is the same as message_begin(), but the origin
@@ -196,7 +196,7 @@ native write_coord(x);
 native write_coord_f(Float:x);
 
 /**
- * Writes an string to a message.
+ * Writes a string to a message.
  *
  * @note This function should only be used in between a message_begin()
  *       or message_begin_f() and a message_end() function. Trying to use
@@ -219,11 +219,11 @@ native write_string(const x[]);
  *       sent with this one are also sent to all other AMXX and Metamod plugins.
  *       This means that if you send one of these messages, other plugins will
  *       be notified of that message, which was previously impossible.
- * @note BE CAREFUL! Using this incorrectly, or not for their intended purpose,
+ * @note BE CAREFUL! Using this incorrectly, or not for its intended purpose,
  *       could cause infinite recursion or something just as bad!
  * @note Each message starts with a emessage_begin() or emessage_begin_f() function
- *       and ends with emessage_end(). The specific message go in between these two
- *       by using the ewrite_*() functions found in messages.inc.
+ *       and ends with emessage_end(). The specific message arguments go in between
+ *       these two by using the ewrite_*() functions found in messages.inc.
  * @note If a emessage_end() function is not added in the end, the server
  *       will crash when another message is going to be sent.
  *
@@ -249,13 +249,15 @@ native emessage_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
  *       sent with this one are also sent to all other AMXX and Metamod plugins.
  *       This means that if you send one of these messages, other plugins will
  *       be notified of that message, which was previously impossible.
- * @note BE CAREFUL! Using this incorrectly, or not for their intended purpose,
+ * @note BE CAREFUL! Using this incorrectly, or not for its intended purpose,
  *       could cause infinite recursion or something just as bad!
  * @note Each message starts with a emessage_begin() or emessage_begin_f() function
- *       and ends with emessage_end(). The specific message go in between these two
- *       by using the ewrite_*() functions found in messages.inc.
+ *       and ends with emessage_end(). The specific message arguments go in between
+ *       these two by using the ewrite_*() functions found in messages.inc.
  * @note If a emessage_end() function is not added in the end, the server
  *       will crash when another message is going to be sent.
+ * @note This function is the same as emessage_begin(), but the origin
+ *       argument accepts only float values in this one.
  *
  * @param dest        Destination type (see MSG_* constants in messages_const.inc)
  * @param msg_type    Message id
@@ -396,7 +398,7 @@ native ewrite_coord(x);
 native ewrite_coord_f(Float:x);
 
 /**
- * Writes an string to a message.
+ * Writes a string to a message.
  *
  * @note This function should only be used in between a emessage_begin()
  *       or emessage_begin_f() and a emessage_end() function. Trying to use

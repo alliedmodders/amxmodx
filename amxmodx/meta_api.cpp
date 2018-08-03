@@ -657,10 +657,11 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 		pPlayer->Init(pEdictList + i, i);
 	}
 
+	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
+
 	executeForwards(FF_PluginInit);
 	executeForwards(FF_PluginCfg);
 
-	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
 	CoreCfg.ExecuteAutoConfigs();   // Execute configs created with AutoExecConfig native.
 	CoreCfg.SetMapConfigTimer(6.1); // Prepare per-map configs to be executed 6.1 seconds later.
 	                                // Original value which was used in admin.sma.

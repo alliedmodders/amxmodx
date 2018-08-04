@@ -222,16 +222,6 @@ public stock const Float:NULL_VECTOR[3];
 #define LANG_PLAYER     -1
 
 /**
- * Placeholder that replaces the admin name in show_activity_custom()
- */
-#define ACTIVITY_STR_NAME      "$an"
-
-/**
- * Placeholder that replaces the client prefix in show_activity_custom()
- */
-#define ACTIVITY_STR_PREFIX    "$px"
-
-/**
  * @section Client print native constants
  */
 

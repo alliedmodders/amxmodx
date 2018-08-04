@@ -16,7 +16,7 @@
 	#include <amxmodx>
 #endif
 
-static bool:activity_color, activity_sender;
+static bool:activity_color, activity_sender, activity_ph_name[32], activity_ph_prefix[32];
 
 /**
  * Returns if the client has any admin flags set
@@ -214,7 +214,7 @@ stock cmd_target(id, const arg[], flags = CMDTARGET_OBEY_IMMUNITY)
  */
 stock show_activity(id, const name[], const fmt[], any:...)
 {
-	if(!get_activity_value())
+	if(!activity_init())
 		return;
 
 	static players[MAX_PLAYERS], pnum;
@@ -253,7 +253,7 @@ stock show_activity(id, const name[], const fmt[], any:...)
  */
 stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
 {
-	if(!is_user_connected(idtarget) || !get_activity_value())
+	if(!is_user_connected(idtarget) || !activity_init())
 		return;
 
 	static buffer[192], prefix[10];
@@ -285,7 +285,7 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 {
 	#pragma unused ___AdminName
 
-	if(!get_activity_value())
+	if(!activity_init())
 		return;
 
 	static players[MAX_PLAYERS], pnum;
@@ -334,7 +334,7 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
  */
 stock show_activity_custom(id, const name[], const fmt[], any:...)
 {
-	if(!get_activity_value())
+	if(!activity_init())
 		return;
 
 	static buffer[192];
@@ -373,7 +373,7 @@ stock show_activity_custom(id, const name[], const fmt[], any:...)
 
 /**
  * Sends an amx_show_activity based message that obeys the colored chat
- * message rules set by the set_activity_color() function.
+ * message rules set by the set_activity_rules() function.
  *
  * @param id        Client index to display message to
  * @param fmt       Formatting rules
@@ -411,7 +411,7 @@ stock send_activity_message(id, const fmt[], any:...)
  */
 stock can_see_admin_name(id)
 {
-	switch(get_activity_value())
+	switch(activity_init())
 	{
 		case 0: return -1;
 		case 1: return 0;
@@ -434,62 +434,67 @@ stock can_see_admin_name(id)
  * @param name          Admin name that will be replaced
  * @param buffer        Buffer where the name will be replaced
  * @param len           Maximum buffer length
- * @param str_name      String that holds the admin name
- * @param str_prefix    String that holds the client prefix
  *
  * @noreturn
  */
-stock replace_activity_data(id, const name[], buffer[], len, str_name[] = ACTIVITY_STR_NAME, str_prefix[] = ACTIVITY_STR_PREFIX)
+stock replace_activity_data(id, const name[], buffer[], len)
 {
-	if(contain(buffer, str_prefix) != -1)
+	if(contain(buffer, activity_ph_prefix) != -1)
 	{
 		static prefix[10];
 		get_activity_prefix(id, prefix, charsmax(prefix));
-		replace_all(buffer, len, str_prefix, prefix);
+		replace_all(buffer, len, activity_ph_prefix, prefix);
 	}
 
 	static cansee; cansee = can_see_admin_name(id);
 
 	if(cansee != -1)
-		replace_all(buffer, len, str_name, cansee ? name : "");
+		replace_all(buffer, len, activity_ph_name, cansee ? name : "");
 }
 
 /**
- * Sets chat color rules for show_activity() functions.
+ * Sets message rules for show_activity() functions.
  *
  * @note The use method of this function is similar to set_hudmessage()
  *       where you need to use the function before using show_hudmessage().
- *       In this case, you need to use set_activity_color() before using any
+ *       In this case, you need to use set_activity_rules() before using any
  *       of the show_activity() functions in order for it to have an effect.
  * @note If you plan to use the same rules all the time, you can use this
  *       function inside of plugin_init() or some other forward. This way you
- *       won't have to write set_activity_color() before every show_activity() function.
+ *       won't have to write set_activity_rules() before every show_activity() function.
  *
  * @param color     Set this to true if you want to use colored chat messages
- * @param sender    Sender id or print_team_* constant
+ * @param sender    Sender id or print_team_* constant for colored messages
+ * @param ph_name   Placeholder for the admin name used in show_activity_custom()
+ * @param ph_prefix Placeholder for the user prefix used in show_activity_custom()
  *
  * @noreturn
  */
-stock set_activity_color(bool:color, sender = print_team_default)
+stock set_activity_rules(bool:color, sender = print_team_default, ph_name[] = "$an", ph_prefix[] = "$pr")
 {
 	activity_color = color;
 	activity_sender = sender;
+	activity_ph_name = ph_name;
+	activity_ph_prefix = ph_prefix;
 }
 
 /**
- * Returns the integer value of the amx_show_activity cvar.
- * Also prepares the cvar for use with show_activity() functions.
+ * Prepares the activity functions for use.
  *
  * @note If the amx_show_activity cvar doesn't exist, it will create a dummy cvar.
  *
- * @return          Cvar value in the range from 0 to 5.
+ * @return          Activity cvar value in the range from 0 to 5.
  */
-stock get_activity_value()
+stock activity_init()
 {
 	static activity_pointer;
 
 	if(!activity_pointer)
 	{
+		activity_color = false;
+		activity_sender = print_team_default;
+		activity_ph_name = "$an";
+		activity_ph_prefix = "$pr";
 		activity_pointer = get_cvar_pointer("amx_show_activity");
 
 		if(!activity_pointer)

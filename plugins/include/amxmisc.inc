@@ -233,8 +233,16 @@ stock show_activity(id, const name[], const fmt[], any:...)
 
 		switch(can_see_admin_name(player))
 		{
-			case 0: send_activity_message(player, "%L: %s", LANG_PLAYER, prefix, buffer);
-			case 1: send_activity_message(player, "%L %s: %s", LANG_PLAYER, prefix, name, buffer);
+			case 0:
+			{
+				SetGlobalTransTarget(player);
+				send_activity_message(player, "%L: %s", LANG_PLAYER, prefix, buffer);
+			}
+			case 1:
+			{
+				SetGlobalTransTarget(player);
+				send_activity_message(player, "%L %s: %s", LANG_PLAYER, prefix, name, buffer);
+			}
 		}
 	}
 }
@@ -354,6 +362,7 @@ stock show_activity_custom(id, const name[], const fmt[], any:...)
 
 			if(can_see_admin_name(player) != -1)
 			{
+				SetGlobalTransTarget(player);
 				replace_activity_data(player, name, buffer, charsmax(buffer));
 				send_activity_message(player, buffer);
 			}
@@ -363,6 +372,7 @@ stock show_activity_custom(id, const name[], const fmt[], any:...)
 	{
 		if(can_see_admin_name(id) != -1)
 		{
+			SetGlobalTransTarget(id);
 			replace_activity_data(id, name, buffer, charsmax(buffer));
 			send_activity_message(id, buffer);
 		}

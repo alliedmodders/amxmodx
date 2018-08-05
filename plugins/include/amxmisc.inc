@@ -217,13 +217,13 @@ stock show_activity(id, const name[], const fmt[], any:...)
 	if(!activity_init())
 		return;
 
-	static players[MAX_PLAYERS], pnum;
+	new players[MAX_PLAYERS], pnum;
 	get_players(players, pnum, "ch");
 
 	if(!pnum)
 		return;
 
-	static buffer[192], prefix[10], player;
+	new buffer[192], prefix[10], player;
 	vformat(buffer, charsmax(buffer), fmt, 4);
 	get_activity_prefix(id, prefix, charsmax(prefix));
 
@@ -256,7 +256,7 @@ stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
 	if(!is_user_connected(idtarget) || !activity_init())
 		return;
 
-	static buffer[192], prefix[10];
+	new buffer[192], prefix[10];
 	vformat(buffer, charsmax(buffer), fmt, 5);
 	get_activity_prefix(idadmin, prefix, charsmax(prefix));
 
@@ -288,13 +288,13 @@ stock show_activity_key(const KeyWithoutName[], const KeyWithName[], const ___Ad
 	if(!activity_init())
 		return;
 
-	static players[MAX_PLAYERS], pnum;
+	new players[MAX_PLAYERS], pnum;
 	get_players(players, pnum, "ch");
 
 	if(!pnum)
 		return;
 
-	static buffer[192], key[192], player;
+	new buffer[192], key[192], player;
 
 	for(new i; i < pnum; i++)
 	{
@@ -337,20 +337,18 @@ stock show_activity_custom(id, const name[], const fmt[], any:...)
 	if(!activity_init())
 		return;
 
-	static buffer[192];
+	new buffer[192];
 	vformat(buffer, charsmax(buffer), fmt, 4);
 
 	if(!id)
 	{
-		static players[MAX_PLAYERS], pnum;
+		new players[MAX_PLAYERS], pnum;
 		get_players(players, pnum);
 
 		if(!pnum)
 			return
 
-		static player;
-
-		for(new i; i < pnum; i++)
+		for(new i, player; i < pnum; i++)
 		{
 			player = players[i];
 
@@ -441,12 +439,12 @@ stock replace_activity_data(id, const name[], buffer[], len)
 {
 	if(contain(buffer, activity_ph_prefix) != -1)
 	{
-		static prefix[10];
+		new prefix[10];
 		get_activity_prefix(id, prefix, charsmax(prefix));
 		replace_all(buffer, len, activity_ph_prefix, prefix);
 	}
 
-	static cansee; cansee = can_see_admin_name(id);
+	new cansee = can_see_admin_name(id);
 
 	if(cansee != -1)
 		replace_all(buffer, len, activity_ph_name, cansee ? name : "");

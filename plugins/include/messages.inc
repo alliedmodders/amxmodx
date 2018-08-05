@@ -19,17 +19,16 @@
 #include <message_const>
 
 /**
- * This function can be used to generate client messages. You may generate
- * menu, smoke, shockwaves, thunderlights, intermission and many other messages.
- * For a list of HL game events, visit https://wiki.alliedmods.net/Half-Life_1_Game_Events
- * For a list of HL engine messages, visit https://wiki.alliedmods.net/Half-Life_1_Engine_Messages
- * You may also refer to the messages_const.inc file for examples.
+ * Marks the beginning of a client message.
  *
+ * @note You may generate menus, smoke, shockwaves, thunderlights,
+ *       intermission and many other messages.
+ * @note For a list of HL game events, visit https://wiki.alliedmods.net/Half-Life_1_Game_Events
+ * @note For a list of HL engine messages, visit https://wiki.alliedmods.net/Half-Life_1_Engine_Messages
+ * @note You may also refer to the messages_const.inc file for examples.
  * @note Each message starts with a message_begin() or message_begin_f() function
  *       and ends with message_end(). The specific message arguments go in between
  *       these two by using the write_*() functions found in messages.inc.
- * @note If a message_end() function is not added in the end, the server
- *       will crash when another message is going to be sent.
  *
  * @param dest        Destination type (see MSG_* constants in messages_const.inc)
  * @param msg_type    Message id
@@ -43,19 +42,18 @@
 native message_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
 
 /**
- * This function can be used to generate client messages. You may generate
- * menu, smoke, shockwaves, thunderlights, intermission and many other messages.
- * For a list of HL game events, visit https://wiki.alliedmods.net/Half-Life_1_Game_Events
- * For a list of HL engine messages, visit https://wiki.alliedmods.net/Half-Life_1_Engine_Messages
- * You may also refer to the messages_const.inc file for examples.
+ * Marks the beginning of a client message.
  *
+ * @note You may generate menus, smoke, shockwaves, thunderlights,
+ *       intermission and many other messages.
+ * @note For a list of HL game events, visit https://wiki.alliedmods.net/Half-Life_1_Game_Events
+ * @note For a list of HL engine messages, visit https://wiki.alliedmods.net/Half-Life_1_Engine_Messages
+ * @note You may also refer to the messages_const.inc file for examples.
+ * @note This function is the same as message_begin(), but the origin
+ *       argument accepts only float values in this one.
  * @note Each message starts with a message_begin() or message_begin_f() function
  *       and ends with message_end(). The specific message arguments go in between
  *       these two by using the write_*() functions found in messages.inc.
- * @note If a message_end() function is not added in the end, the server
- *       will crash when another message is going to be sent.
- * @note This function is the same as message_begin(), but the origin
- *       argument accepts only float values in this one.
  *
  * @param dest        Destination type (see MSG_* constants in messages_const.inc)
  * @param msg_type    Message id
@@ -209,12 +207,13 @@ native write_coord_f(Float:x);
 native write_string(const x[]);
 
 /**
- * This function can be used to generate client messages. You may generate
- * menu, smoke, shockwaves, thunderlights, intermission and many other messages.
- * For a list of HL game events, visit https://wiki.alliedmods.net/Half-Life_1_Game_Events
- * For a list of HL engine messages, visit https://wiki.alliedmods.net/Half-Life_1_Engine_Messages
- * You may also refer to the messages_const.inc file for examples.
+ * Marks the beginning of a client message.
  *
+ * @note You may generate menus, smoke, shockwaves, thunderlights,
+ *       intermission and many other messages.
+ * @note For a list of HL game events, visit https://wiki.alliedmods.net/Half-Life_1_Game_Events
+ * @note For a list of HL engine messages, visit https://wiki.alliedmods.net/Half-Life_1_Engine_Messages
+ * @note You may also refer to the messages_const.inc file for examples.
  * @note This function is the same as message_begin(), except that the messages
  *       sent with this one are also sent to all other AMXX and Metamod plugins.
  *       This means that if you send one of these messages, other plugins will
@@ -224,8 +223,6 @@ native write_string(const x[]);
  * @note Each message starts with a emessage_begin() or emessage_begin_f() function
  *       and ends with emessage_end(). The specific message arguments go in between
  *       these two by using the ewrite_*() functions found in messages.inc.
- * @note If a emessage_end() function is not added in the end, the server
- *       will crash when another message is going to be sent.
  *
  * @param dest        Destination type (see MSG_* constants in messages_const.inc)
  * @param msg_type    Message id
@@ -239,25 +236,24 @@ native write_string(const x[]);
 native emessage_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
 
 /**
- * This function can be used to generate client messages. You may generate
- * menu, smoke, shockwaves, thunderlights, intermission and many other messages.
- * For a list of HL game events, visit https://wiki.alliedmods.net/Half-Life_1_Game_Events
- * For a list of HL engine messages, visit https://wiki.alliedmods.net/Half-Life_1_Engine_Messages
- * You may also refer to the messages_const.inc file for examples.
+ * Marks the beginning of a client message.
  *
+ * @note You may generate menus, smoke, shockwaves, thunderlights,
+ *       intermission and many other messages.
+ * @note For a list of HL game events, visit https://wiki.alliedmods.net/Half-Life_1_Game_Events
+ * @note For a list of HL engine messages, visit https://wiki.alliedmods.net/Half-Life_1_Engine_Messages
+ * @note You may also refer to the messages_const.inc file for examples.
  * @note This function is the same as message_begin_f(), except that the messages
  *       sent with this one are also sent to all other AMXX and Metamod plugins.
  *       This means that if you send one of these messages, other plugins will
  *       be notified of that message, which was previously impossible.
  * @note BE CAREFUL! Using this incorrectly, or not for its intended purpose,
  *       could cause infinite recursion or something just as bad!
+ * @note This function is the same as emessage_begin(), but the origin
+ *       argument accepts only float values in this one.
  * @note Each message starts with a emessage_begin() or emessage_begin_f() function
  *       and ends with emessage_end(). The specific message arguments go in between
  *       these two by using the ewrite_*() functions found in messages.inc.
- * @note If a emessage_end() function is not added in the end, the server
- *       will crash when another message is going to be sent.
- * @note This function is the same as emessage_begin(), but the origin
- *       argument accepts only float values in this one.
  *
  * @param dest        Destination type (see MSG_* constants in messages_const.inc)
  * @param msg_type    Message id
@@ -438,13 +434,21 @@ native get_msg_block(iMessage);
 
 /**
  * Lets you directly hook a message in the engine.
- * You can overwrite the message before anything happens and either let the
- * message continue or fully block it. If you hook a message, the message is
- * stored but not sent. You have the opportunity to not only execute code,
- * but to get/set the contents of the message before you choose to either
- * block it or let it go on its way. The hooked function will pass a msg_id,
- * msg_dest and entity index. The return value can be passed to
- * unregister_message() in order to stop the message from being hooked.
+ *
+ * @note The function is called in the following manner:
+ *   msg_id          - Message id
+ *   msg_dest        - Destination type (see MSG_* constants in messages_const.inc)
+ *   msg_entity      - Entity receiving the message
+ *
+ * @note You can overwrite the message before anything happens by using the
+ *       set_msg_arg_* functions and either let the message continue by
+ *       returning PLUGIN_CONTINUE or fully block it with PLUGIN_HANDLED.
+ * @note If you hook a message, the message is stored but not sent. You have
+ *       the opportunity to not only execute code, but to get/set the contents
+ *       of the message before you choose to either block it or let it go on
+ *       its way.
+ * @note The return value can be passed to unregister_message() in order to
+ *       stop the message from being hooked.
  *
  * @param iMsgId         Message id
  * @param szFunction     Function that will be called
@@ -457,7 +461,7 @@ native get_msg_block(iMessage);
 native register_message(iMsgId, const szFunction[]);
 
 /**
- * Unregisters a message hook previosly created with register_message().
+ * Unregisters a message hook previously created with register_message().
  *
  * @note You must pass the proper message id and return value from the
  *       message to unregister the message successfully.
@@ -476,7 +480,7 @@ native unregister_message(iMsgId, registeredmsg);
  * Gets number of arguments that were passed to a message.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @return               Number of arguments
  */
@@ -486,7 +490,7 @@ native get_msg_args();
  * Gets the argument type of a specified argument.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @param argn           Argument number
  *
@@ -498,7 +502,7 @@ native get_msg_argtype(argn);
  * Gets the integer value of a specified argument.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @param argn           Argument number
  *
@@ -512,7 +516,7 @@ native get_msg_arg_int(argn);
  * Gets the float value of a specified argument.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @param argn           Argument number
  *
@@ -526,7 +530,7 @@ native Float:get_msg_arg_float(argn);
  * Gets the string value from a specified argument.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @param argn           Argument number
  * @param szReturn       Buffer to store the value in
@@ -542,7 +546,7 @@ native get_msg_arg_string(argn, szReturn[], iLength);
  * Sets the integer value of a specified argument.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @param argn           Argument number
  * @param argtype        Argument type (see ARG_* constants in message_const.inc)
@@ -558,7 +562,7 @@ native set_msg_arg_int(argn, argtype, iValue);
  * Sets the float value of a specified argument.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @param argn           Argument number
  * @param argtype        Argument type (see ARG_* constants in message_const.inc)
@@ -574,7 +578,7 @@ native set_msg_arg_float(argn, argtype, Float:fValue);
  * Sets the string value of a specified argument.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @param argn           Argument number
  * @param argtype        Argument type (see ARG_* constants in message_const.inc)
@@ -590,7 +594,7 @@ native set_msg_arg_string(argn, const szString[]);
  * Gets the origin of a message.
  *
  * @note This function will fail if used outside a hooked message scope, thus
- *       tt should never be used unless inside a registered message function.
+ *       it should never be used unless inside a registered message function.
  *
  * @param _Origin        Array to store the origin in
  *

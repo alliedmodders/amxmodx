@@ -136,3 +136,21 @@ enum {
 	DODC_PIAT, 
 	//DODC_BRIT_MORTAR,
 };
+
+/* DoD stats constants */
+enum {
+	DODX_KILLS = 0,
+	DODX_DEATHS,
+	DODX_HEADSHOTS,
+	DODX_TEAMKILLS,
+	DODX_SHOTS,
+	DODX_HITS,
+	DODX_DAMAGE,
+	DODX_POINTS,
+	DODX_RANK
+}
+
+/* Constants for maximum number of stats in DoD */
+#define DODX_MAX_STATS 9
+#define DODX_MAX_BODYHITS 8
+#define DODX_MAX_OBJECTIVE 4

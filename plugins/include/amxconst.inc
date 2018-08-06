@@ -545,7 +545,8 @@ enum
 /**
  * Constants for maximum number of stats
  */
-#define MAX_STATS_CLIENT 8
-#define MAX_STATS_OBJECTIVE 4
+#define STATSX_MAX_STATS 8
+#define STATSX_MAX_BODYHITS 8
+#define STATSX_MAX_OBJECTIVE 4
 
 #include <cstrike_const> // To keep backward compatibility

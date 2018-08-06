@@ -581,7 +581,6 @@ native set_msg_arg_float(argn, argtype, Float:fValue);
  *       it should never be used unless inside a registered message function.
  *
  * @param argn           Argument number
- * @param argtype        Argument type (see ARG_* constants in message_const.inc)
  * @param szString       Argument value
  *
  * @noreturn

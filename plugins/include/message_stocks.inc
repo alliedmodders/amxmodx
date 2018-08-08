@@ -17,7 +17,7 @@
 #define _message_stocks_included
 
 /**
- * Creates a death message.
+ * Sends a death message.
  *
  * @param killer        Killer id
  * @param victim        Victim id

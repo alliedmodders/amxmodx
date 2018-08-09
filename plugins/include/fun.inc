@@ -126,6 +126,26 @@ native set_user_origin(index, const origin[3]);
 native set_user_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render = kRenderNormal, amount = 0);
 
 /**
+ * Gets player's rendering mode.
+ *
+ * @note A really useful render modes reference:
+ *		 https://sites.google.com/site/svenmanor/rendermodes
+ *
+ * @param index         Client index
+ * @param fx            Variable to store the rendering effect
+ * @param r             Variable to store the amount of red color
+ * @param g             Variable to store the amount of green color
+ * @param b             Variable to store the amount of blue color
+ * @param render        Variable to store the render mode
+ * @param amount        Variable to store the render amount
+ *
+ * @noreturn
+ * @error               If player is not connected or not within the range
+ *                      of 1 to MaxClients.
+ */
+native get_user_rendering(index, &fx = 0, &r = 0, &g = 0, &b = 0, &render = 0, &amount = 0);
+
+/**
  * Gives an item to a player.
  *
  * @param index         Client index

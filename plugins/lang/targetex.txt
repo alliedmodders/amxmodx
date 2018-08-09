@@ -1,0 +1,38 @@
+[en]
+TARGETEX_NO_SELF = This command cannot be used on yourself.
+TARGETEX_NO_GROUPS = This command cannot be used on groups of players.
+TARGETEX_NO_BOTS = This command cannot be used on bots.
+TARGETEX_NO_ALIVE = Alive players cannot be targeted with this command.
+TARGETEX_NO_DEAD = Dead players cannot be targeted with this command.
+TARGETEX_NO_MATCHES = No players were found matching your criteria.
+TARGETEX_EXCEPT_HIMSELF = except him
+
+TARGETEX_ARG_ALL = all players
+TARGETEX_ARG_ALL_CT = all counter-terrorists
+TARGETEX_ARG_ALL_T = all terrorists
+TARGETEX_ARG_ALL_SPEC = all spectators
+
+TARGETEX_ARG_ALIVE = alive players
+TARGETEX_ARG_ALIVE_CT = alive counter-terrorists
+TARGETEX_ARG_ALIVE_T = alive terrorists 
+TARGETEX_ARG_ALIVE_SPEC = alive spectators
+
+TARGETEX_ARG_BOTS = all bots
+TARGETEX_ARG_BOTS_CT = all CT bots
+TARGETEX_ARG_BOTS_T = all T bots 
+TARGETEX_ARG_BOTS_SPEC = all SPEC bots
+
+TARGETEX_ARG_DEAD = dead players
+TARGETEX_ARG_DEAD_CT = dead counter-terrorists
+TARGETEX_ARG_DEAD_T = dead terrorists
+TARGETEX_ARG_DEAD_SPEC = dead spectators
+
+TARGETEX_ARG_HUMANS = all humans
+TARGETEX_ARG_HUMANS_CT = all CT humans
+TARGETEX_ARG_HUMANS_T = all T humans 
+TARGETEX_ARG_HUMANS_SPEC = all SPEC humans
+
+TARGETEX_ARG_VIEW = all players in his view
+TARGETEX_ARG_VIEW_CT = all CTs in his view
+TARGETEX_ARG_VIEW_T = all Ts in his view
+TARGETEX_ARG_VIEW_SPEC = all SPECs in his view

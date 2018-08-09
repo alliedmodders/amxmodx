@@ -221,7 +221,7 @@ native menu_find_id(menu, page, key);
  * @return				1 on success, 0 on failure.
  * @error				Invalid menu resource.
  */
-native menu_item_getinfo(menu, item, &access, info[], infolen, name[]="", namelen=0, &callback);
+native menu_item_getinfo(menu, item, &access = 0, info[] = "", infolen = 0, name[]="", namelen=0, &callback = 0);
 
 /**
  * Sets an item's display text.

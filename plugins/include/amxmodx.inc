@@ -459,7 +459,7 @@ native client_print_color(index, sender, const message[], any:...);
  *       last, to the client with the highest index.
  *
  * @param player    Client index, use 0 to display to all clients
- * @param type      Message type, see print_* destination constants in
+ * @param type      Message type, see engprint_* destination constants in
  *                  amxconst.inc
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters

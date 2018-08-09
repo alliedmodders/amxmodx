@@ -2142,8 +2142,9 @@ native random_num(a, b);
  * @note Example usage: get_user_msgid("TextMsg")
  * @note The message id is unique as long as the server is running, but might
  *       change between updates. They should not be hardcoded into plugins.
- * @note This function should not be used inside plugin_precache(), as it
- *       will return 0 if the server was just started.
+ * @note On first server start, this function will return 0 if used inside
+ *       plugin_precache(). Consider hooking RegUserMsg in order to retrieve
+ *       the correct message id.
  *
  * @param name      Client message name
  *

@@ -5,6 +5,7 @@ TARGETEX_NO_BOTS = This command cannot be used on bots.
 TARGETEX_NO_ALIVE = Alive players cannot be targeted with this command.
 TARGETEX_NO_DEAD = Dead players cannot be targeted with this command.
 TARGETEX_NO_MATCHES = No players were found matching your criteria.
+TARGETEX_NO_EXCEPT = You cannot exclude yourself when using @%s.
 TARGETEX_EXCEPT_HIMSELF = except him
 
 TARGETEX_ARG_ALL = all players

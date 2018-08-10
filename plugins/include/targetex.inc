@@ -81,6 +81,9 @@ static const Targetex_Teams[][TargetexTeams] =
  *       except the admin that used the command.
  * @note The "name" argument is used to store the matched client's name
  *       or one of the translations found in the targetex.txt dictionary.
+ *       If only one client is matched, the "name" argument will be equal
+ *       to the matched client's name, otherwise it will contain a translated
+ *       string which you can directly add in your message by using %s.
  *
  * @param id        Client index of admin performing an action
  * @param arg       Target pattern
@@ -133,7 +136,10 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 			}
 		}
 		else if(bExceptMe)
+		{
+			console_print(id, "%L", id, "TARGETEX_NO_EXCEPT", arg);
 			return 0;
+		}
 
 		new iPlayers[MAX_PLAYERS], iPnum;
 		new szMatchingString[10], GetPlayersFlags:iMatchingFlags, iMatchedPlayers;
@@ -146,7 +152,7 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 		if(flags & TARGETEX_NO_BOTS)
 			iMatchingFlags |= GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV;
 
-		new szLangKey[32], szSuffix[6], iArgLen = strlen(arg)
+		new szLangKey[32], szSuffix[6], iArgLen = strlen(arg);
 		new iArgLen2 = iArgLen - (bExceptMe ? 1 : 0);
 
 		for(new i; i < sizeof(Targetex_Teams); i++)
@@ -161,12 +167,10 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 				{
 					copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_ALL");
 					get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
+					goto @AFTER_ARGS;
 				}
 			}
 		}
-
-		if(szLangKey[0])
-			goto @AFTER_ARGS;
 
 		if(equal(arg[iStartArg], "aim", 3))
 		{

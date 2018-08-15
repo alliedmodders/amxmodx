@@ -3283,7 +3283,7 @@ native DestroyForward(forward_handle);
  *
  * @noreturn
  */
-native arrayset(array[], value, size);
+native arrayset(any:array[], any:value, size);
 
 /**
  * Returns the weapon id associated with a weapon name.

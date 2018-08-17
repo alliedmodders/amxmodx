@@ -861,7 +861,7 @@ stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = 
  *                    GetPlayers_IncludeConnecting - include connecting clients
  *                    GetPlayers_MatchAllFlags - match with all of the specified admin flags
  *                    GetPlayers_MatchAnyFlags - match with any of the specified admin flags
- * @param string    String to match against if the "e", "f", "j" or "k" flag is specified
+ * @param team      String to match against if the "e", "f", "j" or "k" flag is specified
  *
  * @noreturn
  */

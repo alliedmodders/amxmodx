@@ -1389,7 +1389,7 @@ native get_playersnum(flag = 0);
  *                    "i" - include connecting clients
  *                    "j" - match with all of the specified admin flags
  *                    "k" - match with any of the specified admin flags
- * @param string    String to match against if the "e", "f", "j" or "k" flag is specified
+ * @param team      String to match against if the "e", "f", "j" or "k" flag is specified
  *
  * @noreturn
  */

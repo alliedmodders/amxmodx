@@ -863,7 +863,7 @@ stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = 
  *
  * @noreturn
  */
-stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
+stock get_players_ex(players[MAX_PLAYERS] = {}, &num, GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
 {
 	new strFlags[10];
 	get_flags(_:flags, strFlags, charsmax(strFlags));

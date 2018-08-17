@@ -1391,7 +1391,7 @@ native get_playersnum(flag = 0);
  *
  * @noreturn
  */
-native get_players(players[MAX_PLAYERS] = 0, &num, const flags[] = "", const team[] = "");
+native get_players(players[MAX_PLAYERS] = {}, &num, const flags[] = "", const team[] = "");
 
 /**
  * Retrieves argument of client command as string.

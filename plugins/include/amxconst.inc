@@ -451,4 +451,69 @@ enum HashType
 	Hash_Keccak_512  // Provides Keccak 512 bit hashing
 };
 
+/**
+ * SetTaskFlags constants for set_task_ex()
+ */
+enum SetTaskFlags (<<= 1)
+{
+	SetTask_Once = 0,          // None; execute callback after the specified amount of time (Default)
+	SetTask_RepeatTimes = 1,   // Repeat timer a set amount of times
+	SetTask_Repeat,            // Loop indefinitely until timer is stopped
+	SetTask_AfterMapStart,     // Time interval is treated as absolute time after map start
+	SetTask_BeforeMapChange    // Time interval is treated as absolute time before map change
+};
+
+/**
+ * RegisterEventFlags constants for register_event_ex()
+ */
+enum RegisterEventFlags (<<= 1)
+{
+	RegisterEvent_None = 0,        // None
+	RegisterEvent_Global = 1,      // Global event (sent to every client)
+	RegisterEvent_Single,          // Event sent to single client
+	RegisterEvent_OnceForMultiple, // Call only once when repeated to multiple clients
+	RegisterEvent_OnlyDead,        // Call only if sent to dead client
+	RegisterEvent_OnlyAlive,       // Call only if sent to alive client
+	RegisterEvent_OnlyHuman,       // Call only if sent to human client (RegisterEvent_Single required)
+	RegisterEvent_OnlyBots         // Call only if sent to bot (RegisterEvent_Single required)
+};
+
+/**
+ * GetPlayerFlags constants for get_players_ex()
+ */
+enum GetPlayersFlags (<<= 1)
+{
+	GetPlayers_None = 0,           // No filter (Default)
+	GetPlayers_ExcludeDead = 1,    // Do not include dead clients
+	GetPlayers_ExcludeAlive,       // Do not include alive clients
+	GetPlayers_ExcludeBots,        // Do not include bots
+	GetPlayers_ExcludeHuman,       // Do not include human clients
+	GetPlayers_MatchTeam,          // Match with team
+	GetPlayers_MatchNameSubstring, // Match with part of name
+	GetPlayers_CaseInsensitive,    // Match case insensitive
+	GetPlayers_ExcludeHLTV,        // Do not include HLTV proxies
+	GetPlayers_IncludeConnecting   // Include connecting clients
+};
+
+/**
+ * FindPlayerFlags constants for find_player_ex()
+ */
+enum FindPlayerFlags (<<= 1)
+{
+	FindPlayer_None = 0,           // None
+	FindPlayer_MatchName = 1,      // Match with name
+	FindPlayer_MatchNameSubstring, // Match with name substring
+	FindPlayer_MatchAuthId,        // Match with authid
+	FindPlayer_MatchIP,            // Match with ip
+	FindPlayer_MatchTeam,          // Match with team name
+	FindPlayer_ExcludeDead,        // Do not include dead clients
+	FindPlayer_ExcludeAlive,       // Do not include alive clients
+	FindPlayer_ExcludeBots,        // Do not include bots
+	FindPlayer_ExcludeHuman,       // Do not include human clients
+	FindPlayer_LastMatched,        // Return last matched client instead of the first
+	FindPlayer_MatchUserId,        // Match with userid
+	FindPlayer_CaseInsensitive,    // Match case insensitively
+	FindPlayer_IncludeConnecting   // Include connecting clients
+}
+
 #include <cstrike_const> // To keep backward compatibility

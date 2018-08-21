@@ -660,10 +660,11 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 		pPlayer->Init(pEdictList + i, i);
 	}
 
+	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
+
 	executeForwards(FF_PluginInit);
 	executeForwards(FF_PluginCfg);
 
-	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
 	CoreCfg.ExecuteAutoConfigs();   // Execute configs created with AutoExecConfig native.
 	CoreCfg.SetMapConfigTimer(6.1); // Prepare per-map configs to be executed 6.1 seconds later.
 	                                // Original value which was used in admin.sma.
@@ -754,8 +755,6 @@ void C_ServerDeactivate_Post()
 
 	modules_callPluginsUnloading();
 
-	detachReloadModules();
-
 	CoreCfg.Clear();
 
 	g_auth.clear();
@@ -778,6 +777,8 @@ void C_ServerDeactivate_Post()
 
 	ClearPluginLibraries();
 	modules_callPluginsUnloaded();
+
+	detachReloadModules();
 
 	ClearMessages();
 
@@ -1753,81 +1754,10 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	return (TRUE);
 }
 
-#if defined(__linux__) || defined(__APPLE__)
-// linux prototype
-C_DLLEXPORT void GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
+C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
 {
-#else
-#ifdef _MSC_VER
-// MSVC: Simulate __stdcall calling convention
-C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
-{
-	__asm			// Prolog
-	{
-		// Save ebp
-		push		ebp
-		// Set stack frame pointer
-		mov			ebp, esp
-		// Allocate space for local variables
-		// The MSVC compiler gives us the needed size in __LOCAL_SIZE.
-		sub			esp, __LOCAL_SIZE
-		// Push registers
-		push		ebx
-		push		esi
-		push		edi
-	}
-#else	// _MSC_VER
-#ifdef __GNUC__
-// GCC can also work with this
-C_DLLEXPORT void __stdcall GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
-{
-#else	// __GNUC__
-// compiler not known
-#error There is no support (yet) for your compiler. Please use MSVC or GCC compilers or contact the AMX Mod X dev team.
-#endif	// __GNUC__
-#endif // _MSC_VER
-#endif // __linux__
-
-	// ** Function core <--
 	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
-	// --> ** Function core
-
-#ifdef _MSC_VER
-	// Epilog
-	if (sizeof(int*) == 8)
-	{	// 64 bit
-		__asm
-		{
-			// Pop registers
-			pop	edi
-			pop	esi
-			pop	ebx
-			// Restore stack frame pointer
-			mov	esp, ebp
-			// Restore ebp
-			pop	ebp
-			// 2 * sizeof(int*) = 16 on 64 bit
-			ret 16
-		}
-	}
-	else
-	{	// 32 bit
-		__asm
-		{
-			// Pop registers
-			pop	edi
-			pop	esi
-			pop	ebx
-			// Restore stack frame pointer
-			mov	esp, ebp
-			// Restore ebp
-			pop	ebp
-			// 2 * sizeof(int*) = 8 on 32 bit
-			ret 8
-		}
-	}
-#endif // #ifdef _MSC_VER
 }
 
 DLL_FUNCTIONS gFunctionTable;

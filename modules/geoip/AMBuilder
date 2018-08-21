@@ -21,8 +21,10 @@ binary.sources = [
 
 if builder.target_platform == 'windows':
     binary.sources += ['version.rc']
-    
-if builder.target_platform == 'windows':
-  binary.compiler.postlink += ['ws2_32.lib']
+    binary.compiler.linkflags += [
+      '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
+      '/SECTION:.data,RW',
+    ]
+    binary.compiler.postlink += ['ws2_32.lib']
 
 AMXX.modules += [builder.Add(binary)]

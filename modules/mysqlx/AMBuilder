@@ -31,7 +31,9 @@ if AMXX.mysql_path:
   elif builder.target_platform is 'windows':
     binary.compiler.linkflags += [
       os.path.join(AMXX.mysql_path, 'lib', 'mysqlclient.lib'),
-      'ws2_32.lib'
+      'ws2_32.lib',
+      '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
+      '/SECTION:.data,RW'
     ]
     if binary.compiler.vendor == 'msvc' and binary.compiler.version >= 1900:
       binary.compiler.linkflags += ['legacy_stdio_definitions.lib', 'legacy_stdio_wide_specifiers.lib']

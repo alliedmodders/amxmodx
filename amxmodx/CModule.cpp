@@ -49,14 +49,13 @@ void CModule::clear(bool clearFilename)
 	m_Metamod = false;
 	m_Handle = NULL;
 	m_Status = MODULE_NONE;
-	
+
 	if (clearFilename)
 	{
 		m_Filename = "unknown";
 	}
 
 	// new
-	m_Amxx = false;
 	m_InfoNew.author = "unknown";
 	m_InfoNew.name = "unknown";
 	m_InfoNew.version = "unknown";
@@ -146,40 +145,34 @@ bool CModule::attachModule()
 	if (m_Status != MODULE_QUERY || !m_Handle)
 		return false;
 
-	if (m_Amxx)
+	ATTACHMOD_NEW AttachFunc_New = (ATTACHMOD_NEW)DLPROC(m_Handle, "AMXX_Attach");
+
+	if (!AttachFunc_New)
+		return false;
+
+	g_ModuleCallReason = ModuleCall_Attach;
+	g_CurrentlyCalledModule = this;
+	int retVal = (*AttachFunc_New)(Module_ReqFnptr);
+	g_CurrentlyCalledModule = NULL;
+	g_ModuleCallReason = ModuleCall_NotCalled;
+
+	switch (retVal)
 	{
-		// new
-		ATTACHMOD_NEW AttachFunc_New = (ATTACHMOD_NEW)DLPROC(m_Handle, "AMXX_Attach");
-
-		if (!AttachFunc_New)
+		case AMXX_OK:
+			m_Status = MODULE_LOADED;
+			break;
+		case AMXX_PARAM:
+			AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") returned \"Invalid parameter\" from Attach func.", m_Filename.chars(), getVersion());
+			m_Status = MODULE_INTERROR;
 			return false;
-		
-		g_ModuleCallReason = ModuleCall_Attach;
-		g_CurrentlyCalledModule = this;
-		int retVal = (*AttachFunc_New)(Module_ReqFnptr);
-		g_CurrentlyCalledModule = NULL;
-		g_ModuleCallReason = ModuleCall_NotCalled;
-
-		switch (retVal)
-		{
-			case AMXX_OK:
-				m_Status = MODULE_LOADED;
-				break;
-			case AMXX_PARAM:
-				AMXXLOG_Log("[AMXX] Internal Error: Module \"%s\" (version \"%s\") returned \"Invalid parameter\" from Attach func.", m_Filename.chars(), getVersion());
-				m_Status = MODULE_INTERROR;
-				return false;
-			case AMXX_FUNC_NOT_PRESENT:
-				m_Status = MODULE_FUNCNOTPRESENT;
-				m_MissingFunc = g_LastRequestedFunc;
-				return false;
-			default:
-				AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.chars(), getVersion());
-				m_Status = MODULE_BADLOAD;
-				return false;
-		}
-	} else {
-		m_Status = MODULE_BADLOAD;
+		case AMXX_FUNC_NOT_PRESENT:
+			m_Status = MODULE_FUNCNOTPRESENT;
+			m_MissingFunc = g_LastRequestedFunc;
+			return false;
+		default:
+			AMXXLOG_Log("[AMXX] Module \"%s\" (version \"%s\") returned an invalid code.", m_Filename.chars(), getVersion());
+			m_Status = MODULE_BADLOAD;
+			return false;
 	}
 
 	if (m_Status == MODULE_LOADED)
@@ -213,17 +206,16 @@ bool CModule::queryModule()
 
 	// Try new interface first
 	QUERYMOD_NEW queryFunc_New = (QUERYMOD_NEW)DLPROC(m_Handle, "AMXX_Query");
-	
+
 	if (queryFunc_New)
 	{
-		m_Amxx = true;
 		int ifVers = AMXX_INTERFACE_VERSION;
 		g_ModuleCallReason = ModuleCall_Query;
 		g_CurrentlyCalledModule = this;
 		int retVal = (*queryFunc_New)(&ifVers, &m_InfoNew);
 		g_CurrentlyCalledModule = NULL;
 		g_ModuleCallReason = ModuleCall_NotCalled;
-		
+
 		switch (retVal)
 		{
 			case AMXX_PARAM:
@@ -244,7 +236,7 @@ bool CModule::queryModule()
 						if (retVal == AMXX_OK)
 						{
 							m_InfoNew.library = m_InfoNew.logtag;
-							if (StrCaseStr(m_InfoNew.library, "sql") 
+							if (StrCaseStr(m_InfoNew.library, "sql")
 								|| StrCaseStr(m_InfoNew.library, "dbi"))
 							{
 								m_InfoNew.libclass = "DBI";
@@ -308,7 +300,6 @@ bool CModule::queryModule()
 		return true;
 	} else {
 		m_Status = MODULE_NOQUERY;
-		m_Amxx = false;
 		return false;
 	}
 }
@@ -320,30 +311,25 @@ bool CModule::detachModule()
 
 	RemoveLibraries(this);
 
-	if (m_Amxx)
+	DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
+
+	if (detachFunc_New)
 	{
-		DETACHMOD_NEW detachFunc_New = (DETACHMOD_NEW)DLPROC(m_Handle, "AMXX_Detach");
-		
-		if (detachFunc_New)
-		{
-			g_ModuleCallReason = ModuleCall_Detach;
-			g_CurrentlyCalledModule = this;
-			(*detachFunc_New)();
-			g_CurrentlyCalledModule = NULL;
-			g_ModuleCallReason = ModuleCall_NotCalled;
-		}
+		g_ModuleCallReason = ModuleCall_Detach;
+		g_CurrentlyCalledModule = this;
+		(*detachFunc_New)();
+		g_CurrentlyCalledModule = NULL;
+		g_ModuleCallReason = ModuleCall_NotCalled;
 	}
 
-#ifndef FAKEMETA
 	if (IsMetamod())
 	{
 		UnloadMetamodPlugin(m_Handle);
 	}
-#endif
-	
+
 	DLFREE(m_Handle);
 	clear();
-	
+
 	return true;
 }
 
@@ -388,10 +374,10 @@ void CModule::CallPluginsLoaded()
 		return;
 
 	PLUGINSLOADED_NEW func = (PLUGINSLOADED_NEW)DLPROC(m_Handle, "AMXX_PluginsLoaded");
-	
+
 	if (!func)
 		return;
-	
+
 	func();
 }
 
@@ -414,6 +400,6 @@ const char* CModule::getStatus() const
 		case MODULE_BADGAME:	return "bad game";
 		default:				break;
 	}
-	
+
 	return "unknown";
 }

@@ -92,7 +92,7 @@ bool CloseNewMenus(CPlayer *pPlayer)
 
 Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
 m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
-isDestroying(false), pageCallback(-1), items_per_page(7)
+isDestroying(false), pageCallback(-1), showPageNumber(true), items_per_page(7)
 {
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
 	menuId = g_menucmds.registerMenuId(title, amx);
@@ -316,11 +316,6 @@ bool Menu::Display(int player, page_t page)
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
 
-	pPlayer->keys = 0;
-	pPlayer->menu = 0;
-
-	UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
-
 	pPlayer->keys = keys;
 	pPlayer->menu = menuId;
 	pPlayer->newmenu = thisId;
@@ -362,7 +357,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	m_Text = nullptr;
 
 	char buffer[255];
-	if (items_per_page && (pages != 1))
+	if (showPageNumber && items_per_page && (pages != 1))
 	{
 		if (m_AutoColors)
 			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s %d/%d\n\\w\n", m_Title.chars(), page + 1, pages);
@@ -828,6 +823,12 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (g_bmod_cstrike)
+	{
+		GET_OFFSET("CBasePlayer", m_iMenu);
+		set_pdata<int>(pPlayer->pEdict, m_iMenu, 0);
+	}
+
 	int time = -1;
 	if (params[0] / sizeof(cell) >= 4)
 		time = params[4];
@@ -982,6 +983,11 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 			unregisterSPForward(pMenu->pageCallback);
 			pMenu->pageCallback = callback;
 
+			break;
+		}
+	case MPROP_SHOWPAGE:
+		{
+			pMenu->showPageNumber = (get_amxaddr(amx, params[3]) != 0);
 			break;
 		}
 	case MPROP_SET_NUMBER_COLOR:

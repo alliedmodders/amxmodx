@@ -35,13 +35,15 @@ binary.sources += [
 if builder.target_platform == 'windows':
   binary.sources += [
     'thread/WinThreads.cpp',
+    'version.rc'
+  ]
+  binary.compiler.linkflags += [
+    '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
+    '/SECTION:.data,RW',
   ]
 else:
   binary.sources += [
     'thread/PosixThreads.cpp',
   ]
-
-if builder.target_platform == 'windows':
-  binary.sources += ['version.rc']
 
 AMXX.modules += [builder.Add(binary)]

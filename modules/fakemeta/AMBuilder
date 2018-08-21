@@ -27,5 +27,9 @@ binary.sources = [
 
 if builder.target_platform == 'windows':
     binary.sources += ['version.rc']
-    
+    binary.compiler.linkflags += [
+      '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
+      '/SECTION:.data,RW',
+    ]
+
 AMXX.modules += [builder.Add(binary)]

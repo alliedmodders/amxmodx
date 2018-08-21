@@ -143,7 +143,7 @@ native set_user_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render
  * @error               If player is not connected or not within the range
  *                      of 1 to MaxClients.
  */
-native get_user_rendering(index, &fx = 0, &r = 0, &g = 0, &b = 0, &render = 0, &amount = 0);
+native get_user_rendering(index, &fx = kRenderFxNone, &r = 0, &g = 0, &b = 0, &render = kRenderNormal, &amount = 0);
 
 /**
  * Gives an item to a player.

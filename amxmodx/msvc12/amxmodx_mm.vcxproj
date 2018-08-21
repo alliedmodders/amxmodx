@@ -60,7 +60,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\third_party;..\..\third_party\zlib;..\..\third_party\hashing;..\..\third_party\utf8rewind;..\..\public\sdk;..\..\public\amtl;..\..\third_party;..\..\third_party\hashing;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\public;..\..\public\memtools;..\..\third_party;..\..\third_party\zlib;..\..\third_party\hashing;..\..\third_party\utf8rewind;..\..\public\sdk;..\..\public\amtl;$(METAMOD)\metamod;$(HLSDK)\common;$(HLSDK)\engine;$(HLSDK)\dlls;$(HLSDK)\pm_shared;$(HLSDK)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;UTF8PROC_EXPORTS;_DEBUG;_WINDOWS;_USRDLL;amxmodx_EXPORTS;PAWN_CELL_SIZE=32;ASM32;JIT;_CRT_SECURE_NO_DEPRECATE;HAVE_STDINT_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -326,6 +326,7 @@
     <ClCompile Include="..\newmenus.cpp" />
     <ClCompile Include="..\nongpl_matches.cpp" />
     <ClCompile Include="..\optimizer.cpp" />
+	<ClCompile Include="..\cpuinfo.cpp" />
     <ClCompile Include="..\power.cpp" />
     <ClCompile Include="..\sorting.cpp" />
     <ClCompile Include="..\srvcmd.cpp" />
@@ -424,6 +425,7 @@
     <ClInclude Include="..\newmenus.h" />
     <ClInclude Include="..\nongpl_matches.h" />
     <ClInclude Include="..\optimizer.h" />
+    <ClInclude Include="..\cpuinfo.h" />
     <ClInclude Include="..\textparse.h" />
     <ClInclude Include="..\trie_natives.h" />
     <ClInclude Include="..\..\public\sdk\amxxmodule.h" />
@@ -445,7 +447,6 @@
     <None Include="..\amxdefn.asm" />
     <None Include="..\amxexecn.asm" />
     <None Include="..\amxjitsn.asm" />
-    <None Include="..\helpers-x86.asm" />
     <None Include="..\natives-amd64.asm" />
     <None Include="..\natives-x86.asm" />
     <None Include="..\..\plugins\include\amxconst.inc" />
@@ -467,9 +468,6 @@
     <None Include="..\..\plugins\include\vault.inc" />
     <None Include="..\..\plugins\include\vector.inc" />
     <None Include="..\..\plugins\include\xs.inc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="..\Jit\helpers-x86.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

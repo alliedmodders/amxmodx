@@ -10,6 +10,7 @@
 #ifndef __AMXXLOG_H__
 #define __AMXXLOG_H__
 
+
 class CLog
 {
 private:

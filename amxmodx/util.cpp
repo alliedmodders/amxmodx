@@ -373,8 +373,8 @@ void UTIL_FakeClientCommand(edict_t *pEdict, const char *cmd, const char *arg1, 
 		{
 			if ((*aa).matchCommandLine(cmd, arg1) && (*aa).getPlugin()->isExecutable((*aa).getFunction()))
 			{
-				if (executeForwards((*aa).getFunction(), static_cast<cell>(GET_PLAYER_POINTER(pEdict)->index)),
-					static_cast<cell>((*aa).getFlags()), static_cast<cell>((*aa).getId()) > 0)
+				if (executeForwards((*aa).getFunction(), static_cast<cell>(GET_PLAYER_POINTER(pEdict)->index),
+					static_cast<cell>((*aa).getFlags()), static_cast<cell>((*aa).getId())) > 0)
 				{
 					g_fakecmd.notify = false;
 					return;

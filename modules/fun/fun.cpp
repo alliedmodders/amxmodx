@@ -325,7 +325,7 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params) // set_us
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_user_rendering(AMX *amx, cell *params) // get_user_rendering(index, &fx = 0, &r = 0, &g = 0, &b = 0, &render = 0, &amount = 0); = 7 arguments
+static cell AMX_NATIVE_CALL get_user_rendering(AMX *amx, cell *params) // get_user_rendering(index, &fx = kRenderFxNone, &r = 0, &g = 0, &b = 0, &render = kRenderNormal, &amount = 0); = 7 arguments
 {
 	// Gets user rendering.
 	// params[1] = index

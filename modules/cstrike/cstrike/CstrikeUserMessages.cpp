@@ -22,7 +22,7 @@ bool ShouldBlock;
 bool ShouldBlockHLTV;
 bool ShouldDisableHooks;
 bool RetrieveWeaponList;
-ItemInfo CurrentWeaponList;
+ItemInfos CurrentWeaponList;
 int ArgPosition;
 
 int MessageIdArmorType;

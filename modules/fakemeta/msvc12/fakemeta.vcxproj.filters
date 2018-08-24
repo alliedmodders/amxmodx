@@ -45,6 +45,9 @@
     <Filter Include="ReSDK\cstrike">
       <UniqueIdentifier>{0d1c5025-071d-43aa-b19a-2eee0d34a906}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ReSDK\cstrike\API">
+      <UniqueIdentifier>{2800175e-06bf-42bf-b3c1-f86561471531}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\fakemeta_amxx.cpp">
@@ -145,14 +148,23 @@
     <ClInclude Include="..\..\..\public\resdk\cstrike\regamedll_const.h">
       <Filter>ReSDK\cstrike</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\public\resdk\cstrike\regamedll_interfaces.h">
-      <Filter>ReSDK\cstrike</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\public\resdk\mod_regamedll_api.h">
       <Filter>ReSDK</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\public\resdk\mod_rehlds_api.h">
-      <Filter>ReSDK</Filter>
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSEntity.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSInterfaces.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSPlayer.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSPlayerItem.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSPlayerWeapon.h">
+      <Filter>ReSDK\cstrike\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

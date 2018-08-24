@@ -721,9 +721,9 @@ void InitFuncsAddresses()
 		MF_Log("UTIL_FindEntByString is not available - native cs_find_ent_by_class() has been disabled");
 	}
 
-	if (!AddEntityHashValue || !AddEntityHashValue)
+	if (!AddEntityHashValue || !RemoveEntityHashValue)
 	{
-		MF_Log("AddEntityHashValue or AddEntityHashValue is not available - native cs_set_ent_class() has been disabled");
+		MF_Log("AddEntityHashValue or RemoveEntityHashValue is not available - native cs_set_ent_class() has been disabled");
 	}
 
 	if (!HasReGameDll && !GetWeaponInfo)

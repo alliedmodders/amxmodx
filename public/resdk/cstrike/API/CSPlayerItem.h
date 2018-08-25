@@ -25,25 +25,44 @@
 *    version.
 *
 */
+
 #pragma once
 
-#include "archtypes.h"
-
-typedef void(*xcommand_t)(void);
-typedef struct cmd_function_s
+typedef struct
 {
-	struct cmd_function_s *next;
-	const char *name;
-	xcommand_t function;
-	int flags;
-} cmd_function_t;
+	int iSlot;
+	int iPosition;
+	const char *pszAmmo1;
+	int iMaxAmmo1;
+	const char *pszAmmo2;
+	int iMaxAmmo2;
+	const char *pszName;
+	int iMaxClip;
+	int iId;
+	int iFlags;
+	int iWeight;
+}
+ItemInfo;
 
-typedef enum cmd_source_s
+class CBasePlayerItem;
+class CCSPlayerItem: public CCSAnimating
 {
-	src_client = 0,		// came in over a net connection as a clc_stringcmd. host_client will be valid during this state.
-	src_command = 1,	// from the command buffer.
-} cmd_source_t;
+public:
+	CCSPlayerItem()
+	{
+		memset(&m_ItemInfo, 0, sizeof(m_ItemInfo));
+	}
 
-#define FCMD_HUD_COMMAND		BIT(0)
-#define FCMD_GAME_COMMAND		BIT(1)
-#define FCMD_WRAPPER_COMMAND	BIT(2)
+	virtual void SetItemInfo(ItemInfo *pInfo);
+
+	CBasePlayerItem *BasePlayerItem() const;
+
+public:
+	ItemInfo m_ItemInfo;
+};
+
+// Inlines
+inline CBasePlayerItem *CCSPlayerItem::BasePlayerItem() const
+{
+	return reinterpret_cast<CBasePlayerItem *>(this->m_pContainingEntity);
+}

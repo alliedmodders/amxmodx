@@ -25,25 +25,23 @@
 *    version.
 *
 */
+
 #pragma once
 
-#include "archtypes.h"
+class IObjectContainer {
+public:
+	virtual ~IObjectContainer() {}
 
-typedef void(*xcommand_t)(void);
-typedef struct cmd_function_s
-{
-	struct cmd_function_s *next;
-	const char *name;
-	xcommand_t function;
-	int flags;
-} cmd_function_t;
+	virtual void Init() = 0;
 
-typedef enum cmd_source_s
-{
-	src_client = 0,		// came in over a net connection as a clc_stringcmd. host_client will be valid during this state.
-	src_command = 1,	// from the command buffer.
-} cmd_source_t;
+	virtual bool Add(void *newObject) = 0;
+	virtual bool Remove(void *object) = 0;
+ 	virtual void Clear(bool freeElementsMemory) = 0;
 
-#define FCMD_HUD_COMMAND		BIT(0)
-#define FCMD_GAME_COMMAND		BIT(1)
-#define FCMD_WRAPPER_COMMAND	BIT(2)
+ 	virtual void *GetFirst() = 0;
+	virtual void *GetNext() = 0;
+
+	virtual int CountElements() = 0;
+	virtual bool Contains(void *object) = 0;
+	virtual bool IsEmpty() = 0;
+};

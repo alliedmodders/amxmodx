@@ -516,4 +516,16 @@ typedef struct client_s
 
 } client_t;
 
+using cvar_callback_t = void (*)(const char *pszNewValue);
+
+struct cvar_listener_t
+{
+	cvar_listener_t(const char *var_name, cvar_callback_t handler) :
+		func(handler), name(var_name) {}
+
+	cvar_callback_t func;
+	const char      *name;
+};
+
+
 #endif //_ENGINE_STRUCTS_H_

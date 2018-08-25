@@ -11,7 +11,9 @@
 // Fun Module
 //
 
-#include "amxxmodule.h"
+#pragma once
+
+#include <amxxmodule.h>
 
 // Fun-specific defines below
 #define GETCLIENTLISTENING		(*g_engfuncs.pfnVoice_GetClientListening)
@@ -34,6 +36,9 @@
 extern DLL_FUNCTIONS *g_pFunctionTable;
 extern enginefuncs_t *g_pengfuncsTable_Post;
 
+void PlayerPreThink(edict_t *pEntity);
+void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *shooter, TraceResult *ptr);
+
 static const auto kHitGroupsBits = (1 << HITGROUP_MAX) - 1;
 static const auto kMaxClients = 32u;
 
@@ -48,7 +53,7 @@ class CPlayer
 
 	public:
 
-		bool HasBodyHits()
+		bool HasBodyHits() const
 		{
 			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
 			{
@@ -61,19 +66,19 @@ class CPlayer
 			return false;
 		}
 
-		int GetBodyHits(int other) const
+		int GetBodyHits(const int other) const
 		{
 			return bodyHits_[other];
 		}
 
-		void SetBodyHits(int other, int flags)
+		void SetBodyHits(const int other, const int flags)
 		{
 			bodyHits_[other] = flags;
 		}
 
 		void SetBodyHits(int flags)
 		{
-			memset(bodyHits_, kHitGroupsBits, sizeof(bodyHits_));
+			memset(bodyHits_, kHitGroupsBits, sizeof bodyHits_);
 		}
 
 	public:
@@ -83,7 +88,7 @@ class CPlayer
 			return silentFootsteps_;
 		}
 
-		void SetSilentFootsteps(bool state)
+		void SetSilentFootsteps(const bool state)
 		{
 			silentFootsteps_ = state;
 		}
@@ -98,8 +103,8 @@ class CPlayer
 
 	private:
 
-		int  bodyHits_[kMaxClients + 1];
-		bool silentFootsteps_;
+		int  bodyHits_[kMaxClients + 1] {};
+		bool silentFootsteps_ {};
 };
 
 class CPlayers
@@ -108,12 +113,7 @@ class CPlayers
 
 	public:
 
-		CPlayers()
-		{}
-
-	public:
-
-		bool HaveBodyHits()
+		bool HaveBodyHits() const
 		{
 			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
 			{
@@ -126,17 +126,17 @@ class CPlayers
 			return false;
 		}
 
-		void SetBodyHits(int attacker, int target, int flags)
+		void SetBodyHits(const int attacker, const int target, const int flags)
 		{
 			players_[attacker].SetBodyHits(target, flags);
 		}
 
-		void SetTargetsBodyHits(int attacker, int flags)
+		void SetTargetsBodyHits(const int attacker, const int flags)
 		{
 			players_[attacker].SetBodyHits(flags);
 		}
 
-		void SetAttackersBodyHits(int target, int flags)
+		void SetAttackersBodyHits(const int target, const int flags)
 		{
 			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
 			{
@@ -144,7 +144,7 @@ class CPlayers
 			}
 		}
 
-		void SetEveryoneBodyHits(int flags)
+		void SetEveryoneBodyHits(const int flags)
 		{
 			for (auto i = 1; i <= gpGlobals->maxClients; ++i)
 			{
@@ -179,12 +179,12 @@ class CPlayers
 
 	public:
 
-		Internal& operator [](size_t index)
+		Internal& operator [](const size_t index)
 		{
 			return players_[index];
 		}
 
-		const Internal& operator [](size_t index) const
+		const Internal& operator [](const size_t index) const
 		{
 			return players_[index];
 		}
@@ -195,17 +195,17 @@ class CPlayers
 };
 
 #define CHECK_ENTITY(x) \
-	if (x < 0 || x > gpGlobals->maxEntities) { \
+	if ((x) < 0 || (x) > gpGlobals->maxEntities) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Entity out of range (%d)", x); \
 		return 0; \
 	} else { \
-		if (x <= gpGlobals->maxClients) { \
+		if ((x) <= gpGlobals->maxClients) { \
 			if (!MF_IsPlayerIngame(x)) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
 				return 0; \
 			} \
 		} else { \
-			if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
+			if ((x) != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
 				return 0; \
 			} \
@@ -213,7 +213,7 @@ class CPlayers
 	}
 
 #define CHECK_PLAYER(x) \
-	if (x < 1 || x > gpGlobals->maxClients) { \
+	if ((x) < 1 || (x) > gpGlobals->maxClients) { \
 		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
 		return 0; \
 	} else { \

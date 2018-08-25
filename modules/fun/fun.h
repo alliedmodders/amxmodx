@@ -76,9 +76,9 @@ class CPlayer
 			bodyHits_[other] = flags;
 		}
 
-		void SetBodyHits(int flags)
+		void SetBodyHits(const int flags)
 		{
-			memset(bodyHits_, kHitGroupsBits, sizeof bodyHits_);
+			memset(bodyHits_, flags, sizeof bodyHits_);
 		}
 
 	public:

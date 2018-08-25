@@ -214,7 +214,7 @@ static cell AMX_NATIVE_CALL get_user_rendering(AMX *amx, cell *params)
 {
 	enum args { arg_count, arg_index, arg_fx, arg_red, arg_green, arg_blue, arg_render, arg_amount };
 
-	CHECK_PLAYER(params[1]);
+	CHECK_PLAYER(params[arg_index]);
 
 	auto pPlayer = TypeConversion.id_to_edict(params[arg_index]);
 
@@ -299,13 +299,13 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params)
 	{
 		CHECK_PLAYER(target);
 
-		Players.SetTargetsBodyHits(attacker, hitzones);
+		Players.SetAttackersBodyHits(target, hitzones);
 	}
 	else if (attacker != 0 && target == 0)
 	{
 		CHECK_PLAYER(attacker);
 
-		Players.SetAttackersBodyHits(target, hitzones);
+		Players.SetTargetsBodyHits(attacker, hitzones);
 	}
 	else
 	{

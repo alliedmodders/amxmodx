@@ -73,6 +73,8 @@ extern AMX_NATIVE_INFO g_StackNatives[];
 extern AMX_NATIVE_INFO g_TextParserNatives[];
 extern AMX_NATIVE_INFO g_CvarNatives[];
 extern AMX_NATIVE_INFO g_GameConfigNatives[];
+extern AMX_NATIVE_INFO tempent_Natives[];
+extern AMX_NATIVE_INFO msgnat_Natives[];
 
 #if defined PLATFORM_WINDOWS
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)
@@ -234,6 +236,14 @@ extern int gmsgResetHUD;
 extern int gmsgRoundTime;
 extern int gmsgSayText;
 extern int gmsgInitHUD;
+extern int gmsgStatusIcon;
+extern int gmsgTrain;
+extern int gmsgGeiger;
+extern int gmsgHideWeapon;
+extern int gmsgCrosshair;
+extern int gmsgScreenFade;
+extern int gmsgScreenShake;
+extern int gmsgSetFOV;
 
 void Client_AmmoPickup(void*);
 void Client_AmmoX(void*);

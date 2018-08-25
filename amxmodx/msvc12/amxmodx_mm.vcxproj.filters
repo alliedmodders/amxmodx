@@ -204,6 +204,12 @@
     <ClCompile Include="..\CTextParsers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\msgnatives.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tempent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\textparse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -642,10 +648,16 @@
     <None Include="..\..\plugins\include\messages.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\plugins\include\msgnatives.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
     <None Include="..\..\plugins\include\sorting.inc">
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\string.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\tempent.inc">
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\time.inc">

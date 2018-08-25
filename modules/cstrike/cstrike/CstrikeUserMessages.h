@@ -24,6 +24,11 @@ extern int MessageIdSetFOV;
 extern int MessageIdStatusIcon;
 extern int MessageIdTeamInfo;
 extern int MessageIdTextMsg;
+extern int MessageIdBarTime;
+extern int MessageIdBarTime2;
+extern int MessageIdReloadSound;
+extern int MessageIdScenario;
+extern int MessageIdShadowIdx;
 
 void EnableMessageHooks();
 void DisableMessageHooks(bool force = false);

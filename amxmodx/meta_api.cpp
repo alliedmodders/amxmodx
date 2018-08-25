@@ -576,6 +576,14 @@ struct sUserMsg
 	{"RoundTime", &gmsgRoundTime, 0, false, false},
 	{"SayText", &gmsgSayText, 0, false, false},
 	{"InitHUD", &gmsgInitHUD, Client_InitHUDEnd, true, false},
+	{"StatusIcon", &gmsgStatusIcon, 0, false, false},
+	{"Train", &gmsgTrain, 0, false, false},
+	{"Geiger", &gmsgGeiger, 0, false, false},
+	{"HideWeapon", &gmsgHideWeapon, 0, false, false},
+	{"Crosshair", &gmsgCrosshair, 0, false, false},
+	{"ScreenFade", &gmsgScreenFade, 0, false, false},
+	{"ScreenShake", &gmsgScreenShake, 0, false, false},
+	{"SetFOV", &gmsgSetFOV, 0, false, false},
 	{0, 0, 0, false, false}
 };
 

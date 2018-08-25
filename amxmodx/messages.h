@@ -210,6 +210,8 @@ void C_MessageEnd(void);
 extern RegisteredMessage msgHooks[256];
 extern int msgBlocks[256];
 
+int get_msg_destination(int index, bool reliable);
+int check_msg_receiver(AMX *amx, int index);
 void ClearMessages();
 
 #endif //_MSGS_INCLUDE_H

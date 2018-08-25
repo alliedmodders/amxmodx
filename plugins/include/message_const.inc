@@ -118,6 +118,55 @@ enum
 };
 
 /**
+ * Flags used in draw_status_icon()
+ */
+enum StatusIconFlags
+{
+	StatusIcon_Hide = 0,
+	StatusIcon_Show,
+	StatusIcon_Flash
+}
+
+/**
+ * Train controls used in draw_train_controls()
+ */
+enum TrainControlFlags
+{
+	TrainControls_None = 0,
+	TrainControls_Neutral,
+	TrainControls_Slow,
+	TrainControls_Medium,
+	TrainControls_Maximum,
+	TrainControls_Reverse
+}
+
+/**
+ * Flags used in hide_hud_elements()
+ */
+enum HideElemenentFlags (<<= 1)
+{
+	HideElement_None = 0,
+	HideElement_Cross_Ammo_WPNList = 1,
+	HideElement_Flashlight,
+	HideElement_All,
+	HideElement_Radar_Health_Armor,
+	HideElement_Timer,
+	HideElement_Money,
+	HideElement_Crosshair
+}
+
+/**
+ * Flags used in fade_user_screen()
+ */
+enum ScreenFadeFlags
+{
+	ScreenFade_FadeIn = 0x0000,
+	ScreenFade_FadeOut = 0x0001,
+	ScreenFade_Modulate = 0x0002,
+	ScreenFade_StayOut = 0x0004
+}
+
+/**
  * @section TempEntity messages for message_begin()
  */
 
@@ -565,7 +614,6 @@ enum
  * write_byte(red)
  * write_byte(green)
  * write_byte(blue)
- * write_byte(brightness)
  * write_byte(life in 10's)
  * write_byte(decay rate in 10's)
  */
@@ -673,6 +721,12 @@ enum
 #define TE_LARGEFUNNEL              100
 
 /**
+ * Flags used in te_create_large_funnel()
+ */
+#define LF_FLOAT_DOWN 0
+#define LF_FLOAT_UP 1
+
+/**
  * Particle spray
  *
  * @note
@@ -684,7 +738,7 @@ enum
  * write_coord(vector.y)
  * write_coord(vector.z)
  * write_byte(color)
- * write_byte(speed)
+ * write_byte(count)
  */
 #define	TE_BLOODSTREAM              101
 
@@ -761,6 +815,16 @@ enum
 #define TE_MODEL                    106
 
 /**
+ * Bounce sound types used in te_create_bouncing_model()
+ */
+enum BounceSounds
+{
+	BounceSound_Null = 0,
+	BounceSound_Shell,
+	BounceSound_ShotShell
+}
+
+/**
  * Spherical shower of models, picks from set
  *
  * @note
@@ -768,9 +832,7 @@ enum
  * write_coord(origin.x)
  * write_coord(origin.y)
  * write_coord(origin.z)
- * write_coord(velocity.x)
- * write_coord(velocity.y)
- * write_coord(velocity.z)
+ * write_coord(speed)
  * write_short(model index)
  * write_short(count)
  * write_byte(life in 0.1's)
@@ -800,6 +862,19 @@ enum
 #define TE_BREAKMODEL               108
 
 /**
+ * Flags used in te_create_break_model()
+ */
+#define BreakModel_TypeMask                  0x4F
+#define BreakModel_Glass                     0x01
+#define BreakModel_Metal                     0x02
+#define BreakModel_Flesh                     0x04
+#define BreakModel_Wood                      0x08
+#define BreakModel_Smoke                     0x10
+#define BreakModel_Trans                     0x20
+#define BreakModel_Concrete                  0x40
+#define BreakModel_2                         0x80
+
+/**
  * Decal and ricochet sound
  *
  * @note
@@ -825,7 +900,7 @@ enum
  * write_coord(velocity.z)
  * write_short(sprite index)
  * write_byte(count)
- * write_byte(speed)
+ * write_byte(randomness)
  * write_byte(noise)
  */
 #define TE_SPRITE_SPRAY             110
@@ -889,7 +964,7 @@ enum
  * write_coord(float height)
  * write_short(model index)
  * write_byte(count)
- * write_coord(speed)
+ * write_coord(randomness)
  */
 #define TE_BUBBLETRAIL              114
 

@@ -21,6 +21,36 @@ bool inhook = false;
 bool inblock = false;
 enginefuncs_t *g_pEngTable = NULL;
 
+int get_msg_destination(int index, bool reliable)
+{
+	if(index)
+		return reliable ? MSG_ONE : MSG_ONE_UNRELIABLE;
+
+	return reliable ? MSG_ALL : MSG_BROADCAST;
+}
+
+int check_msg_receiver(AMX *amx, int index)
+{
+	if(index)
+	{
+		if(index < 0 || index > gpGlobals->maxClients)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
+			return 0;
+		}
+
+		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+		if(!pPlayer->ingame)
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Player %d is not connected", index);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
 void ClearMessages()
 {
 	for (size_t i=0; i<MAX_MESSAGES; i++)

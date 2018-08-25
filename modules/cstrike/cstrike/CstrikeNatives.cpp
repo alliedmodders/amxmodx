@@ -24,6 +24,14 @@
 bool NoKnivesMode = false;
 StringHashMap<int> ModelsList;
 
+int get_msg_destination(int index, bool reliable)
+{
+	if(index)
+		return reliable ? MSG_ONE : MSG_ONE_UNRELIABLE;
+
+	return reliable ? MSG_ALL : MSG_BROADCAST;
+}
+
 // native cs_set_user_money(index, money, flash = 1);
 static cell AMX_NATIVE_CALL cs_set_user_money(AMX *amx, cell *params)
 {
@@ -1998,6 +2006,89 @@ static cell AMX_NATIVE_CALL cs_get_user_weapon(AMX *amx, cell *params)
 	return 0;
 }
 
+static cell AMX_NATIVE_CALL cs_draw_progress_bar(AMX *amx, cell *params)
+{
+	int index = params[1];
+
+	if(index)
+		CHECK_PLAYER(index);
+
+	int startpercent = params[3];
+
+	MESSAGE_BEGIN(get_msg_destination(index, params[4] != 0), startpercent ? MessageIdBarTime2 : MessageIdBarTime, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_SHORT(params[2]);
+
+		if(startpercent)
+			WRITE_SHORT(startpercent);
+	MESSAGE_END();
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cs_play_reload_sound(AMX *amx, cell *params)
+{
+	int index = params[1];
+
+	if(index)
+		CHECK_PLAYER(index);
+
+	MESSAGE_BEGIN(get_msg_destination(index, params[4] != 0), MessageIdReloadSound, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_BYTE(params[3]);
+		WRITE_BYTE(!params[2]);
+	MESSAGE_END();
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cs_set_hud_icon(AMX *amx, cell *params)
+{
+	int index = params[1];
+
+	if(index)
+		CHECK_PLAYER(index);
+
+	int active = params[2];
+
+	MESSAGE_BEGIN(get_msg_destination(index, params[7] != 0), MessageIdScenario, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+
+		WRITE_BYTE(active);
+
+		if(active)
+		{
+			int len;
+			const char *sprite = MF_GetAmxString(amx, params[3], 0, &len);
+
+			WRITE_STRING(sprite);
+			WRITE_BYTE(params[4]);
+		}
+
+		int flashrate = params[5];
+
+		if(flashrate)
+		{
+			WRITE_SHORT(flashrate);
+			WRITE_SHORT(params[6]);
+		}
+
+	MESSAGE_END();
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL cs_set_user_shadow(AMX *amx, cell *params)
+{
+	int index = params[1];
+
+	if(index)
+		CHECK_PLAYER(index);
+
+	MESSAGE_BEGIN(get_msg_destination(index, params[3] != 0), MessageIdShadowIdx, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_LONG(params[2]);
+	MESSAGE_END();
+
+	return 1;
+}
+
 AMX_NATIVE_INFO CstrikeNatives[] =
 {
 	{"cs_set_user_money",			cs_set_user_money},
@@ -2070,5 +2161,9 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_get_weapon_info",          cs_get_weapon_info},
 	{"cs_get_user_weapon_entity",   cs_get_user_weapon_entity},
 	{"cs_get_user_weapon",          cs_get_user_weapon},
+	{"cs_draw_progress_bar",        cs_draw_progress_bar},
+	{"cs_play_reload_sound",        cs_play_reload_sound},
+	{"cs_set_hud_icon",             cs_set_hud_icon},
+	{"cs_set_user_shadow",          cs_set_user_shadow},
 	{nullptr,						nullptr}
 };

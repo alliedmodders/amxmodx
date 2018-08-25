@@ -25,17 +25,17 @@
  * @param startpos      Starting coordinates of the beam
  * @param endpos        Ending coordinates of the beam
  * @param sprite        The sprite index to use in the beam
- * @param startframe    The frame to start with in the sprite
- * @param framerate     The frame rate to show the sprite at
- * @param life          The length of time the beam shall remain
- * @param width         The width of the beam
+ * @param startframe    The frame to start with in the sprite (0 - 255)
+ * @param framerate     The frame rate to show the sprite at (0 - 255)
+ * @param life          The length of time the beam shall remain (0 - 255)
+ * @param width         The width of the beam (0 - 255)
  * @param noise         The noise amplitude of the beam, this controls
- *                      the distorsion of the beam
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param a             Beam brightness (alpha)
- * @param speed         The scroll speed of the beam
+ *                      the distorsion of the beam (0 - 255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Beam brightness (alpha) (0 - 255)
+ * @param speed         The scroll speed of the beam (0 - 255)
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -55,17 +55,17 @@ native te_create_beam_between_points(startpos[3], endpos[3], sprite, startframe 
  * @param startent      Primary entity id
  * @param endpos        Ending coordinates of the beam
  * @param sprite        The sprite index to use in the beam
- * @param startframe    The frame to start with in the sprite
- * @param framerate     The frame rate to show the sprite at
- * @param life          The length of time the beam shall remain
- * @param width         The width of the beam
+ * @param startframe    The frame to start with in the sprite (0 - 255)
+ * @param framerate     The frame rate to show the sprite at (0 - 255)
+ * @param life          The length of time the beam shall remain (0 - 255)
+ * @param width         The width of the beam (0 - 255)
  * @param noise         The noise amplitude of the beam, this controls
- *                      the distorsion of the beam
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param a             Beam brightness (alpha)
- * @param speed         The scroll speed of the beam
+ *                      the distorsion of the beam (0 - 255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Beam brightness (alpha) (0 - 255)
+ * @param speed         The scroll speed of the beam (0 - 255)
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -99,8 +99,8 @@ native te_create_gunshot(position[3], receiver = 0, bool:reliable = true)
  *
  * @param position      Position of the explosion
  * @param sprite        The additive sprite index to use in the explosion
- * @param scale         The scale of the sprite in the explosion
- * @param framerate     The frame rate to show the sprite at
+ * @param scale         The scale of the sprite in the explosion (0 - 255)
+ * @param framerate     The frame rate to show the sprite at (0 - 255)
  * @param flags         Explosion flags:
  *                        TE_EXPLFLAG_NONE               - default Half-Life explosion
  *                        TE_EXPLFLAG_NOADDITIVE         - sprite will be drawn opaque
@@ -140,8 +140,8 @@ native te_create_tar_explosion(position[3], receiver = 0, bool:reliable = true)
  *
  * @param position      Position of the smoke effect
  * @param sprite        The alphablend sprite index to use for the smoke
- * @param scale         The scale of the smoke
- * @param framerate     The frame rate to show the sprite at
+ * @param scale         The scale of the smoke (0 - 255)
+ * @param framerate     The frame rate to show the sprite at (0 - 255)
  * @param receiver      Client index that will be able to see the smoke
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -177,17 +177,17 @@ native te_create_tracer(startpos[3], endpos[3], receiver = 0, bool:reliable = tr
  * @param startent      Primary entity id
  * @param endent        Secondary entity id
  * @param sprite        The sprite index to use in the beam
- * @param startframe    The frame to start with in the sprite
- * @param framerate     The frame rate to show the sprite at
- * @param life          The length of time the beam shall remain
- * @param width         The width of the beam
+ * @param startframe    The frame to start with in the sprite (0 - 255)
+ * @param framerate     The frame rate to show the sprite at (0 - 255)
+ * @param life          The length of time the beam shall remain (0 - 255)
+ * @param width         The width of the beam (0 - 255)
  * @param noise         The noise amplitude of the beam, this controls
- *                      the distorsion of the beam
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param a             Beam brightness (alpha)
- * @param speed         The scroll speed of the beam
+ *                      the distorsion of the beam (0 - 255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Beam brightness (alpha) (0 - 255)
+ * @param speed         The scroll speed of the beam (0 - 255)
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -248,7 +248,7 @@ native te_create_teleport_splash(position[3], receiver = 0, bool:reliable = true
  * Creates a Quake colormapped (base palette) particle explosion with sound.
  *
  * @param position      Position of the explosion
- * @param startcolor    Starting color
+ * @param startcolor    Starting color (0 - 255)
  * @param numcolors     Number of colors (1 - 255)
  * @param receiver      Client index that will be able to see the explosion
  *                      or 0 for all clients
@@ -376,11 +376,11 @@ native te_create_beam_sprite(startpos[3], endpos[3], beamid, endid, receiver = 0
  * @param width         The width of the beam
  * @param noise         The noise amplitude of the beam, this controls
  *                      the distorsion of the beam
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param a             Beam brightness (alpha)
- * @param speed         The scroll speed of the beam
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Beam brightness (alpha) (0 - 255)
+ * @param speed         The scroll speed of the beam (0 - 255)
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -400,17 +400,17 @@ native te_create_beam_ring(position[3], sprite, axis[3] = {0, 0, 0}, startframe 
  * @param position      Starting coordinates of the beam
  * @param sprite        The sprite index to use in the beam
  * @param axis          Beam axis
- * @param startframe    The frame to start with in the sprite
- * @param framerate     The frame rate to show the sprite at
- * @param life          The length of time the beam shall remain
- * @param width         The width of the beam
+ * @param startframe    The frame to start with in the sprite (0 - 255)
+ * @param framerate     The frame rate to show the sprite at (0 - 255)
+ * @param life          The length of time the beam shall remain (0 - 255)
+ * @param width         The width of the beam (0 - 255)
  * @param noise         The noise amplitude of the beam, this controls
- *                      the distorsion of the beam
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param a             Beam brightness (alpha)
- * @param speed         The scroll speed of the beam
+ *                      the distorsion of the beam (0 - 255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Beam brightness (alpha) (0 - 255)
+ * @param speed         The scroll speed of the beam (0 - 255)
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -430,17 +430,17 @@ native te_create_beam_disk(position[3], sprite, axis[3] = {0, 0, 0}, startframe 
  * @param position      Starting coordinates of the beam
  * @param sprite        The sprite index to use in the beam
  * @param axis          Beam axis
- * @param startframe    The frame to start with in the sprite
- * @param framerate     The frame rate to show the sprite at
- * @param life          The length of time the beam shall remain
- * @param width         The width of the beam
+ * @param startframe    The frame to start with in the sprite (0 - 255)
+ * @param framerate     The frame rate to show the sprite at (0 - 255)
+ * @param life          The length of time the beam shall remain (0 - 255)
+ * @param width         The width of the beam (0 - 255)
  * @param noise         The noise amplitude of the beam, this controls
- *                      the distorsion of the beam
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param a             Beam brightness (alpha)
- * @param speed         The scroll speed of the beam
+ *                      the distorsion of the beam (0 - 255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Beam brightness (alpha) (0 - 255)
+ * @param speed         The scroll speed of the beam (0 - 255)
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -461,12 +461,12 @@ native te_create_beam_cylinder(position[3], sprite, axis[3] = {0, 0, 0}, startfr
  *
  * @param entity        Entity that the beam will follow
  * @param sprite        The sprite index to use in the beam
- * @param life          The length of time the beam shall remain
- * @param width         The width of the beam
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param a             Beam brightness (alpha)
+ * @param life          The length of time the beam shall remain (0 - 255)
+ * @param width         The width of the beam (0 - 255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Beam brightness (alpha) (0 - 255)
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -483,9 +483,9 @@ native te_create_following_beam(entity, sprite, life = 10, width = 10, r = 0, g 
  *
  * @param position      Sprite position
  * @param sprite        Sprite index
- * @param scale         Sprite scale
- * @param size          Sprite size
- * @param brightness    Sprite brightness
+ * @param scale         Sprite scale (0 - 255)
+ * @param size          Sprite size (0 - 255)
+ * @param brightness    Sprite brightness (0 - 255)
  * @param receiver      Client index that will be able to see the sprite
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -505,17 +505,17 @@ native te_display_glow_sprite(position[3], sprite, scale = 10, size = 10, bright
  * @param startent      Primary entity id
  * @param endent        Secondary entity id
  * @param sprite        The sprite index to use in the beam
- * @param startframe    The frame to start with in the sprite
- * @param framerate     The frame rate to show the sprite at
- * @param life          The length of time the beam shall remain
- * @param width         The width of the beam
+ * @param startframe    The frame to start with in the sprite (0 - 255)
+ * @param framerate     The frame rate to show the sprite at (0 - 255)
+ * @param life          The length of time the beam shall remain (0 - 255)
+ * @param width         The width of the beam (0 - 255)
  * @param noise         The noise amplitude of the beam, this controls
- *                      the distorsion of the beam
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param a             Beam brightness (alpha)
- * @param speed         The scroll speed of the beam
+ *                      the distorsion of the beam (0 - 255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Beam brightness (alpha) (0 - 255)
+ * @param speed         The scroll speed of the beam (0 - 255)
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -551,12 +551,12 @@ native te_create_tracer_shower(position[3], direction[3] = {0, 0, 0}, color = 12
  * Creates a dynamic light with a world effect.
  *
  * @param position      Position of the light
- * @param radius        Light radius
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param life          The length of time the light shall remain
- * @param decay         Light decay rate
+ * @param radius        Light radius (0 - 255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param life          The length of time the light shall remain (0 - 255)
+ * @param decay         Light decay rate (0 - 255)
  * @param receiver      Client index that will be able to see the light
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -574,10 +574,10 @@ native te_create_dynamic_light(position[3], radius = 10, r = 255, g = 255, b = 2
  * @param entity        Entity or client to apply the light on
  * @param position      Position of the light
  * @param radius        Light radius
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
- * @param life          The length of time the light shall remain
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param life          The length of time the light shall remain (0 - 255)
  * @param decay         Light decay rate
  * @param receiver      Client index that will be able to see the light
  *                      or 0 for all clients
@@ -596,9 +596,9 @@ native te_create_entity_light(entity, position[3] = {0, 0, 0}, radius = 50, r = 
  * @param startpos      Starting position of the line
  * @param endpos        Ending position of the line
  * @param life          Line life
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
  * @param receiver      Client index that will be able to see the line
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -616,9 +616,9 @@ native te_draw_line(startpos[3], endpos[3], life = 10, r = 0, g = 0, b = 255, re
  * @param startpos      Starting position of the box
  * @param endpos        Ending position of the box
  * @param life          Box life
- * @param r             Red color amount
- * @param g             Green color amount
- * @param b             Blue color amount
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
  * @param receiver      Client index that will be able to see the box
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -671,7 +671,7 @@ native te_create_large_funnel(position[3], sprite, flag = LF_FLOAT_DOWN, receive
  * @param position      Starting position of the blood
  * @param direction     Blood direction
  * @param color         Blood color (https://wiki.alliedmods.net/images/Palette.png)
- * @param count         Number of blood particles to generate
+ * @param count         Number of blood particles to generate (0 - 255)
  * @param receiver      Client index that will be able to see the blood
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -706,7 +706,7 @@ native te_draw_blood_line(startpos[3], endpos[3], receiver = 0, bool:reliable = 
  * @param position      Position from where the blood will be sprayed
  * @param direction     Blood spraying direction
  * @param color         Blood color (https://wiki.alliedmods.net/images/Palette.png)
- * @param speed         Speed at which the blood particles will be sprayed
+ * @param speed         Speed at which the blood particles will be sprayed (0 - 255)
  * @param receiver      Client index that will be able to see the particles
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -722,7 +722,7 @@ native te_spray_blood(position[3], direction[3] = {0, 0, 0}, color = 78, speed =
  * Applies a decal to a brush entity (not the world).
  *
  * @param position      Position of the decal (center of texture in world)
- * @param texture       Texture index of precached decal texture name
+ * @param texture       Texture index of precached decal texture name (0 - 511)
  * @param entity        Entity index to apply the decal to
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
@@ -746,7 +746,7 @@ native te_place_brush_decal(position[3], texture, entity = 0, receiver = 0, bool
  *                        BounceSound_Null
  *                        BounceSound_Shell
  *                        BounceSound_ShotShell
- * @param life          The length of time the model shall remain
+ * @param life          The length of time the model shall remain (0 - 255)
  * @param receiver      Client index that will be able to see the model
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -765,7 +765,7 @@ native te_create_bouncing_model(position[3], modelid, velocity[3] = {0, 0, 0}, y
  * @param modelid       Model index
  * @param speed         Model speed
  * @param count         Number of models to generate
- * @param life          The length of time the model shall remain
+ * @param life          The length of time the model shall remain (0 - 255)
  * @param receiver      Client index that will be able to see the model
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -784,9 +784,9 @@ native te_create_explode_model(position[3], modelid, speed = 0, count = 1, life 
  * @param size          Size of the model
  * @param velocity      Model velocity
  * @param modelid       Model index
- * @param random        Random velocity
- * @param count         Number of model pieces to generate
- * @param life          The length of time the model shall remain
+ * @param random        Random velocity (0 - 255)
+ * @param count         Number of model pieces to generate (0 - 255)
+ * @param life          The length of time the model shall remain (0 - 255)
  * @param flags         Break model flags:
  *                        BreakModel_TypeMask
  *                        BreakModel_Glass
@@ -812,7 +812,7 @@ native te_create_break_model(position[3], modelid, size[3] = {50, 50, 50}, veloc
  * Places a gunshot decal on an entity or the world and plays a ricochet sound.
  *
  * @param position      Position of the decal
- * @param decal         Decal index
+ * @param decal         Decal index (0 - 255)
  * @param entity        Entity to apply the decal to or 0 for world
  * @param receiver      Client index that will be able to see the model
  *                      or 0 for all clients
@@ -831,10 +831,10 @@ native te_place_gunshot_decal(position[3], decal = 41, entity = 0, receiver = 0,
  * @param position      Position of the effect
  * @param sprite        Sprite index
  * @param velocity      Spray velocity
- * @param count         Number of sprays to generate
- * @param speed         The scroll speed of the effect
+ * @param count         Number of sprays to generate (0 - 255)
+ * @param speed         The scroll speed of the effect (0 - 255)
  * @param noise         The noise amplitude of the effect - this
- *                      controls the distorsion of the effect
+ *                      controls the distorsion of the effect (0 - 255)
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -850,7 +850,7 @@ native te_create_sprite_spray(position[3], sprite, velocity[3] = {0, 0, 0}, coun
  * Creates a quick spray sprite with a ricochet sound.
  *
  * @param position      Position of the effect
- * @param scale         Scale of the effect
+ * @param scale         Scale of the effect (0 - 255)
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -866,7 +866,7 @@ native te_create_armor_ricochet(position[3], scale = 10, receiver = 0, bool:reli
  * Places a player spray on an entity or the world.
  *
  * @param position      Position of the decal
- * @param decal         Decal index
+ * @param decal         Decal index (0 - 255)
  * @param entity        Entity to apply the decal to or 0 for world
  * @param receiver      Client index that will be able to see the model
  *                      or 0 for all clients
@@ -887,7 +887,7 @@ native te_place_player_spray(position[3], player, spray = 0, entity = 0, receive
  * @param startpos      Start position
  * @param endpos        End position
  * @param sprite        Sprite index
- * @param count         Number of sprites to generate
+ * @param count         Number of sprites to generate (0 - 255)
  * @param randomness    Randoness of the floating direction
  * @param height        Float height
  * @param receiver      Client index that will be able to see the effect
@@ -909,7 +909,7 @@ native te_create_bubble_box(startpos[3], endpos[3], sprite, count = 3, randomnes
  * @param startpos      Start position
  * @param endpos        End position
  * @param sprite        Sprite index
- * @param count         Number of sprites to generate
+ * @param count         Number of sprites to generate (0 - 255)
  * @param randomness    Randoness of the floating direction
  * @param height        Float height
  * @param receiver      Client index that will be able to see the effect
@@ -930,7 +930,7 @@ native te_create_bubble_line(startpos[3], endpos[3], sprite, count = 3, randomne
  * @param sprite1id     Primary sprite index
  * @param sprite2id     Secondary sprite index
  * @param color         Sprite color (https://wiki.alliedmods.net/images/Palette.png)
- * @param scale         Sprite scale
+ * @param scale         Sprite scale (0 - 255)
  * @param receiver      Client index that will be able to see the sprite
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -948,7 +948,7 @@ native te_display_falling_sprite(position[3], sprite1id, sprite2id, color = 78, 
  * @note Using a decal index that doesn't exist will crash the client.
  *
  * @param position      Decal position (center of texture in world)
- * @param texture       Texture index of precached decal texture name
+ * @param texture       Texture index of precached decal texture name (0 - 511)
  * @param receiver      Client index that will be able to see the decal
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -966,7 +966,7 @@ native te_place_world_decal(position[3], texture, receiver = 0, bool:reliable = 
  * @param position      Projectile position
  * @param velocity      Projectile velocity
  * @param model         Model index that will be used for the projectile
- * @param life          The length of time the projectile shall remain
+ * @param life          The length of time the projectile shall remain (0 - 255)
  * @param owner         The projectile won't collide with the owner, if set to 0,
  *                      the projectile will hit any client
  * @param receiver      Client index that will be able to see the projectile
@@ -986,10 +986,10 @@ native te_create_projectile(position[3], velocity[3], model, life = 30, owner = 
  * @param position      Effect position
  * @param model         Model index that will be used for the effect
  * @param direction     Effect direction
- * @param count         Number of sprites/models to generate
- * @param speed         The scroll speed of the effect
+ * @param count         Number of sprites/models to generate (0 - 255)
+ * @param speed         The scroll speed of the effect (0 - 255)
  * @param noise         The noise amplitude of the effect - this
- *                      controls the distorsion of the effect
+ *                      controls the distorsion of the effect (0 - 255)
  * @param rendermode    Render mode - one of kRender* constants
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
@@ -1007,8 +1007,8 @@ native te_create_sprite_shower(position[3], model, direction[3] = {0, 0, 0}, cou
  *
  * @param player        Client index to emit the sprites from (can't be 0)
  * @param sprite        Sprite index
- * @param count         Number of sprites to generate
- * @param variance      Variance in size (0 = no variance; 10 = 10% variance)
+ * @param count         Number of sprites to generate (0 - 255)
+ * @param variance      Variance in size (0 = no variance; 10 = 10% variance) (0 - 255)
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -1026,7 +1026,7 @@ native te_emit_sprite_from_player(player, sprite, count = 1, variance = 0, recei
  * @param position      Effect position
  * @param radius        Effect radius
  * @param color         Particle color (https://wiki.alliedmods.net/images/Palette.png)
- * @param duration      Duration of the effect (will be randomized a bit)
+ * @param duration      Duration of the effect (will be randomized a bit) (0 - 255)
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -1044,8 +1044,8 @@ native te_create_particle_burst(position[3], radius = 30, color = 106, duration 
  * @param position      Effect position
  * @param sprite        Sprite or model index to use for the fire
  * @param radius        Effect radius
- * @param count         Number of fields to generate
- * @param duration      Duration of the effect (will be randomized a bit)
+ * @param count         Number of fields to generate (0 - 255)
+ * @param duration      Duration of the effect (will be randomized a bit) (0 - 255)
  * @param flags         Available flags:
  *                        TEFIRE_FLAG_ALLFLOAT    - all sprites will drift upwards as they animate
  *                        TEFIRE_FLAG_SOMEFLOAT   - some of the sprites will drift upwards (50% chance)
@@ -1107,8 +1107,8 @@ native te_kill_all_player_attachments(player, receiver = 0, bool:reliable = true
  *
  * @param position      Gunshot position
  * @param direction     Gunshot direction
- * @param decal         Bullethole decal texture index
- * @param count         Number of bulletholes to generate
+ * @param decal         Bullethole decal texture index (0 - 255)
+ * @param count         Number of bulletholes to generate (0 - 255)
  * @param noise_x       X noise multiplied by 100
  * @param noise_y       Y noise multiplied by 100
  * @param receiver      Client index that will be able to see the Gunshot
@@ -1127,9 +1127,9 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
  *
  * @param position      Effect position
  * @param velocity      Effect velocity
- * @param life          The length of time the effect shall remain, multiplied by 10
+ * @param life          The length of time the effect shall remain, multiplied by 10 (0 - 255)
  * @param color         Tracer color (https://wiki.alliedmods.net/images/Palette.png)
- * @param length        Length of the tracer
+ * @param length        Length of the tracer (0 - 255)
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable

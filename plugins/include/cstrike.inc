@@ -1241,7 +1241,7 @@ stock bool:cs_is_valid_itemid(id, bool:weapon_only = false)
  *
  * @param id            Client index or 0 for all clients
  * @param duration      How long (in seconds) until the bar is fully filled
- * @param startpercent  Bar starting percentage
+ * @param startpercent  Bar starting percentage (0-100)
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
@@ -1256,7 +1256,7 @@ native cs_draw_progress_bar(id, duration, startpercent = 0, bool:reliable = true
  * @param id            Client index or 0 for all clients
  * @param shotgun       If set to true, it will play "weapons/generic_shot_reload.wav",
  *                      otherwise it will play "weapons/generic_reload.wav".
- * @param volume        Volume amount (0-255)
+ * @param volume        Volume amount (0 - 255)
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *

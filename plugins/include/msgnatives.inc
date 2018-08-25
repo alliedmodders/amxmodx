@@ -69,9 +69,9 @@ native draw_weapon_pickup_icon(id, weaponid, bool:reliable = true)
  *                        StatusIcon_Hide         - hides the status icon
  *                        StatusIcon_Show         - shows the status icon
  *                        StatusIcon_Flash        - flashes the status icon
- * @param r             Red color amount (0-255)
- * @param g             Green color amount (0-255)
- * @param b             Blue color amount (0-255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
@@ -151,17 +151,18 @@ native send_geiger_signal(id, distance, bool:reliable = true)
  * Fades the client's screen.
  *
  * @param id            Client index or 0 for all clients
- * @param duration      How long (in seconds) the fade is going to stay on the screen
- * @param fadetime      How many seconds is the fade going to fade in
+ * @param duration      How long (in seconds) the fade is going to stay
+ *                      on the screen (0 - 16)
+ * @param fadetime      How many seconds is the fade going to fade in (0 - 16)
  * @param flags         Screen fade flags:
  *                        ScreenFade_FadeIn       - default
  *                        ScreenFade_FadeOut      - fade out (not in)
  *                        ScreenFade_Modulate     - modulate (don't blend)
  *                        ScreenFade_StayOut      - ignores the duration and stays faded out until a new ScreenFade messages is received
- * @param r             Red color amount (0-255)
- * @param g             Green color amount (0-255)
- * @param b             Blue color amount (0-255)
- * @param a             Color alpha (brightness) (0-255)
+ * @param r             Red color amount (0 - 255)
+ * @param g             Green color amount (0 - 255)
+ * @param b             Blue color amount (0 - 255)
+ * @param a             Color alpha (brightness) (0 - 255)
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
@@ -175,9 +176,9 @@ native fade_user_screen(id, Float:duration = 1.0, Float:fadetime = 0.5, ScreenFa
  * Shakes the client's screen.
  *
  * @param id            Client index or 0 for all clients
- * @param amplitude     Shake amplitude
- * @param duration      Shake duration (in seconds)
- * @param frequency     Delay between each shake
+ * @param amplitude     Shake amplitude (0 - 16)
+ * @param duration      Shake duration (in seconds) (0 - 16)
+ * @param frequency     Delay between each shake (0 - 16)
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
@@ -193,7 +194,7 @@ native shake_user_screen(id, Float:amplitude = 3.0, Float:duration = 3.0, Float:
  * @note Setting the "fov" argument below 45 will also draw a sniper scope.
  *
  * @param id            Client index or 0 for all clients
- * @param fov           Field of view degrees (0-255)
+ * @param fov           Field of view degrees (0 - 255)
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *

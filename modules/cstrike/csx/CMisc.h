@@ -36,7 +36,6 @@ struct CPlayer {
 	int aiming;
 	int current;
 	bool bot;
-	float clearStats;
 	RankSystem::RankStats*	rank;
 
 	struct PlayerWeapon : Stats {
@@ -67,6 +66,7 @@ struct CPlayer {
 	void saveBDefused();
 
 	void restartStats(bool all = true);
+	void ClearStats();
 	inline bool IsBot(){
 		const char* auth= (*g_engfuncs.pfnGetPlayerAuthId)(pEdict);
 		return ( (auth && !strcmp( auth , "BOT" )) || // AuthID of "BOT"

@@ -177,7 +177,7 @@
 #define FN_ClientUserInfoChanged_Post			ClientUserInfoChanged_Post
 #define FN_ServerActivate_Post					ServerActivate_Post
 // #define FN_ServerDeactivate_Post				ServerDeactivate_Post
-#define FN_PlayerPreThink_Post					PlayerPreThink_Post
+// #define FN_PlayerPreThink_Post				PlayerPreThink_Post
 // #define FN_PlayerPostThink_Post				PlayerPostThink_Post
 #define FN_StartFrame_Post						StartFrame_Post
 // #define FN_ParmsNewLevel_Post				ParmsNewLevel_Post

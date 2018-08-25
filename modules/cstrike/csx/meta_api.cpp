@@ -52,7 +52,7 @@ int gmsgDeathMsg;
 int gmsgDamage;
 int gmsgDamageEnd;
 int gmsgWeaponList;
-int gmsgResetHUD;
+int gmsgHLTV;
 int gmsgAmmoX;
 int gmsgScoreInfo;
 int gmsgAmmoPickup;
@@ -81,18 +81,18 @@ struct sUserMsg
 	funEventCall func;
 	bool endmsg;
 } g_user_msg[] = {
-	{"CurWeapon",	&gmsgCurWeapon,		Client_CurWeapon,	false},
-	{"Damage",		&gmsgDamage,		Client_Damage,		false},	
-	{"Damage",		&gmsgDamageEnd,		Client_Damage_End,	true},
-	{"WeaponList",	&gmsgWeaponList,	Client_WeaponList,	false},
-	{"ResetHUD",	&gmsgResetHUD,		Client_ResetHUD,	true},
-	{"AmmoX",		&gmsgAmmoX,			Client_AmmoX,		false},
-	{"ScoreInfo",	&gmsgScoreInfo,		Client_ScoreInfo,	false},
-	{"AmmoPickup",	&gmsgAmmoPickup,	Client_AmmoPickup,	false},
-	{"SendAudio",	&gmsgSendAudio,		Client_SendAudio,	false},
-	{"TextMsg",		&gmsgTextMsg,		Client_TextMsg,		false},
-	{"BarTime",		&gmsgBarTime,		Client_BarTime,		false},
-	{"DeathMsg",	&gmsgDeathMsg,		Client_DeathMsg,	false},
+	{"CurWeapon",  &gmsgCurWeapon,  Client_CurWeapon,  false},
+	{"Damage",     &gmsgDamage,     Client_Damage,     false}, 
+	{"Damage",     &gmsgDamageEnd,  Client_Damage_End, true},
+	{"WeaponList", &gmsgWeaponList, Client_WeaponList, false},
+	{"HLTV",       &gmsgHLTV,       Client_HLTV,       false},
+	{"AmmoX",      &gmsgAmmoX,      Client_AmmoX,      false},
+	{"ScoreInfo",  &gmsgScoreInfo,  Client_ScoreInfo,  false},
+	{"AmmoPickup", &gmsgAmmoPickup, Client_AmmoPickup, false},
+	{"SendAudio",  &gmsgSendAudio,  Client_SendAudio,  false},
+	{"TextMsg",    &gmsgTextMsg,    Client_TextMsg,    false},
+	{"BarTime",    &gmsgBarTime,    Client_BarTime,    false},
+	{"DeathMsg",   &gmsgDeathMsg,   Client_DeathMsg,   false},
 
 	{0, 0, 0, false}
 };
@@ -156,25 +156,6 @@ void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 
 	for( int i = 1; i <= gpGlobals->maxClients; ++i)
 		GET_PLAYER_POINTER_I(i)->Init( i , pEdictList + i );
-	RETURN_META(MRES_IGNORED);
-}
-
-void PlayerPreThink_Post( edict_t *pEntity ) {
-    if ( !isModuleActive() )
-	{
-		RETURN_META(MRES_IGNORED);
-	}
-
-	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	if (pPlayer->clearStats && pPlayer->clearStats < gpGlobals->time ){
-
-		if ( !ignoreBots(pEntity) ){
-			pPlayer->clearStats = 0.0f;
-			if (pPlayer->rank)
-				pPlayer->rank->updatePosition( &pPlayer->life );
-			pPlayer->restartStats(false);
-		}
-	}
 	RETURN_META(MRES_IGNORED);
 }
 

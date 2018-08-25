@@ -60,6 +60,9 @@
     <None Include="..\..\..\plugins\include\csstats.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\..\plugins\include\csstats_const.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
     <None Include="..\..\..\plugins\include\csx.inc">
       <Filter>Pawn Includes</Filter>
     </None>

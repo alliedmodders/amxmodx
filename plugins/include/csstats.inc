@@ -12,6 +12,8 @@
 #endif
 #define _csstats_included
 
+#include <csstats_const>
+
 /**
  * Retrieves the client's current weapon statistics.
  *

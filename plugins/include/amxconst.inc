@@ -528,25 +528,13 @@ enum
 	STATSX_SHOTS,
 	STATSX_HITS,
 	STATSX_DAMAGE,
-	STATSX_RANK
+	STATSX_RANK,
+	STATSX_MAX_STATS
 }
 
 /**
- * Constants for objective based statistics
+ * Mmaximum number of bodyhits used with stats natives
  */
-enum
-{
-	STATSX_TOTAL_DEFUSIONS = 0,
-	STATSX_BOMBS_DEFUSED,
-	STATSX_BOMBS_PLANTED,
-	STATSX_BOMB_EXPLOSIONS
-}
-
-/**
- * Constants for maximum number of stats
- */
-#define STATSX_MAX_STATS 8
 #define STATSX_MAX_BODYHITS 8
-#define STATSX_MAX_OBJECTIVE 4
 
 #include <cstrike_const> // To keep backward compatibility

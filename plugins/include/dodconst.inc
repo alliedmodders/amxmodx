@@ -147,10 +147,6 @@ enum {
 	DODX_HITS,
 	DODX_DAMAGE,
 	DODX_POINTS,
-	DODX_RANK
+	DODX_RANK,
+	DODX_MAX_STATS
 }
-
-/* Constants for maximum number of stats in DoD */
-#define DODX_MAX_STATS 9
-#define DODX_MAX_BODYHITS 8
-#define DODX_MAX_OBJECTIVE 4

@@ -43,7 +43,7 @@
  * @error           If an invalid client index or weapon id is provided, an
  *                  error will be thrown.
  */
-native get_user_wstats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYHITS]);
+native get_user_wstats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS]);
 
 /**
  * Retrieves the client's weapon statistics from the current round.
@@ -74,7 +74,7 @@ native get_user_wstats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[STATSX
  * @error           If an invalid client index or weapon id is provided, an
  *                  error will be thrown.
  */
-native get_user_wrstats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYHITS]);
+native get_user_wrstats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS]);
 
 /**
  * Retrieves the client's weapon statistics from the permanent storage on the
@@ -107,7 +107,7 @@ native get_user_wrstats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[STATS
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_stats(index, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYHITS]);
+native get_user_stats(index, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS]);
 
 /**
  * Retrieves the client's statistics from the current round.
@@ -133,7 +133,7 @@ native get_user_stats(index, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYHI
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_rstats(index, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYHITS]);
+native get_user_rstats(index, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS]);
 
 /**
  * Retrieves the client's statistics inflicted upon another client from the
@@ -165,7 +165,7 @@ native get_user_rstats(index, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYH
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_vstats(index, victim, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYHITS], wpnname[] = "", len = 0);
+native get_user_vstats(index, victim, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS], wpnname[] = "", len = 0);
 
 /**
  * Retrieves the client's statistics received from another client from the
@@ -197,7 +197,7 @@ native get_user_vstats(index, victim, stats[STATSX_MAX_STATS], bodyhits[STATSX_M
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_astats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYHITS], wpnname[] = "", len = 0);
+native get_user_astats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS], wpnname[] = "", len = 0);
 
 /**
  * Resets the current round weapon, attacker and victim statistics.
@@ -243,7 +243,7 @@ native reset_user_wstats(index);
  * @return              Next rank index (> 0 and > index), or 0 if no more
  *                      statistics exist
  */
-native get_stats(index, stats[STATSX_MAX_STATS], bodyhits[STATSX_MAX_BODYHITS], name[], len, authid[] = "", authidlen = 0);
+native get_stats(index, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS], name[], len, authid[] = "", authidlen = 0);
 
 /**
  * Returns the number of all entries in the permanent statistics storage.

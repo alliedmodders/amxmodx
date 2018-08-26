@@ -28,6 +28,7 @@
  */
 
 #include <amxmodx>
+#include <dodx>
 
 #define KILLS	stats[DODX_KILLS]
 #define DEATHS	stats[DODX_DEATHS]

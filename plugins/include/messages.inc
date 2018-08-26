@@ -17,6 +17,8 @@
 #define _coremsg_included
 
 #include <message_const>
+#include <msgnatives>
+#include <tempent>
 
 /**
  * Marks the beginning of a client message.

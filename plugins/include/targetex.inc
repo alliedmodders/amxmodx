@@ -77,10 +77,12 @@ static const Targetex_Teams[][TargetexTeams] =
  *       can also exclude himself from the command by adding a "!" symbol
  *       right after the "@" one, e.g. @!humans will target all humans
  *       except the admin that used the command.
- * @note The "name" argument is used to store the matched client's name
- *       or one of the translations found in the targetex.txt dictionary.
+ * @note If only one client is matched, the client's name will be copied
+ *       in the "name" buffer, otherwise a translated string using one
+ *       of the language keys found in cmdtarget.txt will be copied in the
+ *       same buffer.
  *
- * @param id        Client index of admin performing an action
+ * @param id        Client index of admin performing the action
  * @param arg       Target pattern
  * @param players   Array to store the matched clients in
  * @param name      Buffer to store the client name or argument translation
@@ -93,7 +95,7 @@ static const Targetex_Teams[][TargetexTeams] =
  *                    TARGETEX_NO_GROUPS - doesn't allow usage of arguments that target a group of clients
  *                    TARGETEX_NO_BOTS - doesn't allow targeting bots
  *                    TARGETEX_NO_ALIVE - doesn't allow targeting alive clients
- *                    TARGETEX_NO_DEAD - doesn't allowt targeting dead clients
+ *                    TARGETEX_NO_DEAD - doesn't allow targeting dead clients
  *
  * @return          Number of clients matched
  */
@@ -129,7 +131,7 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 		}
 		else if(bExceptMe)
 		{
-			console_print(id, "%L", id, "TARGETEX_NO_EXCLUDE", arg[2]);
+			targetex_cant_exclude(id, arg);
 			return 0;
 		}
 
@@ -157,16 +159,14 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 
 				if(iArgLen2 == Targetex_Teams[i][TARGETEX_E_LEN] + 1)
 				{
-					copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_ALL");
+					szLangKey = "TARGETEX_ARG_ALL";
 					get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
+					goto @AFTER_ARGS;
 				}
 
 				break;
 			}
 		}
-
-		if(szLangKey[0])
-			goto @AFTER_ARGS;
 
 		if(equal(arg[iStartArg], "aim", 3))
 		{
@@ -178,7 +178,7 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 		}
 		else if(equal(arg[iStartArg], "all", 3))
 		{
-			copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_ALL");
+			szLangKey = "TARGETEX_ARG_ALL";
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
 		else if(equal(arg[iStartArg], "alive", 5))
@@ -189,20 +189,26 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 				return 0;
 			}
 
+			szLangKey = "TARGETEX_ARG_ALIVE";
 			iMatchingFlags |= GetPlayers_ExcludeDead;
-			copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_ALIVE");
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
 		else if(equal(arg[iStartArg], "bots", 4))
 		{
+			if(bExceptMe)
+			{
+				targetex_cant_exclude(id, arg);
+				return 0;
+			}
+			
 			if(flags & TARGETEX_NO_BOTS)
 			{
 				console_print(id, "%L", id, "TARGETEX_NO_BOTS")
 				return 0;
 			}
 
+			szLangKey = "TARGETEX_ARG_BOTS";
 			iMatchingFlags |= GetPlayers_ExcludeHuman;
-			copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_BOTS");
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
 		else if(equal(arg[iStartArg], "dead", 4))
@@ -213,20 +219,26 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 				return 0;
 			}
 
+			szLangKey = "TARGETEX_ARG_DEAD";
 			iMatchingFlags |= GetPlayers_ExcludeAlive;
-			copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_DEAD");
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
-		else if(equal(arg[iStartArg], "humans", 4))
+		else if(equal(arg[iStartArg], "humans", 6))
 		{
+			szLangKey = "TARGETEX_ARG_HUMANS";
 			iMatchingFlags |= GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV;
-			copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_HUMANS");
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
 		else if(equal(arg[iStartArg], "me", 2))
 			iPlayers[iPnum++] = id;
 		else if(equal(arg[iStartArg], "spectating", 10))
 		{
+			if(bExceptMe)
+			{
+				targetex_cant_exclude(id, arg);
+				return 0;
+			}
+
 			new iTarget = entity_get_int(id, EV_INT_iuser2);
 
 			if(iTarget)
@@ -234,6 +246,12 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 		}
 		else if(equal(arg[iStartArg], "view", 4))
 		{
+			if(bExceptMe)
+			{
+				targetex_cant_exclude(id, arg);
+				return 0;
+			}
+
 			new iViewPlayers[MAX_PLAYERS], iViewPnum;
 			get_players_ex(iViewPlayers, iViewPnum, iMatchingFlags, szMatchingString);
 
@@ -246,7 +264,7 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 					iPlayers[iPnum++] = iPlayer;
 			}
 
-			copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_VIEW");
+			szLangKey = "TARGETEX_ARG_VIEW";
 		}
 
 		@AFTER_ARGS:
@@ -325,6 +343,9 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 
 	return 0;
 }
+
+static stock targetex_cant_exclude(id, const arg[])
+	console_print(id, "%L", id, "TARGETEX_NO_EXCLUDE", arg[2]);
 
 static stock bool:targetex_is_group_argument(const arg[])
 {

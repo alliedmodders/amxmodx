@@ -21,6 +21,8 @@
  * Creates a beam between two points.
  *
  * @note A common sprite to use is "sprites/laserbeam.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=3s
  *
  * @param startpos      Starting coordinates of the beam
  * @param endpos        Ending coordinates of the beam
@@ -51,6 +53,8 @@ native te_create_beam_between_points(startpos[3], endpos[3], sprite, startframe 
  * Creates a beam between an entity and a point.
  *
  * @note A common sprite to use is "sprites/laserbeam.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=20s
  *
  * @param startent      Primary entity id
  * @param endpos        Ending coordinates of the beam
@@ -80,6 +84,9 @@ native te_create_beam_from_entity(startent, endpos[3], sprite, startframe = 0, f
 /**
  * Creates a gunshot that consists of a particle effect and a ricochet sound.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=36s
+ *
  * @param position      Gunshot coordinates
  * @param receiver      Client index that will be able to see the gunshot
  *                      or 0 for all clients
@@ -96,6 +103,8 @@ native te_create_gunshot(position[3], receiver = 0, bool:reliable = true)
  * Creates an explosion.
  *
  * @note A common sprite to use is "sprites/zerogxplode.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=43s
  *
  * @param position      Position of the explosion
  * @param sprite        The additive sprite index to use in the explosion
@@ -105,7 +114,7 @@ native te_create_gunshot(position[3], receiver = 0, bool:reliable = true)
  *                        TE_EXPLFLAG_NONE               - default Half-Life explosion
  *                        TE_EXPLFLAG_NOADDITIVE         - sprite will be drawn opaque
  *                        TE_EXPLFLAG_NODLIGHTS          - don't render the dynamic lights
- *                        TE_EXPLFLAG_NOSOUND            - don't play the exlposion sound
+ *                        TE_EXPLFLAG_NOSOUND            - don't play the explosion sound
  *                        TE_EXPLFLAG_NOPARTICLES        - don't draw the particles
  * @param receiver      Client index that will be able to see the explosion
  *                      or 0 for all clients
@@ -120,6 +129,9 @@ native te_create_explosion(position[3], sprite, scale = 10, framerate = 30, flag
 
 /**
  * Creates the Quake "tarbaby" explosion with sound.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=55s
  *
  * @param position      Position of the explosion
  * @param receiver      Client index that will be able to see the explosion
@@ -137,6 +149,8 @@ native te_create_tar_explosion(position[3], receiver = 0, bool:reliable = true)
  * Creates smoke (a rising alphablend sprite at 30 pps).
  *
  * @note A common sprite to use is "sprites/steam1.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=1m2s
  *
  * @param position      Position of the smoke effect
  * @param sprite        The alphablend sprite index to use for the smoke
@@ -156,6 +170,9 @@ native te_create_smoke(position[3], sprite, scale = 10, framerate = 30, receiver
 /**
  * Creates a tracer effect from one point to another.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=1m12s
+ *
  * @param startpos      Starting position of the tracer
  * @param endpos        Ending position of the tracer
  * @param receiver      Client index that will be able to see the tracer
@@ -173,6 +190,8 @@ native te_create_tracer(startpos[3], endpos[3], receiver = 0, bool:reliable = tr
  * Creates a beam between two entities.
  *
  * @note A common sprite to use is "sprites/laserbeam.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=1m26s
  *
  * @param startent      Primary entity id
  * @param endent        Secondary entity id
@@ -202,6 +221,9 @@ native te_create_beam_between_entities(startent, endent, sprite, startframe = 0,
 /**
  * Creates 8 random tracers with gravity and a ricochet sprite.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=1m41s
+ *
  * @param position      Position of the effect
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
@@ -216,6 +238,9 @@ native te_create_sparks(position[3], receiver = 0, bool:reliable = true)
 
 /**
  * Creates a Quake-style lava splash.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=1m49s
  *
  * @param position      Position of the effect
  * @param receiver      Client index that will be able to see the effect
@@ -232,6 +257,9 @@ native te_create_lava_splash(position[3], receiver = 0, bool:reliable = true)
 /**
  * Creates a Quake-style teleport splash.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=2m6s
+ *
  * @param position      Position of the effect
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
@@ -246,6 +274,9 @@ native te_create_teleport_splash(position[3], receiver = 0, bool:reliable = true
 
 /**
  * Creates a Quake colormapped (base palette) particle explosion with sound.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=2m19s
  *
  * @param position      Position of the explosion
  * @param startcolor    Starting color (0 - 255)
@@ -265,6 +296,8 @@ native te_create_colored_explosion(position[3], startcolor = 0, numcolors = 255,
  * Places a decal from the .BSP file.
  *
  * @note Using a decal index that doesn't exist will crash the client.
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=2m30s
  *
  * @param position      Position of the decal (center of texture in world)
  * @param texture       Texture index of precached decal texture name
@@ -285,6 +318,9 @@ native te_place_decal_from_bsp_file(position[3], texture, entity = 0, entabove =
 /**
  * Creates tracers moving towards a point.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=2m44s
+ *
  * @param position      Position of the implosion effect
  * @param radius        Implosion radius
  * @param count         Number of tracers to generate
@@ -303,6 +339,9 @@ native te_create_implosion(position[3], radius = 64, count = 10, life = 3, recei
 /**
  * Creates a line of moving glow sprites or models with gravity, fadeout,
  * and collisions.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=2m58s
  *
  * @param startpos      Starting position of the effect
  * @param endpos        Ending position of the effect
@@ -326,6 +365,9 @@ native te_create_model_trail(startpos[3], endpos[3], sprite, count = 1, life = 1
 /**
  * Displays an additive sprite that plays one cycle.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=3m7s
+ *
  * @param position      Sprite position
  * @param sprite        Sprite index
  * @param scale         Scale of the sprite
@@ -343,6 +385,9 @@ native te_display_additive_sprite(position[3], sprite, scale = 5, brightness = 2
 
 /**
  * Creates a beam with a sprite at the end of the beam.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=3m29s
  *
  * @param receiver      Client index that will be able to see the beam
  *                      or 0 for all clients
@@ -366,6 +411,8 @@ native te_create_beam_sprite(startpos[3], endpos[3], beamid, endid, receiver = 0
  * over lifetime.
  *
  * @note A common sprite to use is "sprites/laserbeam.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=3m40s
  *
  * @param position      Starting coordinates of the beam
  * @param sprite        The sprite index to use in the beam
@@ -396,6 +443,8 @@ native te_create_beam_ring(position[3], sprite, axis[3] = {0, 0, 0}, startframe 
  * Creates a beam disk that expands to the maximum radius over lifetime.
  *
  * @note A common sprite to use is "sprites/laserbeam.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=3m58s
  *
  * @param position      Starting coordinates of the beam
  * @param sprite        The sprite index to use in the beam
@@ -426,6 +475,8 @@ native te_create_beam_disk(position[3], sprite, axis[3] = {0, 0, 0}, startframe 
  * Creates a beam cylinder that expands to the maximum radius over lifetime.
  *
  * @note A common sprite to use is "sprites/laserbeam.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=4m17s
  *
  * @param position      Starting coordinates of the beam
  * @param sprite        The sprite index to use in the beam
@@ -458,6 +509,8 @@ native te_create_beam_cylinder(position[3], sprite, axis[3] = {0, 0, 0}, startfr
  * @note A common sprite to use is "sprites/laserbeam.spr"
  * @note When the entity stops moving, the beam will become visible again
  *       once the entity starts moving.
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=4m31s
  *
  * @param entity        Entity that the beam will follow
  * @param sprite        The sprite index to use in the beam
@@ -481,6 +534,9 @@ native te_create_following_beam(entity, sprite, life = 10, width = 10, r = 0, g 
 /**
  * Displays a glowing sprite.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=4m43s
+ *
  * @param position      Sprite position
  * @param sprite        Sprite index
  * @param scale         Sprite scale (0 - 255)
@@ -501,6 +557,8 @@ native te_display_glow_sprite(position[3], sprite, scale = 10, size = 10, bright
  * Creates a beam ring between two entities.
  *
  * @note A common sprite to use is "sprites/laserbeam.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=5m10s
  *
  * @param startent      Primary entity id
  * @param endent        Secondary entity id
@@ -530,6 +588,9 @@ native te_create_beam_ring_between_entities(startent, endent, sprite, startframe
 /**
  * Creates an oriented shower of tracers.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=5m34s
+ *
  * @param position      Position of the effect
  * @param direction     Effect direction
  * @param color         Effect color (https://wiki.alliedmods.net/images/Palette.png)
@@ -549,6 +610,9 @@ native te_create_tracer_shower(position[3], direction[3] = {0, 0, 0}, color = 12
 
 /**
  * Creates a dynamic light with a world effect.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=5m47s
  *
  * @param position      Position of the light
  * @param radius        Light radius (0 - 255)
@@ -570,6 +634,9 @@ native te_create_dynamic_light(position[3], radius = 10, r = 255, g = 255, b = 2
 
 /**
  * Creates a point entity light with no world effect.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=6m7s
  *
  * @param entity        Entity or client to apply the light on
  * @param position      Position of the light
@@ -593,6 +660,9 @@ native te_create_entity_light(entity, position[3] = {0, 0, 0}, radius = 50, r = 
 /**
  * Draws a simple line.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=6m32s
+ *
  * @param startpos      Starting position of the line
  * @param endpos        Ending position of the line
  * @param life          Line life
@@ -612,6 +682,9 @@ native te_draw_line(startpos[3], endpos[3], life = 10, r = 0, g = 0, b = 255, re
 
 /**
  * Creates a simple box.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=6m45s
  *
  * @param startpos      Starting position of the box
  * @param endpos        Ending position of the box
@@ -633,6 +706,9 @@ native te_create_box(startpos[3], endpos[3], life = 10, r = 0, g = 0, b = 255, r
 /**
  * Removes all beams attached to an entity.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=7m7s
+ *
  * @param entity        Entity id to remove attached beams from
  * @param receiver      Client index that will be able to see the changes
  *                      or 0 for all clients
@@ -648,6 +724,9 @@ native te_remove_all_beams_from_entity(entity, receiver = 0, bool:reliable = tru
 /**
  * Creates a large group of sprites or models accompanied by green dots
  * that float up or down until they reach the point set in the "position" argument.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=7m10s
  *
  * @param position      Effect position
  * @param sprite        Sprite index to use
@@ -668,6 +747,9 @@ native te_create_large_funnel(position[3], sprite, flag = LF_FLOAT_DOWN, receive
 /**
  * Creates dripping blood particles.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=7m35s
+ *
  * @param position      Starting position of the blood
  * @param direction     Blood direction
  * @param color         Blood color (https://wiki.alliedmods.net/images/Palette.png)
@@ -687,6 +769,9 @@ native te_create_bloodstream(position[3], direction[3] = {0, 0, 0}, color = 78, 
  * Draws a line of blood particles spread 5 units from each other that
  * disappears after 30 seconds.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=7m53s
+ *
  * @param startpos      Starting position of the line
  * @param endpos        Ending position of the line
  * @param receiver      Client index that will be able to see the line
@@ -702,6 +787,9 @@ native te_draw_blood_line(startpos[3], endpos[3], receiver = 0, bool:reliable = 
 
 /**
  * Sprays blood particles from a given point.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=7m59s
  *
  * @param position      Position from where the blood will be sprayed
  * @param direction     Blood spraying direction
@@ -721,6 +809,9 @@ native te_spray_blood(position[3], direction[3] = {0, 0, 0}, color = 78, speed =
 /**
  * Applies a decal to a brush entity (not the world).
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=8m12s
+ *
  * @param position      Position of the decal (center of texture in world)
  * @param texture       Texture index of precached decal texture name (0 - 511)
  * @param entity        Entity index to apply the decal to
@@ -737,6 +828,9 @@ native te_place_brush_decal(position[3], texture, entity = 0, receiver = 0, bool
 
 /**
  * Creates a moving model or sprite that bounces and makes a sound when it hits.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=8m16s
  *
  * @param position      Position of the model
  * @param modelid       Model index
@@ -761,6 +855,9 @@ native te_create_bouncing_model(position[3], modelid, velocity[3] = {0, 0, 0}, y
 /**
  * Creates model or sprite with a blinking orange aura effect.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=8m28s
+ *
  * @param position      Position of the model
  * @param modelid       Model index
  * @param speed         Model speed
@@ -779,6 +876,9 @@ native te_create_explode_model(position[3], modelid, speed = 0, count = 1, life 
 
 /**
  * Creates a model or sprite entity that slowly disappears until it's gone.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ
  *
  * @param position      Position of the model
  * @param size          Size of the model
@@ -811,6 +911,9 @@ native te_create_break_model(position[3], modelid, size[3] = {50, 50, 50}, veloc
 /**
  * Places a gunshot decal on an entity or the world and plays a ricochet sound.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=8m41s
+ *
  * @param position      Position of the decal
  * @param decal         Decal index (0 - 255)
  * @param entity        Entity to apply the decal to or 0 for world
@@ -827,6 +930,9 @@ native te_place_gunshot_decal(position[3], decal = 41, entity = 0, receiver = 0,
 
 /**
  * Creates a spray of alpha sprites or models.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=8m52s
  *
  * @param position      Position of the effect
  * @param sprite        Sprite index
@@ -849,6 +955,9 @@ native te_create_sprite_spray(position[3], sprite, velocity[3] = {0, 0, 0}, coun
 /**
  * Creates a quick spray sprite with a ricochet sound.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=9m3s
+ *
  * @param position      Position of the effect
  * @param scale         Scale of the effect (0 - 255)
  * @param receiver      Client index that will be able to see the effect
@@ -864,6 +973,9 @@ native te_create_armor_ricochet(position[3], scale = 10, receiver = 0, bool:reli
 
 /**
  * Places a player spray on an entity or the world.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=9m16s
  *
  * @param position      Position of the decal
  * @param decal         Decal index (0 - 255)
@@ -883,6 +995,8 @@ native te_place_player_spray(position[3], player, spray = 0, entity = 0, receive
  * Creates alpha sprites or models inside of a box that float upwards.
  *
  * @note A common sprite to use is "sprites/bubble.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=9m22s
  *
  * @param startpos      Start position
  * @param endpos        End position
@@ -905,6 +1019,8 @@ native te_create_bubble_box(startpos[3], endpos[3], sprite, count = 3, randomnes
  * Creates alpha sprites or models along a line that float upwards.
  *
  * @note A common sprite to use is "sprites/bubble.spr"
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=9m37s
  *
  * @param startpos      Start position
  * @param endpos        End position
@@ -926,6 +1042,9 @@ native te_create_bubble_line(startpos[3], endpos[3], sprite, count = 3, randomne
 /**
  * Creates an spray of opaque sprites or models that fall to another sprite or model.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=9m44s
+ *
  * @param position      Effect position
  * @param sprite1id     Primary sprite index
  * @param sprite2id     Secondary sprite index
@@ -946,6 +1065,8 @@ native te_display_falling_sprite(position[3], sprite1id, sprite2id, color = 78, 
  * Applies a decal to the world brush.
  *
  * @note Using a decal index that doesn't exist will crash the client.
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=9m56s
  *
  * @param position      Decal position (center of texture in world)
  * @param texture       Texture index of precached decal texture name (0 - 511)
@@ -962,6 +1083,9 @@ native te_place_world_decal(position[3], texture, receiver = 0, bool:reliable = 
 
 /**
  * Creates a nail-like projectile.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=10m12s
  *
  * @param position      Projectile position
  * @param velocity      Projectile velocity
@@ -982,6 +1106,9 @@ native te_create_projectile(position[3], velocity[3], model, life = 30, owner = 
 
 /**
  * Creates a shower of sprites or models.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=10m27s
  *
  * @param position      Effect position
  * @param model         Model index that will be used for the effect
@@ -1005,6 +1132,9 @@ native te_create_sprite_shower(position[3], model, direction[3] = {0, 0, 0}, cou
 /**
  * Emits sprites or models from a player's bounding box.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=10m39s
+ *
  * @param player        Client index to emit the sprites from (can't be 0)
  * @param sprite        Sprite index
  * @param count         Number of sprites to generate (0 - 255)
@@ -1023,6 +1153,9 @@ native te_emit_sprite_from_player(player, sprite, count = 1, variance = 0, recei
 /**
  * Creates a particle burst similar to te_create_lava_splash.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=10m55s
+ *
  * @param position      Effect position
  * @param radius        Effect radius
  * @param color         Particle color (https://wiki.alliedmods.net/images/Palette.png)
@@ -1040,6 +1173,9 @@ native te_create_particle_burst(position[3], radius = 30, color = 106, duration 
 
 /**
  * Creates a field of fire.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=11m7s
  *
  * @param position      Effect position
  * @param sprite        Sprite or model index to use for the fire
@@ -1066,6 +1202,9 @@ native te_create_fire_field(position[3], sprite, radius = 5, count = 1, duration
 /**
  * Attaches a temporary entity model to a client.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=11m16s
+ *
  * @param player        Client index to attach the model to
  * @param model         Model index
  * @param offset        Vertical offset (attachment origin.z = player origin.z + vertical offset)
@@ -1084,6 +1223,9 @@ native te_attach_model_to_player(player, model, offset = 0, life = 5, receiver =
 /**
  * Kills all temporary entity models attached to a client.
  *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=11m24s
+ *
  * @param player        Client index to remove the attachments from
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
@@ -1094,7 +1236,7 @@ native te_attach_model_to_player(player, model, offset = 0, life = 5, receiver =
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_kill_all_player_attachments(player, receiver = 0, bool:reliable = true)
+native te_remove_all_player_attachments(player, receiver = 0, bool:reliable = true)
 
 /**
  * Much more compact shotgun shot native.
@@ -1104,6 +1246,8 @@ native te_kill_all_player_attachments(player, receiver = 0, bool:reliable = true
  *       of a spread is a good candidate for MULTIGUNSHOT use. (shotguns)
  * @note This effect makes the client do traces for each bullet, these client
  *       traces ignore entities that have studio models. Traces are 4096 long.
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=11m27s
  *
  * @param position      Gunshot position
  * @param direction     Gunshot direction
@@ -1124,6 +1268,9 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
 
 /**
  * Creates a tracer effect and allows more customization than te_create_tracer.
+ *
+ * @note Video preview of this and all other te_ natives can be found here:
+ *       https://youtu.be/szW-bSMPuyQ?t=11m36s
  *
  * @param position      Effect position
  * @param velocity      Effect velocity

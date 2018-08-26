@@ -1245,8 +1245,9 @@ stock bool:cs_is_valid_itemid(id, bool:weapon_only = false)
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
- * @return              0 if "id" is non-zero and the client isn't connected,
- *                      1 otherwise
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
  */
 native cs_draw_progress_bar(id, duration, startpercent = 0, bool:reliable = true)
 
@@ -1260,8 +1261,9 @@ native cs_draw_progress_bar(id, duration, startpercent = 0, bool:reliable = true
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
- * @return              0 if "id" is non-zero and the client isn't connected,
- *                      1 otherwise
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
  */
 native cs_play_reload_sound(id, bool:shotgun = false, volume = 100, bool:reliable = true)
 
@@ -1284,8 +1286,9 @@ native cs_play_reload_sound(id, bool:shotgun = false, volume = 100, bool:reliabl
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
- * @return              0 if "id" is non-zero and the client isn't connected,
- *                      1 otherwise
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
  */
 native cs_set_hud_icon(id, active = 0, sprite[] = "", alpha = 100, flashrate = 0, flashdelay = 0, bool:reliable = true)
 
@@ -1300,8 +1303,9 @@ native cs_set_hud_icon(id, active = 0, sprite[] = "", alpha = 100, flashrate = 0
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
- * @return              0 if "id" is non-zero and the client isn't connected,
- *                      1 otherwise
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
  */
 native cs_set_user_shadow(id, shadowid = 0, bool:reliable = true)
 

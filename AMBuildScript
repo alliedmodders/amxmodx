@@ -20,6 +20,7 @@ class AMXXConfig(object):
     self.utf8rewind = None
     self.csx_app = None
     self.stdcxx_path = None
+    self.nasm_path = None
 
   def use_auto_versioning(self):
     if builder.backend != 'amb2':
@@ -104,6 +105,31 @@ class AMXXConfig(object):
           break
       if not self.mysql_path:
         raise Exception('Could not find MySQL! Try passing --mysql to configure.py.')
+
+  def detectNASM(self):
+    import subprocess
+
+    nasm_paths = [
+      getattr(builder.options, 'nasm_path', 'nasm'),
+    ]
+    if builder.target_platform == 'windows':
+      nasm_paths += [os.path.join(
+        builder.sourcePath,
+        'build_deps',
+        'nasm',
+        'nasm.exe')
+      ]
+
+    for nasm_path in nasm_paths:
+      try:
+        subprocess.check_output([nasm_path, '-v'])
+        self.nasm_path = nasm_path
+        break
+      except:
+        pass
+
+    if self.nasm_path is None:
+      raise Exception('Could not find a suitable path for nasm')
 
   # Returns list of lines of output from the compiler
   @staticmethod
@@ -369,11 +395,42 @@ class AMXXConfig(object):
     binary = context.compiler.Program(name)
     return self.AddVersioning(binary)
 
+  def AddAssembly(self, context, binary, input_file, output_file, includes=[], extra_argv=[]):
+    if builder.target_platform == 'windows':
+      obj_type = 'win32'
+    elif builder.target_platform == 'linux':
+      obj_type = 'elf32'
+    elif builder.target_platform == 'mac':
+      obj_type = 'macho32'
+
+    input_path = os.path.join(context.currentSourcePath, input_file)
+    output_path = output_file
+
+    argv = [
+      self.nasm_path,
+      '-I{0}{1}'.format(context.currentSourcePath, os.sep),
+      input_path,
+      '-f', obj_type,
+      '-o', output_path,
+    ] + extra_argv
+
+    extra_includes = []
+    for include_file in includes:
+      extra_includes.append(os.path.join(context.currentSourcePath, include_file))
+
+    cmd_node, output_nodes = context.AddCommand(
+      inputs = [input_path] + extra_includes,
+      argv = argv,
+      outputs = [output_path])
+
+    binary.compiler.linkflags += [output_nodes[0]]
+
 AMXX = AMXXConfig()
 AMXX.detectProductVersion()
 AMXX.detectMetamod()
 AMXX.detectHlsdk()
 AMXX.detectMysql()
+AMXX.detectNASM()
 AMXX.configure()
 
 if AMXX.use_auto_versioning():

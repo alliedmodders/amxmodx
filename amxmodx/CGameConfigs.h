@@ -12,6 +12,7 @@
 
 #include <IGameConfigs.h>
 #include "CLibrarySys.h"
+#include <amtl/am-autoptr.h>
 #include <amtl/am-vector.h>
 #include <amtl/am-string.h>
 #include <amtl/am-refcounting.h>

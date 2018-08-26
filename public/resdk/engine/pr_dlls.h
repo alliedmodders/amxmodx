@@ -25,25 +25,24 @@
 *    version.
 *
 */
+
 #pragma once
 
-#include "archtypes.h"
+const int MAX_EXTENSION_DLL = 50;
 
-typedef void(*xcommand_t)(void);
-typedef struct cmd_function_s
+typedef struct functiontable_s
 {
-	struct cmd_function_s *next;
-	const char *name;
-	xcommand_t function;
-	int flags;
-} cmd_function_t;
+	uint32 pFunction;
+	char *pFunctionName;
+} functiontable_t;
 
-typedef enum cmd_source_s
+typedef struct extensiondll_s
 {
-	src_client = 0,		// came in over a net connection as a clc_stringcmd. host_client will be valid during this state.
-	src_command = 1,	// from the command buffer.
-} cmd_source_t;
+	void *lDLLHandle;
+	functiontable_t *functionTable;
+	int functionCount;
+} extensiondll_t;
 
-#define FCMD_HUD_COMMAND		BIT(0)
-#define FCMD_GAME_COMMAND		BIT(1)
-#define FCMD_WRAPPER_COMMAND	BIT(2)
+typedef void(*ENTITYINIT)(struct entvars_s *);
+typedef void(*DISPATCHFUNCTION)(struct entvars_s *, void *);
+typedef void(*FIELDIOFUNCTION)(SAVERESTOREDATA *, const char *, void *, TYPEDESCRIPTION *, int);

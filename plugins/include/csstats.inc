@@ -12,12 +12,16 @@
 #endif
 #define _csstats_included
 
+#include <csstats_const>
+
 /**
  * Retrieves the client's current weapon statistics.
  *
  * @note For a list of default CS weapon ids see the CSW_* constants in
  *       amxconst.inc, this function also works on custom weapons.
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATSX_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -39,7 +43,7 @@
  * @error           If an invalid client index or weapon id is provided, an
  *                  error will be thrown.
  */
-native get_user_wstats(index, wpnindex, stats[8], bodyhits[8]);
+native get_user_wstats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS]);
 
 /**
  * Retrieves the client's weapon statistics from the current round.
@@ -47,6 +51,8 @@ native get_user_wstats(index, wpnindex, stats[8], bodyhits[8]);
  * @note For a list of default CS weapon ids see the CSW_* constants in
  *       amxconst.inc, this function also works on custom weapons.
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATSX_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -68,7 +74,7 @@ native get_user_wstats(index, wpnindex, stats[8], bodyhits[8]);
  * @error           If an invalid client index or weapon id is provided, an
  *                  error will be thrown.
  */
-native get_user_wrstats(index, wpnindex, stats[8], bodyhits[8]);
+native get_user_wrstats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS]);
 
 /**
  * Retrieves the client's weapon statistics from the permanent storage on the
@@ -79,6 +85,8 @@ native get_user_wrstats(index, wpnindex, stats[8], bodyhits[8]);
  *       "data/csstats.amxx". By default it uses the difference of kills to
  *       deaths/teamkills.
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATSX_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -99,12 +107,14 @@ native get_user_wrstats(index, wpnindex, stats[8], bodyhits[8]);
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_stats(index, stats[8], bodyhits[8]);
+native get_user_stats(index, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS]);
 
 /**
  * Retrieves the client's statistics from the current round.
  *
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATSX_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -123,13 +133,15 @@ native get_user_stats(index, stats[8], bodyhits[8]);
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_rstats(index, stats[8], bodyhits[8]);
+native get_user_rstats(index, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS]);
 
 /**
  * Retrieves the client's statistics inflicted upon another client from the
  * current round.
  *
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATSX_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -153,13 +165,15 @@ native get_user_rstats(index, stats[8], bodyhits[8]);
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_vstats(index, victim, stats[8], bodyhits[8], wpnname[] = "", len = 0);
+native get_user_vstats(index, victim, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS], wpnname[] = "", len = 0);
 
 /**
  * Retrieves the client's statistics received from another client from the
  * current round.
  *
  * @note For a list of possible body hitplaces see the HIT_* constants in
+ *       amxconst.inc
+ * @note For a list of possible stat constants see the STATSX_* constants in
  *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
@@ -183,7 +197,7 @@ native get_user_vstats(index, victim, stats[8], bodyhits[8], wpnname[] = "", len
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_astats(index, wpnindex, stats[8], bodyhits[8], wpnname[] = "", len = 0);
+native get_user_astats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS], wpnname[] = "", len = 0);
 
 /**
  * Resets the current round weapon, attacker and victim statistics.
@@ -206,6 +220,8 @@ native reset_user_wstats(index);
  *       deaths/teamkills.
  * @note For a list of possible body hitplaces see the HIT_* constants in
  *       amxconst.inc
+ * @note For a list of possible stat constants see the STATSX_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - Kills
  *          1 - Deaths
@@ -227,7 +243,7 @@ native reset_user_wstats(index);
  * @return              Next rank index (> 0 and > index), or 0 if no more
  *                      statistics exist
  */
-native get_stats(index, stats[8], bodyhits[8], name[], len, authid[] = "", authidlen = 0);
+native get_stats(index, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS], name[], len, authid[] = "", authidlen = 0);
 
 /**
  * Returns the number of all entries in the permanent statistics storage.
@@ -240,6 +256,8 @@ native get_statsnum();
  * Retrieves the client's objective statistics from the permanent storage.
  *
  * @note The permanent storage is updated on every respawn or client disconnect.
+ * @note For a list of possible stat constants see the STATSX_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - total defusions
  *          1 - bomb defused
@@ -254,13 +272,15 @@ native get_statsnum();
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_stats2(index, stats[4]);
+native get_user_stats2(index, stats[STATSX_MAX_OBJECTIVE]);
 
 /**
  * Retrieves objective statistics from the permanent storage on the server via
  * iterative, incremental access.
  *
  * @note The permanent storage is updated on every respawn or client disconnect.
+ * @note For a list of possible stat constants see the STATSX_* constants in
+ *       amxconst.inc
  * @note The fields in the statistics are:
  *          0 - total defusions
  *          1 - bomb defused
@@ -275,4 +295,4 @@ native get_user_stats2(index, stats[4]);
  * @return              Next rank index (> 0 and > index), or 0 if no more
  *                      statistics exist
  */
-native get_stats2(index, stats[4], authid[] = "", authidlen = 0);
+native get_stats2(index, stats[STATSX_MAX_OBJECTIVE], authid[] = "", authidlen = 0);

@@ -25,25 +25,41 @@
 *    version.
 *
 */
+
 #pragma once
 
-#include "archtypes.h"
-
-typedef void(*xcommand_t)(void);
-typedef struct cmd_function_s
+class CBaseEntity;
+class CCSEntity
 {
-	struct cmd_function_s *next;
-	const char *name;
-	xcommand_t function;
-	int flags;
-} cmd_function_t;
+public:
+	virtual ~CCSEntity() {}
+	virtual void FireBullets(int iShots, Vector &vecSrc, Vector &vecDirShooting, Vector &vecSpread, float flDistance, int iBulletType, int iTracerFreq, int iDamage, entvars_t *pevAttacker);
+	virtual Vector FireBullets3(Vector &vecSrc, Vector &vecDirShooting, float vecSpread, float flDistance, int iPenetration, int iBulletType, int iDamage, float flRangeModifier, entvars_t *pevAttacker, bool bPistol, int shared_rand);
 
-typedef enum cmd_source_s
+public:
+	CBaseEntity *m_pContainingEntity;
+};
+
+class CCSDelay: public CCSEntity
 {
-	src_client = 0,		// came in over a net connection as a clc_stringcmd. host_client will be valid during this state.
-	src_command = 1,	// from the command buffer.
-} cmd_source_t;
+public:
 
-#define FCMD_HUD_COMMAND		BIT(0)
-#define FCMD_GAME_COMMAND		BIT(1)
-#define FCMD_WRAPPER_COMMAND	BIT(2)
+};
+
+class CCSAnimating: public CCSDelay
+{
+public:
+
+};
+
+class CCSToggle: public CCSAnimating
+{
+public:
+
+};
+
+class CCSMonster: public CCSToggle
+{
+public:
+
+};

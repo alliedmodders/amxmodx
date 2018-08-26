@@ -325,6 +325,32 @@ static cell AMX_NATIVE_CALL set_user_rendering(AMX *amx, cell *params) // set_us
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_user_rendering(AMX *amx, cell *params) // get_user_rendering(index, &fx = kRenderFxNone, &r = 0, &g = 0, &b = 0, &render = kRenderNormal, &amount = 0); = 7 arguments
+{
+	// Gets user rendering.
+	// params[1] = index
+	// params[2] = fx
+	// params[3] = r
+	// params[4] = g
+	// params[5] = b
+	// params[6] = render
+	// params[7] = amount
+
+	// Check index
+	CHECK_PLAYER(params[1]);
+
+	// Fetch player pointer
+	edict_t *pPlayer = TypeConversion.id_to_edict(params[1]);
+
+	*MF_GetAmxAddr(amx, params[2]) = pPlayer->v.renderfx;
+	*MF_GetAmxAddr(amx, params[3]) = pPlayer->v.rendercolor[0];
+	*MF_GetAmxAddr(amx, params[4]) = pPlayer->v.rendercolor[1];
+	*MF_GetAmxAddr(amx, params[5]) = pPlayer->v.rendercolor[2];
+	*MF_GetAmxAddr(amx, params[6]) = pPlayer->v.rendermode;
+	*MF_GetAmxAddr(amx, params[7]) = pPlayer->v.renderamt;
+	
+	return 1;
+}
 
 static cell AMX_NATIVE_CALL set_user_maxspeed(AMX *amx, cell *params) // set_user_maxspeed(index, Float:speed = -1.0) = 2 arguments
 {
@@ -548,6 +574,7 @@ AMX_NATIVE_INFO fun_Exports[] = {
 	{"set_user_armor",			set_user_armor},
 	{"set_user_origin",			set_user_origin},
 	{"set_user_rendering",		set_user_rendering},
+	{"get_user_rendering",		get_user_rendering},
 	{"set_user_maxspeed",		set_user_maxspeed},
 	{"get_user_maxspeed",		get_user_maxspeed},
 	{"set_user_gravity",		set_user_gravity},

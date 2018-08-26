@@ -25,25 +25,41 @@
 *    version.
 *
 */
+
 #pragma once
 
-#include "archtypes.h"
+#include "IObjectContainer.h"
 
-typedef void(*xcommand_t)(void);
-typedef struct cmd_function_s
-{
-	struct cmd_function_s *next;
-	const char *name;
-	xcommand_t function;
-	int flags;
-} cmd_function_t;
+class ObjectList: public IObjectContainer {
+public:
+	EXT_FUNC void Init();
+	EXT_FUNC bool Add(void *newObject);
+	EXT_FUNC void *GetFirst();
+	EXT_FUNC void *GetNext();
 
-typedef enum cmd_source_s
-{
-	src_client = 0,		// came in over a net connection as a clc_stringcmd. host_client will be valid during this state.
-	src_command = 1,	// from the command buffer.
-} cmd_source_t;
+	ObjectList();
+	virtual ~ObjectList();
 
-#define FCMD_HUD_COMMAND		BIT(0)
-#define FCMD_GAME_COMMAND		BIT(1)
-#define FCMD_WRAPPER_COMMAND	BIT(2)
+	EXT_FUNC void Clear(bool freeElementsMemory = false);
+	EXT_FUNC int CountElements();
+	void *RemoveTail();
+	void *RemoveHead();
+
+	bool AddTail(void *newObject);
+	bool AddHead(void *newObject);
+	EXT_FUNC bool Remove(void *object);
+	EXT_FUNC bool Contains(void *object);
+	EXT_FUNC bool IsEmpty();
+
+	typedef struct element_s {
+		struct element_s *prev;	// pointer to the last element or NULL
+		struct element_s *next;	// pointer to the next elemnet or NULL
+		void *object;		// the element's object
+	} element_t;
+
+protected:
+	element_t *m_head;    // first element in list
+	element_t *m_tail;    // last element in list
+	element_t *m_current; // current element in list
+	int m_number;
+};

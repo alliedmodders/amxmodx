@@ -275,6 +275,7 @@ scripting_files = [
   'include/amxmodx.inc',
   'include/core.inc',
   'include/csstats.inc',
+  'include/csstats_const.inc',
   'include/cstrike.inc',
   'include/cstrike_const.inc',
   'include/csx.inc',

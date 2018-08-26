@@ -657,10 +657,11 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 		pPlayer->Init(pEdictList + i, i);
 	}
 
+	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
+
 	executeForwards(FF_PluginInit);
 	executeForwards(FF_PluginCfg);
 
-	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
 	CoreCfg.ExecuteAutoConfigs();   // Execute configs created with AutoExecConfig native.
 	CoreCfg.SetMapConfigTimer(6.1); // Prepare per-map configs to be executed 6.1 seconds later.
 	                                // Original value which was used in admin.sma.
@@ -1433,8 +1434,15 @@ int	C_Cmd_Argc(void)
 // Only	here we	may	find out who is	an owner.
 void C_SetModel(edict_t *e, const char *m)
 {
-	if (e->v.owner && m[7]=='w' && m[8]=='_' && m[9]=='h')
-		g_grenades.put(e, 1.75, 4, GET_PLAYER_POINTER(e->v.owner));
+	if (!m || strcmp(m, "models/w_hegrenade.mdl") != 0)
+	{
+		RETURN_META(MRES_IGNORED);
+	}
+
+	if (e->v.owner)
+	{
+		g_grenades.put(e, 1.75f, 4, GET_PLAYER_POINTER(e->v.owner));
+	}
 
 	RETURN_META(MRES_IGNORED);
 }

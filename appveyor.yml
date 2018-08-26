@@ -3,6 +3,11 @@ clone_folder: c:\projects\amxmodx
 install:
 - git submodule update --init --recursive
 - 'c:'
+- mkdir c:\nasm
+- set PATH=c:\nasm\nasm-2.13.03;%PATH%
+- curl -o "c:\nasm\nasm.zip" http://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip
+- chdir c:\nasm
+- 7z x nasm.zip
 - chdir c:\projects
 - git clone https://github.com/alliedmodders/ambuild
 - git clone https://github.com/alliedmodders/metamod-hl1
@@ -22,5 +27,5 @@ build_script:
 - '"%VS120COMNTOOLS%\vsvars32.bat"'
 - mkdir build
 - cd build
-- c:\python27\python ../configure.py --enable-optimize
+- c:\python27\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"
 - c:\python27\scripts\ambuild

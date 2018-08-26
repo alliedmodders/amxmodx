@@ -29,12 +29,12 @@
 
 #include <amxmodx>
 
-#define KILLS	stats[0]
-#define DEATHS	stats[1]
-#define TK		stats[3]
-#define SCORE	stats[7]
+#define KILLS	stats[DODX_KILLS]
+#define DEATHS	stats[DODX_DEATHS]
+#define TK		stats[DODX_TEAMKILLS]
+#define SCORE	stats[DODX_POINTS]
 
-public get_score(stats[9],body[8]){
+public get_score(stats[DODX_MAX_STATS],body[MAX_BODYHITS]){
 	if (!DEATHS)
 		DEATHS = 1
 

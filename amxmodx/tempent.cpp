@@ -1259,7 +1259,7 @@ static cell AMX_NATIVE_CALL te_attach_model_to_player(AMX *amx, cell *params)
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL te_kill_all_player_attachments(AMX *amx, cell *params)
+static cell AMX_NATIVE_CALL te_remove_all_player_attachments(AMX *amx, cell *params)
 {
 	int index = params[2];
 
@@ -1380,7 +1380,7 @@ AMX_NATIVE_INFO tempent_Natives[] =
 	{"te_create_particle_burst",				te_create_particle_burst},
 	{"te_create_fire_field",					te_create_fire_field},
 	{"te_attach_model_to_player",				te_attach_model_to_player},
-	{"te_kill_all_player_attachments",			te_kill_all_player_attachments},
+	{"te_remove_all_player_attachments",		te_remove_all_player_attachments},
 	{"te_create_multi_gunshot",					te_create_multi_gunshot},
 	{"te_create_user_tracer",					te_create_user_tracer},
 	{NULL,										NULL},

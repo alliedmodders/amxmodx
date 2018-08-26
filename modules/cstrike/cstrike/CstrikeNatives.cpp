@@ -2011,7 +2011,9 @@ static cell AMX_NATIVE_CALL cs_draw_progress_bar(AMX *amx, cell *params)
 	int index = params[1];
 
 	if(index)
+	{
 		CHECK_PLAYER(index);
+	}
 
 	int startpercent = params[3];
 
@@ -2030,7 +2032,9 @@ static cell AMX_NATIVE_CALL cs_play_reload_sound(AMX *amx, cell *params)
 	int index = params[1];
 
 	if(index)
+	{
 		CHECK_PLAYER(index);
+	}
 
 	MESSAGE_BEGIN(get_msg_destination(index, params[4] != 0), MessageIdReloadSound, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
 		WRITE_BYTE(params[3]);
@@ -2045,7 +2049,9 @@ static cell AMX_NATIVE_CALL cs_set_hud_icon(AMX *amx, cell *params)
 	int index = params[1];
 
 	if(index)
+	{
 		CHECK_PLAYER(index);
+	}
 
 	int active = params[2];
 
@@ -2080,7 +2086,9 @@ static cell AMX_NATIVE_CALL cs_set_user_shadow(AMX *amx, cell *params)
 	int index = params[1];
 
 	if(index)
+	{
 		CHECK_PLAYER(index);
+	}
 
 	MESSAGE_BEGIN(get_msg_destination(index, params[3] != 0), MessageIdShadowIdx, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
 		WRITE_LONG(params[2]);

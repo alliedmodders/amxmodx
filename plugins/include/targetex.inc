@@ -38,16 +38,14 @@ enum TargetexTeams
 {
 	TARGETEX_E_CODE[5],
 	TARGETEX_E_NAME[10],
-	TARGETEX_E_SUFFIX[6],
-	TARGETEX_E_LEN,
-	TARGETEX_E_LEN_PLUS_ONE,
+	TARGETEX_E_LEN
 }
 
 static const Targetex_Teams[][TargetexTeams] =
 {
-	{ "t", "TERRORIST", "_T" },
-	{ "ct", "CT", "_CT" },
-	{ "spec", "SPECTATOR", "_SPEC" }
+	{ "ct", "CT" },
+	{ "t", "TERRORIST" },
+	{ "spec", "SPECTATOR" }
 }
 
 /**
@@ -81,9 +79,6 @@ static const Targetex_Teams[][TargetexTeams] =
  *       except the admin that used the command.
  * @note The "name" argument is used to store the matched client's name
  *       or one of the translations found in the targetex.txt dictionary.
- *       If only one client is matched, the "name" argument will be equal
- *       to the matched client's name, otherwise it will contain a translated
- *       string which you can directly add in your message by using %s.
  *
  * @param id        Client index of admin performing an action
  * @param arg       Target pattern
@@ -113,10 +108,7 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 		register_dictionary("targetex.txt")
 
 		for(new i; i < sizeof(Targetex_Teams); i++)
-		{
 			Targetex_Teams[i][TARGETEX_E_LEN] = strlen(Targetex_Teams[i][TARGETEX_E_CODE]);
-			Targetex_Teams[i][TARGETEX_E_LEN_PLUS_ONE] = Targetex_Teams[i][TARGETEX_E_LEN] + 1;
-		}
 
 		for(new i; i < sizeof(TargetEx_GroupArguments); i++)
 			TargetEx_ArgLens[i] = strlen(TargetEx_GroupArguments[i]);
@@ -137,7 +129,7 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 		}
 		else if(bExceptMe)
 		{
-			console_print(id, "%L", id, "TARGETEX_NO_EXCEPT", arg);
+			console_print(id, "%L", id, "TARGETEX_NO_EXCLUDE", arg[2]);
 			return 0;
 		}
 
@@ -152,25 +144,29 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 		if(flags & TARGETEX_NO_BOTS)
 			iMatchingFlags |= GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV;
 
-		new szLangKey[32], szSuffix[6], iArgLen = strlen(arg);
+		new szLangKey[32], szSuffix[6], iArgLen = strlen(arg)
 		new iArgLen2 = iArgLen - (bExceptMe ? 1 : 0);
 
 		for(new i; i < sizeof(Targetex_Teams); i++)
 		{
 			if(equal(arg[iArgLen - Targetex_Teams[i][TARGETEX_E_LEN]], Targetex_Teams[i][TARGETEX_E_CODE]))
 			{
+				szSuffix = "_TEAM";
 				iMatchingFlags |= GetPlayers_MatchTeam;
-				copy(szSuffix, charsmax(szSuffix), Targetex_Teams[i][TARGETEX_E_SUFFIX]);
 				copy(szMatchingString, charsmax(szMatchingString), Targetex_Teams[i][TARGETEX_E_NAME]);
 
-				if(iArgLen2 == Targetex_Teams[i][TARGETEX_E_LEN_PLUS_ONE])
+				if(iArgLen2 == Targetex_Teams[i][TARGETEX_E_LEN] + 1)
 				{
 					copy(szLangKey, charsmax(szLangKey), "TARGETEX_ARG_ALL");
 					get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
-					goto @AFTER_ARGS;
 				}
+
+				break;
 			}
 		}
+
+		if(szLangKey[0])
+			goto @AFTER_ARGS;
 
 		if(equal(arg[iStartArg], "aim", 3))
 		{
@@ -278,16 +274,19 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 
 		switch(iMatchedPlayers)
 		{
-			case 0: console_print(id, "%L", id, "TARGETEX_NO_MATCHES")
+			case 0: console_print(id, "%L", id, "TARGETEX_NO_MATCHES");
 			case 1: get_user_name(players[0], name, len);
 			default:
 			{
 				if(szSuffix[0])
+				{
 					add(szLangKey, charsmax(szLangKey), szSuffix);
+					formatex(name, len, "%L", LANG_PLAYER, szLangKey, szMatchingString);
+				}
+				else formatex(name, len, "%L", LANG_PLAYER, szLangKey);
 
 				if(bExceptMe)
-					formatex(name, len, "%L %L", LANG_PLAYER, szLangKey, LANG_PLAYER, "TARGETEX_EXCEPT_HIMSELF");
-				else formatex(name, len, "%L", LANG_PLAYER, szLangKey);
+					add(name, len, fmt(" %L", LANG_PLAYER, "TARGETEX_EXCEPT_HIMSELF"));
 			}
 		}
 
@@ -313,6 +312,12 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 
 		if(players[0])
 		{
+			if(flags & TARGETEX_NO_ALIVE && is_user_alive(players[0]))
+			{
+				console_print(id, "%L", id, "TARGETEX_NO_ALIVE");
+				return 0;
+			}
+
 			get_user_name(players[0], name, len);
 			return 1;
 		}

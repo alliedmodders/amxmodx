@@ -479,6 +479,7 @@ md -p JIT 2&gt;NUL
     <None Include="..\..\plugins\include\messages.inc" />
     <None Include="..\..\plugins\include\sorting.inc" />
     <None Include="..\..\plugins\include\string.inc" />
+    <None Include="..\..\plugins\include\targetex.inc" />
     <None Include="..\..\plugins\include\time.inc" />
     <None Include="..\..\plugins\include\vault.inc" />
     <None Include="..\..\plugins\include\vector.inc" />

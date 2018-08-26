@@ -648,6 +648,9 @@
     <None Include="..\..\plugins\include\string.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\plugins\include\targetex.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
     <None Include="..\..\plugins\include\time.inc">
       <Filter>Pawn Includes</Filter>
     </None>

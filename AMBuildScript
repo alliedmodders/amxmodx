@@ -399,7 +399,7 @@ class AMXXConfig(object):
     if builder.target_platform == 'windows':
       obj_type = 'win32'
     elif builder.target_platform == 'linux':
-      obj_type = 'elf'
+      obj_type = 'elf32'
     elif builder.target_platform == 'mac':
       obj_type = 'macho32'
 

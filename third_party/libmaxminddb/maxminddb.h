@@ -17,6 +17,9 @@ extern "C" {
 #define _POSIX_C_SOURCE 200809L
 #endif
 
+/* libmaxminddb package version from configure */
+#define PACKAGE_VERSION "1.3.2"
+
 #include "maxminddb_config.h"
 #include <stdarg.h>
 #include <stdbool.h>
@@ -27,8 +30,6 @@ extern "C" {
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
-/* libmaxminddb package version from configure */
-#define PACKAGE_VERSION "1.3.2"
 
 typedef ADDRESS_FAMILY sa_family_t;
 

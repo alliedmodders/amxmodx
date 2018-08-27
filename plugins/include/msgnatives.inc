@@ -172,6 +172,7 @@ native send_geiger_signal(id, distance, bool:reliable = true)
  */
 
 native fade_user_screen(id, Float:duration = 1.0, Float:fadetime = 0.5, ScreenFadeFlags:flags = ScreenFade_FadeIn, r = 0, g = 0, b = 255, a = 75, bool:reliable = true)
+
 /**
  * Shakes the client's screen.
  *

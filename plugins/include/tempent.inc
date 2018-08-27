@@ -1275,7 +1275,7 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
  * @param position      Effect position
  * @param velocity      Effect velocity
  * @param life          The length of time the effect shall remain, multiplied by 10 (0 - 255)
- * @param color         Tracer color (https://wiki.alliedmods.net/images/Palette.png)
+ * @param color         Tracer color (0 - 12)
  * @param length        Length of the tracer (0 - 255)
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients

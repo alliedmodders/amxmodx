@@ -1308,6 +1308,15 @@ static cell AMX_NATIVE_CALL te_create_user_tracer(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
+	// Values outside the range 0-12 will throw an error
+	int color = params[4];
+
+	if(color < 0)
+		color = 0;
+
+	if(color > 12)
+		color = 12;
+
 	cell *position = get_amxaddr(amx, params[1]);
 	cell *velocity = get_amxaddr(amx, params[2]);
 
@@ -1320,7 +1329,7 @@ static cell AMX_NATIVE_CALL te_create_user_tracer(AMX *amx, cell *params)
 		WRITE_COORD(velocity[1]);
 		WRITE_COORD(velocity[2]);
 		WRITE_BYTE(params[3]);
-		WRITE_BYTE(params[4]);
+		WRITE_BYTE(color);
 		WRITE_BYTE(params[5]);
 	MESSAGE_END();
 

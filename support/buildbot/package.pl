@@ -4,7 +4,9 @@
 use strict;
 use Cwd;
 use File::Basename;
+use File::stat;
 use Net::FTP;
+use Time::localtime;
 
 my ($ftp_file, $ftp_host, $ftp_user, $ftp_pass, $ftp_path);
 
@@ -33,6 +35,34 @@ $version .= '-git' . Build::GitRevNum('.');
 
 #Switch to the output folder.
 chdir(Build::PathFormat('../../../OUTPUT'));
+
+my $needNewGeoIP = 1;
+if (-e '../GeoLite2-Country.tar.gz')
+{
+    my $fileModifiedTime = stat('../GeoLite2-Country.tar.gz')->mtime;
+    my $fileModifiedMonth = localtime($fileModifiedTime)->mon;
+    my $currentMonth = localtime->mon;
+    my $thirtyOneDays = 60 * 60 * 24 * 31;
+
+    # GeoIP file only updates once per month
+    if ($currentMonth == $fileModifiedMonth || (time() - $fileModifiedTime) < $thirtyOneDays)
+    {
+        $needNewGeoIP = 0;
+    }
+}
+
+if ($needNewGeoIP)
+{
+    print "Downloading GeoLite2-Country.mmdb...\n";
+    system('wget -q -O ../GeoLite2-Country.tar.gz http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz');
+}
+else
+{
+    print "Reusing existing GeoLite2-Country.mmdb\n";
+}
+
+system('gunzip -c ../GeoLite2-Country.tar.gz >  packages/base/addons/amxmodx/data/GeoLite2-Country.mmdb');
+
 
 my (@packages,@mac_exclude);
 @packages = ('base', 'cstrike', 'dod', 'esf', 'ns', 'tfc', 'ts');

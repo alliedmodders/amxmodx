@@ -5,14 +5,14 @@ install:
 - 'c:'
 - mkdir c:\nasm
 - set PATH=c:\nasm\nasm-2.13.03;%PATH%
-- curl -o "c:\nasm\nasm.zip" http://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip
+- curl -L -o "c:\nasm\nasm.zip" https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip
 - chdir c:\nasm
 - 7z x nasm.zip
 - chdir c:\projects
 - git clone https://github.com/alliedmodders/ambuild
 - git clone https://github.com/alliedmodders/metamod-hl1
 - git clone https://github.com/alliedmodders/hlsdk
-- ps: Start-FileDownload 'http://cdn.mysql.com/archives/mysql-5.5/mysql-5.5.54-win32.zip'
+- ps: Start-FileDownload 'https://cdn.mysql.com/archives/mysql-5.5/mysql-5.5.54-win32.zip'
 - 7z x mysql-5.5.54-win32.zip -o"mysql"
 - cd mysql
 - ren mysql-5.5.54-win32 mysql-5.5

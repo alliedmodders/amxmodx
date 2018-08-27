@@ -90,7 +90,7 @@ bool CloseNewMenus(CPlayer *pPlayer)
 	return true;
 }
 
-Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
+Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), m_NumberFormat("%d."),
 m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
 isDestroying(false), pageCallback(-1), showPageNumber(true), items_per_page(7)
 {
@@ -413,6 +413,8 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	int slots = 0;
 	int option_display = 0;
 	
+	char number_format[16];
+
 	for (item_t i = start; i < end; i++)
 	{
 		// reset enabled
@@ -462,6 +464,8 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			option_display = 0;
 		}
 
+		ke::SafeSprintf(number_format, sizeof(number_format), m_NumberFormat.chars(), option_display);
+
 		if (pItem->isBlank)
 		{
 			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n", pItem->name.chars());
@@ -470,14 +474,15 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		{
 			if (m_AutoColors) 
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.\\w %s\n", m_ItemColor.chars(),option_display, pItem->name.chars());
+				
+				ke::SafeSprintf(buffer, sizeof(buffer), "%s%s\\w %s\n", m_ItemColor.chars(), number_format, pItem->name.chars());
 			} else {
-				ke::SafeSprintf(buffer, sizeof(buffer), "%d. %s\n", option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "%s %s\n", number_format, pItem->name.chars());
 			}
 		} else {
 			if (m_AutoColors)
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer), "\\d%d. %s\n\\w", option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "\\d%s\\d %s\n\\w", number_format, pItem->name.chars());
 			} else {
 				ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", pItem->name.chars());
 			}
@@ -519,29 +524,31 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			if (flags & Display_Back)
 			{
 				keys |= (1<<option++);
+				ke::SafeSprintf(number_format, sizeof(number_format), m_NumberFormat.chars(), option == 10 ? 0 : option);
 				if (m_AutoColors)
 				{
 					ke::SafeSprintf(buffer,
 						sizeof(buffer), 
-						"%s%d. \\w%s\n", 
+						"%s%s \\w%s\n", 
 						m_ItemColor.chars(), 
-						option == 10 ? 0 : option, 
+						number_format,
 						m_OptNames[abs(MENU_BACK)].chars());
 				} else {
 					ke::SafeSprintf(buffer,
 						sizeof(buffer), 
-						"%d. %s\n", 
-						option == 10 ? 0 : option, 
+						"%s %s\n", 
+						number_format,
 						m_OptNames[abs(MENU_BACK)].chars());
 				}
 			} else {
 				option++;
+				ke::SafeSprintf(number_format, sizeof(number_format), m_NumberFormat.chars(), option == 10 ? 0 : option);
 				if (m_AutoColors)
 				{
 					ke::SafeSprintf(buffer,
 						sizeof(buffer),
-						"\\d%d. %s\n\\w",
-						option == 10 ? 0 : option,
+						"\\d%s\\d %s\n\\w",
+						number_format,
 						m_OptNames[abs(MENU_BACK)].chars());
 				} else {
 					ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", m_OptNames[abs(MENU_BACK)].chars());
@@ -552,29 +559,32 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			if (flags & Display_Next)
 			{
 				keys |= (1<<option++);
+				ke::SafeSprintf(number_format, sizeof(number_format), m_NumberFormat.chars(), option == 10 ? 0 : option);
 				if (m_AutoColors)
 				{
 					ke::SafeSprintf(buffer,
 						sizeof(buffer), 
-						"%s%d. \\w%s\n", 
+						"%s%s \\w%s\n", 
 						m_ItemColor.chars(), 
-						option == 10 ? 0 : option, 
+						number_format,
 						m_OptNames[abs(MENU_MORE)].chars());
 				} else {
 					ke::SafeSprintf(buffer,
 						sizeof(buffer), 
-						"%d. %s\n", 
+						"%s %s\n", 
+						m_NumberFormat.chars(),
 						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_MORE)].chars());
 				}
 			} else {
 				option++;
+				ke::SafeSprintf(number_format, sizeof(number_format), m_NumberFormat.chars(), option == 10 ? 0 : option);
 				if (m_AutoColors)
 				{
 					ke::SafeSprintf(buffer,
 						sizeof(buffer),
-						"\\d%d. %s\n\\w",
-						option == 10 ? 0 : option,
+						"\\d%s\\d %s\n\\w",
+						number_format,
 						m_OptNames[abs(MENU_MORE)].chars());
 				} else {
 					ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", m_OptNames[abs(MENU_MORE)].chars());
@@ -594,19 +604,20 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			m_Text = m_Text + "\n";
 		
 		keys |= (1<<option++);
+		ke::SafeSprintf(number_format, sizeof(number_format), m_NumberFormat.chars(), option == 10 ? 0 : option);
 		if (m_AutoColors)
 		{
 			ke::SafeSprintf(buffer,
 				sizeof(buffer), 
-				"%s%d. \\w%s\n", 
+				"%s%s \\w%s\n", 
 				m_ItemColor.chars(), 
-				option == 10 ? 0 : option, 
+				number_format,
 				m_OptNames[abs(MENU_EXIT)].chars());
 		} else {
 			ke::SafeSprintf(buffer,
 				sizeof(buffer), 
-				"%d. %s\n", 
-				option == 10 ? 0 : option, 
+				"%s %s\n", 
+				number_format,
 				m_OptNames[abs(MENU_EXIT)].chars());
 		}
 		m_Text = m_Text + buffer;
@@ -963,6 +974,23 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 
 	switch (params[2])
 	{
+	case MPROP_NUMBER_FORMAT:
+		{
+			char *str = get_amxstring(amx, params[3], 0, len);
+			validate_menu_text(str);
+
+			if (strstr(str, "#num") == nullptr)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Format without number identifier", str);
+				return 0;
+			}
+
+			UTIL_ReplaceEx(str, len, "#num", strlen("#num"), "%d", strlen("%d"), false);
+
+			pMenu->m_NumberFormat = str;
+
+			break;
+		}
 	case MPROP_PAGE_CALLBACK:
 		{
 			const char *str = get_amxstring_null(amx, params[3], 0, len);

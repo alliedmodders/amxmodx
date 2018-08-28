@@ -82,34 +82,6 @@ native draw_weapon_pickup_icon(id, weaponid, bool:reliable = true)
 native draw_status_icon(id, sprite[] = "", StatusIconFlags:status = StatusIcon_Hide, r = 0, g = 0, b = 0, bool:reliable = true)
 
 /**
- * Hides specific elements from the HUD.
- *
- * @note The symbol + means that an additional crosshair will be drawn.
- * This crosshair looks not like the regular one, but like the one that
- * is drawn in spectator mode. You can remove this crosshair by setting
- * the "noadd" argument to "true".
- *
- * @param id            Client index or 0 for all clients
- * @param elements      HUD elements to hide. The names are self-explanatory:
- *                        HideElement_Cross_Ammo_WPNList
- *                        HideElement_Flashlight (+)
- *                        HideElement_All
- *                        HideElement_Radar_Health_Armor (+)
- *                        HideElement_Timer (+)
- *                        HideElement_Money (+)
- *                        HideElement_Crosshair
- * @param noadd         If set to false and the chosen element names have
- *                      a "+" sign, an additional crosshair will be drawn.
- * @param reliable      If true, the message will be sent via the reliable
- *                      channel, otherwise it will use the unreliable one
- *
- * @noreturn
- * @error               If "id" is non-zero and the client isn't
- *                      connected, an error will be thrown.
- */
-native hide_hud_elements(id, HideElemenentFlags:elements, bool:noadd = true, bool:reliable = true)
-
-/**
  * Displays the speed bar used for controlling a train.
  *
  * @note This native isn't available in Day of Defeat.
@@ -146,6 +118,34 @@ native draw_train_controls(id, TrainControlFlags:speed = TrainControls_None, boo
  *                      connected, an error will be thrown.
  */
 native send_geiger_signal(id, distance, bool:reliable = true)
+
+/**
+ * Hides specific elements from the HUD.
+ *
+ * @note The symbol + means that an additional crosshair will be drawn.
+ * This crosshair looks not like the regular one, but like the one that
+ * is drawn in spectator mode. You can remove this crosshair by setting
+ * the "noadd" argument to "true".
+ *
+ * @param id            Client index or 0 for all clients
+ * @param elements      HUD elements to hide. The names are self-explanatory:
+ *                        HideElement_Cross_Ammo_WPNList
+ *                        HideElement_Flashlight (+)
+ *                        HideElement_All
+ *                        HideElement_Radar_Health_Armor (+)
+ *                        HideElement_Timer (+)
+ *                        HideElement_Money (+)
+ *                        HideElement_Crosshair
+ * @param noadd         If set to false and the chosen element names have
+ *                      a "+" sign, an additional crosshair will be drawn.
+ * @param reliable      If true, the message will be sent via the reliable
+ *                      channel, otherwise it will use the unreliable one
+ *
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
+ */
+native hide_hud_elements(id, HideElemenentFlags:elements, bool:noadd = true, bool:reliable = true)
 
 /**
  * Fades the client's screen.

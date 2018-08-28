@@ -2008,17 +2008,17 @@ static cell AMX_NATIVE_CALL cs_get_user_weapon(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL cs_draw_progress_bar(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_duration, arg_startpercent, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(index)
-	{
 		CHECK_PLAYER(index);
-	}
 
-	int startpercent = params[3];
+	int startpercent = params[arg_startpercent];
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[4] != 0), startpercent ? MessageIdBarTime2 : MessageIdBarTime, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_SHORT(params[2]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), startpercent ? MessageIdBarTime2 : MessageIdBarTime, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_SHORT(params[arg_duration]);
 
 		if(startpercent)
 			WRITE_SHORT(startpercent);
@@ -2029,16 +2029,16 @@ static cell AMX_NATIVE_CALL cs_draw_progress_bar(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL cs_play_reload_sound(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_shotgun, arg_volume, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(index)
-	{
 		CHECK_PLAYER(index);
-	}
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[4] != 0), MessageIdReloadSound, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_BYTE(params[3]);
-		WRITE_BYTE(!params[2]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdReloadSound, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_BYTE(params[arg_volume]);
+		WRITE_BYTE(!params[arg_shotgun]);
 	MESSAGE_END();
 
 	return 1;
@@ -2046,34 +2046,34 @@ static cell AMX_NATIVE_CALL cs_play_reload_sound(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL cs_set_hud_icon(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_active, arg_sprite, arg_alpha, arg_flashrate, arg_flashdelay, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(index)
-	{
 		CHECK_PLAYER(index);
-	}
 
-	int active = params[2];
+	int active = params[arg_active];
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[7] != 0), MessageIdScenario, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdScenario, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
 
 		WRITE_BYTE(active);
 
 		if(active)
 		{
 			int len;
-			const char *sprite = MF_GetAmxString(amx, params[3], 0, &len);
+			const char *sprite = MF_GetAmxString(amx, params[arg_sprite], 0, &len);
 
 			WRITE_STRING(sprite);
-			WRITE_BYTE(params[4]);
+			WRITE_BYTE(params[arg_alpha]);
 		}
 
-		int flashrate = params[5];
+		int flashrate = params[arg_flashrate];
 
 		if(flashrate)
 		{
 			WRITE_SHORT(flashrate);
-			WRITE_SHORT(params[6]);
+			WRITE_SHORT(params[arg_flashdelay]);
 		}
 
 	MESSAGE_END();
@@ -2083,15 +2083,15 @@ static cell AMX_NATIVE_CALL cs_set_hud_icon(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL cs_set_user_shadow(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_shadowid, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(index)
-	{
 		CHECK_PLAYER(index);
-	}
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[3] != 0), MessageIdShadowIdx, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_LONG(params[2]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdShadowIdx, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_LONG(params[arg_shadowid]);
 	MESSAGE_END();
 
 	return 1;

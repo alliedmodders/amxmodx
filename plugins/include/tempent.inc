@@ -824,7 +824,7 @@ native te_spray_blood(position[3], direction[3] = {0, 0, 0}, color = 78, speed =
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_place_brush_decal(position[3], texture, entity = 0, receiver = 0, bool:reliable = true)
+native te_place_brush_decal(position[3], texture, entity, receiver = 0, bool:reliable = true)
 
 /**
  * Creates a moving model or sprite that bounces and makes a sound when it hits.
@@ -833,7 +833,7 @@ native te_place_brush_decal(position[3], texture, entity = 0, receiver = 0, bool
  *       https://youtu.be/szW-bSMPuyQ?t=8m16s
  *
  * @param position      Position of the model
- * @param modelid       Model index
+ * @param model         Model index
  * @param velocity      Model velocity
  * @param yaw           Initial yaw
  * @param bouncesound   Bounce sound type:
@@ -850,7 +850,7 @@ native te_place_brush_decal(position[3], texture, entity = 0, receiver = 0, bool
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_bouncing_model(position[3], modelid, velocity[3] = {0, 0, 0}, yaw = 0, BounceSounds:bouncesound = BounceSound_Null, life = 10, receiver = 0, bool:reliable = true)
+native te_create_bouncing_model(position[3], model, velocity[3] = {0, 0, 0}, yaw = 0, BounceSounds:bouncesound = BounceSound_Null, life = 10, receiver = 0, bool:reliable = true)
 
 /**
  * Creates model or sprite with a blinking orange aura effect.
@@ -859,7 +859,7 @@ native te_create_bouncing_model(position[3], modelid, velocity[3] = {0, 0, 0}, y
  *       https://youtu.be/szW-bSMPuyQ?t=8m28s
  *
  * @param position      Position of the model
- * @param modelid       Model index
+ * @param model         Model index
  * @param speed         Model speed
  * @param count         Number of models to generate
  * @param life          The length of time the model shall remain (0 - 255)
@@ -872,7 +872,7 @@ native te_create_bouncing_model(position[3], modelid, velocity[3] = {0, 0, 0}, y
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_explode_model(position[3], modelid, speed = 0, count = 1, life = 10, receiver = 0, bool:reliable = true)
+native te_create_explode_model(position[3], model, speed = 0, count = 1, life = 10, receiver = 0, bool:reliable = true)
 
 /**
  * Creates a model or sprite entity that slowly disappears until it's gone.
@@ -881,9 +881,9 @@ native te_create_explode_model(position[3], modelid, speed = 0, count = 1, life 
  *       https://youtu.be/szW-bSMPuyQ
  *
  * @param position      Position of the model
+ * @param model         Model index
  * @param size          Size of the model
  * @param velocity      Model velocity
- * @param modelid       Model index
  * @param random        Random velocity (0 - 255)
  * @param count         Number of model pieces to generate (0 - 255)
  * @param life          The length of time the model shall remain (0 - 255)
@@ -906,7 +906,7 @@ native te_create_explode_model(position[3], modelid, speed = 0, count = 1, life 
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_break_model(position[3], modelid, size[3] = {50, 50, 50}, velocity[3] = {0, 0, 0}, random = 0, count = 1, life = 10, flags = 0, receiver = 0, bool:reliable = true)
+native te_create_break_model(position[3], model, size[3] = {50, 50, 50}, velocity[3] = {0, 0, 0}, random = 0, count = 1, life = 10, flags = 0, receiver = 0, bool:reliable = true)
 
 /**
  * Places a gunshot decal on an entity or the world and plays a ricochet sound.

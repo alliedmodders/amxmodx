@@ -12,14 +12,16 @@
 
 static cell AMX_NATIVE_CALL draw_ammo_pickup_icon(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_ammoid, arg_amount, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[4] != 0), gmsgAmmoPickup, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_BYTE(params[2]);
-		WRITE_BYTE(params[3]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgAmmoPickup, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_BYTE(params[arg_ammoid]);
+		WRITE_BYTE(params[arg_amount]);
 	MESSAGE_END();
 
 	return 1;
@@ -27,13 +29,15 @@ static cell AMX_NATIVE_CALL draw_ammo_pickup_icon(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL draw_weapon_pickup_icon(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_weaponid, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[3] != 0), gmsgWeapPickup, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_BYTE(params[2]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgWeapPickup, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_BYTE(params[arg_weaponid]);
 	MESSAGE_END();
 
 	return 1;
@@ -41,25 +45,27 @@ static cell AMX_NATIVE_CALL draw_weapon_pickup_icon(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL draw_status_icon(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_sprite, arg_status, arg_r, arg_g, arg_b, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
 	int len;
-	int status = params[3];
-	char* sprite = get_amxstring(amx, params[2], 0, len);
+	int status = params[arg_status];
+	char* sprite = get_amxstring(amx, params[arg_sprite], 0, len);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[7] != 0), gmsgStatusIcon, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgStatusIcon, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
 
 		WRITE_BYTE(status);
 
 		if(status)
 		{
 			WRITE_STRING(sprite);
-			WRITE_BYTE(params[4]);
-			WRITE_BYTE(params[5]);
-			WRITE_BYTE(params[6]);
+			WRITE_BYTE(params[arg_r]);
+			WRITE_BYTE(params[arg_g]);
+			WRITE_BYTE(params[arg_b]);
 		}
 
 	MESSAGE_END();
@@ -72,13 +78,15 @@ static cell AMX_NATIVE_CALL draw_train_controls(AMX *amx, cell *params)
 	if(g_bmod_dod)
 		return 0;
 
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_speed, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[3] != 0), gmsgTrain, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_BYTE(params[2]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgTrain, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_BYTE(params[arg_speed]);
 	MESSAGE_END();
 
 	return 1;
@@ -89,13 +97,15 @@ static cell AMX_NATIVE_CALL send_geiger_signal(AMX *amx, cell *params)
 	if(g_bmod_dod)
 		return 0;
 	
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_distance, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[3] != 0), gmsgGeiger, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_BYTE(params[2]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgGeiger, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_BYTE(params[arg_distance]);
 	MESSAGE_END();
 
 	return 1;
@@ -103,19 +113,21 @@ static cell AMX_NATIVE_CALL send_geiger_signal(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL hide_hud_elements(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_elements, arg_noadd, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	int destination = get_msg_destination(index, params[4] != 0);
+	int destination = get_msg_destination(index, params[arg_reliable] != 0);
 	edict_t *receiver = index ? TypeConversion.id_to_edict(index) : NULL;
 
 	MESSAGE_BEGIN(destination, gmsgHideWeapon, NULL, receiver);
-		WRITE_BYTE(params[2]);
+		WRITE_BYTE(params[arg_elements]);
 	MESSAGE_END();
 
-	if(params[3])
+	if(params[arg_noadd])
 	{
 		MESSAGE_BEGIN(destination, gmsgCrosshair, NULL, receiver);
 			WRITE_BYTE(0);
@@ -127,19 +139,21 @@ static cell AMX_NATIVE_CALL hide_hud_elements(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL fade_user_screen(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_duration, arg_fadetime, arg_flags, arg_r, arg_g, arg_b, arg_a, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[9] != 0), gmsgScreenFade, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[3]), (1<<12)));
-		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[2]), (1<<12)));
-		WRITE_SHORT(params[4]);
-		WRITE_BYTE(params[5]);
-		WRITE_BYTE(params[6]);
-		WRITE_BYTE(params[7]);
-		WRITE_BYTE(params[8]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgScreenFade, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_fadetime]), (1<<12)));
+		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_duration]), (1<<12)));
+		WRITE_SHORT(params[arg_flags]);
+		WRITE_BYTE(params[arg_r]);
+		WRITE_BYTE(params[arg_g]);
+		WRITE_BYTE(params[arg_b]);
+		WRITE_BYTE(params[arg_a]);
 	MESSAGE_END();
 
 	return 1;
@@ -147,15 +161,17 @@ static cell AMX_NATIVE_CALL fade_user_screen(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL shake_user_screen(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_amplitude, arg_duration, arg_frequency, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[5] != 0), gmsgScreenShake, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[2]), (1<<12)));
-		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[3]), (1<<12)));
-		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[4]), (1<<12)));
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgScreenShake, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_amplitude]), (1<<12)));
+		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_duration]), (1<<12)));
+		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_frequency]), (1<<12)));
 	MESSAGE_END();
 
 	return 1;
@@ -163,13 +179,15 @@ static cell AMX_NATIVE_CALL shake_user_screen(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_user_fov(AMX *amx, cell *params)
 {
-	int index = params[1];
+	enum args { arg_numargs, arg_id, arg_fov, arg_reliable };
+
+	int index = params[arg_id];
 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[3] != 0), gmsgSetFOV, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
-		WRITE_BYTE(params[2]);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgSetFOV, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+		WRITE_BYTE(params[arg_fov]);
 	MESSAGE_END();
 
 	return 1;

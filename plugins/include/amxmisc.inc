@@ -887,7 +887,7 @@ stock get_players_ex(players[MAX_PLAYERS] = {}, &num, GetPlayersFlags:flags = Ge
  *                    GetPlayers_CaseInsensitive - match case insensitive
  *                    GetPlayers_ExcludeHLTV - do not include HLTV proxies
  *                    GetPlayers_IncludeConnecting - include connecting clients
- * @param team      String to match against if the "e" or "f" flag is specified
+ * @param team      String to match against if the GetPlayers_MatchTeam or GetPlayers_MatchNameSubstring flag is specified
  *
  * @return          Number of clients on the server that match the specified flags
  */

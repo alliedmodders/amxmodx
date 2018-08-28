@@ -2399,6 +2399,7 @@ PFN_AMX_EXECV				g_fn_AmxExecv;
 PFN_AMX_ALLOT				g_fn_AmxAllot;
 PFN_AMX_FINDPUBLIC			g_fn_AmxFindPublic;
 PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
+PFN_LOAD_AMXSCRIPT_EX		g_fn_LoadAmxScriptEx;
 PFN_UNLOAD_AMXSCRIPT		g_fn_UnloadAmxScript;
 PFN_REAL_TO_CELL			g_fn_RealToCell;
 PFN_CELL_TO_REAL			g_fn_CellToReal;
@@ -2492,6 +2493,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("FindAmxScriptByAmx", g_fn_FindAmxScriptByAmx, PFN_FIND_AMXSCRIPT_BYAMX);
 	REQFUNC("FindAmxScriptByName", g_fn_FindAmxScriptByName, PFN_FIND_AMXSCRIPT_BYNAME);
 	REQFUNC("LoadAmxScript", g_fn_LoadAmxScript, PFN_LOAD_AMXSCRIPT);
+	REQFUNC("LoadAmxScriptEx", g_fn_LoadAmxScriptEx, PFN_LOAD_AMXSCRIPT_EX);
 	REQFUNC("UnloadAmxScript", g_fn_UnloadAmxScript, PFN_UNLOAD_AMXSCRIPT);
     REQFUNC("GetAmxScriptName", g_fn_GetAmxScriptName, PFN_GET_AMXSCRIPTNAME);
 
@@ -2695,6 +2697,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_AmxFindPublic(0, 0, 0);
 	MF_AmxAllot(0, 0, 0, 0);
 	MF_LoadAmxScript(0, 0, 0, 0, 0);
+	MF_LoadAmxScriptEx(0, 0, 0, 0, 0, 0);
 	MF_UnloadAmxScript(0, 0);
 	MF_RegisterSPForward(0, 0, 0, 0, 0, 0);
 	MF_RegisterSPForwardByName(0, 0, 0, 0, 0, 0);

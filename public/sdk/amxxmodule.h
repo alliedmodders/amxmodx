@@ -2199,6 +2199,7 @@ typedef int				(*PFN_AMX_ALLOT)				(AMX* /*amx*/, int /*length*/, cell* /*amx_ad
 typedef int				(*PFN_AMX_FINDPUBLIC)			(AMX* /*amx*/, const char* /*func name*/, int* /*index*/);
 typedef int				(*PFN_AMX_FINDNATIVE)			(AMX* /*amx*/, const char* /*func name*/, int* /*index*/);
 typedef int				(*PFN_LOAD_AMXSCRIPT)			(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char[64] /*error info*/, int /* debug */);
+typedef int				(*PFN_LOAD_AMXSCRIPT_EX)		(AMX* /*amx*/, void** /*code*/, const char* /*path*/, char* /*error info*/, size_t /* max length */, int /* debug */);
 typedef int				(*PFN_UNLOAD_AMXSCRIPT)			(AMX* /*amx*/,void** /*code*/);
 typedef cell			(*PFN_REAL_TO_CELL)				(REAL /*x*/);
 typedef REAL			(*PFN_CELL_TO_REAL)				(cell /*x*/);
@@ -2274,6 +2275,7 @@ extern PFN_AMX_EXEC					g_fn_AmxExec;
 extern PFN_AMX_ALLOT				g_fn_AmxAllot;
 extern PFN_AMX_FINDPUBLIC			g_fn_AmxFindPublic;
 extern PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
+extern PFN_LOAD_AMXSCRIPT_EX		g_fn_LoadAmxScriptEx;
 extern PFN_UNLOAD_AMXSCRIPT			g_fn_UnloadAmxScript;
 extern PFN_REAL_TO_CELL				g_fn_RealToCell;
 extern PFN_CELL_TO_REAL				g_fn_CellToReal;
@@ -2437,6 +2439,7 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_AmxAllot g_fn_AmxAllot
 #define MF_AmxFindNative g_fn_AmxFindNative
 #define MF_LoadAmxScript g_fn_LoadAmxScript
+#define MF_LoadAmxScriptEx g_fn_LoadAmxScriptEx
 #define MF_UnloadAmxScript g_fn_UnloadAmxScript
 #define MF_MergeDefinitionFile g_fn_MergeDefinition_File
 #define amx_ctof g_fn_CellToReal

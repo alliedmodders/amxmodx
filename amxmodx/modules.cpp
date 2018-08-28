@@ -1770,8 +1770,9 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("FindAmxScriptByName", MNF_FindAmxScriptByName)
 	REGISTER_FUNC("FindAmxScriptByAmx", MNF_FindAmxScriptByAmx)
 	REGISTER_FUNC("LoadAmxScript", load_amxscript)
+	REGISTER_FUNC("LoadAmxScriptEx", load_amxscript_ex)
 	REGISTER_FUNC("UnloadAmxScript", unload_amxscript)
-
+		
 	// String / mem in amx scripts support
 	REGISTER_FUNC("SetAmxString", set_amxstring)
 	REGISTER_FUNC("SetAmxStringUTF8Char", set_amxstring_utf8_char)

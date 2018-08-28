@@ -2492,7 +2492,7 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
 	REQFUNC("FindAmxScriptByAmx", g_fn_FindAmxScriptByAmx, PFN_FIND_AMXSCRIPT_BYAMX);
 	REQFUNC("FindAmxScriptByName", g_fn_FindAmxScriptByName, PFN_FIND_AMXSCRIPT_BYNAME);
-	REQFUNC("LoadAmxScript", g_fn_LoadAmxScript, PFN_LOAD_AMXSCRIPT);
+	REQFUNC("LoadAmxScript", g_fn_LoadAmxScript, PFN_LOAD_AMXSCRIPT); // Deprecated. Please use LoadAmxScriptEx instead.
 	REQFUNC("LoadAmxScriptEx", g_fn_LoadAmxScriptEx, PFN_LOAD_AMXSCRIPT_EX);
 	REQFUNC("UnloadAmxScript", g_fn_UnloadAmxScript, PFN_UNLOAD_AMXSCRIPT);
     REQFUNC("GetAmxScriptName", g_fn_GetAmxScriptName, PFN_GET_AMXSCRIPTNAME);

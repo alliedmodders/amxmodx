@@ -357,9 +357,10 @@ int load_amxscript_ex(AMX *amx, void **program, const char *filename, char *erro
 	return load_amxscript_internal(amx, program, filename, error, maxLength, debug);
 }
 
+// Deprecated. Use load_amxscript_ex() or MF_LoadAmxScriptEx() for modules. This function is kept to maintain backward compatibility.
 int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
 {
-	return load_amxscript_internal(amx, program, filename, error, 64, debug);
+	return load_amxscript_internal(amx, program, filename, error, 64 /* error max length */, debug);
 }
 
 const char *StrCaseStr(const char *as, const char *bs)
@@ -1769,7 +1770,7 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("GetAmxScriptName", MNF_GetAmxScriptName)
 	REGISTER_FUNC("FindAmxScriptByName", MNF_FindAmxScriptByName)
 	REGISTER_FUNC("FindAmxScriptByAmx", MNF_FindAmxScriptByAmx)
-	REGISTER_FUNC("LoadAmxScript", load_amxscript)
+	REGISTER_FUNC("LoadAmxScript", load_amxscript) // Deprecated. Please use LoadAmxScriptEx instead.
 	REGISTER_FUNC("LoadAmxScriptEx", load_amxscript_ex)
 	REGISTER_FUNC("UnloadAmxScript", unload_amxscript)
 		

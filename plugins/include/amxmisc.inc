@@ -871,7 +871,7 @@ stock get_players_ex(players[MAX_PLAYERS] = {}, &num, GetPlayersFlags:flags = Ge
 }
 
 /**
- * Returns the number of clients on the server that matches the specified flags.
+ * Returns the number of clients on the server that match the specified flags.
  *
  * @note Example retrieving all alive CTs:
  *       new AliveCt = get_playersnum_ex(GetPlayers_ExcludeDead | GetPlayers_MatchTeam, "CT")
@@ -889,7 +889,7 @@ stock get_players_ex(players[MAX_PLAYERS] = {}, &num, GetPlayersFlags:flags = Ge
  *                    GetPlayers_IncludeConnecting - include connecting clients
  * @param team      String to match against if the "e" or "f" flag is specified
  *
- * @return          Number of clients on the server that matches the specified flags
+ * @return          Number of clients on the server that match the specified flags
  */
 stock get_playersnum_ex(GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
 {

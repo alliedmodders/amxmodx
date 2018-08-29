@@ -2013,13 +2013,11 @@ static cell AMX_NATIVE_CALL cs_draw_progress_bar(AMX *amx, cell *params)
 	int index = params[arg_id];
 
 	if(index)
-	{
 		CHECK_PLAYER(index);
-	}
 
 	int startpercent = params[arg_startpercent];
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), startpercent ? MessageIdBarTime2 : MessageIdBarTime, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), startpercent ? MessageIdBarTime2 : MessageIdBarTime, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_SHORT(params[arg_duration]);
 
 		if(startpercent)
@@ -2036,11 +2034,9 @@ static cell AMX_NATIVE_CALL cs_play_reload_sound(AMX *amx, cell *params)
 	int index = params[arg_id];
 
 	if(index)
-	{
 		CHECK_PLAYER(index);
-	}
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdReloadSound, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdReloadSound, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(params[arg_volume]);
 		WRITE_BYTE(!params[arg_shotgun]);
 	MESSAGE_END();
@@ -2055,13 +2051,11 @@ static cell AMX_NATIVE_CALL cs_set_hud_icon(AMX *amx, cell *params)
 	int index = params[arg_id];
 
 	if(index)
-	{
 		CHECK_PLAYER(index);
-	}
 
 	int active = params[arg_active];
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdScenario, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdScenario, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 
 		WRITE_BYTE(active);
 
@@ -2094,11 +2088,9 @@ static cell AMX_NATIVE_CALL cs_set_user_shadow(AMX *amx, cell *params)
 	int index = params[arg_id];
 
 	if(index)
-	{
 		CHECK_PLAYER(index);
-	}
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdShadowIdx, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), MessageIdShadowIdx, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_LONG(params[arg_shadowid]);
 	MESSAGE_END();
 

@@ -19,7 +19,7 @@ static cell AMX_NATIVE_CALL draw_ammo_pickup_icon(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgAmmoPickup, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgAmmoPickup, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(params[arg_ammoid]);
 		WRITE_BYTE(params[arg_amount]);
 	MESSAGE_END();
@@ -36,7 +36,7 @@ static cell AMX_NATIVE_CALL draw_weapon_pickup_icon(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgWeapPickup, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgWeapPickup, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(params[arg_weaponid]);
 	MESSAGE_END();
 
@@ -56,7 +56,7 @@ static cell AMX_NATIVE_CALL draw_status_icon(AMX *amx, cell *params)
 	int status = params[arg_status];
 	char* sprite = get_amxstring(amx, params[arg_sprite], 0, len);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgStatusIcon, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgStatusIcon, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 
 		WRITE_BYTE(status);
 
@@ -85,7 +85,7 @@ static cell AMX_NATIVE_CALL draw_train_controls(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgTrain, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgTrain, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(params[arg_speed]);
 	MESSAGE_END();
 
@@ -104,7 +104,7 @@ static cell AMX_NATIVE_CALL send_geiger_signal(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgGeiger, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgGeiger, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(params[arg_distance]);
 	MESSAGE_END();
 
@@ -121,15 +121,15 @@ static cell AMX_NATIVE_CALL hide_hud_elements(AMX *amx, cell *params)
 		return 0;
 
 	int destination = get_msg_destination(index, params[arg_reliable] != 0);
-	edict_t *receiver = index ? TypeConversion.id_to_edict(index) : NULL;
+	edict_t *receiver = index ? TypeConversion.id_to_edict(index) : nullptr;
 
-	MESSAGE_BEGIN(destination, gmsgHideWeapon, NULL, receiver);
+	MESSAGE_BEGIN(destination, gmsgHideWeapon, nullptr, receiver);
 		WRITE_BYTE(params[arg_elements]);
 	MESSAGE_END();
 
 	if(params[arg_noadd])
 	{
-		MESSAGE_BEGIN(destination, gmsgCrosshair, NULL, receiver);
+		MESSAGE_BEGIN(destination, gmsgCrosshair, nullptr, receiver);
 			WRITE_BYTE(0);
 		MESSAGE_END();
 	}
@@ -146,7 +146,7 @@ static cell AMX_NATIVE_CALL fade_user_screen(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgScreenFade, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgScreenFade, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_fadetime]), (1<<12)));
 		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_duration]), (1<<12)));
 		WRITE_SHORT(params[arg_flags]);
@@ -168,7 +168,7 @@ static cell AMX_NATIVE_CALL shake_user_screen(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgScreenShake, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgScreenShake, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_amplitude]), (1<<12)));
 		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_duration]), (1<<12)));
 		WRITE_SHORT(FixedUnsigned16(amx_ctof(params[arg_frequency]), (1<<12)));
@@ -186,7 +186,7 @@ static cell AMX_NATIVE_CALL set_user_fov(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgSetFOV, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), gmsgSetFOV, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(params[arg_fov]);
 	MESSAGE_END();
 
@@ -204,5 +204,5 @@ AMX_NATIVE_INFO msgnat_Natives[] =
 	{"fade_user_screen",						fade_user_screen},
 	{"shake_user_screen",						shake_user_screen},
 	{"set_user_fov",							set_user_fov},
-	{NULL,										NULL},
+	{nullptr,										nullptr},
 };

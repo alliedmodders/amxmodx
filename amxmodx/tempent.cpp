@@ -22,7 +22,7 @@ static cell AMX_NATIVE_CALL te_create_beam_between_points(AMX *amx, cell *params
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMPOINTS);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -57,7 +57,7 @@ static cell AMX_NATIVE_CALL te_create_beam_from_entity(AMX *amx, cell *params)
 
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMENTPOINT);
 		WRITE_SHORT(params[arg_startent]);
 		WRITE_COORD(endpos[0]);
@@ -90,7 +90,7 @@ static cell AMX_NATIVE_CALL te_create_gunshot(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_GUNSHOT);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -111,7 +111,7 @@ static cell AMX_NATIVE_CALL te_create_explosion(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_EXPLOSION);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -136,7 +136,7 @@ static cell AMX_NATIVE_CALL te_create_tar_explosion(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_TAREXPLOSION);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -157,7 +157,7 @@ static cell AMX_NATIVE_CALL te_create_smoke(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_SMOKE);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -182,7 +182,7 @@ static cell AMX_NATIVE_CALL te_create_tracer(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_TRACER);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -204,7 +204,7 @@ static cell AMX_NATIVE_CALL te_create_beam_between_entities(AMX *amx, cell *para
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMENTS);
 		WRITE_SHORT(params[arg_startent]);
 		WRITE_SHORT(params[arg_endent]);
@@ -235,7 +235,7 @@ static cell AMX_NATIVE_CALL te_create_sparks(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_SPARKS);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -256,7 +256,7 @@ static cell AMX_NATIVE_CALL te_create_lava_splash(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_LAVASPLASH);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -277,7 +277,7 @@ static cell AMX_NATIVE_CALL te_create_teleport_splash(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_TELEPORT);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -304,7 +304,7 @@ static cell AMX_NATIVE_CALL te_create_colored_explosion(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_EXPLOSION2);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -328,7 +328,7 @@ static cell AMX_NATIVE_CALL te_place_decal_from_bsp_file(AMX *amx, cell *params)
 	int entity = params[arg_entity];
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 
 		WRITE_BYTE(TE_BSPDECAL);
 		WRITE_COORD(position[0]);
@@ -356,7 +356,7 @@ static cell AMX_NATIVE_CALL te_create_implosion(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_IMPLOSION);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -381,7 +381,7 @@ static cell AMX_NATIVE_CALL te_create_model_trail(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_SPRITETRAIL);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -411,7 +411,7 @@ static cell AMX_NATIVE_CALL te_display_additive_sprite(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_SPRITE);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -436,7 +436,7 @@ static cell AMX_NATIVE_CALL te_create_beam_sprite(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMSPRITE);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -462,7 +462,7 @@ static cell AMX_NATIVE_CALL te_create_beam_ring(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_position]);
 	cell *axis = get_amxaddr(amx, params[arg_axis]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMTORUS);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -498,7 +498,7 @@ static cell AMX_NATIVE_CALL te_create_beam_disk(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_position]);
 	cell *axis = get_amxaddr(amx, params[arg_axis]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMDISK);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -534,7 +534,7 @@ static cell AMX_NATIVE_CALL te_create_beam_cylinder(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_position]);
 	cell *axis = get_amxaddr(amx, params[arg_axis]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMCYLINDER);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -567,7 +567,7 @@ static cell AMX_NATIVE_CALL te_create_following_beam(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMFOLLOW);
 		WRITE_SHORT(params[arg_entity]);
 		WRITE_SHORT(params[arg_sprite]);
@@ -593,7 +593,7 @@ static cell AMX_NATIVE_CALL te_display_glow_sprite(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_GLOWSPRITE);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -616,7 +616,7 @@ static cell AMX_NATIVE_CALL te_create_beam_ring_between_entities(AMX *amx, cell 
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BEAMRING);
 		WRITE_SHORT(params[arg_startent]);
 		WRITE_SHORT(params[arg_endent]);
@@ -648,7 +648,7 @@ static cell AMX_NATIVE_CALL te_create_tracer_shower(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *direction = get_amxaddr(amx, params[arg_direction]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_STREAK_SPLASH);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -676,7 +676,7 @@ static cell AMX_NATIVE_CALL te_create_dynamic_light(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_DLIGHT);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -703,7 +703,7 @@ static cell AMX_NATIVE_CALL te_create_entity_light(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_ELIGHT);
 		WRITE_SHORT(params[arg_entity]);
 		WRITE_COORD(position[0]);
@@ -732,7 +732,7 @@ static cell AMX_NATIVE_CALL te_draw_line(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_LINE);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -761,7 +761,7 @@ static cell AMX_NATIVE_CALL te_create_box(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BOX);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -787,7 +787,7 @@ static cell AMX_NATIVE_CALL te_remove_all_beams_from_entity(AMX *amx, cell *para
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_KILLBEAM);
 		WRITE_SHORT(params[arg_entity]);
 	MESSAGE_END();
@@ -806,7 +806,7 @@ static cell AMX_NATIVE_CALL te_create_large_funnel(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_LARGEFUNNEL);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -830,7 +830,7 @@ static cell AMX_NATIVE_CALL te_create_bloodstream(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *direction = get_amxaddr(amx, params[arg_direction]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BLOODSTREAM);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -857,7 +857,7 @@ static cell AMX_NATIVE_CALL te_draw_blood_line(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_SHOWLINE);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -882,7 +882,7 @@ static cell AMX_NATIVE_CALL te_spray_blood(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *direction = get_amxaddr(amx, params[arg_direction]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BLOOD);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -909,7 +909,7 @@ static cell AMX_NATIVE_CALL te_place_brush_decal(AMX *amx, cell *params)
 	int texture = params[arg_texture];
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(texture > 256 ? TE_DECALHIGH : TE_DECAL);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -933,7 +933,7 @@ static cell AMX_NATIVE_CALL te_create_bouncing_model(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *velocity = get_amxaddr(amx, params[arg_velocity]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_MODEL);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -961,7 +961,7 @@ static cell AMX_NATIVE_CALL te_create_explode_model(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_EXPLODEMODEL);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -988,7 +988,7 @@ static cell AMX_NATIVE_CALL te_create_break_model(AMX *amx, cell *params)
 	cell *size = get_amxaddr(amx, params[arg_size]);
 	cell *velocity = get_amxaddr(amx, params[arg_velocity]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BREAKMODEL);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1020,7 +1020,7 @@ static cell AMX_NATIVE_CALL te_place_gunshot_decal(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_GUNSHOTDECAL);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1044,7 +1044,7 @@ static cell AMX_NATIVE_CALL te_create_sprite_spray(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *velocity = get_amxaddr(amx, params[arg_velocity]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_SPRITE_SPRAY);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1072,7 +1072,7 @@ static cell AMX_NATIVE_CALL te_create_armor_ricochet(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_ARMOR_RICOCHET);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1094,7 +1094,7 @@ static cell AMX_NATIVE_CALL te_place_player_spray(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_PLAYERDECAL);
 		WRITE_BYTE(params[arg_player]);
 		WRITE_COORD(position[0]);
@@ -1119,7 +1119,7 @@ static cell AMX_NATIVE_CALL te_create_bubble_box(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BUBBLES);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -1148,7 +1148,7 @@ static cell AMX_NATIVE_CALL te_create_bubble_line(AMX *amx, cell *params)
 	cell *startpos = get_amxaddr(amx, params[arg_startpos]);
 	cell *endpos = get_amxaddr(amx, params[arg_endpos]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BUBBLETRAIL);
 		WRITE_COORD(startpos[0]);
 		WRITE_COORD(startpos[1]);
@@ -1176,7 +1176,7 @@ static cell AMX_NATIVE_CALL te_display_falling_sprite(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_BLOODSPRITE);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1202,7 +1202,7 @@ static cell AMX_NATIVE_CALL te_place_world_decal(AMX *amx, cell *params)
 	int texture = params[arg_texture];
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(texture > 256 ? TE_WORLDDECALHIGH : TE_WORLDDECAL);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1225,7 +1225,7 @@ static cell AMX_NATIVE_CALL te_create_projectile(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *velocity = get_amxaddr(amx, params[arg_velocity]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_PROJECTILE);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1253,7 +1253,7 @@ static cell AMX_NATIVE_CALL te_create_sprite_shower(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *direction = get_amxaddr(amx, params[arg_direction]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_SPRAY);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1280,7 +1280,7 @@ static cell AMX_NATIVE_CALL te_emit_sprite_from_player(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_PLAYERSPRITES);
 		WRITE_SHORT(params[arg_player]);
 		WRITE_SHORT(params[arg_sprite]);
@@ -1302,7 +1302,7 @@ static cell AMX_NATIVE_CALL te_create_particle_burst(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_PARTICLEBURST);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1326,7 +1326,7 @@ static cell AMX_NATIVE_CALL te_create_fire_field(AMX *amx, cell *params)
 
 	cell *position = get_amxaddr(amx, params[arg_position]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_FIREFIELD);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1350,7 +1350,7 @@ static cell AMX_NATIVE_CALL te_attach_model_to_player(AMX *amx, cell *params)
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_PLAYERATTACHMENT);
 		WRITE_BYTE(params[arg_player]);
 		WRITE_COORD(params[arg_offset]);
@@ -1370,7 +1370,7 @@ static cell AMX_NATIVE_CALL te_remove_all_player_attachments(AMX *amx, cell *par
 	if(!check_msg_receiver(amx, index))
 		return 0;
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_KILLPLAYERATTACHMENTS);
 		WRITE_BYTE(params[arg_player]);
 	MESSAGE_END();
@@ -1390,7 +1390,7 @@ static cell AMX_NATIVE_CALL te_create_multi_gunshot(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *direction = get_amxaddr(amx, params[arg_direction]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_MULTIGUNSHOT);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1428,7 +1428,7 @@ static cell AMX_NATIVE_CALL te_create_user_tracer(AMX *amx, cell *params)
 	cell *position = get_amxaddr(amx, params[arg_position]);
 	cell *velocity = get_amxaddr(amx, params[arg_velocity]);
 
-	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, NULL, index ? TypeConversion.id_to_edict(index) : NULL);
+	MESSAGE_BEGIN(get_msg_destination(index, params[arg_reliable] != 0), SVC_TEMPENTITY, nullptr, index ? TypeConversion.id_to_edict(index) : nullptr);
 		WRITE_BYTE(TE_USERTRACER);
 		WRITE_COORD(position[0]);
 		WRITE_COORD(position[1]);
@@ -1500,5 +1500,5 @@ AMX_NATIVE_INFO tempent_Natives[] =
 	{"te_remove_all_player_attachments",		te_remove_all_player_attachments},
 	{"te_create_multi_gunshot",					te_create_multi_gunshot},
 	{"te_create_user_tracer",					te_create_user_tracer},
-	{NULL,										NULL},
+	{nullptr,										nullptr},
 };

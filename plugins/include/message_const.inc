@@ -16,6 +16,8 @@
 #endif
 #define _message_const_included
 
+#pragma semicolon 1
+
 /**
  * Destination types for message_begin()
  */
@@ -125,7 +127,7 @@ enum StatusIconFlags
 	StatusIcon_Hide = 0,
 	StatusIcon_Show,
 	StatusIcon_Flash
-}
+};
 
 /**
  * Train controls used in draw_train_controls()
@@ -138,7 +140,7 @@ enum TrainControlFlags
 	TrainControls_Medium,
 	TrainControls_Maximum,
 	TrainControls_Reverse
-}
+};
 
 /**
  * Flags used in hide_hud_elements()
@@ -153,7 +155,7 @@ enum HideElemenentFlags (<<= 1)
 	HideElement_Timer,
 	HideElement_Money,
 	HideElement_Crosshair
-}
+};
 
 /**
  * Flags used in fade_user_screen()
@@ -164,7 +166,7 @@ enum ScreenFadeFlags
 	ScreenFade_FadeOut = 0x0001,
 	ScreenFade_Modulate = 0x0002,
 	ScreenFade_StayOut = 0x0004
-}
+};
 
 /**
  * @section TempEntity messages for message_begin()
@@ -822,7 +824,7 @@ enum BounceSounds
 	BounceSound_Null = 0,
 	BounceSound_Shell,
 	BounceSound_ShotShell
-}
+};
 
 /**
  * Spherical shower of models, picks from set
@@ -864,15 +866,18 @@ enum BounceSounds
 /**
  * Flags used in te_create_break_model()
  */
-#define BreakModel_TypeMask                  0x4F
-#define BreakModel_Glass                     0x01
-#define BreakModel_Metal                     0x02
-#define BreakModel_Flesh                     0x04
-#define BreakModel_Wood                      0x08
-#define BreakModel_Smoke                     0x10
-#define BreakModel_Trans                     0x20
-#define BreakModel_Concrete                  0x40
-#define BreakModel_2                         0x80
+enum BreakModelFlags
+{
+	BreakModel_TypeMask =                0x4F,
+	BreakModel_Glass =                   0x01,
+	BreakModel_Metal =                   0x02,
+	BreakModel_Flesh =                   0x04,
+	BreakModel_Wood =                    0x08,
+	BreakModel_Smoke =                   0x10,
+	BreakModel_Trans =                   0x20,
+	BreakModel_Concrete =                0x40,
+	BreakModel_2 =                       0x80
+};
 
 /**
  * Decal and ricochet sound

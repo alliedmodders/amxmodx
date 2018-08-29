@@ -33,7 +33,7 @@
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native draw_ammo_pickup_icon(id, ammoid, amount, bool:reliable = true)
+native draw_ammo_pickup_icon(id, ammoid, amount, bool:reliable = true);
 
 /**
  * Temporarily draws the corresponding weapon HUD icon in the middle of the
@@ -50,7 +50,7 @@ native draw_ammo_pickup_icon(id, ammoid, amount, bool:reliable = true)
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native draw_weapon_pickup_icon(id, weaponid, bool:reliable = true)
+native draw_weapon_pickup_icon(id, weaponid, bool:reliable = true);
 
 /**
  * Draws a specified status HUD icon.
@@ -79,7 +79,7 @@ native draw_weapon_pickup_icon(id, weaponid, bool:reliable = true)
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native draw_status_icon(id, sprite[] = "", StatusIconFlags:status = StatusIcon_Hide, r = 0, g = 0, b = 0, bool:reliable = true)
+native draw_status_icon(id, sprite[] = "", StatusIconFlags:status = StatusIcon_Hide, r = 0, g = 0, b = 0, bool:reliable = true);
 
 /**
  * Displays the speed bar used for controlling a train.
@@ -101,7 +101,7 @@ native draw_status_icon(id, sprite[] = "", StatusIconFlags:status = StatusIcon_H
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native draw_train_controls(id, TrainControlFlags:speed = TrainControls_None, bool:reliable = true)
+native draw_train_controls(id, TrainControlFlags:speed = TrainControls_None, bool:reliable = true);
 
 /**
  * Sends the geiger signal that notifies the player of nearby radiation level.
@@ -117,7 +117,7 @@ native draw_train_controls(id, TrainControlFlags:speed = TrainControls_None, boo
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native send_geiger_signal(id, distance, bool:reliable = true)
+native send_geiger_signal(id, distance, bool:reliable = true);
 
 /**
  * Hides specific elements from the HUD.
@@ -145,7 +145,7 @@ native send_geiger_signal(id, distance, bool:reliable = true)
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native hide_hud_elements(id, HideElemenentFlags:elements, bool:noadd = true, bool:reliable = true)
+native hide_hud_elements(id, HideElemenentFlags:elements, bool:noadd = true, bool:reliable = true);
 
 /**
  * Fades the client's screen.
@@ -171,7 +171,7 @@ native hide_hud_elements(id, HideElemenentFlags:elements, bool:noadd = true, boo
  *                      connected, an error will be thrown.
  */
 
-native fade_user_screen(id, Float:duration = 1.0, Float:fadetime = 0.5, ScreenFadeFlags:flags = ScreenFade_FadeIn, r = 0, g = 0, b = 255, a = 75, bool:reliable = true)
+native fade_user_screen(id, Float:duration = 1.0, Float:fadetime = 0.5, ScreenFadeFlags:flags = ScreenFade_FadeIn, r = 0, g = 0, b = 255, a = 75, bool:reliable = true);
 
 /**
  * Shakes the client's screen.
@@ -187,7 +187,7 @@ native fade_user_screen(id, Float:duration = 1.0, Float:fadetime = 0.5, ScreenFa
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native shake_user_screen(id, Float:amplitude = 3.0, Float:duration = 3.0, Float:frequency = 1.0, bool:reliable = true)
+native shake_user_screen(id, Float:amplitude = 3.0, Float:duration = 3.0, Float:frequency = 1.0, bool:reliable = true);
 
 /**
  * Changes the client's field of view (FOV).
@@ -203,4 +203,4 @@ native shake_user_screen(id, Float:amplitude = 3.0, Float:duration = 3.0, Float:
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native set_user_fov(id, fov = 0, bool:reliable = true)
+native set_user_fov(id, fov = 0, bool:reliable = true);

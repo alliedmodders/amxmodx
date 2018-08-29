@@ -1249,7 +1249,7 @@ stock bool:cs_is_valid_itemid(id, bool:weapon_only = false)
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native cs_draw_progress_bar(id, duration, startpercent = 0, bool:reliable = true)
+native cs_draw_progress_bar(id, duration, startpercent = 0, bool:reliable = true);
 
 /**
  * Plays a generic reload sound.
@@ -1265,7 +1265,7 @@ native cs_draw_progress_bar(id, duration, startpercent = 0, bool:reliable = true
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native cs_play_reload_sound(id, bool:shotgun = false, volume = 100, bool:reliable = true)
+native cs_play_reload_sound(id, bool:shotgun = false, volume = 100, bool:reliable = true);
 
 /**
  * Displays a sprite to the right side of the round timer.
@@ -1290,7 +1290,7 @@ native cs_play_reload_sound(id, bool:shotgun = false, volume = 100, bool:reliabl
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native cs_set_hud_icon(id, active = 0, sprite[] = "", alpha = 100, flashrate = 0, flashdelay = 0, bool:reliable = true)
+native cs_set_hud_icon(id, active = 0, sprite[] = "", alpha = 100, flashrate = 0, flashdelay = 0, bool:reliable = true);
 
 /**
  * Creates/Hides the shadow beneath players.
@@ -1307,7 +1307,7 @@ native cs_set_hud_icon(id, active = 0, sprite[] = "", alpha = 100, flashrate = 0
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native cs_set_user_shadow(id, shadowid = 0, bool:reliable = true)
+native cs_set_user_shadow(id, shadowid = 0, bool:reliable = true);
 
 /**
  * Called when CS internally fires a command to a player.

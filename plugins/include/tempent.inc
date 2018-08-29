@@ -1102,7 +1102,7 @@ native te_place_world_decal(position[3], texture, receiver = 0, bool:reliable = 
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_projectile(position[3], velocity[3], model, life = 30, owner = 0, receiver = 0, bool:reliable = true);
+native te_create_projectile(position[3], velocity[3], model, life = 10, owner = 0, receiver = 0, bool:reliable = true);
 
 /**
  * Creates a shower of sprites or models.
@@ -1218,7 +1218,7 @@ native te_create_fire_field(position[3], sprite, radius = 5, count = 1, duration
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_attach_model_to_player(player, model, offset = 0, life = 5, receiver = 0, bool:reliable = true);
+native te_attach_model_to_player(player, model, offset = 0, life = 10, receiver = 0, bool:reliable = true);
 
 /**
  * Kills all temporary entity models attached to a client.
@@ -1286,4 +1286,4 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_user_tracer(position[3], velocity[3], life = 1, color = 106, length = 1, receiver = 0, bool:reliable = true);
+native te_create_user_tracer(position[3], velocity[3], life = 10, color = 5, length = 10, receiver = 0, bool:reliable = true);

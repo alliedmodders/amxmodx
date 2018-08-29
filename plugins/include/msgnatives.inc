@@ -204,4 +204,4 @@ native shake_user_screen(id, Float:amplitude = 3.0, Float:duration = 3.0, Float:
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native set_user_fov(id, fov = 0, bool:reliable = true);
+native set_user_fov(id, fov = 90, bool:reliable = true);

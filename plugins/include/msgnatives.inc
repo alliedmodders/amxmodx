@@ -192,7 +192,8 @@ native shake_user_screen(id, Float:amplitude = 3.0, Float:duration = 3.0, Float:
 /**
  * Changes the client's field of view (FOV).
  *
- * @note Setting the "fov" argument below 45 will also draw a sniper scope.
+ * @note Setting the "fov" argument below 45 will also draw a sniper scope in
+ *       some games (e.g. Counter-Strike).
  *
  * @param id            Client index or 0 for all clients
  * @param fov           Field of view degrees (0 - 255)

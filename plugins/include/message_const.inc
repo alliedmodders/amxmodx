@@ -16,8 +16,6 @@
 #endif
 #define _message_const_included
 
-#pragma semicolon 1
-
 /**
  * Destination types for message_begin()
  */

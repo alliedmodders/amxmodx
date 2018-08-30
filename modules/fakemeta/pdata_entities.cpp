@@ -18,7 +18,7 @@
 static cell AMX_NATIVE_CALL get_ent_data(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
@@ -33,7 +33,7 @@ static cell AMX_NATIVE_CALL get_ent_data(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_ent_data(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
@@ -57,7 +57,7 @@ static cell AMX_NATIVE_CALL set_ent_data(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_ent_data_float(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
@@ -72,7 +72,7 @@ static cell AMX_NATIVE_CALL get_ent_data_float(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_ent_data_float(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
@@ -90,7 +90,7 @@ static cell AMX_NATIVE_CALL set_ent_data_float(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_ent_data_vector(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
@@ -107,7 +107,7 @@ static cell AMX_NATIVE_CALL get_ent_data_vector(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_ent_data_vector(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
@@ -125,7 +125,7 @@ static cell AMX_NATIVE_CALL set_ent_data_vector(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_ent_data_entity(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
@@ -142,7 +142,7 @@ static cell AMX_NATIVE_CALL set_ent_data_entity(AMX *amx, cell *params)
 	int entity = params[1];
 	int value = params[4];
 
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	if (value != -1)
 	{
@@ -165,7 +165,7 @@ static cell AMX_NATIVE_CALL set_ent_data_entity(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_ent_data_string(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);
@@ -190,7 +190,7 @@ static cell AMX_NATIVE_CALL get_ent_data_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_ent_data_string(AMX *amx, cell *params)
 {
 	int entity = params[1];
-	CHECK_ENTITY(entity);
+	CHECK_ENTITY_PDATA(entity);
 
 	TypeDescription data;
 	GET_TYPE_DESCRIPTION(2, data, CommonConfig);

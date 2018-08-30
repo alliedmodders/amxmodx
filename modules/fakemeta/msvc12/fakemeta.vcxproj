@@ -120,11 +120,14 @@
     <ClInclude Include="..\..\..\public\HLTypeConversion.h" />
     <ClInclude Include="..\..\..\public\memtools\MemoryUtils.h" />
     <ClInclude Include="..\..\..\public\resdk\common\hookchains.h" />
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSEntity.h" />
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSInterfaces.h" />
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSPlayer.h" />
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSPlayerItem.h" />
+    <ClInclude Include="..\..\..\public\resdk\cstrike\API\CSPlayerWeapon.h" />
     <ClInclude Include="..\..\..\public\resdk\cstrike\regamedll_api.h" />
     <ClInclude Include="..\..\..\public\resdk\cstrike\regamedll_const.h" />
-    <ClInclude Include="..\..\..\public\resdk\cstrike\regamedll_interfaces.h" />
     <ClInclude Include="..\..\..\public\resdk\mod_regamedll_api.h" />
-    <ClInclude Include="..\..\..\public\resdk\mod_rehlds_api.h" />
     <ClInclude Include="..\fakemeta_amxx.h" />
     <ClInclude Include="..\fm_tr.h" />
     <ClInclude Include="..\dllfunc.h" />

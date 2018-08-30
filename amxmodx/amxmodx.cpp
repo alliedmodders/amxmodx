@@ -214,7 +214,7 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 	{
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
+		if (pPlayer->ingame && !pPlayer->IsBot())
 		{
 			if (len > 126)	// Client console truncates after byte 127. (126 + \n = 127)
 			{
@@ -247,7 +247,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 		{
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 
-			if (pPlayer->ingame)
+			if (pPlayer->ingame && !pPlayer->IsBot())
 			{
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
@@ -280,7 +280,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
+		if (pPlayer->ingame && !pPlayer->IsBot())
 		{
 			g_langMngr.SetDefLang(index);
 
@@ -338,7 +338,7 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
 
-				if (*msg > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
+				if (static_cast<byte>(*msg) > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
 				{
 					memmove(msg + 1, msg, ke::Min(len++, 191));
 					*msg = 1;
@@ -376,7 +376,7 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 
 			msg = format_amxstring(amx, params, 3, len);
 
-			if (*msg > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
+			if (static_cast<byte>(*msg) > 4) // Insert default color code at the start if not present, otherwise message will not be colored.
 			{
 				memmove(msg + 1, msg, ke::Min(len++, 191));
 				*msg = 1;
@@ -427,7 +427,7 @@ static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params) /* 3 param */
 		{
 			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
 
-			if (pPlayer->ingame)
+			if (pPlayer->ingame && !pPlayer->IsBot())
 				UTIL_ShowMOTD(pPlayer->pEdict, sToShow, ilen, szHead);
 		}
 	} else {
@@ -444,7 +444,7 @@ static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params) /* 3 param */
 
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
+		if (pPlayer->ingame && !pPlayer->IsBot())
 			UTIL_ShowMOTD(pPlayer->pEdict, sToShow, ilen, szHead);
 	}
 
@@ -524,7 +524,7 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 		{
 			CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
 
-			if (pPlayer->ingame)
+			if (pPlayer->ingame && !pPlayer->IsBot())
 			{
 				g_langMngr.SetDefLang(i);
 				message = UTIL_SplitHudMessage(format_amxstring(amx, params, 2, len));
@@ -551,7 +551,7 @@ static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param *
 
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		if (pPlayer->ingame)
+		if (pPlayer->ingame && !pPlayer->IsBot())
 		{
 			if (aut)
 			{
@@ -787,10 +787,15 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 
 	if (index < 1 || index > gpGlobals->maxClients)
 	{
-		return 0;
+		return FALSE;
 	}
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+	if (!pPlayer->ingame)
+	{
+		return FALSE;
+	}
 
 	if (g_bmod_tfc)
 	{
@@ -798,11 +803,11 @@ static cell AMX_NATIVE_CALL is_user_alive(AMX *amx, cell *params) /* 1 param */
 		if (e->v.flags & FL_SPECTATOR ||
 			(!e->v.team || !e->v.playerclass))
 		{
-			return 0;
+			return FALSE;
 		}
 	}
 
-	return ((pPlayer->ingame && pPlayer->IsAlive()) ? 1 : 0);
+	return pPlayer->IsAlive() ? TRUE : FALSE;
 }
 
 static cell AMX_NATIVE_CALL get_amxx_verstring(AMX *amx, cell *params) /* 2 params */
@@ -1106,6 +1111,12 @@ static cell AMX_NATIVE_CALL user_has_weapon(AMX *amx, cell *params)
 	}
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
+	if (!pPlayer->ingame)
+	{
+		return 0;
+	}
+
 	edict_t *pEntity = pPlayer->pEdict;
 
 	if (params[3] == -1)
@@ -1246,31 +1257,48 @@ static cell AMX_NATIVE_CALL get_user_team(AMX *amx, cell *params) /* 3 param */
 
 static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 {
+	auto closeMenu = [amx](int index) -> int
+	{
+		auto pPlayer = GET_PLAYER_POINTER_I(index);
+
+		if (!pPlayer->ingame)
+		{
+			return 1;
+		}
+
+		pPlayer->keys = 0;
+		pPlayer->menu = 0;
+
+		// Fire newmenu callback so closing it can be handled by the plugin
+		if (!CloseNewMenus(pPlayer))
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
+			return 2;
+		}
+
+		if (g_bmod_cstrike)
+		{
+			GET_OFFSET("CBasePlayer", m_iMenu);
+			set_pdata<int>(pPlayer->pEdict, m_iMenu, 0);
+		}
+
+		return 0;
+	};
+
+	int index = params[1];
+
 	// If show_menu is called from within a newmenu callback upon receiving MENU_EXIT
 	// it is possible for this native to recurse. We need to close newmenus right away
 	// because the recursive call would otherwise modify/corrupt the static get_amxstring
 	// buffer mid execution. This will either display incorrect text or result in UTIL_ShowMenu
 	// running into an infinite loop.
-	int index = params[1];
 	if (index == 0)
 	{
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
 		{
-			CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
-
-			if (pPlayer->ingame)
+			if (closeMenu(i) == 2)
 			{
-				pPlayer->keys = 0;
-				pPlayer->menu = 0;
-
-				// Fire newmenu callback so closing it can be handled by the plugin
-				if (!CloseNewMenus(pPlayer))
-				{
-					LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
-					return 0;
-				}
-
-				UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
+				return 0;
 			}
 		}
 	}
@@ -1282,23 +1310,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			return 0;
 		}
 
-		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
-
-		if (pPlayer->ingame)
-		{
-			pPlayer->keys = 0;
-			pPlayer->menu = 0;
-
-			// Fire newmenu callback so closing it can be handled by the plugin
-			if (!CloseNewMenus(pPlayer))
-			{
-				LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
-				return 0;
-			}
-
-			UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
-		}
-		else
+		if (closeMenu(index))
 		{
 			return 0;
 		}
@@ -1343,17 +1355,20 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 	} else {
 		CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
-		pPlayer->keys = keys;
-		pPlayer->menu = menuid;
-		pPlayer->vgui = false;
+		if (pPlayer->ingame)
+		{
+			pPlayer->keys = keys;
+			pPlayer->menu = menuid;
+			pPlayer->vgui = false;
 
-		if (time == -1)
-			pPlayer->menuexpire = INFINITE;
-		else
-			pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
+			if (time == -1)
+				pPlayer->menuexpire = INFINITE;
+			else
+				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
-		pPlayer->page = 0;
-		UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
+			pPlayer->page = 0;
+			UTIL_ShowMenu(pPlayer->pEdict, keys, time, sMenu, ilen);
+		}
 	}
 
 	return 1;
@@ -2625,11 +2640,11 @@ static cell AMX_NATIVE_CALL change_task(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL engine_changelevel(AMX *amx, cell *params)
 {
 	int length;
-	const char* new_map = get_amxstring(amx, params[1], 0, length);
+	ke::AString new_map(get_amxstring(amx, params[1], 0, length));
 
 	// Same as calling "changelevel" command but will trigger "server_changelevel" AMXX forward as well.
 	// Filling second param will call "changelevel2" command, but this is not usable in multiplayer game.
-	g_pEngTable->pfnChangeLevel(new_map, NULL);
+	g_pEngTable->pfnChangeLevel(new_map.chars(), NULL);
 
 	return 1;
 }
@@ -4710,7 +4725,8 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"plugin_flags",			plugin_flags},
 	{"precache_model",			precache_model},
 	{"precache_sound",			precache_sound},
-	{"precache_generic",		precache_generic},
+	{"precache_generic",			precache_generic},
+	{"precache_event",			precache_event},
 	{"random_float",			random_float},
 	{"random_num",				random_num},
 	{"read_argc",				read_argc},

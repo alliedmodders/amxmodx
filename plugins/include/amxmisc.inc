@@ -865,9 +865,38 @@ stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = 
  *
  * @noreturn
  */
+
 stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags = GetPlayers_None, const string[] = "")
 {
 	new strFlags[12];
 	get_flags(_:flags, strFlags, charsmax(strFlags));
 	get_players(players, num, strFlags, string);
+}
+
+/**
+ * Returns the number of clients on the server that match the specified flags.
+ *
+ * @note Example retrieving all alive CTs:
+ *       new AliveCt = get_playersnum_ex(GetPlayers_ExcludeDead | GetPlayers_MatchTeam, "CT")
+ *
+ * @param flags     Optional filtering flags (enum GetPlayersFlags); valid flags are:
+ *                    GetPlayers_None - No filter (Default)
+ *                    GetPlayers_ExcludeDead - do not include dead clients
+ *                    GetPlayers_ExcludeAlive - do not include alive clients
+ *                    GetPlayers_ExcludeBots - do not include bots
+ *                    GetPlayers_ExcludeHuman - do not include human clients
+ *                    GetPlayers_MatchTeam - match with team
+ *                    GetPlayers_MatchNameSubstring - match with part of name
+ *                    GetPlayers_CaseInsensitive - match case insensitive
+ *                    GetPlayers_ExcludeHLTV - do not include HLTV proxies
+ *                    GetPlayers_IncludeConnecting - include connecting clients
+ * @param team      String to match against if the GetPlayers_MatchTeam or GetPlayers_MatchNameSubstring flag is specified
+ *
+ * @return          Number of clients on the server that match the specified flags
+ */
+stock get_playersnum_ex(GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
+{
+	new PlayersNum;
+	get_players_ex(_, PlayersNum, flags, team);
+	return PlayersNum;
 }

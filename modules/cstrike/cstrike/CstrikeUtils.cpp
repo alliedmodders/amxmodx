@@ -13,12 +13,13 @@
 
 #include "amxxmodule.h"
 #include <amtl/am-algorithm.h>
+#include <amtl/am-string.h>
 
 extern int MessageIdTextMsg;
 
 bool UTIL_IsPlayer(edict_t *pPlayer)
 {
-	return strcmp(STRING(pPlayer->v.classname), "player") == 0;
+	return pPlayer && strcmp(STRING(pPlayer->v.classname), "player") == 0;
 }
 
 void UTIL_TextMsg_Generic(edict_t* pPlayer, const char* message)
@@ -36,7 +37,7 @@ bool UTIL_CheckForPublic(const char *publicname)
 	int i = 0;
 	char blah[64];
 
-	strncpy(blah, publicname, sizeof(blah) - 1);
+	ke::SafeStrcpy(blah, sizeof(blah), publicname);
 
 	while ((amx = MF_GetScriptAmx(i++)))
 	{

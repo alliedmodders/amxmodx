@@ -15,9 +15,9 @@ bool RehldsApi_Init()
 	}
 
 #if defined(PLATFORM_WINDOWS)
-	auto library = "swds";
+	const auto library = "swds";
 #elif defined(PLATFORM_POSIX)
-	auto library = "engine_i486";
+	const auto library = "engine_i486";
 #endif
 
 	if (!GET_IFACE<IRehldsApi>(library, RehldsApi, VREHLDS_HLDS_API_VERSION) || !RehldsApi)
@@ -25,8 +25,8 @@ bool RehldsApi_Init()
 		return false;
 	}
 
-	auto majorVersion = RehldsApi->GetMajorVersion();
-	auto minorVersion = RehldsApi->GetMinorVersion();
+	const auto majorVersion = RehldsApi->GetMajorVersion();
+	const auto minorVersion = RehldsApi->GetMinorVersion();
 
 	if (majorVersion != REHLDS_API_VERSION_MAJOR || minorVersion < REHLDS_API_VERSION_MINOR)
 	{

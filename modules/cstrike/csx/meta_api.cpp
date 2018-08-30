@@ -178,14 +178,18 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 	RETURN_META(MRES_IGNORED);
 }
 
-void ServerDeactivate() {
+void ServerDeactivate() 
+{
 	int i;
-	for( i = 1;i<=gpGlobals->maxClients; ++i){
-		CPlayer *pPlayer = GET_PLAYER_POINTER_I(i);
-		if (pPlayer->rank) pPlayer->Disconnect();
+
+	for( i = 1; i <= gpGlobals->maxClients; ++i)
+	{
+		GET_PLAYER_POINTER_I(i)->Disconnect();
 	}
-	if ( (g_rank.getRankNum() >= (int)csstats_maxsize->value) || ((int)csstats_reset->value == 1 ) ) {
-		CVAR_SET_FLOAT("csstats_reset",0.0);
+
+	if (static_cast<int>(csstats_maxsize->value) <= 0 || g_rank.getRankNum() >= static_cast<int>(csstats_maxsize->value) || static_cast<int>(csstats_reset->value) != 0)
+	{
+		CVAR_SET_FLOAT("csstats_reset", 0.0f);
 		g_rank.clear(); // clear before save to file
 	}
 	g_rank.saveRank( MF_BuildPathname("%s",get_localinfo("csstats")) );	
@@ -197,27 +201,26 @@ void ServerDeactivate() {
 	RETURN_META(MRES_IGNORED);
 }
 
-BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  ){
+BOOL ClientConnect_Post( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128])
+{
 	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	
-	if (pPlayer->pEdict == NULL)
-	{
-		pPlayer->Init(ENTINDEX(pEntity), pEntity);
-	}
 	
 	pPlayer->Connect(pszAddress);
 
 	RETURN_META_VALUE(MRES_IGNORED, TRUE);
 }
 
-void ClientDisconnect( edict_t *pEntity ) {
-	CPlayer *pPlayer = GET_PLAYER_POINTER(pEntity);
-	if (pPlayer->rank) pPlayer->Disconnect();
+void ClientDisconnect( edict_t *pEntity ) 
+{
+	GET_PLAYER_POINTER(pEntity)->Disconnect();
+
 	RETURN_META(MRES_IGNORED);
 }
 
-void ClientPutInServer_Post( edict_t *pEntity ) {
+void ClientPutInServer_Post( edict_t *pEntity ) 
+{
 	GET_PLAYER_POINTER(pEntity)->PutInServer();
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -418,7 +421,7 @@ void OnAmxxAttach(){
 	if ( path && *path ) 
 	{
 		char error[128];
-		g_rank.loadCalc( MF_BuildPathname("%s",path) , error  );
+		g_rank.loadCalc( MF_BuildPathname("%s",path) , error, sizeof(error));
 	}
 	
 	if ( !g_rank.begin() )

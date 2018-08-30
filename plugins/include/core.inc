@@ -167,9 +167,9 @@ native time(&hour = 0, &minute = 0, &second = 0);
 /**
  * Retrieves the current date in year, month and day.
  *
- * @param hour      Variable to store year in
- * @param minute    Variable to store month in
- * @param second    Variable to store day in
+ * @param year      Variable to store year in
+ * @param month     Variable to store month in
+ * @param day       Variable to store day in
  *
  * @noreturn
  */

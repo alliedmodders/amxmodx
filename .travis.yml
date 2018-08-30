@@ -8,6 +8,7 @@ addons:
     - linux-libc-dev
     - gcc-multilib
     - g++-multilib
+    - nasm
     sources:
     - llvm-toolchain-precise-3.7
     - ubuntu-toolchain-r-test

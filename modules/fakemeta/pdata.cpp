@@ -32,18 +32,18 @@
 //implement these with setjmp later.
 bool IsBadReadPtr(void *l, size_t size)
 {
-	return false;
+	return l ? false : true;
 }
 bool IsBadWritePtr(void *l, size_t size)
 {
-	return false;
+	return l ? false : true;
 }
 #endif
 
 static cell AMX_NATIVE_CALL set_pdata_int(AMX *amx, cell *params)
 {
 	int index=params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int iOffset=params[2];
 	CHECK_OFFSET(iOffset);
@@ -65,7 +65,7 @@ static cell AMX_NATIVE_CALL set_pdata_int(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_int(AMX *amx, cell *params)
 {
 	int index=params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int iOffset=params[2];
 	CHECK_OFFSET(iOffset);
@@ -87,7 +87,7 @@ static cell AMX_NATIVE_CALL get_pdata_int(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_float(AMX *amx, cell *params)
 {
 	int index=params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int iOffset=params[2];
 	CHECK_OFFSET(iOffset);
@@ -109,7 +109,7 @@ static cell AMX_NATIVE_CALL set_pdata_float(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_float(AMX *amx, cell *params)
 {
 	int index=params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int iOffset=params[2];
 	CHECK_OFFSET(iOffset);
@@ -130,7 +130,7 @@ static cell AMX_NATIVE_CALL get_pdata_float(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_string(AMX *amx, cell *params)
 {
 	int index=params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int iOffset=params[2];
 	CHECK_OFFSET(iOffset);
@@ -167,7 +167,7 @@ static cell AMX_NATIVE_CALL get_pdata_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 {
 	int index=params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int iOffset=params[2];
 	CHECK_OFFSET(iOffset);
@@ -192,22 +192,27 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 		szData = get_pdata_direct<char*>(pEdict, iOffset);
 		if (IsBadWritePtr(szData, 1))
 			return 0;
-		strcpy(szData, data);
 	} else {
 		szData = get_pdata<char*>(pEdict, iOffset);
 		if (IsBadWritePtr(szData, 1))
 			return 0;
-		if (params[4] == 1)
+
+		if (len > static_cast<int>(strlen(szData)))
 		{
-			free(szData);
-			szData = (char *)malloc(len + 1);
-		} else if (params[4] == 2) {
-			delete [] szData;
-			szData = new char[len + 1];
+			if (params[4] == 1)
+			{
+				free(szData);
+				szData = (char *)malloc(len + 1);
+			}
+			else if (params[4] == 2) {
+				delete[] szData;
+				szData = new char[len + 1];
+			}
+			set_pdata<char*>(pEdict, iOffset, szData);
 		}
-		strcpy(szData, data);
-		set_pdata<char*>(pEdict, iOffset, szData);
 	}
+
+	strncopy(szData, data, len + 1);
 
 	return 1;
 }
@@ -215,7 +220,7 @@ static cell AMX_NATIVE_CALL set_pdata_string(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_ent(AMX *amx, cell *params)
 {
 	int index=params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int iOffset=params[2];
 	CHECK_OFFSET(iOffset); 
@@ -256,7 +261,7 @@ static cell AMX_NATIVE_CALL get_pdata_ent(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_ent(AMX *amx, cell *params)
 {
 	int index  = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -282,7 +287,7 @@ static cell AMX_NATIVE_CALL set_pdata_ent(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_bool(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -303,7 +308,7 @@ static cell AMX_NATIVE_CALL get_pdata_bool(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_bool(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -328,7 +333,7 @@ static cell AMX_NATIVE_CALL set_pdata_bool(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_byte(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -349,7 +354,7 @@ static cell AMX_NATIVE_CALL get_pdata_byte(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_byte(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -374,7 +379,7 @@ static cell AMX_NATIVE_CALL set_pdata_byte(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_short(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -395,7 +400,7 @@ static cell AMX_NATIVE_CALL get_pdata_short(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_short(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -420,7 +425,7 @@ static cell AMX_NATIVE_CALL set_pdata_short(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_vector(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -449,7 +454,7 @@ static cell AMX_NATIVE_CALL get_pdata_vector(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_vector(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -476,7 +481,7 @@ static cell AMX_NATIVE_CALL set_pdata_vector(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL get_pdata_ehandle(AMX *amx, cell *params)
 {
 	int index = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);
@@ -524,7 +529,7 @@ static cell AMX_NATIVE_CALL get_pdata_ehandle(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL set_pdata_ehandle(AMX *amx, cell *params)
 {
 	int index  = params[1];
-	CHECK_ENTITY(index);
+	CHECK_ENTITY_PDATA(index);
 
 	int offset = params[2];
 	CHECK_OFFSET(offset);

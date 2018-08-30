@@ -87,6 +87,7 @@ void Client_TeamInfo(void* mValue)
 		case 1:
 			if (index < 1 || index > gpGlobals->maxClients) break;
 			char* msg = (char*)mValue;
+			if (!msg) break;
 			g_players[index].team = msg;
 			g_teamsIds.registerTeam(msg, -1);
 			g_players[index].teamId = g_teamsIds.findTeamId(msg);

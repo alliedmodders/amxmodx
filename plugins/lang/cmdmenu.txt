@@ -64,9 +64,9 @@ CONF_MENU = Saatovalikko
 SPE_MENU = Puhevalikko
 
 [bg]
-CMD_MENU = Comandnoto Menu
-CONF_MENU = Configuracionno Menu
-SPE_MENU = Menu za Govorene
+CMD_MENU = Menu s komandi
+CONF_MENU = Konfiguracionno menu
+SPE_MENU = Menu za govorene
 
 [ro]
 CMD_MENU = Menu Comenzi
@@ -74,9 +74,9 @@ CONF_MENU = Menu Configuratie
 SPE_MENU = Menu Speech
 
 [hu]
-CMD_MENU = Parancs Menu
-CONF_MENU = Beallitas Menu
-SPE_MENU = Beszed Menu
+CMD_MENU = Parancs Menü
+CONF_MENU = Beállítás Menü
+SPE_MENU = Beszéd Menü
 
 [lt]
 CMD_MENU = Komandu meniu

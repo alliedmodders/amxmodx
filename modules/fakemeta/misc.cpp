@@ -149,42 +149,6 @@ enum
 	Model_CurrentSequence	= -1,
 };
 
-// GetModelCollisionBox( index, Float:mins[3], Float:maxs[3] );
-static cell AMX_NATIVE_CALL GetModelCollisionBox(AMX *amx, cell *params)
-{
-	int entityIndex = params[1];
-
-	CHECK_ENTITY(entityIndex);
-
-	edict_t *pEdict = TypeConversion.id_to_edict(entityIndex);
-
-	if (!FNullEnt(pEdict))
-	{
-		studiohdr_t *pStudiohdr = static_cast<studiohdr_t*>(GET_MODEL_PTR(pEdict));
-
-		if (!pStudiohdr)
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Could not find the model pointer for the entity.");
-			return 0;
-		}
-
-		cell *cmins = MF_GetAmxAddr(amx, params[2]);
-		cell *cmaxs = MF_GetAmxAddr(amx, params[3]);
-
-		cmins[0] = amx_ftoc(pStudiohdr->bbmin.x);
-		cmins[1] = amx_ftoc(pStudiohdr->bbmin.y);
-		cmins[2] = amx_ftoc(pStudiohdr->bbmin.z);
-
-		cmaxs[0] = amx_ftoc(pStudiohdr->bbmax.x);
-		cmaxs[1] = amx_ftoc(pStudiohdr->bbmax.y);
-		cmaxs[2] = amx_ftoc(pStudiohdr->bbmax.z);
-
-		return 1;
-	}
-
-	return 0;
-};
-
 // GetModelBoundingBox( index, Float:mins[3], Float:maxs[3], sequence = Model_DefaultSize );
 static cell AMX_NATIVE_CALL GetModelBoundingBox(AMX *amx, cell *params)
 {
@@ -242,82 +206,11 @@ static cell AMX_NATIVE_CALL GetModelBoundingBox(AMX *amx, cell *params)
 	return 0;
 };
 
-// SetModelCollisionBox( index );
-static cell AMX_NATIVE_CALL SetModelCollisionBox(AMX *amx, cell *params)
-{
-	int entityIndex = params[1];
-
-	CHECK_ENTITY(entityIndex);
-
-	edict_t *pentModel = TypeConversion.id_to_edict(entityIndex);
-
-	if (!FNullEnt(pentModel))
-	{
-		studiohdr_t *pStudiohdr = static_cast<studiohdr_t*>(GET_MODEL_PTR(pentModel));
-
-		if (!pStudiohdr)
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Could not find the model pointer for the entity.");
-			return 0;
-		}
-
-		SET_SIZE(pentModel, pStudiohdr->bbmin, pStudiohdr->bbmax);
-
-		return 1;
-	}
-
-	return 0;
-};
-
-// SetModelBoudingBox( index, sequence = Model_DefaultSize );
-static cell AMX_NATIVE_CALL SetModelBoundingBox(AMX *amx, cell *params)
-{
-	int entityIndex = params[1];
-
-	CHECK_ENTITY(entityIndex);
-
-	edict_t *pentModel = TypeConversion.id_to_edict(entityIndex);
-
-	if (!FNullEnt(pentModel))
-	{
-		studiohdr_t *pStudiohdr = static_cast<studiohdr_t*>(GET_MODEL_PTR(pentModel));
-
-		if (!pStudiohdr)
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Could not find the model pointer for the entity.");
-			return 0;
-		}
-
-		int sequence = params[2];
-
-		if (sequence <= Model_DefaultSize)
-		{
-			SET_SIZE(pentModel, pStudiohdr->min, pStudiohdr->max);
-		}
-		else
-		{
-			if (sequence <= Model_CurrentSequence || sequence >= pStudiohdr->numseq)
-				sequence = pentModel->v.sequence;
-
-			mstudioseqdesc_t *pSeqdesc; 
-			pSeqdesc = (mstudioseqdesc_t*)((byte*)pStudiohdr + pStudiohdr->seqindex);
-
-			SET_SIZE(pentModel, pSeqdesc[sequence].bbmin, pSeqdesc[sequence].bbmax);
-
-			return 1;
-		}
-	}
-
-	return 0;
-}
 
 AMX_NATIVE_INFO misc_natives[] = {
 	{ "copy_infokey_buffer",		copy_infokey_buffer },
 	{ "lookup_sequence",			lookup_sequence },
 	{ "set_controller",				set_controller },
-	{ "GetModelCollisionBox",		GetModelCollisionBox },
-	{ "SetModelCollisionBox",		SetModelCollisionBox },
 	{ "GetModelBoundingBox",		GetModelBoundingBox },
-	{ "SetModelBoundingBox",		SetModelBoundingBox },
 	{NULL,							NULL},
 };

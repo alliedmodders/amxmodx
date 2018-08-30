@@ -861,13 +861,13 @@ stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = 
  *                    GetPlayers_IncludeConnecting - include connecting clients
  *                    GetPlayers_MatchAllFlags - match with all of the specified admin flags
  *                    GetPlayers_MatchAnyFlags - match with any of the specified admin flags
- * @param team      String to match against if the "e", "f", "j" or "k" flag is specified
+ * @param string    String to match against if the "e", "f", "j" or "k" flag is specified
  *
  * @noreturn
  */
-stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
+stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags = GetPlayers_None, const string[] = "")
 {
 	new strFlags[12];
 	get_flags(_:flags, strFlags, charsmax(strFlags));
-	get_players(players, num, strFlags, team);
+	get_players(players, num, strFlags, string);
 }

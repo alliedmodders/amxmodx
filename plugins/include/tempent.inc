@@ -1270,13 +1270,32 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
 /**
  * Creates a tracer effect and allows more customization than te_create_tracer.
  *
+ * @note If the tracer color is set to "TracerColor_User", the color will depend
+ *       on the client cvar values for "tracerred", "tracergreen", "tracerblue"
+ *       and "traceralpha".
+ * @note The color "TracerColor_Invalid" is buggy as it will output a different
+ *       color depending on the client's operating system so you should avoid
+ *       using it.
  * @note Video preview of this and all other te_ natives can be found here:
  *       https://youtu.be/szW-bSMPuyQ?t=11m36s
  *
  * @param position      Effect position
  * @param velocity      Effect velocity
  * @param life          The length of time the effect shall remain, multiplied by 10 (0 - 255)
- * @param color         Tracer color (0 - 12)
+ * @param color         Tracer color:
+ *                        TracerColor_White
+ *                        TracerColor_Red
+ *                        TracerColor_Green
+ *                        TracerColor_Blue
+ *                        TracerColor_User
+ *                        TracerColor_Orange
+ *                        TracerColor_Coral
+ *                        TracerColor_Purple
+ *                        TracerColor_Coral2
+ *                        TracerColor_Coral3
+ *                        TracerColor_Coral4
+ *                        TracerColor_Coral5
+ *                        TracerColor_Invalid
  * @param length        Length of the tracer (0 - 255)
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients

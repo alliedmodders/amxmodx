@@ -1164,15 +1164,15 @@ enum TracerColor
 	TracerColor_Red,
 	TracerColor_Green,
 	TracerColor_Blue,
-	TracerColor_Yellow,
+	TracerColor_User,
 	TracerColor_Orange,
-	TracerColor_Pink,
+	TracerColor_Coral,
 	TracerColor_Purple,
-	TracerColor_Pink2,
-	TracerColor_Pink3,
-	TracerColor_Pink4,
-	TracerColor_Pink5,
-	TracerColor_DarkBlue
+	TracerColor_Coral2,
+	TracerColor_Coral3,
+	TracerColor_Coral4,
+	TracerColor_Coral5,
+	TracerColor_Invalid
 }
 
 /**

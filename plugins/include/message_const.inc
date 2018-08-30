@@ -864,17 +864,18 @@ enum BounceSounds
 /**
  * Flags used in te_create_break_model()
  */
-enum BreakModelFlags
+enum BreakModelFlags (<<= 1)
 {
-	BreakModel_TypeMask =                0x4F,
-	BreakModel_Glass =                   0x01,
-	BreakModel_Metal =                   0x02,
-	BreakModel_Flesh =                   0x04,
-	BreakModel_Wood =                    0x08,
-	BreakModel_Smoke =                   0x10,
-	BreakModel_Trans =                   0x20,
-	BreakModel_Concrete =                0x40,
-	BreakModel_2 =                       0x80
+	BreakModel_None = 0,
+	BreakModel_Glass = 1,
+	BreakModel_Metal,
+	BreakModel_Flesh,
+	BreakModel_Wood,
+	BreakModel_Smoke,
+	BreakModel_Trans,
+	BreakModel_Concrete,
+	BreakModel_2,
+	BreakModel_TypeMask = BreakModel_Glass | BreakModel_Metal | BreakModel_Flesh | BreakModel_Wood | BreakModel_Concrete
 };
 
 /**

@@ -888,7 +888,7 @@ native te_create_explode_model(position[3], model, speed = 0, count = 1, life = 
  * @param count         Number of model pieces to generate (0 - 255)
  * @param life          The length of time the model shall remain (0 - 255)
  * @param flags         Break model flags:
- *                        BreakModel_TypeMask
+ *                        BreakModel_None
  *                        BreakModel_Glass
  *                        BreakModel_Metal
  *                        BreakModel_Flesh
@@ -897,6 +897,7 @@ native te_create_explode_model(position[3], model, speed = 0, count = 1, life = 
  *                        BreakModel_Trans
  *                        BreakModel_Concrete
  *                        BreakModel_2
+ *                        BreakModel_TypeMask
  * @param receiver      Client index that will be able to see the model
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -906,7 +907,7 @@ native te_create_explode_model(position[3], model, speed = 0, count = 1, life = 
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_break_model(position[3], model, size[3] = {50, 50, 50}, velocity[3] = {0, 0, 0}, random = 0, count = 1, life = 10, BreakModelFlags:flags = BreakModel_TypeMask, receiver = 0, bool:reliable = true);
+native te_create_break_model(position[3], model, size[3] = {50, 50, 50}, velocity[3] = {0, 0, 0}, random = 0, count = 1, life = 10, BreakModelFlags:flags = BreakModel_None, receiver = 0, bool:reliable = true);
 
 /**
  * Places a gunshot decal on an entity or the world and plays a ricochet sound.

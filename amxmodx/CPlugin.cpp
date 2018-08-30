@@ -18,14 +18,14 @@
 
 extern const char *no_function;
 
-CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error, int debug)
+CPluginMngr::CPlugin* CPluginMngr::loadPlugin(const char* path, const char* name, char* error, size_t maxLength, int debug)
 {
 	CPlugin** a = &head;
 
 	while (*a)
 		a = &(*a)->next;
 
-	*a = new CPlugin(pCounter++, path, name, error, debug);
+	*a = new CPlugin(pCounter++, path, name, error, maxLength, debug);
 
 	return (*a);
 }
@@ -137,7 +137,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 			continue;
 		}
 
-		CPlugin* plugin = loadPlugin(pluginsDir, pluginName, error, debugFlag);
+		CPlugin* plugin = loadPlugin(pluginsDir, pluginName, error, sizeof(error), debugFlag);
 
 		if (plugin->getStatusCode() == ps_bad_load)
 		{
@@ -267,7 +267,7 @@ const char* CPluginMngr::CPlugin::getStatus() const
 	return "error";
 }
 
-CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int d) : name(n), title(n), m_pNullStringOfs(nullptr), m_pNullVectorOfs(nullptr)
+CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, size_t m, int d) : name(n), title(n), m_pNullStringOfs(nullptr), m_pNullVectorOfs(nullptr)
 {
 	const char* unk = "unknown";
 
@@ -280,7 +280,7 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, int 
 	char* path = build_pathname_r(file, sizeof(file), "%s/%s", p, n);
 	code = 0;
 	memset(&amx, 0, sizeof(AMX));
-	int err = load_amxscript(&amx, &code, path, e, d);
+	int err = load_amxscript_ex(&amx, &code, path, e, m, d);
 
 	if (err == AMX_ERR_NONE)
 	{

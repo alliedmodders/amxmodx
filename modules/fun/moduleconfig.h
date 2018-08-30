@@ -119,8 +119,8 @@
 // #define FN_ClientCommand				ClientCommand				/* pfnClientCommand()			(wd) Player has sent a command (typed or from a bind) */
 // #define FN_ClientUserInfoChanged		ClientUserInfoChanged		/* pfnClientUserInfoChanged()	(wd) Client has updated their setinfo structure */
 // #define FN_ServerActivate			ServerActivate				/* pfnServerActivate()			(wd) Server is starting a new map */
-// #define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
-#define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
+#define FN_ServerDeactivate			ServerDeactivate			/* pfnServerDeactivate()		(wd) Server is leaving the map (shutdown or changelevel); SDK2 */
+// #define FN_PlayerPreThink			PlayerPreThink				/* pfnPlayerPreThink() */
 // #define FN_PlayerPostThink			PlayerPostThink				/* pfnPlayerPostThink() */
 // #define FN_StartFrame				StartFrame					/* pfnStartFrame() */
 // #define FN_ParmsNewLevel				ParmsNewLevel				/* pfnParmsNewLevel() */
@@ -232,7 +232,7 @@
 // #define FN_SetOrigin							SetOrigin
 // #define FN_EmitSound							EmitSound
 // #define FN_EmitAmbientSound					EmitAmbientSound
-#define FN_TraceLine							TraceLine
+// #define FN_TraceLine							TraceLine
 // #define FN_TraceToss							TraceToss
 // #define FN_TraceMonsterHull					TraceMonsterHull
 // #define FN_TraceHull							TraceHull

@@ -1010,6 +1010,7 @@ native get_user_attacker(index, ...);
  *
  * @note If the trace does not hit a client, id and body will be set to 0.
  * @note If the trace hits nothing within the specified distance, 0 is returned.
+ * @note For a list of possible body hitplaces see the HIT_* constants in amxconst.inc.
  *
  * @param index     Client index to trace aim from
  * @param id        Variable to store hit client index (if applicable)
@@ -1020,7 +1021,7 @@ native get_user_attacker(index, ...);
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients, an error will be thrown.
  */
-native Float:get_user_aiming(index, &id, &body, dist = 9999);
+native Float:get_user_aiming(index, &id, &body = HIT_GENERIC, dist = 9999);
 
 /**
  * Returns the client's frags.

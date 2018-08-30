@@ -33,5 +33,5 @@
 * Returning cellmin as value in get_score function
 * makes that rank won't be saved. */
 
-public get_score(stats[11], body[8])
-	return stats[0] - stats[1] - stats[3]	// kills - deaths - teamkills
+public get_score(stats[11], body[MAX_BODYHITS])
+	return stats[STATSX_KILLS] - stats[STATSX_DEATHS] - stats[STATSX_TEAMKILLS]	// kills - deaths - teamkills

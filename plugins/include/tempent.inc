@@ -731,8 +731,8 @@ native te_remove_all_beams_from_entity(entity, receiver = 0, bool:reliable = tru
  * @param position      Effect position
  * @param sprite        Sprite index to use
  * @param flag          List of valid flags:
- *                        LF_FLOAT_DOWN           - float downwards and end in the point set in the "position" argument
- *                        LF_FLOAT_UP             - start from the point set in the "position" argument and float upwards
+ *                        LargeFunnel_FloatDown   - float downwards and end in the point set in the "position" argument
+ *                        LargeFunnel_FloatUp     - start from the point set in the "position" argument and float upwards
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients
  * @param reliable      If true, the message will be sent via the reliable
@@ -742,7 +742,7 @@ native te_remove_all_beams_from_entity(entity, receiver = 0, bool:reliable = tru
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_large_funnel(position[3], sprite, LargeFunnelFlags:flag = LargeFunnel_FloatDown, receiver = 0, bool:reliable = true);
+native te_create_large_funnel(position[3], sprite, LargeFunnelType:flag = LargeFunnel_FloatDown, receiver = 0, bool:reliable = true);
 
 /**
  * Creates dripping blood particles.
@@ -850,7 +850,7 @@ native te_place_brush_decal(position[3], texture, entity, receiver = 0, bool:rel
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_bouncing_model(position[3], model, velocity[3] = {0, 0, 0}, yaw = 0, BounceSounds:bouncesound = BounceSound_Null, life = 10, receiver = 0, bool:reliable = true);
+native te_create_bouncing_model(position[3], model, velocity[3] = {0, 0, 0}, yaw = 0, BounceSound:bouncesound = BounceSound_Null, life = 10, receiver = 0, bool:reliable = true);
 
 /**
  * Creates model or sprite with a blinking orange aura effect.
@@ -907,7 +907,7 @@ native te_create_explode_model(position[3], model, speed = 0, count = 1, life = 
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_break_model(position[3], model, size[3] = {50, 50, 50}, velocity[3] = {0, 0, 0}, random = 0, count = 1, life = 10, BreakModelFlags:flags = BreakModel_None, receiver = 0, bool:reliable = true);
+native te_create_break_model(position[3], model, size[3] = {50, 50, 50}, velocity[3] = {0, 0, 0}, random = 0, count = 1, life = 10, BreakModelType:flags = BreakModel_None, receiver = 0, bool:reliable = true);
 
 /**
  * Places a gunshot decal on an entity or the world and plays a ricochet sound.
@@ -1287,4 +1287,4 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_user_tracer(position[3], velocity[3], life = 10, TracerColors:color = TracerColor_Orange, length = 10, receiver = 0, bool:reliable = true);
+native te_create_user_tracer(position[3], velocity[3], life = 10, TracerColor:color = TracerColor_Orange, length = 10, receiver = 0, bool:reliable = true);

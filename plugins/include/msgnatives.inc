@@ -79,7 +79,7 @@ native draw_weapon_pickup_icon(id, weaponid, bool:reliable = true);
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native draw_status_icon(id, sprite[] = "", StatusIconFlags:status = StatusIcon_Hide, r = 0, g = 0, b = 0, bool:reliable = true);
+native draw_status_icon(id, sprite[] = "", StatusIconDisplay:status = StatusIcon_Hide, r = 0, g = 0, b = 0, bool:reliable = true);
 
 /**
  * Displays the speed bar used for controlling a train.
@@ -88,12 +88,12 @@ native draw_status_icon(id, sprite[] = "", StatusIconFlags:status = StatusIcon_H
  *
  * @param id            Client index or 0 for all clients
  * @param speed         Train speed:
- *                        TrainControls_None
- *                        TrainControls_Neutral
- *                        TrainControls_Slow
- *                        TrainControls_Medium
- *                        TrainControls_Maximum
- *                        TrainControls_Reverse
+ *                        TrainSpeed_None
+ *                        TrainSpeed_Neutral
+ *                        TrainSpeed_Slow
+ *                        TrainSpeed_Medium
+ *                        TrainSpeed_Maximum
+ *                        TrainSpeed_Reverse
  * @param reliable      If true, the message will be sent via the reliable
  *                      channel, otherwise it will use the unreliable one
  *
@@ -101,7 +101,7 @@ native draw_status_icon(id, sprite[] = "", StatusIconFlags:status = StatusIcon_H
  * @error               If "id" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native draw_train_controls(id, TrainControlFlags:speed = TrainControls_None, bool:reliable = true);
+native draw_train_controls(id, TrainControlSpeed:speed = TrainSpeed_None, bool:reliable = true);
 
 /**
  * Sends the geiger signal that notifies the player of nearby radiation level.

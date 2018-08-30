@@ -120,7 +120,7 @@ enum
 /**
  * Flags used in draw_status_icon()
  */
-enum StatusIconFlags
+enum StatusIconDisplay
 {
 	StatusIcon_Hide = 0,
 	StatusIcon_Show,
@@ -130,14 +130,14 @@ enum StatusIconFlags
 /**
  * Train controls used in draw_train_controls()
  */
-enum TrainControlFlags
+enum TrainControlSpeed
 {
-	TrainControls_None = 0,
-	TrainControls_Neutral,
-	TrainControls_Slow,
-	TrainControls_Medium,
-	TrainControls_Maximum,
-	TrainControls_Reverse
+	TrainSpeed_None = 0,
+	TrainSpeed_Neutral,
+	TrainSpeed_Slow,
+	TrainSpeed_Medium,
+	TrainSpeed_Maximum,
+	TrainSpeed_Reverse
 };
 
 /**
@@ -158,12 +158,12 @@ enum HideElemenentFlags (<<= 1)
 /**
  * Flags used in fade_user_screen()
  */
-enum ScreenFadeFlags
+enum ScreenFadeFlags (<<= 1)
 {
-	ScreenFade_FadeIn = 0x0000,
-	ScreenFade_FadeOut = 0x0001,
-	ScreenFade_Modulate = 0x0002,
-	ScreenFade_StayOut = 0x0004
+	ScreenFade_FadeIn = 0,
+	ScreenFade_FadeOut = 1,
+	ScreenFade_Modulate,
+	ScreenFade_StayOut
 };
 
 /**
@@ -723,7 +723,7 @@ enum ScreenFadeFlags
 /**
  * Flags used in te_create_large_funnel()
  */
-enum LargeFunnelFlags
+enum LargeFunnelType
 {
 	LargeFunnel_FloatDown = 0,
 	LargeFunnel_FloatUp
@@ -820,7 +820,7 @@ enum LargeFunnelFlags
 /**
  * Bounce sound types used in te_create_bouncing_model()
  */
-enum BounceSounds
+enum BounceSound
 {
 	BounceSound_Null = 0,
 	BounceSound_Shell,
@@ -867,7 +867,7 @@ enum BounceSounds
 /**
  * Flags used in te_create_break_model()
  */
-enum BreakModelFlags (<<= 1)
+enum BreakModelType (<<= 1)
 {
 	BreakModel_None = 0,
 	BreakModel_Glass = 1,
@@ -1158,7 +1158,7 @@ enum BreakModelFlags (<<= 1)
 /**
  * Colors used in te_create_user_tracer()
  */
-enum TracerColors
+enum TracerColor
 {
 	TracerColor_White = 0,
 	TracerColor_Red,

@@ -1151,6 +1151,25 @@ enum BreakModelFlags
  */
 #define TE_MULTIGUNSHOT             126
 
+/**
+ * Colors used in te_create_user_tracer()
+ */
+enum TracerColors
+{
+	TracerColor_White = 0,
+	TracerColor_Red,
+	TracerColor_Green,
+	TracerColor_Blue,
+	TracerColor_Yellow,
+	TracerColor_Orange,
+	TracerColor_Pink,
+	TracerColor_Purple,
+	TracerColor_Pink2,
+	TracerColor_Pink3,
+	TracerColor_Pink4,
+	TracerColor_Pink5,
+	TracerColor_DarkBlue
+}
 
 /**
  * Larger message than the standard tracer, but allows some customization.

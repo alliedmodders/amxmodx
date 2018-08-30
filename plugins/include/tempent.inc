@@ -1286,4 +1286,4 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_user_tracer(position[3], velocity[3], life = 10, color = 5, length = 10, receiver = 0, bool:reliable = true);
+native te_create_user_tracer(position[3], velocity[3], life = 10, TracerColors:color = TracerColor_Orange, length = 10, receiver = 0, bool:reliable = true);

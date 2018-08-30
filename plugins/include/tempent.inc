@@ -742,7 +742,7 @@ native te_remove_all_beams_from_entity(entity, receiver = 0, bool:reliable = tru
  * @error               If "receiver" is non-zero and the client isn't
  *                      connected, an error will be thrown.
  */
-native te_create_large_funnel(position[3], sprite, flag = LF_FLOAT_DOWN, receiver = 0, bool:reliable = true);
+native te_create_large_funnel(position[3], sprite, LargeFunnelFlags:flag = LargeFunnel_FloatDown, receiver = 0, bool:reliable = true);
 
 /**
  * Creates dripping blood particles.

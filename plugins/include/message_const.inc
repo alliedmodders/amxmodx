@@ -723,8 +723,11 @@ enum ScreenFadeFlags
 /**
  * Flags used in te_create_large_funnel()
  */
-#define LF_FLOAT_DOWN 0
-#define LF_FLOAT_UP 1
+enum LargeFunnelFlags
+{
+	LargeFunnel_FloatDown = 0,
+	LargeFunnel_FloatUp
+};
 
 /**
  * Particle spray

@@ -889,12 +889,13 @@ stock get_players_ex(players[MAX_PLAYERS], &num, GetPlayersFlags:flags = GetPlay
  *                      automatically
  * @param info_ml       If true, the parameter "info" will be looked up as multilingual key
  *
- * @noreturn
+ * @return              Id of the "say_team" command or 0 on failure. The index of the "say"
+ *                      command is equal to the returned index + 1.
  * @error               If an invalid callback function is specified, an error
  *                      will be thrown.
  */
 stock register_chatcmd(const client_cmd[], const function[], flags = -1, const info[] = "", FlagManager = -1, bool:info_ml = false)
 {
 	register_clcmd(fmt("say %s", client_cmd), function, flags, info, FlagManager, info_ml);
-	register_clcmd(fmt("say_team %s", client_cmd), function, flags, info, FlagManager, info_ml);
+	return register_clcmd(fmt("say_team %s", client_cmd), function, flags, info, FlagManager, info_ml);
 }

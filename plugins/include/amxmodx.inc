@@ -1216,7 +1216,7 @@ native get_user_ping(index, &ping, &loss);
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients, an error will be thrown.
  */
-native get_user_origin(index, origin[3], mode = 0);
+native get_user_origin(index, origin[3], mode = Origin_Current);
 
 /**
  * Retrieves all weapons in the client inventory, stores them in an array, and

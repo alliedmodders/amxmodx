@@ -28,7 +28,7 @@
 
 #include <amxmodx>
 
-public get_score(stats[8],body[8])
+public get_score(stats[STATSX_MAX_STATS],body[MAX_BODYHITS])
 {
-	return stats[0] - stats[1] - stats[3] /* kills - deaths - TKs */
+	return stats[STATSX_KILLS] - stats[STATSX_DEATHS] - stats[STATSX_TEAMKILLS] /* kills - deaths - TKs */
 }

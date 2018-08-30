@@ -75,7 +75,7 @@ new g_center2_sync
 new g_left_sync
 new g_damage_sync
 
-new g_bodyParts[8][] = { 
+new g_bodyParts[MAX_BODYHITS][] = { 
                         "whole body",
                         "head",
                         "chest",
@@ -220,18 +220,18 @@ public cmdStatsMe(id){
 }
 
 displayStats(id,dest) {
-  new name[32], stats[8], body[8]
+  new name[32], stats[STATSX_MAX_STATS], body[MAX_BODYHITS]
   get_user_wstats(id,0,stats,body)
   new pos = format(g_Buffer,charsmax(g_Buffer),"Kills: %d^nDeaths: %d^nTKs: %d^nDamage: %d^nHits: %d^nShots: %d^n^n",
-    stats[0],stats[1],stats[3],stats[6],stats[5],stats[4])
+    stats[STATSX_KILLS],stats[STATSX_DEATHS],stats[STATSX_TEAMKILLS],stats[STATSX_DAMAGE],stats[STATSX_HITS],stats[STATSX_SHOTS])
   new a
   for( a = 1; a < TFCMAX_WEAPONS; a++) {
     if (get_user_wstats(id,a,stats,body)){
       if ( xmod_is_melee_wpn(a) )
-        stats[4] = -1;
+        stats[STATSX_SHOTS] = -1;
       xmod_get_wpnname(a,name,charsmax(name))
       pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%s shots: %d  hits: %d  damage: %d  kills: %d  deaths: %d^n",
-        name,stats[4],stats[5],stats[6],stats[0],stats[1])
+        name,stats[STATSX_SHOTS],stats[STATSX_HITS],stats[STATSX_DAMAGE],stats[STATSX_KILLS],stats[STATSX_DEATHS])
     }
   }
   get_user_name(id,name,charsmax(name))
@@ -248,13 +248,13 @@ public cmdRank(id){
 }
 
 displayRank(id,dest) {
-  new name[MAX_NAME_LENGTH], stats[8], body[8]
+  new name[MAX_NAME_LENGTH], stats[STATSX_MAX_STATS], body[MAX_BODYHITS]
   new rank_pos = get_user_stats(id,stats,body)
   new pos = format(g_Buffer,charsmax(g_Buffer),"Kills: %d^nDeaths: %d^nTKs: %d^nDamage: %d^nHits: %d^nShots: %d^n^n",
-    stats[0],stats[1],stats[3],stats[6],stats[5],stats[4])
+    stats[STATSX_KILLS],stats[STATSX_DEATHS],stats[STATSX_TEAMKILLS],stats[STATSX_DAMAGE],stats[STATSX_HITS],stats[STATSX_SHOTS])
   pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"Hits:^n%s: %d^n%s: %d^n%s: %d^n%s: %d^n%s: %d^n%s: %d^n%s: %d^n^n",
-    g_bodyParts[1],body[1],g_bodyParts[2],body[2],g_bodyParts[3],body[3], g_bodyParts[4],body[4],
-    g_bodyParts[5],body[5],g_bodyParts[6],body[6],g_bodyParts[7],body[7])
+    g_bodyParts[HIT_HEAD],body[HIT_HEAD],g_bodyParts[HIT_CHEST],body[HIT_CHEST],g_bodyParts[HIT_STOMACH],body[HIT_STOMACH], g_bodyParts[HIT_LEFTARM],body[HIT_LEFTARM],
+    g_bodyParts[HIT_RIGHTARM],body[HIT_RIGHTARM],g_bodyParts[HIT_LEFTLEG],body[HIT_LEFTLEG],g_bodyParts[HIT_RIGHTLEG],body[HIT_RIGHTLEG])
   format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%s rank is %d of %d",(id==dest)?"Your":"His", rank_pos,get_statsnum())
   get_user_name(id,name,charsmax(name))
   show_motd(dest,g_Buffer,name)
@@ -272,7 +272,7 @@ public cmdTop15(id) {
 
 /* get top 15 */
 getTop15(){
-  new stats[8], body[8], name[MAX_NAME_LENGTH]
+  new stats[STATSX_MAX_STATS], body[MAX_BODYHITS], name[MAX_NAME_LENGTH]
   new pos = copy(g_Buffer,charsmax(g_Buffer),"#   nick                           kills/deaths    TKs      hits/shots/headshots^n")
   new imax = get_statsnum()
   if (imax > 15) imax = 15
@@ -280,7 +280,7 @@ getTop15(){
     get_stats(a,stats,body,name,charsmax(name))
     replace_all(name, charsmax(name), "<", "[")
     replace_all(name, charsmax(name), ">", "]")
-    pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%2d.  %-28.27s    %d/%d         %d            %d/%d/%d^n",a+1,name,stats[0],stats[1],stats[3],stats[5],stats[4],stats[2])
+    pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%2d.  %-28.27s    %d/%d         %d            %d/%d/%d^n",a+1,name,stats[STATSX_KILLS],stats[STATSX_DEATHS],stats[STATSX_TEAMKILLS],stats[STATSX_HITS],stats[STATSX_SHOTS],stats[STATSX_HEADSHOTS])
   }
 }
 
@@ -318,18 +318,18 @@ public cmdStats(id){
 
 /* build list of attackers */ 
 getAttackers(id) { 
-  new name[MAX_NAME_LENGTH],wpn[32], stats[8],body[8],found=0 
+  new name[MAX_NAME_LENGTH],wpn[32], stats[STATSX_MAX_STATS],body[MAX_BODYHITS],found=0 
   new pos = copy(g_Buffer,charsmax(g_Buffer),"Attackers:^n") 
   for(new a = 1; a <= MaxClients; ++a){ 
 
     if(get_user_astats(id,a,stats,body,wpn,charsmax(wpn))){ 
       found = 1 
-      if (stats[0]) 
+      if (stats[STATSX_KILLS]) 
         format(wpn,charsmax(wpn)," -- %s",wpn) 
       else 
         wpn[0] = 0 
       get_user_name(a,name,charsmax(name)) 
-      pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%s -- %d dmg / %d hit(s)%s^n",name,stats[6],stats[5],wpn) 
+      pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%s -- %d dmg / %d hit(s)%s^n",name,stats[STATSX_DAMAGE],stats[STATSX_HITS],wpn) 
     } 
   } 
   return found 
@@ -338,17 +338,17 @@ getAttackers(id) {
 
 /* build list of victims */ 
 getVictims(id) { 
-  new name[MAX_NAME_LENGTH],wpn[32], stats[8],body[8],found=0 
+  new name[MAX_NAME_LENGTH],wpn[32], stats[STATSX_MAX_STATS],body[MAX_BODYHITS],found=0 
   new pos = copy(g_Buffer,charsmax(g_Buffer),"Victims:^n") 
   for(new a = 1; a <= MaxClients; ++a){ 
     if(get_user_vstats(id,a,stats,body,wpn,charsmax(wpn))){ 
       found = 1 
-      if (stats[1]) 
+      if (stats[STATSX_DEATHS]) 
         format(wpn,charsmax(wpn)," -- %s",wpn) 
       else 
         wpn[0] = 0 
       get_user_name(a,name,charsmax(name)) 
-      pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%s -- %d dmg / %d hit(s)%s^n",name,stats[6],stats[5],wpn) 
+      pos += format(g_Buffer[pos],charsmax(g_Buffer)-pos,"%s -- %d dmg / %d hit(s)%s^n",name,stats[STATSX_DAMAGE],stats[STATSX_HITS],wpn) 
     } 
   } 
   return found 
@@ -356,7 +356,7 @@ getVictims(id) {
 
 /* build list of hita for AV List */ 
 getHits(id,killer) { 
-  new stats[8], body[8], pos = 0 
+  new stats[STATSX_MAX_STATS], body[MAX_BODYHITS], pos = 0 
   g_Buffer[0] = 0 
   get_user_astats(id,killer,stats,body) 
   for(new a = 1; a < sizeof(body); ++a) 
@@ -367,7 +367,7 @@ getHits(id,killer) {
 
 /* build list of hits for say hp */ 
 getMyHits(id,killed) { 
-  new name[MAX_NAME_LENGTH], stats[8], body[8], found = 0 
+  new name[MAX_NAME_LENGTH], stats[STATSX_MAX_STATS], body[MAX_BODYHITS], found = 0 
   get_user_name(killed,name,charsmax(name)) 
   new pos = format(g_Buffer,charsmax(g_Buffer),"You hit %s in:",name) 
   get_user_vstats(id,killed,stats,body) 
@@ -390,14 +390,14 @@ public cmdKiller(id) {
     return PLUGIN_HANDLED
   }
   if (g_Killers[id][0]) {
-    new name[MAX_NAME_LENGTH], stats[8], body[8], wpn[32], mstats[8], mbody[8]
+    new name[MAX_NAME_LENGTH], stats[STATSX_MAX_STATS], body[MAX_BODYHITS], wpn[32], mstats[STATSX_MAX_STATS], mbody[MAX_BODYHITS]
     get_user_name(g_Killers[id][0],name,charsmax(name))
     get_user_astats(id,g_Killers[id][0],stats,body,wpn,charsmax(wpn))
     client_print(id,print_chat,"%s killed you with %s from distance of %.2f meters",  name,wpn,float(g_Killers[id][3]) * 0.0254 )
     client_print(id,print_chat,"He did %d damage to you with %d hit%s and still had %dhp and %dap",
-      stats[6],stats[5],(stats[5]==1)?"":"s" , g_Killers[id][1],g_Killers[id][2] )
+      stats[STATSX_DAMAGE],stats[STATSX_HITS],(stats[STATSX_HITS]==1)?"":"s" , g_Killers[id][1],g_Killers[id][2] )
     if ( get_user_vstats(id,g_Killers[id][0],mstats,mbody) )  {
-      client_print(id,print_chat,"You did %d damage to him with %d hit%s",mstats[6], mstats[5],(mstats[5]==1)?"":"s" )
+      client_print(id,print_chat,"You did %d damage to him with %d hit%s",mstats[STATSX_DAMAGE], mstats[STATSX_HITS],(mstats[STATSX_HITS]==1)?"":"s" )
       getMyHits(id,g_Killers[id][0])
       client_print(id,print_chat, "%s", g_Buffer)
     }
@@ -527,15 +527,15 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
 
 
   if ( ShowKiller && !(!get_cvar_num("tfcstats_rankbots") &&  (is_user_bot(killer) || is_user_bot(killer)))  ){ 
-    new stats[8], body[8], wpn[32], mstats[8], mbody[8] 
+    new stats[STATSX_MAX_STATS], body[MAX_BODYHITS], wpn[32], mstats[STATSX_MAX_STATS], mbody[MAX_BODYHITS] 
   
     get_user_astats(victim,killer,stats,body,wpn,charsmax(wpn)) 
     get_user_vstats(victim,killer,mstats,mbody) 
     set_hudmessage(220,80,0,0.05,0.15,0, statstime, 12.0, 1.0, 2.0, -1) 
     getHits(victim,killer) 
     show_hudmessage(victim,"%s killed you with %s^nfrom distance of %.2f meters.^nHe did %d damage to you with %d hit(s)^nand still has %dhp and %dap.^nYou did %d damage to him with %d hit(s).^nHe hits you in:^n%s", 
-                                killer_name,wpn,float(g_Killers[victim][3]) * 0.0254,  stats[6],stats[5],
-                                g_Killers[victim][1],g_Killers[victim][2], mstats[6],mstats[5],g_Buffer ) 
+                                killer_name,wpn,float(g_Killers[victim][3]) * 0.0254,  stats[STATSX_DAMAGE],stats[STATSX_HITS],
+                                g_Killers[victim][1],g_Killers[victim][2], mstats[STATSX_DAMAGE],mstats[STATSX_HITS],g_Buffer ) 
   } 
 
   if ( KillerHp ){

@@ -1020,7 +1020,7 @@ native get_user_attacker(index, ...);
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients, an error will be thrown.
  */
-native Float:get_user_aiming(index, &id, &body, dist = 9999);
+native Float:get_user_aiming(index, &id, &body = HIT_GENERIC, dist = 9999);
 
 /**
  * Returns the client's frags.

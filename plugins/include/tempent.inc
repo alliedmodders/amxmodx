@@ -1273,9 +1273,6 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
  * @note If the tracer color is set to "TracerColor_User", the color will depend
  *       on the client cvar values for "tracerred", "tracergreen", "tracerblue"
  *       and "traceralpha".
- * @note The color "TracerColor_Invalid" is buggy as it will output a different
- *       color depending on the client's operating system so you should avoid
- *       using it.
  * @note Video preview of this and all other te_ natives can be found here:
  *       https://youtu.be/szW-bSMPuyQ?t=11m36s
  *
@@ -1294,8 +1291,6 @@ native te_create_multi_gunshot(position[3], direction[3], decal = 105, count = 1
  *                        TracerColor_Coral2
  *                        TracerColor_Coral3
  *                        TracerColor_Coral4
- *                        TracerColor_Coral5
- *                        TracerColor_Invalid
  * @param length        Length of the tracer (0 - 255)
  * @param receiver      Client index that will be able to see the effect
  *                      or 0 for all clients

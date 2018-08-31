@@ -1168,11 +1168,9 @@ enum TracerColor
 	TracerColor_Orange,
 	TracerColor_Coral,
 	TracerColor_Purple,
-	TracerColor_Coral2,
+	TracerColor_Coral2 = 9,
 	TracerColor_Coral3,
-	TracerColor_Coral4,
-	TracerColor_Coral5,
-	TracerColor_Invalid
+	TracerColor_Coral4
 }
 
 /**

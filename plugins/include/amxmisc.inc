@@ -922,6 +922,8 @@ stock precache_player_model(const name[], &id = 0)
 		id = precache_generic(model);
 
 	static const extension[] = "T.mdl";
-	replace_string(model[charsmax(extension)], charsmax(model), extension, ".mdl");
+	#pragma unused extension
+
+	copy(model[strlen(model) - charsmax(extension)], charsmax(model), ".mdl");
 	return precache_model(model);
 }

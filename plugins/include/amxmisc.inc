@@ -16,18 +16,7 @@
 	#include <amxmodx>
 #endif
 
-/**
- * Used in replace_activity_data() to specify if and where a whitespace should
- * be removed from the admin's name when the client isn't supposed to see it
- */
-enum ActivityTrim
-{
-	ActivityTrim_None = 0,
-	ActivityTrim_Before,
-	ActivityTrim_After
-}
-
-static ActivityTrim:activity_trim, bool:activity_color, activity_sender, activity_ph_name[32], activity_ph_prefix[32];
+static bool:activity_color, activity_sender, activity_ph_name[32], activity_ph_prefix[32];
 
 /**
  * Returns if the client has any admin flags set
@@ -446,8 +435,14 @@ stock can_see_admin_name(id)
 /**
  * Replaces the admin name and client prefix placeholders for show_activity() functions inside a string.
  *
- * @note If the client isn't supposed to see the admin name, the name
- *       will simply get removed by the string (replace with "").
+ * @note If the client isn't supposed to see the admin name, the name will
+ *       simply get removed by the string (replaced with ""). In addition,
+ *       it will also attempt to remove an extra whitespace in order to
+ *       prevent having two of them when it gets replaced with "". To do this,
+ *       it first attempts to remove a whitespace before the admin name. If not
+ *       found, it attempts to remove a whitespace after the name. If it's still
+ *       not found, it proceeds to removing the entire name without removing
+ *       any whitespaces before or after.
  *
  * @param id            Client index
  * @param name          Admin name that will be replaced
@@ -469,15 +464,11 @@ stock replace_activity_data(id, const name[], buffer[], len)
 		replace_string(buffer, len, activity_ph_name, name);
 	else
 	{
-		new ph[32];
-
-		switch(activity_trim)
+		if(!replace_string(buffer, len, fmt(" %s", activity_ph_name), ""))
 		{
-			case ActivityTrim_Before: formatex(ph, charsmax(ph), " %s", activity_ph_name);
-			case ActivityTrim_After: formatex(ph, charsmax(ph), "%s ", activity_ph_name);
+			if(!replace_string(buffer, len, fmt("%s ", activity_ph_name), ""))
+				replace_string(buffer, len, activity_ph_name, "");
 		}
-
-		replace_string(buffer, len, ph, "");
 	}
 }
 
@@ -494,21 +485,16 @@ stock replace_activity_data(id, const name[], buffer[], len)
  *
  * @param color     Set this to true if you want to use colored chat messages
  * @param sender    Sender id or print_team_* constant for colored messages
- * @param trim_ws   Specifies if and where a whitespace should be removed from the
- *                  admin name if the client isn't supposed to see it:
- *                    ActivityTrim_None - don't remove any whitespace
- *                    ActivityTrim_Before - remove the whitespace before the name
- *                    ActivityTrim_After - remove the whitespace after the name
  * @param ph_name   Placeholder for the admin name used in show_activity_custom()
  * @param ph_prefix Placeholder for the user prefix used in show_activity_custom()
  *
  * @noreturn
  */
-stock set_activity_rules(bool:color, sender = print_team_default, ActivityTrim:trim_ws = ActivityTrim_After, ph_name[] = "$an", ph_prefix[] = "$pr")
+stock set_activity_rules(bool:color, sender = print_team_default, ph_name[] = "$an", ph_prefix[] = "$pr")
 {
+	activity_init();
 	activity_color = color;
 	activity_sender = sender;
-	activity_trim = trim_ws;
 	copy(activity_ph_name, charsmax(activity_ph_name), ph_name);
 	copy(activity_ph_prefix, charsmax(activity_ph_prefix), ph_prefix);
 }
@@ -530,7 +516,6 @@ stock activity_init()
 		activity_sender = print_team_default;
 		activity_ph_name = "$an";
 		activity_ph_prefix = "$pr";
-		activity_trim = ActivityTrim_After;
 		activity_pointer = get_cvar_pointer("amx_show_activity");
 
 		if(!activity_pointer)

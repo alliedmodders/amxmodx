@@ -50,7 +50,7 @@ General
  
 Development
 -----------
-- [Issue tracker](https://github.com/voed/amxmodx/issues): Feel free to create an issue
+- [Issue tracker](https://github.com/voed/amxmodx/issues): Feel free to open an issue
 - [Issue archive](https://bugs.alliedmods.net/describecomponents.cgi?product=AMX%20Mod%20X): Old issues can be found here
 - [Building AMXX](https://wiki.alliedmods.net/Building_AMX_Mod_X): Instructions on how to build AMXX itself using [AMBuild](https://github.com/alliedmodders/ambuild)
 - [AMX Mod X API](https://amxmodx.org/api/): AMX Mod X API reference generated from include files

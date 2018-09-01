@@ -42,7 +42,7 @@ Feature list
 
 General
 -------
-- [AMXX website](http://www.amxmodx.org/)
+- [AMXX website](https://amxmodx.org/)
 - [Forum](https://forums.alliedmods.net/forumdisplay.php?f=3): Discussion forum including plugin/extension development
 - [General documentation](https://wiki.alliedmods.net/Category:Documentation_%28AMX_Mod_X%29): Miscellaneous information about AMXX
 - [Latest release](http://www.amxmodx.org/downloads.php): The latest stable AMXX release

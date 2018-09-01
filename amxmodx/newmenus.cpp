@@ -825,8 +825,16 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 
 	if (g_bmod_cstrike)
 	{
+		enum JoinState { Joined = 0 };
+		enum MenuState { Menu_OFF = 0, Menu_ChooseTeam = 1, Menu_ChooseAppearance = 3 };
+
+		GET_OFFSET("CBasePlayer", m_iJoiningState);
 		GET_OFFSET("CBasePlayer", m_iMenu);
-		set_pdata<int>(pPlayer->pEdict, m_iMenu, 0);
+
+		if (get_pdata<int>(pPlayer->pEdict, m_iJoiningState) == Joined || (get_pdata<int>(pPlayer->pEdict, m_iMenu) != Menu_ChooseTeam && get_pdata<int>(pPlayer->pEdict, m_iMenu) != Menu_ChooseAppearance))
+		{
+			set_pdata<int>(pPlayer->pEdict, m_iMenu, Menu_OFF);
+		}
 	}
 
 	int time = -1;

@@ -103,7 +103,7 @@ class CPlayer
 
 	private:
 
-		int  bodyHits_[kMaxClients + 1] {};
+		int  bodyHits_[kMaxClients + 1];
 		bool silentFootsteps_ {};
 };
 

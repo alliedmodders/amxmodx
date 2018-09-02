@@ -494,7 +494,7 @@ enum CsAmmoCostType
  */
 enum
 {
-	CS_AK47_MAX_MAX_BPAMMO      = 90,
+	CS_AK47_MAX_BPAMMO      = 90,
 	CS_AWP_MAX_BPAMMO           = 30,
 	CS_DEAGLE_MAX_BPAMMO        = 35,
 	CS_G3SG1_MAX_BPAMMO         = 90,
@@ -528,7 +528,7 @@ enum
  */
 enum
 {
-	CS_AK47_MAX_MAX_CLIPAMMO      = 30,
+	CS_AK47_MAX_CLIPAMMO      = 30,
 	CS_AWP_MAX_CLIPAMMO           = 10,
 	CS_DEAGLE_MAX_CLIPAMMO        = 7,
 	CS_G3SG1_MAX_CLIPAMMO         = 20,

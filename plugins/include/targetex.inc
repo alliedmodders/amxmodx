@@ -19,9 +19,27 @@
 #include <amxmisc>
 #include <engine>
 
-static const TargetEx_GroupArguments[][] = { "all", "alive", "bots", "dead", "humans", "view" }
-static TargetEx_ArgLens[sizeof(TargetEx_GroupArguments)];
+/**
+ * Selectors used with cmd_targetex()
+ */
+#define TARGETEX_ARG_AIM 			"aim"
+#define TARGETEX_ARG_ALL 			"all"
+#define TARGETEX_ARG_ALIVE 			"alive"
+#define TARGETEX_ARG_BOTS 			"bots"
+#define TARGETEX_ARG_DEAD 			"dead"
+#define TARGETEX_ARG_HUMANS 		"humans"
+#define TARGETEX_ARG_ME 			"me"
+#define TARGETEX_ARG_SPECTATING	 	"spectating"
+#define TARGETEX_ARG_VIEW 			"view"
 
+static const TargetEx_GroupArguments[][] = { TARGETEX_ARG_ALL, TARGETEX_ARG_ALIVE, TARGETEX_ARG_BOTS, TARGETEX_ARG_DEAD, TARGETEX_ARG_HUMANS, TARGETEX_ARG_VIEW };
+static const TargetEx_NoExcludeArguments[][] = { TARGETEX_ARG_AIM, TARGETEX_ARG_BOTS, TARGETEX_ARG_ME, TARGETEX_ARG_SPECTATING, TARGETEX_ARG_VIEW };
+static TargetEx_GroupArgsLens[sizeof(TargetEx_GroupArguments)];
+static TargetEx_NoExcludeArgsLens[sizeof(TargetEx_NoExcludeArguments)];
+
+/**
+ * Flags used with cmd_targetex()
+ */
 enum TargetexFlags (<<= 1)
 {
 	TARGETEX_NONE = 0,
@@ -34,19 +52,24 @@ enum TargetexFlags (<<= 1)
 	TARGETEX_NO_DEAD
 }
 
-enum TargetexTeams
+enum TargetExTeamStructure
 {
-	TARGETEX_E_CODE[5],
-	TARGETEX_E_NAME[10],
-	TARGETEX_E_LEN
+	TARGETEX_TEAM_CODE[5],
+	TARGETEX_TEAM_NAME[10],
+	TARGETEX_TEAM_LEN
 }
 
-static const Targetex_Teams[][TargetexTeams] =
+/**
+ * List of teams used with cmd_targetex()
+ */
+static TargetEx_Teams[][TargetExTeamStructure] =
 {
 	{ "ct", "CT" },
 	{ "t", "TERRORIST" },
 	{ "spec", "SPECTATOR" }
 }
+
+static TargetEx_TeamStart, TargetEx_TeamEnd;
 
 /**
  * Processes a generic target pattern and tries to match it to a client or a
@@ -71,7 +94,7 @@ static const Targetex_Teams[][TargetexTeams] =
  * @note For arguments that are used to target more than one client,
  *       the admin can also specify a team name after the argument itself,
  *       e.g. @alivect will target all alive counter-terrorists. All the
- *       valid team names and argument codes can be found in the Targetex_Teams
+ *       valid team names and argument codes can be found in the TargetEx_Teams
  *       constant in targetex.inc.
  * @note When using an argument that targets a group of clients, the admin
  *       can also exclude himself from the command by adding a "!" symbol
@@ -107,13 +130,25 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 	{
 		bDontInit = true;
 
-		register_dictionary("targetex.txt")
+		new szModName[32];
+		get_modname(szModName, charsmax(szModName));
 
-		for(new i; i < sizeof(Targetex_Teams); i++)
-			Targetex_Teams[i][TARGETEX_E_LEN] = strlen(Targetex_Teams[i][TARGETEX_E_CODE]);
+		if(equal(szModName, "cstrike"))
+		{
+			TargetEx_TeamStart = 0;
+			TargetEx_TeamEnd = 2;
+		}
+
+		TargetEx_TeamEnd++;
+
+		for(new i = TargetEx_TeamStart; i < TargetEx_TeamEnd; i++)
+			TargetEx_Teams[i][TARGETEX_TEAM_LEN] = strlen(TargetEx_Teams[i][TARGETEX_TEAM_CODE]);
 
 		for(new i; i < sizeof(TargetEx_GroupArguments); i++)
-			TargetEx_ArgLens[i] = strlen(TargetEx_GroupArguments[i]);
+			TargetEx_GroupArgsLens[i] = strlen(TargetEx_GroupArguments[i]);
+
+		for(new i; i < sizeof(TargetEx_NoExcludeArgsLens); i++)
+			TargetEx_NoExcludeArgsLens[i] = strlen(TargetEx_NoExcludeArgsLens[i]);
 	}
 
 	if(arg[0] == '@')
@@ -129,7 +164,8 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 				return 0;
 			}
 		}
-		else if(bExceptMe)
+		
+		if(bExceptMe && targetex_is_no_exclude_argument(arg[iStartArg]))
 		{
 			targetex_cant_exclude(id, arg);
 			return 0;
@@ -149,15 +185,15 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 		new szLangKey[32], szSuffix[6], iArgLen = strlen(arg)
 		new iArgLen2 = iArgLen - (bExceptMe ? 1 : 0);
 
-		for(new i; i < sizeof(Targetex_Teams); i++)
+		for(new i = TargetEx_TeamStart; i < TargetEx_TeamEnd; i++)
 		{
-			if(equal(arg[iArgLen - Targetex_Teams[i][TARGETEX_E_LEN]], Targetex_Teams[i][TARGETEX_E_CODE]))
+			if(equal(arg[iArgLen - TargetEx_Teams[i][TARGETEX_TEAM_LEN]], TargetEx_Teams[i][TARGETEX_TEAM_CODE]))
 			{
 				szSuffix = "_TEAM";
 				iMatchingFlags |= GetPlayers_MatchTeam;
-				copy(szMatchingString, charsmax(szMatchingString), Targetex_Teams[i][TARGETEX_E_NAME]);
+				copy(szMatchingString, charsmax(szMatchingString), TargetEx_Teams[i][TARGETEX_TEAM_NAME]);
 
-				if(iArgLen2 == Targetex_Teams[i][TARGETEX_E_LEN] + 1)
+				if(iArgLen2 == TargetEx_Teams[i][TARGETEX_TEAM_LEN] + 1)
 				{
 					szLangKey = "TARGETEX_ARG_ALL";
 					get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
@@ -168,7 +204,7 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 			}
 		}
 
-		if(equal(arg[iStartArg], "aim", 3))
+		if(equal(arg[iStartArg], TARGETEX_ARG_AIM, 3))
 		{
 			new iTarget, iBody;
 			get_user_aiming(id, iTarget, iBody);
@@ -176,12 +212,12 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 			if(iTarget)
 				iPlayers[iPnum++] = iTarget;
 		}
-		else if(equal(arg[iStartArg], "all", 3))
+		else if(equal(arg[iStartArg], TARGETEX_ARG_ALL, 3))
 		{
 			szLangKey = "TARGETEX_ARG_ALL";
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
-		else if(equal(arg[iStartArg], "alive", 5))
+		else if(equal(arg[iStartArg], TARGETEX_ARG_ALIVE, 5))
 		{
 			if(flags & TARGETEX_NO_ALIVE)
 			{
@@ -193,14 +229,8 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 			iMatchingFlags |= GetPlayers_ExcludeDead;
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
-		else if(equal(arg[iStartArg], "bots", 4))
+		else if(equal(arg[iStartArg], TARGETEX_ARG_BOTS, 4))
 		{
-			if(bExceptMe)
-			{
-				targetex_cant_exclude(id, arg);
-				return 0;
-			}
-			
 			if(flags & TARGETEX_NO_BOTS)
 			{
 				console_print(id, "%L", id, "TARGETEX_NO_BOTS")
@@ -211,7 +241,7 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 			iMatchingFlags |= GetPlayers_ExcludeHuman;
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
-		else if(equal(arg[iStartArg], "dead", 4))
+		else if(equal(arg[iStartArg], TARGETEX_ARG_DEAD, 4))
 		{
 			if(flags & TARGETEX_NO_DEAD)
 			{
@@ -223,35 +253,23 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 			iMatchingFlags |= GetPlayers_ExcludeAlive;
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
-		else if(equal(arg[iStartArg], "humans", 6))
+		else if(equal(arg[iStartArg], TARGETEX_ARG_HUMANS, 6))
 		{
 			szLangKey = "TARGETEX_ARG_HUMANS";
 			iMatchingFlags |= GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV;
 			get_players_ex(iPlayers, iPnum, iMatchingFlags, szMatchingString);
 		}
-		else if(equal(arg[iStartArg], "me", 2))
+		else if(equal(arg[iStartArg], TARGETEX_ARG_ME, 2))
 			iPlayers[iPnum++] = id;
-		else if(equal(arg[iStartArg], "spectating", 10))
+		else if(equal(arg[iStartArg], TARGETEX_ARG_SPECTATING, 10))
 		{
-			if(bExceptMe)
-			{
-				targetex_cant_exclude(id, arg);
-				return 0;
-			}
-
 			new iTarget = entity_get_int(id, EV_INT_iuser2);
 
 			if(iTarget)
 				iPlayers[iPnum++] = iTarget;
 		}
-		else if(equal(arg[iStartArg], "view", 4))
+		else if(equal(arg[iStartArg], TARGETEX_ARG_VIEW, 4))
 		{
-			if(bExceptMe)
-			{
-				targetex_cant_exclude(id, arg);
-				return 0;
-			}
-
 			new iViewPlayers[MAX_PLAYERS], iViewPnum;
 			get_players_ex(iViewPlayers, iViewPnum, iMatchingFlags, szMatchingString);
 
@@ -347,17 +365,55 @@ stock cmd_targetex(id, const arg[], players[MAX_PLAYERS], name[], len, TargetexF
 static stock targetex_cant_exclude(id, const arg[])
 	console_print(id, "%L", id, "TARGETEX_NO_EXCLUDE", arg[2]);
 
-static stock bool:targetex_is_group_argument(const arg[])
+/**
+ * Checks whether a specified argument is a team argument.
+ *
+ * @param arg       Target pattern
+ *
+ * @return          True if it is, false otherwise
+ */
+bool:targetex_is_team_argument(const arg[])
 {
-	for(new i; i < sizeof(TargetEx_GroupArguments); i++)
+	for(new i = TargetEx_TeamStart; i < TargetEx_TeamEnd; i++)
 	{
-		if(equal(arg, TargetEx_GroupArguments[i], TargetEx_ArgLens[i]))
+		if(equal(arg, TargetEx_Teams[i][TARGETEX_TEAM_CODE], TargetEx_Teams[i][TARGETEX_TEAM_LEN]))
 			return true;
 	}
 
-	for(new i; i < sizeof(Targetex_Teams); i++)
+	return false;
+}
+
+/**
+ * Checks whether a specified argument is a group argument.
+ *
+ * @param arg       Target pattern
+ *
+ * @return          True if it is, false otherwise
+ */
+bool:targetex_is_group_argument(const arg[])
+{
+	for(new i; i < sizeof(TargetEx_GroupArguments); i++)
 	{
-		if(equal(arg, Targetex_Teams[i][TARGETEX_E_CODE], Targetex_Teams[i][TARGETEX_E_LEN]))
+		if(equal(arg, TargetEx_GroupArguments[i], TargetEx_GroupArgsLens[i]))
+			return true;
+	}
+
+	return targetex_is_team_argument(arg);
+}
+
+/**
+ * Checks whether a specified argument is a type of argument that doesn't
+ * allow the admin to exclude himself.
+ *
+ * @param arg       Target pattern
+ *
+ * @return          True if it is, false otherwise
+ */
+bool:targetex_is_no_exclude_argument(const arg[])
+{
+	for(new i; i < sizeof(TargetEx_NoExcludeArguments); i++)
+	{
+		if(equal(arg, TargetEx_NoExcludeArguments[i], TargetEx_NoExcludeArgsLens[i]))
 			return true;
 	}
 

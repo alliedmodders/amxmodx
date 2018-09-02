@@ -446,7 +446,10 @@ md -p JIT 2&gt;NUL
     <ClInclude Include="..\..\public\sdk\moduleconfig.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\version.rc" />
+    <ResourceCompile Include="..\version.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">../../public;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">../../public;</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\plugins\include\cellstack.inc" />

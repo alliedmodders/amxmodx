@@ -27,6 +27,9 @@
     <Filter Include="Memtools\CDetour\asm">
       <UniqueIdentifier>{6c2c3c74-4dc3-45bf-b3a5-6224971eee69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{766da9da-a13a-4f01-a886-570fc28772a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\amxxapi.cpp">
@@ -102,5 +105,10 @@
     <None Include="..\..\..\plugins\include\hlsdk_const.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

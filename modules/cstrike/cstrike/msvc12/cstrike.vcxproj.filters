@@ -42,6 +42,9 @@
     <Filter Include="ReSDK\cstrike\API">
       <UniqueIdentifier>{67de85cb-b8e7-4cd6-b8cf-2ff7ed540c2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{1b196636-b242-45a8-ad14-3fb21eb799f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CstrikeHacks.cpp">
@@ -180,5 +183,10 @@
     <None Include="..\..\..\..\plugins\include\cstrike_const.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

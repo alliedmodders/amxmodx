@@ -48,6 +48,9 @@
     <Filter Include="ReSDK\cstrike\API">
       <UniqueIdentifier>{2800175e-06bf-42bf-b3c1-f86561471531}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{c5065ec5-3262-49dd-825b-2cf3956e79ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\fakemeta_amxx.cpp">
@@ -185,5 +188,10 @@
     <CustomBuildStep Include="pev.h">
       <Filter>PEV</Filter>
     </CustomBuildStep>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

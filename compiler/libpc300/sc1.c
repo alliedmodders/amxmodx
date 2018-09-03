@@ -473,7 +473,7 @@ static void inst_binary_name(char *binfname)
 
   snprintf(newname, sizeof(newname), "\"%s\"", binptr);
 
-  insert_subst("__BINARY_NAME__", newname, 15);
+  insert_subst("__BINARY__", newname, 10);
 }
 
 /*  "main" of the compiler

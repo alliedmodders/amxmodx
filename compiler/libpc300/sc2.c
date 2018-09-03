@@ -270,6 +270,11 @@ static void doinclude(int silent)
   result=plungefile(name,(c!='>'),TRUE);
   if (!result && !silent)
     error(100,name);            /* cannot read from ... (fatal error) */
+#if !defined NO_DEFINE
+  if (result) {
+    inst_file_name(name, FALSE);
+  }
+#endif
 }
 
 /*  readline
@@ -324,6 +329,9 @@ static void readline(unsigned char *line)
       inpf=(FILE *)POPSTK_P();
       insert_dbgfile(inpfname);
       setfiledirect(inpfname);
+#if !defined NO_DEFINE
+      inst_file_name(inpfname, TRUE);
+#endif
       assert(sc_status==statFIRST || strcmp(get_inputfile(fcurrent),inpfname)==0);
       listline=-1;              /* force a #line directive when changing the file */
     } /* if */
@@ -972,8 +980,14 @@ static int command(void)
       if (strlen(pathname)>0) {
         free(inpfname);
         inpfname=duplicatestring(pathname);
-        if (inpfname==NULL)
+        if (inpfname==NULL) {
           error(103);           /* insufficient memory */
+        }
+#if !defined NO_DEFINE
+        else {
+          inst_file_name(inpfname, TRUE);
+        }
+#endif
       } /* if */
     } /* if */
     check_empty(lptr);

@@ -1080,7 +1080,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 {
 	GETMENU(params[1]);
 
-	int len = params[0] / sizeof(cell);
+	int paramsNum = params[0] / sizeof(cell);
 
 	switch(params[2])
 	{
@@ -1088,7 +1088,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		case MPROP_SHOWPAGE: return pMenu->showPageNumber;
 		case MPROP_SET_NUMBER_COLOR:
 		{
-			if (len < 4)
+			if (paramsNum < 4)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
 				return 0;
@@ -1100,7 +1100,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		case MPROP_PERPAGE:	return pMenu->items_per_page;
 		case MPROP_BACKNAME:
 		{
-			if (len < 4)
+			if (paramsNum < 4)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
 				return 0;
@@ -1111,7 +1111,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		}
 		case MPROP_NEXTNAME:
 		{
-			if (len < 4)
+			if (paramsNum < 4)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
 				return 0;
@@ -1122,7 +1122,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		}
 		case MPROP_EXITNAME:
 		{
-			if (len < 4)
+			if (paramsNum < 4)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
 				return 0;
@@ -1133,7 +1133,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		}
 		case MPROP_TITLE:
 		{
-			if (len < 4)
+			if (paramsNum < 4)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
 				return 0;

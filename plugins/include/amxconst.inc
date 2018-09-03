@@ -538,11 +538,11 @@ enum
  */
 enum
 {
-	Origin_Current = 0,
-	Origin_Eyes_Weapon,
-	Origin_AimEnd,
-	Origin_AimEndEyes,
-	Origin_LastBullet
+	Origin_Client = 0, 	// Client's Origin
+	Origin_Eyes, 		// Eyes (and Weapon) Origin
+	Origin_AimEndClient, 	// Aim End Origin from Client's Position
+	Origin_AimEndEyes, 	// Aim End Origin from Eyes Position
+	Origin_CSLastBullet 	// Last Bullet's Origin (Counter-Strike)
 }
 
 #include <cstrike_const> // To keep backward compatibility

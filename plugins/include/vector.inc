@@ -36,12 +36,12 @@ native get_distance(const origin1[3], const origin2[3]);
 /**
  * Calculates the distance between two input float vectors.
  * 
- * @param origin1       The first vector
- * @param origin2       The second vector
+ * @param Origin1       The first vector
+ * @param Origin2       The second vector
  * 
  * @return              The distance between two input vectors
  */
-native Float:get_distance_f(const Float:origin1[3], const Float:origin2[3]);
+native Float:get_distance_f(const Float:Origin1[3], const Float:Origin2[3]);
 
 /**
  * Calculates velocity in the direction player is looking.

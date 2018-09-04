@@ -11,7 +11,7 @@ General
 - [Forum](https://forums.alliedmods.net/forumdisplay.php?f=3): Discussion forum including plugin/extension development
 - [General documentation](https://wiki.alliedmods.net/Category:Documentation_%28AMX_Mod_X%29): Miscellaneous information about AMXX
 - [Latest release](https://amxmodx.org/downloads.php): The latest stable AMXX release
-- [Build snapshots](https://amxmodx.org/snapshots.php): Builds of recent development versions
+- [Build snapshots](https://www.amxmodx.org/downloads-new.php): Builds of recent development versions
  
 Development
 -----------

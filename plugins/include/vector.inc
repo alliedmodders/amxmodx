@@ -139,7 +139,7 @@ stock FVecIVec(const Float:FVec[3], IVec[3])
  */
 stock bool:IsVectorZero(const any:Vector[3])
 {
-	return (Vector[0] == 0 && Vector[1] == 0 && Vector[2] == 0) ? true : false;
+	return Vector[0] == 0 && Vector[1] == 0 && Vector[2] == 0;
 }
 
 /**

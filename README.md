@@ -5,41 +5,6 @@
 
 **AMX Mod X** is a [Metamod](https://github.com/jkivilin/metamod-p) plugin for [Half-Life 1](https://github.com/ValveSoftware/halflife). It provides comprehensive scripting for the game engine and its mods. Scripts can intercept network messages, log events, commands, client commands, set cvars, modify entities, and more. AMX Mod X also has a system for extending native scripting through modules, leading to outside support for things like MySQL and Sockets.
 
-Feature list
-------------
-- Creating client and server-side commands and variables
-- Default and customizable server administration tools
-  - Kicking/Banning
-  - Slot Reservation
-  - Text file or MySQL enabled admin system
-  - Voting
-  - Management Commands (chat, map changing, cvar changing, etc)
-  - Flood Protection
-  - Weapon Restriction
-  - Statistics
-- Scriptability through large function library
-  - Inter-plugin communication
-  - Event listening
-  - Network message hooking
-  - Entity and engine modification
-  - Gamedll and engine function call hooking
-  - Sockets
-  - Mod-specific extra support for:
-      - Counter-Strike, Condition Zero
-      - Day of Defeat
-      - Natural Selection
-      - Team Fortress Classic
-      - The Specialists
-      - Earth's Special Forces
-  - Regular Expressions
-  - Menu Creation
-  - Debugger
-- Modularity
-  - Comprehensive M/DK for interacting with scripts
-  - Easily attach and use Metamod
-  - Plug 'n Use - MDK requires almost no modification to compile
-  - Written in C/C++ - total flexibility
-
 General
 -------
 - [AMXX website](https://amxmodx.org/)
@@ -50,7 +15,7 @@ General
  
 Development
 -----------
-- [Issue tracker](https://github.com/voed/amxmodx/issues): Feel free to open an issue
+- [Issue tracker](https://github.com/alliedmodders/amxmodx/issues): Issues that require back and forth communication
 - [Issue archive](https://bugs.alliedmods.net/describecomponents.cgi?product=AMX%20Mod%20X): Old issues can be found here
 - [Building AMXX](https://wiki.alliedmods.net/Building_AMX_Mod_X): Instructions on how to build AMXX itself using [AMBuild](https://github.com/alliedmodders/ambuild)
 - [AMX Mod X API](https://amxmodx.org/api/): AMX Mod X API reference generated from include files

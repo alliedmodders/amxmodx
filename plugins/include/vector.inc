@@ -137,7 +137,7 @@ stock FVecIVec(const Float:FVec[3], IVec[3])
  * 
  * @return              True if the vector is zero, false otherwise
  */
-stock bool:IsVectorZero(const any:Vector[3])
+stock bool:IsVectorZero(const {_, Float}:Vector[3])
 {
 	return Vector[0] == 0 && Vector[1] == 0 && Vector[2] == 0;
 }
@@ -149,7 +149,7 @@ stock bool:IsVectorZero(const any:Vector[3])
  * 
  * @noreturn
  */
-stock SetVectorZero(any:Vector[3])
+stock SetVectorZero({_, Float}:Vector[3])
 {
 	Vector[0] = Vector[1] = Vector[2] = 0;
 }

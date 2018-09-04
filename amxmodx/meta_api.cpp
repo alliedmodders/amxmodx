@@ -770,7 +770,7 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 			}
 		};
 
-		const auto pEntity = CREATE_ENTITY();
+		edict_t entity;
 
 		for (auto index = 1u; index < ARRAYSIZE(Server->model_precache); index++)
 		{
@@ -786,16 +786,14 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 				continue;
 			}
 
-			pEntity->v.modelindex = index;
+			entity.v.modelindex = index;
 
-			const auto pStudioHeader = static_cast<studiohdr_t *>(GET_MODEL_PTR(pEntity));
+			const auto pStudioHeader = static_cast<studiohdr_t *>(GET_MODEL_PTR(&entity));
 
 			precacheTextures(model, pStudioHeader);
 			precacheGroups(pStudioHeader);
 			precacheSounds(pStudioHeader);
 		}
-
-		REMOVE_ENTITY(pEntity);
 	}
 
 	g_activated = true;

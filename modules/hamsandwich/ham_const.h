@@ -497,6 +497,7 @@ enum
 	Ham_SC_AddPoints,
 	Ham_SC_AddPointsToTeam,
 	Ham_SC_IsSneaking,
+	Ham_SC_IsAlive,
 	Ham_SC_CanPlaySequence,
 	Ham_SC_CanPlaySentence2,
 	Ham_SC_PlayScriptedSentence,

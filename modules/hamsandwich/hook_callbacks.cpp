@@ -2159,6 +2159,42 @@ void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2)
 	POP()
 }
 
+bool Hook_Bool_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+
+	int iEnt =TypeConversion.cbase_to_id(p1);
+
+	MAKE_VECTOR()
+
+	P_CBASE(p1, iEnt)
+	P_INT(i1)
+
+	PRE_START()
+		, iEnt, i1
+	PRE_END()
+
+#if defined(_WIN32)
+		origret = reinterpret_cast<bool (__fastcall*)(void*, int, void *, int)>(hook->func)(pthis, 0, p1, i1);
+#elif defined(__linux__) || defined(__APPLE__)
+		origret = reinterpret_cast<bool (*)(void*, void *, int)>(hook->func)(pthis, p1, i1);
+#endif
+
+	POST_START()
+		, iEnt, i1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+
+	CHECK_RETURN()
+
+	return ret;
+}
+
 void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
 {
 	PUSH_VOID()

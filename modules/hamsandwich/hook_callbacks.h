@@ -386,6 +386,11 @@ const bool RB_Void_Str_Int = false;
 const int PC_Void_Str_Int = 2;
 void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2);
 
+const bool RT_Bool_Cbase_Int = false;
+const bool RB_Bool_Cbase_Int = false;
+const int PC_Bool_Cbase_Int = 2;
+bool Hook_Bool_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1);
+
 const bool RT_Void_Cbase_Int = true;
 const bool RB_Void_Cbase_Int = false;
 const int PC_Void_Cbase_Int = 2;

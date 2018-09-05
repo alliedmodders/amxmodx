@@ -1292,6 +1292,24 @@ cell Call_Void_Str_Int(AMX *amx, cell *params)
 	return 1;
 }
 
+cell Call_Bool_Cbase_Int(AMX *amx, cell *params)
+{
+	SETUP(2);
+
+	int id3 = *MF_GetAmxAddr(amx, params[3]);
+	CHECK_ENTITY(id3);
+
+	void *p8 = TypeConversion.id_to_cbase(id3);
+
+	int i4 = *MF_GetAmxAddr(amx, params[4]);
+
+#if defined(_WIN32)
+	return reinterpret_cast<bool(__fastcall *)(void*, int, void *, int)>(__func)(pv, 0, p8, i4) ? TRUE : FALSE;
+#elif defined(__linux__) || defined(__APPLE__)
+	return reinterpret_cast<bool(*)(void *, void *, int)>(__func)(pv, p8, i4) ? TRUE : FALSE;
+#endif
+}
+
 cell Call_Void_Cbase_Int(AMX *amx, cell *params)
 {
 	SETUP(2);

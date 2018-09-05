@@ -549,6 +549,8 @@ hook_t hooklist[] =
 	{ V("sc_canplaysequence",		Bool_Bool_Int) },
 	{ V("sc_canplaysentence2",		Bool_Bool) },
 	{ V("sc_playscriptedsentence",	Void_Str_Float_Float_Float_Bool_Cbase) },
+	{ V("sc_item_cancollect",		Bool_Cbase_Int) },
+	{ V("sc_item_collect",			Void_Cbase_Int) },
 };
 
 

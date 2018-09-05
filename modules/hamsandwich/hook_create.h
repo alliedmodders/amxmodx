@@ -145,6 +145,8 @@ int Create_Int_Int_Int_Float_Int(AMX *amx, const char *func);
 
 int Create_Void_Str_Int(AMX *amx, const char *func);
 
+int Create_Bool_Cbase_Int(AMX *amx, const char *func);
+
 int Create_Void_Cbase_Int(AMX *amx, const char *func);
 
 int Create_Void_Cbase_Int_Float(AMX *amx, const char *func);

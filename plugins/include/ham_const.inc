@@ -4035,6 +4035,28 @@ enum Ham
 	 */
 	Ham_SC_PlayScriptedSentence,
 
+	/**
+	 * Description:		-
+	 *					Collect Types:
+	 *						COLLECT_TOUCH			0
+	 *						COLLECT_USE_DIRECT		1
+	 *						COLLECT_USE_INDIRECT	2
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_CanCollect, this, idOther, collectType);
+	 */
+	Ham_SC_Item_CanCollect,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, idOther, collectType);
+	 *					Collect Types:
+	 *						COLLECT_TOUCH			0
+	 *						COLLECT_USE_DIRECT		1
+	 *						COLLECT_USE_INDIRECT	2
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_Collect, this, idOther, collectType);
+	 */
+	Ham_SC_Item_Collect,
 
 	/**
 	 * DONT USE ME LOL

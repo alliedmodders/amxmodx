@@ -3743,8 +3743,15 @@ enum Ham
 	 */
 
 	/**
+	 * Description:		Performs checks that must occur before Spawn itself is called. Always call baseclass version first.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_PreSpawn, this);
+	 */
+	Ham_SC_PreSpawn,
+
+	/**
 	 * Description:		Typically adds points to the entity.
-	 *					This function is not supported by Team Fortress Classic mod.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_AddPoints, this, points, bool:cangonegative);
@@ -3753,7 +3760,6 @@ enum Ham
 
 	/**
 	 * Description:		Typically adds points to everybody on the entity's team.
-	 *					This function is not supported by Team Fortress Classic mod.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);

@@ -561,6 +561,7 @@ hook_t hooklist[] =
 	{ V("sc_item_updateclientdata", Bool_Cbase) },
 	{ V("sc_item_getrespawntime",	Float_Void) },
 	{ V("sc_item_canhaveduplicates",Bool_Void) },
+	{ V("sc_weapon_extractammofromitem",Bool_Cbase) },
 };
 
 

@@ -4047,6 +4047,11 @@ enum Ham
 	 */
 	Ham_SC_PlayScriptedSentence,
 
+
+	/**
+	 * Items have all the attributes of normal entities in addition to these.
+	 */
+
 	/**
 	 * Description:		Adds the item to the player.
 	 * Forward params:	function(this, idPlayer);
@@ -4150,6 +4155,19 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_Item_CanHaveDuplicates, this);
 	 */
 	Ham_SC_Item_CanHaveDuplicates,
+
+
+	/**
+	 * Weapons have all the attributes to Ham_Item_*, in addition to these.
+	 */
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, idOriginal)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_ExtractAmmoFromItem, idOriginal);
+	 */
+	Ham_SC_Weapon_ExtractAmmoFromItem,
 
 	/**
 	 * DONT USE ME LOL

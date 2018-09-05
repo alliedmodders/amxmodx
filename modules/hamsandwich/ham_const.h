@@ -532,6 +532,7 @@ enum
 	Ham_SC_Item_UpdateClientData,
 	Ham_SC_Item_GetRespawnTime,
 	Ham_SC_Item_CanHaveDuplicates,
+	Ham_SC_Weapon_ExtractAmmoFromItem,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

@@ -502,6 +502,7 @@ enum
 	Ham_SC_ReflectGauss,
 	Ham_SC_HasTarget,
 	Ham_SC_IsInWorld,
+	Ham_SC_IsPlayer,
 	Ham_SC_CanPlaySequence,
 	Ham_SC_CanPlaySentence2,
 	Ham_SC_PlayScriptedSentence,

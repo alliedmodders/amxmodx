@@ -383,6 +383,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is a player.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsPlayer instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsPlayer, this);
@@ -3867,6 +3869,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_IsInWorld, this);
 	 */
 	Ham_SC_IsInWorld,
+
+	/**
+	 * Description:		Whether or not the entity is a player.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Sc_IsPlayer, this);
+	 */
+	Ham_Sc_IsPlayer,
 
 	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is

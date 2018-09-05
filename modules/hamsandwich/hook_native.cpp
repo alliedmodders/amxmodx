@@ -529,6 +529,7 @@ hook_t hooklist[] =
 	{ V("sc_isalive",				Bool_Void) },
 	{ V("sc_isbspmodel",			Bool_Void) },
 	{ V("sc_reflectgauss",			Bool_Void) },
+	{ V("sc_hastarget",				Bool_Int) },
 	{ V("sc_canplaysequence",		Bool_Bool_Int) },
 	{ V("sc_canplaysentence2",		Bool_Bool) },
 	{ V("sc_playscriptedsentence",	Void_Str_Float_Float_Float_Bool_Cbase) },

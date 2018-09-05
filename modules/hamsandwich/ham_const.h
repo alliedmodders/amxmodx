@@ -500,6 +500,7 @@ enum
 	Ham_SC_IsAlive,
 	Ham_SC_IsBSPModel,
 	Ham_SC_ReflectGauss,
+	Ham_SC_HasTarget,
 	Ham_SC_CanPlaySequence,
 	Ham_SC_CanPlaySentence2,
 	Ham_SC_PlayScriptedSentence,

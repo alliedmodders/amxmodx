@@ -364,7 +364,8 @@ enum Ham
 	 *					Note the strindex parameter is a string passed that has been allocated by the engine.
 	 *					Use fakemeta's EngFunc_SzFromIndex to convert to a normal string, or fakemeta's
 	 *					EngFunc_AllocString to create a new string.
-	 * Forward params:	function(this, strindex).
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_HasTarget instead.
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_HasTarget, this, strindex);
 	 */
@@ -3845,6 +3846,17 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_ReflectGauss, this);
 	 */
 	Ham_SC_ReflectGauss,
+
+	/**
+	 * Description:		Whether or not the target is the same as the one passed.
+	 *					Note the strindex parameter is a string passed that has been allocated by the engine.
+	 *					Use fakemeta's EngFunc_SzFromIndex to convert to a normal string, or fakemeta's
+	 *					EngFunc_AllocString to create a new string.
+	 * Forward params:	function(this, strindex).
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_HasTarget, this, strindex);
+	 */
+	Ham_SC_HasTarget,
 
 	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is

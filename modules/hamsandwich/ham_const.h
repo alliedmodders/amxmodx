@@ -490,6 +490,7 @@ enum
 
 	Ham_SC_PreSpawn,
 	Ham_SC_PostSpawn,
+	Ham_SC_OnKeyValueUpdate,
 	Ham_SC_AddPoints,
 	Ham_SC_AddPointsToTeam,
 	Ham_SC_CanPlaySequence,

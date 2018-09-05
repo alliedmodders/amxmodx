@@ -3759,6 +3759,14 @@ enum Ham
 	Ham_SC_PostSpawn,
 
 	/**
+	 * Description:		-
+	 * Forward params:	function(this, key);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_PostSpawn, this, const key[]);
+	 */
+	Ham_SC_OnKeyValueUpdate,
+
+	/**
 	 * Description:		Typically adds points to the entity.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.

@@ -4144,6 +4144,14 @@ enum Ham
 	Ham_SC_Item_GetRespawnTime,
 
 	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_CanHaveDuplicates, this);
+	 */
+	Ham_SC_Item_CanHaveDuplicates,
+
+	/**
 	 * DONT USE ME LOL
 	 */
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL

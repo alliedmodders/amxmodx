@@ -531,6 +531,7 @@ enum
 	Ham_SC_Item_CanHolster,
 	Ham_SC_Item_UpdateClientData,
 	Ham_SC_Item_GetRespawnTime,
+	Ham_SC_Item_CanHaveDuplicates,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

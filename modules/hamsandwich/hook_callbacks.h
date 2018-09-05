@@ -461,6 +461,11 @@ const bool RB_Int_pVector_pVector = false;
 const int PC_Int_pVector_pVector = 3;
 int Hook_Int_pVector_pVector(Hook *hook, void *pthis, Vector *v1, Vector *v2);
 
+const bool RT_Bool_pVector_pVector = false;
+const bool RB_Bool_pVector_pVector = false;
+const int PC_Bool_pVector_pVector = 3;
+bool Hook_Bool_pVector_pVector(Hook *hook, void *pthis, Vector *v1, Vector *v2);
+
 const bool RT_Int_Entvar_Float = false;
 const bool RB_Int_Entvar_Float = false;
 const int PC_Int_Entvar_Float = 2;

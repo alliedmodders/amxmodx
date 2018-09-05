@@ -183,9 +183,9 @@ cell Call_Bool_Float_Int_Int(AMX *amx, cell *params)
 	int i5 = *MF_GetAmxAddr(amx, params[5]);
 
 #if defined(_WIN32)
-	return reinterpret_cast<bool(__fastcall *)(void*, int, float, int, int)>(__func)(pv, 0, f3, i4, i5);
+	return reinterpret_cast<bool(__fastcall *)(void*, int, float, int, int)>(__func)(pv, 0, f3, i4, i5) ? TRUE : FALSE;
 #elif defined(__linux__) || defined(__APPLE__)
-	return reinterpret_cast<bool(*)(void *, float, int, int)>(__func)(pv, f3, i4, i5);
+	return reinterpret_cast<bool(*)(void *, float, int, int)>(__func)(pv, f3, i4, i5) ? TRUE : FALSE;
 #endif
 }
 
@@ -360,9 +360,9 @@ cell Call_Bool_Bool(AMX *amx, cell *params)
 	bool i3 = *MF_GetAmxAddr(amx, params[3]) != 0;
 
 #if defined(_WIN32)
-	return reinterpret_cast<bool (__fastcall *)(void*, int, bool)>(__func)(pv, 0, i3);
+	return reinterpret_cast<bool (__fastcall *)(void*, int, bool)>(__func)(pv, 0, i3) ? TRUE : FALSE;
 #elif defined(__linux__) || defined(__APPLE__)
-	return reinterpret_cast<bool (*)(void *, bool)>(__func)(pv, i3);
+	return reinterpret_cast<bool (*)(void *, bool)>(__func)(pv, i3) ? TRUE : FALSE;
 #endif
 }
 
@@ -685,7 +685,7 @@ cell Call_Bool_pVector(AMX *amx, cell *params)
 	fl3[1] = v3.y;
 	fl3[2] = v3.z;
 
-	return ret;
+	return ret ? TRUE : FALSE;
 }
 
 cell Call_Void_Entvar_Float_Float(AMX *amx, cell *params)
@@ -949,9 +949,9 @@ cell Call_Bool_Bool_Int(AMX *amx, cell *params)
 	int i4 = *MF_GetAmxAddr(amx, params[4]);
 
 #if defined(_WIN32)
-	return reinterpret_cast<bool (__fastcall *)(void*, int, bool, int)>(__func)(pv, 0, i3, i4);
+	return reinterpret_cast<bool (__fastcall *)(void*, int, bool, int)>(__func)(pv, 0, i3, i4) ? TRUE : FALSE;
 #elif defined(__linux__) || defined(__APPLE__)
-	return reinterpret_cast<bool (*)(void *, bool, int)>(__func)(pv, i3, i4);
+	return reinterpret_cast<bool (*)(void *, bool, int)>(__func)(pv, i3, i4) ? TRUE : FALSE;
 #endif
 }
 
@@ -1593,9 +1593,9 @@ cell Call_Bool_Cbase_Bool(AMX *amx, cell *params)
 	bool b4 = *MF_GetAmxAddr(amx, params[4]) != 0;
 
 #if defined(_WIN32)
-	return reinterpret_cast<bool(__fastcall *)(void*, int, void *, bool)>(__func)(pv, 0, pv1, b4);
+	return reinterpret_cast<bool(__fastcall *)(void*, int, void *, bool)>(__func)(pv, 0, pv1, b4) ? TRUE : FALSE;
 #elif defined(__linux__) || defined(__APPLE__)
-	return reinterpret_cast<bool(*)(void *, void *, bool)>(__func)(pv, pv1, b4);
+	return reinterpret_cast<bool(*)(void *, void *, bool)>(__func)(pv, pv1, b4) ? TRUE : FALSE;
 #endif
 }
 
@@ -1644,6 +1644,30 @@ cell Call_Int_pVector_pVector(AMX *amx, cell *params)
 	return reinterpret_cast<int(__fastcall *)(void *, int, Vector *, Vector *)>(__func)(pv, 0, &v3, &v4);
 #elif defined(__linux__) || defined(__APPLE__)
 	return reinterpret_cast<int(*)(void *, Vector *, Vector *)>(__func)(pv, &v3, &v4);
+#endif
+}
+
+cell Call_Bool_pVector_pVector(AMX *amx, cell *params)
+{
+	SETUP(2);
+
+	Vector v3;
+	Vector v4;
+
+	float *fl3 = (float *)MF_GetAmxAddr(amx, params[3]);
+	v3.x = fl3[0];
+	v3.y = fl3[1];
+	v3.z = fl3[2];
+
+	float *fl4 = (float *)MF_GetAmxAddr(amx, params[4]);
+	v4.x = fl4[0];
+	v4.y = fl4[1];
+	v4.z = fl4[2];
+
+#if defined(_WIN32)
+	return reinterpret_cast<bool(__fastcall *)(void *, int, Vector *, Vector *)>(__func)(pv, 0, &v3, &v4) ? TRUE : FALSE;
+#elif defined(__linux__) || defined(__APPLE__)
+	return reinterpret_cast<bool(*)(void *, Vector *, Vector *)>(__func)(pv, &v3, &v4) ? TRUE : FALSE;
 #endif
 }
 
@@ -1710,9 +1734,9 @@ cell Call_Bool_Void(AMX *amx, cell *params)
 	SETUP(0);
 
 #if defined(_WIN32)
-	return reinterpret_cast<bool (__fastcall *)(void*, int)>(__func)(pv, 0);
+	return reinterpret_cast<bool (__fastcall *)(void*, int)>(__func)(pv, 0) ? TRUE : FALSE;
 #elif defined(__linux__) || defined(__APPLE__)
-	return reinterpret_cast<bool (*)(void *)>(__func)(pv);
+	return reinterpret_cast<bool (*)(void *)>(__func)(pv) ? TRUE : FALSE;
 #endif
 }
 
@@ -1878,9 +1902,9 @@ cell Call_Bool_Cbase(AMX *amx, cell *params)
 	void *pv1 = TypeConversion.id_to_cbase(id3);
 
 #if defined(_WIN32)
-	return reinterpret_cast<bool (__fastcall *)(void*, int, void*)>(__func)(pv, 0, pv1);
+	return reinterpret_cast<bool (__fastcall *)(void*, int, void*)>(__func)(pv, 0, pv1) ? TRUE : FALSE;
 #elif defined(__linux__) || defined(__APPLE__)
-	return reinterpret_cast<bool (*)(void *, void*)>(__func)(pv, pv1);
+	return reinterpret_cast<bool (*)(void *, void*)>(__func)(pv, pv1) ? TRUE : FALSE;
 #endif
 }
 
@@ -1891,9 +1915,9 @@ cell Call_Bool_Int(AMX *amx, cell *params)
 	int id3=*MF_GetAmxAddr(amx, params[3]);
 
 #if defined(_WIN32)
-	return reinterpret_cast<bool (__fastcall *)(void*, int, int)>(__func)(pv, 0, id3);
+	return reinterpret_cast<bool (__fastcall *)(void*, int, int)>(__func)(pv, 0, id3) ? TRUE : FALSE;
 #elif defined(__linux__) || defined(__APPLE__)
-	return reinterpret_cast<bool (*)(void *, int)>(__func)(pv, id3);
+	return reinterpret_cast<bool (*)(void *, int)>(__func)(pv, id3) ? TRUE : FALSE;
 #endif
 }
 
@@ -1906,9 +1930,9 @@ cell Call_Bool_Entvar(AMX *amx, cell *params)
 	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
 
 #if defined(_WIN32)
-	return reinterpret_cast<bool(__fastcall *)(void*, int, void*)>(__func)(pv, 0, ev3);
+	return reinterpret_cast<bool(__fastcall *)(void*, int, void*)>(__func)(pv, 0, ev3) ? TRUE : FALSE;
 #elif defined(__linux__) || defined(__APPLE__)
-	return reinterpret_cast<bool(*)(void *, void*)>(__func)(pv, ev3);
+	return reinterpret_cast<bool(*)(void *, void*)>(__func)(pv, ev3) ? TRUE : FALSE;
 #endif
 }
 

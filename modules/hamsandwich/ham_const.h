@@ -508,6 +508,7 @@ enum
 	Ham_SC_IsPlayer,
 	Ham_SC_IsNetClient,
 	Ham_SC_IsBreakable,
+	Ham_SC_SUB_UseTargets,
 	Ham_SC_CanPlaySequence,
 	Ham_SC_CanPlaySentence2,
 	Ham_SC_PlayScriptedSentence,

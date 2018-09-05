@@ -1289,6 +1289,27 @@ cell Call_Void_Cbase_Int(AMX *amx, cell *params)
 	return 1;
 }
 
+cell Call_Void_Cbase_Int_Float(AMX *amx, cell *params)
+{
+	SETUP(3);
+
+	int id3 = *MF_GetAmxAddr(amx, params[3]);
+	CHECK_ENTITY(id3);
+
+	void *p8 = TypeConversion.id_to_cbase(id3);
+
+	int i4 = *MF_GetAmxAddr(amx, params[4]);
+	float f5 = amx_ctof(*MF_GetAmxAddr(amx, params[5]));
+
+#if defined(_WIN32)
+	reinterpret_cast<void(__fastcall *)(void*, int, void *, int, float)>(__func)(pv, 0, p8, i4, f5);
+#elif defined(__linux__) || defined(__APPLE__)
+	reinterpret_cast<void(*)(void *, void *, int, float)>(__func)(pv, p8, i4, f5);
+#endif
+
+	return 1;
+}
+
 cell Call_Void_Str(AMX *amx, cell *params)
 {
 	SETUP(1);

@@ -537,6 +537,7 @@ hook_t hooklist[] =
 	{ V("sc_isplayer",				Bool_Void) },
 	{ V("sc_isnetclient",			Bool_Void) },
 	{ V("sc_isbreakable",			Bool_Void) },
+	{ V("sc_subusetargets",			Void_Cbase_Int_Float) },
 	{ V("sc_canplaysequence",		Bool_Bool_Int) },
 	{ V("sc_canplaysentence2",		Bool_Bool) },
 	{ V("sc_playscriptedsentence",	Void_Str_Float_Float_Float_Bool_Cbase) },

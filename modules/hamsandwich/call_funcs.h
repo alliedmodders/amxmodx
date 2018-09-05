@@ -145,6 +145,8 @@ cell Call_Void_Str_Int(AMX* amx, cell* params);
 
 cell Call_Void_Cbase_Int(AMX* amx, cell* params);
 
+cell Call_Void_Cbase_Int_Float(AMX* amx, cell* params);
+
 cell Call_Void_Str(AMX* amx, cell* params);
 
 cell Call_Void_Vector(AMX* amx, cell* params);

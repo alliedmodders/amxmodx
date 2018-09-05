@@ -2157,6 +2157,35 @@ void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
 	POP()
 }
 
+void Hook_Void_Cbase_Int_Float(Hook *hook, void *pthis, void *p1, int i1, float f1)
+{
+	PUSH_VOID()
+	int iEnt = TypeConversion.cbase_to_id(p1);
+
+	MAKE_VECTOR()
+
+	P_CBASE(p1, iEnt)
+	P_INT(i1)
+	P_FLOAT(f1)
+
+	PRE_START()
+	, iEnt, i1, f1
+	PRE_END()
+
+#if defined(_WIN32)
+		reinterpret_cast<void(__fastcall*)(void*, int, void *, int, float)>(hook->func)(pthis, 0, p1, i1, f1);
+#elif defined(__linux__) || defined(__APPLE__)
+		reinterpret_cast<void(*)(void*, void *, int, float)>(hook->func)(pthis, p1, i1, f1);
+#endif
+
+	POST_START()
+	, iEnt, i1, f1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+
 void Hook_Void_Str(Hook *hook, void *pthis, const char *sz1)
 {
 	ke::AString a;

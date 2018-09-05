@@ -3930,6 +3930,14 @@ enum Ham
 	Ham_SC_IsBreakable,
 
 	/**
+	 * Description:		-
+	 * Forward params:	function(this, idActivator, useType, value);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_SUB_UseTargets, this, idActivator, useType, value);
+	 */
+	Ham_SC_SUB_UseTargets,
+
+	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is
 	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
 	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.

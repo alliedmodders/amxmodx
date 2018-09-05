@@ -50,6 +50,11 @@ const bool RB_Int_Float_Int_Int = false;
 const int PC_Int_Float_Int_Int = 3;
 int  Hook_Int_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2);
 
+const bool RT_Bool_Float_Int_Int = false;
+const bool RB_Bool_Float_Int_Int = false;
+const int PC_Bool_Float_Int_Int = 3;
+bool Hook_Bool_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2);
+
 const bool RT_Void_Entvar_Int = true;
 const bool RB_Void_Entvar_Int = false;
 const int PC_Void_Entvar_Int = 2;

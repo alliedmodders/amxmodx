@@ -173,7 +173,22 @@ cell Call_Int_Float_Int_Int(AMX *amx, cell *params)
 	return reinterpret_cast<int (*)(void *, float, int, int)>(__func)(pv, f3, i4, i5);
 #endif
 }
-	
+
+cell Call_Bool_Float_Int_Int(AMX *amx, cell *params)
+{
+	SETUP(3);
+
+	float f3 = amx_ctof(*MF_GetAmxAddr(amx, params[3]));
+	int i4 = *MF_GetAmxAddr(amx, params[4]);
+	int i5 = *MF_GetAmxAddr(amx, params[5]);
+
+#if defined(_WIN32)
+	return reinterpret_cast<bool(__fastcall *)(void*, int, float, int, int)>(__func)(pv, 0, f3, i4, i5);
+#elif defined(__linux__) || defined(__APPLE__)
+	return reinterpret_cast<bool(*)(void *, float, int, int)>(__func)(pv, f3, i4, i5);
+#endif
+}
+
 cell Call_Void_Entvar_Int(AMX *amx, cell *params)
 {
 	SETUP(2);

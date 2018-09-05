@@ -27,6 +27,8 @@ cell Call_Int_Float_Int(AMX *amx, cell *params);
 	
 cell Call_Int_Float_Int_Int(AMX *amx, cell *params);
 
+cell Call_Bool_Float_Int_Int(AMX *amx, cell *params);
+
 cell Call_Void_Entvar_Int(AMX *amx, cell *params);
 
 cell Call_Void_Entvar_Entvar_Int(AMX *amx, cell *params);

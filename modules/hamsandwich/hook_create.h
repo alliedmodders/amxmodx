@@ -27,6 +27,8 @@ int Create_Int_Float_Int(AMX *amx, const char *func);
 
 int Create_Int_Float_Int_Int(AMX *amx, const char *func);
 
+int Create_Bool_Float_Int_Int(AMX *amx, const char *func);
+
 int Create_Void_Entvar_Int(AMX *amx, const char *func);
 
 int Create_Void_Entvar_Entvar_Int(AMX *amx, const char *func);

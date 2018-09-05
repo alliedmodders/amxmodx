@@ -233,6 +233,10 @@ const bool RB_Int_ItemInfo = false;
 const int PC_Int_ItemInfo = 1;
 int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo);
 
+const bool RT_Bool_ItemInfo = false;
+const bool RB_Bool_ItemInfo = false;
+const int PC_Bool_ItemInfo = 1;
+bool Hook_Bool_ItemInfo(Hook *hook, void *pthis, void *iteminfo);
 
 const bool RT_Float_Void = false;
 const bool RB_Float_Void = false;

@@ -89,6 +89,8 @@ cell Call_Void_Int_Int_Int(AMX *amx, cell *params);
 
 cell Call_Int_ItemInfo(AMX *amx, cell *params);
 
+cell Call_Bool_ItemInfo(AMX *amx, cell *params);
+
 cell Call_Float_Void(AMX *amx, cell *params);
 
 cell Call_Void_Float_Int(AMX* amx, cell* params);

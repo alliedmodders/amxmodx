@@ -193,8 +193,12 @@ int Create_Void_Int_Int_Int(AMX *amx, const char *func)
 	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }
 
-
 int Create_Int_ItemInfo(AMX *amx, const char *func)
+{
+	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_CELL, FP_DONE);
+}
+
+int Create_Bool_ItemInfo(AMX *amx, const char *func)
 {
 	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_CELL, FP_DONE);
 }

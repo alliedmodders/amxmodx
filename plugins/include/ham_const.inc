@@ -4087,6 +4087,15 @@ enum Ham
 	Ham_SC_Item_Collect,
 
 	/**
+	 * Description:		Gets item infos.
+	 * Forward params:	function(this, iteminfo_handle);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_GetItemInfo, this, iteminfo_handle);
+	 *					Use CreateHamItemInfo() to pass a new ItemInfo handle.
+	 */
+	Ham_SC_Item_GetItemInfo,
+
+	/**
 	 * DONT USE ME LOL
 	 */
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL

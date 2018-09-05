@@ -780,6 +780,24 @@ cell Call_Int_ItemInfo(AMX *amx, cell *params)
 #endif
 }
 
+cell Call_Bool_ItemInfo(AMX *amx, cell *params)
+{
+	SETUP(1);
+
+	void *ptr = reinterpret_cast<void *>(*MF_GetAmxAddr(amx, params[3]));
+
+	if (!ptr)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Null ItemInfo handle!");
+		return 0;
+	}
+#if defined(_WIN32)
+	return reinterpret_cast<bool(__fastcall *)(void*, int, void *)>(__func)(pv, 0, ptr) ? TRUE : FALSE;
+#elif defined(__linux__) || defined(__APPLE__)
+	return reinterpret_cast<bool(*)(void *, void *)>(__func)(pv, ptr) ? TRUE : FALSE;
+#endif
+}
+
 cell Call_Float_Void(AMX *amx, cell *params)
 {
 	SETUP(1);

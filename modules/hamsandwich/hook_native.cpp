@@ -554,6 +554,7 @@ hook_t hooklist[] =
 	{ V("sc_item_addammofromitem",	Bool_Cbase) },
 	{ V("sc_item_cancollect",		Bool_Cbase_Int) },
 	{ V("sc_item_collect",			Void_Cbase_Int) },
+	{ V("sc_item_getiteminfo",		Bool_ItemInfo) },
 };
 
 

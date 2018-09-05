@@ -1263,6 +1263,7 @@ void Hook_Void_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2, int i3)
 	KILL_VECTOR()
 	POP()
 }
+
 int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 {
 	int ret = 0;
@@ -1291,6 +1292,38 @@ int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 	POP()
 
 	CHECK_RETURN()
+	return ret;
+}
+
+bool Hook_Bool_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+
+	MAKE_VECTOR()
+
+	P_ITEMINFO(iteminfo)
+
+	PRE_START()
+		,iteminfo
+	PRE_END()
+#if defined(_WIN32)
+	origret = reinterpret_cast<bool (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, iteminfo);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret = reinterpret_cast<bool (*)(void*, void *)>(hook->func)(pthis, iteminfo);
+#endif
+
+	POST_START()
+		,iteminfo
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+
+	CHECK_RETURN()
+
 	return ret;
 }
 

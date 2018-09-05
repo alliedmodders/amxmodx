@@ -3775,6 +3775,22 @@ enum Ham
 	Ham_SC_SetClassification,
 
 	/**
+	 * Description:		Returns the id of the entity if its class is derived off of ICustomEntity, -1 otherwise.
+	 * Forward params:	function(this)
+	 * Return type:		Entity.
+	 * Execute params:	ExecuteHam(Ham_SC_MyCustomPointer, this);
+	 */
+	Ham_SC_MyCustomPointer,
+
+	/**
+	 * Description:		Returns the id of the entity if its class is derived off of CBasePlayerItem, -1 otherwise.
+	 * Forward params:	function(this)
+	 * Return type:		Entity.
+	 * Execute params:	ExecuteHam(Ham_SC_MyItemPointer, this);
+	 */
+	Ham_SC_MyItemPointer,
+
+	/**
 	 * Description:		Typically adds points to the entity.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.

@@ -521,6 +521,8 @@ hook_t hooklist[] =
 	{ V("sc_postspawn",				Void_Void) },
 	{ V("sc_onkeyvalueupdate",		Void_Str) },
 	{ V("sc_setclassification",		Void_Int) },
+	{ V("sc_mycustompointer",		Cbase_Void) },
+	{ V("sc_myitempointer",			Cbase_Void) },
 	{ V("sc_addpoints",				Void_Int_Bool) },
 	{ V("sc_addpointstoteam",		Void_Int_Bool) },
 	{ V("sc_canplaysequence",		Bool_Bool_Int) },

@@ -492,6 +492,8 @@ enum
 	Ham_SC_PostSpawn,
 	Ham_SC_OnKeyValueUpdate,
 	Ham_SC_SetClassification,
+	Ham_SC_MyCustomPointer,
+	Ham_SC_MyItemPointer,
 	Ham_SC_AddPoints,
 	Ham_SC_AddPointsToTeam,
 	Ham_SC_CanPlaySequence,

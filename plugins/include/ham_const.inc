@@ -268,6 +268,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is moving.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsMoving instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsMoving, this);

@@ -530,6 +530,7 @@ enum
 	Ham_SC_Item_Deploy,
 	Ham_SC_Item_CanHolster,
 	Ham_SC_Item_UpdateClientData,
+	Ham_SC_Item_GetRespawnTime,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

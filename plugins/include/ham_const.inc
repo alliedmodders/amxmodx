@@ -4136,6 +4136,14 @@ enum Ham
 	Ham_SC_Item_UpdateClientData,
 
 	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Float.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_GetRespawnTime, this);
+	 */
+	Ham_SC_Item_GetRespawnTime,
+
+	/**
 	 * DONT USE ME LOL
 	 */
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL

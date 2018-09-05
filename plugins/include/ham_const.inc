@@ -393,6 +393,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is a net client.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsNetClient instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsNetClient, this);
@@ -3877,6 +3879,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_Sc_IsPlayer, this);
 	 */
 	Ham_Sc_IsPlayer,
+
+	/**
+	 * Description:		Whether or not the entity is a net client.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsNetClient, this);
+	 */
+	Ham_SC_IsNetClient,
 
 	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is

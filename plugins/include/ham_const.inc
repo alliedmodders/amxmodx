@@ -4186,6 +4186,22 @@ enum Ham
 	Ham_SC_Weapon_GetAmmo2Drop,
 
 	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_FinishReload, idOriginal);
+	 */
+	Ham_SC_Weapon_FinishReload,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_ShouldReload, idOriginal);
+	 */
+	Ham_SC_Weapon_ShouldReload,
+
+	/**
 	 * DONT USE ME LOL
 	 */
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL

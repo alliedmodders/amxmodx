@@ -174,7 +174,9 @@ enum Ham
 	/**
 	 * Description:		Returns whether an entity is activated.
 	 *					This function is not supported by Day Of Defeat.
-	 *					This function has different version for Team Fortress Classic, see Ham_TFC_IsTriggered instead.
+	 *					This function has different version for the following mods:
+	 *					    Team Fortress Classic, see Ham_TFC_IsTriggered instead.
+	 *						Sven-Coop 5.0+, see Ham_SC_IsTriggered instead.
 	 * Forward params:	function(this, idActivator);
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsTriggered, this, idActivator);
@@ -3790,6 +3792,16 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_SetClassification, this, classification);
 	 */
 	Ham_SC_SetClassification,
+
+	/**
+	 * Description:		Returns whether an entity is activated.
+	 *					This function is not supported by Day Of Defeat.
+	 *					This function has different version for Team Fortress Classic, see Ham_TFC_IsTriggered instead.
+	 * Forward params:	function(this, idActivator);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_IsTriggered, this, idActivator);
+	 */
+	Ham_SC_IsTriggered,
 
 	/**
 	 * Description:		Returns the id of the entity if its class is derived off of ICustomEntity, -1 otherwise.

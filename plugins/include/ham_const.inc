@@ -3992,6 +3992,24 @@ enum Ham
 	Ham_SC_IsRevivable,
 
 	/**
+	 * Description:		-
+	 *                  timeUntilRevive is the time until the actual revive event occurs.
+	 * Forward params:	function(this, Float:timeUntilRevive);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_BeginRevive, Float:timeUntilRevive);
+	 */
+	Ham_SC_BeginRevive,
+
+	/**
+	 * Description:		-
+	 *                  timeUntilRevive is the time before the monster is supposed to be revived
+	 * Forward params:	function(this, Float:timeUntilRevive);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_EndRevive, Float:timeUntilRevive);
+	 */
+	Ham_SC_EndRevive,
+
+	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is
 	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
 	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.

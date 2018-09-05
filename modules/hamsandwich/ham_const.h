@@ -497,6 +497,7 @@ enum
 	Ham_SC_MyItemPointer,
 	Ham_SC_AddPoints,
 	Ham_SC_AddPointsToTeam,
+	Ham_SC_RemovePlayerItem,
 	Ham_SC_OnControls,
 	Ham_SC_IsSneaking,
 	Ham_SC_IsAlive,

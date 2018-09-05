@@ -526,6 +526,7 @@ hook_t hooklist[] =
 	{ V("sc_myitempointer",			Cbase_Void) },
 	{ V("sc_addpoints",				Void_Int_Bool) },
 	{ V("sc_addpointstoteam",		Void_Int_Bool) },
+	{ V("sc_removeplayeritem",		Bool_Cbase) },
 	{ V("sc_issneaking",			Bool_Void) },
 	{ V("sc_oncontrols",			Bool_Entvar) },
 	{ V("sc_isalive",				Bool_Void) },

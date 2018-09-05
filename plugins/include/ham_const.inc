@@ -239,7 +239,8 @@ enum Ham
 
 	/**
 	 * Description:		Removes an item to the player's inventory.
-	 * Forward params:	function(this, idother);
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_RemovePlayerItem instead.
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_RemovePlayerItem, this, idother);
 	 */
@@ -3834,7 +3835,15 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
 	 */
 	Ham_SC_AddPointsToTeam,
-	
+
+	/**
+	 * Description:		Removes an item to the player's inventory.
+	 * Forward params:	function(this, idother);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_RemovePlayerItem, this, idother);
+	 */
+	Ham_SC_RemovePlayerItem,
+
 	/**
 	 * Description:		Not entirely sure.
 	 * Forward params:	function(this, idOn)

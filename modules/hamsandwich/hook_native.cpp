@@ -518,6 +518,7 @@ hook_t hooklist[] =
 	{ V("item_getiteminfo", Int_ItemInfo) },
 
 	{ V("sc_prespawn",				Void_Void) },
+	{ V("sc_postspawn",				Void_Void) },
 	{ V("sc_addpoints",				Void_Int_Bool) },
 	{ V("sc_addpointstoteam",		Void_Int_Bool) },
 	{ V("sc_canplaysequence",		Bool_Bool_Int) },

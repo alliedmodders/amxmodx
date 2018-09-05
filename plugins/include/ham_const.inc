@@ -3751,6 +3751,14 @@ enum Ham
 	Ham_SC_PreSpawn,
 
 	/**
+	 * Description:		Performs checks that must occur after Spawn itself is called. Always call baseclass version first.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_PostSpawn, this);
+	 */
+	Ham_SC_PostSpawn,
+
+	/**
 	 * Description:		Typically adds points to the entity.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.

@@ -533,6 +533,8 @@ enum
 	Ham_SC_Item_GetRespawnTime,
 	Ham_SC_Item_CanHaveDuplicates,
 	Ham_SC_Weapon_ExtractAmmoFromItem,
+	Ham_SC_Weapon_GetAmmo1Drop,
+	Ham_SC_Weapon_GetAmmo2Drop,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

@@ -4170,6 +4170,22 @@ enum Ham
 	Ham_SC_Weapon_ExtractAmmoFromItem,
 
 	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_GetAmmo1Drop);
+	 */
+	Ham_SC_Weapon_GetAmmo1Drop,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_GetAmmo2Drop, idOriginal);
+	 */
+	Ham_SC_Weapon_GetAmmo2Drop,
+
+	/**
 	 * DONT USE ME LOL
 	 */
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL

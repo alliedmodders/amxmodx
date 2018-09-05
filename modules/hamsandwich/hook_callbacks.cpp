@@ -634,9 +634,9 @@ bool Hook_Bool_Bool(Hook *hook, void *pthis, bool i1)
 	PRE_END()
 
 #if defined(_WIN32)
-	origret = reinterpret_cast<int (__fastcall*)(void*, int, bool)>(hook->func)(pthis, 0, i1);
+	origret = reinterpret_cast<bool (__fastcall*)(void*, int, bool)>(hook->func)(pthis, 0, i1);
 #elif defined(__linux__) || defined(__APPLE__)
-	origret = reinterpret_cast<int (*)(void*, bool)>(hook->func)(pthis, i1);
+	origret = reinterpret_cast<bool (*)(void*, bool)>(hook->func)(pthis, i1);
 #endif
 
 	POST_START()
@@ -1547,9 +1547,9 @@ bool Hook_Bool_Bool_Int(Hook *hook, void *pthis, bool i1, int i2)
 	PRE_END()
 
 #if defined(_WIN32)
-	origret = reinterpret_cast<int (__fastcall*)(void*, int, bool, int)>(hook->func)(pthis, 0, i1, i2);
+	origret = reinterpret_cast<bool (__fastcall*)(void*, int, bool, int)>(hook->func)(pthis, 0, i1, i2);
 #elif defined(__linux__) || defined(__APPLE__)
-	origret = reinterpret_cast<int (*)(void*, bool, int)>(hook->func)(pthis, i1, i2);
+	origret = reinterpret_cast<bool (*)(void*, bool, int)>(hook->func)(pthis, i1, i2);
 #endif
 
 	POST_START()

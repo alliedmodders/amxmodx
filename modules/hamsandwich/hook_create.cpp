@@ -395,6 +395,11 @@ int Create_Int_Cbase_Bool(AMX *amx, const char *func)
 	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 }
 
+int Create_Bool_Cbase_Bool(AMX *amx, const char *func)
+{
+	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+}
+
 int Create_Int_Vector_Vector(AMX *amx, const char *func)
 {
 	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_ARRAY, FP_ARRAY, FP_DONE);

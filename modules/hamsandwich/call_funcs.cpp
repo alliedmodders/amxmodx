@@ -1548,12 +1548,31 @@ cell Call_Int_Cbase_Bool(AMX *amx, cell *params)
 
 	void *pv1 = TypeConversion.id_to_cbase(id3);
 
-	bool b4=*MF_GetAmxAddr(amx, params[4]) ? true : false;
+	bool b4= *MF_GetAmxAddr(amx, params[4]) != 0;
 
 #if defined(_WIN32)
 	return reinterpret_cast<int (__fastcall *)(void*, int, void *, bool)>(__func)(pv, 0, pv1, b4);
 #elif defined(__linux__) || defined(__APPLE__)
 	return reinterpret_cast<int (*)(void *, void *, bool)>(__func)(pv, pv1, b4);
+#endif
+}
+
+cell Call_Bool_Cbase_Bool(AMX *amx, cell *params)
+{
+	SETUP(2);
+
+	int id3 = *MF_GetAmxAddr(amx, params[3]);
+
+	CHECK_ENTITY(id3);
+
+	void *pv1 = TypeConversion.id_to_cbase(id3);
+
+	bool b4 = *MF_GetAmxAddr(amx, params[4]) != 0;
+
+#if defined(_WIN32)
+	return reinterpret_cast<bool(__fastcall *)(void*, int, void *, bool)>(__func)(pv, 0, pv1, b4);
+#elif defined(__linux__) || defined(__APPLE__)
+	return reinterpret_cast<bool(*)(void *, void *, bool)>(__func)(pv, pv1, b4);
 #endif
 }
 

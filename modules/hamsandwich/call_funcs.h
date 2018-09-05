@@ -167,6 +167,8 @@ cell Call_Int_pVector_pVector_Float_Cbase_pVector(AMX* amx, cell* params);
 
 cell Call_Int_Cbase_Bool(AMX* amx, cell* params);
 
+cell Call_Bool_Cbase_Bool(AMX* amx, cell* params);
+
 cell Call_Int_Vector_Vector(AMX *amx, cell *params);
 
 cell Call_Int_pVector_pVector(AMX *amx, cell *params);

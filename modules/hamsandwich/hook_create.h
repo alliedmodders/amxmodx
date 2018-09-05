@@ -167,6 +167,8 @@ int Create_Int_pVector_pVector_Float_Cbase_pVector(AMX *amx, const char *func);
 
 int Create_Int_Cbase_Bool(AMX *amx, const char *func);
 
+int Create_Bool_Cbase_Bool(AMX *amx, const char *func);
+
 int Create_Int_Vector_Vector(AMX *amx, const char *func);
 
 int Create_Int_pVector_pVector(AMX *amx, const char *func);

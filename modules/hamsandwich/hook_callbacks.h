@@ -441,6 +441,11 @@ const bool RB_Int_Cbase_Bool = false;
 const int PC_Int_Cbase_Bool = 2;
 int Hook_Int_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1);
 
+const bool RT_Bool_Cbase_Bool = false;
+const bool RB_Bool_Cbase_Bool = false;
+const int PC_Bool_Cbase_Bool = 2;
+bool Hook_Bool_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1);
+
 const bool RT_Int_Vector_Vector = false;
 const bool RB_Int_Vector_Vector = false;
 const int PC_Int_Vector_Vector = 6;

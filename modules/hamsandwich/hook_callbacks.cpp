@@ -2525,6 +2525,39 @@ int Hook_Int_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1)
 	return ret;
 }
 
+bool Hook_Bool_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1)
+{
+	bool ret=false;
+	bool origret=false;
+
+	PUSH_BOOL()
+
+	int i1=TypeConversion.cbase_to_id(cb1);
+
+	MAKE_VECTOR()
+
+	P_CBASE(cb1, i1)
+	P_BOOL(b1)
+
+	PRE_START()
+		, i1, b1
+	PRE_END()
+#if defined(_WIN32)
+	origret=reinterpret_cast<bool (__fastcall*)(void*, int, void *, bool)>(hook->func)(pthis, 0, cb1, b1);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret=reinterpret_cast<bool (*)(void*, void *, bool)>(hook->func)(pthis, cb1, b1);
+#endif
+
+	POST_START()
+		, i1, b1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+	return ret;
+}
+
 int Hook_Int_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
 {
 	int ret=0;

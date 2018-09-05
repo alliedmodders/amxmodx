@@ -475,6 +475,8 @@ enum Ham
 
 	/**
 	 * Description:		Normally called whenever a barnacle grabs the entity.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_FBecomeProne instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_FBecomeProne, this);
@@ -3944,6 +3946,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_IsLockedByMaster, this);
 	 */
 	Ham_SC_IsLockedByMaster,
+
+	/**
+	 * Description:		Normally called whenever a barnacle grabs the entity.
+	 * Forward params:	function(this, idOther);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_FBecomeProne, this, idOther);
+	 */
+	Ham_SC_FBecomeProne,
 
 	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is

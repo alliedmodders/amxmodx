@@ -4278,12 +4278,41 @@ enum Ham
 
 	/**
 	 * Description:		Unsure.
-	 *					This function is not supported by Team Fortress Classic.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_Weapon_UseDecrement, this);
 	 */
 	Ham_SC_Weapon_UseDecrement,
+
+
+	/**
+	 * Players have all the attributes of normal entities, in addition to these.
+	 */
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Player_EnteredObserver, this);
+	 */
+	Ham_SC_Player_EnteredObserver,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Player_LeftObserver, this);
+	 */
+	Ham_SC_Player_LeftObserver,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Player_IsObserver, this);
+	 */
+	Ham_SC_Player_IsObserver,
+
 
 	/**
 	 * DONT USE ME LOL

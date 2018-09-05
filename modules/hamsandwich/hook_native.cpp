@@ -575,6 +575,9 @@ hook_t hooklist[] =
 	{ V("sc_weapon_shouldreload",	Bool_Void) },
 	{ V("sc_weapon_shouldweaponidle",Bool_Void) },
 	{ V("sc_weapon_usedecrement",	Bool_Void) },
+	{ V("sc_player_enteredobserver",Void_Void) },
+	{ V("sc_player_leftobserver",	Void_Void) },
+	{ V("sc_player_isobserver",		Bool_Void) },
 };
 
 

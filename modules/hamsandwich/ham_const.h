@@ -546,6 +546,9 @@ enum
 	Ham_SC_Weapon_ShouldReload,
 	Ham_SC_Weapon_ShouldWeaponIdle,
 	Ham_SC_Weapon_UseDecrement,
+	Ham_SC_Player_EnteredObserver,
+	Ham_SC_Player_LeftObserver,
+	Ham_SC_Player_IsObserver,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

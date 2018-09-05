@@ -4087,6 +4087,14 @@ enum Ham
 
 	/**
 	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		String (string length returned and string byref'd in ExecuteHam).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_GetPickupSound, this)
+	 */
+	Ham_SC_Item_GetPickupSound,
+
+	/**
+	 * Description:		-
 	 *					Collect Types:
 	 *						COLLECT_TOUCH			0
 	 *						COLLECT_USE_DIRECT		1

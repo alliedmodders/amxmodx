@@ -187,6 +187,8 @@ cell Call_Void_Bool(AMX *amx, cell *params);
 
 cell Call_Bool_Cbase(AMX *amx, cell *params);
 
+cell Call_Bool_Entvar(AMX *amx, cell *params);
+
 cell Call_Bool_Int(AMX *amx, cell *params);
 
 cell Call_Void_Cbase_Float(AMX* amx, cell* params);

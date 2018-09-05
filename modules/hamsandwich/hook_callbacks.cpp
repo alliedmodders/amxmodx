@@ -2868,6 +2868,40 @@ bool Hook_Bool_Cbase(Hook *hook, void *pthis, void *cb)
 	return ret;
 }
 
+bool Hook_Bool_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
+{
+	bool ret = 0;
+	bool origret = 0;
+
+	PUSH_BOOL()
+
+	int e1 = TypeConversion.entvars_to_id(ev1);
+
+	MAKE_VECTOR()
+
+	P_ENTVAR(ev1, e1)
+
+	PRE_START()
+		, e1
+	PRE_END()
+
+#if defined(_WIN32)
+		origret = reinterpret_cast<bool(__fastcall*)(void*, int, entvars_t*)>(hook->func)(pthis, 0, ev1);
+#elif defined(__linux__) || defined(__APPLE__)
+		origret = reinterpret_cast<bool(*)(void*, entvars_t*)>(hook->func)(pthis, ev1);
+#endif
+
+	POST_START()
+		, e1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+
+	CHECK_RETURN()
+	return ret;
+}
+
 bool Hook_Bool_Int(Hook *hook, void *pthis, int i1)
 {
 	bool ret=0;

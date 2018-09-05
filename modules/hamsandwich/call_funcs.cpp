@@ -1819,6 +1819,21 @@ cell Call_Bool_Int(AMX *amx, cell *params)
 #endif
 }
 
+cell Call_Bool_Entvar(AMX *amx, cell *params)
+{
+	SETUP(1);
+
+	int id3 = *MF_GetAmxAddr(amx, params[3]);
+	CHECK_ENTITY(id3);
+	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
+
+#if defined(_WIN32)
+	return reinterpret_cast<bool(__fastcall *)(void*, int, void*)>(__func)(pv, 0, ev3);
+#elif defined(__linux__) || defined(__APPLE__)
+	return reinterpret_cast<bool(*)(void *, void*)>(__func)(pv, ev3);
+#endif
+}
+
 cell Call_Void_Cbase_Float(AMX *amx, cell *params)
 {
 	SETUP(2);

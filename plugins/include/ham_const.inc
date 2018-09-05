@@ -313,6 +313,8 @@ enum Ham
 
 	/**
 	 * Description:		Not entirely sure.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_OnControls instead.
 	 * Forward params:	function(this, idOn)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_OnControls, this, idOn);
@@ -3820,6 +3822,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
 	 */
 	Ham_SC_AddPointsToTeam,
+	
+	/**
+	 * Description:		Not entirely sure.
+	 * Forward params:	function(this, idOn)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_OnControls, this, idOn);
+	 */
+	Ham_SC_OnControls,
 
 	/**
 	 * Description:		Whether or not the entity is sneaking.

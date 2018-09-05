@@ -187,6 +187,8 @@ int Create_Void_Bool(AMX *amx, const char *func);
 
 int Create_Bool_Cbase(AMX *amx, const char *func);
 
+int Create_Bool_Entvar(AMX *amx, const char *func);
+
 int Create_Bool_Int(AMX *amx, const char *func);
 
 int Create_Void_Cbase_Float(AMX *amx, const char *func);

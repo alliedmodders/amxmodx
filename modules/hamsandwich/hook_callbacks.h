@@ -491,6 +491,11 @@ const bool RB_Bool_Cbase = false;
 const int PC_Bool_Cbase = 1;
 bool Hook_Bool_Cbase(Hook *hook, void *pthis, void *cb);
 
+const bool RT_Bool_Entvar = false;
+const bool RB_Bool_Entvar = false;
+const int PC_Bool_Entvar = 1;
+bool Hook_Bool_Entvar(Hook *hook, void *pthis, entvars_t *ev1);
+
 const bool RT_Bool_Int = false;
 const bool RB_Bool_Int = false;
 const int PC_Bool_Int = 1;

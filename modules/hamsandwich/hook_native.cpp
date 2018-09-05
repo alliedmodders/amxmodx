@@ -402,11 +402,11 @@ hook_t hooklist[] =
 
 	/* Sven co-op */
 	{ V("sc_getclassification",		Int_Int) },
-	{ V("sc_ismonster",				Int_Void) },
+	{ V("sc_ismonster",				Bool_Void) },
 	{ V_REMOVED("sc_isphysx") },
-	{ V("sc_ispointentity",			Int_Void) },
-	{ V("sc_ismachine",				Int_Void) },
-	{ V("sc_criticalremove",		Int_Void) },
+	{ V("sc_ispointentity",			Bool_Void) },
+	{ V("sc_ismachine",				Bool_Void) },
+	{ V("sc_criticalremove",		Bool_Void) },
 	{ V("sc_updateonremove",		Void_Void) },
 	{ V("sc_fvisible",				Int_Cbase_Bool) },
 	{ V("sc_fvisiblefrompos",		Int_pVector_pVector) },

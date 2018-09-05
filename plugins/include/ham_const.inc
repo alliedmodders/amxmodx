@@ -321,6 +321,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is sneaking.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsSneaking instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsSneaking, this);
@@ -3805,6 +3807,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
 	 */
 	Ham_SC_AddPointsToTeam,
+
+	/**
+	 * Description:		Whether or not the entity is sneaking.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsSneaking, this);
+	 */
+	Ham_SC_IsSneaking,
 
 	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is

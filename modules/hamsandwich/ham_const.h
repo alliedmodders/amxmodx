@@ -530,6 +530,8 @@ enum
 	Ham_SC_Item_CanDeploy,
 	Ham_SC_Item_Deploy,
 	Ham_SC_Item_CanHolster,
+	Ham_SC_Item_InactiveItemPreFrame,
+	Ham_SC_Item_InactiveItemPostFrame,
 	Ham_SC_Item_UpdateClientData,
 	Ham_SC_Item_GetRespawnTime,
 	Ham_SC_Item_CanHaveDuplicates,

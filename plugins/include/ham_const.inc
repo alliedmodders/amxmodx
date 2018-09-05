@@ -4150,6 +4150,22 @@ enum Ham
 	Ham_SC_Item_CanHolster,
 
 	/**
+	 * Description:		Called each frame by the player PreThink if inactive.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_InactiveItemPreFrame, this);
+	 */
+	Ham_SC_Item_InactiveItemPreFrame,
+
+	/**
+	 * Description:		Called each frame by the player PostThink if inactive.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_InactiveItemPostFrame, this);
+	 */
+	Ham_SC_Item_InactiveItemPostFrame,
+
+	/**
 	 * Description:		Updates item data for the client.
 	 * Forward params:	function(this, idPlayer)
 	 * Return type:		Integer.

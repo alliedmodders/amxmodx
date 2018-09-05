@@ -529,6 +529,7 @@ enum
 	Ham_SC_Item_CanDeploy,
 	Ham_SC_Item_Deploy,
 	Ham_SC_Item_CanHolster,
+	Ham_SC_Item_UpdateClientData,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

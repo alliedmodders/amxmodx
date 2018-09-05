@@ -744,6 +744,8 @@ enum Ham
 
 	/**
 	 * Description:		Updates item data for the client.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_UpdateClientData instead.
 	 * Forward params:	function(this, idPlayer)
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_Item_UpdateClientData, this, idPlayer);
@@ -4124,6 +4126,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_Item_CanHolster, this);
 	 */
 	Ham_SC_Item_CanHolster,
+
+	/**
+	 * Description:		Updates item data for the client.
+	 * Forward params:	function(this, idPlayer)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_UpdateClientData, this, idPlayer);
+	 */
+	Ham_SC_Item_UpdateClientData,
 
 	/**
 	 * DONT USE ME LOL

@@ -562,10 +562,15 @@ hook_t hooklist[] =
 	{ V("sc_item_getrespawntime",	Float_Void) },
 	{ V("sc_item_canhaveduplicates",Bool_Void) },
 	{ V("sc_weapon_extractammofromitem",Bool_Cbase) },
+	{ V("sc_weapon_addweapon",		Bool_Void) },
 	{ V("sc_weapon_getammo1drop",	Int_Void) },
 	{ V("sc_weapon_getammo2drop",	Int_Void) },
+	{ V("sc_weapon_playemptysound",	Bool_Void) },
+	{ V("sc_weapon_isusable",		Bool_Void) },
 	{ V("sc_weapon_finishreload",	Void_Void) },
 	{ V("sc_weapon_shouldreload",	Bool_Void) },
+	{ V("sc_weapon_shouldweaponidle",Bool_Void) },
+	{ V("sc_weapon_usedecrement",	Bool_Void) },
 };
 
 

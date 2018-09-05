@@ -794,6 +794,8 @@ enum Ham
 	/**
 	 * Description:		Unsure.
 	 *					This function is not supported in Earth's Special Forces mod.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_AddWeapon instead.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Weapon_AddWeapon, this);
@@ -802,6 +804,8 @@ enum Ham
 
 	/**
 	 * Description:		Plays the weapon's empty sound.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_PlayEmptySound instead.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Weapon_PlayEmptySound, this);
@@ -831,6 +835,8 @@ enum Ham
 	/**
 	 * Description:		Whether or not the weapon is usable (has ammo, etc.)
 	 *					This function is not supported in Earth's Special Forces mod.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_IsUsable instead.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Weapon_IsUsable, this)
@@ -880,6 +886,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the weapon should idle.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_ShouldWeaponIdle instead.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute Params:	ExecuteHam(Ham_Weapon_ShouldWeaponIdle, this)
@@ -889,7 +897,8 @@ enum Ham
 	/**
 	 * Description:		Unsure.
 	 *					This function is not supported by Team Fortress Classic.
-	 * Forward params:	function(this)
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_UseDecrement instead.
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Weapon_UseDecrement, this);
 	 */
@@ -4170,6 +4179,15 @@ enum Ham
 	Ham_SC_Weapon_ExtractAmmoFromItem,
 
 	/**
+	 * Description:		Unsure.
+	 *					This function is not supported in Earth's Special Forces mod.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_AddWeapon, this);
+	 */
+	Ham_SC_Weapon_AddWeapon,
+
+	/**
 	 * Description:		-
 	 * Forward params:	function(this)
 	 * Return type:		Integer.
@@ -4186,6 +4204,23 @@ enum Ham
 	Ham_SC_Weapon_GetAmmo2Drop,
 
 	/**
+	 * Description:		Plays the weapon's empty sound.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_PlayEmptySound, this);
+	 */
+	Ham_SC_Weapon_PlayEmptySound,
+
+	/**
+	 * Description:		Whether or not the weapon is usable (has ammo, etc.)
+	 *					This function is not supported in Earth's Special Forces mod.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_IsUsable, this)
+	 */
+	Ham_SC_Weapon_IsUsable,
+
+	/**
 	 * Description:		-
 	 * Forward params:	function(this)
 	 * Return type:		None.
@@ -4200,6 +4235,23 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_Weapon_ShouldReload, idOriginal);
 	 */
 	Ham_SC_Weapon_ShouldReload,
+
+	/**
+	 * Description:		Whether or not the weapon should idle.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute Params:	ExecuteHam(Ham_SC_Weapon_ShouldWeaponIdle, this)
+	 */
+	Ham_SC_Weapon_ShouldWeaponIdle,
+
+	/**
+	 * Description:		Unsure.
+	 *					This function is not supported by Team Fortress Classic.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_UseDecrement, this);
+	 */
+	Ham_SC_Weapon_UseDecrement,
 
 	/**
 	 * DONT USE ME LOL

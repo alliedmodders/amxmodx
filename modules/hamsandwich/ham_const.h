@@ -533,10 +533,15 @@ enum
 	Ham_SC_Item_GetRespawnTime,
 	Ham_SC_Item_CanHaveDuplicates,
 	Ham_SC_Weapon_ExtractAmmoFromItem,
+	Ham_SC_Weapon_AddWeapon,
 	Ham_SC_Weapon_GetAmmo1Drop,
 	Ham_SC_Weapon_GetAmmo2Drop,
+	Ham_SC_Weapon_PlayEmptySound,
+	Ham_SC_Weapon_IsUsable,
 	Ham_SC_Weapon_FinishReload,
 	Ham_SC_Weapon_ShouldReload,
+	Ham_SC_Weapon_ShouldWeaponIdle,
+	Ham_SC_Weapon_UseDecrement,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

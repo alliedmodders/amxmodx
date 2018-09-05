@@ -1953,10 +1953,19 @@ static cell AMX_NATIVE_CALL cs_get_user_weapon_entity(AMX *amx, cell *params)
 	GET_OFFSET("CBasePlayerItem", m_pNext);
 
 	int playerIndex = params[1];
-	int weaponIndex = params[2];
 
 	CHECK_PLAYER(playerIndex);
 	edict_t *pPlayer = MF_GetPlayerEdict(playerIndex);
+
+	int paramsCount = *params / sizeof(cell), weaponIndex;
+	if (paramsCount == 1)
+	{
+		weaponIndex = CSW_NONE;
+	}
+	else
+	{
+		weaponIndex = params[2];
+	}
 
 	int weaponEntIndex = -1;
 	if (weaponIndex == CSW_NONE)
@@ -1987,7 +1996,6 @@ static cell AMX_NATIVE_CALL cs_get_user_weapon_entity(AMX *amx, cell *params)
 				}
 		
 				pWeapon = TypeConversion.cbase_to_edict(get_pdata<void *>(pWeapon, m_pNext));
-				
 			}
 
 			if (foundWeapon)

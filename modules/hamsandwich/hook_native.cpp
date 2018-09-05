@@ -555,6 +555,9 @@ hook_t hooklist[] =
 	{ V("sc_item_cancollect",		Bool_Cbase_Int) },
 	{ V("sc_item_collect",			Void_Cbase_Int) },
 	{ V("sc_item_getiteminfo",		Bool_ItemInfo) },
+	{ V("sc_item_candeploy",		Bool_Void) },
+	{ V("sc_item_deploy",			Bool_Void) },
+	{ V("sc_item_canholster",		Bool_Void) },
 };
 
 

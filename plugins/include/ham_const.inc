@@ -642,6 +642,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not this entity can be deployed.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_CanDeploy instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_CanDeploy, this);
@@ -650,6 +652,8 @@ enum Ham
 
 	/**
 	 * Description:		Deploys the entity (usually a weapon).
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_Deploy instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_Deploy, this);
@@ -658,6 +662,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity can be holstered.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_CanHolster instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_CanHolster, this);
@@ -4094,6 +4100,30 @@ enum Ham
 	 *					Use CreateHamItemInfo() to pass a new ItemInfo handle.
 	 */
 	Ham_SC_Item_GetItemInfo,
+
+	/**
+	 * Description:		Whether or not this entity can be deployed.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_CanDeploy, this);
+	 */
+	Ham_SC_Item_CanDeploy,
+
+	/**
+	 * Description:		Deploys the entity (usually a weapon).
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_Deploy, this);
+	 */
+	Ham_SC_Item_Deploy,
+
+	/**
+	 * Description:		Whether or not the entity can be holstered.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_CanHolster, this);
+	 */
+	Ham_SC_Item_CanHolster,
 
 	/**
 	 * DONT USE ME LOL

@@ -526,6 +526,9 @@ enum
 	Ham_SC_Item_CanCollect,
 	Ham_SC_Item_Collect,
 	Ham_SC_Item_GetItemInfo,
+	Ham_SC_Item_CanDeploy,
+	Ham_SC_Item_Deploy,
+	Ham_SC_Item_CanHolster,
 
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };

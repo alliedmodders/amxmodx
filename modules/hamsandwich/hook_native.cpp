@@ -543,6 +543,7 @@ hook_t hooklist[] =
 	{ V("sc_fvecvisible",			Bool_pVector) },
 	{ V("sc_setplayerally",			Void_Bool) },
 	{ V("sc_onsetoriginbymap",		Void_Void) },
+	{ V("sc_isrevivable",			Bool_Void) },
 	{ V("sc_canplaysequence",		Bool_Bool_Int) },
 	{ V("sc_canplaysentence2",		Bool_Bool) },
 	{ V("sc_playscriptedsentence",	Void_Str_Float_Float_Float_Bool_Cbase) },

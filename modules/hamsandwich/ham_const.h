@@ -514,6 +514,7 @@ enum
 	Ham_SC_FVecVisible,
 	Ham_SC_SetPlayerAlly,
 	Ham_SC_OnSetOriginByMap,
+	Ham_SC_IsRevivable,
 	Ham_SC_CanPlaySequence,
 	Ham_SC_CanPlaySentence2,
 	Ham_SC_PlayScriptedSentence,

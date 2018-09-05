@@ -3984,6 +3984,14 @@ enum Ham
 	Ham_SC_OnSetOriginByMap,
 
 	/**
+	 * Description:		Return true if you want to be revivable.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsRevivable, this);
+	 */
+	Ham_SC_IsRevivable,
+
+	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is
 	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
 	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.

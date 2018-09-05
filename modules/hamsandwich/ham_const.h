@@ -522,6 +522,7 @@ enum
 	Ham_SC_PlayScriptedSentence,
 	Ham_SC_Item_AddToPlayer,
 	Ham_SC_Item_AddDuplicate,
+	Ham_SC_Item_AddAmmoFromItem,
 	Ham_SC_Item_CanCollect,
 	Ham_SC_Item_Collect,
 

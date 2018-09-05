@@ -4057,6 +4057,14 @@ enum Ham
 
 	/**
 	 * Description:		-
+	 * Forward params:	function(this, idOther);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_AddAmmoFromItem, this, idOther);
+	 */
+	Ham_SC_Item_AddAmmoFromItem,
+
+	/**
+	 * Description:		-
 	 *					Collect Types:
 	 *						COLLECT_TOUCH			0
 	 *						COLLECT_USE_DIRECT		1

@@ -4166,6 +4166,14 @@ enum Ham
 	Ham_SC_Item_InactiveItemPostFrame,
 
 	/**
+	 * Description:		-
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_DetachFromPlayer, this);
+	 */
+	Ham_SC_Item_DetachFromPlayer,
+
+	/**
 	 * Description:		Updates item data for the client.
 	 * Forward params:	function(this, idPlayer)
 	 * Return type:		Integer.

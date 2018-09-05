@@ -561,6 +561,7 @@ hook_t hooklist[] =
 	{ V("sc_item_canholster",		Bool_Void) },
 	{ V("sc_item_inactiveitempreframe",	Void_Void) },
 	{ V("sc_item_inactiveitempostframe",Void_Void) },
+	{ V("sc_item_detachfromplayer",	Void_Void) },
 	{ V("sc_item_updateclientdata", Bool_Cbase) },
 	{ V("sc_item_getrespawntime",	Float_Void) },
 	{ V("sc_item_canhaveduplicates",Bool_Void) },

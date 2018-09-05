@@ -665,6 +665,29 @@ cell Call_Int_pVector(AMX *amx, cell *params)
 	return ret;
 }
 
+cell Call_Bool_pVector(AMX *amx, cell *params)
+{
+	SETUP(1);
+
+	Vector v3;
+	float *fl3 = (float *)MF_GetAmxAddr(amx, params[3]);
+	v3.x = fl3[0];
+	v3.y = fl3[1];
+	v3.z = fl3[2];
+
+#if defined(_WIN32)
+	bool ret = reinterpret_cast<bool(__fastcall *)(void *, int, Vector*)>(__func)(pv, 0, &v3);
+#elif defined(__linux__) || defined(__APPLE__)
+	bool ret = reinterpret_cast<bool(*)(void *, Vector*)>(__func)(pv, &v3);
+#endif
+
+	fl3[0] = v3.x;
+	fl3[1] = v3.y;
+	fl3[2] = v3.z;
+
+	return ret;
+}
+
 cell Call_Void_Entvar_Float_Float(AMX *amx, cell *params)
 {
 	SETUP(3);

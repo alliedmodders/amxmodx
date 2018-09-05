@@ -525,6 +525,8 @@ enum Ham
 
 	/**
 	 * Description:		Returns true if a line can be traced from the caller's eyes to the target.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_FVisible instead.
 	 * Forward params:	function(this, idOther);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_FVisible, this, idOther);
@@ -533,6 +535,8 @@ enum Ham
 
 	/**
 	 * Description:		Returns true if a line can be traced from the caller's eyes to given vector.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_FVecVisible instead.
 	 * Forward params:	function(this, const Float:origin[3]);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_FVecVisible, this, const Float:origin[3]);
@@ -3954,6 +3958,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_FBecomeProne, this, idOther);
 	 */
 	Ham_SC_FBecomeProne,
+
+	/**
+	 * Description:		Returns true if a line can be traced from the caller's eyes to given vector.
+	 * Forward params:	function(this, const Float:origin[3]);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_FVecVisible, this, const Float:origin[3]);
+	 */
+	Ham_SC_FVecVisible,
 
 	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is

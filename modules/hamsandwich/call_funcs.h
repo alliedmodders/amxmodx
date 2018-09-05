@@ -77,6 +77,8 @@ cell Call_Vector_pVector(AMX *amx, cell *params);
 
 cell Call_Int_pVector(AMX *amx, cell *params);
 
+cell Call_Bool_pVector(AMX *amx, cell *params);
+
 cell Call_Void_Entvar_Float_Float(AMX *amx, cell *params);
 
 cell Call_Void_pFloat_pFloat(AMX *amx, cell *params);

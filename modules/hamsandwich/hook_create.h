@@ -77,6 +77,8 @@ int Create_Vector_pVector(AMX *amx, const char *func);
 
 int Create_Int_pVector(AMX *amx, const char *func);
 
+int Create_Bool_pVector(AMX *amx, const char *func);
+
 int Create_Void_Entvar_Float_Float(AMX *amx, const char *func);
 
 int Create_Void_pFloat_pFloat(AMX *amx, const char *func);

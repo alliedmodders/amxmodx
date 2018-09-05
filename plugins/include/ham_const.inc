@@ -632,6 +632,8 @@ enum Ham
 
 	/**
 	 * Description:		Unsure.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_AddDuplicate instead.
 	 * Forward params:	function(this, idOriginal);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_AddDuplicate, this, idOriginal);
@@ -4044,6 +4046,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_Item_AddToPlayer, this, idPlayer);
 	 */
 	Ham_SC_Item_AddToPlayer,
+
+	/**
+	 * Description:		Returns true if you want your duplicate removed from world.
+	 * Forward params:	function(this, idOriginal);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_AddDuplicate, this, idOriginal);
+	 */
+	Ham_SC_Item_AddDuplicate,
 
 	/**
 	 * Description:		-

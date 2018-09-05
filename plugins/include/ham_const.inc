@@ -3889,6 +3889,14 @@ enum Ham
 	Ham_SC_IsNetClient,
 
 	/**
+	 * Description:		Whether or not the entity is a brush entity breakable.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsBreakable, this);
+	 */
+	Ham_SC_IsBreakable,
+
+	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is
 	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
 	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.

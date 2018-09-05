@@ -351,6 +351,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity can reflect gauss shots..
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_ReflectGauss instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_ReflectGauss, this);
@@ -3835,6 +3837,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_SC_IsBSPModel, this);
 	 */
 	Ham_SC_IsBSPModel,
+
+	/**
+	 * Description:		Whether or not the entity can reflect gauss shots.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_ReflectGauss, this);
+	 */
+	Ham_SC_ReflectGauss,
 
 	/**
 	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is

@@ -2725,6 +2725,38 @@ int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 	return ret;
 }
 
+bool Hook_Bool_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
+{
+	bool ret=false;
+	bool origret=false;
+
+	PUSH_BOOL()
+	int i1=TypeConversion.entvars_to_id(ev1);
+
+	MAKE_VECTOR()
+	P_ENTVAR(ev1, i1)
+	P_FLOAT(f1)
+
+	PRE_START()
+		,i1, f1
+	PRE_END()
+
+#if defined(_WIN32)
+		origret=reinterpret_cast<bool(__fastcall*)(void*, int, entvars_t *, float)>(hook->func)(pthis, 0, ev1, f1);
+#elif defined(__linux__) || defined(__APPLE__)
+		origret=reinterpret_cast<bool(*)(void*, entvars_t *, float)>(hook->func)(pthis, ev1, f1);
+#endif
+
+	POST_START()
+		, i1, f1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+	return ret;
+}
+
 float Hook_Float_Float(Hook *hook, void *pthis, float f1)
 {
 	float ret=0.0;

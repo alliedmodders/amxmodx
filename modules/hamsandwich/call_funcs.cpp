@@ -1690,6 +1690,25 @@ cell Call_Int_Entvar_Float(AMX *amx, cell *params)
 #endif
 }
 
+cell Call_Bool_Entvar_Float(AMX *amx, cell *params)
+{
+	SETUP(2);
+
+	int id3 = *MF_GetAmxAddr(amx, params[3]);
+
+	CHECK_ENTITY(id3);
+
+	entvars_t *ev3 = TypeConversion.id_to_entvars(id3);
+
+	float f4 = amx_ctof(*MF_GetAmxAddr(amx, params[4]));
+
+#if defined(_WIN32)
+	return reinterpret_cast<bool(__fastcall *)(void *, int, entvars_t *, float)>(__func)(pv, 0, ev3, f4) ? TRUE : FALSE;
+#elif defined(__linux__) || defined(__APPLE__)
+	return reinterpret_cast<bool(*)(void *, entvars_t *, float)>(__func)(pv, ev3, f4) ? TRUE : FALSE;
+#endif
+}
+
 cell Call_Float_Float(AMX *amx, cell *params)
 {
 	SETUP(2);

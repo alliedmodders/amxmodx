@@ -430,6 +430,11 @@ int Create_Int_Entvar_Float(AMX *amx, const char *func)
 	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_CELL, FP_FLOAT, FP_DONE);
 }
 
+int Create_Bool_Entvar_Float(AMX *amx, const char *func)
+{
+	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_CELL, FP_FLOAT, FP_DONE);
+}
+
 int Create_Float_Float(AMX *amx, const char *func)
 {
 	return MF_RegisterSPForwardByName(amx, func, FP_CELL, FP_FLOAT, FP_DONE);

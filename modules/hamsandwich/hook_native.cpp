@@ -410,7 +410,7 @@ hook_t hooklist[] =
 	{ V("sc_updateonremove",		Void_Void) },
 	{ V("sc_fvisible",				Bool_Cbase_Bool) },
 	{ V("sc_fvisiblefrompos",		Bool_pVector_pVector) },
-	{ V("sc_isfacing",				Int_Entvar_Float) },
+	{ V("sc_isfacing",				Bool_Entvar_Float) },
 	{ V("sc_getpointsfordamage",	Float_Float) },
 	{ V("sc_getdamagepoints",		Void_Entvar_Entvar_Float) },
 	{ V("sc_oncreate",				Void_Void) },

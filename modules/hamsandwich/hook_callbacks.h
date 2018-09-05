@@ -471,6 +471,11 @@ const bool RB_Int_Entvar_Float = false;
 const int PC_Int_Entvar_Float = 2;
 int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1);
 
+const bool RT_Bool_Entvar_Float = false;
+const bool RB_Bool_Entvar_Float = false;
+const int PC_Bool_Entvar_Float = 2;
+bool Hook_Bool_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1);
+
 const bool RT_Float_Float = false;
 const bool RB_Float_Float = false;
 const int PC_Float_Float = 1;

@@ -179,6 +179,8 @@ int Create_Bool_pVector_pVector(AMX *amx, const char *func);
 
 int Create_Int_Entvar_Float(AMX *amx, const char *func);
 
+int Create_Bool_Entvar_Float(AMX *amx, const char *func);
+
 int Create_Float_Float(AMX *amx, const char *func);
 
 int Create_Void_Entvar_Entvar_Float(AMX *amx, const char *func);

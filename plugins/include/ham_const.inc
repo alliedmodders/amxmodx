@@ -3767,6 +3767,14 @@ enum Ham
 	Ham_SC_OnKeyValueUpdate,
 
 	/**
+	 * Description:		-
+	 * Forward params:	function(this, classification);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_SetClassification, this, classification);
+	 */
+	Ham_SC_SetClassification,
+
+	/**
 	 * Description:		Typically adds points to the entity.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.

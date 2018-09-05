@@ -512,6 +512,7 @@ enum
 	Ham_SC_IsLockedByMaster,
 	Ham_SC_FBecomeProne,
 	Ham_SC_FVecVisible,
+	Ham_SC_SetPlayerAlly,
 	Ham_SC_CanPlaySequence,
 	Ham_SC_CanPlaySentence2,
 	Ham_SC_PlayScriptedSentence,

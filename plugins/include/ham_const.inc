@@ -622,6 +622,8 @@ enum Ham
 
 	/**
 	 * Description:		Adds the item to the player.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_AddToPlayer instead.
 	 * Forward params:	function(this, idPlayer);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_AddToPlayer, this, idPlayer);
@@ -4034,6 +4036,14 @@ enum Ham
 	 * Execute params:	ExecuteHam(Ham_PlayScriptedSentence, this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
 	 */
 	Ham_SC_PlayScriptedSentence,
+
+	/**
+	 * Description:		Adds the item to the player.
+	 * Forward params:	function(this, idPlayer);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Item_AddToPlayer, this, idPlayer);
+	 */
+	Ham_SC_Item_AddToPlayer,
 
 	/**
 	 * Description:		-

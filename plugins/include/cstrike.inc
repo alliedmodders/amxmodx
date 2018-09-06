@@ -748,7 +748,7 @@ native cs_set_armoury_type(index, type, count = -1);
  * @error                 If a non-weaponbox entity is provided or the entity is invalid, an error will be
  *                        thrown.
  */
-native cs_get_wpnbox_weapon(weaponboxIndex);
+native cs_get_weaponbox_item(weaponboxIndex);
 
 /**
  * Returns the map zones the client is inside of as a bitflag value.

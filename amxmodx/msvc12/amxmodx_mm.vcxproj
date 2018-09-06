@@ -338,6 +338,7 @@ md -p JIT 2&gt;NUL
     <ClCompile Include="..\messages.cpp" />
     <ClCompile Include="..\meta_api.cpp" />
     <ClCompile Include="..\modules.cpp" />
+    <ClCompile Include="..\msgnatives.cpp" />
     <ClCompile Include="..\natives.cpp" />
     <ClCompile Include="..\newmenus.cpp" />
     <ClCompile Include="..\nongpl_matches.cpp" />
@@ -350,6 +351,7 @@ md -p JIT 2&gt;NUL
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">All</AssemblerOutput>
     </ClCompile>
     <ClCompile Include="..\strptime.cpp" />
+    <ClCompile Include="..\tempent.cpp" />
     <ClCompile Include="..\textparse.cpp" />
     <ClCompile Include="..\trie_natives.cpp" />
     <ClCompile Include="..\util.cpp" />
@@ -480,8 +482,10 @@ md -p JIT 2&gt;NUL
     <None Include="..\..\plugins\include\message_const.inc" />
     <None Include="..\..\plugins\include\message_stocks.inc" />
     <None Include="..\..\plugins\include\messages.inc" />
+    <None Include="..\..\plugins\include\msgnatives.inc" />
     <None Include="..\..\plugins\include\sorting.inc" />
     <None Include="..\..\plugins\include\string.inc" />
+    <None Include="..\..\plugins\include\tempent.inc" />
     <None Include="..\..\plugins\include\time.inc" />
     <None Include="..\..\plugins\include\vault.inc" />
     <None Include="..\..\plugins\include\vector.inc" />

@@ -37,6 +37,11 @@ int MessageIdStatusIcon;
 int MessageIdTeamInfo;
 int MessageIdTextMsg;
 int MessageIdWeaponList;
+int MessageIdBarTime;
+int MessageIdBarTime2;
+int MessageIdReloadSound;
+int MessageIdScenario;
+int MessageIdShadowIdx;
 
 extern bool OnMessageStatusIcon(edict_t *pPlayer);
 extern bool OnMessageItemStatus(edict_t *pPlayer);
@@ -61,6 +66,11 @@ UserMsg MessagesList[] =
 	{ "TeamInfo"   , &MessageIdTeamInfo    },
 	{ "TextMsg"    , &MessageIdTextMsg     },
 	{ "WeaponList" , &MessageIdWeaponList  },
+	{ "BarTime"    , &MessageIdBarTime     },
+	{ "BarTime2"   , &MessageIdBarTime2    },
+	{ "ReloadSound", &MessageIdReloadSound },
+	{ "Scenario"   , &MessageIdScenario    },
+	{ "ShadowIdx"  , &MessageIdShadowIdx   },
 	{ nullptr      , nullptr               }
 };
 

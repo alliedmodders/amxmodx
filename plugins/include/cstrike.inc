@@ -1232,6 +1232,84 @@ stock bool:cs_is_valid_itemid(id, bool:weapon_only = false)
 }
 
 /**
+ * Draws a HUD progress bar which is filled from 0% to 100% for the given
+ * amount of seconds. Once the bar is fully filled it will be removed from
+ * the screen automatically.
+ *
+ * @note If the "startpercent" argument is greater than 0, the bar will be
+ * filled from that amount of percentage instead of starting from 0%.
+ *
+ * @param id            Client index or 0 for all clients
+ * @param duration      How long (in seconds) until the bar is fully filled
+ * @param startpercent  Bar starting percentage (0-100)
+ * @param reliable      If true, the message will be sent via the reliable
+ *                      channel, otherwise it will use the unreliable one
+ *
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
+ */
+native cs_draw_progress_bar(id, duration, startpercent = 0, bool:reliable = true);
+
+/**
+ * Plays a generic reload sound.
+ *
+ * @param id            Client index or 0 for all clients
+ * @param shotgun       If set to true, it will play "weapons/generic_shot_reload.wav",
+ *                      otherwise it will play "weapons/generic_reload.wav".
+ * @param volume        Volume amount (0 - 255)
+ * @param reliable      If true, the message will be sent via the reliable
+ *                      channel, otherwise it will use the unreliable one
+ *
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
+ */
+native cs_play_reload_sound(id, bool:shotgun = false, volume = 100, bool:reliable = true);
+
+/**
+ * Displays a sprite to the right side of the round timer.
+ *
+ * @note A list of all icons and screenshots of them can be found here:
+ *       http://doktor.haze.free.fr/counter-strike/sprites_screens/index.php
+ *
+ * @param id            Client index or 0 for all clients
+ * @param active        If set to 0, it will remove the scenario icon and
+ *                      ignore all other arguments. Always set this to 1
+ *                      if you want to use any of the other arguments
+ * @param sprite        Sprite name (valid names are listed in sprites.hud.txt)
+ * @param alpha         Sprite alpha (100-255)
+ * @param flashrate     If nonzero, the sprite will flash from the given alpha
+ *                      in the "alpha" argument to an alpha of 100, at a rate
+ *                      set in this argument
+ * @param flashdelay    Delay (in seconds) between each flash
+ * @param reliable      If true, the message will be sent via the reliable
+ *                      channel, otherwise it will use the unreliable one
+ *
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
+ */
+native cs_set_hud_icon(id, active = 0, sprite[] = "", alpha = 100, flashrate = 0, flashdelay = 0, bool:reliable = true);
+
+/**
+ * Creates/Hides the shadow beneath players.
+ *
+ * @note This stock can't be used to set shadow to a specific player. It can
+ *       only set the shadow that a specific player sees for all other players.
+ *
+ * @param id            Client index or 0 for all clients
+ * @param shadowid      Sprite index or 0 to disable the shadow
+ * @param reliable      If true, the message will be sent via the reliable
+ *                      channel, otherwise it will use the unreliable one
+ *
+ * @noreturn
+ * @error               If "id" is non-zero and the client isn't
+ *                      connected, an error will be thrown.
+ */
+native cs_set_user_shadow(id, shadowid = 0, bool:reliable = true);
+
+/**
  * Called when CS internally fires a command to a player.
  *
  * @note This is most notably used by the rebuy/autobuy functionality,

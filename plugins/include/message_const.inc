@@ -118,6 +118,55 @@ enum
 };
 
 /**
+ * Flags used in draw_status_icon()
+ */
+enum StatusIconDisplay
+{
+	StatusIcon_Hide = 0,
+	StatusIcon_Show,
+	StatusIcon_Flash
+};
+
+/**
+ * Train controls used in draw_train_controls()
+ */
+enum TrainControlSpeed
+{
+	TrainSpeed_None = 0,
+	TrainSpeed_Neutral,
+	TrainSpeed_Slow,
+	TrainSpeed_Medium,
+	TrainSpeed_Maximum,
+	TrainSpeed_Reverse
+};
+
+/**
+ * Flags used in hide_hud_elements()
+ */
+enum HideElemenentFlags (<<= 1)
+{
+	HideElement_None = 0,
+	HideElement_Cross_Ammo_WPNList = 1,
+	HideElement_Flashlight,
+	HideElement_All,
+	HideElement_Radar_Health_Armor,
+	HideElement_Timer,
+	HideElement_Money,
+	HideElement_Crosshair
+};
+
+/**
+ * Flags used in fade_user_screen()
+ */
+enum ScreenFadeFlags (<<= 1)
+{
+	ScreenFade_FadeIn = 0,
+	ScreenFade_FadeOut = 1,
+	ScreenFade_Modulate,
+	ScreenFade_StayOut
+};
+
+/**
  * @section TempEntity messages for message_begin()
  */
 
@@ -565,7 +614,6 @@ enum
  * write_byte(red)
  * write_byte(green)
  * write_byte(blue)
- * write_byte(brightness)
  * write_byte(life in 10's)
  * write_byte(decay rate in 10's)
  */
@@ -673,6 +721,15 @@ enum
 #define TE_LARGEFUNNEL              100
 
 /**
+ * Flags used in te_create_large_funnel()
+ */
+enum LargeFunnelType
+{
+	LargeFunnel_FloatDown = 0,
+	LargeFunnel_FloatUp
+};
+
+/**
  * Particle spray
  *
  * @note
@@ -684,7 +741,7 @@ enum
  * write_coord(vector.y)
  * write_coord(vector.z)
  * write_byte(color)
- * write_byte(speed)
+ * write_byte(count)
  */
 #define	TE_BLOODSTREAM              101
 
@@ -761,6 +818,16 @@ enum
 #define TE_MODEL                    106
 
 /**
+ * Bounce sound types used in te_create_bouncing_model()
+ */
+enum BounceSound
+{
+	BounceSound_Null = 0,
+	BounceSound_Shell,
+	BounceSound_ShotShell
+};
+
+/**
  * Spherical shower of models, picks from set
  *
  * @note
@@ -768,9 +835,7 @@ enum
  * write_coord(origin.x)
  * write_coord(origin.y)
  * write_coord(origin.z)
- * write_coord(velocity.x)
- * write_coord(velocity.y)
- * write_coord(velocity.z)
+ * write_coord(speed)
  * write_short(model index)
  * write_short(count)
  * write_byte(life in 0.1's)
@@ -800,6 +865,23 @@ enum
 #define TE_BREAKMODEL               108
 
 /**
+ * Flags used in te_create_break_model()
+ */
+enum BreakModelType (<<= 1)
+{
+	BreakModel_None = 0,
+	BreakModel_Glass = 1,
+	BreakModel_Metal,
+	BreakModel_Flesh,
+	BreakModel_Wood,
+	BreakModel_Smoke,
+	BreakModel_Trans,
+	BreakModel_Concrete,
+	BreakModel_2,
+	BreakModel_TypeMask = BreakModel_Glass | BreakModel_Metal | BreakModel_Flesh | BreakModel_Wood | BreakModel_Concrete
+};
+
+/**
  * Decal and ricochet sound
  *
  * @note
@@ -825,7 +907,7 @@ enum
  * write_coord(velocity.z)
  * write_short(sprite index)
  * write_byte(count)
- * write_byte(speed)
+ * write_byte(randomness)
  * write_byte(noise)
  */
 #define TE_SPRITE_SPRAY             110
@@ -889,7 +971,7 @@ enum
  * write_coord(float height)
  * write_short(model index)
  * write_byte(count)
- * write_coord(speed)
+ * write_coord(randomness)
  */
 #define TE_BUBBLETRAIL              114
 
@@ -1073,6 +1155,23 @@ enum
  */
 #define TE_MULTIGUNSHOT             126
 
+/**
+ * Colors used in te_create_user_tracer()
+ */
+enum TracerColor
+{
+	TracerColor_White = 0,
+	TracerColor_Red,
+	TracerColor_Green,
+	TracerColor_Blue,
+	TracerColor_User,
+	TracerColor_Orange,
+	TracerColor_Coral,
+	TracerColor_Purple,
+	TracerColor_Coral2 = 9,
+	TracerColor_Coral3,
+	TracerColor_Coral4
+}
 
 /**
  * Larger message than the standard tracer, but allows some customization.

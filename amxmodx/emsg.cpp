@@ -32,6 +32,14 @@ int gmsgResetHUD;
 int gmsgRoundTime;
 int gmsgSayText;
 int gmsgInitHUD;
+int gmsgStatusIcon;
+int gmsgTrain;
+int gmsgGeiger;
+int gmsgHideWeapon;
+int gmsgCrosshair;
+int gmsgScreenFade;
+int gmsgScreenShake;
+int gmsgSetFOV;
 
 TeamIds g_teamsIds;
 WeaponsVault g_weaponsData[MAX_WEAPONS];

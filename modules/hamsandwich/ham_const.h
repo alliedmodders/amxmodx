@@ -203,7 +203,7 @@ enum
 	Ham_CheckMeleeAttack2,
 	Ham_ScheduleChange,
 	Ham_CanPlaySequence,
-	Ham_CanPlaySentence,
+	Ham_CanPlaySentence2,
 	Ham_PlaySentence,
 	Ham_PlayScriptedSentence,
 	Ham_SentenceStop,
@@ -484,6 +484,72 @@ enum
 
 	Ham_Item_GetItemInfo,
 
+	//
+	// New addition - 20117
+	//
+
+	Ham_SC_PreSpawn,
+	Ham_SC_PostSpawn,
+	Ham_SC_OnKeyValueUpdate,
+	Ham_SC_SetClassification,
+	Ham_SC_IsTriggered,
+	Ham_SC_MyCustomPointer,
+	Ham_SC_MyItemPointer,
+	Ham_SC_AddPoints,
+	Ham_SC_AddPointsToTeam,
+	Ham_SC_RemovePlayerItem,
+	Ham_SC_OnControls,
+	Ham_SC_IsSneaking,
+	Ham_SC_IsAlive,
+	Ham_SC_IsBSPModel,
+	Ham_SC_ReflectGauss,
+	Ham_SC_HasTarget,
+	Ham_SC_IsInWorld,
+	Ham_SC_IsPlayer,
+	Ham_SC_IsNetClient,
+	Ham_SC_IsBreakable,
+	Ham_SC_SUB_UseTargets,
+	Ham_SC_IsLockedByMaster,
+	Ham_SC_FBecomeProne,
+	Ham_SC_FVecVisible,
+	Ham_SC_SetPlayerAlly,
+	Ham_SC_OnSetOriginByMap,
+	Ham_SC_IsRevivable,
+	Ham_SC_BeginRevive,
+	Ham_SC_EndRevive,
+	Ham_SC_CanPlaySequence,
+	Ham_SC_CanPlaySentence2,
+	Ham_SC_PlayScriptedSentence,
+	Ham_SC_Item_AddToPlayer,
+	Ham_SC_Item_AddDuplicate,
+	Ham_SC_Item_AddAmmoFromItem,
+	Ham_SC_Item_GetPickupSound,
+	Ham_SC_Item_CanCollect,
+	Ham_SC_Item_Collect,
+	Ham_SC_Item_GetItemInfo,
+	Ham_SC_Item_CanDeploy,
+	Ham_SC_Item_Deploy,
+	Ham_SC_Item_CanHolster,
+	Ham_SC_Item_InactiveItemPreFrame,
+	Ham_SC_Item_InactiveItemPostFrame,
+	Ham_SC_Item_DetachFromPlayer,
+	Ham_SC_Item_UpdateClientData,
+	Ham_SC_Item_GetRespawnTime,
+	Ham_SC_Item_CanHaveDuplicates,
+	Ham_SC_Weapon_ExtractAmmoFromItem,
+	Ham_SC_Weapon_AddWeapon,
+	Ham_SC_Weapon_GetAmmo1Drop,
+	Ham_SC_Weapon_GetAmmo2Drop,
+	Ham_SC_Weapon_PlayEmptySound,
+	Ham_SC_Weapon_IsUsable,
+	Ham_SC_Weapon_FinishReload,
+	Ham_SC_Weapon_ShouldReload,
+	Ham_SC_Weapon_ShouldWeaponIdle,
+	Ham_SC_Weapon_UseDecrement,
+	Ham_SC_Player_EnteredObserver,
+	Ham_SC_Player_LeftObserver,
+	Ham_SC_Player_IsObserver,
+
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
 };
 
@@ -493,7 +559,8 @@ enum
 	
 	HAM_INVALID_FUNC,			// The function is not valid
 	HAM_FUNC_NOT_CONFIGURED,	// This function is not configured in hamdata.ini
-	
+	HAM_FUNC_NOT_AVAILABLE,		// This function is not more available in the mod
+
 	HAM_ERR_END
 };
 

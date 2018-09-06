@@ -33,7 +33,7 @@ native get_vaultdata(const key[], data[] = "", len = 0);
 
 /**
  * Sets data for a given key.
-
+ *
  * @param key           Key to set the value for
  * @param data          Data to set for the given key
  *
@@ -43,7 +43,7 @@ native set_vaultdata(const key[], const data[] = "");
 
 /**
  * Removes a key and it's data from the vault.
-
+ *
  * @param key           Key to remove
  *
  * @noreturn

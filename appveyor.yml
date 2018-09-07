@@ -24,7 +24,7 @@ cache:
   - c:\projects\*.zip -> appveyor.yml
   - c:\projects\mysql-5.5 -> appveyor.yml
 build_script:
-- '"%VS120COMNTOOLS%\vsvars32.bat"'
+- '"%VS140COMNTOOLS%\vsvars32.bat"'
 - mkdir build
 - cd build
 - c:\python27\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"

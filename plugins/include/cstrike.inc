@@ -1119,7 +1119,7 @@ native any:cs_get_weapon_info(weapon_id, CsWeaponInfo:type);
  * @param weaponIndex   A CSW_* id or 0. If 0(CSW_NONE) is passed the active item entity index will be retrieved
 					 If non-zero it will retrieve the entity index of the weapon with the given CSW_* id				
  *
- * @return              Weapon entity index on success or 0 if weapon could not be found
+ * @return              Weapon entity index on success or 0 if the weapon could not be found
  * @error               If the client index is not within the range of 1 to
  *                      maxClients, or the client is not connected or an invalid CSW_* value is passed an error will be
  *                      thrown.

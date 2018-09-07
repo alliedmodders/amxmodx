@@ -315,8 +315,6 @@ static cell AMX_NATIVE_CALL set_user_hitzones(AMX *amx, cell *params)
 		Players.SetBodyHits(attacker, target, hitzones);
 	}
 
-	g_pengfuncsTable_Post->pfnTraceLine = Players.HaveBodyHits() ? TraceLine_Post : nullptr;
-
 	return 1;
 }
 
@@ -484,8 +482,10 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
-void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *shooter, TraceResult *ptr)
+void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shooter, TraceResult *ptr)
 {
+	TRACE_LINE(v1, v2, fNoMonsters, shooter, ptr);
+
 	if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT))
 	    && shooter &&  (shooter->v.flags & (FL_CLIENT | FL_FAKECLIENT)) )
 	{
@@ -499,7 +499,7 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 		}
 	}
 
-	RETURN_META(MRES_IGNORED);
+	RETURN_META(MRES_SUPERCEDE);
 }
 
 

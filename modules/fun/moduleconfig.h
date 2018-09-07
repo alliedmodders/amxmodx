@@ -232,7 +232,7 @@
 // #define FN_SetOrigin							SetOrigin
 // #define FN_EmitSound							EmitSound
 // #define FN_EmitAmbientSound					EmitAmbientSound
-// #define FN_TraceLine							TraceLine
+#define FN_TraceLine							TraceLine
 // #define FN_TraceToss							TraceToss
 // #define FN_TraceMonsterHull					TraceMonsterHull
 // #define FN_TraceHull							TraceHull

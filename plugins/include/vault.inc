@@ -25,8 +25,8 @@
  * @param len           Buffer size. If len is set to 0 then the function will 
  * 			        	 return the value as a number
  *
- * @return              If len is not 0 function will return the number of characters written.
-					 If len is 0 function will return the numerical value associated with the key.	
+ * @return              If len is not 0 the function will return the number of characters written.
+					 If len is 0 the function will return the numerical value associated with the key.	
  */
 native get_vaultdata(const key[], data[] = "", len = 0);
 
@@ -42,7 +42,7 @@ native get_vaultdata(const key[], data[] = "", len = 0);
 native set_vaultdata(const key[], const data[] = "");
 
 /**
- * Removes a key and it's data from the vault.
+ * Removes a key and its data from the vault.
  *
  * @param key           Key to remove
  *

@@ -291,6 +291,9 @@ class AMXXConfig(object):
       'odbccp32.lib',
     ]
 
+    if cxx.version >= 1900:
+      cxx.linkflags += ['legacy_stdio_definitions.lib', 'legacy_stdio_wide_specifiers.lib']
+
     if builder.options.opt == '1':
       cxx.cflags += ['/Ox']
       cxx.linkflags += ['/OPT:ICF', '/OPT:REF']

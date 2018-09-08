@@ -2,8 +2,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <stdlib.h>
-#include <corecrt_wstdio.h>
-
 
 // Fix from from https://stackoverflow.com/a/34655235.
 //
@@ -13,6 +11,7 @@
 #pragma comment(lib, "DbgHelp.lib")
 #pragma warning(disable:4091) // 'typedef ': ignored on left of '' when no variable is declared
 #include <DbgHelp.h>
+#include <corecrt_wstdio.h>
 
 #define GET_CURRENT_CONTEXT(c, contextFlags) \
   do { \

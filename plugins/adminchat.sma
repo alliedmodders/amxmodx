@@ -217,9 +217,9 @@ public cmdSayAdmin(id)
 	log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")", name, userid, authid, message[1])
 	
 	if (is_user_admin(id)) // no diff here if admins have g_AdminChatFlag access or not, but we don't want to print "PLAYER"
-		format(message, charsmax(message), "(%L) %s :  %s", id, "ADMIN", name, message[1])
+		format(message, charsmax(message), "(%L) %s :  %s", LANG_PLAYER, "ADMIN", name, message[1])
 	else
-		format(message, charsmax(message), "(%L) %s :  %s", id, "PLAYER", name, message[1])
+		format(message, charsmax(message), "(%L) %s :  %s", LANG_PLAYER, "PLAYER", name, message[1])
 
 	get_players(players, inum, "ch")
 	

@@ -1170,7 +1170,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		}
 		case MPROP_NOCOLORS:
 		{
-			return static_cast<cell>(pMenu->m_AutoColors);
+			return static_cast<cell>(!pMenu->m_AutoColors);
 		}
 		default:
 		{

@@ -151,6 +151,7 @@ public stock const Float:NULL_VECTOR[3];
 #define HIT_LEFTLEG     6
 #define HIT_RIGHTLEG    7
 #define HIT_SHIELD      8 // CS only
+#define MAX_BODYHITS    8
 
 /**
  * @section emit_sound() constants
@@ -516,6 +517,22 @@ enum FindPlayerFlags (<<= 1)
 	FindPlayer_MatchUserId,        // Match with userid
 	FindPlayer_CaseInsensitive,    // Match case insensitively
 	FindPlayer_IncludeConnecting   // Include connecting clients
+}
+
+/**
+ * Constants for client statistics
+ */
+enum
+{
+	STATSX_KILLS = 0,
+	STATSX_DEATHS,
+	STATSX_HEADSHOTS,
+	STATSX_TEAMKILLS,
+	STATSX_SHOTS,
+	STATSX_HITS,
+	STATSX_DAMAGE,
+	STATSX_RANK,
+	STATSX_MAX_STATS
 }
 
 #include <cstrike_const> // To keep backward compatibility

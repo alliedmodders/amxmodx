@@ -38,6 +38,9 @@
     <ClCompile Include="..\..\..\third_party\libmaxminddb\maxminddb.c">
       <Filter>GeoIP2</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\third_party\libmaxminddb\data-pool.c">
+      <Filter>GeoIP2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\geoip_util.h">
@@ -62,6 +65,9 @@
       <Filter>GeoIP2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\third_party\libmaxminddb\maxminddb-compat-util.h">
+      <Filter>GeoIP2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\third_party\libmaxminddb\data-pool.h">
       <Filter>GeoIP2</Filter>
     </ClInclude>
   </ItemGroup>

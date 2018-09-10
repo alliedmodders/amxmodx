@@ -882,7 +882,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 
 		GET_OFFSET("CBasePlayer", m_modelIndexPlayer);
 
-		char modelpath[260];
+		char modelpath[PLATFORM_MAX_PATH];
 		ke::SafeSprintf(modelpath, sizeof(modelpath), "models/player/%s/%s.mdl", newModel, newModel);
 
 		auto modelIndex = 0;

@@ -12,6 +12,7 @@
 
 #include <IGameConfigs.h>
 #include "CLibrarySys.h"
+#include <amtl/am-autoptr.h>
 #include <amtl/am-vector.h>
 #include <amtl/am-string.h>
 #include <amtl/am-refcounting.h>
@@ -165,6 +166,19 @@ class CGameConfigManager : public IGameConfigManager
 
 		StringHashMap<ITextListener_SMC*> m_customHandlers;
 };
+
+#define GET_OFFSET(classname, member)												\
+	static int member = -1;															\
+	if (member == -1)																\
+	{                                                                               \
+		TypeDescription type;                                                       \
+		if (!CommonConfig->GetOffsetByClass(classname, #member, &type) || type.fieldOffset < 0)\
+		{																			\
+			LogError(amx, AMX_ERR_NATIVE, "Invalid %s offset. Native %s is disabled", #member, __FUNCTION__);\
+			return 0;																\
+		}																			\
+		member = type.fieldOffset;                                                  \
+	}
 
 extern CGameConfigManager ConfigManager;
 extern IGameConfig *CommonConfig;

@@ -15,6 +15,7 @@
 #include "amxxfile.h"
 #include <amtl/am-string.h>
 #include <amtl/am-vector.h>
+#include <amtl/am-autoptr.h>
 
 // *****************************************************
 // class CPluginMngr
@@ -65,7 +66,7 @@ public:
 		CPlugin* next;
 		int id;
 		
-		CPlugin(int i, const char* p, const char* n, char* e, int d);
+		CPlugin(int i, const char* p, const char* n, char* e, size_t m, int d);
 		~CPlugin();
 		
 		bool m_Debug;
@@ -121,7 +122,7 @@ public:
 
 	// Interface
 
-	CPlugin* loadPlugin(const char* path, const char* name, char* error, int debug);
+	CPlugin* loadPlugin(const char* path, const char* name, char* error, size_t maxLength, int debug);
 	void unloadPlugin(CPlugin** a);
 	int loadPluginsFromFile(const char* filename, bool warn=true);
 	

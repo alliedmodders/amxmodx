@@ -99,7 +99,7 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 	case TR_pHit:
 		{
 			edict_t *e = TypeConversion.id_to_edict(*ptr);
-			if (!e || FNullEnt(e))
+			if (*ptr != -1 && FNullEnt(e))
 				return 0; //TODO: return error
 			tr->pHit = e;
 			return 1;
@@ -187,7 +187,7 @@ static cell AMX_NATIVE_CALL get_tr2(AMX *amx, cell *params)
 		}
 	case TR_pHit:
 		{
-			if (tr->pHit == NULL || FNullEnt(tr->pHit))
+			if (FNullEnt(tr->pHit))
 				return -1;
 			return ENTINDEX(tr->pHit);
 			break;

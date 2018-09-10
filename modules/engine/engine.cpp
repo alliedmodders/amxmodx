@@ -456,6 +456,13 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			plinfo[iIndex].iViewType = CAMERA_3RDPERSON;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
+
+			if (!pNewCamera)
+			{
+				MF_LogError(amx, AMX_ERR_NATIVE, "Could not create camera entity.");
+				return 0;
+			}
+
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
@@ -486,6 +493,13 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			plinfo[iIndex].iViewType = CAMERA_UPLEFT;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
+
+			if (!pNewCamera)
+			{
+				MF_LogError(amx, AMX_ERR_NATIVE, "Could not create camera entity.");
+				return 0;
+			}
+
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
@@ -516,6 +530,13 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			plinfo[iIndex].iViewType = CAMERA_TOPDOWN;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
+
+			if (!pNewCamera)
+			{
+				MF_LogError(amx, AMX_ERR_NATIVE, "Could not create camera entity.");
+				return 0;
+			}
+
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");

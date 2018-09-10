@@ -178,7 +178,7 @@ forward client_authorized(id, const authid[]);
 #pragma deprecated Use client_disconnected() instead.
 forward client_disconnect(id);
 
- /**
+/**
  * Called when a client is disconnected from the server.
  *
  * @note This will be called in some additional cases that client_disconnect doesn't cover, 
@@ -459,7 +459,7 @@ native client_print_color(index, sender, const message[], any:...);
  *       last, to the client with the highest index.
  *
  * @param player    Client index, use 0 to display to all clients
- * @param type      Message type, see print_* destination constants in
+ * @param type      Message type, see engprint_* destination constants in
  *                  amxconst.inc
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
@@ -587,7 +587,7 @@ native register_event_ex(const event[], const function[], RegisterEventFlags:fla
 /**
  * Enables a function hook of a game event which has been previously registered with register_event_ex().
  *
- * @param handle    Value returned from register_event_ex()
+ * @param handle    Value returned from register_event() or register_event_ex()
  *
  * @noreturn
  * @error           If an invalid handle is provided, an error will be thrown.
@@ -597,7 +597,7 @@ native enable_event(handle);
 /**
  * Disables a function hook of a game event which has been previously registered with register_event_ex().
  *
- * @param handle    Value returned from register_event_ex()
+ * @param handle    Value returned from register_event() or register_event_ex()
  *
  * @noreturn
  * @error           If an invalid handle is provided, an error will be thrown.
@@ -2144,6 +2144,9 @@ native random_num(a, b);
  * @note Example usage: get_user_msgid("TextMsg")
  * @note The message id is unique as long as the server is running, but might
  *       change between updates. They should not be hardcoded into plugins.
+ * @note On first server start, this function will return 0 if used inside
+ *       plugin_precache(). Consider hooking RegUserMsg in order to retrieve
+ *       the correct message id.
  *
  * @param name      Client message name
  *
@@ -3285,7 +3288,7 @@ native DestroyForward(forward_handle);
  *
  * @noreturn
  */
-native arrayset(array[], value, size);
+native arrayset(any:array[], any:value, size);
 
 /**
  * Returns the weapon id associated with a weapon name.

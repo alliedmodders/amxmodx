@@ -108,7 +108,7 @@ ADMIN_TELEPORT_1 = ADMIN: %s teleport
 ADMIN_TELEPORT_2 = ADMIN %s: %s teleport
 TELE_MENU = Teleport Menu
 CUR_LOC = Mostani hely
-SAVE_LOC = Hely mentese
+SAVE_LOC = Hely mentése
 
 [lt]
 ADMIN_TELEPORT_1 = ADMINAS: teleportavo %s
@@ -128,8 +128,8 @@ SAVE_LOC = Ulozit miesto
 ADMIN_TELEPORT_1 = ADMIN: go teleportira %s
 ADMIN_TELEPORT_2 = ADMIN %s: go teleportira %s
 TELE_MENU = Meni za teleportiranje
-CUR_LOC = Vidi ja zacuvanata lokacija
-SAVE_LOC = Zacuvaj ja segasnata lokacija
+CUR_LOC = Vidi ja zachuvanata lokacija
+SAVE_LOC = Zachuvaj ja segashnata lokacija
 
 [hr]
 ADMIN_TELEPORT_1 = ADMIN: teleportirao %s

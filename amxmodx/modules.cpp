@@ -108,7 +108,7 @@ static binlogfuncs_t logfuncs =
 };
 #endif
 
-int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
+int load_amxscript_internal(AMX *amx, void **program, const char *filename, char *error, size_t maxLength, int debug)
 {
 	*error = 0;
 	size_t bufSize;
@@ -127,7 +127,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 				if (!*program)
 				{
-					strcpy(error, "Failed to allocate memory");
+					ke::SafeStrcpy(error, maxLength, "Failed to allocate memory");
 					return (amx->error = AMX_ERR_MEMORY);
 				}
 
@@ -140,31 +140,31 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 			case CAmxxReader::Err_None:
 				break;
 			case CAmxxReader::Err_FileOpen:
-				strcpy(error, "Plugin file open error");
+				ke::SafeStrcpy(error, maxLength, "Plugin file open error");
 				return (amx->error = AMX_ERR_NOTFOUND);
 			case CAmxxReader::Err_FileRead:
-				strcpy(error, "Plugin file read error");
+				ke::SafeStrcpy(error, maxLength, "Plugin file read error");
 				return (amx->error = AMX_ERR_NOTFOUND);
 			case CAmxxReader::Err_InvalidParam:
-				strcpy(error, "Internal error: Invalid parameter");
+				ke::SafeStrcpy(error, maxLength, "Internal error: Invalid parameter");
 				return (amx->error = AMX_ERR_NOTFOUND);
 			case CAmxxReader::Err_FileInvalid:
-				strcpy(error, "Invalid Plugin");
+				ke::SafeStrcpy(error, maxLength, "Invalid Plugin");
 				return (amx->error = AMX_ERR_FORMAT);
 			case CAmxxReader::Err_SectionNotFound:
-				strcpy(error, "Searched section not found (.amxx)");
+				ke::SafeStrcpy(error, maxLength, "Searched section not found (.amxx)");
 				return (amx->error = AMX_ERR_NOTFOUND);
 			case CAmxxReader::Err_DecompressorInit:
-				strcpy(error, "Decompressor initialization failed");
+				ke::SafeStrcpy(error, maxLength, "Decompressor initialization failed");
 				return (amx->error = AMX_ERR_INIT);
 			case CAmxxReader::Err_Decompress:
-				strcpy(error, "Internal error: Decompress");
+				ke::SafeStrcpy(error, maxLength, "Internal error: Decompress");
 				return (amx->error = AMX_ERR_NOTFOUND);
 			case CAmxxReader::Err_OldFile:
-				strcpy(error, "Plugin uses deprecated format. Update compiler");
+				ke::SafeStrcpy(error, maxLength, "Plugin uses deprecated format. Update compiler");
 				return (amx->error = AMX_ERR_FORMAT);
 			default:
-				strcpy(error, "Unknown error");
+				ke::SafeStrcpy(error, maxLength, "Unknown error");
 				return (amx->error = AMX_ERR_NOTFOUND);
 		}
 	} else {
@@ -178,7 +178,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 	if (magic != AMX_MAGIC)
 	{
-		strcpy(error, "Invalid Plugin");
+		ke::SafeStrcpy(error, maxLength, "Invalid Plugin");
 		return (amx->error = AMX_ERR_FORMAT);
 	}
 
@@ -191,7 +191,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	{
 		if ((hdr->file_version < CUR_FILE_VERSION))
 		{
-			sprintf(error, "Plugin needs newer debug version info");
+			ke::SafeStrcpy(error, maxLength, "Plugin needs newer debug version info");
 			return (amx->error = AMX_ERR_VERSION);
 		}
 		else if ((hdr->flags & AMX_FLAG_DEBUG) != 0)
@@ -209,13 +209,13 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 			{
 				dbg_FreeInfo(pDbg);
 				delete pDbg;
-				sprintf(error, "Debug loading error %d", err);
+				ke::SafeSprintf(error, maxLength, "Debug loading error %d", err);
 				return (amx->error = AMX_ERR_INIT);
 			}
 
 			amx->flags |= AMX_FLAG_DEBUG;
 		} else {
-			sprintf(error, "Plugin not compiled with debug option");
+			ke::SafeStrcpy(error, maxLength, "Plugin not compiled with debug option");
 			return (amx->error = AMX_ERR_INIT);
 		}
 	} else {
@@ -238,7 +238,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 			delete pDbg;
 		}
 
-		sprintf(error, "Load error %d (invalid file format or version)", err);
+		ke::SafeSprintf(error, maxLength, "Load error %d (invalid file format or version)", err);
 		return (amx->error = AMX_ERR_INIT);
 	}
 
@@ -276,7 +276,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		{
 			delete[] np;
 			delete[] rt;
-			strcpy(error, "Failed to initialize JIT'd plugin");
+			ke::SafeStrcpy(error, maxLength, "Failed to initialize JIT'd plugin");
 
 			return (amx->error = AMX_ERR_INIT);
 		}
@@ -307,14 +307,14 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 			if (*program == 0)
 			{
-				strcpy(error, "Failed to allocate memory");
+				ke::SafeStrcpy(error, maxLength, "Failed to allocate memory");
 				return (amx->error = AMX_ERR_MEMORY);
 			}
 		} else {
 			delete[] np;
 			delete[] rt;
 
-			sprintf(error, "Failed to initialize plugin (%d)", err);
+			ke::SafeSprintf(error, maxLength, "Failed to initialize plugin (%d)", err);
 
 			return (amx->error = AMX_ERR_INIT_JIT);
 		}
@@ -325,7 +325,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 
 	if (!script)
 	{
-		ke::SafeSprintf(error, 64, "Failed to allocate memory for script");
+		ke::SafeStrcpy(error, maxLength, "Failed to allocate memory for script");
 		return (amx->error = AMX_ERR_MEMORY);
 	}
 
@@ -341,7 +341,7 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 		{
 			if (amx_Register(amx, core_Natives, -1) != AMX_ERR_NONE)
 			{
-				sprintf(error, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
+				ke::SafeSprintf(error, maxLength, "Plugin uses an unknown function (name \"%s\") - check your modules.ini.", no_function);
 				return (amx->error = AMX_ERR_NOTFOUND);
 			}
 		} else {
@@ -350,6 +350,17 @@ int load_amxscript(AMX *amx, void **program, const char *filename, char error[64
 	}
 
 	return (amx->error = AMX_ERR_NONE);
+}
+
+int load_amxscript_ex(AMX *amx, void **program, const char *filename, char *error, size_t maxLength, int debug)
+{
+	return load_amxscript_internal(amx, program, filename, error, maxLength, debug);
+}
+
+// Deprecated. Use load_amxscript_ex() or MF_LoadAmxScriptEx() for modules. This function is kept to maintain backward compatibility.
+int load_amxscript(AMX *amx, void **program, const char *filename, char error[64], int debug)
+{
+	return load_amxscript_internal(amx, program, filename, error, 64 /* error max length */, debug);
 }
 
 const char *StrCaseStr(const char *as, const char *bs)
@@ -1759,9 +1770,10 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("GetAmxScriptName", MNF_GetAmxScriptName)
 	REGISTER_FUNC("FindAmxScriptByName", MNF_FindAmxScriptByName)
 	REGISTER_FUNC("FindAmxScriptByAmx", MNF_FindAmxScriptByAmx)
-	REGISTER_FUNC("LoadAmxScript", load_amxscript)
+	REGISTER_FUNC("LoadAmxScript", load_amxscript) // Deprecated. Please use LoadAmxScriptEx instead.
+	REGISTER_FUNC("LoadAmxScriptEx", load_amxscript_ex)
 	REGISTER_FUNC("UnloadAmxScript", unload_amxscript)
-
+		
 	// String / mem in amx scripts support
 	REGISTER_FUNC("SetAmxString", set_amxstring)
 	REGISTER_FUNC("SetAmxStringUTF8Char", set_amxstring_utf8_char)

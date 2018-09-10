@@ -224,7 +224,7 @@ public cmdSayAdmin(id)
 
 		if (pl == id || get_user_flags(pl) & g_AdminChatFlag)
 		{
-			client_print(pl, print_chat, "(%L) %s :  %s", pl, is_sender_admin ? "ADMIN" : "PLAYER", name, message[1])
+			client_print(pl, print_chat, "(%l) %s :  %s", is_sender_admin ? "ADMIN" : "PLAYER", name, message[1])
 		}
 	}
 

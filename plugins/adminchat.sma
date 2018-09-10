@@ -217,9 +217,9 @@ public cmdSayAdmin(id)
 	log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")", name, userid, authid, message[1])
 	
 	if (is_user_admin(id)) // no diff here if admins have g_AdminChatFlag access or not, but we don't want to print "PLAYER"
-		format(message, charsmax(message), "(%L) %s :  %s", LANG_PLAYER, "ADMIN", name, message[1])
+		format(message, charsmax(message), "(%l) %s :  %s", "ADMIN", name, message[1])
 	else
-		format(message, charsmax(message), "(%L) %s :  %s", LANG_PLAYER, "PLAYER", name, message[1])
+		format(message, charsmax(message), "(%l) %s :  %s", "PLAYER", name, message[1])
 
 	get_players(players, inum, "ch")
 	
@@ -227,7 +227,10 @@ public cmdSayAdmin(id)
 	{
 		pl = players[i]
 		if (pl == id || get_user_flags(pl) & g_AdminChatFlag)
+		{
+			SetGlobalTransTarget(pl)
 			client_print(pl, print_chat, "%s", message)
+		}
 	}
 	
 	return PLUGIN_HANDLED

@@ -1086,7 +1086,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 
 	int paramsNum = params[arg_numargs] / sizeof(cell);
 
-	switch(params[arg_prop])
+	switch (params[arg_prop])
 	{
 		case MPROP_PAGE_CALLBACK: return pMenu->pageCallback;
 		case MPROP_SHOWPAGE: return pMenu->showPageNumber;
@@ -1101,7 +1101,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 			set_amxstring(amx, params[arg_buffer], pMenu->m_ItemColor.chars(), params[arg_bufferlen]);
 			break;
 		}
-		case MPROP_PERPAGE:	return pMenu->items_per_page;
+		case MPROP_PERPAGE: return static_cast<cell>(pMenu->items_per_page);
 		case MPROP_BACKNAME:
 		{
 			if (paramsNum < arg_bufferlen)
@@ -1148,15 +1148,15 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		}
 		case MPROP_EXITALL:
 		{
-			if(pMenu->m_NeverExit == false && pMenu->m_ForceExit == false)
+			if (!pMenu->m_NeverExit && !pMenu->m_ForceExit)
 			{
 				return 1;
 			}
-			else if(pMenu->m_NeverExit == false && pMenu->m_ForceExit == true)
+			else if (!pMenu->m_NeverExit && pMenu->m_ForceExit)
 			{
 				return 2;
 			}
-			else if(pMenu->m_NeverExit == true && pMenu->m_ForceExit == false)
+			else if (pMenu->m_NeverExit && !pMenu->m_ForceExit)
 			{
 				return -1;
 			}
@@ -1170,7 +1170,7 @@ static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
 		}
 		case MPROP_NOCOLORS:
 		{
-			return pMenu->m_AutoColors;
+			return static_cast<cell>(pMenu->m_AutoColors);
 		}
 		default:
 		{

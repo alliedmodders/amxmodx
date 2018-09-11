@@ -46,55 +46,47 @@ InsertInfo(id)
 
 	if (g_iSize > 0)
 	{
-		new ip[32]
-		new auth[32];
+		new szAuth[34], szIP[16], iLast;
+		get_user_authid(id, szAuth, charsmax(szAuth));
+		get_user_ip(id, szIP, charsmax(szIP), 1);
 
-		get_user_authid(id, auth, charsmax(auth));
-		get_user_ip(id, ip, charsmax(ip), 1/*no port*/);
-
-		new last = 0;
-		
 		if (g_iSize < sizeof(g_szSteamIDs))
 		{
-			last = g_iSize - 1;
+			iLast = g_iSize - 1;
 		}
 		else
 		{
-			last = g_iTracker - 1;
+			iLast = g_iTracker - 1;
 			
-			if (last < 0)
+			if (iLast < 0)
 			{
-				last = g_iSize - 1;
+				iLast = g_iSize - 1;
 			}
 		}
 		
-		if (equal(auth, g_szSteamIDs[last]) &&
-			equal(ip, g_szIPs[last])) // need to check ip too, or all the nosteams will while it doesn't work with their illegitimate server
+		if (equal(szAuth, g_szSteamIDs[iLast]) && equal(szIP, g_szIPs[iLast])) // need to check ip too, or all the nosteams will while it doesn't work with their illegitimate server
 		{
-			get_user_name(id, g_szNames[last], charsmax(g_szNames[]));
-			g_iAccess[last] = get_user_flags(id);
-			
+			get_user_name(id, g_szNames[iLast], charsmax(g_szNames[]));
+			g_iAccess[iLast] = get_user_flags(id);
 			return;
 		}
 	}
 	
 	// Need to insert the entry
 	
-	new target = 0;  // the slot to save the info at
+	new iTarget;  // the slot to save the info at
 
 	// Queue is not yet full
 	if (g_iSize < sizeof(g_szSteamIDs))
 	{
-		target = g_iSize;
-		
+		iTarget = g_iSize;
 		++g_iSize;
-		
 	}
 	else
 	{
-		target = g_iTracker;
-		
+		iTarget = g_iTracker;
 		++g_iTracker;
+
 		// If we reached the end of the array, then move to the front
 		if (g_iTracker == sizeof(g_szSteamIDs))
 		{
@@ -102,28 +94,28 @@ InsertInfo(id)
 		}
 	}
 	
-	get_user_authid(id, g_szSteamIDs[target], charsmax(g_szSteamIDs[]));
-	get_user_name(id, g_szNames[target], charsmax(g_szNames[]));
-	get_user_ip(id, g_szIPs[target], charsmax(g_szIPs[]), 1/*no port*/);
-	
-	g_iAccess[target] = get_user_flags(id);
-
+	get_user_authid(id, g_szSteamIDs[iTarget], charsmax(g_szSteamIDs[]));
+	get_user_name(id, g_szNames[iTarget], charsmax(g_szNames[]));
+	get_user_ip(id, g_szIPs[iTarget], charsmax(g_szIPs[]), 1);
+	g_iAccess[iTarget] = get_user_flags(id);
 }
-stock GetInfo(i, name[], namesize, auth[], authsize, ip[], ipsize, &access)
+
+GetInfo(i, szName[], iNameLen, szAuth[] = "", iAuthLen = 0, szIP[] = "", iIPLen = 0, &iAccess = 0)
 {
 	if (i >= g_iSize)
 	{
 		abort(AMX_ERR_NATIVE, "GetInfo: Out of bounds (%d:%d)", i, g_iSize);
 	}
 	
-	new target = (g_iTracker + i) % sizeof(g_szSteamIDs);
+	new iTarget = (g_iTracker + i) % sizeof(g_szSteamIDs);
 	
-	copy(name, namesize, g_szNames[target]);
-	copy(auth, authsize, g_szSteamIDs[target]);
-	copy(ip,   ipsize,   g_szIPs[target]);
-	access = g_iAccess[target];
+	copy(szName, iNameLen, g_szNames[iTarget]);
+	copy(szAuth, iAuthLen, g_szSteamIDs[iTarget]);
+	copy(szIP,   iIPLen,   g_szIPs[iTarget]);
+	iAccess = g_iAccess[iTarget];
 	
 }
+
 public client_disconnected(id)
 {
 	if (!is_user_bot(id))
@@ -134,89 +126,91 @@ public client_disconnected(id)
 
 public plugin_init()
 {
-	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team");
 
-	register_dictionary("admincmd.txt")
-	register_dictionary("common.txt")
-	register_dictionary("adminhelp.txt")
+	register_dictionary("admincmd.txt");
+	register_dictionary("adminhelp.txt");
+	register_dictionary("common.txt");
 
-	register_concmd("amx_kick", "cmdKick", ADMIN_KICK, "<name or #userid> [reason]")
-	register_concmd("amx_ban", "cmdBan", ADMIN_BAN|ADMIN_BAN_TEMP, "<name or #userid> <minutes> [reason]")
-	register_concmd("amx_banip", "cmdBanIP", ADMIN_BAN|ADMIN_BAN_TEMP, "<name or #userid> <minutes> [reason]")
-	register_concmd("amx_addban", "cmdAddBan", ADMIN_BAN, "<^"authid^" or ip> <minutes> [reason]")
-	register_concmd("amx_unban", "cmdUnban", ADMIN_BAN|ADMIN_BAN_TEMP, "<^"authid^" or ip>")
-	register_concmd("amx_slay", "cmdSlay", ADMIN_SLAY, "<name or #userid>")
-	register_concmd("amx_slap", "cmdSlap", ADMIN_SLAY, "<name or #userid> [power]")
-	register_concmd("amx_leave", "cmdLeave", ADMIN_KICK, "<tag> [tag] [tag] [tag]")
-	register_concmd("amx_pause", "cmdPause", ADMIN_CVAR, "- pause or unpause the game")
-	register_concmd("amx_who", "cmdWho", ADMIN_ADMIN, "- displays who is on server")
-	register_concmd("amx_cvar", "cmdCvar", ADMIN_CVAR, "<cvar> [value]")
-	register_concmd("amx_xvar_float", "cmdXvar", ADMIN_CVAR, "<xvar> [value]")
-	register_concmd("amx_xvar_int", "cmdXvar", ADMIN_CVAR, "<xvar> [value]")
-	register_concmd("amx_plugins", "cmdPlugins", ADMIN_ADMIN)
-	register_concmd("amx_modules", "cmdModules", ADMIN_ADMIN)
-	register_concmd("amx_map", "cmdMap", ADMIN_MAP, "<mapname>")
-	register_concmd("amx_extendmap", "cmdExtendMap", ADMIN_MAP, "<number of minutes> - extend map")
-	register_concmd("amx_cfg", "cmdCfg", ADMIN_CFG, "<filename>")
-	register_concmd("amx_nick", "cmdNick", ADMIN_SLAY, "<name or #userid> <new nick>")
-	register_concmd("amx_last", "cmdLast", ADMIN_BAN, "- list the last few disconnected clients info");
-	register_clcmd("amx_rcon", "cmdRcon", ADMIN_RCON, "<command line>")
-	register_clcmd("amx_showrcon", "cmdShowRcon", ADMIN_RCON, "<command line>")
-	register_clcmd("pauseAck", "cmdLBack")
+	register_concmd("amx_kick",			"cmdKick",		ADMIN_KICK,					"AMX_KICK_SYNTAX",		.info_ml = true);
+	register_concmd("amx_ban",			"cmdBan",		ADMIN_BAN|ADMIN_BAN_TEMP,	"AMX_BAN_SYNTAX",		.info_ml = true);
+	register_concmd("amx_banip",		"cmdBanIP",		ADMIN_BAN|ADMIN_BAN_TEMP,	"AMX_BANIP_SYNTAX",		.info_ml = true);
+	register_concmd("amx_addban",		"cmdAddBan",	ADMIN_BAN,					"AMX_ADDBAN_SYNTAX",	.info_ml = true);
+	register_concmd("amx_unban",		"cmdUnban",		ADMIN_BAN|ADMIN_BAN_TEMP,	"AMX_UNBAN_SYNTAX",		.info_ml = true);
+	register_concmd("amx_slay",			"cmdSlay",		ADMIN_SLAY,					"AMX_SLAY_SYNTAX",		.info_ml = true);
+	register_concmd("amx_slap",			"cmdSlap",		ADMIN_SLAY,					"AMX_SLAP_SYNTAX",		.info_ml = true);
+	register_concmd("amx_leave",		"cmdLeave",		ADMIN_KICK,					"AMX_LEAVE_SYNTAX",		.info_ml = true);
+	register_concmd("amx_pause",		"cmdPause",		ADMIN_CVAR,					"AMX_PAUSE_SYNTAX",		.info_ml = true);
+	register_concmd("amx_who",			"cmdWho",		ADMIN_ADMIN,				"AMX_WHO_SYNTAX",		.info_ml = true);
+	register_concmd("amx_cvar",			"cmdCvar",		ADMIN_CVAR,					"AMX_CVAR_SYNTAX",		.info_ml = true);
+	register_concmd("amx_xvar_float",	"cmdXvar",		ADMIN_CVAR,					"AMX_XVAR_SYNTAX",		.info_ml = true);
+	register_concmd("amx_xvar_int",		"cmdXvar",		ADMIN_CVAR,					"AMX_XVAR_SYNTAX",		.info_ml = true);
+	register_concmd("amx_plugins",		"cmdPlugins",	ADMIN_ADMIN,				"AMX_PLUGINS_SYNTAX",	.info_ml = true);
+	register_concmd("amx_modules",		"cmdModules",	ADMIN_ADMIN,				"AMX_MODULES_SYNTAX",	.info_ml = true);
+	register_concmd("amx_map",			"cmdMap",		ADMIN_MAP,					"AMX_MAP_SYNTAX",		.info_ml = true);
+	register_concmd("amx_extendmap",	"cmdExtendMap",	ADMIN_MAP,					"AMX_EXTENDMAP_SYNTAX",	.info_ml = true);
+	register_concmd("amx_cfg",			"cmdCfg",		ADMIN_CFG,					"AMX_CFG_SYNTAX",		.info_ml = true);
+	register_concmd("amx_nick",			"cmdNick",		ADMIN_SLAY,					"AMX_NICK_SYNTAX",		.info_ml = true);
+	register_concmd("amx_last",			"cmdLast",		ADMIN_BAN,					"AMX_LAST_SYNTAX",		.info_ml = true);
+	register_clcmd("amx_rcon",			"cmdRcon",		ADMIN_RCON,					"AMX_RCON_SYNTAX",		.info_ml = true);
+	register_clcmd("amx_showrcon",		"cmdShowRcon",	ADMIN_RCON,					"AMX_RCON_SYNTAX",		.info_ml = true);
+	register_clcmd("pauseAc",			"cmdLBack");
 
-	g_pRconPassword=get_cvar_pointer("g_pRconPassword");
-	g_pPausable=get_cvar_pointer("g_pPausable");
-	g_pTimelimit=get_cvar_pointer( "mp_g_pTimelimit" );
+	g_pRconPassword = get_cvar_pointer("rcon_password");
+	g_pPausable = get_cvar_pointer("pausable");
+	g_pTimelimit = get_cvar_pointer("mp_timelimit");
 	g_pTempBanMaxTime = register_cvar("amx_tempban_maxtime", "4320", FCVAR_PROTECTED);
-
 	g_tTempBans = TrieCreate();
 
-	new flags = get_pcvar_flags(g_pRconPassword);
+	new iFlags = get_pcvar_flags(g_pRconPassword);
 
-	if (!(flags & FCVAR_PROTECTED))
+	if (!(iFlags & FCVAR_PROTECTED))
 	{
-		set_pcvar_flags(g_pRconPassword, flags | FCVAR_PROTECTED);
+		set_pcvar_flags(g_pRconPassword, iFlags | FCVAR_PROTECTED);
 	}
 }
 
-public cmdKick(id, level, cid)
+public cmdKick(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
-		return PLUGIN_HANDLED
+	if (!cmd_access(id, iLevel, iCid, 2))
+	{
+		return PLUGIN_HANDLED;
+	}
 
-	new arg[32]
-	read_argv(1, arg, charsmax(arg))
-	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
-	
-	if (!player)
-		return PLUGIN_HANDLED
-	
-	new authid[32], authid2[32], name2[MAX_NAME_LENGTH], name[MAX_NAME_LENGTH], userid2, reason[32]
-	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_name(player, name2, charsmax(name2))
-	get_user_name(id, name, charsmax(name))
-	userid2 = get_user_userid(player)
-	read_argv(2, reason, charsmax(reason))
-	remove_quotes(reason)
-	
-	log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, reason)
+	new szPlayer[32];
+	read_argv(1, szPlayer, charsmax(szPlayer));
 
-	show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", name, name2);
+	new iPlayer = cmd_target(id, szPlayer, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF);
+	
+	if (!iPlayer)
+	{
+		return PLUGIN_HANDLED;
+	}
 
-	if (is_user_bot(player))
-		server_cmd("kick #%d", userid2)
+	new szReason[32];
+	read_argv(2, szReason, charsmax(szReason));
+	remove_quotes(szReason);
+
+	log_amx("Kick: ^"%N^" kick ^"%N^" (reason ^"%s^")", id, iPlayer, szReason);
+	show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", fmt("%n", id), fmt("%n", iPlayer));
+
+	if (is_user_bot(iPlayer))
+	{
+		server_cmd("kick #%d", get_user_userid(iPlayer));
+	}
 	else
 	{
-		if (reason[0])
-			server_cmd("kick #%d ^"%s^"", userid2, reason)
+		if (szReason[0])
+		{
+			server_cmd("kick #%d ^"%s^"", get_user_userid(iPlayer), szReason);
+		}
 		else
-			server_cmd("kick #%d", userid2)
+		{
+			server_cmd("kick #%d", get_user_userid(iPlayer));
+		}
 	}
 	
-	console_print(id, "[AMXX] Client ^"%s^" kicked", name2)
-	
+	console_print(id, "[AMXX] %l", "ADMIN_KICK_CON", iPlayer);	
 	return PLUGIN_HANDLED
 }
 
@@ -225,403 +219,406 @@ public cmdKick(id, level, cid)
  * it is not safe to be passed to server_cmd() as it may be trying to execute
  * a command.
  */
-isCommandArgSafe(const arg[])
+isCommandArgSafe(const szArg[])
 {
-	return contain(arg, ";") == -1 && contain(arg, "\n") == -1;
+	return contain(szArg, ";") == -1 && contain(szArg, "\n") == -1;
 }
 
-public cmdUnban(id, level, cid)
+public cmdUnban(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
-		return PLUGIN_HANDLED
-	
-	new arg[32], authid[32], name[MAX_NAME_LENGTH]
-	
-	read_argv(1, arg, charsmax(arg))
-
-	get_user_authid(id, authid, charsmax(authid))
-
-	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) )
+	if (!cmd_access(id, iLevel, iCid, 2))
 	{
-		new storedAdminAuth[32]
-		if( !TrieGetString(g_tTempBans, arg, storedAdminAuth, charsmax(storedAdminAuth)) || !equal(storedAdminAuth, authid) )
+		return PLUGIN_HANDLED;
+	}
+	
+	new szArg[32], szAuth[32];
+	read_argv(1, szArg, charsmax(szArg));
+	get_user_authid(id, szAuth, charsmax(szAuth));
+
+	if (!(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )))
+	{
+		new szStoredAdminAuth[32];
+
+		if (!TrieGetString(g_tTempBans, szArg, szStoredAdminAuth, charsmax(szStoredAdminAuth)) || !equal(szStoredAdminAuth, szAuth))
 		{
-			console_print(id, "%L", id, "ADMIN_MUST_TEMPUNBAN");
+			console_print(id, "[AMXX] %l", "ADMIN_MUST_TEMPUNBAN");
 			return PLUGIN_HANDLED;
 		}
 	}
 	
-	if (contain(arg, ".") != -1)
+	if (contain(szArg, ".") != -1)
 	{
-		server_cmd("removeip ^"%s^";writeip", arg)
-		console_print(id, "[AMXX] %L", id, "IP_REMOVED", arg)
-	} else {
-		if(!isCommandArgSafe(arg))
+		server_cmd("removeip ^"%s^";writeip", szArg);
+		console_print(id, "[AMXX] %l", "IP_REMOVED", szArg);
+	}
+	else
+	{
+		if (!isCommandArgSafe(szArg))
 		{
-			console_print(id, "%l", "CL_NOT_FOUND");
+			console_print(id, "[AMXX] %l", "CL_NOT_FOUND");
 			return PLUGIN_HANDLED;
 		}
 
-		server_cmd("removeid %s;writeid", arg)
-		console_print(id, "[AMXX] %L", id, "AUTHID_REMOVED", arg)
+		server_cmd("removeid %s;writeid", szArg);
+		console_print(id, "[AMXX] %l", "AUTHID_REMOVED", szArg);
 	}
 
-	get_user_name(id, name, charsmax(name))
+	show_activity_key("ADMIN_UNBAN_1", "ADMIN_UNBAN_2", fmt("%n", id), szArg);
+	log_amx("Cmd: ^"%N^" unban ^"%s^"", id, szArg);
 
-	show_activity_key("ADMIN_UNBAN_1", "ADMIN_UNBAN_2", name, arg);
-
-	log_amx("Cmd: ^"%s<%d><%s><>^" unban ^"%s^"", name, get_user_userid(id), authid, arg)
-	
 	return PLUGIN_HANDLED
 }
 
 /* amx_addban is a special command now.
- * If a user with rcon uses it, it bans the user.  No questions asked.
+ * If a user with rcon uses it, it bans the user. No questions asked.
  * If a user without rcon but with ADMIN_BAN uses it, it will scan the old
  * connection queue, and if it finds the info for a player in it, it will
- * check their old access.  If they have immunity, it will not ban.
- * If they do not have immunity, it will ban.  If the user is not found,
+ * check their old access. If they have immunity, it will not ban.
+ * If they do not have immunity, it will ban. If the user is not found,
  * it will refuse to ban the target.
  */
- 
-public cmdAddBan(id, level, cid)
+public cmdAddBan(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 3, true)) // check for ADMIN_BAN access
+	if (!cmd_access(id, iLevel, iCid, 3, true)) // check for ADMIN_BAN access
 	{
-		if (get_user_flags(id) & level) // Getting here means they didn't input enough args
+		if (get_user_flags(id) & iLevel) // Getting here means they didn't input enough args
 		{
 			return PLUGIN_HANDLED;
 		}
-		if (!cmd_access(id, ADMIN_RCON, cid, 3)) // If somehow they have ADMIN_RCON without ADMIN_BAN, continue
+		if (!cmd_access(id, ADMIN_RCON, iCid, 3)) // If somehow they have ADMIN_RCON without ADMIN_BAN, continue
 		{
 			return PLUGIN_HANDLED;
 		}
 	}
 
-	new arg[32], authid[32], name[MAX_NAME_LENGTH], minutes[32], reason[32]
-	
-	read_argv(1, arg, charsmax(arg))
-	read_argv(2, minutes, charsmax(minutes))
-	read_argv(3, reason, charsmax(reason))
-	
-	trim(arg);
+	new szArg[32], szAuth[32], szMinutes[32], szReason[32];
+	read_argv(1, szArg, charsmax(szArg));
+	read_argv(2, szMinutes, charsmax(szMinutes));
+	read_argv(3, szReason, charsmax(szReason));
+	trim(szArg);
 	
 	if (!(get_user_flags(id) & ADMIN_RCON))
 	{
-		new bool:canban = false;
-		new bool:isip = false;
+		new bool:bCanBan, bool:bIsIP;
+		static const szLimitedAccess[][] = { "STEAM_ID_PENDING", "STEAM_ID_LAN", "HLTV", "4294967295", "VALVE_ID_LAN", "VALVE_ID_PENDING" };
+
 		// Limited access to this command
-		if (equali(arg, "STEAM_ID_PENDING") ||
-			equali(arg, "STEAM_ID_LAN") ||
-			equali(arg, "HLTV") ||
-			equali(arg, "4294967295") ||
-			equali(arg, "VALVE_ID_LAN") ||
-			equali(arg, "VALVE_ID_PENDING"))
+		for(new i; i < sizeof(szLimitedAccess); i++)
 		{
-			// Hopefully we never get here, so ML shouldn't be needed
-			console_print(id, "Cannot ban %s", arg);
-			return PLUGIN_HANDLED;
-		}
-		
-		if (contain(arg, ".") != -1)
-		{
-			isip = true;
-		}
-		
-		// Scan the disconnection queue
-		if (isip)
-		{
-			new IP[32];
-			new Name[MAX_NAME_LENGTH];
-			new dummy[1];
-			new Access;
-			for (new i = 0; i < g_iSize; i++)
+			if(equali(szArg, szLimitedAccess[i]))
 			{
-				GetInfo(i, Name, charsmax(Name), dummy, 0, IP, charsmax(IP), Access);
+				console_print(id, "[AMXX] %l", "ADMIN_CANNOT_BAN", szArg);
+				return PLUGIN_HANDLED;
+			}
+		}
+		
+		if (contain(szArg, ".") != -1)
+		{
+			bIsIP = true;
+		}
+		
+		new szName[MAX_NAME_LENGTH], iAccess;
+
+		// Scan the disconnection queue
+		if (bIsIP)
+		{
+			for (new szIP[16], i; i < g_iSize; i++)
+			{
+				GetInfo(i, szName, charsmax(szName), _, _, szIP, charsmax(szIP), iAccess);
 				
-				if (equal(IP, arg))
+				if (equal(szIP, szArg))
 				{
-					if (Access & ADMIN_IMMUNITY)
+					if (iAccess & ADMIN_IMMUNITY)
 					{
-						console_print(id, "[AMXX] %s : %L", IP, id, "CLIENT_IMM", Name);
-						
+						console_print(id, "[AMXX] %s : %l", szIP, "CLIENT_IMM", szName);
 						return PLUGIN_HANDLED;
 					}
+
 					// User did not have immunity
-					canban = true;
+					bCanBan = true;
 				}
 			}
 		}
 		else
 		{
-			new Auth[32];
-			new Name[MAX_NAME_LENGTH];
-			new dummy[1];
-			new Access;
-			for (new i = 0; i < g_iSize; i++)
+			for (new szAuth[32], i; i < g_iSize; i++)
 			{
-				GetInfo(i, Name, charsmax(Name), Auth, charsmax(Auth), dummy, 0, Access);
+				GetInfo(i, szName, charsmax(szName), szAuth, charsmax(szAuth), _, _, iAccess);
 				
-				if (equal(Auth, arg))
+				if (equal(szAuth, szArg))
 				{
-					if (Access & ADMIN_IMMUNITY)
+					if (iAccess & ADMIN_IMMUNITY)
 					{
-						console_print(id, "[AMXX] %s : %L", Auth, id, "CLIENT_IMM", Name);
-						
+						console_print(id, "[AMXX] %s : %l", szAuth, "CLIENT_IMM", szName);
 						return PLUGIN_HANDLED;
 					}
+
 					// User did not have immunity
-					canban = true;
+					bCanBan = true;
 				}
 			}
 		}
 		
-		if (!canban)
+		if (!bCanBan)
 		{
-			console_print(id, "[AMXX] You may only ban recently disconnected clients.  Use ^"amx_last^" to view.");
-			
+			console_print(id, "[AMXX] %l", "ADMIN_BAN_ONLY_RECENT");
 			return PLUGIN_HANDLED;
 		}
-		
 	}
 	
 	// User has access to ban their target
-	if (contain(arg, ".") != -1)
+	if (contain(szArg, ".") != -1)
 	{
-		server_cmd("addip ^"%s^" ^"%s^";wait;writeip", minutes, arg)
-		console_print(id, "[AMXX] Ip ^"%s^" added to ban list", arg)
-	} else {
-		if(!isCommandArgSafe(arg))
+		server_cmd("addip ^"%s^" ^"%s^";wait;writeip", szMinutes, szArg);
+		console_print(id, "[AMXX] %l", "ADMIN_IP_ADDED", szArg);
+	}
+	else
+	{
+		if (!isCommandArgSafe(szArg))
 		{
-			console_print(id, "%l", "CL_NOT_FOUND");
+			console_print(id, "[AMXX] %l", "CL_NOT_FOUND");
 			return PLUGIN_HANDLED;
 		}
 
-		server_cmd("banid ^"%s^" %s;wait;writeid", minutes, arg)
-		console_print(id, "[AMXX] Authid ^"%s^" added to ban list", arg)
+		server_cmd("banid ^"%s^" %s;wait;writeid", szMinutes, szArg);
+		console_print(id, "[AMXX] %l", "ADMIN_AUTHID_ADDED", szArg);
 	}
 
-	get_user_name(id, name, charsmax(name))
+	get_user_authid(id, szAuth, charsmax(szAuth));
+	TrieSetString(g_tTempBans, szArg, szAuth);
 
-	show_activity_key("ADMIN_ADDBAN_1", "ADMIN_ADDBAN_2", name, arg);
+	show_activity_key("ADMIN_ADDBAN_1", "ADMIN_ADDBAN_2", fmt("%n", id), szArg);
+	log_amx("Cmd: ^"%N^" ban ^"%s^" (minutes ^"%s^") (szReason ^"%s^")", id, szArg, szMinutes, szReason);
 
-	get_user_authid(id, authid, charsmax(authid))
-	TrieSetString(g_tTempBans, arg, authid)
-	log_amx("Cmd: ^"%s<%d><%s><>^" ban ^"%s^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, arg, minutes, reason)
-
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
-public cmdBan(id, level, cid)
+public cmdBan(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 3))
-		return PLUGIN_HANDLED
-
-	new target[32], minutes[8], reason[64]
-	
-	read_argv(1, target, charsmax(target))
-	read_argv(2, minutes, charsmax(minutes))
-	read_argv(3, reason, charsmax(reason))
-	
-	new player = cmd_target(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF)
-	
-	if (!player)
-		return PLUGIN_HANDLED
-
-	new nNum = str_to_num(minutes)
-	new const tempBanMaxTime = get_pcvar_num(g_pTempBanMaxTime);
-	if( nNum < 0 ) // since negative values result in permanent bans
+	if (!cmd_access(id, iLevel, iCid, 3))
 	{
-		nNum = 0;
-		minutes = "0";
-	}
-	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) && (nNum <= 0 || nNum > tempBanMaxTime) )
-	{
-		console_print(id, "%L", id, "ADMIN_MUST_TEMPBAN", tempBanMaxTime);
-		return PLUGIN_HANDLED
+		return PLUGIN_HANDLED;
 	}
 
-	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
-	new userid2 = get_user_userid(player)
-
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(player, name2, charsmax(name2))
-	get_user_name(id, name, charsmax(name))
+	new szPlayer[32], szMinutes[8], szReason[32];
+	read_argv(1, szPlayer, charsmax(szPlayer));
+	read_argv(2, szMinutes, charsmax(szMinutes));
+	read_argv(3, szReason, charsmax(szReason));
 	
-	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
-
-	TrieSetString(g_tTempBans, authid2, authid); // store all bans in case a permanent ban would override a temporary one.
+	new iPlayer = cmd_target(id, szPlayer, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF);
 	
-	new temp[64], banned[16]
-	if (nNum)
-		formatex(temp, charsmax(temp), "%L", player, "FOR_MIN", minutes)
-	else
-		formatex(temp, charsmax(temp), "%L", player, "PERM")
-
-	formatex(banned, charsmax(banned), "%L", player, "BANNED")
-
-	if (reason[0])
-		server_cmd("kick #%d ^"%s (%s %s)^";wait;banid %s %s;wait;writeid", userid2, reason, banned, temp, minutes, authid2)
-	else
-		server_cmd("kick #%d ^"%s %s^";wait;banid %s %s;wait;writeid", userid2, banned, temp, minutes, authid2)
-
-	
-	// Display the message to all clients
-
-	new msg[256];
-	new len;
-	new players[MAX_PLAYERS], pnum, plr
-	get_players(players, pnum, "ch")
-	for (new i; i<pnum; i++)
+	if (!iPlayer)
 	{
-		plr = players[i]
+		return PLUGIN_HANDLED;
+	}
 
-		len = formatex(msg, charsmax(msg), "%L", plr, "BAN");
-		len += formatex(msg[len], charsmax(msg) - len, " %s ", name2);
-		if (nNum)
+	new iMinutes = str_to_num(szMinutes);
+	new const iTempBanMaxTime = get_pcvar_num(g_pTempBanMaxTime);
+
+	if ( iMinutes < 0 ) // since negative values result in permanent bans
+	{
+		iMinutes = 0;
+		szMinutes = "0";
+	}
+
+	if (!(get_user_flags(id) & (ADMIN_BAN | ADMIN_RCON)) && (iMinutes <= 0 || iMinutes > iTempBanMaxTime))
+	{
+		console_print(id, "[AMXX] %l", "ADMIN_MUST_TEMPBAN", iTempBanMaxTime);
+		return PLUGIN_HANDLED;
+	}
+
+	new szAuth[32], szAuth2[32], szName[MAX_NAME_LENGTH], szName2[MAX_NAME_LENGTH];
+	get_user_authid(iPlayer, szAuth2, charsmax(szAuth2));
+	get_user_authid(id, szAuth, charsmax(szAuth));
+	get_user_name(iPlayer, szName2, charsmax(szName2));
+	get_user_name(id, szName, charsmax(szName));
+	
+	log_amx("Ban: ^"%N^" ban and kick ^"%N^" (minutes ^"%s^") (reason ^"%s^")", id, iPlayer, szMinutes, szReason);
+	TrieSetString(g_tTempBans, szAuth2, szAuth); // store all bans in case a permanent ban would override a temporary one
+	
+	new szTemp[64], szBanned[16];
+
+	if (iMinutes)
+	{
+		formatex(szTemp, charsmax(szTemp), "%L", iPlayer, "FOR_MIN", szMinutes);
+	}
+	else
+	{
+		formatex(szTemp, charsmax(szTemp), "%L", iPlayer, "PERM");
+	}
+
+	formatex(szBanned, charsmax(szBanned), "%L", iPlayer, "BANNED");
+
+	if (szReason[0])
+	{
+		server_cmd("kick #%d ^"%s (%s %s)^";wait;banid %s %s;wait;writeid", get_user_userid(iPlayer), szReason, szBanned, szTemp, szMinutes, szAuth2);
+	}
+	else
+	{
+		server_cmd("kick #%d ^"%s %s^";wait;banid %s %s;wait;writeid", get_user_userid(iPlayer), szBanned, szTemp, szMinutes, szAuth2);
+	}
+
+	// display the message to all clients
+
+	new szMessage[256], iPlayers[MAX_PLAYERS], iPnum, iLen;
+	get_players(iPlayers, iPnum, "ch");
+
+	for (new iPlayer, i; i < iPnum; i++)
+	{
+		iPlayer = iPlayers[i];
+
+		iLen = formatex(szMessage, charsmax(szMessage), "%L", iPlayer, "BAN");
+		iLen += formatex(szMessage[iLen], charsmax(szMessage) - iLen, " %s ", szName2);
+
+		if (iMinutes)
 		{
-			len += formatex(msg[len], charsmax(msg) - len, "%L", plr, "FOR_MIN", minutes);
+			iLen += formatex(szMessage[iLen], charsmax(szMessage) - iLen, "%L", iPlayer, "FOR_MIN", szMinutes);
 		}
 		else
 		{
-			len += formatex(msg[len], charsmax(msg) - len, "%L", plr, "PERM");
+			iLen += formatex(szMessage[iLen], charsmax(szMessage) - iLen, "%L", iPlayer, "PERM");
 		}
-		if (strlen(reason) > 0)
+
+		if (strlen(szReason) > 0)
 		{
-			formatex(msg[len], charsmax(msg) - len, " (%L: %s)", plr, "REASON", reason);
+			formatex(szMessage[iLen], charsmax(szMessage) - iLen, " (%L: %s)", iPlayer, "REASON", szReason);
 		}
-		show_activity_id(plr, id, name, msg);
+
+		show_activity_id(iPlayer, id, szName, szMessage);
 	}
 	
-	console_print(id, "[AMXX] %L", id, "CLIENT_BANNED", name2)
-	
+	console_print(id, "[AMXX] %l", "CLIENT_BANNED", szName2)
 	return PLUGIN_HANDLED
 }
 
-public cmdBanIP(id, level, cid)
+public cmdBanIP(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 3))
+	if (!cmd_access(id, iLevel, iCid, 3))
 		return PLUGIN_HANDLED
 	
-	new target[32], minutes[8], reason[64]
+	new szPlayer[32], szMinutes[8], szReason[32];
+	read_argv(1, szPlayer, charsmax(szPlayer));
+	read_argv(2, szMinutes, charsmax(szMinutes));
+	read_argv(3, szReason, charsmax(szReason));
 	
-	read_argv(1, target, charsmax(target))
-	read_argv(2, minutes, charsmax(minutes))
-	read_argv(3, reason, charsmax(reason))
+	new iPlayer = cmd_target(id, szPlayer, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF);
 	
-	new player = cmd_target(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF)
-	
-	if (!player)
-		return PLUGIN_HANDLED
-
-	new nNum = str_to_num(minutes)
-	new const tempBanMaxTime = get_pcvar_num(g_pTempBanMaxTime);
-	if( nNum < 0 ) // since negative values result in permanent bans
+	if (!iPlayer)
 	{
-		nNum = 0;
-		minutes = "0";
+		return PLUGIN_HANDLED;
 	}
-	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) && (nNum <= 0 || nNum > tempBanMaxTime) )
+
+	new iMinutes = str_to_num(szMinutes);
+	new const iTempBanMaxTime = get_pcvar_num(g_pTempBanMaxTime);
+
+	if ( iMinutes < 0 ) // since negative values result in permanent bans
 	{
-		console_print(id, "%L", id, "ADMIN_MUST_TEMPBAN", tempBanMaxTime);
-		return PLUGIN_HANDLED
+		iMinutes = 0;
+		szMinutes = "0";
+	}
+
+	if (!(get_user_flags(id) & (ADMIN_BAN | ADMIN_RCON)) && (iMinutes <= 0 || iMinutes > iTempBanMaxTime))
+	{
+		console_print(id, "[AMXX] %l", "ADMIN_MUST_TEMPBAN", iTempBanMaxTime);
+		return PLUGIN_HANDLED;
 	}
 	
-	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
-	new userid2 = get_user_userid(player)
+	new szAuth[32], szAuth2[32], szName[MAX_NAME_LENGTH], szName2[MAX_NAME_LENGTH];
+	get_user_authid(iPlayer, szAuth2, charsmax(szAuth2));
+	get_user_authid(id, szAuth, charsmax(szAuth));
+	get_user_name(iPlayer, szName2, charsmax(szName2));
+	get_user_name(id, szName, charsmax(szName));
 	
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(player, name2, charsmax(name2))
-	get_user_name(id, name, charsmax(name))
-	
-	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
+	log_amx("Ban: ^"%N^" ban and kick ^"%N^" (minutes ^"%s^") (reason ^"%s^")", id, iPlayer, szMinutes, szReason);
+	TrieSetString(g_tTempBans, szAuth2, szAuth);
 
-	TrieSetString(g_tTempBans, authid2, authid);
+	new szTemp[64], szBanned[16];
 
-	new temp[64], banned[16]
-	if (nNum)
-		formatex(temp, charsmax(temp), "%L", player, "FOR_MIN", minutes)
-	else
-		formatex(temp, charsmax(temp), "%L", player, "PERM")
-	format(banned, 15, "%L", player, "BANNED")
-
-	new address[32]
-	get_user_ip(player, address, charsmax(address), 1)
-
-	if (reason[0])
-		server_cmd("kick #%d ^"%s (%s %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip", userid2, reason, banned, temp, minutes, address)
-	else
-		server_cmd("kick #%d ^"%s %s^";wait;addip ^"%s^" ^"%s^";wait;writeip", userid2, banned, temp, minutes, address)
-
-	// Display the message to all clients
-
-	new msg[256];
-	new len;
-	new players[MAX_PLAYERS], pnum, plr
-	get_players(players, pnum, "ch")
-	for (new i; i<pnum; i++)
+	if (iMinutes)
 	{
-		plr = players[i]
+		formatex(szTemp, charsmax(szTemp), "%L", iPlayer, "FOR_MIN", szMinutes);
+	}
+	else
+	{
+		formatex(szTemp, charsmax(szTemp), "%L", iPlayer, "PERM");
+	}
 
-		len = formatex(msg, charsmax(msg), "%L", plr, "BAN");
-		len += formatex(msg[len], charsmax(msg) - len, " %s ", name2);
-		if (nNum)
+	formatex(szBanned, charsmax(szBanned), "%L", iPlayer, "BANNED");
+
+	new szIP[16];
+	get_user_ip(iPlayer, szIP, charsmax(szIP), 1);
+
+	if (szReason[0])
+	{
+		server_cmd("kick #%d ^"%s (%s %s)^";wait;addip ^"%s^" ^"%s^";wait;writeip", get_user_userid(iPlayer), szReason, szBanned, szTemp, szMinutes, szIP);
+	}
+	else
+	{
+		server_cmd("kick #%d ^"%s %s^";wait;addip ^"%s^" ^"%s^";wait;writeip", get_user_userid(iPlayer), szBanned, szTemp, iMinutes, szIP);
+	}
+
+	// display the message to all clients
+
+	new szMessage[256], iPlayers[MAX_PLAYERS], iPnum, iLen;
+	get_players(iPlayers, iPnum, "ch")
+
+	for (new iPlayer, i; i < iPnum; i++)
+	{
+		iPlayer = iPlayers[i];
+
+		iLen = formatex(szMessage, charsmax(szMessage), "%L", iPlayer, "BAN");
+		iLen += formatex(szMessage[iLen], charsmax(szMessage) - iLen, " %s ", szName2);
+
+		if (iMinutes)
 		{
-			formatex(msg[len], charsmax(msg) - len, "%L", plr, "FOR_MIN", minutes);
+			formatex(szMessage[iLen], charsmax(szMessage) - iLen, "%L", iPlayer, "FOR_MIN", szMinutes);
 		}
 		else
 		{
-			formatex(msg[len], charsmax(msg) - len, "%L", plr, "PERM");
+			formatex(szMessage[iLen], charsmax(szMessage) - iLen, "%L", iPlayer, "PERM");
 		}
-		if (strlen(reason) > 0)
+
+		if (strlen(szReason) > 0)
 		{
-			formatex(msg[len], charsmax(msg) - len, " (%L: %s)", plr, "REASON", reason);
+			formatex(szMessage[iLen], charsmax(szMessage) - iLen, " (%L: %s)", iPlayer, "REASON", szReason);
 		}
-		show_activity_id(plr, id, name, msg);
+
+		show_activity_id(iPlayer, id, szName, szMessage);
 	}
 
-	console_print(id, "[AMXX] %L", id, "CLIENT_BANNED", name2)
-	
+	console_print(id, "[AMXX] %l", "CLIENT_BANNED", szName2)
 	return PLUGIN_HANDLED
 }
 
-public cmdSlay(id, level, cid)
+public cmdSlay(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
-		return PLUGIN_HANDLED
+	if (!cmd_access(id, iLevel, iCid, 2))
+	{
+		return PLUGIN_HANDLED;
+	}
 	
-	new arg[32]
+	new szPlayer[32];	
+	read_argv(1, szPlayer, charsmax(szPlayer));
 	
-	read_argv(1, arg, charsmax(arg))
+	new iPlayer = cmd_target(id, szPlayer, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE);
 	
-	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE)
+	if (!iPlayer)
+	{
+		return PLUGIN_HANDLED;
+	}
 	
-	if (!player)
-		return PLUGIN_HANDLED
-	
-	user_kill(player)
-	
-	new authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
-	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_name(player, name2, charsmax(name2))
-	
-	log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
+	user_kill(iPlayer);
 
-	show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
+	log_amx("Cmd: ^"%N^" slay ^"%N^"", id, iPlayer);
+	show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", fmt("%n", id), fmt("%n", iPlayer));
+	console_print(id, "[AMXX] %l", "CLIENT_SLAYED", iPlayer);
 
-	console_print(id, "[AMXX] %L", id, "CLIENT_SLAYED", name2)
-	
 	return PLUGIN_HANDLED
 }
 
-public cmdSlap(id, level, cid)
+public cmdSlap(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
+	if (!cmd_access(id, iLevel, iCid, 2))
 		return PLUGIN_HANDLED
 
 	new arg[32]
@@ -659,9 +656,9 @@ public chMap(map[])
 	engine_changelevel(map);
 }
 
-public cmdMap(id, level, cid)
+public cmdMap(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
+	if (!cmd_access(id, iLevel, iCid, 2))
 		return PLUGIN_HANDLED
 
 	new arg[32]
@@ -696,16 +693,16 @@ public cmdMap(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-public cmdExtendMap(id, level, cid)
+public cmdExtendMap(id, iLevel, iCid)
 {
-	if(!cmd_access(id, level, cid, 2))
+	if (!cmd_access(id, iLevel, iCid, 2))
 		return PLUGIN_HANDLED
 	
 	new arg[32]
 	read_argv(1, arg, charsmax(arg))
 	new mns = str_to_num(arg)
 	
-	if(mns <= 0)
+	if (mns <= 0)
 		return PLUGIN_HANDLED
 	
 	new mapname[32]
@@ -735,9 +732,9 @@ stock bool:onlyRcon(const name[])
 	return false;
 }
 
-public cmdCvar(id, level, cid)
+public cmdCvar(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
+	if (!cmd_access(id, iLevel, iCid, 2))
 		return PLUGIN_HANDLED
 	
 	new arg[32], arg2[64]
@@ -829,9 +826,9 @@ public cmdCvar(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-public cmdXvar(id, level, cid)
+public cmdXvar(id, iLevel, iCid)
 {
-	if( !cmd_access(id, level, cid, 2) )
+	if ( !cmd_access(id, iLevel, iCid, 2) )
 	{
 		return PLUGIN_HANDLED;
 	}
@@ -841,16 +838,16 @@ public cmdXvar(id, level, cid)
 	read_argv(0, cmd, charsmax(cmd));
 	read_argv(1, arg1, charsmax(arg1));
 	trim(arg1);
-	if( read_argc() > 2 )
+	if ( read_argc() > 2 )
 	{
 		read_argv(2, arg2, charsmax(arg2));
 		trim(arg2);
 
-		if( equali(arg1, "add") )
+		if ( equali(arg1, "add") )
 		{
-			if( get_user_flags(id) & ADMIN_RCON && xvar_exists(arg2) )
+			if ( get_user_flags(id) & ADMIN_RCON && xvar_exists(arg2) )
 			{
-				if( !g_tXvarsFlags )
+				if ( !g_tXvarsFlags )
 				{
 					g_tXvarsFlags = TrieCreate();
 				}
@@ -864,7 +861,7 @@ public cmdXvar(id, level, cid)
 
 	new xvar = get_xvar_id( arg1 );
 
-	if( xvar == -1 )
+	if ( xvar == -1 )
 	{
 		console_print(id, "[AMXX] %L", id, "UNKNOWN_XVAR", arg1)
 		return PLUGIN_HANDLED
@@ -872,10 +869,10 @@ public cmdXvar(id, level, cid)
 
 	new any:value;
 
-	if( !arg2[0] ) // get value
+	if ( !arg2[0] ) // get value
 	{
 		value = get_xvar_num(xvar);
-		if( bFloat )
+		if ( bFloat )
 		{
 			float_to_str(value, arg2, charsmax(arg2));
 		}
@@ -888,17 +885,17 @@ public cmdXvar(id, level, cid)
 	}
 
 	// set value
-	if( g_tXvarsFlags && TrieKeyExists(g_tXvarsFlags, arg1) && ~get_user_flags(id) & ADMIN_RCON )
+	if ( g_tXvarsFlags && TrieKeyExists(g_tXvarsFlags, arg1) && ~get_user_flags(id) & ADMIN_RCON )
 	{
 		console_print(id, "[AMXX] %L", id, "XVAR_NO_ACC");
 		return PLUGIN_HANDLED;
 	}
 
 	new endPos;
-	if( bFloat )
+	if ( bFloat )
 	{
 		value = strtof(arg2, endPos);
-		if( !endPos )
+		if ( !endPos )
 		{
 			return PLUGIN_HANDLED;
 		}
@@ -906,7 +903,7 @@ public cmdXvar(id, level, cid)
 	else
 	{
 		value = strtol(arg2, endPos);
-		if( !endPos )
+		if ( !endPos )
 		{
 			return PLUGIN_HANDLED;
 		}
@@ -915,7 +912,7 @@ public cmdXvar(id, level, cid)
 	set_xvar_num(xvar, value);
 
 	// convert back value to string so admin can know value has been set correctly
-	if( bFloat )
+	if ( bFloat )
 	{
 		float_to_str(value, arg2, charsmax(arg2));
 	}
@@ -945,9 +942,9 @@ public cmdXvar(id, level, cid)
 	return PLUGIN_HANDLED;
 }
 
-public cmdPlugins(id, level, cid)
+public cmdPlugins(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 1))
+	if (!cmd_access(id, iLevel, iCid, 1))
 		return PLUGIN_HANDLED
 		
 	if (id==0) // If server executes redirect this to "amxx plugins" for more in depth output
@@ -1014,9 +1011,9 @@ public cmdPlugins(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-public cmdModules(id, level, cid)
+public cmdModules(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 1))
+	if (!cmd_access(id, iLevel, iCid, 1))
 		return PLUGIN_HANDLED
 
 	new name[32], version[32], author[32], status, sStatus[16]
@@ -1055,9 +1052,9 @@ public cmdModules(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-public cmdCfg(id, level, cid)
+public cmdCfg(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
+	if (!cmd_access(id, iLevel, iCid, 2))
 		return PLUGIN_HANDLED
 	
 	new arg[128]
@@ -1104,9 +1101,9 @@ public cmdLBack()
 	return PLUGIN_HANDLED
 }
 
-public cmdPause(id, level, cid)
+public cmdPause(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 1))
+	if (!cmd_access(id, iLevel, iCid, 1))
 		return PLUGIN_HANDLED 
 	
 	new authid[32], name[MAX_NAME_LENGTH], slayer = id
@@ -1149,9 +1146,9 @@ public cmdPause(id, level, cid)
 	return PLUGIN_HANDLED
 } 
 
-public cmdShowRcon(id, level, cid)
+public cmdShowRcon(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
+	if (!cmd_access(id, iLevel, iCid, 2))
 		return PLUGIN_HANDLED
 		
 	new password[64]
@@ -1160,7 +1157,7 @@ public cmdShowRcon(id, level, cid)
 	
 	if (!password[0])
 	{
-		cmdRcon(id, level, cid)
+		cmdRcon(id, iLevel, iCid)
 	} 
 	else 
 	{
@@ -1174,9 +1171,9 @@ public cmdShowRcon(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-public cmdRcon(id, level, cid)
+public cmdRcon(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
+	if (!cmd_access(id, iLevel, iCid, 2))
 		return PLUGIN_HANDLED
 	
 	new arg[128], authid[32], name[MAX_NAME_LENGTH]
@@ -1193,9 +1190,9 @@ public cmdRcon(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-public cmdWho(id, level, cid)
+public cmdWho(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 1))
+	if (!cmd_access(id, iLevel, iCid, 1))
 		return PLUGIN_HANDLED
 
 	new players[MAX_PLAYERS], inum, cl_on_server[64], authid[32], name[MAX_NAME_LENGTH], flags, sflags[32], plr
@@ -1238,9 +1235,9 @@ hasTag(name[], tags[4][32], tagsNum)
 	return -1
 }
 
-public cmdLeave(id, level, cid)
+public cmdLeave(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 2))
+	if (!cmd_access(id, iLevel, iCid, 2))
 		return PLUGIN_HANDLED
 	
 	new argnum = read_argc()
@@ -1301,9 +1298,9 @@ public cmdLeave(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-public cmdNick(id, level, cid)
+public cmdNick(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 3))
+	if (!cmd_access(id, iLevel, iCid, 3))
 		return PLUGIN_HANDLED
 
 	new arg1[32], arg2[32], authid[32], name[32], authid2[32], name2[32]
@@ -1332,9 +1329,9 @@ public cmdNick(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
-public cmdLast(id, level, cid)
+public cmdLast(id, iLevel, iCid)
 {
-	if (!cmd_access(id, level, cid, 1))
+	if (!cmd_access(id, iLevel, iCid, 1))
 	{
 		return PLUGIN_HANDLED;
 	}

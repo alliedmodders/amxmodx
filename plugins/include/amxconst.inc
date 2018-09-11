@@ -55,9 +55,24 @@ public stock const NULL_STRING[1];
 public stock const Float:NULL_VECTOR[3];
 
 /**
- * The maximum buffer size required to store a clients name.
+ * The maximum buffer size required to store a client's name.
  */
 #define MAX_NAME_LENGTH 32
+
+/**
+ * The maximum buffer size required to store a client's IP address without a port.
+ */
+#define MAX_IP_LENGTH 16
+
+/**
+ * The maximum buffer size required to store a client's IP address without a port.
+ */
+#define MAX_IP_WITH_PORT_LENGTH 22
+
+/**
+ * The maximum buffer size required to store a client's AuthID.
+ */
+#define MAX_AUTHID_LENGTH 34
 
 /**
  * π

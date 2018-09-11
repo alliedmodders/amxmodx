@@ -216,20 +216,18 @@ public cmdSayAdmin(id)
 	log_amx("Chat: ^"%s<%d><%s><>^" chat ^"%s^"", name, userid, authid, message[1])
 	log_message("^"%s<%d><%s><>^" triggered ^"amx_chat^" (text ^"%s^")", name, userid, authid, message[1])
 	
-	if (is_user_admin(id)) // no diff here if admins have g_AdminChatFlag access or not, but we don't want to print "PLAYER"
-		format(message, charsmax(message), "(%L) %s :  %s", id, "ADMIN", name, message[1])
-	else
-		format(message, charsmax(message), "(%L) %s :  %s", id, "PLAYER", name, message[1])
-
 	get_players(players, inum, "ch")
 	
-	for (new i = 0; i < inum; ++i)
+	for (new bool:is_sender_admin = is_user_admin(id) != 0, i = 0; i < inum; ++i)
 	{
 		pl = players[i]
+
 		if (pl == id || get_user_flags(pl) & g_AdminChatFlag)
-			client_print(pl, print_chat, "%s", message)
+		{
+			client_print(pl, print_chat, "(%l) %s :  %s", is_sender_admin ? "ADMIN" : "PLAYER", name, message[1])
+		}
 	}
-	
+
 	return PLUGIN_HANDLED
 }
 

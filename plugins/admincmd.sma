@@ -139,7 +139,7 @@ public cmdKick(id, iLevel, iCid)
 	}
 	
 	console_print(id, "[AMXX] %l", "ADMIN_KICK_CON", iPlayer);	
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdUnban(id, iLevel, iCid)
@@ -153,7 +153,7 @@ public cmdUnban(id, iLevel, iCid)
 	read_argv(1, szArg, charsmax(szArg));
 	get_user_authid(id, szAuth, charsmax(szAuth));
 
-	if (!(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )))
+	if (!(get_user_flags(id) & (ADMIN_BAN | ADMIN_RCON)))
 	{
 		new szStoredAdminAuth[32];
 
@@ -184,7 +184,7 @@ public cmdUnban(id, iLevel, iCid)
 	show_activity_key("ADMIN_UNBAN_1", "ADMIN_UNBAN_2", fmt("%n", id), szArg);
 	log_amx("Cmd: ^"%N^" unban ^"%s^"", id, szArg);
 
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 /* amx_addban is a special command now.
@@ -333,7 +333,7 @@ public cmdBan(id, iLevel, iCid)
 	new iMinutes = str_to_num(szMinutes);
 	new const iTempBanMaxTime = get_pcvar_num(g_pTempBanMaxTime);
 
-	if ( iMinutes < 0 ) // since negative values result in permanent bans
+	if (iMinutes < 0) // since negative values result in permanent bans
 	{
 		iMinutes = 0;
 		szMinutes = "0";
@@ -405,14 +405,16 @@ public cmdBan(id, iLevel, iCid)
 		show_activity_id(iPlayer, id, szName, szMessage);
 	}
 	
-	console_print(id, "[AMXX] %l", "CLIENT_BANNED", szName2)
-	return PLUGIN_HANDLED
+	console_print(id, "[AMXX] %l", "CLIENT_BANNED", szName2);
+	return PLUGIN_HANDLED;
 }
 
 public cmdBanIP(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 3))
-		return PLUGIN_HANDLED
+	{
+		return PLUGIN_HANDLED;
+	}
 	
 	new szPlayer[32], szMinutes[8], szReason[32];
 	read_argv(1, szPlayer, charsmax(szPlayer));
@@ -429,7 +431,7 @@ public cmdBanIP(id, iLevel, iCid)
 	new iMinutes = str_to_num(szMinutes);
 	new const iTempBanMaxTime = get_pcvar_num(g_pTempBanMaxTime);
 
-	if ( iMinutes < 0 ) // since negative values result in permanent bans
+	if (iMinutes < 0) // since negative values result in permanent bans
 	{
 		iMinutes = 0;
 		szMinutes = "0";
@@ -504,8 +506,8 @@ public cmdBanIP(id, iLevel, iCid)
 		show_activity_id(iPlayer, id, szName, szMessage);
 	}
 
-	console_print(id, "[AMXX] %l", "CLIENT_BANNED", szName2)
-	return PLUGIN_HANDLED
+	console_print(id, "[AMXX] %l", "CLIENT_BANNED", szName2);
+	return PLUGIN_HANDLED;
 }
 
 public cmdSlay(id, iLevel, iCid)
@@ -531,7 +533,7 @@ public cmdSlay(id, iLevel, iCid)
 	show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", fmt("%n", id), fmt("%n", iPlayer));
 	console_print(id, "[AMXX] %l", "CLIENT_SLAYED", iPlayer);
 
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdSlap(id, iLevel, iCid)
@@ -593,7 +595,7 @@ public cmdMap(id, iLevel, iCid)
 	}
 	
 	set_task(2.0, "ChangeMap", 0, szMap, iMapLen + 1);
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdExtendMap(id, iLevel, iCid)
@@ -650,7 +652,8 @@ public cmdCvar(id, iLevel, iCid)
 				set_pcvar_flags(pCvar,flags | FCVAR_PROTECTED);
 			}
 		}
-		return PLUGIN_HANDLED
+
+		return PLUGIN_HANDLED;
 	}
 	
 	trim(szCvar);
@@ -689,7 +692,7 @@ public cmdCvar(id, iLevel, iCid)
 		}
 	}
 
-	log_amx("Cmd: ^"%N^" set cvar (name ^"%s^") (value ^"%s^")", id, szCvar, szValue)
+	log_amx("Cmd: ^"%N^" set cvar (name ^"%s^") (value ^"%s^")", id, szCvar, szValue);
 	set_pcvar_string(pCvar, szValue);
 	
 	// display the message to all clients
@@ -714,7 +717,7 @@ public cmdCvar(id, iLevel, iCid)
 	}
 
 	console_print(id, "[AMXX] %l", "CVAR_CHANGED", szCvar, szValue);
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdXvar(id, iLevel, iCid)
@@ -870,7 +873,7 @@ public cmdPlugins(id, iLevel, iCid)
 		
 		if (szStatus[0] == 'd' || szStatus[0] == 'r') // "debug" or "running"
 		{
-			iPluginsRunning++
+			iPluginsRunning++;
 		}
 	}
 
@@ -907,7 +910,7 @@ public cmdModules(id, iLevel, iCid)
 	
 	for (new szName[32], szVersion[32], szAuthor[32], szStatus[16], iStatus, i; i < iModulesNum; i++)
 	{
-		get_module(i, szName, charsmax(szName), szAuthor, charsmax(szAuthor), szVersion, charsmax(szVersion), iStatus)
+		get_module(i, szName, charsmax(szName), szAuthor, charsmax(szAuthor), szVersion, charsmax(szVersion), iStatus);
 		
 		switch (iStatus)
 		{
@@ -928,7 +931,7 @@ public cmdModules(id, iLevel, iCid)
 	}
 
 	console_print(id, "%l", "NUM_MODULES", iModulesNum);
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdCfg(id, iLevel, iCid)
@@ -952,7 +955,7 @@ public cmdCfg(id, iLevel, iCid)
 	show_activity_key("ADMIN_CONF_1", "ADMIN_CONF_2", fmt("%n", id), szFile);
 
 	server_cmd("exec ^"%s^"", szFile);
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdLBack()
@@ -1143,7 +1146,7 @@ public cmdLeave(id, iLevel, iCid)
 			server_cmd("kick #%d ^"%L^"", get_user_userid(iPlayer), iPlayer, "YOU_DROPPED");
 		}
 
-		iCount++
+		iCount++;
 	}
 	
 	console_print(id, "[AMXX] %l", "KICKED_CLIENTS", iCount);
@@ -1161,13 +1164,15 @@ public cmdNick(id, iLevel, iCid)
 	}
 
 	new szPlayer[32], szNick[32], szName2[MAX_NAME_LENGTH];
-	read_argv(1, szPlayer, charsmax(szPlayer))
-	read_argv(2, szNick, charsmax(szNick))
+	read_argv(1, szPlayer, charsmax(szPlayer));
+	read_argv(2, szNick, charsmax(szNick));
 
 	new iPlayer = cmd_target(id, szPlayer, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF);
 	
 	if (!iPlayer)
-		return PLUGIN_HANDLED
+	{
+		return PLUGIN_HANDLED;
+	}
 
 	get_user_name(iPlayer, szName2, charsmax(szName2));
 	set_user_info(iPlayer, "name", szNick);

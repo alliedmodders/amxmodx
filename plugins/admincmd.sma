@@ -38,92 +38,6 @@ new g_iSize;
 public Trie:g_tTempBans;
 new Trie:g_tXvarsFlags;
 
-InsertInfo(id)
-{
-	// Scan to see if this entry is the last entry in the list
-	// If it is, then update the name and access
-	// If it is not, then insert it again.
-
-	if (g_iSize > 0)
-	{
-		new szAuth[34], szIP[16], iLast;
-		get_user_authid(id, szAuth, charsmax(szAuth));
-		get_user_ip(id, szIP, charsmax(szIP), 1);
-
-		if (g_iSize < sizeof(g_szSteamIDs))
-		{
-			iLast = g_iSize - 1;
-		}
-		else
-		{
-			iLast = g_iTracker - 1;
-			
-			if (iLast < 0)
-			{
-				iLast = g_iSize - 1;
-			}
-		}
-		
-		if (equal(szAuth, g_szSteamIDs[iLast]) && equal(szIP, g_szIPs[iLast])) // need to check ip too, or all the nosteams will while it doesn't work with their illegitimate server
-		{
-			get_user_name(id, g_szNames[iLast], charsmax(g_szNames[]));
-			g_iAccess[iLast] = get_user_flags(id);
-			return;
-		}
-	}
-	
-	// Need to insert the entry
-	
-	new iTarget;  // the slot to save the info at
-
-	// Queue is not yet full
-	if (g_iSize < sizeof(g_szSteamIDs))
-	{
-		iTarget = g_iSize;
-		++g_iSize;
-	}
-	else
-	{
-		iTarget = g_iTracker;
-		++g_iTracker;
-
-		// If we reached the end of the array, then move to the front
-		if (g_iTracker == sizeof(g_szSteamIDs))
-		{
-			g_iTracker = 0;
-		}
-	}
-	
-	get_user_authid(id, g_szSteamIDs[iTarget], charsmax(g_szSteamIDs[]));
-	get_user_name(id, g_szNames[iTarget], charsmax(g_szNames[]));
-	get_user_ip(id, g_szIPs[iTarget], charsmax(g_szIPs[]), 1);
-	g_iAccess[iTarget] = get_user_flags(id);
-}
-
-GetInfo(i, szName[], iNameLen, szAuth[] = "", iAuthLen = 0, szIP[] = "", iIPLen = 0, &iAccess = 0)
-{
-	if (i >= g_iSize)
-	{
-		abort(AMX_ERR_NATIVE, "GetInfo: Out of bounds (%d:%d)", i, g_iSize);
-	}
-	
-	new iTarget = (g_iTracker + i) % sizeof(g_szSteamIDs);
-	
-	copy(szName, iNameLen, g_szNames[iTarget]);
-	copy(szAuth, iAuthLen, g_szSteamIDs[iTarget]);
-	copy(szIP,   iIPLen,   g_szIPs[iTarget]);
-	iAccess = g_iAccess[iTarget];
-	
-}
-
-public client_disconnected(id)
-{
-	if (!is_user_bot(id))
-	{
-		InsertInfo(id);
-	}
-}
-
 public plugin_init()
 {
 	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team");
@@ -170,6 +84,20 @@ public plugin_init()
 	}
 }
 
+public plugin_end()
+{
+	TrieDestroy(g_tTempBans);
+	TrieDestroy(g_tXvarsFlags);
+}
+
+public client_disconnected(id)
+{
+	if (!is_user_bot(id))
+	{
+		InsertInfo(id);
+	}
+}
+
 public cmdKick(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
@@ -212,16 +140,6 @@ public cmdKick(id, iLevel, iCid)
 	
 	console_print(id, "[AMXX] %l", "ADMIN_KICK_CON", iPlayer);	
 	return PLUGIN_HANDLED
-}
-
-/**
- * ';' and '\n' are command delimiters. If a command arg contains these 2
- * it is not safe to be passed to server_cmd() as it may be trying to execute
- * a command.
- */
-isCommandArgSafe(const szArg[])
-{
-	return contain(szArg, ";") == -1 && contain(szArg, "\n") == -1;
 }
 
 public cmdUnban(id, iLevel, iCid)
@@ -643,11 +561,6 @@ public cmdSlap(id, iLevel, iCid)
 	return PLUGIN_HANDLED;
 }
 
-public ChangeMap(szMap[])
-{
-	engine_changelevel(szMap);
-}
-
 public cmdMap(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
@@ -711,12 +624,6 @@ public cmdExtendMap(id, iLevel, iCid)
 	console_print(id, "%L", id, "MAP_EXTENDED", szMap, iMinutes);
 	
 	return PLUGIN_HANDLED;
-}
-
-bool:onlyRcon(const szName[])
-{
-	new iPointer = get_cvar_pointer(szName);
-	return iPointer && get_pcvar_flags(iPointer) & FCVAR_PROTECTED;
 }
 
 public cmdCvar(id, iLevel, iCid)
@@ -1183,19 +1090,6 @@ public cmdWho(id, iLevel, iCid)
 	return PLUGIN_HANDLED;
 }
 
-hasTag(szName[], szTags[4][32], iTagsNum)
-{
-	for (new i = 0; i < iTagsNum; i++)
-	{
-		if (contain(szName, szTags[i]) != -1)
-		{
-			return i;
-		}
-	}
-
-	return -1;
-}
-
 public cmdLeave(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
@@ -1292,7 +1186,6 @@ public cmdLast(id, iLevel, iCid)
 		return PLUGIN_HANDLED;
 	}
 	
-	
 	// This alignment is a bit weird (it should grow if the name is larger)
 	// but otherwise for the more common shorter name, it'll wrap in server console
 	// Steam client display is all skewed anyway because of the non fixed font.
@@ -1309,8 +1202,115 @@ public cmdLast(id, iLevel, iCid)
 	return PLUGIN_HANDLED;
 }
 
-public plugin_end()
+InsertInfo(id)
 {
-	TrieDestroy(g_tTempBans);
-	TrieDestroy(g_tXvarsFlags);
+	// Scan to see if this entry is the last entry in the list
+	// If it is, then update the name and access
+	// If it is not, then insert it again.
+
+	if (g_iSize > 0)
+	{
+		new szAuth[34], szIP[16], iLast;
+		get_user_authid(id, szAuth, charsmax(szAuth));
+		get_user_ip(id, szIP, charsmax(szIP), 1);
+
+		if (g_iSize < sizeof(g_szSteamIDs))
+		{
+			iLast = g_iSize - 1;
+		}
+		else
+		{
+			iLast = g_iTracker - 1;
+			
+			if (iLast < 0)
+			{
+				iLast = g_iSize - 1;
+			}
+		}
+		
+		if (equal(szAuth, g_szSteamIDs[iLast]) && equal(szIP, g_szIPs[iLast])) // need to check ip too, or all the nosteams will while it doesn't work with their illegitimate server
+		{
+			get_user_name(id, g_szNames[iLast], charsmax(g_szNames[]));
+			g_iAccess[iLast] = get_user_flags(id);
+			return;
+		}
+	}
+	
+	// Need to insert the entry
+	
+	new iTarget;  // the slot to save the info at
+
+	// Queue is not yet full
+	if (g_iSize < sizeof(g_szSteamIDs))
+	{
+		iTarget = g_iSize;
+		++g_iSize;
+	}
+	else
+	{
+		iTarget = g_iTracker;
+		++g_iTracker;
+
+		// If we reached the end of the array, then move to the front
+		if (g_iTracker == sizeof(g_szSteamIDs))
+		{
+			g_iTracker = 0;
+		}
+	}
+	
+	get_user_authid(id, g_szSteamIDs[iTarget], charsmax(g_szSteamIDs[]));
+	get_user_name(id, g_szNames[iTarget], charsmax(g_szNames[]));
+	get_user_ip(id, g_szIPs[iTarget], charsmax(g_szIPs[]), 1);
+	g_iAccess[iTarget] = get_user_flags(id);
+}
+
+GetInfo(i, szName[], iNameLen, szAuth[] = "", iAuthLen = 0, szIP[] = "", iIPLen = 0, &iAccess = 0)
+{
+	if (i >= g_iSize)
+	{
+		abort(AMX_ERR_NATIVE, "GetInfo: Out of bounds (%d:%d)", i, g_iSize);
+	}
+	
+	new iTarget = (g_iTracker + i) % sizeof(g_szSteamIDs);
+	
+	copy(szName, iNameLen, g_szNames[iTarget]);
+	copy(szAuth, iAuthLen, g_szSteamIDs[iTarget]);
+	copy(szIP,   iIPLen,   g_szIPs[iTarget]);
+	iAccess = g_iAccess[iTarget];
+	
+}
+
+/**
+ * ';' and '\n' are command delimiters. If a command arg contains these 2
+ * it is not safe to be passed to server_cmd() as it may be trying to execute
+ * a command.
+ */
+isCommandArgSafe(const szArg[])
+{
+	return contain(szArg, ";") == -1 && contain(szArg, "\n") == -1;
+}
+
+public ChangeMap(szMap[])
+{
+	engine_changelevel(szMap);
+}
+
+
+bool:onlyRcon(const szName[])
+{
+	new iPointer = get_cvar_pointer(szName);
+	return iPointer && get_pcvar_flags(iPointer) & FCVAR_PROTECTED;
+}
+
+hasTag(szName[], szTags[4][32], iTagsNum)
+{
+	for (new i = 0; i < iTagsNum; i++)
+	{
+		if (contain(szName, szTags[i]) != -1)
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }

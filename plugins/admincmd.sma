@@ -159,7 +159,7 @@ public plugin_init()
 	g_pRconPassword = get_cvar_pointer("rcon_password");
 	g_pPausable = get_cvar_pointer("pausable");
 	g_pTimelimit = get_cvar_pointer("mp_timelimit");
-	g_pTempBanMaxTime = register_cvar("amx_tempban_maxtime", "4320", FCVAR_PROTECTED);
+	g_pTempBanMaxTime = create_cvar("amx_tempban_maxtime", "4320", FCVAR_PROTECTED, "maximum ban time for temporary bans");
 	g_tTempBans = TrieCreate();
 
 	new iFlags = get_pcvar_flags(g_pRconPassword);
@@ -461,7 +461,7 @@ public cmdBan(id, iLevel, iCid)
 	// display the message to all clients
 
 	new szMessage[256], iPlayers[MAX_PLAYERS], iPnum, iLen;
-	get_players(iPlayers, iPnum, "ch");
+	get_players_ex(iPlayers, iPnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV);
 
 	for (new iPlayer, i; i < iPnum; i++)
 	{
@@ -560,7 +560,7 @@ public cmdBanIP(id, iLevel, iCid)
 	// display the message to all clients
 
 	new szMessage[256], iPlayers[MAX_PLAYERS], iPnum, iLen;
-	get_players(iPlayers, iPnum, "ch")
+	get_players_ex(iPlayers, iPnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV);
 
 	for (new iPlayer, i; i < iPnum; i++)
 	{
@@ -619,714 +619,670 @@ public cmdSlay(id, iLevel, iCid)
 public cmdSlap(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
-		return PLUGIN_HANDLED
+	{
+		return PLUGIN_HANDLED;
+	}
 
-	new arg[32]
-	
-	read_argv(1, arg, charsmax(arg))
-	new player = cmd_target(id, arg, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE)
-	
-	if (!player)
-		return PLUGIN_HANDLED
+	new szPlayer[32];
+	read_argv(1, szPlayer, charsmax(szPlayer));
 
-	new spower[32], authid[32], name2[MAX_NAME_LENGTH], authid2[32], name[MAX_NAME_LENGTH]
+	new iPlayer = cmd_target(id, szPlayer, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF | CMDTARGET_ONLY_ALIVE);
 	
-	read_argv(2, spower, charsmax(spower))
-	
-	new damage = clamp( str_to_num(spower), 0)
-	
-	user_slap(player, damage)
-	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_name(player, name2, charsmax(name2))
-	
-	log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, damage, name2, get_user_userid(player), authid2)
+	if (!iPlayer)
+	{
+		return PLUGIN_HANDLED;
+	}
 
-	show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, damage);
-
-	console_print(id, "[AMXX] %L", id, "CLIENT_SLAPED", name2, damage)
+	new iDamage = clamp(read_argv_int(2), 0);
+	user_slap(iPlayer, iDamage);
 	
-	return PLUGIN_HANDLED
+	log_amx("Cmd: ^"%N^" slap ^"%N^" (%d damage)", id, iPlayer, iDamage);
+	show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", fmt("%n", id), fmt("%n", iPlayer), iDamage);
+	console_print(id, "[AMXX] %l", "CLIENT_SLAPPED", id, iDamage);
+	
+	return PLUGIN_HANDLED;
 }
 
-public chMap(map[])
+public ChangeMap(szMap[])
 {
-	engine_changelevel(map);
+	engine_changelevel(szMap);
 }
 
 public cmdMap(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
-		return PLUGIN_HANDLED
-
-	new arg[32]
-	new arglen = read_argv(1, arg, charsmax(arg))
-	
-	if (!is_map_valid(arg))
 	{
-		console_print(id, "[AMXX] %L", id, "MAP_NOT_FOUND")
-		return PLUGIN_HANDLED
+		return PLUGIN_HANDLED;
 	}
 
-	new authid[32], name[MAX_NAME_LENGTH]
+	new szMap[32], iMapLen = read_argv(1, szMap, charsmax(szMap));
 	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	
-	show_activity_key("ADMIN_MAP_1", "ADMIN_MAP_2", name, arg);
-	
-	log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"", name, get_user_userid(id), authid, arg)
-	
-	new _modName[10]
-	get_modname(_modName, charsmax(_modName))
-	
-	if (!equal(_modName, "zp"))
+	if (!is_map_valid(szMap))
 	{
-		message_begin(MSG_ALL, SVC_INTERMISSION)
-		message_end()
+		console_print(id, "[AMXX] %l", "MAP_NOT_FOUND");
+		return PLUGIN_HANDLED;
+	}
+
+	show_activity_key("ADMIN_MAP_1", "ADMIN_MAP_2", fmt("%n", id), szMap);
+	log_amx("Cmd: ^"%N^" change map to ^"%s^"", id, szMap);
+	
+	static szMod[10];
+
+	if(!szMod[0])
+	{
+		get_modname(szMod, charsmax(szMod));
 	}
 	
-	set_task(2.0, "chMap", 0, arg, arglen + 1)
+	if (!equal(szMod, "zp"))
+	{
+		message_begin(MSG_ALL, SVC_INTERMISSION);
+		message_end();
+	}
 	
+	set_task(2.0, "ChangeMap", 0, szMap, iMapLen + 1);
 	return PLUGIN_HANDLED
 }
 
 public cmdExtendMap(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
-		return PLUGIN_HANDLED
+	{
+		return PLUGIN_HANDLED;
+	}
 	
-	new arg[32]
-	read_argv(1, arg, charsmax(arg))
-	new mns = str_to_num(arg)
+	new iMinutes = read_argv_int(1);
 	
-	if (mns <= 0)
-		return PLUGIN_HANDLED
+	if (iMinutes <= 0)
+	{
+		return PLUGIN_HANDLED;
+	}
 	
-	new mapname[32]
-	get_mapname(mapname, charsmax(mapname))
-	set_pcvar_num( g_pTimelimit , get_pcvar_num( g_pTimelimit ) + mns)
+	static szMap[32];
+
+	if(!szMap[0])
+	{
+		get_mapname(szMap, charsmax(szMap));
+	}
+
+	set_pcvar_num(g_pTimelimit, get_pcvar_num(g_pTimelimit) + iMinutes);
+
+	show_activity_key("ADMIN_EXTEND_1", "ADMIN_EXTEND_2", fmt("%n", id), iMinutes);
+	log_amx("ExtendMap: ^"%N^" extend map ^"%s^" for %d minutes", id, szMap, iMinutes);
+	console_print(id, "%L", id, "MAP_EXTENDED", szMap, iMinutes);
 	
-	new authid[32], name[MAX_NAME_LENGTH]
-	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	
-	show_activity_key("ADMIN_EXTEND_1", "ADMIN_EXTEND_2", name, mns)
-	
-	log_amx("ExtendMap: ^"%s<%d><%s><>^" extended map ^"%s^" for %d minutes.", name, get_user_userid(id), authid, mapname, mns)
-	console_print(id, "%L", id, "MAP_EXTENDED", mapname, mns)
-	
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
-stock bool:onlyRcon(const name[])
+bool:onlyRcon(const szName[])
 {
-	new ptr=get_cvar_pointer(name);
-	if (ptr && get_pcvar_flags(ptr) & FCVAR_PROTECTED)
-	{
-		return true;
-	}
-	return false;
+	new iPointer = get_cvar_pointer(szName);
+	return iPointer && get_pcvar_flags(iPointer) & FCVAR_PROTECTED;
 }
 
 public cmdCvar(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
-		return PLUGIN_HANDLED
-	
-	new arg[32], arg2[64]
-	
-	read_argv(1, arg, charsmax(arg))
-	read_argv(2, arg2, charsmax(arg2))
-	
-	new pointer;
-	
-	if (equal(arg, "add") && (get_user_flags(id) & ADMIN_RCON))
 	{
-		if ((pointer=get_cvar_pointer(arg2))!=0)
+		return PLUGIN_HANDLED;
+	}
+	
+	new szCvar[32], szValue[64];
+	read_argv(1, szCvar, charsmax(szCvar));
+	read_argv(2, szValue, charsmax(szValue));
+	
+	new pCvar;
+	
+	if (equal(szCvar, "add") && (get_user_flags(id) & ADMIN_RCON))
+	{
+		if ((pCvar = get_cvar_pointer(szValue))!=0)
 		{
-			new flags=get_pcvar_flags(pointer);
+			new flags=get_pcvar_flags(pCvar);
 			
 			if (!(flags & FCVAR_PROTECTED))
 			{
-				set_pcvar_flags(pointer,flags | FCVAR_PROTECTED);
+				set_pcvar_flags(pCvar,flags | FCVAR_PROTECTED);
 			}
 		}
 		return PLUGIN_HANDLED
 	}
 	
-	trim(arg);
+	trim(szCvar);
 	
-	if ((pointer=get_cvar_pointer(arg))==0)
+	if ((pCvar = get_cvar_pointer(szCvar)) == 0)
 	{
-		console_print(id, "[AMXX] %L", id, "UNKNOWN_CVAR", arg)
-		return PLUGIN_HANDLED
+		console_print(id, "[AMXX] %l", "UNKNOWN_CVAR", szCvar);
+		return PLUGIN_HANDLED;
 	}
 	
-	if (onlyRcon(arg) && !(get_user_flags(id) & ADMIN_RCON))
+	if (onlyRcon(szCvar) && !(get_user_flags(id) & ADMIN_RCON))
 	{
 		// Exception for the new onlyRcon rules:
-		//   sv_password is allowed to be modified by ADMIN_PASSWORD
-		if (!(equali(arg,"sv_password") && (get_user_flags(id) & ADMIN_PASSWORD)))
+		// sv_password is allowed to be modified by ADMIN_PASSWORD
+		if (!(equali(szCvar,"sv_password") && (get_user_flags(id) & ADMIN_PASSWORD)))
 		{
-			console_print(id, "[AMXX] %L", id, "CVAR_NO_ACC")
-			return PLUGIN_HANDLED
+			console_print(id, "[AMXX] %l", "CVAR_NO_ACC");
+			return PLUGIN_HANDLED;
 		}
 	}
 	
 	if (read_argc() < 3)
 	{
-		get_pcvar_string(pointer, arg2, charsmax(arg2))
-		console_print(id, "[AMXX] %L", id, "CVAR_IS", arg, arg2)
-		return PLUGIN_HANDLED
+		get_pcvar_string(pCvar, szValue, charsmax(szValue));
+		console_print(id, "[AMXX] %l", "CVAR_IS", szCvar, szValue);
+		return PLUGIN_HANDLED;
 	}
 	
-	if (equali(arg, "servercfgfile") || equali(arg, "lservercfgfile"))
+	if (equali(szCvar, "servercfgfile") || equali(szCvar, "lservercfgfile"))
 	{
-		new pos = contain(arg2, ";")
-		if (pos != -1)
+		new iPos = contain(szValue, ";");
+
+		if (iPos != -1)
 		{
-			arg2[pos] = '^0'
+			szValue[iPos] = '^0';
 		}
 	}
 
-	new authid[32], name[MAX_NAME_LENGTH]
+	log_amx("Cmd: ^"%N^" set cvar (name ^"%s^") (value ^"%s^")", id, szCvar, szValue)
+	set_pcvar_string(pCvar, szValue);
 	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	
-	log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, arg, arg2)
-	set_pcvar_string(pointer, arg2)
-	
-	
-	// Display the message to all clients
+	// display the message to all clients
 
-	new cvar_val[64];
-	new players[MAX_PLAYERS], pnum, plr
-	get_players(players, pnum, "ch")
-	for (new i; i<pnum; i++)
+	new szCvarValue[64], iPlayers[MAX_PLAYERS], iPnum;
+	get_players_ex(iPlayers, iPnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV);
+
+	for (new iPlayer, i; i < iPnum; i++)
 	{
-		plr = players[i]
-		if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(arg, "g_pRconPassword"))
+		iPlayer = iPlayers[i];
+
+		if (get_pcvar_flags(pCvar) & FCVAR_PROTECTED || equali(szCvar, "g_pRconPassword"))
 		{
-			formatex(cvar_val, charsmax(cvar_val), "*** %L ***", plr, "PROTECTED");
+			formatex(szCvarValue, charsmax(szCvarValue), "*** %L ***", iPlayer, "PROTECTED");
 		}
 		else
 		{
-			copy(cvar_val, charsmax(cvar_val), arg2);
+			copy(szCvarValue, charsmax(szCvarValue), szValue);
 		}
-		show_activity_id(plr, id, name, "%L", plr, "SET_CVAR_TO", "", arg, cvar_val);
+
+		show_activity_id(iPlayer, id, fmt("%n", id), "%L", iPlayer, "SET_CVAR_TO", "", szCvar, szCvarValue);
 	}
 
-	console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", arg, arg2)
-	
+	console_print(id, "[AMXX] %l", "CVAR_CHANGED", szCvar, szValue);
 	return PLUGIN_HANDLED
 }
 
 public cmdXvar(id, iLevel, iCid)
 {
-	if ( !cmd_access(id, iLevel, iCid, 2) )
+	if (!cmd_access(id, iLevel, iCid, 2))
 	{
 		return PLUGIN_HANDLED;
 	}
 
-	new cmd[15], arg1[32], arg2[32];
-	
-	read_argv(0, cmd, charsmax(cmd));
-	read_argv(1, arg1, charsmax(arg1));
-	trim(arg1);
-	if ( read_argc() > 2 )
-	{
-		read_argv(2, arg2, charsmax(arg2));
-		trim(arg2);
+	new szCommand[15], szXvar[32], szValue[32];
+	read_argv(0, szCommand, charsmax(szCommand));
+	read_argv(1, szXvar, charsmax(szXvar));
+	trim(szXvar);
 
-		if ( equali(arg1, "add") )
+	if (read_argc() > 2)
+	{
+		read_argv(2, szValue, charsmax(szValue));
+		trim(szValue);
+
+		if (equali(szXvar, "add"))
 		{
-			if ( get_user_flags(id) & ADMIN_RCON && xvar_exists(arg2) )
+			if (get_user_flags(id) & ADMIN_RCON && xvar_exists(szValue))
 			{
-				if ( !g_tXvarsFlags )
+				if (!g_tXvarsFlags)
 				{
 					g_tXvarsFlags = TrieCreate();
 				}
-				TrieSetCell(g_tXvarsFlags, arg2, 1);
+
+				TrieSetCell(g_tXvarsFlags, szValue, 1);
 			}
+
 			return PLUGIN_HANDLED;
 		}
 	}
 
-	new bFloat = equali(cmd, "amx_xvar_float");
+	new bool:bFloat = equali(szCommand, "amx_xvar_float") != 0;
+	new iXvar = get_xvar_id(szXvar);
 
-	new xvar = get_xvar_id( arg1 );
-
-	if ( xvar == -1 )
+	if (iXvar == -1)
 	{
-		console_print(id, "[AMXX] %L", id, "UNKNOWN_XVAR", arg1)
-		return PLUGIN_HANDLED
+		console_print(id, "[AMXX] %l", "UNKNOWN_XVAR", szXvar);
+		return PLUGIN_HANDLED;
 	}
 
 	new any:value;
 
-	if ( !arg2[0] ) // get value
+	if (!szValue[0]) // get value
 	{
-		value = get_xvar_num(xvar);
-		if ( bFloat )
+		value = get_xvar_num(iXvar);
+
+		if (bFloat)
 		{
-			float_to_str(value, arg2, charsmax(arg2));
+			float_to_str(value, szValue, charsmax(szValue));
 		}
 		else
 		{
-			num_to_str(value, arg2, charsmax(arg2));
+			num_to_str(value, szValue, charsmax(szValue));
 		}
-		console_print(id, "[AMXX] %L", id, "XVAR_IS", arg1, arg2);
+
+		console_print(id, "[AMXX] %l", "XVAR_IS", szXvar, szValue);
 		return PLUGIN_HANDLED;
 	}
 
 	// set value
-	if ( g_tXvarsFlags && TrieKeyExists(g_tXvarsFlags, arg1) && ~get_user_flags(id) & ADMIN_RCON )
+	if (g_tXvarsFlags && TrieKeyExists(g_tXvarsFlags, szXvar) && ~get_user_flags(id) & ADMIN_RCON)
 	{
-		console_print(id, "[AMXX] %L", id, "XVAR_NO_ACC");
+		console_print(id, "[AMXX] %l", "XVAR_NO_ACC");
 		return PLUGIN_HANDLED;
 	}
 
-	new endPos;
-	if ( bFloat )
+	new iEndPos;
+
+	if (bFloat)
 	{
-		value = strtof(arg2, endPos);
-		if ( !endPos )
+		value = strtof(szValue, iEndPos);
+
+		if (!iEndPos)
 		{
 			return PLUGIN_HANDLED;
 		}
 	}
 	else
 	{
-		value = strtol(arg2, endPos);
-		if ( !endPos )
+		value = strtol(szValue, iEndPos);
+
+		if (!iEndPos)
 		{
 			return PLUGIN_HANDLED;
 		}
 	}
 
-	set_xvar_num(xvar, value);
+	set_xvar_num(iXvar, value);
 
 	// convert back value to string so admin can know value has been set correctly
-	if ( bFloat )
+	if (bFloat)
 	{
-		float_to_str(value, arg2, charsmax(arg2));
+		float_to_str(value, szValue, charsmax(szValue));
 	}
 	else
 	{
-		num_to_str(value, arg2, charsmax(arg2));
+		num_to_str(value, szValue, charsmax(szValue));
 	}
 
-	new authid[32], name[MAX_NAME_LENGTH];
+	log_amx("Cmd: ^"%N^" set xvar (name ^"%s^") (value ^"%s^")", id, szXvar, szValue);
 	
-	get_user_authid(id, authid, charsmax(authid));
-	get_user_name(id, name, charsmax(name));
-	
-	log_amx("Cmd: ^"%s<%d><%s><>^" set xvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, arg1, arg2);
-	
-	// Display the message to all clients
-	new players[MAX_PLAYERS], pnum, plr;
-	get_players(players, pnum, "ch");
-	for (new i; i<pnum; i++)
+	// display the message to all clients
+	new iPlayers[MAX_PLAYERS], iPnum;
+	get_players_ex(iPlayers, iPnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV);
+
+	for (new iPlayer, i; i < iPnum; i++)
 	{
-		plr = players[i];
-		show_activity_id(plr, id, name, "%L", plr, "SET_XVAR_TO", "", arg1, arg2);
+		iPlayer = iPlayers[i];
+		show_activity_id(iPlayer, id, fmt("%n", id), "%L", iPlayer, "SET_XVAR_TO", "", szXvar, szValue);
 	}
 	
-	console_print(id, "[AMXX] %L", id, "XVAR_CHANGED", arg1, arg2);
-
+	console_print(id, "[AMXX] %l", "XVAR_CHANGED", szXvar, szValue);
 	return PLUGIN_HANDLED;
 }
 
 public cmdPlugins(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 1))
-		return PLUGIN_HANDLED
+	{
+		return PLUGIN_HANDLED;
+	}
 		
-	if (id==0) // If server executes redirect this to "amxx plugins" for more in depth output
+	if (!id) // if server executes redirect this to "amxx plugins" for more in-depth output
 	{
 		server_cmd("amxx plugins");
 		server_exec();
 		return PLUGIN_HANDLED;
 	}
 
-	new name[MAX_NAME_LENGTH], version[32], author[32], filename[32], status[32]
-	new lName[32], lVersion[32], lAuthor[32], lFile[32], lStatus[32]
-
-	format(lName, charsmax(lName), "%L", id, "NAME")
-	format(lVersion, charsmax(lVersion), "%L", id, "VERSION")
-	format(lAuthor, charsmax(lAuthor), "%L", id, "AUTHOR")
-	format(lFile, charsmax(lFile), "%L", id, "FILE")
-	format(lStatus, charsmax(lStatus), "%L", id, "STATUS")
-
-	new StartPLID=0;
-	new EndPLID;
-
-	new Temp[96]
-
-	new num = get_pluginsnum()
+	new iPluginsNum = get_pluginsnum();
+	new szTemp[96], szName[32], szVersion[32], szAuthor[32], szFileName[32], szStatus[32], iStartPlugin, iEndPlugin, iPluginsRunning;
 	
 	if (read_argc() > 1)
 	{
-		read_argv(1,Temp,charsmax(Temp));
-		StartPLID=str_to_num(Temp)-1; // zero-based
+		iStartPlugin = read_argv_int(1) - 1; // zero-based
 	}
 
-	EndPLID=min(StartPLID + 10, num);
+	iEndPlugin = min(iStartPlugin + 10, iPluginsNum);
 	
-	new running = 0
-	
-	console_print(id, "----- %L -----", id, "LOADED_PLUGINS")
-	console_print(id, "%-18.17s %-11.10s %-17.16s %-16.15s %-9.8s", lName, lVersion, lAuthor, lFile, lStatus)
+	console_print(id, "----- %l -----", "LOADED_PLUGINS");
+	console_print(id, "%-18.17s %-11.10s %-17.16s %-16.15s %-9.8s", fmt("%l", "NAME"), fmt("%l", "VERSION"), fmt("%l", "AUTHOR"), fmt("%l", "FILE"), fmt("%l", "STATUS"));
 
-	new i=StartPLID;
-	while (i <EndPLID)
+	new i = iStartPlugin;
+
+	while (i < iEndPlugin)
 	{
-		get_plugin(i++, filename, charsmax(filename), name, charsmax(name), version, charsmax(version), author, charsmax(author), status, charsmax(status))
-		console_print(id, "%-18.17s %-11.10s %-17.16s %-16.15s %-9.8s", name, version, author, filename, status)
+		get_plugin(i++, szFileName, charsmax(szFileName), szName, charsmax(szName), szVersion, charsmax(szVersion), szAuthor, charsmax(szAuthor), szStatus, charsmax(szStatus));
+		console_print(id, "%-18.17s %-11.10s %-17.16s %-16.15s %-9.8s", szName, szVersion, szAuthor, szFileName, szStatus);
 		
-		if (status[0]=='d' || status[0]=='r') // "debug" or "running"
-			running++
+		if (szStatus[0] == 'd' || szStatus[0] == 'r') // "debug" or "running"
+		{
+			iPluginsRunning++
+		}
 	}
-	console_print(id, "%L", id, "PLUGINS_RUN", EndPLID-StartPLID, running)
-	console_print(id, "----- %L -----",id,"HELP_ENTRIES",StartPLID + 1,EndPLID,num);
+
+	console_print(id, "%l", "PLUGINS_RUN", iEndPlugin - iStartPlugin, iPluginsRunning);
+	console_print(id, "----- %l -----", "HELP_ENTRIES", iStartPlugin + 1, iEndPlugin, iPluginsNum);
 	
-	if (EndPLID < num)
+	if (iEndPlugin < iPluginsNum)
 	{
-		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_MORE", "amx_help", EndPLID + 1);
-		replace_all(Temp,charsmax(Temp),"amx_help","amx_plugins");
-		console_print(id,"%s",Temp);
+		formatex(szTemp, charsmax(szTemp), "----- %L -----", id, "HELP_USE_MORE", "amx_help", iEndPlugin + 1);
+		replace_string(szTemp, charsmax(szTemp), "amx_help", "amx_plugins");
+		console_print(id, szTemp);
 	}
 	else
 	{
-		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_BEGIN", "amx_help");
-		replace_all(Temp,charsmax(Temp),"amx_help","amx_plugins");
-		console_print(id,"%s",Temp);
+		formatex(szTemp, charsmax(szTemp), "----- %L -----", id, "HELP_USE_BEGIN", "amx_help");
+		replace_string(szTemp, charsmax(szTemp), "amx_help", "amx_plugins");
+		console_print(id, szTemp);
 	}
 
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdModules(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 1))
-		return PLUGIN_HANDLED
-
-	new name[32], version[32], author[32], status, sStatus[16]
-	new lName[32], lVersion[32], lAuthor[32], lStatus[32];
-
-	format(lName, charsmax(lName), "%L", id, "NAME")
-	format(lVersion, charsmax(lVersion), "%L", id, "VERSION")
-	format(lAuthor, charsmax(lAuthor), "%L", id, "AUTHOR")
-	format(lStatus, charsmax(lStatus), "%L", id, "STATUS")
-
-	new num = get_modulesnum()
-	
-	console_print(id, "%L:", id, "LOADED_MODULES")
-	console_print(id, "%-23.22s %-11.10s %-20.19s %-11.10s", lName, lVersion, lAuthor, lStatus)
-	
-	for (new i = 0; i < num; i++)
 	{
-		get_module(i, name, charsmax(name), author, charsmax(author), version, charsmax(version), status)
+		return PLUGIN_HANDLED;
+	}
+
+	new iModulesNum = get_modulesnum();
+
+	console_print(id, "%l:", "LOADED_MODULES");
+	console_print(id, "%-23.22s %-11.10s %-20.19s %-11.10s", fmt("%l", "NAME"), fmt("%l", "VERSION"), fmt("%l", "AUTHOR"), fmt("%l", "STATUS"));
+	
+	for (new szName[32], szVersion[32], szAuthor[32], szStatus[16], iStatus, i; i < iModulesNum; i++)
+	{
+		get_module(i, szName, charsmax(szName), szAuthor, charsmax(szAuthor), szVersion, charsmax(szVersion), iStatus)
 		
-		switch (status)
+		switch (iStatus)
 		{
-			case module_loaded: copy(sStatus, charsmax(sStatus), "running")
-			default: 
+			case module_loaded:
 			{
-				copy(sStatus, charsmax(sStatus), "bad load");
-				copy(name, charsmax(name), "unknown");
-				copy(author, charsmax(author), "unknown");
-				copy(version, charsmax(version), "unknown");
+				formatex(szStatus, charsmax(szStatus), "%L", id, "MODULE_RUNNING");
+			}
+			default:
+			{
+				formatex(szStatus, charsmax(szStatus), "%L", id, "MODULE_BAD_LOAD");
+				formatex(szName, charsmax(szName), "%L", id, "MODULE_UNKNOWN");
+				formatex(szAuthor, charsmax(szAuthor), "%L", id, "MODULE_UNKNOWN");
+				formatex(szVersion, charsmax(szVersion), "%L", id, "MODULE_UNKNOWN");
 			}
 		}
 		
-		console_print(id, "%-23.22s %-11.10s %-20.19s %-11.10s", name, version, author, sStatus)
+		console_print(id, "%-23.22s %-11.10s %-20.19s %-11.10s", szName, szVersion, szAuthor, szStatus);
 	}
-	console_print(id, "%L", id, "NUM_MODULES", num)
 
+	console_print(id, "%l", "NUM_MODULES", iModulesNum);
 	return PLUGIN_HANDLED
 }
 
 public cmdCfg(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
-		return PLUGIN_HANDLED
-	
-	new arg[128]
-	read_argv(1, arg, charsmax(arg))
-	
-	if (!file_exists(arg))
 	{
-		console_print(id, "[AMXX] %L", id, "FILE_NOT_FOUND", arg)
-		return PLUGIN_HANDLED
+		return PLUGIN_HANDLED;
 	}
 	
-	new authid[32], name[MAX_NAME_LENGTH]
+	new szFile[128];
+	read_argv(1, szFile, charsmax(szFile));
 	
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
+	if (!file_exists(szFile))
+	{
+		console_print(id, "[AMXX] %l", "FILE_NOT_FOUND", szFile);
+		return PLUGIN_HANDLED;
+	}
 	
-	log_amx("Cmd: ^"%s<%d><%s><>^" execute cfg (file ^"%s^")", name, get_user_userid(id), authid, arg)
-	
-	console_print(id, "[AMXX] Executing file ^"%s^"", arg)
-	server_cmd("exec ^"%s^"", arg)
+	log_amx("Cmd: ^"%N^" execute cfg file ^"%s^"", id, szFile);
+	console_print(id, "[AMXX] %l", id, szFile);
+	show_activity_key("ADMIN_CONF_1", "ADMIN_CONF_2", fmt("%n", id), szFile);
 
-	show_activity_key("ADMIN_CONF_1", "ADMIN_CONF_2", name, arg);
-
+	server_cmd("exec ^"%s^"", szFile);
 	return PLUGIN_HANDLED
 }
 
 public cmdLBack()
 {
 	if (!g_bPauseAllowed)
-		return PLUGIN_CONTINUE	
+	{
+		return PLUGIN_CONTINUE;
+	}
 
-	new paused[25]
-	
-	format(paused, 24, "%L", g_iPauseCon, g_bPaused ? "UNPAUSED" : "PAUSED")
-	set_pcvar_float(g_pPausable, g_fPausable)
-	console_print(g_iPauseCon, "[AMXX] Server %s", paused)
-	g_bPauseAllowed = false
-	
-	if (g_bPaused)
-		g_bPaused = false
-	else 
-		g_bPaused = true
-	
-	return PLUGIN_HANDLED
+	set_pcvar_float(g_pPausable, g_fPausable);
+	console_print(g_iPauseCon, "[AMXX] %l", g_bPaused ? "ADMIN_UNPAUSE_CON" : "ADMIN_PAUSE_CON");
+
+	g_bPauseAllowed = false;
+	g_bPaused = !g_bPaused;
+	return PLUGIN_HANDLED;
 }
 
 public cmdPause(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 1))
-		return PLUGIN_HANDLED 
-	
-	new authid[32], name[MAX_NAME_LENGTH], slayer = id
-	
-	get_user_authid(id, authid, charsmax(authid)) 
-	get_user_name(id, name, charsmax(name)) 
-	if (g_pPausable!=0)
 	{
-		g_fPausable = get_pcvar_float(g_pPausable)
+		return PLUGIN_HANDLED;
 	}
 	
-	if (!slayer)
-		slayer = find_player("h") 
+	new iPlayer = id;
 	
-	if (!slayer)
+	if (g_pPausable)
+	{
+		g_fPausable = get_pcvar_float(g_pPausable);
+	}
+	
+	if (!iPlayer)
+	{
+		iPlayer = find_player_ex(FindPlayer_ExcludeBots);
+	}
+	
+	if (!iPlayer)
 	{ 
-		console_print(id, "[AMXX] %L", id, "UNABLE_PAUSE") 
-		return PLUGIN_HANDLED
+		console_print(id, "[AMXX] %l", "UNABLE_PAUSE");
+		return PLUGIN_HANDLED;
 	}
 
-	set_pcvar_float(g_pPausable, 1.0)
-	g_bPauseAllowed = true
-	client_cmd(slayer, "pause;pauseAck")
+	g_bPauseAllowed = true;
+	set_pcvar_float(g_pPausable, 1.0);
+	client_cmd(iPlayer, "pause;pauseAck");
 	
-	log_amx("Cmd: ^"%s<%d><%s><>^" %s server", name, get_user_userid(id), authid, g_bPaused ? "unpause" : "pause")
-	
-	console_print(id, "[AMXX] %L", id, g_bPaused ? "UNPAUSING" : "PAUSING")
+	log_amx("Cmd: ^"%N^" %s server", id, g_bPaused ? "unpause" : "pause");
+	console_print(id, "[AMXX] %l", g_bPaused ? "UNPAUSING" : "PAUSING");
 
-	// Display the message to all clients
+	// display the message to all clients
 
-	new players[MAX_PLAYERS], pnum
-	get_players(players, pnum, "ch")
-	for (new i; i<pnum; i++)
+	new iPlayers[MAX_PLAYERS], iPnum;
+	get_players_ex(iPlayers, iPnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV);
+
+	for (new i; i < iPnum; i++)
 	{
-		show_activity_id(players[i], id, name, "%L server", i, g_bPaused ? "UNPAUSE" : "PAUSE");
+		show_activity_id(iPlayers[i], id, fmt("%n", id), "%L server", i, g_bPaused ? "UNPAUSE" : "PAUSE");
 	}
 
-	g_iPauseCon = id
-	
-	return PLUGIN_HANDLED
+	g_iPauseCon = id;	
+	return PLUGIN_HANDLED;
 } 
 
 public cmdShowRcon(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
-		return PLUGIN_HANDLED
-		
-	new password[64]
-	
-	get_pcvar_string(g_pRconPassword, password, charsmax(password))
-	
-	if (!password[0])
 	{
-		cmdRcon(id, iLevel, iCid)
+		return PLUGIN_HANDLED;
+	}
+		
+	new szPassword[64];	
+	get_pcvar_string(g_pRconPassword, szPassword, charsmax(szPassword));
+	
+	if (!szPassword[0])
+	{
+		cmdRcon(id, iLevel, iCid);
 	} 
 	else 
 	{
-		new args[128]
-		
-		read_args(args, charsmax(args))
-		client_cmd(id, "g_pRconPassword %s", password)
-		client_cmd(id, "rcon %s", args)
+		new szArgs[128];		
+		read_args(szArgs, charsmax(szArgs));
+		client_cmd(id, "g_pRconPassword %s", szPassword);
+		client_cmd(id, "rcon %s", szArgs);
 	}
 	
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdRcon(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
-		return PLUGIN_HANDLED
+	{
+		return PLUGIN_HANDLED;
+	}
 	
-	new arg[128], authid[32], name[MAX_NAME_LENGTH]
-	
-	read_args(arg, charsmax(arg))
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	
-	log_amx("Cmd: ^"%s<%d><%s><>^" server console (cmdline ^"%s^")", name, get_user_userid(id), authid, arg)
-	
-	console_print(id, "[AMXX] %L", id, "COM_SENT_SERVER", arg)
-	server_cmd("%s", arg)
-	
-	return PLUGIN_HANDLED
+	new szCommand[128];
+	read_args(szCommand, charsmax(szCommand));
+
+	log_amx("Cmd: ^"%N^" server console (cmdline ^"%s^")", id, szCommand);
+	console_print(id, "[AMXX] %l", "COM_SENT_SERVER", szCommand);
+	server_cmd("%s", szCommand);
+
+	return PLUGIN_HANDLED;
 }
 
 public cmdWho(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 1))
-		return PLUGIN_HANDLED
-
-	new players[MAX_PLAYERS], inum, cl_on_server[64], authid[32], name[MAX_NAME_LENGTH], flags, sflags[32], plr
-	new lImm[16], lRes[16], lAccess[16], lYes[16], lNo[16]
-	
-	formatex(lImm, charsmax(lImm), "%L", id, "IMMU")
-	formatex(lRes, charsmax(lRes), "%L", id, "RESERV")
-	formatex(lAccess, charsmax(lAccess), "%L", id, "ACCESS")
-	formatex(lYes, charsmax(lYes), "%L", id, "YES")
-	formatex(lNo, charsmax(lNo), "%L", id, "NO")
-	
-	get_players(players, inum)
-	format(cl_on_server, charsmax(cl_on_server), "%L", id, "CLIENTS_ON_SERVER")
-	console_print(id, "^n%s:^n #  %-16.15s %-20s %-8s %-4.3s %-4.3s %s", cl_on_server, "nick", "authid", "userid", lImm, lRes, lAccess)
-	
-	for (new a = 0; a < inum; ++a)
 	{
-		plr = players[a]
-		get_user_authid(plr, authid, charsmax(authid))
-		get_user_name(plr, name, charsmax(name))
-		flags = get_user_flags(plr)
-		get_flags(flags, sflags, charsmax(sflags))
-		console_print(id, "%2d  %-16.15s %-20s %-8d %-6.5s %-6.5s %s", plr, name, authid, 
-		get_user_userid(plr), (flags&ADMIN_IMMUNITY) ? lYes : lNo, (flags&ADMIN_RESERVATION) ? lYes : lNo, sflags)
+		return PLUGIN_HANDLED;
+	}
+
+	new szYes[16], szNo[16], iPlayers[MAX_PLAYERS], iPnum, szAuth[32], szName[MAX_NAME_LENGTH];
+	formatex(szYes, charsmax(szYes), "%L", id, "YES");
+	formatex(szNo, charsmax(szNo), "%L", id, "NO");
+	
+	get_players_ex(iPlayers, iPnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV);
+	console_print(id, "^n%s:^n #  %-16.15s %-20s %-8s %-4.3s %-4.3s %s", fmt("%l", "CLIENTS_ON_SERVER"), "nick", "authid", "userid", fmt("%l", "IMMU"), fmt("%l", "RESERV"), fmt("%l", "ACCESS"));
+	
+	for (new szFlags[32], iPlayer, iFlags, i; i < iPnum; i++)
+	{
+		iPlayer = iPlayers[i];
+		iFlags = get_user_flags(iPlayer);
+
+		get_user_authid(iPlayer, szAuth, charsmax(szAuth));
+		get_user_name(iPlayer, szName, charsmax(szName));		
+		get_flags(iFlags, szFlags, charsmax(szFlags));
+
+		console_print(id, "%2d  %-16.15s %-20s %-8d %-6.5s %-6.5s %s", iPlayer, szName, szAuth,
+		get_user_userid(iPlayer), iFlags & ADMIN_IMMUNITY ? szYes : szNo, iFlags & ADMIN_RESERVATION ? szYes : szNo, szFlags);
 	}
 	
-	console_print(id, "%L", id, "TOTAL_NUM", inum)
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	log_amx("Cmd: ^"%s<%d><%s><>^" ask for players list", name, get_user_userid(id), authid) 
-	
-	return PLUGIN_HANDLED
+	console_print(id, "%l", "TOTAL_NUM", iPnum);
+	log_amx("Cmd: ^"%N^" ask for players list", id);
+	return PLUGIN_HANDLED;
 }
 
-hasTag(name[], tags[4][32], tagsNum)
+hasTag(szName[], szTags[4][32], iTagsNum)
 {
-	for (new a = 0; a < tagsNum; ++a)
-		if (contain(name, tags[a]) != -1)
-			return a
-	return -1
+	for (new i = 0; i < iTagsNum; i++)
+	{
+		if (contain(szName, szTags[i]) != -1)
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 public cmdLeave(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 2))
-		return PLUGIN_HANDLED
-	
-	new argnum = read_argc()
-	new ltags[4][32]
-	new ltagsnum = 0
-	
-	for (new a = 1; a < 5; ++a)
 	{
-		if (a < argnum)
-			read_argv(a, ltags[ltagsnum++], charsmax(ltags[]))
-		else
-			ltags[ltagsnum++][0] = 0
+		return PLUGIN_HANDLED;
 	}
 	
-	new nick[MAX_NAME_LENGTH], ires, pnum = MaxClients, count = 0, lReason[128]
+	new szTags[4][32], iTagsNum;
 	
-	for (new b = 1; b <= pnum; ++b)
+	for (new iArgNum = read_argc(), i = 1; i < 5; i++)
 	{
-		if (!is_user_connected(b) && !is_user_connecting(b)) continue
-
-		get_user_name(b, nick, charsmax(nick))
-		ires = hasTag(nick, ltags, ltagsnum)
-		
-		if (ires != -1)
+		if (i < iArgNum)
 		{
-			console_print(id, "[AMXX] %L", id, "SKIP_MATCH", nick, ltags[ires])
-			continue
+			read_argv(i, szTags[iTagsNum++], charsmax(szTags[]));
 		}
-		
-		if (get_user_flags(b) & ADMIN_IMMUNITY)
-		{
-			console_print(id, "[AMXX] %L", id, "SKIP_IMM", nick)
-			continue
-		}
-		
-		console_print(id, "[AMXX] %L", id, "KICK_PL", nick)
-		
-		if (is_user_bot(b))
-			server_cmd("kick #%d", get_user_userid(b))
 		else
 		{
-			formatex(lReason, charsmax(lReason), "%L", b, "YOU_DROPPED")
-			server_cmd("kick #%d ^"%s^"", get_user_userid(b), lReason)
+			szTags[iTagsNum++][0] = 0;
 		}
-		count++
 	}
 	
-	console_print(id, "[AMXX] %L", id, "KICKED_CLIENTS", count)
+	new szName[MAX_NAME_LENGTH], iPlayers[MAX_PLAYERS], iPnum, iCount;
+	get_players_ex(iPlayers, iPnum, GetPlayers_IncludeConnecting);
 	
-	new authid[32], name[MAX_NAME_LENGTH]
+	for (new iPlayer, iRes, i; i < iPnum; i++)
+	{
+		iPlayer = iPlayers[i];
+		iRes = hasTag(szName, szTags, iTagsNum);
+		get_user_name(iPlayer, szName, charsmax(szName));
+		
+		if (iRes != -1)
+		{
+			console_print(id, "[AMXX] %l", "SKIP_MATCH", szName, szTags[iRes]);
+			continue;
+		}
+		
+		if (get_user_flags(iPlayer) & ADMIN_IMMUNITY)
+		{
+			console_print(id, "[AMXX] %l", "SKIP_IMM", szName);
+			continue;
+		}
+		
+		console_print(id, "[AMXX] %l", "KICK_PL", szName);
+		
+		if (is_user_bot(iPlayer))
+		{
+			server_cmd("kick #%d", get_user_userid(iPlayer));
+		}
+		else
+		{
+			server_cmd("kick #%d ^"%L^"", get_user_userid(iPlayer), iPlayer, "YOU_DROPPED");
+		}
 
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	log_amx("Kick: ^"%s<%d><%s><>^" leave some group (tag1 ^"%s^") (tag2 ^"%s^") (tag3 ^"%s^") (tag4 ^"%s^")", name, get_user_userid(id), authid, ltags[0], ltags[1], ltags[2], ltags[3])
+		iCount++
+	}
+	
+	console_print(id, "[AMXX] %l", "KICKED_CLIENTS", iCount);
+	log_amx("Kick: ^"%N^" leave some group (tag1 ^"%s^") (tag2 ^"%s^") (tag3 ^"%s^") (tag4 ^"%s^")", id, szTags[0], szTags[1], szTags[2], szTags[3]);
+	show_activity_key("ADMIN_LEAVE_1", "ADMIN_LEAVE_2", fmt("%n", id), szTags[0], szTags[1], szTags[2], szTags[3]);
 
-	show_activity_key("ADMIN_LEAVE_1", "ADMIN_LEAVE_2", name, ltags[0], ltags[1], ltags[2], ltags[3]);
-
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdNick(id, iLevel, iCid)
 {
 	if (!cmd_access(id, iLevel, iCid, 3))
-		return PLUGIN_HANDLED
+	{
+		return PLUGIN_HANDLED;
+	}
 
-	new arg1[32], arg2[32], authid[32], name[32], authid2[32], name2[32]
+	new szPlayer[32], szNick[32], szName2[MAX_NAME_LENGTH];
+	read_argv(1, szPlayer, charsmax(szPlayer))
+	read_argv(2, szNick, charsmax(szNick))
 
-	read_argv(1, arg1, charsmax(arg1))
-	read_argv(2, arg2, charsmax(arg2))
-
-	new player = cmd_target(id, arg1, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF)
+	new iPlayer = cmd_target(id, szPlayer, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_ALLOW_SELF);
 	
-	if (!player)
+	if (!iPlayer)
 		return PLUGIN_HANDLED
 
-	get_user_authid(id, authid, charsmax(authid))
-	get_user_name(id, name, charsmax(name))
-	get_user_authid(player, authid2, charsmax(authid2))
-	get_user_name(player, name2, charsmax(name2))
+	get_user_name(iPlayer, szName2, charsmax(szName2));
+	set_user_info(iPlayer, "name", szNick);
 
-	set_user_info(player, "name", arg2)
+	log_amx("Cmd: ^"%N^" change nick to ^"%s^" ^"%N^"", id, szNick, iPlayer);
+	show_activity_key("ADMIN_NICK_1", "ADMIN_NICK_2", fmt("%n", id), szName2, szNick);
+	console_print(id, "[AMXX] %l", "CHANGED_NICK", szName2, szNick);
 
-	log_amx("Cmd: ^"%s<%d><%s><>^" change nick to ^"%s^" ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, arg2, name2, get_user_userid(player), authid2)
-
-	show_activity_key("ADMIN_NICK_1", "ADMIN_NICK_2", name, name2, arg2);
-
-	console_print(id, "[AMXX] %L", id, "CHANGED_NICK", name2, arg2)
-
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public cmdLast(id, iLevel, iCid)
@@ -1336,29 +1292,20 @@ public cmdLast(id, iLevel, iCid)
 		return PLUGIN_HANDLED;
 	}
 	
-	new name[MAX_NAME_LENGTH];
-	new authid[32];
-	new ip[32];
-	new flags[32];
-	new access;
-	
 	
 	// This alignment is a bit weird (it should grow if the name is larger)
 	// but otherwise for the more common shorter name, it'll wrap in server console
 	// Steam client display is all skewed anyway because of the non fixed font.
 	console_print(id, "%19s %20s %15s %s", "name", "authid", "ip", "access");
 	
-	for (new i = 0; i < g_iSize; i++)
+	for (new szName[MAX_NAME_LENGTH], szAuth[32], szFlags[32], szIP[16], iAccess, i; i < g_iSize; i++)
 	{
-		GetInfo(i, name, charsmax(name), authid, charsmax(authid), ip, charsmax(ip), access);
-		
-		get_flags(access, flags, charsmax(flags));
-		
-		console_print(id, "%19s %20s %15s %s", name, authid, ip, flags);
+		GetInfo(i, szName, charsmax(szName), szAuth, charsmax(szAuth), szIP, charsmax(szIP), iAccess);
+		get_flags(iAccess, szFlags, charsmax(szFlags));
+		console_print(id, "%19s %20s %15s %s", szName, szAuth, szIP, szFlags);
 	}
 	
-	console_print(id, "%d old connections saved.", g_iSize);
-	
+	console_print(id, "[AMXX] %l", "ADMIN_OLD_CONNS_SAVED", g_iSize);
 	return PLUGIN_HANDLED;
 }
 

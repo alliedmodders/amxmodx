@@ -1300,7 +1300,6 @@ public ChangeMap(szMap[])
 	engine_changelevel(szMap);
 }
 
-
 bool:onlyRcon(const szName[])
 {
 	new iPointer = get_cvar_pointer(szName);

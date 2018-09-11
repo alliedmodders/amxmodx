@@ -558,7 +558,7 @@ public cmdSlap(id, iLevel, iCid)
 	
 	log_amx("Cmd: ^"%N^" slap ^"%N^" (%d damage)", id, iPlayer, iDamage);
 	show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", fmt("%n", id), fmt("%n", iPlayer), iDamage);
-	console_print(id, "[AMXX] %l", "CLIENT_SLAPPED", id, iDamage);
+	console_print(id, "[AMXX] %l", "CLIENT_SLAPPED", iPlayer, iDamage);
 	
 	return PLUGIN_HANDLED;
 }
@@ -645,11 +645,11 @@ public cmdCvar(id, iLevel, iCid)
 	{
 		if ((pCvar = get_cvar_pointer(szValue))!=0)
 		{
-			new flags=get_pcvar_flags(pCvar);
+			new flags = get_pcvar_flags(pCvar);
 			
 			if (!(flags & FCVAR_PROTECTED))
 			{
-				set_pcvar_flags(pCvar,flags | FCVAR_PROTECTED);
+				set_pcvar_flags(pCvar, flags | FCVAR_PROTECTED);
 			}
 		}
 

@@ -704,7 +704,7 @@ public cmdCvar(id, iLevel, iCid)
 	{
 		iPlayer = iPlayers[i];
 
-		if (get_pcvar_flags(pCvar) & FCVAR_PROTECTED || equali(szCvar, "g_pRconPassword"))
+		if (get_pcvar_flags(pCvar) & FCVAR_PROTECTED || equali(szCvar, "rcon_password"))
 		{
 			formatex(szCvarValue, charsmax(szCvarValue), "*** %L ***", iPlayer, "PROTECTED");
 		}
@@ -1037,7 +1037,7 @@ public cmdShowRcon(id, iLevel, iCid)
 	{
 		new szArgs[128];		
 		read_args(szArgs, charsmax(szArgs));
-		client_cmd(id, "g_pRconPassword %s", szPassword);
+		client_cmd(id, "rcon_password %s", szPassword);
 		client_cmd(id, "rcon %s", szArgs);
 	}
 	

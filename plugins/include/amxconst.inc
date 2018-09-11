@@ -65,7 +65,7 @@ public stock const Float:NULL_VECTOR[3];
 #define MAX_IP_LENGTH 16
 
 /**
- * The maximum buffer size required to store a client's IP address without a port.
+ * The maximum buffer size required to store a client's IP address with a port.
  */
 #define MAX_IP_WITH_PORT_LENGTH 22
 

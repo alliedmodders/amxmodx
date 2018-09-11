@@ -218,7 +218,7 @@ public cmdSayAdmin(id)
 	
 	get_players(players, inum, "ch")
 	
-	for (new bool:is_sender_admin = !!is_user_admin(id), i = 0; i < inum; ++i)
+	for (new bool:is_sender_admin = is_user_admin(id) != 0, i = 0; i < inum; ++i)
 	{
 		pl = players[i]
 

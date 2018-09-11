@@ -72,7 +72,7 @@ public stock const Float:NULL_VECTOR[3];
 /**
  * The maximum buffer size required to store a client's AuthID.
  */
-#define MAX_AUTHID_LENGTH 34
+#define MAX_AUTHID_LENGTH 64
 
 /**
  * π

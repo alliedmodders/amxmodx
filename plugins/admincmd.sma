@@ -17,35 +17,34 @@
 // This is not a dynamic array because it would be bad for 24/7 map servers.
 #define OLD_CONNECTION_QUEUE 10
 
-new g_pauseCon
-new Float:g_pausAble
-new bool:g_Paused
-new bool:g_PauseAllowed = false
+new g_iPauseCon;
+new Float:g_fPausable;
+new bool:g_bPaused;
+new bool:g_bPauseAllowed;
 
-new pausable;
-new rcon_password;
-new timelimit;
-new p_amx_tempban_maxtime;
+new g_pPausable;
+new g_pRconPassword;
+new g_pTimelimit;
+new g_pTempBanMaxTime;
 
 // Old connection queue
-new g_Names[OLD_CONNECTION_QUEUE][MAX_NAME_LENGTH];
-new g_SteamIDs[OLD_CONNECTION_QUEUE][32];
-new g_IPs[OLD_CONNECTION_QUEUE][32];
-new g_Access[OLD_CONNECTION_QUEUE];
-new g_Tracker;
-new g_Size;
+new g_szNames[OLD_CONNECTION_QUEUE][MAX_NAME_LENGTH];
+new g_szSteamIDs[OLD_CONNECTION_QUEUE][32];
+new g_szIPs[OLD_CONNECTION_QUEUE][32];
+new g_iAccess[OLD_CONNECTION_QUEUE];
+new g_iTracker;
+new g_iSize;
 
-public Trie:g_tempBans
+public Trie:g_tTempBans;
 new Trie:g_tXvarsFlags;
 
-stock InsertInfo(id)
+InsertInfo(id)
 {
-	
 	// Scan to see if this entry is the last entry in the list
 	// If it is, then update the name and access
 	// If it is not, then insert it again.
 
-	if (g_Size > 0)
+	if (g_iSize > 0)
 	{
 		new ip[32]
 		new auth[32];
@@ -55,25 +54,25 @@ stock InsertInfo(id)
 
 		new last = 0;
 		
-		if (g_Size < sizeof(g_SteamIDs))
+		if (g_iSize < sizeof(g_szSteamIDs))
 		{
-			last = g_Size - 1;
+			last = g_iSize - 1;
 		}
 		else
 		{
-			last = g_Tracker - 1;
+			last = g_iTracker - 1;
 			
 			if (last < 0)
 			{
-				last = g_Size - 1;
+				last = g_iSize - 1;
 			}
 		}
 		
-		if (equal(auth, g_SteamIDs[last]) &&
-			equal(ip, g_IPs[last])) // need to check ip too, or all the nosteams will while it doesn't work with their illegitimate server
+		if (equal(auth, g_szSteamIDs[last]) &&
+			equal(ip, g_szIPs[last])) // need to check ip too, or all the nosteams will while it doesn't work with their illegitimate server
 		{
-			get_user_name(id, g_Names[last], charsmax(g_Names[]));
-			g_Access[last] = get_user_flags(id);
+			get_user_name(id, g_szNames[last], charsmax(g_szNames[]));
+			g_iAccess[last] = get_user_flags(id);
 			
 			return;
 		}
@@ -84,45 +83,45 @@ stock InsertInfo(id)
 	new target = 0;  // the slot to save the info at
 
 	// Queue is not yet full
-	if (g_Size < sizeof(g_SteamIDs))
+	if (g_iSize < sizeof(g_szSteamIDs))
 	{
-		target = g_Size;
+		target = g_iSize;
 		
-		++g_Size;
+		++g_iSize;
 		
 	}
 	else
 	{
-		target = g_Tracker;
+		target = g_iTracker;
 		
-		++g_Tracker;
+		++g_iTracker;
 		// If we reached the end of the array, then move to the front
-		if (g_Tracker == sizeof(g_SteamIDs))
+		if (g_iTracker == sizeof(g_szSteamIDs))
 		{
-			g_Tracker = 0;
+			g_iTracker = 0;
 		}
 	}
 	
-	get_user_authid(id, g_SteamIDs[target], charsmax(g_SteamIDs[]));
-	get_user_name(id, g_Names[target], charsmax(g_Names[]));
-	get_user_ip(id, g_IPs[target], charsmax(g_IPs[]), 1/*no port*/);
+	get_user_authid(id, g_szSteamIDs[target], charsmax(g_szSteamIDs[]));
+	get_user_name(id, g_szNames[target], charsmax(g_szNames[]));
+	get_user_ip(id, g_szIPs[target], charsmax(g_szIPs[]), 1/*no port*/);
 	
-	g_Access[target] = get_user_flags(id);
+	g_iAccess[target] = get_user_flags(id);
 
 }
 stock GetInfo(i, name[], namesize, auth[], authsize, ip[], ipsize, &access)
 {
-	if (i >= g_Size)
+	if (i >= g_iSize)
 	{
-		abort(AMX_ERR_NATIVE, "GetInfo: Out of bounds (%d:%d)", i, g_Size);
+		abort(AMX_ERR_NATIVE, "GetInfo: Out of bounds (%d:%d)", i, g_iSize);
 	}
 	
-	new target = (g_Tracker + i) % sizeof(g_SteamIDs);
+	new target = (g_iTracker + i) % sizeof(g_szSteamIDs);
 	
-	copy(name, namesize, g_Names[target]);
-	copy(auth, authsize, g_SteamIDs[target]);
-	copy(ip,   ipsize,   g_IPs[target]);
-	access = g_Access[target];
+	copy(name, namesize, g_szNames[target]);
+	copy(auth, authsize, g_szSteamIDs[target]);
+	copy(ip,   ipsize,   g_szIPs[target]);
+	access = g_iAccess[target];
 	
 }
 public client_disconnected(id)
@@ -165,18 +164,18 @@ public plugin_init()
 	register_clcmd("amx_showrcon", "cmdShowRcon", ADMIN_RCON, "<command line>")
 	register_clcmd("pauseAck", "cmdLBack")
 
-	rcon_password=get_cvar_pointer("rcon_password");
-	pausable=get_cvar_pointer("pausable");
-	timelimit=get_cvar_pointer( "mp_timelimit" );
-	p_amx_tempban_maxtime = register_cvar("amx_tempban_maxtime", "4320", FCVAR_PROTECTED);
+	g_pRconPassword=get_cvar_pointer("g_pRconPassword");
+	g_pPausable=get_cvar_pointer("g_pPausable");
+	g_pTimelimit=get_cvar_pointer( "mp_g_pTimelimit" );
+	g_pTempBanMaxTime = register_cvar("amx_tempban_maxtime", "4320", FCVAR_PROTECTED);
 
-	g_tempBans = TrieCreate();
+	g_tTempBans = TrieCreate();
 
-	new flags = get_pcvar_flags(rcon_password);
+	new flags = get_pcvar_flags(g_pRconPassword);
 
 	if (!(flags & FCVAR_PROTECTED))
 	{
-		set_pcvar_flags(rcon_password, flags | FCVAR_PROTECTED);
+		set_pcvar_flags(g_pRconPassword, flags | FCVAR_PROTECTED);
 	}
 }
 
@@ -245,7 +244,7 @@ public cmdUnban(id, level, cid)
 	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) )
 	{
 		new storedAdminAuth[32]
-		if( !TrieGetString(g_tempBans, arg, storedAdminAuth, charsmax(storedAdminAuth)) || !equal(storedAdminAuth, authid) )
+		if( !TrieGetString(g_tTempBans, arg, storedAdminAuth, charsmax(storedAdminAuth)) || !equal(storedAdminAuth, authid) )
 		{
 			console_print(id, "%L", id, "ADMIN_MUST_TEMPUNBAN");
 			return PLUGIN_HANDLED;
@@ -336,7 +335,7 @@ public cmdAddBan(id, level, cid)
 			new Name[MAX_NAME_LENGTH];
 			new dummy[1];
 			new Access;
-			for (new i = 0; i < g_Size; i++)
+			for (new i = 0; i < g_iSize; i++)
 			{
 				GetInfo(i, Name, charsmax(Name), dummy, 0, IP, charsmax(IP), Access);
 				
@@ -359,7 +358,7 @@ public cmdAddBan(id, level, cid)
 			new Name[MAX_NAME_LENGTH];
 			new dummy[1];
 			new Access;
-			for (new i = 0; i < g_Size; i++)
+			for (new i = 0; i < g_iSize; i++)
 			{
 				GetInfo(i, Name, charsmax(Name), Auth, charsmax(Auth), dummy, 0, Access);
 				
@@ -407,7 +406,7 @@ public cmdAddBan(id, level, cid)
 	show_activity_key("ADMIN_ADDBAN_1", "ADMIN_ADDBAN_2", name, arg);
 
 	get_user_authid(id, authid, charsmax(authid))
-	TrieSetString(g_tempBans, arg, authid)
+	TrieSetString(g_tTempBans, arg, authid)
 	log_amx("Cmd: ^"%s<%d><%s><>^" ban ^"%s^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, arg, minutes, reason)
 
 	return PLUGIN_HANDLED
@@ -430,7 +429,7 @@ public cmdBan(id, level, cid)
 		return PLUGIN_HANDLED
 
 	new nNum = str_to_num(minutes)
-	new const tempBanMaxTime = get_pcvar_num(p_amx_tempban_maxtime);
+	new const tempBanMaxTime = get_pcvar_num(g_pTempBanMaxTime);
 	if( nNum < 0 ) // since negative values result in permanent bans
 	{
 		nNum = 0;
@@ -452,7 +451,7 @@ public cmdBan(id, level, cid)
 	
 	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
 
-	TrieSetString(g_tempBans, authid2, authid); // store all bans in case a permanent ban would override a temporary one.
+	TrieSetString(g_tTempBans, authid2, authid); // store all bans in case a permanent ban would override a temporary one.
 	
 	new temp[64], banned[16]
 	if (nNum)
@@ -517,7 +516,7 @@ public cmdBanIP(id, level, cid)
 		return PLUGIN_HANDLED
 
 	new nNum = str_to_num(minutes)
-	new const tempBanMaxTime = get_pcvar_num(p_amx_tempban_maxtime);
+	new const tempBanMaxTime = get_pcvar_num(g_pTempBanMaxTime);
 	if( nNum < 0 ) // since negative values result in permanent bans
 	{
 		nNum = 0;
@@ -539,7 +538,7 @@ public cmdBanIP(id, level, cid)
 	
 	log_amx("Ban: ^"%s<%d><%s><>^" ban and kick ^"%s<%d><%s><>^" (minutes ^"%s^") (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, minutes, reason)
 
-	TrieSetString(g_tempBans, authid2, authid);
+	TrieSetString(g_tTempBans, authid2, authid);
 
 	new temp[64], banned[16]
 	if (nNum)
@@ -711,7 +710,7 @@ public cmdExtendMap(id, level, cid)
 	
 	new mapname[32]
 	get_mapname(mapname, charsmax(mapname))
-	set_pcvar_num( timelimit , get_pcvar_num( timelimit ) + mns)
+	set_pcvar_num( g_pTimelimit , get_pcvar_num( g_pTimelimit ) + mns)
 	
 	new authid[32], name[MAX_NAME_LENGTH]
 	
@@ -814,7 +813,7 @@ public cmdCvar(id, level, cid)
 	for (new i; i<pnum; i++)
 	{
 		plr = players[i]
-		if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(arg, "rcon_password"))
+		if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(arg, "g_pRconPassword"))
 		{
 			formatex(cvar_val, charsmax(cvar_val), "*** %L ***", plr, "PROTECTED");
 		}
@@ -1087,20 +1086,20 @@ public cmdCfg(id, level, cid)
 
 public cmdLBack()
 {
-	if (!g_PauseAllowed)
+	if (!g_bPauseAllowed)
 		return PLUGIN_CONTINUE	
 
 	new paused[25]
 	
-	format(paused, 24, "%L", g_pauseCon, g_Paused ? "UNPAUSED" : "PAUSED")
-	set_pcvar_float(pausable, g_pausAble)
-	console_print(g_pauseCon, "[AMXX] Server %s", paused)
-	g_PauseAllowed = false
+	format(paused, 24, "%L", g_iPauseCon, g_bPaused ? "UNPAUSED" : "PAUSED")
+	set_pcvar_float(g_pPausable, g_fPausable)
+	console_print(g_iPauseCon, "[AMXX] Server %s", paused)
+	g_bPauseAllowed = false
 	
-	if (g_Paused)
-		g_Paused = false
+	if (g_bPaused)
+		g_bPaused = false
 	else 
-		g_Paused = true
+		g_bPaused = true
 	
 	return PLUGIN_HANDLED
 }
@@ -1114,9 +1113,9 @@ public cmdPause(id, level, cid)
 	
 	get_user_authid(id, authid, charsmax(authid)) 
 	get_user_name(id, name, charsmax(name)) 
-	if (pausable!=0)
+	if (g_pPausable!=0)
 	{
-		g_pausAble = get_pcvar_float(pausable)
+		g_fPausable = get_pcvar_float(g_pPausable)
 	}
 	
 	if (!slayer)
@@ -1128,13 +1127,13 @@ public cmdPause(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 
-	set_pcvar_float(pausable, 1.0)
-	g_PauseAllowed = true
+	set_pcvar_float(g_pPausable, 1.0)
+	g_bPauseAllowed = true
 	client_cmd(slayer, "pause;pauseAck")
 	
-	log_amx("Cmd: ^"%s<%d><%s><>^" %s server", name, get_user_userid(id), authid, g_Paused ? "unpause" : "pause")
+	log_amx("Cmd: ^"%s<%d><%s><>^" %s server", name, get_user_userid(id), authid, g_bPaused ? "unpause" : "pause")
 	
-	console_print(id, "[AMXX] %L", id, g_Paused ? "UNPAUSING" : "PAUSING")
+	console_print(id, "[AMXX] %L", id, g_bPaused ? "UNPAUSING" : "PAUSING")
 
 	// Display the message to all clients
 
@@ -1142,10 +1141,10 @@ public cmdPause(id, level, cid)
 	get_players(players, pnum, "ch")
 	for (new i; i<pnum; i++)
 	{
-		show_activity_id(players[i], id, name, "%L server", i, g_Paused ? "UNPAUSE" : "PAUSE");
+		show_activity_id(players[i], id, name, "%L server", i, g_bPaused ? "UNPAUSE" : "PAUSE");
 	}
 
-	g_pauseCon = id
+	g_iPauseCon = id
 	
 	return PLUGIN_HANDLED
 } 
@@ -1157,7 +1156,7 @@ public cmdShowRcon(id, level, cid)
 		
 	new password[64]
 	
-	get_pcvar_string(rcon_password, password, charsmax(password))
+	get_pcvar_string(g_pRconPassword, password, charsmax(password))
 	
 	if (!password[0])
 	{
@@ -1168,7 +1167,7 @@ public cmdShowRcon(id, level, cid)
 		new args[128]
 		
 		read_args(args, charsmax(args))
-		client_cmd(id, "rcon_password %s", password)
+		client_cmd(id, "g_pRconPassword %s", password)
 		client_cmd(id, "rcon %s", args)
 	}
 	
@@ -1352,7 +1351,7 @@ public cmdLast(id, level, cid)
 	// Steam client display is all skewed anyway because of the non fixed font.
 	console_print(id, "%19s %20s %15s %s", "name", "authid", "ip", "access");
 	
-	for (new i = 0; i < g_Size; i++)
+	for (new i = 0; i < g_iSize; i++)
 	{
 		GetInfo(i, name, charsmax(name), authid, charsmax(authid), ip, charsmax(ip), access);
 		
@@ -1361,13 +1360,13 @@ public cmdLast(id, level, cid)
 		console_print(id, "%19s %20s %15s %s", name, authid, ip, flags);
 	}
 	
-	console_print(id, "%d old connections saved.", g_Size);
+	console_print(id, "%d old connections saved.", g_iSize);
 	
 	return PLUGIN_HANDLED;
 }
 
 public plugin_end()
 {
-	TrieDestroy(g_tempBans);
+	TrieDestroy(g_tTempBans);
 	TrieDestroy(g_tXvarsFlags);
 }

@@ -190,7 +190,7 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 		// If the plugin was not found, then tell them there was an error.
 		if (plid == -1)
 		{
-			console_print(id, "%L", id, "PAUSE_COULDNT_FIND", target_plugin);
+			console_print(id, "%l", "PAUSE_COULDNT_FIND", target_plugin);
 			
 			// return a failure state
 			return false;
@@ -415,7 +415,7 @@ public CommandChangeCvar(id)
 			}
 		}
 
-		console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", g_current_cvar_name[id], args);
+		console_print(id, "[AMXX] %l", "CVAR_CHANGED", g_current_cvar_name[id], args);
 	}
 	
 	// Now redraw the menu for the client

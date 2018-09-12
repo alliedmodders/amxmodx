@@ -45,8 +45,8 @@ public plugin_init()
 	register_dictionary("common.txt");
 	register_dictionary("pausecfg.txt"); // Needed for PAUSE_COULDNT_FIND
 	
-	g_cvarmenu_cmdid=register_clcmd("amx_plugincvarmenu", "CvarMenuCommand", ADMIN_CVAR, " - displays the plugin cvar menu");
-	g_cmdmenu_cmdid=register_clcmd("amx_plugincmdmenu", "CommandMenuCommand", ADMIN_MENU, " - displays the plugin command menu");
+	g_cvarmenu_cmdid = register_clcmd("amx_plugincvarmenu", "CvarMenuCommand", ADMIN_CVAR, " - displays the plugin cvar menu");
+	g_cmdmenu_cmdid = register_clcmd("amx_plugincmdmenu", "CommandMenuCommand", ADMIN_MENU, " - displays the plugin command menu");
 	
 	register_clcmd("amx_changecvar", "CommandChangeCvar");
 	register_clcmd("amx_executecmd", "CommandExecuteCommand");
@@ -122,10 +122,10 @@ stock DisplayPluginMenu(id, const menu_text[], const Handler[], const Command[],
 	new plugincmd[64];
 	new menu_text[64];
 	for (new i = 0, max = get_pluginsnum();
-		 i<max;
+		 i < max;
 		 i++)
 	{
-		if (callfunc_begin_i(func,-1) == 1)
+		if (callfunc_begin_i(func, -1) == 1)
 		{
 			callfunc_push_int(i); // push the plid
 			if ((tally = callfunc_end()) > 0)
@@ -227,7 +227,7 @@ public GetNumberOfCvarsForPlid(plid)
 		 i < max;
 		 i++)
 	{
-		get_plugins_cvar(i, "", 0,_, cvar_plid, _);
+		get_plugins_cvar(i, "", 0, _, cvar_plid, _);
 		
 		if (cvar_plid == plid)
 		{
@@ -541,7 +541,7 @@ public DisplayCvarMenu(id, plid, page)
 		 i < max;
 		 i++)
 	{
-		get_plugins_cvar(i, cvar, charsmax(cvar),_, cvar_plid, cvar_pointer);
+		get_plugins_cvar(i, cvar, charsmax(cvar), _, cvar_plid, cvar_pointer);
 		
 		if (cvar_plid == plid)
 		{
@@ -552,11 +552,11 @@ public DisplayCvarMenu(id, plid, page)
 				
 				// Now store the pcvar data in cvar
 				num_to_str(cvar_pointer, cvar, charsmax(cvar));
-				menu_additem(menu, cvar_text, cvar,_ ,g_enabled_callback);
+				menu_additem(menu, cvar_text, cvar, _ , g_enabled_callback);
 			}
 			else
 			{
-				menu_additem(menu, cvar, "",_, g_disabled_callback);
+				menu_additem(menu, cvar, "", _, g_disabled_callback);
 			}
 			
 		}

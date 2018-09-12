@@ -25,7 +25,9 @@ new bool:g_pause_allowed;
 new g_cvar_pausable;
 new g_cvar_rcon_password;
 new g_cvar_timelimit;
+new g_cvar_timelimit_bind;
 new g_cvar_amx_tempban_maxtime;
+new g_cvar_amx_tempban_maxtime_bind;
 
 // Old connection queue
 new g_names[OLD_CONNECTION_QUEUE][MAX_NAME_LENGTH];
@@ -72,8 +74,13 @@ public plugin_init()
 
 	g_cvar_rcon_password = get_cvar_pointer("rcon_password");
 	g_cvar_pausable = get_cvar_pointer("pausable");
+
 	g_cvar_timelimit = get_cvar_pointer("mp_timelimit");
+	bind_pcvar_num(g_cvar_timelimit, g_cvar_timelimit_bind);
+
 	g_cvar_amx_tempban_maxtime = create_cvar("amx_tempban_maxtime", "4320", FCVAR_PROTECTED, "maximum ban time for temporary bans");
+	bind_pcvar_num(g_cvar_amx_tempban_maxtime, g_cvar_amx_tempban_maxtime_bind);
+
 	g_tempbans = TrieCreate();
 
 	new flags = get_pcvar_flags(g_cvar_rcon_password);
@@ -331,11 +338,9 @@ public cmdBan(id, level, cid)
 		return PLUGIN_HANDLED;
 	}
 
-	new const tempban_max_time = get_pcvar_num(g_cvar_amx_tempban_maxtime);
-
-	if (!(get_user_flags(id) & (ADMIN_BAN | ADMIN_RCON)) && (minutes <= 0 || minutes > tempban_max_time))
+	if (!(get_user_flags(id) & (ADMIN_BAN | ADMIN_RCON)) && (minutes <= 0 || minutes > g_cvar_amx_tempban_maxtime_bind))
 	{
-		console_print(id, "[AMXX] %l", "ADMIN_MUST_TEMPBAN", tempban_max_time);
+		console_print(id, "[AMXX] %l", "ADMIN_MUST_TEMPBAN", g_cvar_amx_tempban_maxtime_bind);
 		return PLUGIN_HANDLED;
 	}
 
@@ -422,11 +427,9 @@ public cmdBanIP(id, level, cid)
 		return PLUGIN_HANDLED;
 	}
 
-	new const tempban_max_time = get_pcvar_num(g_cvar_amx_tempban_maxtime);
-
-	if (!(get_user_flags(id) & (ADMIN_BAN | ADMIN_RCON)) && (minutes <= 0 || minutes > tempban_max_time))
+	if (!(get_user_flags(id) & (ADMIN_BAN | ADMIN_RCON)) && (minutes <= 0 || minutes > g_cvar_amx_tempban_maxtime_bind))
 	{
-		console_print(id, "[AMXX] %l", "ADMIN_MUST_TEMPBAN", tempban_max_time);
+		console_print(id, "[AMXX] %l", "ADMIN_MUST_TEMPBAN", g_cvar_amx_tempban_maxtime_bind);
 		return PLUGIN_HANDLED;
 	}
 	
@@ -602,7 +605,7 @@ public cmdExtendMap(id, level, cid)
 		get_mapname(map, charsmax(map));
 	}
 
-	set_pcvar_num(g_cvar_timelimit, get_pcvar_num(g_cvar_timelimit) + minutes);
+	set_pcvar_num(g_cvar_timelimit, g_cvar_timelimit_bind + minutes);
 
 	show_activity_key("ADMIN_EXTEND_1", "ADMIN_EXTEND_2", fmt("%n", id), minutes);
 	log_amx("ExtendMap: ^"%N^" extend map ^"%s^" for %d minutes", id, map, minutes);

@@ -488,3 +488,34 @@ enum CsAmmoCostType
 	CS_AMMO_9MM_PRICE      = 20,
 	CS_AMMO_BUCKSHOT_PRICE = 65
 };
+
+/**
+ * Weapon state for use with m_iWeaponState.
+ */
+#define WPNSTATE_USP_SILENCED       (1<<0)
+#define WPNSTATE_GLOCK18_BURST_MODE (1<<1)
+#define WPNSTATE_M4A1_SILENCED      (1<<2)
+#define WPNSTATE_ELITE_LEFT         (1<<3)
+#define WPNSTATE_FAMAS_BURST_MODE   (1<<4)
+#define WPNSTATE_SHIELD_DRAWN       (1<<5)
+
+/**
+ * Internal commands, for use with m_flLastCommandTime.
+ */
+#define CMD_SAY           0
+#define CMD_SAYTEAM       1
+#define CMD_FULLUPDATE    2
+#define CMD_VOTE          3
+#define CMD_VOTEMAP       4
+#define CMD_LISTMAPS      5
+#define CMD_LISTPLAYERS   6
+#define CMD_NIGHTVISION   7
+
+/**
+ * Signal state for use with m_signals.
+ */
+#define SIGNAL_BUY        (1<<0)
+#define SIGNAL_BOMB       (1<<1)
+#define SIGNAL_RESCUE     (1<<2)
+#define SIGNAL_ESCAPE     (1<<3)
+#define SIGNAL_VIPSAFETY  (1<<4)

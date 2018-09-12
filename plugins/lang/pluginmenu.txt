@@ -1,0 +1,18 @@
+[en]
+PLUGINCVARMENU_DESC = - displays the plugin cvar menu
+PLUGINCMDMENU_DESC = - displays the plugin command menu
+PLUGIN_NOT_RUNNING = Plugin %s is not running
+CVAR_NOT_CHANGED = Cvar not changed
+CVAR_PTR_ERROR = There was an error extracting the cvar pointer. (Name = "%s")
+CVAR_TYPE_NEW_VALUE = Type in the new value for %s, or !cancel to cancel
+CVARS = Cvars
+CMD_NAME_ERROR = There was an error extracting the command name
+CMD_TYPE_PARAMS = Type in the parameters for %s, or !cancel to cancel
+CMD_EXEC_NO_PARAMS = Command "%s" executed with no parameters
+EXEC_WITH_PARAMS = Execute with parameters
+EXEC_WITHOUT_PARAMS = Execute with no parameters
+CMD_NOT_EXECUTED = Command not executed
+CMD_EXECUTED = Command "%s" executed with "%s"
+COMMANDS = Commands
+PLUGIN_CVAR_MENU = Plugin Cvar Menu
+PLUGIN_CMD_MENU = Plugin Command Menu

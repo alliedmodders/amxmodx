@@ -219,12 +219,12 @@ public cmdAddBan(id, level, cid)
 	if (!(get_user_flags(id) & ADMIN_RCON))
 	{
 		new bool:can_ban, bool:is_ip;
-		static const szLimitedAccess[][] = { "STEAM_ID_PENDING", "STEAM_ID_LAN", "HLTV", "4294967295", "VALVE_ID_LAN", "VALVE_ID_PENDING" };
+		static const limited_access[][] = { "STEAM_ID_PENDING", "STEAM_ID_LAN", "HLTV", "4294967295", "VALVE_ID_LAN", "VALVE_ID_PENDING" };
 
 		// Limited access to this command
-		for(new i; i < sizeof(szLimitedAccess); i++)
+		for(new i; i < sizeof(limited_access); i++)
 		{
-			if(equali(arg, szLimitedAccess[i]))
+			if(equali(arg, limited_access[i]))
 			{
 				console_print(id, "[AMXX] %l", "ADMIN_CANNOT_BAN", arg);
 				return PLUGIN_HANDLED;

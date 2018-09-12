@@ -35,3 +35,22 @@ CMD_EXECUTED = Komandata "%s" e izvrshena so "%s"
 COMMANDS = Komandi
 PLUGIN_CVAR_MENU = Menu so cvarovi za pluginite
 PLUGIN_CMD_MENU = Menu so komandi za pluginite
+
+[bg]
+PLUGINCVARMENU_DESC = - pokazva menu s cvarove za pluginite
+PLUGINCMDMENU_DESC = - pokazva menu s komandi za pluginite
+PLUGIN_NOT_RUNNING = Pluginut %s ne raboti
+CVAR_NOT_CHANGED = Cvarut ne e promenen
+CVAR_PTR_ERROR = Poqvi se greshka pri izvlichaneto na cvar pointera (ime = "%s")
+CVAR_TYPE_NEW_VALUE = Vuvedete novata stoinost za %s ili !cancel za da otkajete
+CVARS = Cvarove
+CMD_NAME_ERROR = Poqvi se gresha pri izvlichaneto na imeto na komandata
+CMD_TYPE_PARAMS = Vuvedete parametrite za %s ili !cancel za da otkajete
+CMD_EXEC_NO_PARAMS = Komandata "%s" e izpulnena bez parametri
+EXEC_WITH_PARAMS = Izpulni s parametri
+EXEC_WITHOUT_PARAMS = Izpulni bez parametri
+CMD_NOT_EXECUTED = Komandata ne e izpulnena
+CMD_EXECUTED = Komandata "%s" e izpulnena s "%s"
+COMMANDS = Komandi
+PLUGIN_CVAR_MENU = Menu s cvarove za pluginite
+PLUGIN_CMD_MENU = Menu s komandi za pluginite

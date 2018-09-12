@@ -321,7 +321,7 @@ public PluginMenuSelection(id, menu, item)
 	// Note the menu is destroyed BEFORE the command
 	// gets executed.
 	// The command retrieved is in the format: "PLID Command"
-	new command[64]
+	new command[64];
 	menu_item_getinfo(menu, item, _, command, charsmax(command));
 	
 	new function[32], plid = str_to_num(command);

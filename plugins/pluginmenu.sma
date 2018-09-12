@@ -130,7 +130,7 @@ stock DisplayPluginMenu(id, const menu_text[], const Handler[], const Command[],
 
 			if ((tally = callfunc_end()) > 0)
 			{
-				get_plugin(i, "", 0, plugin_name, charsmax(plugin_name), "", 0, "", 0, plugin_state, charsmax(plugin_state));
+				get_plugin(i, _, _, plugin_name, charsmax(plugin_name), _, _, _, _, plugin_state, charsmax(plugin_state));
 						
 				// Command syntax is: "# Function", # being plugin ID, function being public function to call.
 				formatex(plugincmd, charsmax(plugincmd), "%d %s", i, Command);
@@ -177,7 +177,7 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 		// Scan for the plugin ID.
 		for (new i = 0, max = get_pluginsnum(); i < max; i++)
 		{
-			get_plugin(i, buffer_file, charsmax(buffer_file), buffer_name, charsmax(buffer_name), "", 0, "", 0, buffer_state, charsmax(buffer_state));
+			get_plugin(i, buffer_file, charsmax(buffer_file), buffer_name, charsmax(buffer_name), _, _, _, _, buffer_state, charsmax(buffer_state));
 			
 			if (strcmp(buffer_file, target_plugin, true) != 0 || strcmp(buffer_name, target_plugin, true) != 0)
 			{
@@ -328,7 +328,6 @@ public PluginMenuSelection(id, menu, item)
 	}
 	
 	new command[64];
-	new dummy[1];
 	
 	// All of the commands set for each item is the public
 	// function that we want to call after the item is selected.
@@ -336,7 +335,7 @@ public PluginMenuSelection(id, menu, item)
 	// Note the menu is destroyed BEFORE the command
 	// gets executed.
 	// The command retrieved is in the format: "PLID Command"
-	menu_item_getinfo(menu, item, dummy[0], command, charsmax(command), dummy, 0, dummy[0]);
+	menu_item_getinfo(menu, item, _, command, charsmax(command));
 	
 	new plid = str_to_num(command);
 	new function[32];
@@ -478,9 +477,9 @@ public CvarMenuSelection(id, menu, item)
 	{
 		new cvar_name[64];
 		new command[32];
-		new dummy[1];
+
 		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
-		menu_item_getinfo(menu, item, dummy[0], command, charsmax(command), cvar_name, charsmax(cvar_name), dummy[0]);
+		menu_item_getinfo(menu, item, _, command, charsmax(command), cvar_name, charsmax(cvar_name));
 		
 		g_current_cvar[id] = str_to_num(command);
 		
@@ -521,7 +520,7 @@ public DisplayCvarMenu(id, plid, page)
 {
 	new plugin_name[32];
 	new menu_title[64];
-	get_plugin(plid, "", 0, plugin_name, charsmax(plugin_name), "", 0, "", 0, "", 0);
+	get_plugin(plid, _, _, plugin_name, charsmax(plugin_name));
 	
 	formatex(menu_title, charsmax(menu_title), "%s Cvars:", plugin_name);
 	
@@ -627,11 +626,9 @@ public SpecificCommandHandler(id, menu, item)
 		return PLUGIN_HANDLED;
 	}
 	
-	new dummy[1];
-
 	if (item == 0)  // "With params"
 	{
-		menu_item_getinfo(menu, item, dummy[0], g_current_command[id], charsmax(g_current_command[]), "", 0, dummy[0]);
+		menu_item_getinfo(menu, item, _, g_current_command[id], charsmax(g_current_command[]));
 
 		if (g_current_command[id][0] == 0) // This should never happen, but just incase..
 		{
@@ -649,7 +646,7 @@ public SpecificCommandHandler(id, menu, item)
 	}
 	else if (item == 1) // "No params"
 	{
-		menu_item_getinfo(menu, item, dummy[0], g_current_command[id], charsmax(g_current_command[]), "", 0, dummy[0]);
+		menu_item_getinfo(menu, item, _, g_current_command[id], charsmax(g_current_command[]));
 
 		if (g_current_command[id][0] == 0) // This should never happen, but just incase..
 		{
@@ -800,10 +797,9 @@ public CommandMenuSelection(id, menu, item)
 	else
 	{
 		new command[32];
-		new dummy[1];
 
 		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
-		menu_item_getinfo(menu, item, dummy[0], command, charsmax(command), "", 0, dummy[0]);
+		menu_item_getinfo(menu, item, _, command, charsmax(command));
 		menu_destroy(menu);
 		DisplaySpecificCommand(id, str_to_num(command));
 	}
@@ -839,7 +835,7 @@ public DisplayCmdMenu(id, plid, page)
 {
 	new plugin_name[32];
 	new menu_title[64];
-	get_plugin(plid, "", 0, plugin_name, charsmax(plugin_name), "", 0, "", 0, "", 0);
+	get_plugin(plid, _, _, plugin_name, charsmax(plugin_name));
 	
 	formatex(menu_title, charsmax(menu_title), "%s Commands:", plugin_name);
 	
@@ -913,7 +909,7 @@ public CommandMenuCommand(id, level, cid)
 		g_current_page[id] = 0;
 		DisplayCmdMenu(id, plid, 0);
 	}
-	
+
 	return PLUGIN_HANDLED;
 }
 

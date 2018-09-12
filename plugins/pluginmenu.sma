@@ -385,16 +385,7 @@ public CommandChangeCvar(id)
 		set_pcvar_string(g_current_cvar[id], args);
 		
 		client_print(id, print_chat, "%l", "CVAR_CHANGED", g_current_cvar_name[id], args);
-		
-		// Copy of admincmd's global output.
-		
-		new name[MAX_NAME_LENGTH];
-		new authid[40];
-		
-		get_user_name(id, name, charsmax(name));
-		get_user_authid(id, authid, charsmax(authid));
-		
-		log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, g_current_cvar_name[id], args);
+		log_amx("Cmd: ^"%N^" set cvar (name ^"%s^") (value ^"%s^")", id, g_current_cvar_name[id], args);
 	
 		new cvar_val[64], players[MAX_PLAYERS], pnum;
 		get_players_ex(players, pnum, GetPlayers_ExcludeBots);
@@ -412,7 +403,7 @@ public CommandChangeCvar(id)
 				copy(cvar_val, charsmax(cvar_val), args);
 			}
 
-			show_activity_id(player, id, name, "%L", player, "SET_CVAR_TO", "", g_current_cvar_name[id], cvar_val);
+			show_activity_id(player, id, fmt("%n", id), "%L", player, "SET_CVAR_TO", "", g_current_cvar_name[id], cvar_val);
 		}
 
 		console_print(id, "[AMXX] %l", "CVAR_CHANGED", g_current_cvar_name[id], args);

@@ -64,14 +64,8 @@ public plugin_cfg()
 
 public addToMenuFront()
 {
-	new plugin_filename[64];
-	
+	new plugin_filename[64], cmd[32], garbage[1], cvarflags, cmdflags;
 	get_plugin(-1, plugin_filename, charsmax(plugin_filename));
-	new cvarflags;
-	new cmdflags;
-	new garbage[1];
-	new cmd[32];
-
 	get_concmd(g_cmdmenu_cmdid, cmd, charsmax(cmd), cmdflags, garbage, charsmax(garbage), -1);
 
 	if (strcmp(cmd, "amx_plugincmdmenu") != 0)
@@ -113,14 +107,10 @@ public client_connect(id)
  */
 stock DisplayPluginMenu(id, const menu_text[], const Handler[], const Command[], const Callback[])
 {
-	new menu=menu_create(menu_text, Handler);
-	
-	new plugin_state[32];
-	new plugin_name[64];
-	new func = get_func_id(Callback);
-	new tally;
-	new plugincmd[64];
-	new menu_text[64];
+	new plugin_name[64], plugincmd[64], menu_text[64], plugin_state[32], tally;
+
+	new menu = menu_create(menu_text, Handler);
+	new func = get_func_id(Callback);	
 
 	for (new i = 0, max = get_pluginsnum(); i < max; i++)
 	{
@@ -168,12 +158,9 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 	if (read_argc() > 1)
 	{ 
 		// Yes, we were provided a plugin.
-		new target_plugin[64];
+		new buffer_name[64], buffer_file[64] ,buffer_state[64], target_plugin[64];
 		read_argv(1, target_plugin, charsmax(target_plugin));
 		
-		new buffer_name[64];
-		new buffer_file[64];
-		new buffer_state[64];
 		// Scan for the plugin ID.
 		for (new i = 0, max = get_pluginsnum(); i < max; i++)
 		{
@@ -218,8 +205,7 @@ stock bool:GetPlidForValidPlugins(id, &plid)
  */
 public GetNumberOfCvarsForPlid(plid)
 {
-	new count = 0;
-	new cvar_plid;
+	new cvar_plid, count;
 
 	for (new i = 0, max = get_plugins_cvarsnum(); i < max; i++)
 	{
@@ -240,7 +226,7 @@ public GetNumberOfCvarsForPlid(plid)
  */
 public GetNumberOfCmdsForPlid(plid)
 {
-	new count = 0;
+	new count;
 	
 	for (new i = 0, max = get_concmdsnum(-1,-1); i < max; i++)
 	{
@@ -327,18 +313,16 @@ public PluginMenuSelection(id, menu, item)
 		return PLUGIN_HANDLED;
 	}
 	
-	new command[64];
-	
 	// All of the commands set for each item is the public
 	// function that we want to call after the item is selected.
 	// The parameters are: function(idPlayer,itemnumber)
 	// Note the menu is destroyed BEFORE the command
 	// gets executed.
 	// The command retrieved is in the format: "PLID Command"
+	new command[64]
 	menu_item_getinfo(menu, item, _, command, charsmax(command));
 	
-	new plid = str_to_num(command);
-	new function[32];
+	new function[32], plid = str_to_num(command);
 	
 	for (new i = 0; i < charsmax(command); i++)
 	{
@@ -363,7 +347,6 @@ public PluginMenuSelection(id, menu, item)
 		callfunc_push_int(plid);
 		callfunc_push_int(0);
 		callfunc_end();
-		
 	}
 
 	return PLUGIN_HANDLED;
@@ -379,7 +362,7 @@ public CommandChangeCvar(id)
 	// All access checks are done before this command is called.
 	// So if the client has no pcvar pointer in his array slot
 	// then just ignore the command.
-	if (g_current_cvar[id] == 0)
+	if (!g_current_cvar[id])
 	{
 		return PLUGIN_CONTINUE;
 	}
@@ -396,7 +379,6 @@ public CommandChangeCvar(id)
 	else
 	{
 		// Changed to set_cvar_* for 1.76 tests
-		
 		new pointer = g_current_cvar[id];
 		set_pcvar_string(g_current_cvar[id], args);
 		
@@ -475,12 +457,10 @@ public CvarMenuSelection(id, menu, item)
 	}
 	else
 	{
-		new cvar_name[64];
-		new command[32];
+		new cvar_name[64], command[32];
 
 		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
 		menu_item_getinfo(menu, item, _, command, charsmax(command), cvar_name, charsmax(cvar_name));
-		
 		g_current_cvar[id] = str_to_num(command);
 		
 		if (g_current_cvar[id] == 0) // This should never happen, but just incase..
@@ -518,19 +498,13 @@ public CvarMenuSelection(id, menu, item)
  */
 public DisplayCvarMenu(id, plid, page)
 {
-	new plugin_name[32];
-	new menu_title[64];
+	new menu_title[64], plugin_name[32];
 	get_plugin(plid, _, _, plugin_name, charsmax(plugin_name));
-	
 	formatex(menu_title, charsmax(menu_title), "%s Cvars:", plugin_name);
 	
 	new menu = menu_create(menu_title, "CvarMenuSelection");
 	
-	new cvar[64];
-	new cvar_plid;
-	new cvar_text[64];
-	new cvar_data[32];
-	new cvar_pointer;
+	new cvar[64], cvar_text[64], cvar_data[32], cvar_plid, cvar_pointer;
 	
 	for (new i = 0, max = get_plugins_cvarsnum(); i < max; i++)
 	{
@@ -686,22 +660,17 @@ public SpecificCommandHandler(id, menu, item)
  */
 stock DisplaySpecificCommand(id, cid)
 {
-	new command_name[64];
-	new command_desc[128];
-	new command_title[256];
-	new command_access;
-	new menu;
-	
+	new command_title[256], command_desc[128], command_name[64], command_access, menu;
 	get_concmd(cid, command_name, charsmax(command_name), command_access, command_desc, charsmax(command_desc), -1, -1);
 	
 	if (command_desc[0] != '^0')
 	{
 		formatex(command_title, charsmax(command_title), "%s^n%s", command_name, command_desc);
-		menu=menu_create(command_title, "SpecificCommandHandler");
+		menu = menu_create(command_title, "SpecificCommandHandler");
 	}
 	else
 	{
-		menu=menu_create(command_name, "SpecificCommandHandler");
+		menu = menu_create(command_name, "SpecificCommandHandler");
 	}
 
 	menu_additem(menu, "Execute with parameters.", command_name, _, g_enabled_callback);
@@ -833,17 +802,11 @@ stock bool:IsDisplayableCmd(const command[])
  */
 public DisplayCmdMenu(id, plid, page)
 {
-	new plugin_name[32];
-	new menu_title[64];
+	new menu_title[64], command[64], plugin_name[32], cid_string[32], command_access;
 	get_plugin(plid, _, _, plugin_name, charsmax(plugin_name));
-	
 	formatex(menu_title, charsmax(menu_title), "%s Commands:", plugin_name);
 	
 	new menu = menu_create(menu_title, "CommandMenuSelection");
-	
-	new command[64];
-	new cid_string[32];
-	new command_access;
 	new userflags = get_user_flags(id);
 	new bool:isadmin = bool:is_user_admin(id);
 	

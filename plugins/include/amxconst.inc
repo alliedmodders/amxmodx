@@ -75,6 +75,31 @@ public stock const Float:NULL_VECTOR[3];
 #define MAX_AUTHID_LENGTH 64
 
 /**
+ * The maximum buffer size required to store a resource path.
+ */
+#define MAX_RESOURCE_PATH_LENGTH 64
+
+/**
+ * The maximum buffer size that can be displayed in a MOTD.
+ */
+#define MAX_MOTD_LENGTH 1536
+
+/**
+ * The maximum size accepted by the user info buffer.
+ */
+#define MAX_USER_INFO_LENGTH 256
+
+/**
+ * The maximum buffer size that can be displayed in a menu.
+ */
+#define MAX_MENU_LENGTH 512
+
+/**
+ * The maximum buffer size required to store a query.
+ */
+#define MAX_QUERY_LENGTH 1472
+
+/**
  * π
  */
 #define M_PI 3.1415926535

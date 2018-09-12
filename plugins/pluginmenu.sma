@@ -396,23 +396,23 @@ public CommandChangeCvar(id)
 		
 		log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, g_current_cvar_name[id], args);
 	
-		new cvar_val[64];
+		new cvar_val[64], players[MAX_PLAYERS], pnum;
+		get_players_ex(players, pnum, GetPlayers_ExcludeBots);
 
-		for (new i = 1; i <= MaxClients; i++)
+		for (new player, i; i < pnum; i++)
 		{
-			if (is_user_connected(i) && !is_user_bot(i))
-			{
-				if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(args, "rcon_password"))
-				{
-					formatex(cvar_val, charsmax(cvar_val), "*** %L ***", i, "PROTECTED");
-				}
-				else
-				{
-					copy(cvar_val, charsmax(cvar_val), args);
-				}
+			player = players[i];
 
-				show_activity_id(i, id, name, "%L", i, "SET_CVAR_TO", "", g_current_cvar_name[id], cvar_val);
+			if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(args, "rcon_password"))
+			{
+				formatex(cvar_val, charsmax(cvar_val), "*** %L ***", player, "PROTECTED");
 			}
+			else
+			{
+				copy(cvar_val, charsmax(cvar_val), args);
+			}
+
+			show_activity_id(player, id, name, "%L", player, "SET_CVAR_TO", "", g_current_cvar_name[id], cvar_val);
 		}
 
 		console_print(id, "[AMXX] %l", "CVAR_CHANGED", g_current_cvar_name[id], args);

@@ -61,6 +61,7 @@ public plugin_cfg()
 {
 	set_task(0.1, "addToMenuFront");
 }
+
 public addToMenuFront()
 {
 	new plugin_filename[64];
@@ -78,6 +79,7 @@ public addToMenuFront()
 		// this should never happen, but just incase!
 		cmdflags = ADMIN_MENU;
 	}
+
 	get_concmd(g_cvarmenu_cmdid, cmd, charsmax(cmd), cvarflags, garbage, charsmax(garbage), -1);
 
 	if (strcmp(cmd, "amx_plugincvarmenu") != 0)
@@ -99,7 +101,6 @@ public client_connect(id)
 	g_current_cvar_name[id][0] = 0;
 	g_current_command[id][0] = 0;
 	g_explicit_plugin[id] = -1;
-	
 }
 
 /**
@@ -114,20 +115,19 @@ stock DisplayPluginMenu(id, const menu_text[], const Handler[], const Command[],
 {
 	new menu=menu_create(menu_text, Handler);
 	
-	
 	new plugin_state[32];
 	new plugin_name[64];
 	new func = get_func_id(Callback);
 	new tally;
 	new plugincmd[64];
 	new menu_text[64];
-	for (new i = 0, max = get_pluginsnum();
-		 i < max;
-		 i++)
+
+	for (new i = 0, max = get_pluginsnum(); i < max; i++)
 	{
 		if (callfunc_begin_i(func, -1) == 1)
 		{
 			callfunc_push_int(i); // push the plid
+
 			if ((tally = callfunc_end()) > 0)
 			{
 				get_plugin(i, "", 0, plugin_name, charsmax(plugin_name), "", 0, "", 0, plugin_state, charsmax(plugin_state));
@@ -135,9 +135,9 @@ stock DisplayPluginMenu(id, const menu_text[], const Handler[], const Command[],
 				// Command syntax is: "# Function", # being plugin ID, function being public function to call.
 				formatex(plugincmd, charsmax(plugincmd), "%d %s", i, Command);
 				formatex(menu_text, charsmax(menu_text), "%s - %d", plugin_name, tally);
+
 				// If the plugin is running, add this as an activated menu item.
-				if (strcmp(plugin_state, "running", true) == 0 ||
-					strcmp(plugin_state, "debug", true) == 0)
+				if (strcmp(plugin_state, "running", true) == 0 || strcmp(plugin_state, "debug", true) == 0)
 				{
 					menu_additem(menu, menu_text, plugincmd, g_enabled_callback);
 				}
@@ -152,7 +152,6 @@ stock DisplayPluginMenu(id, const menu_text[], const Handler[], const Command[],
 	menu_setprop(menu, MPROP_NUMBER_COLOR, "\y");
 	menu_setprop(menu, MPROP_EXIT, MEXIT_ALL);
 	menu_display(id, menu, 0);
-
 }
 
 /**
@@ -176,26 +175,24 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 		new buffer_file[64];
 		new buffer_state[64];
 		// Scan for the plugin ID.
-		for (new i = 0, max = get_pluginsnum();
-			 i < max;
-			 i++)
+		for (new i = 0, max = get_pluginsnum(); i < max; i++)
 		{
 			get_plugin(i, buffer_file, charsmax(buffer_file), buffer_name, charsmax(buffer_name), "", 0, "", 0, buffer_state, charsmax(buffer_state));
 			
-			if (strcmp(buffer_file, target_plugin, true) != 0 ||
-				strcmp(buffer_name, target_plugin, true) != 0)
+			if (strcmp(buffer_file, target_plugin, true) != 0 || strcmp(buffer_name, target_plugin, true) != 0)
 			{
 				// We have a match.
 				
 				// Check the status of the plugin.  If it's anything other than "running" or "debug" fail.
-				if (strcmp(buffer_state, "running") != 0 &&
-					strcmp(buffer_state, "debug")   != 0)
+				if (strcmp(buffer_state, "running") != 0 &&	strcmp(buffer_state, "debug") != 0)
 				{
 					// TODO: ML This
 					console_print(id, "Plugin ^"%s^" is not running.", buffer_file);
+
 					// Return a failed state.
 					return false;
 				}
+
 				plid = i;
 				break;
 			}
@@ -223,9 +220,8 @@ public GetNumberOfCvarsForPlid(plid)
 {
 	new count = 0;
 	new cvar_plid;
-	for (new i = 0, max = get_plugins_cvarsnum();
-		 i < max;
-		 i++)
+
+	for (new i = 0, max = get_plugins_cvarsnum(); i < max; i++)
 	{
 		get_plugins_cvar(i, "", 0, _, cvar_plid, _);
 		
@@ -246,9 +242,7 @@ public GetNumberOfCmdsForPlid(plid)
 {
 	new count = 0;
 	
-	for (new i = 0, max = get_concmdsnum(-1,-1);
-		 i < max;
-		 i++)
+	for (new i = 0, max = get_concmdsnum(-1,-1); i < max; i++)
 	{
 		if (get_concmd_plid(i, -1, -1) == plid)
 		{
@@ -269,6 +263,7 @@ public GetNumberOfCmdsForPlid(plid)
 stock bool:CanIModifyCvar(id, const cvar[])
 {
 	new user_flags = get_user_flags(id);
+
 	// If the user has rcon access don't bother checking anything.
 	if (user_flags & ADMIN_RCON)
 	{
@@ -302,6 +297,7 @@ public AlwaysDisableCallback(playerid, menuid, itemid)
 {
 	return ITEM_DISABLED;
 }
+
 /**
  * Simple function to ensure that a menu item is always enabled.
  *
@@ -311,6 +307,7 @@ public AlwaysEnableCallback(playerid, menuid, itemid)
 {
 	return ITEM_ENABLED;
 }
+
 /**
  * Handler for the plugin menu.
  *
@@ -324,6 +321,7 @@ public PluginMenuSelection(id, menu, item)
 	{
 		menu_destroy(menu);
 	}
+
 	if (item < 0)
 	{
 		return PLUGIN_HANDLED;
@@ -340,7 +338,6 @@ public PluginMenuSelection(id, menu, item)
 	// The command retrieved is in the format: "PLID Command"
 	menu_item_getinfo(menu, item, dummy[0], command, charsmax(command), dummy, 0, dummy[0]);
 	
-	
 	new plid = str_to_num(command);
 	new function[32];
 	
@@ -356,8 +353,8 @@ public PluginMenuSelection(id, menu, item)
 	}
 	
 	menu_destroy(menu);
-	
 	new funcid = get_func_id(function);
+
 	if (funcid != -1 && callfunc_begin_i(funcid) == 1)
 	{
 		g_current_page[id] = 0;
@@ -369,6 +366,7 @@ public PluginMenuSelection(id, menu, item)
 		callfunc_end();
 		
 	}
+
 	return PLUGIN_HANDLED;
 }
 
@@ -388,9 +386,7 @@ public CommandChangeCvar(id)
 	}
 	
 	new args[256];
-	
 	read_args(args, charsmax(args));
-	
 	remove_quotes(args);
 	
 	if (equali(args, "!cancel", 7))
@@ -417,8 +413,8 @@ public CommandChangeCvar(id)
 		
 		log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, g_current_cvar_name[id], args);
 	
-	
 		new cvar_val[64];
+
 		for (new i = 1; i <= MaxClients; i++)
 		{
 			if (is_user_connected(i) && !is_user_bot(i))
@@ -434,8 +430,8 @@ public CommandChangeCvar(id)
 				show_activity_id(i, id, name, "%L", i, "SET_CVAR_TO", "", g_current_cvar_name[id], cvar_val);
 			}
 		}
+
 		console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", g_current_cvar_name[id], args);
-		
 	}
 	
 	// Now redraw the menu for the client
@@ -459,7 +455,6 @@ public CommandChangeCvar(id)
  */
 public CvarMenuSelection(id, menu, item)
 {
-	
 	if (item == MENU_EXIT)
 	{
 		menu_destroy(menu);
@@ -505,6 +500,7 @@ public CvarMenuSelection(id, menu, item)
 				break;
 			}
 		}
+
 		copy(g_current_cvar_name[id], charsmax(g_current_cvar_name[]), cvar_name);
 		client_print(id, print_chat, "[AMXX] Type in the new value for %s, or !cancel to cancel.", cvar_name);
 		client_cmd(id, "messagemode amx_changecvar");
@@ -537,9 +533,7 @@ public DisplayCvarMenu(id, plid, page)
 	new cvar_data[32];
 	new cvar_pointer;
 	
-	for (new i = 0, max = get_plugins_cvarsnum();
-		 i < max;
-		 i++)
+	for (new i = 0, max = get_plugins_cvarsnum(); i < max; i++)
 	{
 		get_plugins_cvar(i, cvar, charsmax(cvar), _, cvar_plid, cvar_pointer);
 		
@@ -565,8 +559,8 @@ public DisplayCvarMenu(id, plid, page)
 	menu_setprop(menu, MPROP_EXIT, MEXIT_ALL);
 	menu_setprop(menu, MPROP_NUMBER_COLOR, "\y");
 	menu_display(id, menu, page);
-
 }
+
 /**
  * Process the "amx_plugincvarmenu" command.
  *
@@ -594,6 +588,7 @@ public CvarMenuCommand(id, level, cid)
 	if (plid == -1)
 	{
 		g_explicit_plugin[id] = -1;
+
 		// We need to display a list of the plugins, instead of a specific plugin.
 		DisplayPluginMenu(id, "Plugin Cvar Menu:", "PluginMenuSelection", "DisplayCvarMenu", "GetNumberOfCvarsForPlid");
 	}
@@ -604,8 +599,10 @@ public CvarMenuCommand(id, level, cid)
 		g_current_page[id] = 0;
 		DisplayCvarMenu(id, plid, 0);
 	}
+
 	return PLUGIN_HANDLED;
 }
+
 /**
  * Handler for the menu that displays a single command ("Execute with no params", etc).
  *
@@ -625,22 +622,24 @@ public SpecificCommandHandler(id, menu, item)
 			callfunc_push_int(g_current_page[id]);
 			callfunc_end();
 		}
+
 		menu_destroy(menu);
-		
 		return PLUGIN_HANDLED;
 	}
 	
 	new dummy[1];
+
 	if (item == 0)  // "With params"
 	{
 		menu_item_getinfo(menu, item, dummy[0], g_current_command[id], charsmax(g_current_command[]), "", 0, dummy[0]);
+
 		if (g_current_command[id][0] == 0) // This should never happen, but just incase..
 		{
 			client_print(id, print_chat, "[AMXX] There was an error extracting the command name.");
 			return PLUGIN_HANDLED;
 		}
-		// TODO: ML this
-		
+
+		// TODO: ML this		
 		client_print(id, print_chat, "[AMXX] Type in the parameters for %s, or !cancel to cancel.", g_current_command[id]);
 		client_cmd(id, "messagemode amx_executecmd");
 		
@@ -651,13 +650,14 @@ public SpecificCommandHandler(id, menu, item)
 	else if (item == 1) // "No params"
 	{
 		menu_item_getinfo(menu, item, dummy[0], g_current_command[id], charsmax(g_current_command[]), "", 0, dummy[0]);
+
 		if (g_current_command[id][0] == 0) // This should never happen, but just incase..
 		{
 			client_print(id, print_chat, "[AMXX] There was an error extracting the command name.");
 			return PLUGIN_HANDLED;
 		}
-		// TODO: ML this
 
+		// TODO: ML this
 		// Now redraw the menu for the client BEFORE the command is executed, incase
 		// that menu brings up a menu of its own.
 		if (g_current_menu_function[id] != -1 && callfunc_begin_i(g_current_menu_function[id]) == 1)
@@ -667,6 +667,7 @@ public SpecificCommandHandler(id, menu, item)
 			callfunc_push_int(g_current_page[id]);
 			callfunc_end();
 		}
+
 		menu_destroy(menu);
 		
 		client_cmd(id, "%s", g_current_command[id]);
@@ -676,8 +677,7 @@ public SpecificCommandHandler(id, menu, item)
 	}
 	
 	// We should never get here, but just incase..
-	menu_destroy(menu);
-	
+	menu_destroy(menu);	
 	return PLUGIN_HANDLED;
 }
 
@@ -706,6 +706,7 @@ stock DisplaySpecificCommand(id, cid)
 	{
 		menu=menu_create(command_name, "SpecificCommandHandler");
 	}
+
 	menu_additem(menu, "Execute with parameters.", command_name, _, g_enabled_callback);
 	menu_additem(menu, "Execute with no parameters.", command_name, _, g_enabled_callback);
 	
@@ -727,9 +728,7 @@ public CommandExecuteCommand(id)
 	}
 	
 	new args[256];
-	
 	read_args(args, charsmax(args));
-	
 	remove_quotes(args);
 	
 	if (equali(args, "!cancel", 7))
@@ -745,7 +744,6 @@ public CommandExecuteCommand(id)
 			callfunc_push_int(g_current_page[id]);
 			callfunc_end();
 		}
-
 	}
 	else
 	{
@@ -765,9 +763,7 @@ public CommandExecuteCommand(id)
 		client_cmd(id, "%s %s", g_current_command[id], args);
 	}
 	
-	
 	return PLUGIN_HANDLED;
-	
 }
 
 /**
@@ -805,16 +801,16 @@ public CommandMenuSelection(id, menu, item)
 	{
 		new command[32];
 		new dummy[1];
+
 		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
 		menu_item_getinfo(menu, item, dummy[0], command, charsmax(command), "", 0, dummy[0]);
-		
 		menu_destroy(menu);
-		
 		DisplaySpecificCommand(id, str_to_num(command));
 	}
 	
 	return PLUGIN_HANDLED;
 }
+
 /**
  * This blocks "say" and "say_team" commands. 
  * Other commands that shouldn't be displayed (eg: amxauth<stuff>) should be filtered out already.
@@ -831,6 +827,7 @@ stock bool:IsDisplayableCmd(const command[])
 	
 	return true;
 }
+
 /**
  * Displays a command list for the specified plugin.
  *
@@ -854,10 +851,7 @@ public DisplayCmdMenu(id, plid, page)
 	new userflags = get_user_flags(id);
 	new bool:isadmin = bool:is_user_admin(id);
 	
-	
-	for (new i = 0, max = get_concmdsnum(-1, -1);
-		 i < max;
-		 i++)
+	for (new i = 0, max = get_concmdsnum(-1, -1); i < max; i++)
 	{
 		if (get_concmd_plid(i, -1, -1) == plid)
 		{
@@ -865,10 +859,7 @@ public DisplayCmdMenu(id, plid, page)
 			
 			if (IsDisplayableCmd(command))
 			{
-				if (userflags & command_access || 
-					(command_access == ADMIN_ADMIN && isadmin) ||
-					 command_access == ADMIN_USER ||
-					 command_access == ADMIN_ALL)
+				if (userflags & command_access || (command_access == ADMIN_ADMIN && isadmin) || command_access == ADMIN_USER || command_access == ADMIN_ALL)
 				{
 					num_to_str(i, cid_string, charsmax(cid_string));
 					menu_additem(menu, command, cid_string, 0, g_enabled_callback);
@@ -880,10 +871,11 @@ public DisplayCmdMenu(id, plid, page)
 			}
 		}
 	}
+
 	menu_setprop(menu, MPROP_NUMBER_COLOR, "\y");
 	menu_display(id, menu, page);
-
 }
+
 /**
  * Handles the "amx_plugincmdmenu" command.
  *
@@ -921,6 +913,7 @@ public CommandMenuCommand(id, level, cid)
 		g_current_page[id] = 0;
 		DisplayCmdMenu(id, plid, 0);
 	}
+	
 	return PLUGIN_HANDLED;
 }
 

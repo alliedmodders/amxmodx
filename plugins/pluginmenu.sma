@@ -14,31 +14,29 @@
 #include <amxmodx>
 #include <amxmisc>
 
-
-
-new DisabledCallback;
-new EnabledCallback;
+new g_disabled_callback;
+new g_enabled_callback;
 
 // pcvar that the client is currently modifying
-new CurrentCvar[MAX_PLAYERS + 1];
+new g_current_cvar[MAX_PLAYERS + 1];
 
 // Name of the cvar being modified
-new CurrentCvarName[MAX_PLAYERS + 1][32];
+new g_current_cvar_name[MAX_PLAYERS + 1][32];
 
 // Plugin ID that the client is modifying
-new CurrentPlid[MAX_PLAYERS + 1];
+new g_current_player_id[MAX_PLAYERS + 1];
 
 // Page that the client is currently on
-new CurrentPage[MAX_PLAYERS + 1];
+new g_current_page[MAX_PLAYERS + 1];
 
 // Menu function ID that the client is in
-new CurrentMenuFunction[MAX_PLAYERS + 1] = { -1,... };
+new g_current_menu_function[MAX_PLAYERS + 1] = { -1,... };
 
-new CurrentCommand[MAX_PLAYERS + 1][32];
-new cvarmenu_cmdid;
-new cmdmenu_cmdid;
+new g_current_command[MAX_PLAYERS + 1][32];
+new g_cvarmenu_cmdid;
+new g_cmdmenu_cmdid;
 
-new ExplicitPlugin[MAX_PLAYERS + 1];
+new g_explicit_plugin[MAX_PLAYERS + 1];
 
 public plugin_init()
 {
@@ -47,15 +45,15 @@ public plugin_init()
 	register_dictionary("common.txt");
 	register_dictionary("pausecfg.txt"); // Needed for PAUSE_COULDNT_FIND
 	
-	cvarmenu_cmdid=register_clcmd("amx_plugincvarmenu", "CvarMenuCommand", ADMIN_CVAR, " - displays the plugin cvar menu");
-	cmdmenu_cmdid=register_clcmd("amx_plugincmdmenu", "CommandMenuCommand", ADMIN_MENU, " - displays the plugin command menu");
+	g_cvarmenu_cmdid=register_clcmd("amx_plugincvarmenu", "CvarMenuCommand", ADMIN_CVAR, " - displays the plugin cvar menu");
+	g_cmdmenu_cmdid=register_clcmd("amx_plugincmdmenu", "CommandMenuCommand", ADMIN_MENU, " - displays the plugin command menu");
 	
 	register_clcmd("amx_changecvar","CommandChangeCvar");
 	register_clcmd("amx_executecmd","CommandExecuteCommand");
 	
 	// Register global menu callbacks.
-	DisabledCallback=menu_makecallback("AlwaysDisableCallback");
-	EnabledCallback=menu_makecallback("AlwaysEnableCallback");
+	g_disabled_callback=menu_makecallback("AlwaysDisableCallback");
+	g_enabled_callback=menu_makecallback("AlwaysEnableCallback");
 }
 
 // Add these menus to the amxmodmenu
@@ -65,22 +63,22 @@ public plugin_cfg()
 }
 public addToMenuFront()
 {
-	new PluginFileName[64];
+	new plugin_filename[64];
 	
-	get_plugin(-1, PluginFileName, charsmax(PluginFileName));
+	get_plugin(-1, plugin_filename, charsmax(plugin_filename));
 	new cvarflags;
 	new cmdflags;
 	new garbage[1];
 	new cmd[32];
 
-	get_concmd(cmdmenu_cmdid, cmd, charsmax(cmd), cmdflags, garbage, charsmax(garbage), -1);
+	get_concmd(g_cmdmenu_cmdid, cmd, charsmax(cmd), cmdflags, garbage, charsmax(garbage), -1);
 
 	if (strcmp(cmd, "amx_plugincmdmenu") != 0)
 	{
 		// this should never happen, but just incase!
 		cmdflags = ADMIN_MENU;
 	}
-	get_concmd(cvarmenu_cmdid, cmd, charsmax(cmd), cvarflags, garbage, charsmax(garbage), -1);
+	get_concmd(g_cvarmenu_cmdid, cmd, charsmax(cmd), cvarflags, garbage, charsmax(garbage), -1);
 
 	if (strcmp(cmd, "amx_plugincvarmenu") != 0)
 	{
@@ -88,41 +86,41 @@ public addToMenuFront()
 		cvarflags = ADMIN_CVAR;
 	}
 
-	AddMenuItem("Plugin Cvars", "amx_plugincvarmenu", cvarflags, PluginFileName);
-	AddMenuItem("Plugin Commands", "amx_plugincmdmenu", cmdflags, PluginFileName);
+	AddMenuItem("Plugin Cvars", "amx_plugincvarmenu", cvarflags, plugin_filename);
+	AddMenuItem("Plugin Commands", "amx_plugincmdmenu", cmdflags, plugin_filename);
 }
 
 // Reset all fields for each client as they connect.
 public client_connect(id)
 {
-	CurrentCvar[id]=0;
-	CurrentPlid[id]=0;
-	CurrentMenuFunction[id]=-1;
-	CurrentCvarName[id][0]=0;
-	CurrentCommand[id][0]=0;
-	ExplicitPlugin[id]=-1;
+	g_current_cvar[id]=0;
+	g_current_player_id[id]=0;
+	g_current_menu_function[id]=-1;
+	g_current_cvar_name[id][0]=0;
+	g_current_command[id][0]=0;
+	g_explicit_plugin[id]=-1;
 	
 }
 
 /**
  * Creates a plugin list menu.
  *
- * @param MenuText		The text to display as the title.
+ * @param menu_text		The text to display as the title.
  * @param Handler		The function to call when an item is selected.
  * @param Command		The function to pass to the handler.  It will be passed as "PLID Command".
  * @param Callback		Function to call for each plugin to be listed.  Displays a number next to it (how many cvars, etc.)
  */
-stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], const Callback[])
+stock DisplayPluginMenu(id,const menu_text[], const Handler[], const Command[], const Callback[])
 {
-	new Menu=menu_create(MenuText,Handler);
+	new menu=menu_create(menu_text,Handler);
 	
 	
-	new PluginState[32];
-	new PluginName[64];
+	new plugin_state[32];
+	new plugin_name[64];
 	new func=get_func_id(Callback);
 	new tally;
-	new PluginCmd[64];
-	new MenuText[64];
+	new plugincmd[64];
+	new menu_text[64];
 	for (new i=0, max=get_pluginsnum();
 		 i<max;
 		 i++)
@@ -132,28 +130,28 @@ stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], c
 			callfunc_push_int(i); // push the plid
 			if ((tally=callfunc_end())>0)
 			{
-				get_plugin(i,"",0,PluginName,charsmax(PluginName),"",0,"",0,PluginState,charsmax(PluginState));
+				get_plugin(i,"",0,plugin_name,charsmax(plugin_name),"",0,"",0,plugin_state,charsmax(plugin_state));
 						
 				// Command syntax is: "# Function", # being plugin ID, function being public function to call.
-				formatex(PluginCmd,charsmax(PluginCmd),"%d %s",i,Command);
-				formatex(MenuText,charsmax(MenuText),"%s - %d",PluginName,tally);
+				formatex(plugincmd,charsmax(plugincmd),"%d %s",i,Command);
+				formatex(menu_text,charsmax(menu_text),"%s - %d",plugin_name,tally);
 				// If the plugin is running, add this as an activated menu item.
-				if (strcmp(PluginState,"running",true)==0 ||
-					strcmp(PluginState,"debug",  true)==0)
+				if (strcmp(plugin_state,"running",true)==0 ||
+					strcmp(plugin_state,"debug",  true)==0)
 				{
-					menu_additem(Menu,MenuText,PluginCmd,EnabledCallback);
+					menu_additem(menu,menu_text,plugincmd,g_enabled_callback);
 				}
 				else
 				{
-					menu_additem(Menu,MenuText,"",_,DisabledCallback);
+					menu_additem(menu,menu_text,"",_,g_disabled_callback);
 				}
 			}
 		}
 	}
 
-	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
-	menu_setprop(Menu,MPROP_EXIT,MEXIT_ALL);
-	menu_display(id,Menu,0);
+	menu_setprop(menu,MPROP_NUMBER_COLOR,"\y");
+	menu_setprop(menu,MPROP_EXIT,MEXIT_ALL);
+	menu_display(id,menu,0);
 
 }
 
@@ -171,30 +169,30 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 	if (read_argc()>1)
 	{ 
 		// Yes, we were provided a plugin.
-		new TargetPlugin[64];
-		read_argv(1,TargetPlugin,charsmax(TargetPlugin));
+		new target_plugin[64];
+		read_argv(1,target_plugin,charsmax(target_plugin));
 		
-		new BufferName[64];
-		new BufferFile[64];
-		new BufferState[64];
+		new buffer_name[64];
+		new buffer_file[64];
+		new buffer_state[64];
 		// Scan for the plugin ID.
 		for (new i=0, max=get_pluginsnum();
 			 i<max;
 			 i++)
 		{
-			get_plugin(i,BufferFile,charsmax(BufferFile),BufferName,charsmax(BufferName),"",0,"",0,BufferState,charsmax(BufferState));
+			get_plugin(i,buffer_file,charsmax(buffer_file),buffer_name,charsmax(buffer_name),"",0,"",0,buffer_state,charsmax(buffer_state));
 			
-			if (strcmp(BufferFile,TargetPlugin,true) != 0||
-				strcmp(BufferName,TargetPlugin,true) != 0)
+			if (strcmp(buffer_file,target_plugin,true) != 0||
+				strcmp(buffer_name,target_plugin,true) != 0)
 			{
 				// We have a match.
 				
 				// Check the status of the plugin.  If it's anything other than "running" or "debug" fail.
-				if (strcmp(BufferState,"running") != 0 &&
-					strcmp(BufferState,"debug")   != 0)
+				if (strcmp(buffer_state,"running") != 0 &&
+					strcmp(buffer_state,"debug")   != 0)
 				{
 					// TODO: ML This
-					console_print(id,"Plugin ^"%s^" is not running.",BufferFile);
+					console_print(id,"Plugin ^"%s^" is not running.",buffer_file);
 					// Return a failed state.
 					return false;
 				}
@@ -206,7 +204,7 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 		// If the plugin was not found, then tell them there was an error.
 		if (plid==-1)
 		{
-			console_print(id, "%L", id, "PAUSE_COULDNT_FIND", TargetPlugin);
+			console_print(id, "%L", id, "PAUSE_COULDNT_FIND", target_plugin);
 			
 			// return a failure state
 			return false;
@@ -224,14 +222,14 @@ stock bool:GetPlidForValidPlugins(id, &plid)
 public GetNumberOfCvarsForPlid(plid)
 {
 	new count=0;
-	new CvarPlid;
+	new cvar_plid;
 	for (new i=0, max=get_plugins_cvarsnum();
 		 i<max;
 		 i++)
 	{
-		get_plugins_cvar(i, "", 0,_, CvarPlid, _);
+		get_plugins_cvar(i, "", 0,_, cvar_plid, _);
 		
-		if (CvarPlid==plid)
+		if (cvar_plid==plid)
 		{
 			count++;
 		}
@@ -270,15 +268,15 @@ public GetNumberOfCmdsForPlid(plid)
  */
 stock bool:CanIModifyCvar(id, const Cvar[])
 {
-	new UserFlags=get_user_flags(id);
+	new user_flags=get_user_flags(id);
 	// If the user has rcon access don't bother checking anything.
-	if (UserFlags & ADMIN_RCON)
+	if (user_flags & ADMIN_RCON)
 	{
 		return true;
 	}
 	
 	// If the cvar is "sv_password" (somehow), then check access.
-	if (equali(Cvar,"sv_password") && UserFlags & ADMIN_PASSWORD)
+	if (equali(Cvar,"sv_password") && user_flags & ADMIN_PASSWORD)
 	{
 		return true;
 	}
@@ -331,8 +329,8 @@ public PluginMenuSelection(id, menu, item)
 		return PLUGIN_HANDLED;
 	}
 	
-	new Command[64];
-	new Dummy[1];
+	new command[64];
+	new dummy[1];
 	
 	// All of the commands set for each item is the public
 	// function that we want to call after the item is selected.
@@ -340,31 +338,31 @@ public PluginMenuSelection(id, menu, item)
 	// Note the menu is destroyed BEFORE the command
 	// gets executed.
 	// The command retrieved is in the format: "PLID Command"
-	menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),Dummy,0,Dummy[0]);
+	menu_item_getinfo(menu, item, dummy[0], command, charsmax(command),dummy,0,dummy[0]);
 	
 	
-	new plid=str_to_num(Command);
-	new Function[32];
+	new plid=str_to_num(command);
+	new function[32];
 	
-	for (new i=0;i<charsmax(Command);i++)
+	for (new i=0;i<charsmax(command);i++)
 	{
-		if (Command[i]==' ')
+		if (command[i]==' ')
 		{
 			// we're at the break. move up one space.
 			i++;
-			copy(Function,charsmax(Function),Command[i]);
+			copy(function,charsmax(function),command[i]);
 			break;
 		}
 	}
 	
 	menu_destroy(menu);
 	
-	new funcid=get_func_id(Function);
+	new funcid=get_func_id(function);
 	if (funcid != -1 && callfunc_begin_i(funcid)==1)
 	{
-		CurrentPage[id]=0;
-		CurrentPlid[id]=plid;
-		CurrentMenuFunction[id]=funcid;
+		g_current_page[id]=0;
+		g_current_player_id[id]=plid;
+		g_current_menu_function[id]=funcid;
 		callfunc_push_int(id);
 		callfunc_push_int(plid);
 		callfunc_push_int(0);
@@ -384,18 +382,18 @@ public CommandChangeCvar(id)
 	// All access checks are done before this command is called.
 	// So if the client has no pcvar pointer in his array slot
 	// then just ignore the command.
-	if (CurrentCvar[id]==0)
+	if (g_current_cvar[id]==0)
 	{
 		return PLUGIN_CONTINUE;
 	}
 	
-	new Args[256];
+	new args[256];
 	
-	read_args(Args,charsmax(Args));
+	read_args(args,charsmax(args));
 	
-	remove_quotes(Args);
+	remove_quotes(args);
 	
-	if (equali(Args,"!cancel",7))
+	if (equali(args,"!cancel",7))
 	{
 		// The client didn't want to change this cvar.
 		client_print(id,print_chat,"[AMXX] Cvar not changed.");
@@ -404,20 +402,20 @@ public CommandChangeCvar(id)
 	{
 		// Changed to set_cvar_* for 1.76 tests
 		
-		new pointer=CurrentCvar[id];
-		set_pcvar_string(CurrentCvar[id],Args);
+		new pointer=g_current_cvar[id];
+		set_pcvar_string(g_current_cvar[id],args);
 		
-		client_print(id,print_chat,"[AMXX] Cvar ^"%s^" changed to ^"%s^"",CurrentCvarName[id],Args);
+		client_print(id,print_chat,"[AMXX] Cvar ^"%s^" changed to ^"%s^"",g_current_cvar_name[id],args);
 		
 		// Copy of admincmd's global output.
 		
-		new Name[MAX_NAME_LENGTH];
-		new AuthID[40];
+		new name[MAX_NAME_LENGTH];
+		new authid[40];
 		
-		get_user_name(id,Name,charsmax(Name));
-		get_user_authid(id,AuthID,charsmax(AuthID));
+		get_user_name(id,name,charsmax(name));
+		get_user_authid(id,authid,charsmax(authid));
 		
-		log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", Name, get_user_userid(id), AuthID, CurrentCvarName[id], Args);
+		log_amx("Cmd: ^"%s<%d><%s><>^" set cvar (name ^"%s^") (value ^"%s^")", name, get_user_userid(id), authid, g_current_cvar_name[id], args);
 	
 	
 		new cvar_val[64];
@@ -425,27 +423,27 @@ public CommandChangeCvar(id)
 		{
 			if (is_user_connected(i) && !is_user_bot(i))
 			{
-				if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(Args, "rcon_password"))
+				if (get_pcvar_flags(pointer) & FCVAR_PROTECTED || equali(args, "rcon_password"))
 				{
 					formatex(cvar_val, charsmax(cvar_val), "*** %L ***", i, "PROTECTED");
 				}
 				else
 				{
-					copy(cvar_val, charsmax(cvar_val), Args);
+					copy(cvar_val, charsmax(cvar_val), args);
 				}
-				show_activity_id(i, id, Name, "%L", i, "SET_CVAR_TO", "", CurrentCvarName[id], cvar_val);
+				show_activity_id(i, id, name, "%L", i, "SET_CVAR_TO", "", g_current_cvar_name[id], cvar_val);
 			}
 		}
-		console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", CurrentCvarName[id], Args);
+		console_print(id, "[AMXX] %L", id, "CVAR_CHANGED", g_current_cvar_name[id], args);
 		
 	}
 	
 	// Now redraw the menu for the client
-	if (CurrentMenuFunction[id]!=-1 && callfunc_begin_i(CurrentMenuFunction[id])==1)
+	if (g_current_menu_function[id]!=-1 && callfunc_begin_i(g_current_menu_function[id])==1)
 	{
 		callfunc_push_int(id);
-		callfunc_push_int(CurrentPlid[id]);
-		callfunc_push_int(CurrentPage[id]);
+		callfunc_push_int(g_current_player_id[id]);
+		callfunc_push_int(g_current_page[id]);
 		callfunc_end();
 	}
 	
@@ -466,49 +464,49 @@ public CvarMenuSelection(id, menu, item)
 	{
 		menu_destroy(menu);
 		
-		if (ExplicitPlugin[id]==-1)
+		if (g_explicit_plugin[id]==-1)
 		{
 			DisplayPluginMenuDefault(id);
 		}
 	}
 	else if (item==MENU_BACK)
 	{
-		--CurrentPage[id];
+		--g_current_page[id];
 		client_print(id,print_chat,"MENU_BACK");
 	}
 	else if (item==MENU_MORE)
 	{
-		++CurrentPage[id];
+		++g_current_page[id];
 		client_print(id,print_chat,"MENU_MORE");
 	}
 	else
 	{
-		new CvarName[64];
-		new Command[32];
-		new Dummy[1];
+		new cvar_name[64];
+		new command[32];
+		new dummy[1];
 		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
-		menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),CvarName,charsmax(CvarName),Dummy[0]);
+		menu_item_getinfo(menu, item, dummy[0], command, charsmax(command),cvar_name,charsmax(cvar_name),dummy[0]);
 		
-		CurrentCvar[id]=str_to_num(Command);
+		g_current_cvar[id]=str_to_num(command);
 		
-		if (CurrentCvar[id]==0) // This should never happen, but just incase..
+		if (g_current_cvar[id]==0) // This should never happen, but just incase..
 		{
-			client_print(id,print_chat,"[AMXX] There was an error extracting the cvar pointer. (Name=^"%s^")",CvarName);
+			client_print(id,print_chat,"[AMXX] There was an error extracting the cvar pointer. (Name=^"%s^")",cvar_name);
 			return PLUGIN_HANDLED;
 		}
 		// TODO: ML this
 		
-		// Scan up "CvarName" and stop at the first space
-		for (new i=0;i<charsmax(CvarName);i++)
+		// Scan up "cvar_name" and stop at the first space
+		for (new i=0;i<charsmax(cvar_name);i++)
 		{
-			if (CvarName[i]==' ')
+			if (cvar_name[i]==' ')
 			{
-				CvarName[i]='^0';
+				cvar_name[i]='^0';
 				break;
 			}
 		}
-		copy(CurrentCvarName[id],charsmax(CurrentCvarName[]),CvarName);
-		client_print(id,print_chat,"[AMXX] Type in the new value for %s, or !cancel to cancel.",CvarName);
+		copy(g_current_cvar_name[id],charsmax(g_current_cvar_name[]),cvar_name);
+		client_print(id,print_chat,"[AMXX] Type in the new value for %s, or !cancel to cancel.",cvar_name);
 		client_cmd(id,"messagemode amx_changecvar");
 		
 		menu_destroy(menu);
@@ -525,48 +523,48 @@ public CvarMenuSelection(id, menu, item)
  */
 public DisplayCvarMenu(id, plid, page)
 {
-	new PluginName[32];
-	new MenuTitle[64];
-	get_plugin(plid,"",0,PluginName,charsmax(PluginName),"",0,"",0,"",0);
+	new plugin_name[32];
+	new menu_title[64];
+	get_plugin(plid,"",0,plugin_name,charsmax(plugin_name),"",0,"",0,"",0);
 	
-	formatex(MenuTitle,charsmax(MenuTitle),"%s Cvars:",PluginName);
+	formatex(menu_title,charsmax(menu_title),"%s Cvars:",plugin_name);
 	
-	new Menu=menu_create(MenuTitle,"CvarMenuSelection");
+	new menu=menu_create(menu_title,"CvarMenuSelection");
 	
-	new Cvar[64];
-	new CvarPlid;
-	new CvarText[64];
-	new CvarData[32];
-	new CvarPtr;
+	new cvar[64];
+	new cvar_plid;
+	new cvar_text[64];
+	new cvar_data[32];
+	new cvar_pointer;
 	
 	for (new i=0, max=get_plugins_cvarsnum();
 		 i<max;
 		 i++)
 	{
-		get_plugins_cvar(i, Cvar, charsmax(Cvar),_, CvarPlid, CvarPtr);
+		get_plugins_cvar(i, cvar, charsmax(cvar),_, cvar_plid, cvar_pointer);
 		
-		if (CvarPlid==plid)
+		if (cvar_plid==plid)
 		{
-			if (CanIModifyCvar(id,Cvar))
+			if (CanIModifyCvar(id,cvar))
 			{
-				get_pcvar_string(CvarPtr,CvarData,charsmax(CvarData));
-				formatex(CvarText,charsmax(CvarText),"%s - %s",Cvar,CvarData);
+				get_pcvar_string(cvar_pointer,cvar_data,charsmax(cvar_data));
+				formatex(cvar_text,charsmax(cvar_text),"%s - %s",cvar,cvar_data);
 				
-				// Now store the pcvar data in Cvar
-				num_to_str(CvarPtr,Cvar,charsmax(Cvar));
-				menu_additem(Menu,CvarText,Cvar,_,EnabledCallback);
+				// Now store the pcvar data in cvar
+				num_to_str(cvar_pointer,cvar,charsmax(cvar));
+				menu_additem(menu,cvar_text,cvar,_,g_enabled_callback);
 			}
 			else
 			{
-				menu_additem(Menu,Cvar,"",_,DisabledCallback);
+				menu_additem(menu,cvar,"",_,g_disabled_callback);
 			}
 			
 		}
 	}
 	
-	menu_setprop(Menu,MPROP_EXIT,MEXIT_ALL);
-	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
-	menu_display(id,Menu,page);
+	menu_setprop(menu,MPROP_EXIT,MEXIT_ALL);
+	menu_setprop(menu,MPROP_NUMBER_COLOR,"\y");
+	menu_display(id,menu,page);
 
 }
 /**
@@ -595,15 +593,15 @@ public CvarMenuCommand(id, level, cid)
 	// Check if we were passed a specific plugin to display or not.
 	if (plid==-1)
 	{
-		ExplicitPlugin[id]=-1;
+		g_explicit_plugin[id]=-1;
 		// We need to display a list of the plugins, instead of a specific plugin.
 		DisplayPluginMenu(id,"Plugin Cvar Menu:", "PluginMenuSelection","DisplayCvarMenu","GetNumberOfCvarsForPlid");
 	}
 	else
 	{
-		ExplicitPlugin[id]=plid;
-		CurrentPlid[id]=plid;
-		CurrentPage[id]=0;
+		g_explicit_plugin[id]=plid;
+		g_current_player_id[id]=plid;
+		g_current_page[id]=0;
 		DisplayCvarMenu(id,plid,0);
 	}
 	return PLUGIN_HANDLED;
@@ -620,11 +618,11 @@ public SpecificCommandHandler(id,menu,item)
 	// Exit was called, return to the previous menu.
 	if (item<0)
 	{	
-		if (CurrentMenuFunction[id]!=-1 && callfunc_begin_i(CurrentMenuFunction[id])==1)
+		if (g_current_menu_function[id]!=-1 && callfunc_begin_i(g_current_menu_function[id])==1)
 		{
 			callfunc_push_int(id);
-			callfunc_push_int(CurrentPlid[id]);
-			callfunc_push_int(CurrentPage[id]);
+			callfunc_push_int(g_current_player_id[id]);
+			callfunc_push_int(g_current_page[id]);
 			callfunc_end();
 		}
 		menu_destroy(menu);
@@ -632,18 +630,18 @@ public SpecificCommandHandler(id,menu,item)
 		return PLUGIN_HANDLED;
 	}
 	
-	new Dummy[1];
+	new dummy[1];
 	if (item==0)  // "With params"
 	{
-		menu_item_getinfo(menu, item, Dummy[0], CurrentCommand[id], charsmax(CurrentCommand[]),"",0,Dummy[0]);
-		if (CurrentCommand[id][0]==0) // This should never happen, but just incase..
+		menu_item_getinfo(menu, item, dummy[0], g_current_command[id], charsmax(g_current_command[]),"",0,dummy[0]);
+		if (g_current_command[id][0]==0) // This should never happen, but just incase..
 		{
 			client_print(id,print_chat,"[AMXX] There was an error extracting the command name.");
 			return PLUGIN_HANDLED;
 		}
 		// TODO: ML this
 		
-		client_print(id,print_chat,"[AMXX] Type in the parameters for %s, or !cancel to cancel.",CurrentCommand[id]);
+		client_print(id,print_chat,"[AMXX] Type in the parameters for %s, or !cancel to cancel.",g_current_command[id]);
 		client_cmd(id,"messagemode amx_executecmd");
 		
 		menu_destroy(menu);
@@ -652,8 +650,8 @@ public SpecificCommandHandler(id,menu,item)
 	}
 	else if (item==1) // "No params"
 	{
-		menu_item_getinfo(menu, item, Dummy[0], CurrentCommand[id], charsmax(CurrentCommand[]),"",0,Dummy[0]);
-		if (CurrentCommand[id][0]==0) // This should never happen, but just incase..
+		menu_item_getinfo(menu, item, dummy[0], g_current_command[id], charsmax(g_current_command[]),"",0,dummy[0]);
+		if (g_current_command[id][0]==0) // This should never happen, but just incase..
 		{
 			client_print(id,print_chat,"[AMXX] There was an error extracting the command name.");
 			return PLUGIN_HANDLED;
@@ -662,17 +660,17 @@ public SpecificCommandHandler(id,menu,item)
 
 		// Now redraw the menu for the client BEFORE the command is executed, incase
 		// that menu brings up a menu of its own.
-		if (CurrentMenuFunction[id]!=-1 && callfunc_begin_i(CurrentMenuFunction[id])==1)
+		if (g_current_menu_function[id]!=-1 && callfunc_begin_i(g_current_menu_function[id])==1)
 		{
 			callfunc_push_int(id);
-			callfunc_push_int(CurrentPlid[id]);
-			callfunc_push_int(CurrentPage[id]);
+			callfunc_push_int(g_current_player_id[id]);
+			callfunc_push_int(g_current_page[id]);
 			callfunc_end();
 		}
 		menu_destroy(menu);
 		
-		client_cmd(id,"%s",CurrentCommand[id]);
-		client_print(id,print_chat,"[AMXX] Command ^"%s^" executed with no parameters",CurrentCommand[id]);
+		client_cmd(id,"%s",g_current_command[id]);
+		client_print(id,print_chat,"[AMXX] Command ^"%s^" executed with no parameters",g_current_command[id]);
 		
 		return PLUGIN_HANDLED;
 	}
@@ -691,28 +689,28 @@ public SpecificCommandHandler(id,menu,item)
  */
 stock DisplaySpecificCommand(id,cid)
 {
-	new CommandName[64];
-	new CommandDesc[128];
-	new CommandTitle[256];
-	new CommandAccess;
-	new Menu;
+	new command_name[64];
+	new command_desc[128];
+	new command_title[256];
+	new command_access;
+	new menu;
 	
-	get_concmd(cid,CommandName,charsmax(CommandName),CommandAccess, CommandDesc, charsmax(CommandDesc), -1, -1);
+	get_concmd(cid,command_name,charsmax(command_name),command_access, command_desc, charsmax(command_desc), -1, -1);
 	
-	if (CommandDesc[0]!='^0')
+	if (command_desc[0]!='^0')
 	{
-		formatex(CommandTitle,charsmax(CommandTitle),"%s^n%s",CommandName,CommandDesc);
-		Menu=menu_create(CommandTitle,"SpecificCommandHandler");
+		formatex(command_title,charsmax(command_title),"%s^n%s",command_name,command_desc);
+		menu=menu_create(command_title,"SpecificCommandHandler");
 	}
 	else
 	{
-		Menu=menu_create(CommandName,"SpecificCommandHandler");
+		menu=menu_create(command_name,"SpecificCommandHandler");
 	}
-	menu_additem(Menu,"Execute with parameters.",CommandName,_,EnabledCallback);
-	menu_additem(Menu,"Execute with no parameters.",CommandName,_,EnabledCallback);
+	menu_additem(menu,"Execute with parameters.",command_name,_,g_enabled_callback);
+	menu_additem(menu,"Execute with no parameters.",command_name,_,g_enabled_callback);
 	
-	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
-	menu_display(id,Menu,0);
+	menu_setprop(menu,MPROP_NUMBER_COLOR,"\y");
+	menu_display(id,menu,0);
 }
 
 /**
@@ -723,28 +721,28 @@ stock DisplaySpecificCommand(id,cid)
 public CommandExecuteCommand(id)
 {
 	// If they had no command stored, then just ignore it entirely.
-	if (CurrentCommand[id][0]=='^0')
+	if (g_current_command[id][0]=='^0')
 	{
 		return PLUGIN_CONTINUE;
 	}
 	
-	new Args[256];
+	new args[256];
 	
-	read_args(Args,charsmax(Args));
+	read_args(args,charsmax(args));
 	
-	remove_quotes(Args);
+	remove_quotes(args);
 	
-	if (equali(Args,"!cancel",7))
+	if (equali(args,"!cancel",7))
 	{
 		// The client didn't want to execute this command.
 		client_print(id,print_chat,"[AMXX] Command not executed.");
 		
 		// Now redraw the menu for the client
-		if (CurrentMenuFunction[id]!=-1 && callfunc_begin_i(CurrentMenuFunction[id])==1)
+		if (g_current_menu_function[id]!=-1 && callfunc_begin_i(g_current_menu_function[id])==1)
 		{
 			callfunc_push_int(id);
-			callfunc_push_int(CurrentPlid[id]);
-			callfunc_push_int(CurrentPage[id]);
+			callfunc_push_int(g_current_player_id[id]);
+			callfunc_push_int(g_current_page[id]);
 			callfunc_end();
 		}
 
@@ -752,19 +750,19 @@ public CommandExecuteCommand(id)
 	else
 	{
 		// TODO: ML
-		client_print(id,print_chat,"[AMXX] Command ^"%s^" executed with ^"%s^"",CurrentCommand[id],Args);
+		client_print(id,print_chat,"[AMXX] Command ^"%s^" executed with ^"%s^"",g_current_command[id],args);
 
 		// Now redraw the menu for the client
-		if (CurrentMenuFunction[id]!=-1 && callfunc_begin_i(CurrentMenuFunction[id])==1)
+		if (g_current_menu_function[id]!=-1 && callfunc_begin_i(g_current_menu_function[id])==1)
 		{
 			callfunc_push_int(id);
-			callfunc_push_int(CurrentPlid[id]);
-			callfunc_push_int(CurrentPage[id]);
+			callfunc_push_int(g_current_player_id[id]);
+			callfunc_push_int(g_current_page[id]);
 			callfunc_end();
 		}
 		
 		// Execute the command on the client.
-		client_cmd(id,"%s %s",CurrentCommand[id],Args);
+		client_cmd(id,"%s %s",g_current_command[id],args);
 	}
 	
 	
@@ -788,31 +786,31 @@ public CommandMenuSelection(id, menu, item)
 		// If the player did not explicitly specify a plugin, return them to the 
 		// plugin selection menu.
 		
-		if (ExplicitPlugin[id]==-1)
+		if (g_explicit_plugin[id]==-1)
 		{
 			client_cmd(id,"amx_plugincmdmenu");
 		}
 	}
 	else if (item==MENU_BACK)
 	{
-		--CurrentPage[id];
+		--g_current_page[id];
 		client_print(id,print_chat,"MENU_BACK");
 	}
 	else if (item==MENU_MORE)
 	{
-		++CurrentPage[id];
+		++g_current_page[id];
 		client_print(id,print_chat,"MENU_MORE");
 	}
 	else
 	{
-		new Command[32];
-		new Dummy[1];
+		new command[32];
+		new dummy[1];
 		// pcvar pointer is stored in command, extract the name of the cvar from the name field.
-		menu_item_getinfo(menu, item, Dummy[0], Command, charsmax(Command),"",0,Dummy[0]);
+		menu_item_getinfo(menu, item, dummy[0], command, charsmax(command),"",0,dummy[0]);
 		
 		menu_destroy(menu);
 		
-		DisplaySpecificCommand(id,str_to_num(Command));
+		DisplaySpecificCommand(id,str_to_num(command));
 	}
 	
 	return PLUGIN_HANDLED;
@@ -821,12 +819,12 @@ public CommandMenuSelection(id, menu, item)
  * This blocks "say" and "say_team" commands. 
  * Other commands that shouldn't be displayed (eg: amxauth<stuff>) should be filtered out already.
  *
- * @param Command	The command that is being checked.
+ * @param command	The command that is being checked.
  */
-stock bool:IsDisplayableCmd(const Command[])
+stock bool:IsDisplayableCmd(const command[])
 {
 	// Block "say" and "say_team"
-	if (equal(Command,"say",3))
+	if (equal(command,"say",3))
 	{
 		return false;
 	}
@@ -842,17 +840,17 @@ stock bool:IsDisplayableCmd(const Command[])
  */
 public DisplayCmdMenu(id, plid, page)
 {
-	new PluginName[32];
-	new MenuTitle[64];
-	get_plugin(plid,"",0,PluginName,charsmax(PluginName),"",0,"",0,"",0);
+	new plugin_name[32];
+	new menu_title[64];
+	get_plugin(plid,"",0,plugin_name,charsmax(plugin_name),"",0,"",0,"",0);
 	
-	formatex(MenuTitle,charsmax(MenuTitle),"%s Commands:",PluginName);
+	formatex(menu_title,charsmax(menu_title),"%s Commands:",plugin_name);
 	
-	new Menu=menu_create(MenuTitle,"CommandMenuSelection");
+	new menu=menu_create(menu_title,"CommandMenuSelection");
 	
-	new Command[64];
-	new CidString[32];
-	new CommandAccess;
+	new command[64];
+	new cid_string[32];
+	new command_access;
 	new userflags=get_user_flags(id);
 	new bool:isadmin=bool:is_user_admin(id);
 	
@@ -863,27 +861,27 @@ public DisplayCmdMenu(id, plid, page)
 	{
 		if (get_concmd_plid(i,-1,-1)==plid)
 		{
-			get_concmd(i,Command,charsmax(Command),CommandAccess, "",0, -1, -1);
+			get_concmd(i,command,charsmax(command),command_access, "",0, -1, -1);
 			
-			if (IsDisplayableCmd(Command))
+			if (IsDisplayableCmd(command))
 			{
-				if ( userflags & CommandAccess || 
-					(CommandAccess==ADMIN_ADMIN && isadmin) ||
-					 CommandAccess==ADMIN_USER ||
-					 CommandAccess==ADMIN_ALL)
+				if ( userflags & command_access || 
+					(command_access==ADMIN_ADMIN && isadmin) ||
+					 command_access==ADMIN_USER ||
+					 command_access==ADMIN_ALL)
 				{
-					num_to_str(i,CidString,charsmax(CidString));
-					menu_additem(Menu,Command,CidString,0,EnabledCallback);
+					num_to_str(i,cid_string,charsmax(cid_string));
+					menu_additem(menu,command,cid_string,0,g_enabled_callback);
 				}
 				else
 				{
-					menu_additem(Menu,Command,"",0,DisabledCallback);
+					menu_additem(menu,command,"",0,g_disabled_callback);
 				}
 			}
 		}
 	}
-	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
-	menu_display(id,Menu,page);
+	menu_setprop(menu,MPROP_NUMBER_COLOR,"\y");
+	menu_display(id,menu,page);
 
 }
 /**
@@ -913,14 +911,14 @@ public CommandMenuCommand(id, level, cid)
 	if (plid==-1)
 	{
 		// We need to display a list of the plugins, instead of a specific plugin.
-		ExplicitPlugin[id]=-1;
+		g_explicit_plugin[id]=-1;
 		DisplayPluginMenuDefault(id);
 	}
 	else
 	{
-		ExplicitPlugin[id]=plid;
-		CurrentPlid[id]=plid;
-		CurrentPage[id]=0;
+		g_explicit_plugin[id]=plid;
+		g_current_player_id[id]=plid;
+		g_current_page[id]=0;
 		DisplayCmdMenu(id,plid,0);
 	}
 	return PLUGIN_HANDLED;

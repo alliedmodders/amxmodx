@@ -14,60 +14,73 @@
 #include <amxmodx>
 #include <amxmisc>
 
+#pragma semicolon 1
+
 #define X_POS         -1.0
 #define Y_POS         0.20
 #define HOLD_TIME     12.0
+#define MAX_MSG_LEN   384
+#define TASK_MSG      12345
 
-new Array:g_Values
-new Array:g_Messages
-new g_MessagesNum
-new g_Current
+enum _:MessageInfo
+{
+	Message[MAX_MSG_LEN],
+	R,
+	G,
+	B
+}
 
-new amx_freq_imessage;
+
+new Array:g_Messages;
+new g_MessagesNum;
+new g_Current;
+
+new g_amx_freq_imessage;
+new g_hostname;
 
 public plugin_init()
 {
-	g_Messages=ArrayCreate(384);
-	g_Values=ArrayCreate(3);
-	register_plugin("Info. Messages", AMXX_VERSION_STR, "AMXX Dev Team")
-	register_dictionary("imessage.txt")
-	register_dictionary("common.txt")
-	register_srvcmd("amx_imessage", "setMessage")
-	amx_freq_imessage=register_cvar("amx_freq_imessage", "10")
+	register_plugin("Info. Messages", AMXX_VERSION_STR, "AMXX Dev Team");
+	register_dictionary("imessage.txt");
+	register_dictionary("common.txt");
+	register_srvcmd("amx_imessage", "setMessage");
+
+	g_Messages = ArrayCreate(MessageInfo);
+	g_amx_freq_imessage = create_cvar("amx_freq_imessage", "10", _, "Frequency in seconds of colored messages", true, 0.0);
+	g_hostname
 	
-	new lastinfo[8]
-	get_localinfo("lastinfomsg", lastinfo, charsmax(lastinfo))
-	g_Current = str_to_num(lastinfo)
-	set_localinfo("lastinfomsg", "")
+	new lastinfo[8];
+	get_localinfo("lastinfomsg", lastinfo, charsmax(lastinfo));
+	g_Current = str_to_num(lastinfo);
+	set_localinfo("lastinfomsg", "");
 }
 
 public infoMessage()
 {
+	// If the last message is reached, go back to the first one
 	if (g_Current >= g_MessagesNum)
-		g_Current = 0
+	{
+		g_Current = 0;
+	}
 		
 	// No messages, just get out of here
-	if (g_MessagesNum==0)
+	if (g_MessagesNum == 0)
 	{
 		return;
 	}
 	
-	new values[3];
-	new Message[384];
+	static message[MessageInfo];
+	ArrayGetArray(g_Messages, g_Current, message);
 	
-	ArrayGetString(g_Messages, g_Current, Message, charsmax(Message));
-	ArrayGetArray(g_Values, g_Current, values);
-	
-	new hostname[64];
-	
+	new hostname[64];	
 	get_cvar_string("hostname", hostname, charsmax(hostname));
-	replace(Message, charsmax(Message), "%hostname%", hostname);
+	replace(message, charsmax(message), "%hostname%", hostname);
 	
 	set_hudmessage(values[0], values[1], values[2], X_POS, Y_POS, 0, 0.5, HOLD_TIME, 2.0, 2.0, -1);
 	
-	show_hudmessage(0, "%s", Message);
+	show_hudmessage(0, "%s", message);
 	
-	client_print(0, print_console, "%s", Message);
+	client_print(0, print_console, "%s", message);
 	++g_Current;
 	
 	new Float:freq_im = get_pcvar_float(amx_freq_imessage);

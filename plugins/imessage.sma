@@ -14,8 +14,8 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#define MAX_MSG_LEN   384
-#define TASK_MSG      12345
+const MAX_MSG_LEN = 384;
+const TASK_MSG    = 12345;
 
 enum _:MessageInfo
 {
@@ -52,7 +52,7 @@ public plugin_init()
 	bind_pcvar_float(create_cvar("amx_freq_imessage", "180", _, "Frequency in seconds of info messages", true, 0.0), g_amx_freq_imessage);
 	bind_pcvar_float(create_cvar("amx_imessage_x_pos", "-1.0", _, "X position for info messages", true, -1.0, true, 1.0), g_amx_imessage_x_pos);
 	bind_pcvar_float(create_cvar("amx_imessage_y_pos", "0.2", _, "Y position for info messages", true, -1.0, true, 1.0), g_amx_imessage_y_pos);
-	bind_pcvar_float(create_cvar("amx_imessage_holdtime", "12.0", _, "Hold time for info messages", true, -1.0, true, 1.0), g_amx_imessage_holdtime);
+	bind_pcvar_float(create_cvar("amx_imessage_holdtime", "12.0", _, "Hold time for info messages", true, 0.0), g_amx_imessage_holdtime);
 	bind_pcvar_string(get_cvar_pointer("hostname"), g_hostname, charsmax(g_hostname));
 	
 	new lastinfo[8];

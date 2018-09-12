@@ -60,7 +60,7 @@ public plugin_init()
 	register_concmd("amx_xvar_float",   "cmdXvar",      ADMIN_CVAR,                 "AMX_XVAR_SYNTAX",      .info_ml = true);
 	register_concmd("amx_xvar_int",     "cmdXvar",      ADMIN_CVAR,                 "AMX_XVAR_SYNTAX",      .info_ml = true);
 	register_concmd("amx_plugins",      "cmdPlugins",   ADMIN_ADMIN,                "AMX_PLUGINS_SYNTAX",   .info_ml = true);
-	register_concmd("amx_modules",      "cmdModules",   ADMIN_ADMIN,				"AMX_MODULES_SYNTAX",	.info_ml = true);
+	register_concmd("amx_modules",      "cmdModules",   ADMIN_ADMIN,                "AMX_MODULES_SYNTAX",   .info_ml = true);
 	register_concmd("amx_map",          "cmdMap",       ADMIN_MAP,                  "AMX_MAP_SYNTAX",       .info_ml = true);
 	register_concmd("amx_extendmap",    "cmdExtendMap", ADMIN_MAP,                  "AMX_EXTENDMAP_SYNTAX", .info_ml = true);
 	register_concmd("amx_cfg",          "cmdCfg",       ADMIN_CFG,                  "AMX_CFG_SYNTAX",       .info_ml = true);

@@ -25,7 +25,6 @@ enum _:MessageInfo
 	B
 }
 
-
 new Array:g_messages;
 new g_messagesNum;
 new g_hudObject;
@@ -42,17 +41,17 @@ public plugin_init()
 {
 	register_plugin("Info. Messages", AMXX_VERSION_STR, "AMXX Dev Team");
 	register_srvcmd("amx_imessage", "setMessage", _, "<message> [color in RRRGGGBBB format]");
-	
+
 	register_dictionary("imessage.txt");
 	register_dictionary("common.txt");
 
 	g_messages = ArrayCreate(MessageInfo);
 	g_hudObject = CreateHudSyncObj();
 
-	bind_pcvar_num(create_cvar("amx_imessage_only_dead", "0", _, "Set to 1 if to show info messages only to dead clients", true, 0.0, true, 1.0), g_amx_imessage_only_dead);
+	bind_pcvar_num(create_cvar("amx_imessage_only_dead", "0", _, "Set to 1 to show info messages only to dead clients", true, 0.0, true, 1.0), g_amx_imessage_only_dead);
 	bind_pcvar_float(create_cvar("amx_freq_imessage", "180", _, "Frequency in seconds of info messages", true, 0.0), g_amx_freq_imessage);
 	bind_pcvar_float(create_cvar("amx_imessage_x_pos", "-1.0", _, "X position for info messages", true, -1.0, true, 1.0), g_amx_imessage_x_pos);
-	bind_pcvar_float(create_cvar("amx_imessage_y_pos", "0.20", _, "Y position for info messages", true, -1.0, true, 1.0), g_amx_imessage_y_pos);
+	bind_pcvar_float(create_cvar("amx_imessage_y_pos", "0.2", _, "Y position for info messages", true, -1.0, true, 1.0), g_amx_imessage_y_pos);
 	bind_pcvar_float(create_cvar("amx_imessage_holdtime", "12.0", _, "Hold time for info messages", true, -1.0, true, 1.0), g_amx_imessage_holdtime);
 	bind_pcvar_string(get_cvar_pointer("hostname"), g_hostname, charsmax(g_hostname));
 	
@@ -64,16 +63,16 @@ public plugin_init()
 
 public infoMessage()
 {
+	// No messages, just get out of here
+	if (!g_messagesNum)
+	{
+		return;
+	}
+
 	// If the last message is reached, go back to the first one
 	if (g_current >= g_messagesNum)
 	{
 		g_current = 0;
-	}
-		
-	// No messages, just get out of here
-	if (g_messagesNum == 0)
-	{
-		return;
 	}
 	
 	static message[MessageInfo];
@@ -133,7 +132,9 @@ public setMessage()
 	ArrayPushArray(g_messages, message);
 	
 	if (g_amx_freq_imessage > 0.0)
+	{
 		set_task(g_amx_freq_imessage, "infoMessage", TASK_MSG);
+	}
 	
 	return PLUGIN_HANDLED;
 }

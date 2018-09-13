@@ -81,12 +81,12 @@ public infoMessage()
 	
 	set_hudmessage(message[R], message[G], message[B], g_amx_imessage_x_pos, g_amx_imessage_y_pos, 0, 0.5, g_amx_imessage_holdtime, 2.0, 2.0, -1);
 
-	if(g_amx_imessage_only_dead)
+	if (g_amx_imessage_only_dead)
 	{
 		new players[MAX_PLAYERS], pnum;
 		get_players_ex(players, pnum, GetPlayers_ExcludeAlive);
 
-		for(new player, i; i < pnum; i++)
+		for (new player, i; i < pnum; i++)
 		{
 			player = players[i];
 

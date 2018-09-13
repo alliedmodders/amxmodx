@@ -92,7 +92,7 @@ public showMsg()
 	if (g_amx_scrollmsg_only_dead)
 	{
 		new players[MAX_PLAYERS], pnum;
-		get_players_ex(players, pnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV|GetPlayers_ExcludeAlive);
+		get_players_ex(players, pnum, GetPlayers_ExcludeBots | GetPlayers_ExcludeHLTV | GetPlayers_ExcludeAlive);
 
 		for (new i; i < pnum; i++)
 		{

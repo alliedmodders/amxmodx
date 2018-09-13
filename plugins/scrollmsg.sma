@@ -89,12 +89,12 @@ public showMsg()
 
 	set_hudmessage(g_amx_scrollmsg_color_red, g_amx_scrollmsg_color_green, g_amx_scrollmsg_color_blue, g_x_pos, g_amx_scrollmsg_y_pos, 0, g_amx_scrollmsg_speed, g_amx_scrollmsg_speed, 0.05, 0.05, 2);
 
-	if(g_amx_scrollmsg_only_dead)
+	if (g_amx_scrollmsg_only_dead)
 	{
 		new players[MAX_PLAYERS], pnum;
 		get_players_ex(players, pnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV|GetPlayers_ExcludeAlive);
 
-		for(new i; i < pnum; i++)
+		for (new i; i < pnum; i++)
 		{
 			ShowSyncHudMsg(players[i], g_hud_object, g_display_msg);
 		}

@@ -95,11 +95,6 @@ public stock const Float:NULL_VECTOR[3];
 #define MAX_MENU_LENGTH 512
 
 /**
- * The maximum buffer size required to store a query.
- */
-#define MAX_QUERY_LENGTH 1472
-
-/**
  * π
  */
 #define M_PI 3.1415926535

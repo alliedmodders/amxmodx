@@ -38,15 +38,21 @@ public showMsg()
 	new a = g_startPos, i = 0
 
 	while (a < g_endPos)
+	{
 		g_displayMsg[i++] = g_scrollMsg[a++]
+	}
 
 	g_displayMsg[i] = 0
 
 	if (g_endPos < g_Length)
+	{
 		g_endPos++
+	}
 
 	if (g_xPos > 0.35)
+	{
 		g_xPos -= 0.0063
+	}
 	else
 	{
 		g_startPos++
@@ -101,7 +107,9 @@ public setMessage()
 		set_task(float(g_Frequency), "msgInit", 123, "", 0, "b")
 	}
 	else
+	{
 		server_print("%L", LANG_SERVER, "MSG_DISABLED")
+	}
 	
 	return PLUGIN_HANDLED
 }

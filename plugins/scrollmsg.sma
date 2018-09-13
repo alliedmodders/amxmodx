@@ -19,6 +19,7 @@
 new g_amx_scrollmsg_color_red;
 new g_amx_scrollmsg_color_green;
 new g_amx_scrollmsg_color_blue;
+new g_amx_scrollmsg_only_dead;
 new Float:g_amx_scrollmsg_speed;
 new Float:g_amx_scrollmsg_x_move_amount;
 new Float:g_amx_scrollmsg_x_start_pos;
@@ -44,6 +45,7 @@ public plugin_init()
 	bind_pcvar_num(create_cvar(   "amx_scrollmsg_color_red",       "200",      _, "Red color amount",                             true, 0.0, true, 255.0), g_amx_scrollmsg_color_red);
 	bind_pcvar_num(create_cvar(   "amx_scrollmsg_color_green",     "100",      _, "Green color amount",                           true, 0.0, true, 255.0), g_amx_scrollmsg_color_green);
 	bind_pcvar_num(create_cvar(   "amx_scrollmsg_color_blue",      "0",        _, "Blue color amount",                            true, 0.0, true, 255.0), g_amx_scrollmsg_color_blue);
+	bind_pcvar_num(create_cvar(   "amx_scrollmsg_only_dead",       "0",        _, "Display the message only to dead clients?",    true, 0.0, true, 1.0),   g_amx_scrollmsg_only_dead);
 	bind_pcvar_float(create_cvar( "amx_scrollmsg_speed",           "0.3",      _, "The rate at which the message will move",      true, 0.0),              g_amx_scrollmsg_speed);
 	bind_pcvar_float(create_cvar( "amx_scrollmsg_x_move_amount",   "0.0063",   _, "The amount of units to move on the X axis"),                            g_amx_scrollmsg_x_move_amount);
 	bind_pcvar_float(create_cvar( "amx_scrollmsg_x_start_pos",     "0.35",     _, "Starting position on the X axis",              true, -1.0, true, 1.0),  g_amx_scrollmsg_x_start_pos);
@@ -78,7 +80,21 @@ public showMsg()
 	}
 
 	set_hudmessage(g_amx_scrollmsg_color_red, g_amx_scrollmsg_color_green, g_amx_scrollmsg_color_blue, g_xPos, g_amx_scrollmsg_y_pos, 0, g_amx_scrollmsg_speed, g_amx_scrollmsg_speed, 0.05, 0.05, 2);
-	show_hudmessage(0, "%s", g_displayMsg);
+
+	if(g_amx_scrollmsg_only_dead)
+	{
+		new players[MAX_PLAYERS], pnum;
+		get_players_ex(players, pnum, GetPlayers_ExcludeBots|GetPlayers_ExcludeHLTV|GetPlayers_ExcludeAlive);
+
+		for(new i; i < pnum; i++)
+		{
+			show_hudmessage(players[i], g_displayMsg);
+		}
+	}
+	else
+	{
+		show_hudmessage(0, "%s", g_displayMsg);
+	}
 }
 
 public msgInit()

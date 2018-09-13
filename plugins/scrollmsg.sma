@@ -16,6 +16,7 @@
 
 #define SCROLLMSG_SIZE 512
 
+new g_hostname[64];
 new g_amx_scrollmsg_color_red;
 new g_amx_scrollmsg_color_green;
 new g_amx_scrollmsg_color_blue;
@@ -40,7 +41,9 @@ public plugin_init()
 
 	register_dictionary("scrollmsg.txt");
 	register_dictionary("common.txt");
+
 	register_srvcmd("amx_scrollmsg", "setMessage");
+	bind_pcvar_string(get_cvar_pointer("hostname"), g_hostname, charsmax(g_hostname));
 
 	bind_pcvar_num(create_cvar(   "amx_scrollmsg_color_red",       "200",      _, "Red color amount",                             true, 0.0, true, 255.0), g_amx_scrollmsg_color_red);
 	bind_pcvar_num(create_cvar(   "amx_scrollmsg_color_green",     "100",      _, "Green color amount",                           true, 0.0, true, 255.0), g_amx_scrollmsg_color_green);
@@ -103,10 +106,7 @@ public msgInit()
 	g_startPos = 0;
 	g_xPos = g_amx_scrollmsg_x_end_pos;
 	
-	new hostname[64];
-	
-	get_cvar_string("hostname", hostname, charsmax(hostname));
-	replace(g_scrollMsg, charsmax(g_scrollMsg), "%hostname%", hostname);
+	replace(g_scrollMsg, charsmax(g_scrollMsg), "%hostname%", g_hostname);
 	
 	g_Length = strlen(g_scrollMsg);
 	

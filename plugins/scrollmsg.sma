@@ -110,12 +110,12 @@ public msgInit()
 	g_start_pos = 0;
 	g_x_pos = g_amx_scrollmsg_x_end_pos;
 	
-	replace(g_scroll_msg, charsmax(g_scroll_msg), "%hostname%", g_hostname);
+	replace_stringex(g_scroll_msg, charsmax(g_scroll_msg), "%hostname%", g_hostname);
 	
 	g_length = strlen(g_scroll_msg);
 	
-	set_task(g_amx_scrollmsg_speed, "showMsg", SCROLLMSG_TASK, "", 0, "a", g_length + 48);
-	client_print(0, print_console, "%s", g_scroll_msg);
+	set_task_ex(g_amx_scrollmsg_speed, "showMsg", SCROLLMSG_TASK, "", 0, SetTask_RepeatTimes, g_length + 48);
+	console_print(0, g_scroll_msg);
 }
 
 public setMessage()
@@ -124,12 +124,7 @@ public setMessage()
 	read_argv(1, g_scroll_msg, charsmax(g_scroll_msg));
 	
 	g_length = strlen(g_scroll_msg);
-	
-	new mytime[32];
-	
-	read_argv(2, mytime, charsmax(mytime));
-	
-	g_frequency = str_to_num(mytime);
+	g_frequency = read_argv_int(2);
 	
 	if (g_frequency > 0)
 	{
@@ -142,7 +137,7 @@ public setMessage()
 		}
 
 		server_print("%L", LANG_SERVER, "MSG_FREQ", g_frequency / 60, g_frequency % 60);
-		set_task(float(g_frequency), "msgInit", SCROLLMSG_TASK, "", 0, "b");
+		set_task_ex(float(g_frequency), "msgInit", SCROLLMSG_TASK, "", 0, SetTask_Repeat);
 	}
 	else
 	{

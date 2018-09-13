@@ -32,9 +32,10 @@ new g_start_pos;
 new g_end_pos;
 new g_scroll_msg[SCROLLMSG_SIZE];
 new g_display_msg[SCROLLMSG_SIZE];
-new Float:g_x_pos;
 new g_length;
 new g_frequency;
+new g_hud_object;
+new Float:g_x_pos;
 
 public plugin_init()
 {
@@ -55,6 +56,8 @@ public plugin_init()
 	bind_pcvar_float(create_cvar( "amx_scrollmsg_x_start_pos",     "0.35",     _, "Starting position on the X axis",              true, -1.0, true, 1.0),  g_amx_scrollmsg_x_start_pos);
 	bind_pcvar_float(create_cvar( "amx_scrollmsg_x_end_pos",       "0.65",     _, "Ending position on the X axis",                true, -1.0, true, 1.0),  g_amx_scrollmsg_x_end_pos);
 	bind_pcvar_float(create_cvar( "amx_scrollmsg_y_pos",           "0.9",      _, "The Y position of the message",                true, -1.0, true, 1.0),  g_amx_scrollmsg_y_pos);
+
+	g_hud_object = CreateHudSyncObj();
 }
 
 public showMsg()
@@ -92,12 +95,12 @@ public showMsg()
 
 		for(new i; i < pnum; i++)
 		{
-			show_hudmessage(players[i], g_display_msg);
+			ShowSyncHudMsg(players[i], g_hud_object, g_display_msg);
 		}
 	}
 	else
 	{
-		show_hudmessage(0, "%s", g_display_msg);
+		ShowSyncHudMsg(0, g_hud_object, g_display_msg);
 	}
 }
 

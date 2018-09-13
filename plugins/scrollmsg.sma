@@ -43,7 +43,7 @@ public plugin_init()
 	register_dictionary("scrollmsg.txt");
 	register_dictionary("common.txt");
 
-	register_srvcmd("amx_scrollmsg", "setMessage");
+	register_srvcmd("amx_scrollmsg", "setMessage", _, "<message>");
 	bind_pcvar_string(get_cvar_pointer("hostname"), g_hostname, charsmax(g_hostname));
 
 	bind_pcvar_num(create_cvar(   "amx_scrollmsg_color_red",       "200",      _, "Red color amount",                             true, 0.0, true, 255.0), g_amx_scrollmsg_color_red);

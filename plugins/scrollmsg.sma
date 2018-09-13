@@ -14,7 +14,8 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#define SCROLLMSG_SIZE 512
+const SCROLLMSG_SIZE = 512;
+const SCROLLMSG_TASK = 123;
 
 new g_hostname[64];
 new g_amx_scrollmsg_color_red;
@@ -110,13 +111,13 @@ public msgInit()
 	
 	g_Length = strlen(g_scrollMsg);
 	
-	set_task(g_amx_scrollmsg_speed, "showMsg", 123, "", 0, "a", g_Length + 48);
+	set_task(g_amx_scrollmsg_speed, "showMsg", SCROLLMSG_TASK, "", 0, "a", g_Length + 48);
 	client_print(0, print_console, "%s", g_scrollMsg);
 }
 
 public setMessage()
 {
-	remove_task(123);		/* remove current messaging */
+	remove_task(SCROLLMSG_TASK);		/* remove current messaging */
 	read_argv(1, g_scrollMsg, charsmax(g_scrollMsg));
 	
 	g_Length = strlen(g_scrollMsg);
@@ -138,7 +139,7 @@ public setMessage()
 		}
 
 		server_print("%L", LANG_SERVER, "MSG_FREQ", g_Frequency / 60, g_Frequency % 60);
-		set_task(float(g_Frequency), "msgInit", 123, "", 0, "b");
+		set_task(float(g_Frequency), "msgInit", SCROLLMSG_TASK, "", 0, "b");
 	}
 	else
 	{

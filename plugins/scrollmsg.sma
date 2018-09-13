@@ -58,6 +58,7 @@ public plugin_init()
 	bind_pcvar_float(create_cvar( "amx_scrollmsg_y_pos",           "0.9",      _, "The Y position of the message",                true, -1.0, true, 1.0),  g_amx_scrollmsg_y_pos);
 
 	g_hud_object = CreateHudSyncObj();
+	AutoExecConfig();
 }
 
 public showMsg()

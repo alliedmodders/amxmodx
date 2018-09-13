@@ -40,7 +40,7 @@ new g_amx_imessage_only_dead;
 public plugin_init()
 {
 	register_plugin("Info. Messages", AMXX_VERSION_STR, "AMXX Dev Team");
-	register_srvcmd("amx_imessage", "setMessage", _, "<message> [color in RRRGGGBBB format]");
+	register_srvcmd("amx_imessage", "setMessage", _, "<message> <color in RRRGGGBBB format>");
 
 	register_dictionary("imessage.txt");
 	register_dictionary("common.txt");

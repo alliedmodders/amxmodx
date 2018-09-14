@@ -5,6 +5,7 @@ use strict;
 use Cwd;
 use File::Basename;
 use File::stat;
+use File::Temp qw/ tempfile :seekable/;
 use Net::FTP;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Time::localtime;
@@ -126,17 +127,30 @@ if ($ftp_path ne '')
 $ftp->binary();
 for ($i = 0; $i <= $#packages; $i++) {
 	my ($filename);
+	my ($latest);
 	if ($^O eq "linux") {
 		$filename = "amxmodx-$version-" . $packages[$i] . "-linux.tar.gz";
+		$latest = "amxmodx-latest-" . $packages[$i] . "-linux";
 	} elsif ($^O eq "darwin") {
 		next if ($packages[$i] ~~ @mac_exclude);
 		$filename = "amxmodx-$version-" . $packages[$i] . "-mac.zip";
+		$latest = "amxmodx-latest-" . $packages[$i] . "-mac";
 	} else {
 		$filename = "amxmodx-$version-" . $packages[$i] . "-windows.zip";
+		$latest = "amxmodx-latest-" . $packages[$i] . "-windows";
 	}
+
+	my ($tmpfh, $tmpfile) = tempfile();
+	print $tmpfh $filename;
+	$tmpfh->seek( 0, SEEK_END );
+
 	print "Uploading $filename...\n";
 	$ftp->put($filename)
 		or die "Cannot drop file $filename ($ftp_path): " . $ftp->message . "\n";
+
+	print "Uploading $latest...\n";
+	$ftp->put($tmpfile, $latest)
+		or die "Cannot drop file $latest ($ftp_path): " . $ftp->message . "\n";
 }
 
 $ftp->close();

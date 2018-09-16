@@ -156,12 +156,28 @@ void OnGeoipCommand()
 
 		MMDB_free_entry_data_list(entry_data_list);
 	}
+	else if (!strcmp(cmd, "reload"))
+	{
+		bool loaded = false;
+		
+		if (HandleDB.filename)
+		{
+			MMDB_close(&HandleDB);
+			loaded = true;
+		}
+
+		if (loadDatabase() && !loaded)
+		{
+			MF_AddNatives(GeoipNatives);
+		}
+	}
 	else
 	{
 		MF_PrintSrvConsole("\n");
 		MF_PrintSrvConsole("  Usage: geoip <command> [argument]\n");
 		MF_PrintSrvConsole("  Commands:\n");
 		MF_PrintSrvConsole("     version                 - display geoip database metadata\n");
+		MF_PrintSrvConsole("     reload                  - reload geoip database\n");
 		MF_PrintSrvConsole("     dump <ip> [output file] - dump all data from an IP address formatted in a JSON-ish fashion.\n");
 		MF_PrintSrvConsole("                               An output file is mod-based and if not provided, it will print in the console.\n");
 		MF_PrintSrvConsole("\n");

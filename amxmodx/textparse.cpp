@@ -44,7 +44,12 @@ cell destroyParser(cell *handle)
 // native SMCParser:SMC_CreateParser();
 static cell AMX_NATIVE_CALL SMC_CreateParser(AMX *amx, cell *params)
 {
-	return createParser();
+	const auto handle = createParser();
+	const auto parseInfo = TextParsersHandles.lookup(handle);
+
+	parseInfo->handle = handle;
+
+	return handle;
 }
 
 // native SMC_SetParseStart(SMCParser:handle, const func[]);
@@ -224,7 +229,12 @@ static cell AMX_NATIVE_CALL SMC_DestroyParser(AMX *amx, cell *params)
 // native INIParser:INI_CreateParser();
 static cell AMX_NATIVE_CALL INI_CreateParser(AMX *amx, cell *params)
 {
-	return createParser();
+	const auto handle = createParser();
+	const auto parseInfo = TextParsersHandles.lookup(handle);
+
+	parseInfo->handle = handle;
+
+	return handle;
 }
 
 // native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0, any:data = 0);

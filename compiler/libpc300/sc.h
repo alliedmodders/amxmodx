@@ -726,8 +726,6 @@ int mfputs(MEMFILE *mf,char *string);
 SC_FUNC int cp_path(const char *root,const char *directory);
 SC_FUNC int cp_set(const char *name);
 SC_FUNC cell cp_translate(const unsigned char *string,const unsigned char **endptr);
-SC_FUNC cell get_utf8_char(const unsigned char *string,const unsigned char **endptr);
-SC_FUNC int scan_utf8(FILE *fp,const char *filename);
 
 /* function prototypes in SCSTATE.C */
 SC_FUNC constvalue *automaton_add(const char *name);
@@ -803,7 +801,6 @@ SC_VDECL int sc_status;       /* read/write status */
 SC_VDECL int sc_rationaltag;  /* tag for rational numbers */
 SC_VDECL int rational_digits; /* number of fractional digits */
 SC_VDECL int sc_allowproccall;/* allow/detect tagnames in lex() */
-SC_VDECL short sc_is_utf8;    /* is this source file in UTF-8 encoding */
 SC_VDECL char *pc_deprecate;  /* if non-NULL, mark next declaration as deprecated */
 SC_VDECL int sc_warnings_are_errors;
 

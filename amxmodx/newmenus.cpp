@@ -10,6 +10,7 @@
 #include "amxmodx.h"
 #include "CMenu.h"
 #include "newmenus.h"
+#include "format.h"
 
 ke::Vector<Menu *> g_NewMenus;
 CStack<int> g_MenuFreeStack;
@@ -90,9 +91,9 @@ bool CloseNewMenus(CPlayer *pPlayer)
 	return true;
 }
 
-Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
+Menu::Menu(const char *title, AMX *amx, int fid, bool use_ml) : m_Title(title), m_ItemColor("\\r"), 
 m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
-isDestroying(false), pageCallback(-1), showPageNumber(true), items_per_page(7)
+isDestroying(false), pageCallback(-1), showPageNumber(true), useMultilingual(use_ml), amx(amx), items_per_page(7)
 {
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
 	menuId = g_menucmds.registerMenuId(title, amx);
@@ -356,18 +357,32 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 
 	m_Text = nullptr;
 
+
+	auto title = m_Title.chars();
+
+	if (this->useMultilingual)
+	{
+		const auto language = playerlang(player);
+		const auto definition = translate(this->amx, language, title);
+
+		if (definition)
+		{
+			title = definition;
+		}
+	}
+
 	char buffer[255];
 	if (showPageNumber && items_per_page && (pages != 1))
 	{
 		if (m_AutoColors)
-			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s %d/%d\n\\w\n", m_Title.chars(), page + 1, pages);
+			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s %d/%d\n\\w\n", title, page + 1, pages);
 		else
-			ke::SafeSprintf(buffer, sizeof(buffer), "%s %d/%d\n\n", m_Title.chars(), page + 1, pages);
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s %d/%d\n\n", title, page + 1, pages);
 	} else {
 		if (m_AutoColors)
-			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s\n\\w\n", m_Title.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s\n\\w\n", title);
 		else
-			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n\n", m_Title.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n\n", title);
 	}
 	
 	m_Text = m_Text + buffer;
@@ -462,24 +477,37 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			option_display = 0;
 		}
 
+		auto itemName = pItem->name.chars();
+
+		if (this->useMultilingual)
+		{
+			const auto language = playerlang(player);
+			const auto definition = translate(this->amx, language, itemName);
+
+			if (definition)
+			{
+				itemName = definition;
+			}
+		}
+
 		if (pItem->isBlank)
 		{
-			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n", pItem->name.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n", itemName);
 		}
 		else if (enabled)
 		{
-			if (m_AutoColors) 
+			if (m_AutoColors)
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.\\w %s\n", m_ItemColor.chars(),option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.\\w %s\n", m_ItemColor.chars(),option_display, itemName);
 			} else {
-				ke::SafeSprintf(buffer, sizeof(buffer), "%d. %s\n", option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "%d. %s\n", option_display, itemName);
 			}
 		} else {
 			if (m_AutoColors)
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer), "\\d%d. %s\n\\w", option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "\\d%d. %s\n\\w", option_display, itemName);
 			} else {
-				ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", itemName);
 			}
 		}
 		slots++;
@@ -638,7 +666,7 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 
 	validate_menu_text(title);
 
-	auto pMenu = new Menu(title, amx, callback);
+	auto pMenu = new Menu(title, amx, callback, params[arg_ml] != 0);
 
 	if (g_MenuFreeStack.empty())
 	{

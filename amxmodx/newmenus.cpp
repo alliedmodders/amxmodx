@@ -620,38 +620,45 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d(%d)", p, g_NewMenus.length()); \
 	return 0; }
 
-//Makes a new menu handle (-1 for failure)
-//native csdm_makemenu(title[]);
+// native menu_create(const title[], const handler[], bool:ml = false);
 static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 {
-	int len;
-	char *title = get_amxstring(amx, params[1], 0, len);
-	validate_menu_text(title);
-	char *handler = get_amxstring(amx, params[2], 1, len);
+	enum args { arg_count, arg_title, arg_handler, arg_ml };
 
-	int func = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-	
-	if (func == -1)
+	int length;
+	const auto title    = get_amxstring(amx, params[arg_title], 0, length);
+	const auto handler  = get_amxstring(amx, params[arg_handler], 1, length);
+	const auto callback = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+
+	if (callback == -1)
 	{
-		LogError(amx, AMX_ERR_NOTFOUND, "Invalid function \"%s\"", handler);
+		LogError(amx, AMX_ERR_NOTFOUND, R"(Invalid function %s)", handler);
 		return 0;
 	}
 
-	Menu *pMenu = new Menu(title, amx, func);
+	validate_menu_text(title);
+
+	auto pMenu = new Menu(title, amx, callback);
 
 	if (g_MenuFreeStack.empty())
 	{
 		g_NewMenus.append(pMenu);
-		pMenu->thisId = (int)g_NewMenus.length() - 1;
-	} else {
-		int pos = g_MenuFreeStack.front();
+
+		pMenu->thisId = static_cast<int>(g_NewMenus.length()) - 1;
+	}
+	else
+	{
+		const auto position = g_MenuFreeStack.front();
+
 		g_MenuFreeStack.pop();
-		g_NewMenus[pos] = pMenu;
-		pMenu->thisId = pos;
+		g_NewMenus[position] = pMenu;
+
+		pMenu->thisId = position;
 	}
 
 	return pMenu->thisId;
 }
+
 static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
 {
 	GETMENU(params[1]);

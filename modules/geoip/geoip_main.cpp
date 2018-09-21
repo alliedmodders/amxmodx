@@ -18,12 +18,15 @@
 
 MMDB_s HandleDB;
 ke::Vector<ke::AString> LangList;
+bool NativesRegistered;
 
 void OnAmxxAttach()
 {
 	if (loadDatabase())
 	{
 		MF_AddNatives(GeoipNatives);
+
+		NativesRegistered = true;
 	}
 
 	REG_SVR_COMMAND("geoip", OnGeoipCommand);
@@ -158,17 +161,18 @@ void OnGeoipCommand()
 	}
 	else if (!strcmp(cmd, "reload"))
 	{
-		bool loaded = false;
-		
-		if (HandleDB.filename)
+		const auto isDatabaseLoaded = HandleDB.filename != nullptr;
+
+		if (isDatabaseLoaded)
 		{
 			MMDB_close(&HandleDB);
-			loaded = true;
 		}
 
-		if (loadDatabase() && !loaded)
+		if (loadDatabase() && !NativesRegistered)
 		{
 			MF_AddNatives(GeoipNatives);
+
+			NativesRegistered = true;
 		}
 	}
 	else

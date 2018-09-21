@@ -14,7 +14,7 @@
 #include "geoip_main.h"
 #include "geoip_natives.h"
 #include "geoip_util.h"
-#include <time.h>
+#include <ctime>
 
 MMDB_s HandleDB;
 ke::Vector<ke::AString> LangList;
@@ -41,7 +41,7 @@ void OnAmxxDetach()
 
 void OnGeoipCommand()
 {
-	const char *cmd = CMD_ARGV(1);
+	const auto cmd = CMD_ARGV(1);
 
 	if (!strcmp(cmd, "version"))
 	{
@@ -51,7 +51,7 @@ void OnGeoipCommand()
 			return;
 		}
 
-		const char *meta_dump = "\n"
+		const auto meta_dump = "\n"
 			"  Database metadata\n"
 			"    Node count:    %i\n"
 			"    Record size:   %i bits\n"
@@ -62,7 +62,7 @@ void OnGeoipCommand()
 			"    Languages:     ";
 
 		char date[40];
-		strftime(date, sizeof(date), "%Y-%m-%d %H:%M:%S UTC", gmtime((const time_t *)&HandleDB.metadata.build_epoch));
+		strftime(date, sizeof date, "%Y-%m-%d %H:%M:%S UTC", gmtime(reinterpret_cast<const time_t *>(&HandleDB.metadata.build_epoch)));
 
 		fprintf(stdout, meta_dump,
 				HandleDB.metadata.node_count,
@@ -103,7 +103,7 @@ void OnGeoipCommand()
 			return;
 		}
 
-		int num_args = CMD_ARGC();
+		const auto num_args = CMD_ARGC();
 
 		if (num_args < 3)
 		{
@@ -111,12 +111,12 @@ void OnGeoipCommand()
 			return;
 		}
 
-		char *ip = stripPort((char *)CMD_ARGV(2));
+		const auto ip = stripPort(const_cast<char *>(CMD_ARGV(2)));
 
-		int gai_error = 0;
-		int mmdb_error = 0;
+		auto gai_error = 0;
+		auto mmdb_error = 0;
 
-		MMDB_lookup_result_s result = MMDB_lookup_string(&HandleDB, ip, &gai_error, &mmdb_error);
+		auto result = MMDB_lookup_string(&HandleDB, ip, &gai_error, &mmdb_error);
 
 		if (gai_error != 0 || mmdb_error != MMDB_SUCCESS || !result.found_entry)
 		{
@@ -124,17 +124,17 @@ void OnGeoipCommand()
 			return;
 		}
 
-		MMDB_entry_data_list_s *entry_data_list = NULL;
-		int status = -1;
+		MMDB_entry_data_list_s *entry_data_list = nullptr;
+		int status;
 
-		if ((status = MMDB_get_entry_data_list(&result.entry, &entry_data_list)) != MMDB_SUCCESS || entry_data_list == NULL)
+		if ((status = MMDB_get_entry_data_list(&result.entry, &entry_data_list)) != MMDB_SUCCESS || entry_data_list == nullptr)
 		{
 			MF_PrintSrvConsole("\n  Could not retrieve data list - %s.\n\n", MMDB_strerror(status));
 			return;
 		}
 
-		const char *file = NULL;
-		FILE *fp = NULL;
+		const char *file = nullptr;
+		FILE *fp = nullptr;
 
 		if (num_args > 3)
 		{
@@ -144,7 +144,7 @@ void OnGeoipCommand()
 
 		if (!fp)
 		{
-			file = NULL;
+			file = nullptr;
 			fp = stdout;
 		}
 
@@ -190,7 +190,9 @@ void OnGeoipCommand()
 
 bool loadDatabase()
 {
-	if (HandleDB.filename) // Already loaded.
+	const auto isDatabaseLoaded = HandleDB.filename != nullptr;
+
+	if (isDatabaseLoaded)
 	{
 		return true;
 	}
@@ -201,18 +203,18 @@ bool loadDatabase()
 		"Country" // Is the default shipped database with AMXX.
 	};
 
-	const char *modName = MF_GetModname();
-	const char *dataDir = MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data");
+	const auto modName = MF_GetModname();
+	const auto dataDir = MF_GetLocalInfo("amxx_datadir", "addons/amxmodx/data");
 
-	char file[255];
-	int status = -1;
+	char file[260];
+	auto status = -1;
 
-	for (size_t i = 0; i < ARRAYSIZE(databases); ++i)
+	for (auto& database : databases)
 	{
 		// MF_BuildPathname not used because backslash
 		// makes CreateFileMapping failing under windows.
 
-		ke::SafeSprintf(file, sizeof(file), "%s/%s/GeoLite2-%s.mmdb", modName, dataDir, databases[i]);
+		ke::SafeSprintf(file, sizeof file, "%s/%s/GeoLite2-%s.mmdb", modName, dataDir, database);
 
 		status = MMDB_open(file, MMDB_MODE_MMAP, &HandleDB);
 
@@ -220,7 +222,8 @@ bool loadDatabase()
 		{
 			break;
 		}
-		else if (status != MMDB_FILE_OPEN_ERROR)
+
+		if (status != MMDB_FILE_OPEN_ERROR)
 		{
 			MF_Log("Could not open %s - %s", file, MMDB_strerror(status));
 

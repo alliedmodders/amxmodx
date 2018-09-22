@@ -488,3 +488,68 @@ enum CsAmmoCostType
 	CS_AMMO_9MM_PRICE      = 20,
 	CS_AMMO_BUCKSHOT_PRICE = 65
 };
+
+/**
+ * Weapon maximum backpack ammo.
+ */
+enum
+{
+	CS_AK47_MAX_BPAMMO      = 90,
+	CS_AWP_MAX_BPAMMO           = 30,
+	CS_DEAGLE_MAX_BPAMMO        = 35,
+	CS_G3SG1_MAX_BPAMMO         = 90,
+	CS_SG550_MAX_BPAMMO         = 90,
+	CS_GLOCK18_MAX_BPAMMO       = 120,
+	CS_M249_MAX_BPAMMO          = 200,
+	CS_M3_MAX_BPAMMO            = 32,
+	CS_M4A1_MAX_BPAMMO          = 90,
+	CS_AUG_MAX_BPAMMO           = 90,
+	CS_MP5NAVY_MAX_BPAMMO       = 120,
+	CS_P228_MAX_BPAMMO          = 52,
+	CS_P90_MAX_BPAMMO           = 100,
+	CS_UMP45_MAX_BPAMMO         = 100,
+	CS_MAC10_MAX_BPAMMO         = 100,
+	CS_SCOUT_MAX_BPAMMO         = 90,
+	CS_SG552_MAX_BPAMMO         = 90,
+	CS_TMP_MAX_BPAMMO           = 120,
+	CS_USP_MAX_BPAMMO           = 100,
+	CS_ELITE_MAX_BPAMMO         = 120,
+	CS_FIVESEVEN_MAX_BPAMMO     = 100,
+	CS_XM1014_MAX_BPAMMO        = 32,
+	CS_GALIL_MAX_BPAMMO         = 90,
+	CS_FAMAS_MAX_BPAMMO         = 90,
+	CS_FLASHBANG_MAX_BPAMMO     = 2,
+	CS_HEGRENADE_MAX_BPAMMO     = 1,
+	CS_SMOKEGRENADE_MAX_BPAMMO  = 1
+};
+
+/**
+ * Weapon maximum clip ammo.
+ */
+enum
+{
+	CS_AK47_MAX_CLIPAMMO      = 30,
+	CS_AWP_MAX_CLIPAMMO           = 10,
+	CS_DEAGLE_MAX_CLIPAMMO        = 7,
+	CS_G3SG1_MAX_CLIPAMMO         = 20,
+	CS_SG550_MAX_CLIPAMMO         = 30,
+	CS_GLOCK18_MAX_CLIPAMMO       = 20,
+	CS_M249_MAX_CLIPAMMO          = 100,
+	CS_M3_MAX_CLIPAMMO            = 8,
+	CS_M4A1_MAX_CLIPAMMO          = 30,
+	CS_AUG_MAX_CLIPAMMO           = 30,
+	CS_MP5NAVY_MAX_CLIPAMMO       = 30,
+	CS_P228_MAX_CLIPAMMO          = 13,
+	CS_P90_MAX_CLIPAMMO           = 50,
+	CS_UMP45_MAX_CLIPAMMO         = 25,
+	CS_MAC10_MAX_CLIPAMMO         = 30,
+	CS_SCOUT_MAX_CLIPAMMO         = 10,
+	CS_SG552_MAX_CLIPAMMO         = 30,
+	CS_TMP_MAX_CLIPAMMO           = 30,
+	CS_USP_MAX_CLIPAMMO           = 12,
+	CS_ELITE_MAX_CLIPAMMO         = 30,
+	CS_FIVESEVEN_MAX_CLIPAMMO     = 20,
+	CS_XM1014_MAX_CLIPAMMO        = 7,
+	CS_GALIL_MAX_CLIPAMMO         = 35,
+	CS_FAMAS_MAX_CLIPAMMO         = 25
+};

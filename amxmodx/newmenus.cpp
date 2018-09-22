@@ -660,7 +660,7 @@ static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 
 	if (callback == -1)
 	{
-		LogError(amx, AMX_ERR_NOTFOUND, R"(Invalid function %s)", handler);
+		LogError(amx, AMX_ERR_NOTFOUND, R"(Invalid function "%s")", handler);
 		return 0;
 	}
 

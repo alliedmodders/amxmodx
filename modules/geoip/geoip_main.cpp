@@ -14,7 +14,7 @@
 #include "geoip_main.h"
 #include "geoip_natives.h"
 #include "geoip_util.h"
-#include <ctime>
+#include <time.h>
 
 MMDB_s HandleDB;
 ke::Vector<ke::AString> LangList;

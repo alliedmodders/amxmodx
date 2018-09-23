@@ -558,7 +558,7 @@ enum
 	HAM_OK = 0,
 	
 	HAM_INVALID_FUNC,			// The function is not valid
-	HAM_FUNC_NOT_CONFIGURED,	// This function is not configured in hamdata.ini
+	HAM_FUNC_NOT_CONFIGURED,	// This function is not configured in gamedata
 	HAM_FUNC_NOT_AVAILABLE,		// This function is not more available in the mod
 
 	HAM_ERR_END

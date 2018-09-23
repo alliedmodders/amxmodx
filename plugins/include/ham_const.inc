@@ -40,7 +40,7 @@
  *       This is the entity from which the function is being executed on.
  * @note All functions and forwards (eg: {Register,Execute}Ham[B]) require
  *       the mod to have the pev and base keys in addition to the function
- *       keys for the corresponding mod/operating system in hamdata.ini
+ *       keys for the corresponding mod/operating system in gamedata
  * @note Some functions that return booleans may need to be logically ANDed
  *       to get the desired results because the mod will return the full integer
  *       value. E.g.: (ExecuteHam(Ham_TS_IsObjective, this) & 0x0000FFFF) != 0
@@ -4328,7 +4328,7 @@ enum HamError
 	HAM_OK = 0,
 
 	HAM_INVALID_FUNC,			// The function is not valid
-	HAM_FUNC_NOT_CONFIGURED,	// This function is not configured in hamdata.ini
+	HAM_FUNC_NOT_CONFIGURED,	// This function is not configured in gamedata
 	HAM_FUNC_NOT_AVAILABLE,		// This function is not more available in the mod
 
 	HAM_ERR_END

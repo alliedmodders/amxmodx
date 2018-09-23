@@ -166,7 +166,6 @@ configs = [
   'core.ini',
   'custommenuitems.cfg',
   'cvars.ini',
-  'hamdata.ini',
   'maps.ini',
   'miscstats.ini',
   'modules.ini',

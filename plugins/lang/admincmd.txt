@@ -1575,7 +1575,7 @@ MAP_EXTENDED = Karta "%s" je dugotrajan za %d minuta igre
 [ru]
 ADMIN_KICK_1 = АДМИНИСТРАТОР: кикнул %s
 ADMIN_KICK_2 = АДМИНИСТРАТОР %s: кикнул %s
-IP_REMOVED = Ip адрес "%s" удален из бан-листа
+IP_REMOVED = IP адрес "%s" удален из бан-листа
 AUTHID_REMOVED = Authid "%s" удален из бан-листа
 ADMIN_UNBAN_1 = АДМИНИСТРАТОР: снял бан с %s
 ADMIN_UNBAN_2 = АДМИНИСТРАТОР %s: снял бан с %s

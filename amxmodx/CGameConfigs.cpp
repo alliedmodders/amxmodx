@@ -325,16 +325,16 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 			}
 			else if (!strcmp(key, "size"))
 			{
-				TempType.fieldSize = ke::Max<int>(0, atoi(value));
+				TempType.fieldSize = ke::Max<int>(0, strtol(value, nullptr, 0));
 			}
 			else if (!strcmp(key, "unsigned"))
 			{
-				TempType.fieldUnsigned = !!atoi(value);
+				TempType.fieldUnsigned = !!strtol(value, nullptr, 0);
 			}
 			else if (g_LibSys.IsPlatformCompatible(key, &m_MatchedPlatform))
 			{
 				m_FoundOffset = true;
-				TempType.fieldOffset = atoi(value);
+				TempType.fieldOffset = strtol(value, nullptr, 0);
 			}
 			break;
 		}
@@ -397,7 +397,7 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 
 				if (m_AddressReadCount < limit)
 				{
-					m_AddressRead[m_AddressReadCount] = atoi(value);
+					m_AddressRead[m_AddressReadCount] = strtol(value, nullptr, 0);
 					m_AddressReadCount++;
 				}
 				else

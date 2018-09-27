@@ -32,6 +32,7 @@
 #include "CDataPack.h"
 #include "CGameConfigs.h"
 #include <amtl/os/am-path.h>
+#include "logger.h"
 
 ke::InlineList<CModule> g_modules;
 ke::InlineList<CScript> g_loadedscripts;
@@ -532,6 +533,7 @@ int set_amxnatives(AMX* amx, char error[128])
 	amx_Register(amx, g_TextParserNatives, -1);
 	amx_Register(amx, g_CvarNatives, -1);
 	amx_Register(amx, g_GameConfigNatives, -1);
+	amx_Register(amx, logger_Natives, -1);
 
 	//we're not actually gonna check these here anymore
 	amx->flags |= AMX_FLAG_PRENIT;

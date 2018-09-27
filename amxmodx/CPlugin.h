@@ -13,6 +13,7 @@
 #include "sh_list.h"
 #include "amx.h"
 #include "amxxfile.h"
+#include "logger.h"
 #include <amtl/am-string.h>
 #include <amtl/am-vector.h>
 #include <amtl/am-autoptr.h>
@@ -73,6 +74,8 @@ public:
 		cell* m_pNullStringOfs;
 		cell* m_pNullVectorOfs;
 		ke::Vector<ke::AutoPtr<AutoConfig>> m_configs;
+
+		cell m_Logger;
 	public:
 		inline const char* getName() { return name.chars();}
 		inline const char* getVersion() { return version.chars();}
@@ -81,12 +84,14 @@ public:
 		inline const char* getError() { return errorMsg.chars();}
 		inline int getStatusCode() { return status; }
 		inline int getId() const { return id; }
+		inline cell getLogger() { return m_Logger; }
 		inline AMX* getAMX() { return &amx; }
 		inline const AMX* getAMX() const { return &amx; }
 		inline void setTitle(const char* n) { title = n; }
 		inline void setAuthor(const char* n) { author =n; }
 		inline void setVersion(const char* n) { version = n; }
 		inline void setError(const char* n) { errorMsg = n; }
+		inline void setLogger(cell logger) { m_Logger = logger; }
 		inline bool isValid() const { return (status >= ps_paused); }
 		inline bool isPaused() const { return ((status == ps_paused) || (status == ps_stopped)); }
 		inline bool isStopped() const { return (status == ps_stopped); }

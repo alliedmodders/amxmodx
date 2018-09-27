@@ -306,6 +306,9 @@
     <ClCompile Include="..\CoreConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\public\resdk\mod_rehlds_api.cpp">
       <Filter>ReSDK</Filter>
     </ClCompile>
@@ -584,6 +587,9 @@
     <ClInclude Include="..\CFrameAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\version.rc">
@@ -691,6 +697,15 @@
       <Filter>Pawn Includes</Filter>
     </None>
     <None Include="..\..\plugins\include\string_stocks.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\logger_const.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\logger_stocks.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+    <None Include="..\..\plugins\include\logger.inc">
       <Filter>Pawn Includes</Filter>
     </None>
   </ItemGroup>

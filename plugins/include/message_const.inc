@@ -1139,7 +1139,7 @@ enum
  */
 enum AllowSpecArgs
 {
-	AllowSpec_IsAllowed
+	AllowSpec_IsAllowed = 1
 };
 
 /**
@@ -1147,7 +1147,7 @@ enum AllowSpecArgs
  */
 enum AmmoPickupArgs
 {
-	AmmoPickup_AmmoId,
+	AmmoPickup_AmmoId = 1,
 	AmmoPickup_Amount
 };
 
@@ -1156,7 +1156,7 @@ enum AmmoPickupArgs
  */
 enum AmmoXArgs
 {
-	AmmoX_AmmoId,
+	AmmoX_AmmoId = 1,
 	AmmoX_Amount
 };
 
@@ -1165,7 +1165,7 @@ enum AmmoXArgs
  */
 enum ArmorTypeArgs
 {
-	ArmorType_Flag
+	ArmorType_Flag = 1
 };
 
 /**
@@ -1173,7 +1173,7 @@ enum ArmorTypeArgs
  */
 enum BarTimeArgs
 {
-	BarTime_Duration
+	BarTime_Duration = 1
 };
 
 /**
@@ -1181,7 +1181,7 @@ enum BarTimeArgs
  */
 enum BarTime2Args
 {
-	BarTime2_Duration,
+	BarTime2_Duration = 1,
 	BarTime2_StartPercent
 };
 
@@ -1190,7 +1190,7 @@ enum BarTime2Args
  */
 enum BatteryArgs
 {
-	Battery_Armor
+	Battery_Armor = 1
 };
 
 /**
@@ -1198,7 +1198,7 @@ enum BatteryArgs
  */
 enum BlinkAcctArgs
 {
-	BlinkAcct_BlinkAmount
+	BlinkAcct_BlinkAmount = 1
 };
 
 /**
@@ -1206,7 +1206,7 @@ enum BlinkAcctArgs
  */
 enum BloodPuffArgs
 {
-	BloodPuff_CoordX,
+	BloodPuff_CoordX = 1,
 	BloodPuff_CoordY,
 	BloodPuff_CoordZ
 };
@@ -1216,7 +1216,7 @@ enum BloodPuffArgs
  */
 enum BombDropArgs
 {
-	BombDrop_CoordX,
+	BombDrop_CoordX = 1,
 	BombDrop_CoordY,
 	BombDrop_CoordZ,
 	BombDrop_Flag
@@ -1227,7 +1227,7 @@ enum BombDropArgs
  */
 enum BotProgressArgs
 {
-	BotProgress_Flag,
+	BotProgress_Flag = 1,
 	BotProgress_Progress,
 	BotProgress_Header
 };
@@ -1237,7 +1237,7 @@ enum BotProgressArgs
  */
 enum BotVoiceArgs
 {
-	BotVoice_Status,
+	BotVoice_Status = 1,
 	BotVoice_PlayerId
 };
 
@@ -1246,7 +1246,7 @@ enum BotVoiceArgs
  */
 enum BrassArgs
 {
-	Brass_MessageId,
+	Brass_MessageId = 1,
 	Brass_StartX,
 	Brass_StartY,
 	Brass_StartZ,
@@ -1268,7 +1268,7 @@ enum BrassArgs
  */
 enum CapMsgArgs
 {
-	CapMsg_PlayerId,
+	CapMsg_PlayerId = 1,
 	CapMsg_PointName,
 	CapMsg_TeamId,
 };
@@ -1278,7 +1278,7 @@ enum CapMsgArgs
  */
 enum ClCorpseArgs
 {
-	ClCorpse_ModelName,
+	ClCorpse_ModelName = 1,
 	ClCorpse_CoordX,
 	ClCorpse_CoordY,
 	ClCorpse_CoordZ,
@@ -1297,7 +1297,7 @@ enum ClCorpseArgs
  */
 enum ConcussArgs
 {
-	Concuss_Amount
+	Concuss_Amount = 1
 };
 
 /**
@@ -1305,7 +1305,7 @@ enum ConcussArgs
  */
 enum CrosshairArgs
 {
-	Crosshair_Flag
+	Crosshair_Flag = 1
 };
 
 /**
@@ -1313,7 +1313,7 @@ enum CrosshairArgs
  */
 enum CurWeaponArgs
 {
-	CurWeapon_IsActive,
+	CurWeapon_IsActive = 1,
 	CurWeapon_WeaponId,
 	CurWeapon_ClipAmmo
 };
@@ -1323,7 +1323,7 @@ enum CurWeaponArgs
  */
 enum CZCareerArgs
 {
-	CZCareer_Type
+	CZCareer_Type = 1
 };
 
 /**
@@ -1331,7 +1331,7 @@ enum CZCareerArgs
  */
 enum CZCareerHUDArgs
 {
-	CZCareerHUD_Type
+	CZCareerHUD_Type = 1
 };
 
 /**
@@ -1339,7 +1339,7 @@ enum CZCareerHUDArgs
  */
 enum DamageArgs
 {
-	Damage_Save,
+	Damage_Save = 1,
 	Damage_Take,
 	Damage_Type,
 	Damage_CoordX,
@@ -1352,7 +1352,7 @@ enum DamageArgs
  */
 enum DeathMsgArgs
 {
-	DeathMsg_KillerId,
+	DeathMsg_KillerId = 1,
 	DeathMsg_VictimId,
 	DeathMsg_WeaponName
 };
@@ -1362,7 +1362,7 @@ enum DeathMsgArgs
  */
 enum DeathMsgArgs_CS
 {
-	DeathMsg_CS_KillerId,
+	DeathMsg_CS_KillerId = 1,
 	DeathMsg_CS_VictimId,
 	DeathMsg_CS_IsHeadshot,
 	DeathMsg_CS_WeaponName
@@ -1373,7 +1373,7 @@ enum DeathMsgArgs_CS
  */
 enum DeathMsgArgs_DoD
 {
-	DeathMsg_DoD_KillerId,
+	DeathMsg_DoD_KillerId = 1,
 	DeathMsg_DoD_VictimId,
 	DeathMsg_DoD_WeaponId
 };
@@ -1383,7 +1383,7 @@ enum DeathMsgArgs_DoD
  */
 enum FlashBatArgs
 {
-	FlashBat_ChargePercent
+	FlashBat_ChargePercent = 1
 };
 
 /**
@@ -1391,7 +1391,7 @@ enum FlashBatArgs
  */
 enum FlashlightArgs
 {
-	Flashlight_Flag,
+	Flashlight_Flag = 1,
 	Flashlight_ChargePercent
 };
 
@@ -1400,7 +1400,7 @@ enum FlashlightArgs
  */
 enum FogArgs
 {
-	Fog_Value1,
+	Fog_Value1 = 1,
 	Fog_Value2,
 	Fog_Unknown
 };
@@ -1410,7 +1410,7 @@ enum FogArgs
  */
 enum ForceCamArgs
 {
-	ForceCam_Value,
+	ForceCam_Value = 1,
 	ForceCam_ChaseCamValue,
 	ForceCam_Unknown
 };
@@ -1420,7 +1420,7 @@ enum ForceCamArgs
  */
 enum FragsArgs
 {
-	Frags_PlayerId,
+	Frags_PlayerId = 1,
 	Frags_Amount
 };
 
@@ -1429,7 +1429,7 @@ enum FragsArgs
  */
 enum GameModeArgs
 {
-	GameMode_Type
+	GameMode_Type = 1
 };
 
 /**
@@ -1437,7 +1437,7 @@ enum GameModeArgs
  */
 enum GameTitleArgs
 {
-	GameTitle_Unknown
+	GameTitle_Unknown = 1
 };
 
 /**
@@ -1445,7 +1445,7 @@ enum GameTitleArgs
  */
 enum GeigerArgs
 {
-	Geiger_Distance
+	Geiger_Distance = 1
 };
 
 /**
@@ -1453,7 +1453,7 @@ enum GeigerArgs
  */
 enum HealthArgs
 {
-	Health_Amount
+	Health_Amount = 1
 };
 
 /**
@@ -1461,7 +1461,7 @@ enum HealthArgs
  */
 enum HideWeaponArgs
 {
-	HideWeapon_Flags
+	HideWeapon_Flags = 1
 };
 
 /**
@@ -1469,7 +1469,7 @@ enum HideWeaponArgs
  */
 enum HLTVArgs
 {
-	HLTV_ClientId,
+	HLTV_ClientId = 1,
 	HLTV_Flags
 };
 
@@ -1478,7 +1478,7 @@ enum HLTVArgs
  */
 enum HostageKArgs
 {
-	HostageK_HostageId
+	HostageK_HostageId = 1
 };
 
 /**
@@ -1486,7 +1486,7 @@ enum HostageKArgs
  */
 enum HostagePosArgs
 {
-	HostagePos_Flag,
+	HostagePos_Flag = 1,
 	HostagePos_HostageId,
 	HostagePos_CoordX,
 	HostagePos_CoordY,
@@ -1498,7 +1498,7 @@ enum HostagePosArgs
  */
 enum HudTextArgs
 {
-	HudText_TextCode,
+	HudText_TextCode = 1,
 	HudText_InitHUDStyle
 };
 
@@ -1507,7 +1507,7 @@ enum HudTextArgs
  */
 enum HudTextArgsArgs
 {
-	HudTextArgs_TextCode,
+	HudTextArgs_TextCode = 1,
 	HudTextArgs_InitHUDStyle,
 	HudTextArgs_NumberOfSubMessages,
 	HudTextArgs_SubMsg1,
@@ -1519,7 +1519,7 @@ enum HudTextArgsArgs
  */
 enum HudTextProArgs
 {
-	HudTextPro_TextCode,
+	HudTextPro_TextCode = 1,
 	HudTextPro_InitHUDStyle
 };
 
@@ -1528,7 +1528,7 @@ enum HudTextProArgs
  */
 enum InitObjArgs
 {
-	InitObj_TotalObjectives
+	InitObj_TotalObjectives = 1
 };
 
 /**
@@ -1536,7 +1536,7 @@ enum InitObjArgs
  */
 enum InitObj_TotalObjectivesArgs
 {
-	InitObj_TotalObjectives_EntityId,
+	InitObj_TotalObjectives_EntityId = 1,
 	InitObj_TotalObjectives_ObjectiveId,
 	InitObj_TotalObjectives_TeamId,
 	InitObj_TotalObjectives_Unknown1,
@@ -1552,7 +1552,7 @@ enum InitObj_TotalObjectivesArgs
  */
 enum ItemPickupArgs
 {
-	ItemPickup_ItemName
+	ItemPickup_ItemName = 1
 };
 
 /**
@@ -1560,7 +1560,7 @@ enum ItemPickupArgs
  */
 enum ItemStatusArgs
 {
-	ItemStatus_ItemsBitSum
+	ItemStatus_ItemsBitSum = 1
 };
 
 /**
@@ -1568,7 +1568,7 @@ enum ItemStatusArgs
  */
 enum LocationArgs
 {
-	Location_PlayerId,
+	Location_PlayerId = 1,
 	Location_Name
 };
 
@@ -1577,7 +1577,7 @@ enum LocationArgs
  */
 enum MoneyArgs
 {
-	Money_Amount,
+	Money_Amount = 1,
 	Money_Flag
 };
 
@@ -1586,7 +1586,7 @@ enum MoneyArgs
  */
 enum MOTDArgs
 {
-	MOTD_Flag,
+	MOTD_Flag = 1,
 	MOTD_Text
 };
 
@@ -1595,7 +1595,7 @@ enum MOTDArgs
  */
 enum NVGToggleArgs
 {
-	NVGToggle_Flag
+	NVGToggle_Flag = 1
 };
 
 /**
@@ -1603,7 +1603,7 @@ enum NVGToggleArgs
  */
 enum ObjectArgs
 {
-	Object_Sprite
+	Object_Sprite = 1
 };
 
 /**
@@ -1611,7 +1611,7 @@ enum ObjectArgs
  */
 enum ObjScoreArgs
 {
-	ObjScore_PlayerId,
+	ObjScore_PlayerId = 1,
 	ObjScore_Score
 };
 
@@ -1620,7 +1620,7 @@ enum ObjScoreArgs
  */
 enum PClassArgs
 {
-	PClass_PlayerId,
+	PClass_PlayerId = 1,
 	PClass_Unknown
 };
 
@@ -1629,7 +1629,7 @@ enum PClassArgs
  */
 enum PStatusArgs
 {
-	PStatus_PlayerId,
+	PStatus_PlayerId = 1,
 	PStatus_Unknown
 };
 
@@ -1638,7 +1638,7 @@ enum PStatusArgs
  */
 enum RadarArgs
 {
-	Radar_PlayerId,
+	Radar_PlayerId = 1,
 	Radar_CoordX,
 	Radar_CoordY,
 	Radar_CoordZ
@@ -1649,7 +1649,7 @@ enum RadarArgs
  */
 enum ReceiveWArgs
 {
-	ReceiveW_Mode
+	ReceiveW_Mode = 1
 };
 
 /**
@@ -1657,7 +1657,7 @@ enum ReceiveWArgs
  */
 enum ReloadSoundArgs
 {
-	ReloadSound_Volume,
+	ReloadSound_Volume = 1,
 	ReloadSound_IsNotShotgun
 };
 
@@ -1666,7 +1666,7 @@ enum ReloadSoundArgs
  */
 enum RoundTimeArgs
 {
-	RoundTime_Time
+	RoundTime_Time = 1
 };
 
 /**
@@ -1674,7 +1674,7 @@ enum RoundTimeArgs
  */
 enum SayTextArgs
 {
-	SayText_SenderId,
+	SayText_SenderId = 1,
 	SayText_String1,
 	SayText_String2,
 	SayText_String3
@@ -1685,7 +1685,7 @@ enum SayTextArgs
  */
 enum ScenarioArgs
 {
-	Scenario_IsActive,
+	Scenario_IsActive = 1,
 	Scenario_Sprite,
 	Scenario_Alpha,
 	Scenario_FlashRate,
@@ -1697,7 +1697,7 @@ enum ScenarioArgs
  */
 enum ScopeArgs
 {
-	Scope_Unknown
+	Scope_Unknown = 1
 };
 
 /**
@@ -1705,7 +1705,7 @@ enum ScopeArgs
  */
 enum ScoreAttribArgs
 {
-	ScoreAttrib_PlayerId,
+	ScoreAttrib_PlayerId = 1,
 	ScoreAttrib_Flags
 };
 
@@ -1714,7 +1714,7 @@ enum ScoreAttribArgs
  */
 enum ScoreInfoArgs
 {
-	ScoreInfo_PlayerId,
+	ScoreInfo_PlayerId = 1,
 	ScoreInfo_Score,
 	ScoreInfo_Deaths,
 	ScoreInfo_ClassId,
@@ -1726,7 +1726,7 @@ enum ScoreInfoArgs
  */
 enum ScoreShortArgs
 {
-	ScoreShort_PlayerId,
+	ScoreShort_PlayerId = 1,
 	ScoreShort_Score,
 	ScoreShort_Kills,
 	ScoreShort_Deaths,
@@ -1738,7 +1738,7 @@ enum ScoreShortArgs
  */
 enum ScreenFadeArgs
 {
-	ScreenFade_Duration,
+	ScreenFade_Duration = 1,
 	ScreenFade_HoldTime,
 	ScreenFade_Flags,
 	ScreenFade_ColorR,
@@ -1752,7 +1752,7 @@ enum ScreenFadeArgs
  */
 enum ScreenShakeArgs
 {
-	ScreenShake_Amplitude,
+	ScreenShake_Amplitude = 1,
 	ScreenShake_Duration,
 	ScreenShake_Frequency
 };
@@ -1762,7 +1762,7 @@ enum ScreenShakeArgs
  */
 enum SecAmmoIconArgs
 {
-	SecAmmoIcon_Icon
+	SecAmmoIcon_Icon = 1
 };
 
 /**
@@ -1770,7 +1770,7 @@ enum SecAmmoIconArgs
  */
 enum SecAmmoValArgs
 {
-	SecAmmoVal_Slot,
+	SecAmmoVal_Slot = 1,
 	SecAmmoVal_Amount
 };
 
@@ -1779,7 +1779,7 @@ enum SecAmmoValArgs
  */
 enum SendAudioArgs
 {
-	SendAudio_SenderId,
+	SendAudio_SenderId = 1,
 	SendAudio_AudioCode,
 	SendAudio_Pitch
 };
@@ -1789,7 +1789,7 @@ enum SendAudioArgs
  */
 enum ServerNameArgs
 {
-	ServerName_Name
+	ServerName_Name = 1
 };
 
 /**
@@ -1797,7 +1797,7 @@ enum ServerNameArgs
  */
 enum SetFOVArgs
 {
-	SetFOV_Degrees
+	SetFOV_Degrees = 1
 };
 
 /**
@@ -1805,7 +1805,7 @@ enum SetFOVArgs
  */
 enum SetObjArgs
 {
-	SetObj_Unknown1,
+	SetObj_Unknown1 = 1,
 	SetObj_Unknown2,
 	SetObj_Unknown3
 };
@@ -1815,7 +1815,7 @@ enum SetObjArgs
  */
 enum ShadowIdxArgs
 {
-	ShadowIdx_SpriteId
+	ShadowIdx_SpriteId = 1
 };
 
 /**
@@ -1823,7 +1823,7 @@ enum ShadowIdxArgs
  */
 enum ShowMenuArgs
 {
-	ShowMenu_KeysBitSum,
+	ShowMenu_KeysBitSum = 1,
 	ShowMenu_Time,
 	ShowMenu_Multipart,
 	ShowMenu_Text
@@ -1834,7 +1834,7 @@ enum ShowMenuArgs
  */
 enum SpecHealthArgs
 {
-	SpecHealth_Health
+	SpecHealth_Health = 1
 };
 
 /**
@@ -1842,7 +1842,7 @@ enum SpecHealthArgs
  */
 enum SpecHealth2Args
 {
-	SpecHealth2_Health,
+	SpecHealth2_Health = 1,
 	SpecHealth2_PlayerId
 };
 
@@ -1851,7 +1851,7 @@ enum SpecHealth2Args
  */
 enum SpectatorArgs
 {
-	Spectator_ClientId,
+	Spectator_ClientId = 1,
 	Spectator_Unknown
 };
 
@@ -1860,7 +1860,7 @@ enum SpectatorArgs
  */
 enum StatusIconArgs
 {
-	StatusIcon_Status,
+	StatusIcon_Status = 1,
 	StatusIcon_SpriteName,
 	StatusIcon_ColorR,
 	StatusIcon_ColorG,
@@ -1872,7 +1872,7 @@ enum StatusIconArgs
  */
 enum StatusTextArgs
 {
-	StatusText_Unknown,
+	StatusText_Unknown = 1,
 	StatusText_Text
 };
 
@@ -1881,7 +1881,7 @@ enum StatusTextArgs
  */
 enum StatusValueArgs
 {
-	StatusValue_Flag,
+	StatusValue_Flag = 1,
 	StatusValue_Value
 };
 
@@ -1890,7 +1890,7 @@ enum StatusValueArgs
  */
 enum TaskTimeArgs
 {
-	TaskTime_Time,
+	TaskTime_Time = 1,
 	TaskTime_Active,
 	TaskTime_Fade
 };
@@ -1900,7 +1900,7 @@ enum TaskTimeArgs
  */
 enum TeamInfoArgs
 {
-	TeamInfo_PlayerId,
+	TeamInfo_PlayerId = 1,
 	TeamInfo_TeamName
 };
 
@@ -1909,7 +1909,7 @@ enum TeamInfoArgs
  */
 enum TeamScoreArgs
 {
-	TeamScore_TeamName,
+	TeamScore_TeamName = 1,
 	TeamScore_Score
 };
 
@@ -1918,7 +1918,7 @@ enum TeamScoreArgs
  */
 enum TeamScoreArgs_DoD
 {
-	TeamScore_DoD_TeamId,
+	TeamScore_DoD_TeamId = 1,
 	TeamScore_DoD_Score
 };
 
@@ -1927,7 +1927,7 @@ enum TeamScoreArgs_DoD
  */
 enum TextMsgArgs
 {
-	TextMsg_DestinationType,
+	TextMsg_DestinationType = 1,
 	TextMsg_Message,
 	TextMsg_SubMsg1,
 	TextMsg_SubMsg2,
@@ -1940,7 +1940,7 @@ enum TextMsgArgs
  */
 enum TrainArgs
 {
-	Train_Speed
+	Train_Speed = 1
 };
 
 /**
@@ -1948,7 +1948,7 @@ enum TrainArgs
  */
 enum TutorStateArgs
 {
-	TutorState_Unknown
+	TutorState_Unknown = 1
 };
 
 /**
@@ -1956,7 +1956,7 @@ enum TutorStateArgs
  */
 enum VGUIMenuArgs
 {
-	VGUIMenu_MenuId,
+	VGUIMenu_MenuId = 1,
 	VGUIMenu_KeysBitSum,
 	VGUIMenu_Time,
 	VGUIMenu_Multipart,
@@ -1968,7 +1968,7 @@ enum VGUIMenuArgs
  */
 enum VoiceMaskArgs
 {
-	VoiceMask_AudiblePlayersBitSum,
+	VoiceMask_AudiblePlayersBitSum = 1,
 	VoiceMask_BannedPlayersBitSum
 };
 
@@ -1977,7 +1977,7 @@ enum VoiceMaskArgs
  */
 enum WeaponListArgs
 {
-	WeaponList_WeaponName,
+	WeaponList_WeaponName = 1,
 	WeaponList_PrimaryAmmoId,
 	WeaponList_PrimaryAmmoMaxAmount,
 	WeaponList_SecondaryAmmoId,
@@ -1993,7 +1993,7 @@ enum WeaponListArgs
  */
 enum WeapPickupArgs
 {
-	WeapPickup_WeaponId
+	WeapPickup_WeaponId = 1
 };
 
 /**
@@ -2001,5 +2001,9 @@ enum WeapPickupArgs
  */
 enum YouDiedArgs
 {
-	YouDied_Unknown
+	YouDied_Unknown = 1
 };
+
+/**
+ * @endsection
+ */

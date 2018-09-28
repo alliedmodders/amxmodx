@@ -91,7 +91,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>ws2_32.lib;..\..\..\..\mysql-5.5\lib\mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -100,6 +100,8 @@
       <TargetMachine>MachineX86</TargetMachine>
       <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
       <AdditionalOptions>/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
+      <ProgramDatabaseFile>$(OutDir)mysql2.pdb</ProgramDatabaseFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -208,6 +210,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\sqlx.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../../public;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../../public;</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

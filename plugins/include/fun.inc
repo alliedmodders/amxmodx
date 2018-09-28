@@ -21,6 +21,21 @@
 	#pragma loadlib fun
 #endif
 
+
+/**
+ * Parts of body for hits, for use with set_user_hitzones().
+ */
+const HITZONE_GENERIC  = (1 << HIT_GENERIC);   // 1
+const HITZONE_HEAD     = (1 << HIT_HEAD);      // 2
+const HITZONE_CHEST    = (1 << HIT_CHEST);     // 4
+const HITZONE_STOMACH  = (1 << HIT_STOMACH);   // 8
+const HITZONE_LEFTARM  = (1 << HIT_LEFTARM);   // 16
+const HITZONE_RIGHTARM = (1 << HIT_RIGHTARM);  // 32
+const HITZONE_LEFTLEG  = (1 << HIT_LEFTLEG);   // 64
+const HITZONE_RIGHTLEG = (1 << HIT_RIGHTLEG);  // 128
+const HITZONES_DEFAULT = HITZONE_GENERIC | HITZONE_HEAD     | HITZONE_CHEST   | HITZONE_STOMACH | 
+                         HITZONE_LEFTARM | HITZONE_RIGHTARM | HITZONE_LEFTLEG | HITZONE_RIGHTLEG; // 255
+
 /**
  * Tells whether receiver hears sender via voice communication.
  *
@@ -169,26 +184,18 @@ native give_item(index, const item[]);
  *
  * @param index         Client index
  * @param target        The target player
- * @param body          A bitsum of the body parts that can/can't be shot:
- *                      1   - generic
- *                      2   - head
- *                      4   - chest
- *                      8   - stomach
- *                      16  - left arm
- *                      32  - right arm
- *                      64  - left leg
- *                      128 - right leg
+ * @param body          A bitsum of the body parts that can/can't be shot. See HITZONE* constants.
  *
  * @noreturn
  * @error               If player is not connected or not within the range
  *                      of 1 to MaxClients.
  */
-native set_user_hitzones(index = 0, target = 0, body = 255);
+native set_user_hitzones(index = 0, target = 0, body = HITZONES_DEFAULT);
 
 /**
  * Gets the set of hit zone "rules" between @index and @target players.
  *
- * @note For the body part bitsum take a look at the set_user_hitzones() native.
+ * @note For the body part bitsum, see HITZONE* constants.
  *
  * @param index         Client index
  * @param target        The target player

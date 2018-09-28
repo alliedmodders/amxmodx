@@ -18,6 +18,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{ffbc64d0-627e-4b7b-851d-f0c0cb9030ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{ea476f56-a723-4227-b805-64745134c852}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\sockets.cpp">
@@ -39,5 +42,10 @@
     <None Include="..\..\..\plugins\include\sockets.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -24,5 +24,9 @@ binary.sources = [
 
 if builder.target_platform == 'windows':
   binary.sources += ['version.rc']
+  if binary.compiler.vendor == 'msvc' and binary.compiler.version >= 1900:
+    binary.sources += [
+    '../../public/msvc/msvc15hack.c'
+  ]
 
 AMXX.modules += [builder.Add(binary)]

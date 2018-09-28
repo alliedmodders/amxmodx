@@ -78,17 +78,8 @@ public SpecRankInfo         = 0 // displays rank info when spectating
 #define MAX_TEXT_LENGTH         255
 #define MAX_BUFFER_LENGTH       2047
 
-// User stats parms id
-#define STATS_KILLS             0
-#define STATS_DEATHS            1
-#define STATS_HS                2
-#define STATS_TKS               3
-#define STATS_SHOTS             4
-#define STATS_HITS              5
-#define STATS_DAMAGE            6
-
 // Global player flags.
-new BODY_PART[8][] =
+new BODY_PART[MAX_BODYHITS][] =
 {
 	"WHOLEBODY",
 	"HEAD",
@@ -140,14 +131,14 @@ new g_pHudFreezeLimit                                   = 0
 new Float:g_fStartGame                                  = 0.0
 new g_izTeamScore[MAX_TEAMS]                            = {0, ...}
 new g_izTeamEventScore[MAX_TEAMS]                       = {0, ...}
-new g_izTeamRndStats[MAX_TEAMS][8]
-new g_izTeamGameStats[MAX_TEAMS][8]
+new g_izTeamRndStats[MAX_TEAMS][STATSX_MAX_STATS]
+new g_izTeamGameStats[MAX_TEAMS][STATSX_MAX_STATS]
 new g_izUserUserID[MAX_PLAYERS + 1]                     = {0, ...}
 new g_izUserAttackerDistance[MAX_PLAYERS + 1]           = {0, ...}
 new g_izUserVictimDistance[MAX_PLAYERS + 1][MAX_PLAYERS + 1]
 new g_izUserRndName[MAX_PLAYERS + 1][MAX_NAME_LENGTH]
-new g_izUserRndStats[MAX_PLAYERS + 1][8]
-new g_izUserGameStats[MAX_PLAYERS + 1][8]
+new g_izUserRndStats[MAX_PLAYERS + 1][STATSX_MAX_STATS]
+new g_izUserGameStats[MAX_PLAYERS + 1][STATSX_MAX_STATS]
 
 // Common buffer to improve performance, as Small always zero-initializes all vars
 new g_sBuffer[MAX_BUFFER_LENGTH + 1]                    = ""
@@ -291,14 +282,14 @@ public cmdHudTest(id)
 #endif
 
 // Stats formulas
-Float:accuracy(izStats[8])
+Float:accuracy(izStats[STATSX_MAX_STATS])
 {
-	return izStats[STATS_SHOTS] ? (100.0 * float(izStats[STATS_HITS]) / float(izStats[STATS_SHOTS])) : (0.0);
+	return izStats[STATSX_SHOTS] ? (100.0 * float(izStats[STATSX_HITS]) / float(izStats[STATSX_SHOTS])) : (0.0);
 }
 
-Float:effec(izStats[8])
+Float:effec(izStats[STATSX_MAX_STATS])
 {
-	return izStats[STATS_KILLS] ? (100.0 * float(izStats[STATS_KILLS]) / float(izStats[STATS_KILLS] + izStats[STATS_DEATHS])) : (0.0);
+	return izStats[STATSX_KILLS] ? (100.0 * float(izStats[STATSX_KILLS]) / float(izStats[STATSX_KILLS] + izStats[STATSX_DEATHS])) : (0.0);
 }
 
 // Distance formula (metric)
@@ -332,7 +323,7 @@ get_config_cvars()
 // Get and format attackers header and list.
 get_attackers(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
-	new izStats[8], izBody[8]
+	new izStats[STATSX_MAX_STATS], izBody[MAX_BODYHITS]
 	new iAttacker
 	new iFound, iLen
 
@@ -342,13 +333,13 @@ get_attackers(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	// Get and format header. Add killing attacker statistics if user is dead.
 	// Make sure shots is greater than zero or division by zero will occur.
 	// To print a '%', 4 of them must done in a row.
-	izStats[STATS_SHOTS] = 0
+	izStats[STATSX_SHOTS] = 0
 	iAttacker = g_izKilled[id][KILLED_KILLER_ID]
 
 	if (iAttacker)
 		get_user_astats(id, iAttacker, izStats, izBody)
 
-	if (izStats[STATS_SHOTS] && ShowFullStats)
+	if (izStats[STATSX_SHOTS] && ShowFullStats)
 	{
 		get_user_name(iAttacker, t_sName, charsmax(t_sName))
 		iLen = formatex(sBuffer, charsmax(sBuffer), "%L -- %s -- %0.2f%% %L:^n", id, "ATTACKERS", t_sName, accuracy(izStats), id, "ACC")
@@ -364,20 +355,20 @@ get_attackers(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 			iFound = 1
 			get_user_name(iAttacker, t_sName, charsmax(t_sName))
 
-			if (izStats[STATS_KILLS])
+			if (izStats[STATSX_KILLS])
 			{
 				if (!ShowDistHS)
-					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s^n", t_sName, izStats[STATS_HITS], id, "HIT_S",
-									izStats[STATS_DAMAGE], id, "DMG", t_sWpn)
-				else if (izStats[STATS_HS])
-					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s / %0.0f m / HS^n", t_sName, izStats[STATS_HITS], id, "HIT_S",
-									izStats[STATS_DAMAGE], id, "DMG", t_sWpn, distance(g_izUserAttackerDistance[id]))
+					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s^n", t_sName, izStats[STATSX_HITS], id, "HIT_S",
+									izStats[STATSX_DAMAGE], id, "DMG", t_sWpn)
+				else if (izStats[STATSX_HEADSHOTS])
+					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s / %0.0f m / HS^n", t_sName, izStats[STATSX_HITS], id, "HIT_S",
+									izStats[STATSX_DAMAGE], id, "DMG", t_sWpn, distance(g_izUserAttackerDistance[id]))
 				else
-					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s / %0.0f m^n", t_sName, izStats[STATS_HITS], id, "HIT_S",
-									izStats[STATS_DAMAGE], id, "DMG", t_sWpn, distance(g_izUserAttackerDistance[id]))
+					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s / %0.0f m^n", t_sName, izStats[STATSX_HITS], id, "HIT_S",
+									izStats[STATSX_DAMAGE], id, "DMG", t_sWpn, distance(g_izUserAttackerDistance[id]))
 			}
 			else
-				iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L^n", t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG")
+				iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L^n", t_sName, izStats[STATSX_HITS], id, "HIT_S", izStats[STATSX_DAMAGE], id, "DMG")
 		}
 	}
 
@@ -390,7 +381,7 @@ get_attackers(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 // Get and format victims header and list
 get_victims(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
-	new izStats[8], izBody[8]
+	new izStats[STATSX_MAX_STATS], izBody[MAX_BODYHITS]
 	new iVictim
 	new iFound, iLen
 
@@ -400,10 +391,10 @@ get_victims(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	// Get and format header.
 	// Make sure shots is greater than zero or division by zero will occur.
 	// To print a '%', 4 of them must done in a row.
-	izStats[STATS_SHOTS] = 0
+	izStats[STATSX_SHOTS] = 0
 	get_user_vstats(id, 0, izStats, izBody)
 
-	if (izStats[STATS_SHOTS])
+	if (izStats[STATSX_SHOTS])
 		iLen = formatex(sBuffer, charsmax(sBuffer), "%L -- %0.2f%% %L:^n", id, "VICTIMS", accuracy(izStats), id, "ACC")
 	else
 		iLen = formatex(sBuffer, charsmax(sBuffer), "%L:^n", id, "VICTIMS")
@@ -415,20 +406,20 @@ get_victims(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 			iFound = 1
 			get_user_name(iVictim, t_sName, charsmax(t_sName))
 
-			if (izStats[STATS_DEATHS])
+			if (izStats[STATSX_DEATHS])
 			{
 				if (!ShowDistHS)
-					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s^n", t_sName, izStats[STATS_HITS], id, "HIT_S",
-									izStats[STATS_DAMAGE], id, "DMG", t_sWpn)
-				else if (izStats[STATS_HS])
-					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s / %0.0f m / HS^n", t_sName, izStats[STATS_HITS], id, "HIT_S",
-									izStats[STATS_DAMAGE], id, "DMG", t_sWpn, distance(g_izUserVictimDistance[id][iVictim]))
+					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s^n", t_sName, izStats[STATSX_HITS], id, "HIT_S",
+									izStats[STATSX_DAMAGE], id, "DMG", t_sWpn)
+				else if (izStats[STATSX_HEADSHOTS])
+					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s / %0.0f m / HS^n", t_sName, izStats[STATSX_HITS], id, "HIT_S",
+									izStats[STATSX_DAMAGE], id, "DMG", t_sWpn, distance(g_izUserVictimDistance[id][iVictim]))
 				else
-					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s / %0.0f m^n", t_sName, izStats[STATS_HITS], id, "HIT_S",
-									izStats[STATS_DAMAGE], id, "DMG", t_sWpn, distance(g_izUserVictimDistance[id][iVictim]))
+					iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L / %s / %0.0f m^n", t_sName, izStats[STATSX_HITS], id, "HIT_S",
+									izStats[STATSX_DAMAGE], id, "DMG", t_sWpn, distance(g_izUserVictimDistance[id][iVictim]))
 			}
 			else
-				iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L^n", t_sName, izStats[STATS_HITS], id, "HIT_S", izStats[STATS_DAMAGE], id, "DMG")
+				iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%s -- %d %L / %d %L^n", t_sName, izStats[STATSX_HITS], id, "HIT_S", izStats[STATSX_DAMAGE], id, "DMG")
 		}
 	}
 
@@ -448,23 +439,23 @@ get_kill_info(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 
 	if (iKiller && iKiller != id)
 	{
-		new izAStats[8], izABody[8], izVStats[8], iaVBody[8]
+		new izAStats[STATSX_MAX_STATS], izABody[MAX_BODYHITS], izVStats[STATSX_MAX_STATS], iaVBody[MAX_BODYHITS]
 
 		iFound = 1
 		get_user_name(iKiller, t_sName, charsmax(t_sName))
 
-		izAStats[STATS_HITS] = 0
-		izAStats[STATS_DAMAGE] = 0
+		izAStats[STATSX_HITS] = 0
+		izAStats[STATSX_DAMAGE] = 0
 		t_sWpn[0] = 0
 		get_user_astats(id, iKiller, izAStats, izABody, t_sWpn, charsmax(t_sWpn))
 
-		izVStats[STATS_HITS] = 0
-		izVStats[STATS_DAMAGE] = 0
+		izVStats[STATSX_HITS] = 0
+		izVStats[STATSX_DAMAGE] = 0
 		get_user_vstats(id, iKiller, izVStats, iaVBody)
 
 		iLen = formatex(sBuffer, charsmax(sBuffer), "%L^n", id, "KILLED_YOU_DIST", t_sName, t_sWpn, distance(g_izUserAttackerDistance[id]))
-		iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%L^n", id, "DID_DMG_HITS", izAStats[STATS_DAMAGE], izAStats[STATS_HITS], g_izKilled[id][KILLED_KILLER_HEALTH], g_izKilled[id][KILLED_KILLER_ARMOUR])
-		iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%L^n", id, "YOU_DID_DMG", izVStats[STATS_DAMAGE], izVStats[STATS_HITS])
+		iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%L^n", id, "DID_DMG_HITS", izAStats[STATSX_DAMAGE], izAStats[STATSX_HITS], g_izKilled[id][KILLED_KILLER_HEALTH], g_izKilled[id][KILLED_KILLER_ARMOUR])
+		iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%L^n", id, "YOU_DID_DMG", izVStats[STATSX_DAMAGE], izVStats[STATSX_HITS])
 	}
 
 	return iFound
@@ -482,11 +473,11 @@ add_most_disruptive(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	// Find player.
 	for (iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (g_izUserRndStats[iPlayer][STATS_DAMAGE] >= iMaxDamage && (g_izUserRndStats[iPlayer][STATS_DAMAGE] > iMaxDamage || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
+		if (g_izUserRndStats[iPlayer][STATSX_DAMAGE] >= iMaxDamage && (g_izUserRndStats[iPlayer][STATSX_DAMAGE] > iMaxDamage || g_izUserRndStats[iPlayer][STATSX_HEADSHOTS] > iMaxHeadShots))
 		{
 			iMaxDamageId = iPlayer
-			iMaxDamage = g_izUserRndStats[iPlayer][STATS_DAMAGE]
-			iMaxHeadShots = g_izUserRndStats[iPlayer][STATS_HS]
+			iMaxDamage = g_izUserRndStats[iPlayer][STATSX_DAMAGE]
+			iMaxHeadShots = g_izUserRndStats[iPlayer][STATSX_HEADSHOTS]
 		}
 	}
 
@@ -499,7 +490,7 @@ add_most_disruptive(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 		new Float:fRndAcc = accuracy(g_izUserRndStats[iPlayer])
 
 		formatex(t_sText, charsmax(t_sText), "%L: %s^n%d %L / %d %L -- %0.2f%% %L / %0.2f%% %L^n", id, "MOST_DMG", g_izUserRndName[iPlayer],
-				g_izUserRndStats[iPlayer][STATS_HITS], id, "HIT_S", iMaxDamage, id, "DMG", fGameEff, id, "EFF", fRndAcc, id, "ACC")
+				g_izUserRndStats[iPlayer][STATSX_HITS], id, "HIT_S", iMaxDamage, id, "DMG", fGameEff, id, "EFF", fRndAcc, id, "ACC")
 		add(sBuffer, charsmax(sBuffer), t_sText)
 	}
 
@@ -518,11 +509,11 @@ add_best_score(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	// Find player
 	for (iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (g_izUserRndStats[iPlayer][STATS_KILLS] >= iMaxKills && (g_izUserRndStats[iPlayer][STATS_KILLS] > iMaxKills || g_izUserRndStats[iPlayer][STATS_HS] > iMaxHeadShots))
+		if (g_izUserRndStats[iPlayer][STATSX_KILLS] >= iMaxKills && (g_izUserRndStats[iPlayer][STATSX_KILLS] > iMaxKills || g_izUserRndStats[iPlayer][STATSX_HEADSHOTS] > iMaxHeadShots))
 		{
 			iMaxKillsId = iPlayer
-			iMaxKills = g_izUserRndStats[iPlayer][STATS_KILLS]
-			iMaxHeadShots = g_izUserRndStats[iPlayer][STATS_HS]
+			iMaxKills = g_izUserRndStats[iPlayer][STATSX_KILLS]
+			iMaxHeadShots = g_izUserRndStats[iPlayer][STATSX_HEADSHOTS]
 		}
 	}
 
@@ -582,8 +573,8 @@ save_team_chatscore(id, sBuffer[MAX_TEXT_LENGTH + 1])
 // Get and format total stats.
 add_total_stats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
-	formatex(t_sText, charsmax(t_sText), "%L: %d %L / %d hs -- %d %L / %d %L^n", id, "TOTAL", g_izUserRndStats[0][STATS_KILLS], id, "KILL_S",
-			g_izUserRndStats[0][STATS_HS], g_izUserRndStats[0][STATS_HITS], id, "HITS", g_izUserRndStats[0][STATS_SHOTS], id, "SHOT_S")
+	formatex(t_sText, charsmax(t_sText), "%L: %d %L / %d hs -- %d %L / %d %L^n", id, "TOTAL", g_izUserRndStats[0][STATSX_KILLS], id, "KILL_S",
+			g_izUserRndStats[0][STATSX_HEADSHOTS], g_izUserRndStats[0][STATSX_HITS], id, "HITS", g_izUserRndStats[0][STATSX_SHOTS], id, "SHOT_S")
 	add(sBuffer, charsmax(sBuffer), t_sText)
 }
 
@@ -594,12 +585,12 @@ add_attacker_hits(id, iAttacker, sBuffer[MAX_BUFFER_LENGTH + 1])
 
 	if (iAttacker && iAttacker != id)
 	{
-		new izStats[8], izBody[8], iLen
+		new izStats[STATSX_MAX_STATS], izBody[MAX_BODYHITS], iLen
 
-		izStats[STATS_HITS] = 0
+		izStats[STATSX_HITS] = 0
 		get_user_astats(id, iAttacker, izStats, izBody)
 
-		if (izStats[STATS_HITS])
+		if (izStats[STATSX_HITS])
 		{
 			iFound = 1
 			iLen = strlen(sBuffer)
@@ -627,18 +618,18 @@ format_kill_ainfo(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 
 	if (iKiller && iKiller != id)
 	{
-		new izStats[8], izBody[8]
+		new izStats[STATSX_MAX_STATS], izBody[MAX_BODYHITS]
 		new iLen
 
 		iFound = 1
 		get_user_name(iKiller, t_sName, charsmax(t_sName))
-		izStats[STATS_HITS] = 0
+		izStats[STATSX_HITS] = 0
 		get_user_astats(id, iKiller, izStats, izBody, t_sWpn, charsmax(t_sWpn))
 
 		iLen = formatex(sBuffer, charsmax(sBuffer), "%L (%dhp, %dap) >>", id, "KILLED_BY_WITH", t_sName, t_sWpn, distance(g_izUserAttackerDistance[id]),
 						g_izKilled[id][KILLED_KILLER_HEALTH], g_izKilled[id][KILLED_KILLER_ARMOUR])
 
-		if (izStats[STATS_HITS])
+		if (izStats[STATSX_HITS])
 		{
 			for (new i = 1; i < sizeof(izBody); i++)
 			{
@@ -661,24 +652,24 @@ format_kill_ainfo(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 format_kill_vinfo(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
 	new iFound = 0
-	new izStats[8]
-	new izBody[8]
+	new izStats[STATSX_MAX_STATS]
+	new izBody[MAX_BODYHITS]
 	new iLen
 
-	izStats[STATS_HITS] = 0
-	izStats[STATS_DAMAGE] = 0
+	izStats[STATSX_HITS] = 0
+	izStats[STATSX_DAMAGE] = 0
 	get_user_vstats(id, iKiller, izStats, izBody)
 
 	if (iKiller && iKiller != id)
 	{
 		iFound = 1
 		get_user_name(iKiller, t_sName, charsmax(t_sName))
-		iLen = formatex(sBuffer, charsmax(sBuffer), "%L >>", id, "YOU_HIT", t_sName, izStats[STATS_HITS], izStats[STATS_DAMAGE])
+		iLen = formatex(sBuffer, charsmax(sBuffer), "%L >>", id, "YOU_HIT", t_sName, izStats[STATSX_HITS], izStats[STATSX_DAMAGE])
 	}
 	else
-		iLen = formatex(sBuffer, charsmax(sBuffer), "%L >>", id, "LAST_RES", izStats[STATS_HITS], izStats[STATS_DAMAGE])
+		iLen = formatex(sBuffer, charsmax(sBuffer), "%L >>", id, "LAST_RES", izStats[STATSX_HITS], izStats[STATSX_DAMAGE])
 
-	if (izStats[STATS_HITS])
+	if (izStats[STATSX_HITS])
 	{
 		for (new i = 1; i < sizeof(izBody); i++)
 		{
@@ -698,7 +689,7 @@ format_kill_vinfo(id, iKiller, sBuffer[MAX_BUFFER_LENGTH + 1])
 format_top15(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
 	new iMax = get_statsnum()
-	new izStats[8], izBody[8]
+	new izStats[STATSX_MAX_STATS], izBody[MAX_BODYHITS]
 	new iLen = 0
 
 	if (iMax > 15)
@@ -724,16 +715,16 @@ format_top15(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 		get_stats(i, izStats, izBody, t_sName, charsmax(t_sName))
 		replace_string(t_sName, charsmax(t_sName), "<", "[")
 		replace_string(t_sName, charsmax(t_sName), ">", "]")
-		iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%2d %-22.22s %6d %6d %6d %6d %4d %3.0f%% %3.0f%%^n", i + 1, t_sName, izStats[STATS_KILLS],
-						izStats[STATS_DEATHS], izStats[STATS_HITS], izStats[STATS_SHOTS], izStats[STATS_HS], effec(izStats), accuracy(izStats))
+		iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%2d %-22.22s %6d %6d %6d %6d %4d %3.0f%% %3.0f%%^n", i + 1, t_sName, izStats[STATSX_KILLS],
+						izStats[STATSX_DEATHS], izStats[STATSX_HITS], izStats[STATSX_SHOTS], izStats[STATSX_HEADSHOTS], effec(izStats), accuracy(izStats))
 	}
 }
 
 // Get and format rank stats.
 format_rankstats(id, sBuffer[MAX_BUFFER_LENGTH + 1], iMyId = 0)
 {
-	new izStats[8] = {0, ...}
-	new izBody[8]
+	new izStats[STATSX_MAX_STATS] = {0, ...}
+	new izBody[MAX_BODYHITS]
 	new iRankPos, iLen
 	new lKills[16], lDeaths[16], lHits[16], lShots[16], lDamage[16], lEff[16], lAcc[16]
 
@@ -752,10 +743,10 @@ format_rankstats(id, sBuffer[MAX_BUFFER_LENGTH + 1], iMyId = 0)
 	iLen = formatex(sBuffer, charsmax(sBuffer), "<meta charset=utf-8><body bgcolor=#000000><font color=#FFB000><pre>")
 	iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%L %L^n^n", id, (!iMyId || iMyId == id) ? "YOUR" : "PLAYERS", id, "RANK_IS", iRankPos, get_statsnum())
 	iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%6s: %d  (%d with hs)^n%6s: %d^n%6s: %d^n%6s: %d^n%6s: %d^n%6s: %0.2f%%^n%6s: %0.2f%%^n^n",
-					lKills, izStats[STATS_KILLS], izStats[STATS_HS], lDeaths, izStats[STATS_DEATHS], lHits, izStats[STATS_HITS], lShots, izStats[STATS_SHOTS],
-					lDamage, izStats[STATS_DAMAGE], lEff, effec(izStats), lAcc, accuracy(izStats))
+					lKills, izStats[STATSX_KILLS], izStats[STATSX_HEADSHOTS], lDeaths, izStats[STATSX_DEATHS], lHits, izStats[STATSX_HITS], lShots, izStats[STATSX_SHOTS],
+					lDamage, izStats[STATSX_DAMAGE], lEff, effec(izStats), lAcc, accuracy(izStats))
 
-	new L_BODY_PART[8][32]
+	new L_BODY_PART[MAX_BODYHITS][32]
 
 	for (new i = 1; i < sizeof(L_BODY_PART); i++)
 	{
@@ -763,15 +754,15 @@ format_rankstats(id, sBuffer[MAX_BUFFER_LENGTH + 1], iMyId = 0)
 	}
 
 	iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%10s:^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d^n%10s: %d", "HITS",
-					L_BODY_PART[1], izBody[1], L_BODY_PART[2], izBody[2], L_BODY_PART[3], izBody[3], L_BODY_PART[4], izBody[4], L_BODY_PART[5],
-					izBody[5], L_BODY_PART[6], izBody[6], L_BODY_PART[7], izBody[7])
+					L_BODY_PART[HIT_HEAD], izBody[HIT_HEAD], L_BODY_PART[HIT_CHEST], izBody[HIT_CHEST], L_BODY_PART[HIT_STOMACH], izBody[HIT_STOMACH], L_BODY_PART[HIT_LEFTARM], izBody[HIT_LEFTARM], L_BODY_PART[HIT_RIGHTARM],
+					izBody[HIT_RIGHTARM], L_BODY_PART[HIT_LEFTLEG], izBody[HIT_LEFTLEG], L_BODY_PART[HIT_RIGHTLEG], izBody[HIT_RIGHTLEG])
 }
 
 // Get and format stats.
 format_stats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 {
-	new izStats[8] = {0, ...}
-	new izBody[8]
+	new izStats[STATSX_MAX_STATS] = {0, ...}
+	new izBody[MAX_BODYHITS]
 	new iWeapon, iLen
 	new lKills[16], lDeaths[16], lHits[16], lShots[16], lDamage[16], lEff[16], lAcc[16], lWeapon[16]
 
@@ -791,8 +782,8 @@ format_stats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 
 	iLen = formatex(sBuffer, charsmax(sBuffer), "<meta charset=utf-8><body bgcolor=#000000><font color=#FFB000><pre>")
 	iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%6s: %d  (%d with hs)^n%6s: %d^n%6s: %d^n%6s: %d^n%6s: %d^n%6s: %0.2f%%^n%6s: %0.2f%%^n^n",
-					lKills, izStats[STATS_KILLS], izStats[STATS_HS], lDeaths, izStats[STATS_DEATHS], lHits, izStats[STATS_HITS], lShots, izStats[STATS_SHOTS],
-					lDamage, izStats[STATS_DAMAGE], lEff, effec(izStats), lAcc, accuracy(izStats))
+					lKills, izStats[STATSX_KILLS], izStats[STATSX_HEADSHOTS], lDeaths, izStats[STATSX_DEATHS], lHits, izStats[STATSX_HITS], lShots, izStats[STATSX_SHOTS],
+					lDamage, izStats[STATSX_DAMAGE], lEff, effec(izStats), lAcc, accuracy(izStats))
 	iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%-12.12s  %6s  %6s  %6s  %6s  %6s  %4s^n", lWeapon, lKills, lDeaths, lHits, lShots, lDamage, lAcc)
 
 	for (iWeapon = 1; iWeapon < xmod_get_maxweapons() && charsmax(sBuffer) - iLen > 0 ; iWeapon++)
@@ -800,8 +791,8 @@ format_stats(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 		if (get_user_wstats(id, iWeapon, izStats, izBody))
 		{
 			xmod_get_wpnname(iWeapon, t_sWpn, charsmax(t_sWpn))
-			iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%-12.12s  %6d  %6d  %6d  %6d  %6d  %3.0f%%^n", t_sWpn, izStats[STATS_KILLS], izStats[STATS_DEATHS],
-							izStats[STATS_HITS], izStats[STATS_SHOTS], izStats[STATS_DAMAGE], accuracy(izStats))
+			iLen += formatex(sBuffer[iLen], charsmax(sBuffer) - iLen, "%-12.12s  %6d  %6d  %6d  %6d  %6d  %3.0f%%^n", t_sWpn, izStats[STATSX_KILLS], izStats[STATSX_DEATHS],
+							izStats[STATSX_HITS], izStats[STATSX_SHOTS], izStats[STATSX_DAMAGE], accuracy(izStats))
 		}
 	}
 }
@@ -1045,7 +1036,7 @@ public cmdRank(id)
 		return PLUGIN_HANDLED
 	}
 
-	new izStats[8], izBody[8]
+	new izStats[STATSX_MAX_STATS], izBody[MAX_BODYHITS]
 	new iRankPos, iRankMax
 	new Float:fEff, Float:fAcc
 
@@ -1055,7 +1046,7 @@ public cmdRank(id)
 	fEff = effec(izStats)
 	fAcc = accuracy(izStats)
 
-	client_print(id, print_chat, "* %L", id, "YOUR_RANK_IS", iRankPos, iRankMax, izStats[STATS_KILLS], izStats[STATS_HITS], fEff, fAcc)
+	client_print(id, print_chat, "* %L", id, "YOUR_RANK_IS", iRankPos, iRankMax, izStats[STATSX_KILLS], izStats[STATSX_HITS], fEff, fAcc)
 
 	return PLUGIN_CONTINUE
 }
@@ -1443,7 +1434,7 @@ kill_stats(id)
 	g_fzShowUserStatsTime[id] = get_gametime()
 
 	// Add user death stats to user round stats
-	new izStats[8], izBody[8]
+	new izStats[STATSX_MAX_STATS], izBody[MAX_BODYHITS]
 	new iTeam, i
 	new iKiller
 
@@ -1651,7 +1642,7 @@ public eventShowRank(id)
 
 		if (is_user_connected(iPlayer))
 		{
-			new izStats[8], izBody[8]
+			new izStats[STATSX_MAX_STATS], izBody[MAX_BODYHITS]
 			new iRankPos, iRankMax
 
 			get_user_name(iPlayer, t_sName, charsmax(t_sName))

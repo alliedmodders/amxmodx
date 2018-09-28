@@ -21,6 +21,9 @@
     <Filter Include="GeoIP2">
       <UniqueIdentifier>{0bd4b9fb-f847-4fe5-af3e-9000fc854c5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{cfe982b9-749c-4d98-ac7b-207290a68c7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\geoip_util.cpp">
@@ -75,5 +78,10 @@
     <None Include="..\..\..\plugins\include\geoip.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

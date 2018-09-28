@@ -40,7 +40,7 @@
  *       This is the entity from which the function is being executed on.
  * @note All functions and forwards (eg: {Register,Execute}Ham[B]) require
  *       the mod to have the pev and base keys in addition to the function
- *       keys for the corresponding mod/operating system in hamdata.ini
+ *       keys for the corresponding mod/operating system in gamedata
  * @note Some functions that return booleans may need to be logically ANDed
  *       to get the desired results because the mod will return the full integer
  *       value. E.g.: (ExecuteHam(Ham_TS_IsObjective, this) & 0x0000FFFF) != 0
@@ -174,7 +174,9 @@ enum Ham
 	/**
 	 * Description:		Returns whether an entity is activated.
 	 *					This function is not supported by Day Of Defeat.
-	 *					This function has different version for Team Fortress Classic, see Ham_TFC_IsTriggered instead.
+	 *					This function has different version for the following mods:
+	 *					    Team Fortress Classic, see Ham_TFC_IsTriggered instead.
+	 *						Sven-Coop 5.0+, see Ham_SC_IsTriggered instead.
 	 * Forward params:	function(this, idActivator);
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsTriggered, this, idActivator);
@@ -207,7 +209,9 @@ enum Ham
 
 	/**
 	 * Description:		Typically adds points to the entity.
-	 *					This function is not supported by Team Fortress Classic mod.
+	 *					This function is not supported for the following mods:
+	 *						Team Fortress Classic.
+	 *						Sven-Coop 5.0-, see Ham_SC_AddPoints instead.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_AddPoints, this, points, bool:cangonegative);
@@ -216,7 +220,9 @@ enum Ham
 
 	/**
 	 * Description:		Typically adds points to everybody on the entity's team.
-	 *					This function is not supported by Team Fortress Classic mod.
+	 *					This function is not supported for the following mods:
+	 *						Team Fortress Classic.
+	 *						Sven-Coop 5.0-, see Ham_SC_AddPointsToTeam instead.
 	 * Forward params:	function(this, points, bool:cangonegative);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
@@ -233,7 +239,8 @@ enum Ham
 
 	/**
 	 * Description:		Removes an item to the player's inventory.
-	 * Forward params:	function(this, idother);
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_RemovePlayerItem instead.
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_RemovePlayerItem, this, idother);
 	 */
@@ -261,6 +268,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is moving.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsMoving instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_IsMoving, this);
@@ -309,6 +318,8 @@ enum Ham
 
 	/**
 	 * Description:		Not entirely sure.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_OnControls instead.
 	 * Forward params:	function(this, idOn)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_OnControls, this, idOn);
@@ -317,6 +328,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is sneaking.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsSneaking instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsSneaking, this);
@@ -325,6 +338,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is alive.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsAlive instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsAlive, this);
@@ -333,6 +348,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity uses a BSP model.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsBSPModel instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsBSPModel, this);
@@ -341,6 +358,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity can reflect gauss shots..
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_ReflectGauss instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_ReflectGauss, this);
@@ -352,7 +371,8 @@ enum Ham
 	 *					Note the strindex parameter is a string passed that has been allocated by the engine.
 	 *					Use fakemeta's EngFunc_SzFromIndex to convert to a normal string, or fakemeta's
 	 *					EngFunc_AllocString to create a new string.
-	 * Forward params:	function(this, strindex).
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_HasTarget instead.
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_HasTarget, this, strindex);
 	 */
@@ -360,6 +380,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is in the world.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsInWorld instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsInWorld, this);
@@ -368,6 +390,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is a player.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsPlayer instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsPlayer, this);
@@ -376,6 +400,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity is a net client.
+	 *					This function is not supported for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_IsNetClient instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_IsNetClient, this);
@@ -449,6 +475,8 @@ enum Ham
 
 	/**
 	 * Description:		Normally called whenever a barnacle grabs the entity.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_FBecomeProne instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_FBecomeProne, this);
@@ -497,6 +525,8 @@ enum Ham
 
 	/**
 	 * Description:		Returns true if a line can be traced from the caller's eyes to the target.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_FVisible instead.
 	 * Forward params:	function(this, idOther);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_FVisible, this, idOther);
@@ -505,6 +535,8 @@ enum Ham
 
 	/**
 	 * Description:		Returns true if a line can be traced from the caller's eyes to given vector.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_FVecVisible instead.
 	 * Forward params:	function(this, const Float:origin[3]);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_FVecVisible, this, const Float:origin[3]);
@@ -590,6 +622,8 @@ enum Ham
 
 	/**
 	 * Description:		Adds the item to the player.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_AddToPlayer instead.
 	 * Forward params:	function(this, idPlayer);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_AddToPlayer, this, idPlayer);
@@ -598,6 +632,8 @@ enum Ham
 
 	/**
 	 * Description:		Unsure.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_AddDuplicate instead.
 	 * Forward params:	function(this, idOriginal);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_AddDuplicate, this, idOriginal);
@@ -606,6 +642,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not this entity can be deployed.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_CanDeploy instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_CanDeploy, this);
@@ -614,6 +652,8 @@ enum Ham
 
 	/**
 	 * Description:		Deploys the entity (usually a weapon).
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_Deploy instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_Deploy, this);
@@ -622,6 +662,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the entity can be holstered.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_CanHolster instead.
 	 * Forward params:	function(this);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Item_CanHolster, this);
@@ -702,6 +744,8 @@ enum Ham
 
 	/**
 	 * Description:		Updates item data for the client.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Item_UpdateClientData instead.
 	 * Forward params:	function(this, idPlayer)
 	 * Return type:		Integer.
 	 * Execute params:	ExecuteHam(Ham_Item_UpdateClientData, this, idPlayer);
@@ -750,6 +794,8 @@ enum Ham
 	/**
 	 * Description:		Unsure.
 	 *					This function is not supported in Earth's Special Forces mod.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_AddWeapon instead.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Weapon_AddWeapon, this);
@@ -758,6 +804,8 @@ enum Ham
 
 	/**
 	 * Description:		Plays the weapon's empty sound.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_PlayEmptySound instead.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Weapon_PlayEmptySound, this);
@@ -787,6 +835,8 @@ enum Ham
 	/**
 	 * Description:		Whether or not the weapon is usable (has ammo, etc.)
 	 *					This function is not supported in Earth's Special Forces mod.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_IsUsable instead.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Weapon_IsUsable, this)
@@ -836,6 +886,8 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the weapon should idle.
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_ShouldWeaponIdle instead.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute Params:	ExecuteHam(Ham_Weapon_ShouldWeaponIdle, this)
@@ -845,7 +897,8 @@ enum Ham
 	/**
 	 * Description:		Unsure.
 	 *					This function is not supported by Team Fortress Classic.
-	 * Forward params:	function(this)
+	 *					This function has different version for the following mods:
+	 *						Sven-Coop 5.0+, see Ham_SC_Weapon_UseDecrement instead.
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_Weapon_UseDecrement, this);
 	 */
@@ -1446,6 +1499,8 @@ enum Ham
 	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
 	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
+	 *					This function has different versions for the following mod:
+	 *						Sven Coop: see Ham_SC_CanPlaySequence
 	 * Forward params:	function(this, bool:disregardState, interruptLevel);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_CanPlaySequence, this, bool:disregardState, interruptLevel);
@@ -1455,11 +1510,13 @@ enum Ham
 	/**
 	 * Description:		-
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
+	 *					This function has different versions for the following mod:
+	 *						Sven Coop: see Ham_SC_CanPlaySentence2
 	 * Forward params:	function(this, bool:disregardState);
 	 * Return type:		Integer (boolean).
-	 * Execute params:	ExecuteHam(Ham_CanPlaySentence, this, bool:disregardState);
+	 * Execute params:	ExecuteHam(Ham_CanPlaySentence2, this, bool:disregardState);
 	 */
-	Ham_CanPlaySentence,
+	Ham_CanPlaySentence2,
 
 	/**
 	 * Description:		-
@@ -1473,6 +1530,7 @@ enum Ham
 	/**
 	 * Description:		-
 	 *					This function is not supported by Counter-Strike, The Specialists and Natural Selection mods.
+	 *					This function has different version for Sven Coop, see Ham_SC_PlayScriptedSentence instead.
 	 * Forward params:	function(this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_PlayScriptedSentence, this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
@@ -2891,7 +2949,8 @@ enum Ham
 	Ham_SC_IsMonster,
 
 	/**
-	 * Description:		Whether entity uses PhysX feature.
+	 * Description:		(!) This function is no more available in the mod.
+	 *                  Whether entity uses PhysX feature.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_IsPhysX, this)
@@ -2992,7 +3051,8 @@ enum Ham
 	Ham_SC_OnDestroy,
 
 	/**
-	 * Description:		Returns false if the entity is somehow invalid.
+	 * Description:		(!) This function is no more available in the mod.
+	 *                  Returns false if the entity is somehow invalid.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_IsValidEntity, this)
@@ -3016,7 +3076,8 @@ enum Ham
 	Ham_SC_SetupFriendly,
 
 	/**
-	 * Description:		Tries to revive a monster.
+	 * Description:		(!) This function is no more available in the mod.
+	 *                  Tries to revive a monster.
 	 * Forward params:	function(this)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_ReviveThink, this)
@@ -3224,17 +3285,17 @@ enum Ham
 
 	/**
 	 * Description:		-
-	 * Forward params:	function(this, idleader)
+	 * Forward params:	function(this, idleader, bool:noSound)
 	 * Return type:		None.
-	 * Execute params:	ExecuteHam(Ham_SC_StartPlayerFollowing, this, idleader)
+	 * Execute params:	ExecuteHam(Ham_SC_StartPlayerFollowing, this, idleader, bool:noSound)
 	 */
 	Ham_SC_StartPlayerFollowing,
 
 	/**
 	 * Description:		-
-	 * Forward params:	function(this, bool:clearSchedule)
+	 * Forward params:	function(this, bool:clearSchedule, bool:noSound)
 	 * Return type:		None.
-	 * Execute params:	ExecuteHam(Ham_SC_StopPlayerFollowing, this, bool:clearSchedule)
+	 * Execute params:	ExecuteHam(Ham_SC_StopPlayerFollowing, this, bool:clearSchedule, bool:noSound)
 	 */
 	Ham_SC_StopPlayerFollowing,
 
@@ -3303,7 +3364,7 @@ enum Ham
 	Ham_SC_CheckRevival,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_MedicCallSound, this)
@@ -3312,10 +3373,10 @@ enum Ham
 
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this)
 	 * Return type:		None.
-	 * Execute params:	ExecuteHam(Ham_SC_MedicCallSound, this)
+	 * Execute params:	ExecuteHam(Ham_SC_Player_MenuInputPerformed, this)
 	 */
 	Ham_SC_Player_MenuInputPerformed,
 
@@ -3440,7 +3501,7 @@ enum Ham
 	Ham_SC_Player_LogPlayerStats,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, idPlayer, Float:time)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_Player_DisableCollision, this, idPlayer, Float:time)
@@ -3448,7 +3509,7 @@ enum Ham
 	Ham_SC_Player_DisableCollisionWithPlayer,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, idPlayer, bool:testIntersection)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_Player_EnableCollision, this, idPlayer, bool:testIntersection)
@@ -3456,7 +3517,7 @@ enum Ham
 	Ham_SC_Player_EnableCollisionWithPlayer,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, idPlayer)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_Player_CanTouchPlayer, this, idPlayer)
@@ -3727,6 +3788,533 @@ enum Ham
 
 
 	/**
+	 * LATE ADDITIONS (2017)
+	 */
+
+	/**
+	 * Description:		Performs checks that must occur before Spawn itself is called. Always call baseclass version first.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_PreSpawn, this);
+	 */
+	Ham_SC_PreSpawn,
+
+	/**
+	 * Description:		Performs checks that must occur after Spawn itself is called. Always call baseclass version first.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_PostSpawn, this);
+	 */
+	Ham_SC_PostSpawn,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, key);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_PostSpawn, this, const key[]);
+	 */
+	Ham_SC_OnKeyValueUpdate,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, classification);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_SetClassification, this, classification);
+	 */
+	Ham_SC_SetClassification,
+
+	/**
+	 * Description:		Returns whether an entity is activated.
+	 *					This function is not supported by Day Of Defeat.
+	 *					This function has different version for Team Fortress Classic, see Ham_TFC_IsTriggered instead.
+	 * Forward params:	function(this, idActivator);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_IsTriggered, this, idActivator);
+	 */
+	Ham_SC_IsTriggered,
+
+	/**
+	 * Description:		Returns the id of the entity if its class is derived off of ICustomEntity, -1 otherwise.
+	 * Forward params:	function(this)
+	 * Return type:		Entity.
+	 * Execute params:	ExecuteHam(Ham_SC_MyCustomPointer, this);
+	 */
+	Ham_SC_MyCustomPointer,
+
+	/**
+	 * Description:		Returns the id of the entity if its class is derived off of CBasePlayerItem, -1 otherwise.
+	 * Forward params:	function(this)
+	 * Return type:		Entity.
+	 * Execute params:	ExecuteHam(Ham_SC_MyItemPointer, this);
+	 */
+	Ham_SC_MyItemPointer,
+
+	/**
+	 * Description:		Typically adds points to the entity.
+	 * Forward params:	function(this, points, bool:cangonegative);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_AddPoints, this, points, bool:cangonegative);
+	 */
+	Ham_SC_AddPoints,
+
+	/**
+	 * Description:		Typically adds points to everybody on the entity's team.
+	 * Forward params:	function(this, points, bool:cangonegative);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_AddPointsToTeam, this, points, bool:cangonegative);
+	 */
+	Ham_SC_AddPointsToTeam,
+
+	/**
+	 * Description:		Removes an item to the player's inventory.
+	 * Forward params:	function(this, idother);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_RemovePlayerItem, this, idother);
+	 */
+	Ham_SC_RemovePlayerItem,
+
+	/**
+	 * Description:		Not entirely sure.
+	 * Forward params:	function(this, idOn)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_OnControls, this, idOn);
+	 */
+	Ham_SC_OnControls,
+
+	/**
+	 * Description:		Whether or not the entity is sneaking.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsSneaking, this);
+	 */
+	Ham_SC_IsSneaking,
+
+	/**
+	 * Description:		Whether or not the entity is alive.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsAlive, this);
+	 */
+	Ham_SC_IsAlive,
+
+	/**
+	 * Description:		Whether or not the entity uses a BSP model.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsBSPModel, this);
+	 */
+	Ham_SC_IsBSPModel,
+
+	/**
+	 * Description:		Whether or not the entity can reflect gauss shots.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_ReflectGauss, this);
+	 */
+	Ham_SC_ReflectGauss,
+
+	/**
+	 * Description:		Whether or not the target is the same as the one passed.
+	 *					Note the strindex parameter is a string passed that has been allocated by the engine.
+	 *					Use fakemeta's EngFunc_SzFromIndex to convert to a normal string, or fakemeta's
+	 *					EngFunc_AllocString to create a new string.
+	 * Forward params:	function(this, strindex).
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_HasTarget, this, strindex);
+	 */
+	Ham_SC_HasTarget,
+
+	/**
+	 * Description:		Whether or not the entity is in the world.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsInWorld, this);
+	 */
+	Ham_SC_IsInWorld,
+
+	/**
+	 * Description:		Whether or not the entity is a player.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Sc_IsPlayer, this);
+	 */
+	Ham_Sc_IsPlayer,
+
+	/**
+	 * Description:		Whether or not the entity is a net client.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsNetClient, this);
+	 */
+	Ham_SC_IsNetClient,
+
+	/**
+	 * Description:		Whether or not the entity is a brush entity breakable.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsBreakable, this);
+	 */
+	Ham_SC_IsBreakable,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, idActivator, useType, value);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_SUB_UseTargets, this, idActivator, useType, value);
+	 */
+	Ham_SC_SUB_UseTargets,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsLockedByMaster, this);
+	 */
+	Ham_SC_IsLockedByMaster,
+
+	/**
+	 * Description:		Normally called whenever a barnacle grabs the entity.
+	 * Forward params:	function(this, idOther);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_FBecomeProne, this, idOther);
+	 */
+	Ham_SC_FBecomeProne,
+
+	/**
+	 * Description:		Returns true if a line can be traced from the caller's eyes to given vector.
+	 * Forward params:	function(this, const Float:origin[3]);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_FVecVisible, this, const Float:origin[3]);
+	 */
+	Ham_SC_FVecVisible,
+
+	/**
+	 * Description:		Sets the player ally state
+	 * Forward params:	function(this, bool:state);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_SetPlayerAlly, this, bool:state);
+	 */
+	Ham_SC_SetPlayerAlly,
+
+	/**
+	 * Description:		Callback after trigger_setorigin has moved the entity.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_OnSetOriginByMap, this);
+	 */
+	Ham_SC_OnSetOriginByMap,
+
+	/**
+	 * Description:		Return true if you want to be revivable.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_IsRevivable, this);
+	 */
+	Ham_SC_IsRevivable,
+
+	/**
+	 * Description:		-
+	 *                  timeUntilRevive is the time until the actual revive event occurs.
+	 * Forward params:	function(this, Float:timeUntilRevive);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_BeginRevive, Float:timeUntilRevive);
+	 */
+	Ham_SC_BeginRevive,
+
+	/**
+	 * Description:		-
+	 *                  timeUntilRevive is the time before the monster is supposed to be revived
+	 * Forward params:	function(this, Float:timeUntilRevive);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_EndRevive, Float:timeUntilRevive);
+	 */
+	Ham_SC_EndRevive,
+
+	/**
+	 * Description:		Determines whether or not the monster can play the scripted sequence or AI sequence that is
+	 *					trying to possess it. If DisregardState is set, the monster will be sucked into the script
+	 *					no matter what state it is in. ONLY Scripted AI ents should allow this.
+	 * Forward params:	function(this, bool:disregardState, interruptLevel);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_CanPlaySequence, this, bool:disregardState, interruptLevel);
+	 */
+	Ham_SC_CanPlaySequence,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, bool:disregardState);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_CanPlaySentence2, this, bool:disregardState);
+	 */
+	Ham_SC_CanPlaySentence2,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_PlayScriptedSentence, this, const sentence[], Float:duration, Float:volume, Float:attenuation, bool:concurrent, idListener);
+	 */
+	Ham_SC_PlayScriptedSentence,
+
+
+	/**
+	 * Items have all the attributes of normal entities in addition to these.
+	 */
+
+	/**
+	 * Description:		Adds the item to the player.
+	 * Forward params:	function(this, idPlayer);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_Item_AddToPlayer, this, idPlayer);
+	 */
+	Ham_SC_Item_AddToPlayer,
+
+	/**
+	 * Description:		Returns true if you want your duplicate removed from world.
+	 * Forward params:	function(this, idOriginal);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_AddDuplicate, this, idOriginal);
+	 */
+	Ham_SC_Item_AddDuplicate,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, idOther);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_AddAmmoFromItem, this, idOther);
+	 */
+	Ham_SC_Item_AddAmmoFromItem,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		String (string length returned and string byref'd in ExecuteHam).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_GetPickupSound, this)
+	 */
+	Ham_SC_Item_GetPickupSound,
+
+	/**
+	 * Description:		-
+	 *					Collect Types:
+	 *						COLLECT_TOUCH			0
+	 *						COLLECT_USE_DIRECT		1
+	 *						COLLECT_USE_INDIRECT	2
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_CanCollect, this, idOther, collectType);
+	 */
+	Ham_SC_Item_CanCollect,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, idOther, collectType);
+	 *					Collect Types:
+	 *						COLLECT_TOUCH			0
+	 *						COLLECT_USE_DIRECT		1
+	 *						COLLECT_USE_INDIRECT	2
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_Collect, this, idOther, collectType);
+	 */
+	Ham_SC_Item_Collect,
+
+	/**
+	 * Description:		Gets item infos.
+	 * Forward params:	function(this, iteminfo_handle);
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_GetItemInfo, this, iteminfo_handle);
+	 *					Use CreateHamItemInfo() to pass a new ItemInfo handle.
+	 */
+	Ham_SC_Item_GetItemInfo,
+
+	/**
+	 * Description:		Whether or not this entity can be deployed.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_CanDeploy, this);
+	 */
+	Ham_SC_Item_CanDeploy,
+
+	/**
+	 * Description:		Deploys the entity (usually a weapon).
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_Deploy, this);
+	 */
+	Ham_SC_Item_Deploy,
+
+	/**
+	 * Description:		Whether or not the entity can be holstered.
+	 * Forward params:	function(this);
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_CanHolster, this);
+	 */
+	Ham_SC_Item_CanHolster,
+
+	/**
+	 * Description:		Called each frame by the player PreThink if inactive.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_InactiveItemPreFrame, this);
+	 */
+	Ham_SC_Item_InactiveItemPreFrame,
+
+	/**
+	 * Description:		Called each frame by the player PostThink if inactive.
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_InactiveItemPostFrame, this);
+	 */
+	Ham_SC_Item_InactiveItemPostFrame,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this);
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_DetachFromPlayer, this);
+	 */
+	Ham_SC_Item_DetachFromPlayer,
+
+	/**
+	 * Description:		Updates item data for the client.
+	 * Forward params:	function(this, idPlayer)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_UpdateClientData, this, idPlayer);
+	 */
+	Ham_SC_Item_UpdateClientData,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Float.
+	 * Execute params:	ExecuteHam(Ham_SC_Item_GetRespawnTime, this);
+	 */
+	Ham_SC_Item_GetRespawnTime,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Item_CanHaveDuplicates, this);
+	 */
+	Ham_SC_Item_CanHaveDuplicates,
+
+
+	/**
+	 * Weapons have all the attributes to Ham_Item_*, in addition to these.
+	 */
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this, idOriginal)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_ExtractAmmoFromItem, idOriginal);
+	 */
+	Ham_SC_Weapon_ExtractAmmoFromItem,
+
+	/**
+	 * Description:		Unsure.
+	 *					This function is not supported in Earth's Special Forces mod.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_AddWeapon, this);
+	 */
+	Ham_SC_Weapon_AddWeapon,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_GetAmmo1Drop);
+	 */
+	Ham_SC_Weapon_GetAmmo1Drop,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer.
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_GetAmmo2Drop, idOriginal);
+	 */
+	Ham_SC_Weapon_GetAmmo2Drop,
+
+	/**
+	 * Description:		Plays the weapon's empty sound.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_PlayEmptySound, this);
+	 */
+	Ham_SC_Weapon_PlayEmptySound,
+
+	/**
+	 * Description:		Whether or not the weapon is usable (has ammo, etc.)
+	 *					This function is not supported in Earth's Special Forces mod.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_IsUsable, this)
+	 */
+	Ham_SC_Weapon_IsUsable,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_FinishReload, idOriginal);
+	 */
+	Ham_SC_Weapon_FinishReload,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_ShouldReload, idOriginal);
+	 */
+	Ham_SC_Weapon_ShouldReload,
+
+	/**
+	 * Description:		Whether or not the weapon should idle.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute Params:	ExecuteHam(Ham_SC_Weapon_ShouldWeaponIdle, this)
+	 */
+	Ham_SC_Weapon_ShouldWeaponIdle,
+
+	/**
+	 * Description:		Unsure.
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Weapon_UseDecrement, this);
+	 */
+	Ham_SC_Weapon_UseDecrement,
+
+
+	/**
+	 * Players have all the attributes of normal entities, in addition to these.
+	 */
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Player_EnteredObserver, this);
+	 */
+	Ham_SC_Player_EnteredObserver,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		None.
+	 * Execute params:	ExecuteHam(Ham_SC_Player_LeftObserver, this);
+	 */
+	Ham_SC_Player_LeftObserver,
+
+	/**
+	 * Description:		-
+	 * Forward params:	function(this)
+	 * Return type:		Integer (boolean).
+	 * Execute params:	ExecuteHam(Ham_SC_Player_IsObserver, this);
+	 */
+	Ham_SC_Player_IsObserver,
+
+
+	/**
 	 * DONT USE ME LOL
 	 */
 	HAM_LAST_ENTRY_DONT_USE_ME_LOL
@@ -3740,7 +4328,8 @@ enum HamError
 	HAM_OK = 0,
 
 	HAM_INVALID_FUNC,			// The function is not valid
-	HAM_FUNC_NOT_CONFIGURED,	// This function is not configured in hamdata.ini
+	HAM_FUNC_NOT_CONFIGURED,	// This function is not configured in gamedata
+	HAM_FUNC_NOT_AVAILABLE,		// This function is not more available in the mod
 
 	HAM_ERR_END
 };

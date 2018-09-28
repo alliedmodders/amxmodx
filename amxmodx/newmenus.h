@@ -96,7 +96,7 @@ typedef unsigned int page_t;
 class Menu
 {
 public:
-	Menu(const char *title, AMX *amx, int fid);
+	Menu(const char *title, AMX *amx, int fid, bool use_ml);
 	~Menu();
 	
 	menuitem *GetMenuItem(item_t item);
@@ -129,6 +129,8 @@ public:
 	bool isDestroying;
 	int pageCallback;
 	bool showPageNumber;
+	bool useMultilingual;
+	AMX *amx;
 public:
 	unsigned int items_per_page;
 };

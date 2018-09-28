@@ -33,7 +33,7 @@ extern HLTypeConversion TypeConversion;
 		return 0;																					\
 	} else if (hooklist[x].isset == 0) {															\
 		char msg[1024];																				\
-		ke::SafeSprintf(msg, sizeof(msg), "Function %s is not configured in hamdata.ini.", hooklist[x].name);	\
+		ke::SafeSprintf(msg, sizeof(msg), "Function %s is not configured in gamedata.", hooklist[x].name);	\
 		FailPlugin(amx, x, HAM_FUNC_NOT_CONFIGURED, msg);											\
 		return 0;																					\
 	}

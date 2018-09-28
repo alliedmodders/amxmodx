@@ -117,13 +117,14 @@
  * @param title 		Title the menu should use.
  * @param handler		Name of the handler function.  The function will be invoked 
  *						once and only once to every menu_display() call.
- * @param ml			Unused (should be 0).
+ * @param ml			If true, the menu title and items will be looked up as multilingual keys
+ *                      when the menu displays.
  * @return				Menu resource identifier which must be destroyed via 
  *						menu_destroy().  All menus are destroyed when the plugin 
  *						unloads.
  * @error				Function name not found.
  */
-native menu_create(const title[], const handler[], ml=0);
+native menu_create(const title[], const handler[], bool:ml = false);
 
 /**
  * Creates a menu item callback handler.  

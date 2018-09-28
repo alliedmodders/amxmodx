@@ -1830,7 +1830,7 @@ native set_user_flags(index, flags = -1, id = 0);
  * @param index     Client index, 0 to set flags of server
  * @param id        Flag set id, ranging from 0 to 31
  *
- * @noreturn
+ * @return          Bitflag sum of client's admin flags
  * @error           If the index is not within the range of 0 to MaxClients, an
  *                  error will be thrown.
  */

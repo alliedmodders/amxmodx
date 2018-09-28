@@ -1203,14 +1203,16 @@ native get_user_ping(index, &ping, &loss);
 /**
  * Retrieves an origin related to the client.
  *
+ * @note For a list of possible modes see the Origin_* constants in amxconst.inc.
+ *
  * @param index     Client index
  * @param origin    Array to store origin in
  * @param mode      What type of origin to retrieve:
- *                    0 - current position
- *                    1 - position of eyes (and weapon)
- *                    2 - aim end position from client position
- *                    3 - aim end position from eyes (hit point for weapon)
- *                    4 - position of last bullet hit (only for Counter-Strike)
+ *                    Origin_Client - current position
+ *                    Origin_Eyes - position of eyes (and weapon)
+ *                    Origin_AimEndClient - aim end position from client position
+ *                    Origin_AimEndEyes - aim end position from eyes (hit point for weapon)
+ *                    Origin_CS_LastBullet - position of last bullet hit (only for Counter-Strike)
  *
  * @return          1 on success, 0 if client is not connected
  * @error           If the client index is not within the range of 1 to

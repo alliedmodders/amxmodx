@@ -533,4 +533,16 @@ enum
 	STATSX_MAX_STATS
 }
 
+/**
+ *  Constants for get_user_origin()
+ */
+enum
+{
+	Origin_Client = 0,      // Client's Origin
+	Origin_Eyes,            // Eyes (and Weapon) Origin
+	Origin_AimEndClient,    // Aim End Origin from Client's Position
+	Origin_AimEndEyes,      // Aim End Origin from Eyes Position
+	Origin_CS_LastBullet    // Last Bullet's Origin (Counter-Strike)
+}
+
 #include <cstrike_const> // To keep backward compatibility

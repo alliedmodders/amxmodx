@@ -496,7 +496,7 @@ native get_msg_args();
  *
  * @return               Argument type (see ARG_* constants in message_const.inc)
  */
-native get_msg_argtype(argn);
+native get_msg_argtype(any:argn);
 
 /**
  * Gets the integer value of a specified argument.
@@ -510,7 +510,7 @@ native get_msg_argtype(argn);
  * @error                If an invalid message argument is passed, an
  *                       error will be thrown.
  */
-native get_msg_arg_int(argn);
+native get_msg_arg_int(any:argn);
 
 /**
  * Gets the float value of a specified argument.
@@ -524,7 +524,7 @@ native get_msg_arg_int(argn);
  * @error                If an invalid message argument is passed, an
  *                       error will be thrown.
  */
-native Float:get_msg_arg_float(argn);
+native Float:get_msg_arg_float(any:argn);
 
 /**
  * Gets the string value from a specified argument.
@@ -540,7 +540,7 @@ native Float:get_msg_arg_float(argn);
  * @error                If an invalid message argument is passed, an
  *                       error will be thrown.
  */
-native get_msg_arg_string(argn, szReturn[], iLength);
+native get_msg_arg_string(any:argn, szReturn[], iLength);
 
 /**
  * Sets the integer value of a specified argument.
@@ -556,7 +556,7 @@ native get_msg_arg_string(argn, szReturn[], iLength);
  * @error                If an invalid message argument is passed, an
  *                       error will be thrown.
  */
-native set_msg_arg_int(argn, argtype, iValue);
+native set_msg_arg_int(any:argn, argtype, iValue);
 
 /**
  * Sets the float value of a specified argument.
@@ -572,7 +572,7 @@ native set_msg_arg_int(argn, argtype, iValue);
  * @error                If an invalid message argument is passed, an
  *                       error will be thrown.
  */
-native set_msg_arg_float(argn, argtype, Float:fValue);
+native set_msg_arg_float(any:argn, argtype, Float:fValue);
 
 /**
  * Sets the string value of a specified argument.
@@ -587,7 +587,7 @@ native set_msg_arg_float(argn, argtype, Float:fValue);
  * @error                If an invalid message argument is passed, an
  *                       error will be thrown.
  */
-native set_msg_arg_string(argn, const szString[]);
+native set_msg_arg_string(any:argn, const szString[]);
 
 /**
  * Gets the origin of a message.

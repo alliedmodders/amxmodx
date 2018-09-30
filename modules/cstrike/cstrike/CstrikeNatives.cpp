@@ -1054,7 +1054,7 @@ static cell AMX_NATIVE_CALL cs_get_user_hasprimary(AMX *amx, cell *params)
 	return 0;
 }
 
-// native cs_has_user_weapon_in_slot(index, slot);
+// native bool:cs_has_user_weapon_in_slot(index, slot);
 static cell AMX_NATIVE_CALL cs_has_user_weapon_in_slot(AMX *amx, cell *params)
 {
 	GET_OFFSET("CBasePlayer", m_rgpPlayerItems);

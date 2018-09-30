@@ -213,14 +213,14 @@ native cs_get_user_hasprim(index);
  * Returns if the client has a weapon in the specified inventory slot.
  *
  * @param index     Client index
- * @param slot      Slot to check
+ * @param slot      Slot to check. See CS_WEAPONSLOT_* in cstrike_const.inc for a list of possible values.
  *
  * @return          1 if the client has a weapon in the specified slot, 0 otherwise
  * @error           If the client index is not within the range of 1 to
  *                  MaxClients, or the client is not connected, an error will be
  *                  thrown.
  */
-native cs_has_user_weapon_in_slot(index, slot);
+native bool:cs_has_user_weapon_in_slot(index, slot);
 
 
 /**

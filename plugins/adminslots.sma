@@ -49,7 +49,9 @@ public client_authorized(id)
 	if (access(id, ADMIN_RESERVATION) || (players <= limit))
 	{
 		if (get_pcvar_num(g_HidePtr))
+		{
 			setVisibleSlots(players, limit);
+		}
 		return;
 	}
 
@@ -69,9 +71,13 @@ setVisibleSlots(players, limit)
 	new num = players + 1;
 
 	if (players == MaxClients)
+	{
 		num = MaxClients;
+	}
 	else if (players < limit)
+	{
 		num = limit;
+	}
 
 	set_pcvar_num(g_sv_visiblemaxplayers, num);
 }

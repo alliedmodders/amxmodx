@@ -52,7 +52,7 @@ public client_authorized(id)
 			setVisibleSlots(players, limit)
 		return
 	}
-	
+
  	server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "DROPPED_RES")
 }
 
@@ -72,6 +72,6 @@ setVisibleSlots(players, limit)
 		num = MaxClients
 	else if (players < limit)
 		num = limit
-	
+
 	set_pcvar_num(g_sv_visiblemaxplayers, num)
 }

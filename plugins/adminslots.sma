@@ -16,7 +16,8 @@
 
 new CvarReservation;
 new CvarHideSlots;
-new g_sv_visiblemaxplayers;
+
+new CvarHandleMaxVisiblePlayers;
 
 public plugin_init()
 {
@@ -28,7 +29,7 @@ public plugin_init()
 	hook_cvar_change(register_cvar("amx_reservation", "0", FCVAR_PROTECTED), "@OnReservationChange");
 	hook_cvar_change(register_cvar("amx_hideslots", "0"), "@OnHideSlotsChange");
 
-	g_sv_visiblemaxplayers = get_cvar_pointer("sv_visiblemaxplayers");
+	CvarHandleMaxVisiblePlayers = get_cvar_pointer("sv_visiblemaxplayers");
 }
 
 @OnReservationChange(const handle, const oldValue[], const newValue[])
@@ -89,5 +90,5 @@ setVisibleSlots(players, limit)
 		num = limit;
 	}
 
-	set_pcvar_num(g_sv_visiblemaxplayers, num);
+	set_pcvar_num(CvarHandleMaxVisiblePlayers, num);
 }

@@ -14,41 +14,51 @@
 #include <amxmodx>
 #include <amxmisc>
 
-new g_ResPtr;
-new g_HidePtr;
+new CvarReservation;
+new CvarHideSlots;
 new g_sv_visiblemaxplayers;
 
 public plugin_init()
 {
 	register_plugin("Slots Reservation", AMXX_VERSION_STR, "AMXX Dev Team");
+
 	register_dictionary("adminslots.txt");
 	register_dictionary("common.txt");
-	g_ResPtr = register_cvar("amx_reservation", "0", FCVAR_PROTECTED);
-	g_HidePtr = register_cvar("amx_hideslots", "0");
+
+	hook_cvar_change(register_cvar("amx_reservation", "0", FCVAR_PROTECTED), "@OnReservationChange");
+	hook_cvar_change(register_cvar("amx_hideslots", "0"), "@OnHideSlotsChange");
+
 	g_sv_visiblemaxplayers = get_cvar_pointer("sv_visiblemaxplayers");
 }
 
-public plugin_cfg()
+@OnReservationChange(const handle, const oldValue[], const newValue[])
 {
-	set_task(3.0, "MapLoaded");
+	CvarReservation = strtol(newValue);
+
+	if (CvarHideSlots)
+	{
+		setVisibleSlots(get_playersnum(1), MaxClients - CvarReservation);
+	}
 }
 
-public MapLoaded()
+@OnHideSlotsChange(const handle, const oldValue[], const newValue[])
 {
-	if (get_pcvar_num(g_HidePtr))
+	CvarHideSlots = strtol(newValue);
+
+	if (CvarReservation)
 	{
-		setVisibleSlots(get_playersnum(1), MaxClients - get_pcvar_num(g_ResPtr));
+		setVisibleSlots(get_playersnum(1), MaxClients - CvarReservation);
 	}
 }
 
 public client_authorized(id)
 {
 	new players = get_playersnum(1);
-	new limit = MaxClients - get_pcvar_num(g_ResPtr);
+	new limit = MaxClients - CvarReservation;
 
 	if (access(id, ADMIN_RESERVATION) || (players <= limit))
 	{
-		if (get_pcvar_num(g_HidePtr))
+		if (CvarHideSlots)
 		{
 			setVisibleSlots(players, limit);
 		}
@@ -60,9 +70,9 @@ public client_authorized(id)
 
 public client_remove(id)
 {
-	if (get_pcvar_num(g_HidePtr))
+	if (CvarHideSlots)
 	{
-		setVisibleSlots(get_playersnum(1), MaxClients - get_pcvar_num(g_ResPtr));
+		setVisibleSlots(get_playersnum(1), MaxClients - CvarReservation);
 	}
 }
 

@@ -56,9 +56,9 @@ public client_remove(id)
 	setVisibleSlots();
 }
 
-setVisibleSlots(id = 0)
+setVisibleSlots(const playerId = 0)
 {
-	if ((id == 0 && !CvarHideSlots) || !CvarReservation)
+	if ((playerId == 0 && !CvarHideSlots) || !CvarReservation)
 	{
 		if (get_pcvar_num(CvarHandleMaxVisiblePlayers) > 0)
 		{
@@ -68,14 +68,14 @@ setVisibleSlots(id = 0)
 		return;
 	}
 
-	new players = get_playersnum_ex(GetPlayers_IncludeConnecting);
-	new limit   = freeVisibleSlots();
+	new const playersCount = get_playersnum_ex(GetPlayers_IncludeConnecting);
+	new const freeVisibleSlots = MaxClients - CvarReservation;
 
-	if (id != 0)
+ 	if (playerId != 0)
 	{
-		if (players > limit && !access(id, ADMIN_RESERVATION))
+		if (playersCount > freeVisibleSlots && !access(playerId, ADMIN_RESERVATION))
 		{
-			server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "DROPPED_RES");
+			server_cmd("kick #%d ^"%L^"", get_user_userid(playerId), playerId, "DROPPED_RES");
 			return;
 		}
 
@@ -85,18 +85,18 @@ setVisibleSlots(id = 0)
 		}
 	}
 
-	new num = players + 1;
+	new maxVisiblePlayers = playersCount + 1;
 
-	if (players == MaxClients)
+	if (playersCount == MaxClients)
 	{
-		num = MaxClients;
+		maxVisiblePlayers = MaxClients;
 	}
-	else if (players < limit)
+	else if (playersCount < freeVisibleSlots)
 	{
-		num = limit;
+		maxVisiblePlayers = freeVisibleSlots;
 	}
 
-	resetVisibleSlots(num);
+	resetVisibleSlots(maxVisiblePlayers);
 }
 
 resetVisibleSlots(value)
@@ -107,9 +107,4 @@ resetVisibleSlots(value)
 	}
 
 	set_pcvar_num(CvarHandleMaxVisiblePlayers, value);
-}
-
-freeVisibleSlots()
-{
-	return MaxClients - CvarReservation;
 }

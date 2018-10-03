@@ -600,13 +600,6 @@ static int htoi(cell *val,const unsigned char *curptr)
     return (int)(ptr-curptr);
 }
 
-#if defined __APPLE__ || ((__GNUC__ && !__GNUC_PREREQ(2,1)) || __GNUC_PREREQ(2,27))
-static double pow10(double d)
-{
-  return pow(10, d);
-}
-#endif
-
 /*  ftoi
  *
  *  Attempts to interpret a numeric symbol as a rational number, either as
@@ -682,11 +675,7 @@ static int ftoi(cell *val,const unsigned char *curptr)
       exp=(exp*10)+(*ptr-'0');
       ptr++;
     } /* while */
-    #if defined __GNUC__
-      fmult=pow10(exp*sign);
-    #else
-      fmult=pow(10,exp*sign);
-    #endif
+    fmult=pow(10,exp*sign);
     fnum *= fmult;
     dnum *= (unsigned long)(fmult+0.5);
   } /* if */

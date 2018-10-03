@@ -36,49 +36,55 @@ public plugin_init()
 {
 	CvarReservation = strtol(newValue);
 
-	if (CvarHideSlots)
-	{
-		setVisibleSlots(get_playersnum(1), freeVisibleSlots());
-	}
+	setVisibleSlots();
 }
 
 @OnHideSlotsChange(const handle, const oldValue[], const newValue[])
 {
 	CvarHideSlots = strtol(newValue);
 
-	if (CvarReservation)
-	{
-		setVisibleSlots(get_playersnum(1), freeVisibleSlots());
-	}
+	setVisibleSlots();
 }
 
 public client_authorized(id)
 {
-	new players = get_playersnum(1);
-	new limit = freeVisibleSlots();
-
-	if (access(id, ADMIN_RESERVATION) || (players <= limit))
-	{
-		if (CvarHideSlots)
-		{
-			setVisibleSlots(players, limit);
-		}
-		return;
-	}
-
- 	server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "DROPPED_RES");
+	setVisibleSlots(id);
 }
 
 public client_remove(id)
 {
-	if (CvarHideSlots)
-	{
-		setVisibleSlots(get_playersnum(1), freeVisibleSlots());
-	}
+	setVisibleSlots();
 }
 
-setVisibleSlots(players, limit)
+setVisibleSlots(id = 0)
 {
+	if ((id == 0 && !CvarHideSlots) || !CvarReservation)
+	{
+		if (get_pcvar_num(CvarHandleMaxVisiblePlayers) > 0)
+		{
+			resetVisibleSlots(MaxClients);
+		}
+
+		return;
+	}
+
+	new players = get_playersnum(1);
+	new limit   = freeVisibleSlots();
+
+	if (id != 0)
+	{
+		if (players > limit && !access(id, ADMIN_RESERVATION))
+		{
+			server_cmd("kick #%d ^"%L^"", get_user_userid(id), id, "DROPPED_RES");
+			return;
+		}
+
+		if (!CvarHideSlots)
+		{
+			return;
+		}
+	}
+
 	new num = players + 1;
 
 	if (players == MaxClients)
@@ -90,7 +96,17 @@ setVisibleSlots(players, limit)
 		num = limit;
 	}
 
-	set_pcvar_num(CvarHandleMaxVisiblePlayers, num);
+	resetVisibleSlots(num);
+}
+
+resetVisibleSlots(value)
+{
+	if (value == MaxClients)
+	{
+		value = -1; // Default sv_visiblemaxplayers value.
+	}
+
+	set_pcvar_num(CvarHandleMaxVisiblePlayers, value);
 }
 
 freeVisibleSlots()

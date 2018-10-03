@@ -208,6 +208,7 @@ class AMXXConfig(object):
     ]
     cxx.cxxflags += [
       '-Wno-invalid-offsetof',
+      '-Wno-class-memaccess',
       '-std=c++11',
     ]
 

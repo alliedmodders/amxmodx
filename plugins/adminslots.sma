@@ -68,7 +68,7 @@ setVisibleSlots(id = 0)
 		return;
 	}
 
-	new players = get_playersnum(1);
+	new players = get_playersnum_ex(GetPlayers_IncludeConnecting);
 	new limit   = freeVisibleSlots();
 
 	if (id != 0)

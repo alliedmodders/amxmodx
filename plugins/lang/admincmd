@@ -9,11 +9,11 @@ TIME_CHOOSE = It's time to choose the nextmap...
 
 [de]
 CHO_FIN_EXT = Auswahl beendet. Laufende Map wird um %.0f Minuten verlaengert.
-CHO_FIN_NEXT = Auswahl beendet. Naechste Map ist %s
-CHOSE_EXT = %s waehlten Map-Verlaengerung
-X_CHOSE_X = %s waehlten %s
-CHOOSE_NEXTM = AMXX waehlt naechste Map
-EXTED_MAP = Verlangere Map %s
+CHO_FIN_NEXT = Auswahl beendet. Naechste Map ist: %s
+CHOSE_EXT = %s waehlte: Map-Verlaengerung
+X_CHOSE_X = %s waehlte: %s
+CHOOSE_NEXTM = [AMXX] Waehlt die naechste Map
+EXTED_MAP = Verlaengere Map %s
 TIME_CHOOSE = Es ist an der Zeit, die naechste Map zu waehlen...
 
 [sr]

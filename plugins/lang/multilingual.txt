@@ -10,15 +10,15 @@ TYPE_LANGMENU = Type 'amx_langmenu' in the console to display a menu where you c
 LANG_MENU_DISABLED = Language menu disabled.
 
 [de]
-LANG_NOT_EXISTS = Diese Sprache exsistiert nicht.
+LANG_NOT_EXISTS = Diese Sprache existiert nicht.
 PERSO_LANG = Eigene Sprache
-LANG_MENU = Sprach Menu
+LANG_MENU = Sprachmenu
 SERVER_LANG = Server Sprache
 SAVE_LANG = Spracheinstellung speichern
 SET_LANG_SERVER = Die Sprache des Servers wurde auf "%s" geaendert
 SET_LANG_USER = Deine Sprache wurde auf "%s" geaendert
-TYPE_LANGMENU = Schreibe 'amx_langmenu' in die Konsole zum Anzeigen des Sprachauswahlmenus
-LANG_MENU_DISABLED = Sprachen Menü deaktiviert.
+TYPE_LANGMENU = Schreibe 'amx_langmenu' in die Konsole zum Anzeigen des Sprachmenus
+LANG_MENU_DISABLED = Sprachmenu deaktiviert.
 
 [sr]
 LANG_NOT_EXISTS = Jezik ne postoji

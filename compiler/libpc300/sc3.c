@@ -2058,7 +2058,8 @@ static int nesting=0;
             error(35,argidx+1); /* argument type mismatch */
           /* Verify that the dimensions match with those in arg[argidx].
            * A literal array always has a single dimension.
-           * An iARRAYCELL parameter is also assumed to have a single dimension.
+           * An iARRAYCELL parameter is also assumed to have a single dimension,
+           * but its size may be >1 in case of an enumeration pseudo-array.
            */
           if (lval.sym==NULL || lval.ident==iARRAYCELL) {
             if (arg[argidx].numdim!=1) {
@@ -2066,7 +2067,8 @@ static int nesting=0;
             } else if (arg[argidx].dim[0]!=0) {
               assert(arg[argidx].dim[0]>0);
               if (lval.ident==iARRAYCELL) {
-                error(47);        /* array sizes must match */
+                if (lval.constval==0 || arg[argidx].dim[0]!=lval.constval)
+                  error(47);        /* array sizes must match */
               } else {
                 assert(lval.constval!=0); /* literal array must have a size */
                 /* A literal array must have exactly the same size as the

@@ -64,9 +64,9 @@ PLAYED_MAP = Pelattu map
 FRIEND_FIRE = Friendly fire
 
 [bg]
-NEXT_MAP = Sledva6tata karta:
+NEXT_MAP = Sledvashta karta:
 PLAYED_MAP = Igrana karta
-FRIEND_FIRE = Friendly fire
+FRIEND_FIRE = Priqtelski ogun
 
 [ro]
 NEXT_MAP = Urmatoarea Harta:
@@ -74,9 +74,9 @@ PLAYED_MAP = Harta Actuala
 FRIEND_FIRE = Friendly-Fire
 
 [hu]
-NEXT_MAP = A kovetkezo palya:
-PLAYED_MAP = Jatszott Palya
-FRIEND_FIRE = Csapattars Sebzes
+NEXT_MAP = A következő pálya:
+PLAYED_MAP = Jelenlegi Pálya
+FRIEND_FIRE = Csapattárs Sebzés
 
 [lt]
 NEXT_MAP = Kitas zemelapis:
@@ -89,9 +89,9 @@ PLAYED_MAP = Aktualna mapa
 FRIEND_FIRE = Friendly fire
 
 [mk]
-NEXT_MAP = Slednata mapa ke bide:
-PLAYED_MAP = Mapata sto ja igras se vika
-FRIEND_FIRE = Friendly fire
+NEXT_MAP = Sledna mapa:
+PLAYED_MAP = Momentalna mapa
+FRIEND_FIRE = Prijatelski ogan
 
 [hr]
 NEXT_MAP = Sljedeca mapa:

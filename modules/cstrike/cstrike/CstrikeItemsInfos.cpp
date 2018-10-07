@@ -17,7 +17,7 @@
 #include <resdk/mod_regamedll_api.h>
 
 CsItemInfo ItemsManager;
-ItemInfo WeaponsList[MAX_WEAPONS];
+ItemInfos WeaponsList[MAX_WEAPONS];
 
 #define PSTATE_ALIASES_TYPE       0
 #define PSTATE_ALIASES_ALIAS      1

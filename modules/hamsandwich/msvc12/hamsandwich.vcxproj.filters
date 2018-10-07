@@ -33,6 +33,9 @@
     <Filter Include="Memtools">
       <UniqueIdentifier>{c26eb07d-14b7-49e9-9122-6b7f5a711ecf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{ce1c1544-036d-4339-918f-a716641a3b4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\call_funcs.cpp">
@@ -129,5 +132,10 @@
     <None Include="..\..\..\plugins\include\hamsandwich.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

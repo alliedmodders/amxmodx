@@ -50,6 +50,11 @@ const bool RB_Int_Float_Int_Int = false;
 const int PC_Int_Float_Int_Int = 3;
 int  Hook_Int_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2);
 
+const bool RT_Bool_Float_Int_Int = false;
+const bool RB_Bool_Float_Int_Int = false;
+const int PC_Bool_Float_Int_Int = 3;
+bool Hook_Bool_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2);
+
 const bool RT_Void_Entvar_Int = true;
 const bool RB_Void_Entvar_Int = false;
 const int PC_Void_Entvar_Int = 2;
@@ -70,6 +75,16 @@ const bool RB_Void_Int_Int = false;
 const int PC_Void_Int_Int = 2;
 void Hook_Void_Int_Int(Hook *hook, void *pthis, int i1, int i2);
 
+const bool RT_Void_Int_Bool = true;
+const bool RB_Void_Int_Bool = false;
+const int PC_Void_Int_Bool = 2;
+void Hook_Void_Int_Bool(Hook *hook, void *pthis, int i1, bool i2);
+
+const bool RT_Void_Bool_Bool = true;
+const bool RB_Void_Bool_Bool = false;
+const int PC_Void_Bool_Bool = 2;
+void Hook_Void_Bool_Bool(Hook *hook, void *pthis, bool i1, bool i2);
+
 const bool RT_Int_Int_Str_Int = false;
 const bool RB_Int_Int_Str_Int = false;
 const int PC_Int_Int_Str_Int = 3;
@@ -81,10 +96,20 @@ const bool RB_Int_Int_Str_Int_Int = false;
 const int PC_Int_Int_Str_Int_Int = 4;
 int  Hook_Int_Int_Str_Int_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i2, int i3);
 
+const bool RT_Int_Int_Str_Int_Bool = false;
+const bool RB_Int_Int_Str_Int_Bool = false;
+const int PC_Int_Int_Str_Int_Bool = 4;
+int  Hook_Int_Int_Str_Int_Bool(Hook *hook, void *pthis, int i1, const char *sz1, int i2, bool i3);
+
 const bool RT_Int_Int = false;
 const bool RB_Int_Int = false;
 const int PC_Int_Int = 1;
 int  Hook_Int_Int(Hook *hook, void *pthis, int i1);
+
+const bool RT_Bool_Bool = false;
+const bool RB_Bool_Bool = false;
+const int PC_Bool_Bool = 1;
+bool  Hook_Bool_Bool(Hook *hook, void *pthis, bool i1);
 
 const bool RT_Int_Entvar = false;
 const bool RB_Int_Entvar = false;
@@ -177,6 +202,11 @@ const bool RB_Int_pVector = false;
 const int PC_Int_pVector = 1;
 int Hook_Int_pVector(Hook *hook, void *pthis, Vector *v1);
 
+const bool RT_Bool_pVector = false;
+const bool RB_Bool_pVector = false;
+const int PC_Bool_pVector = 1;
+bool Hook_Bool_pVector(Hook *hook, void *pthis, Vector *v1);
+
 const bool RT_Void_Entvar_Float_Float = true;
 const bool RB_Void_Entvar_Float_Float = false;
 const int PC_Void_Entvar_Float_Float = 3;
@@ -203,6 +233,10 @@ const bool RB_Int_ItemInfo = false;
 const int PC_Int_ItemInfo = 1;
 int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo);
 
+const bool RT_Bool_ItemInfo = false;
+const bool RB_Bool_ItemInfo = false;
+const int PC_Bool_ItemInfo = 1;
+bool Hook_Bool_ItemInfo(Hook *hook, void *pthis, void *iteminfo);
 
 const bool RT_Float_Void = false;
 const bool RB_Float_Void = false;
@@ -263,6 +297,11 @@ const bool RB_Int_Int_Int = false;
 const int PC_Int_Int_Int = 2;
 int Hook_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2);
 
+const bool RT_Bool_Bool_Int = false;
+const bool RB_Bool_Bool_Int = false;
+const int PC_Bool_Bool_Int = 2;
+bool Hook_Bool_Bool_Int(Hook *hook, void *pthis, bool i1, int i2);
+
 const bool RT_Void_Str_Float_Float_Float = true;
 const bool RB_Void_Str_Float_Float_Float = false;
 const int PC_Void_Str_Float_Float_Float = 4;
@@ -272,6 +311,11 @@ const bool RT_Void_Str_Float_Float_Float_Int_Cbase = true;
 const bool RB_Void_Str_Float_Float_Float_Int_Cbase = false;
 const int PC_Void_Str_Float_Float_Float_Int_Cbase = 6;
 void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3, int i1, void *cb);
+
+const bool RT_Void_Str_Float_Float_Float_Bool_Cbase = true;
+const bool RB_Void_Str_Float_Float_Float_Bool_Cbase = false;
+const int PC_Void_Str_Float_Float_Float_Bool_Cbase = 6;
+void Hook_Void_Str_Float_Float_Float_Bool_Cbase(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3, bool i1, void *cb);
 
 const bool RT_Int_Vector_Vector_Float_Float= false;
 const bool RB_Int_Vector_Vector_Float_Float = false;
@@ -346,10 +390,20 @@ const bool RB_Void_Str_Int = false;
 const int PC_Void_Str_Int = 2;
 void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2);
 
+const bool RT_Bool_Cbase_Int = false;
+const bool RB_Bool_Cbase_Int = false;
+const int PC_Bool_Cbase_Int = 2;
+bool Hook_Bool_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1);
+
 const bool RT_Void_Cbase_Int = true;
 const bool RB_Void_Cbase_Int = false;
 const int PC_Void_Cbase_Int = 2;
 void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1);
+
+const bool RT_Void_Cbase_Int_Float = true;
+const bool RB_Void_Cbase_Int_Float = false;
+const int PC_Void_Cbase_Int_Float = 3;
+void Hook_Void_Cbase_Int_Float(Hook *hook, void *pthis, void *p1, int i1, float f1);
 
 const bool RT_Void_Str = true;
 const bool RB_Void_Str = false;
@@ -401,15 +455,35 @@ const bool RB_Int_Cbase_Bool = false;
 const int PC_Int_Cbase_Bool = 2;
 int Hook_Int_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1);
 
+const bool RT_Bool_Cbase_Bool = false;
+const bool RB_Bool_Cbase_Bool = false;
+const int PC_Bool_Cbase_Bool = 2;
+bool Hook_Bool_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1);
+
 const bool RT_Int_Vector_Vector = false;
 const bool RB_Int_Vector_Vector = false;
 const int PC_Int_Vector_Vector = 6;
 int Hook_Int_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2);
 
+const bool RT_Int_pVector_pVector = false;
+const bool RB_Int_pVector_pVector = false;
+const int PC_Int_pVector_pVector = 3;
+int Hook_Int_pVector_pVector(Hook *hook, void *pthis, Vector *v1, Vector *v2);
+
+const bool RT_Bool_pVector_pVector = false;
+const bool RB_Bool_pVector_pVector = false;
+const int PC_Bool_pVector_pVector = 3;
+bool Hook_Bool_pVector_pVector(Hook *hook, void *pthis, Vector *v1, Vector *v2);
+
 const bool RT_Int_Entvar_Float = false;
 const bool RB_Int_Entvar_Float = false;
 const int PC_Int_Entvar_Float = 2;
 int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1);
+
+const bool RT_Bool_Entvar_Float = false;
+const bool RB_Bool_Entvar_Float = false;
+const int PC_Bool_Entvar_Float = 2;
+bool Hook_Bool_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1);
 
 const bool RT_Float_Float = false;
 const bool RB_Float_Float = false;
@@ -455,6 +529,11 @@ const bool RT_Bool_Cbase = false;
 const bool RB_Bool_Cbase = false;
 const int PC_Bool_Cbase = 1;
 bool Hook_Bool_Cbase(Hook *hook, void *pthis, void *cb);
+
+const bool RT_Bool_Entvar = false;
+const bool RB_Bool_Entvar = false;
+const int PC_Bool_Entvar = 1;
+bool Hook_Bool_Entvar(Hook *hook, void *pthis, entvars_t *ev1);
 
 const bool RT_Bool_Int = false;
 const bool RB_Bool_Int = false;

@@ -19,6 +19,7 @@ typedef struct hook_s
 	int isset;								// whether or not this hook is registered with hamdata
 	int vtid;								// vtable index of this function
 	const char *name;						// name used in the keys
+	bool isremoved;                         // whether or not this function is no more available in the mod
 	bool isvoid;							// whether or not the target trampoline uses voids
 	bool needsretbuf;						// whether or not a pointer to a memory buffer is needed to store a return value
 	int  paramcount;						// how many parameters are in the func

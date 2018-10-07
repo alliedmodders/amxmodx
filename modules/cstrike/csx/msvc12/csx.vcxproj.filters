@@ -18,6 +18,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{3f559917-fcbd-4cd3-8136-8a7a769af465}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{95e872b8-d195-4d02-8a88-aed2894c54fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CMisc.cpp">
@@ -60,8 +63,16 @@
     <None Include="..\..\..\plugins\include\csstats.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+    <None Include="..\..\..\plugins\include\csstats_const.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
     <None Include="..\..\..\plugins\include\csx.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

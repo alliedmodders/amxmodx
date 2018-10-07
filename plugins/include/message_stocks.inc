@@ -16,7 +16,15 @@
 #endif
 #define _message_stocks_included
 
-/* Creates a death message. */
+/**
+ * Sends a death message.
+ *
+ * @param killer        Killer id
+ * @param victim        Victim id
+ * @param weaponNUM     Weapon index
+ *
+ * @noreturn
+ */
 stock dod_make_deathmsg(killer, victim, weaponNUM)
 {
 	static msgid = 0;
@@ -33,7 +41,14 @@ stock dod_make_deathmsg(killer, victim, weaponNUM)
 	return 1;
 }
 
-/* Kills a user without a message. */
+/**
+ * Kills a user without a message.
+ *
+ * @param index         Client index
+ * @param flag          If nonzero, the death will not affect the client's score
+ *
+ * @noreturn
+ */
 stock user_silentkill(index, flag = 1)
 {
 	static msgid = 0;
@@ -50,7 +65,16 @@ stock user_silentkill(index, flag = 1)
 	return 1;
 }
 
-/* Creates a death message. */
+/**
+ * Creates a death message.
+ *
+ * @param killer        Killer id
+ * @param victim        Victim id
+ * @param headshot      Headshot
+ * @param weapon        Weapon
+ *
+ * @noreturn
+ */
 stock make_deathmsg(killer, victim, headshot, const weapon[])
 {
 	static msgid = 0;

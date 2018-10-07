@@ -98,12 +98,13 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 		}
 	case TR_pHit:
 		{
-			edict_t *e = TypeConversion.id_to_edict(*ptr);
-			if (!e || FNullEnt(e))
-				return 0; //TODO: return error
-			tr->pHit = e;
+			const auto pEdict = TypeConversion.id_to_edict(*ptr);
+			if (pEdict == nullptr)
+			{
+				return 0;
+			}
+			tr->pHit = pEdict;
 			return 1;
-			break;
 		}
 	case TR_iHitgroup:
 		{
@@ -187,7 +188,7 @@ static cell AMX_NATIVE_CALL get_tr2(AMX *amx, cell *params)
 		}
 	case TR_pHit:
 		{
-			if (tr->pHit == NULL || FNullEnt(tr->pHit))
+			if (FNullEnt(tr->pHit))
 				return -1;
 			return ENTINDEX(tr->pHit);
 			break;

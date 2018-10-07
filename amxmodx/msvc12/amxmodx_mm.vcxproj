@@ -96,6 +96,14 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
     </Link>
+    <PreBuildEvent>
+      <Command>cd ..
+md -p JIT 2&gt;NUL
+%NASM_PATH%nasm.exe -f win32 helpers-x86.asm -o JIT/helpers-x86.obj 
+%NASM_PATH%nasm.exe -f win32 natives-x86.asm -o JIT/natives-x86.obj 
+%NASM_PATH%nasm.exe -f win32 amxexecn.asm -o JIT/amxexecn.obj 
+%NASM_PATH%nasm.exe -O0 -f win32 amxjitsn.asm -o JIT/amxjitsn.obj</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">
     <Midl>
@@ -148,6 +156,14 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
     </Link>
+    <PreBuildEvent>
+      <Command>cd ..
+md -p JIT 2&gt;NUL
+%NASM_PATH%nasm.exe -f win32 helpers-x86.asm -o JIT/helpers-x86.obj 
+%NASM_PATH%nasm.exe -f win32 natives-x86.asm -o JIT/natives-x86.obj 
+%NASM_PATH%nasm.exe -f win32 amxexecn.asm -o JIT/amxexecn.obj 
+%NASM_PATH%nasm.exe -O0 -f win32 amxjitsn.asm -o JIT/amxjitsn.obj</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\public\memtools\CDetour\asm\asm.c" />
@@ -430,7 +446,10 @@
     <ClInclude Include="..\..\public\sdk\moduleconfig.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\version.rc" />
+    <ResourceCompile Include="..\version.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='JITDebug|Win32'">../../public;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='JITRelease|Win32'">../../public;</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\plugins\include\cellstack.inc" />
@@ -438,6 +457,7 @@
     <None Include="..\..\plugins\include\cvars.inc" />
     <None Include="..\..\plugins\include\datapack.inc" />
     <None Include="..\..\plugins\include\gameconfig.inc" />
+    <None Include="..\..\plugins\include\newmenus.inc" />
     <None Include="..\..\plugins\include\string_const.inc" />
     <None Include="..\..\plugins\include\string_stocks.inc" />
     <None Include="..\..\plugins\include\textparse_ini.inc" />

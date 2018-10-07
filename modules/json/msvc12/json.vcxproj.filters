@@ -22,6 +22,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{aaebd544-6579-4a7e-9c6b-2ccc3c0280be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{50d2c03b-6783-40f5-8cb5-78ca29e9cfdc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\JsonMngr.cpp">
@@ -58,5 +61,10 @@
     <None Include="..\..\..\plugins\include\json.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

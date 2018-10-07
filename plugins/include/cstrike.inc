@@ -740,6 +740,17 @@ native cs_get_armoury_type(index, &count = 1);
 native cs_set_armoury_type(index, type, count = -1);
 
 /**
+ * Returns the weapon entity index that was packed into a weaponbox.
+ *
+ * @param weaponboxIndex  Weaponbox entity index
+ *
+ * @return                Weapon entity index on success or 0 if no weapon can be found
+ * @error                 If a non-weaponbox entity is provided or the entity is invalid, an error will be
+ *                        thrown.
+ */
+native cs_get_weaponbox_item(weaponboxIndex);
+
+/**
  * Returns the map zones the client is inside of as a bitflag value.
  *
  * @note If the user does not have the ability to plant (cs_get_user_plant()

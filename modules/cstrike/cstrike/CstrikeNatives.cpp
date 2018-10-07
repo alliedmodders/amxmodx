@@ -882,7 +882,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 
 		GET_OFFSET("CBasePlayer", m_modelIndexPlayer);
 
-		char modelpath[260];
+		char modelpath[PLATFORM_MAX_PATH];
 		ke::SafeSprintf(modelpath, sizeof(modelpath), "models/player/%s/%s.mdl", newModel, newModel);
 
 		auto modelIndex = 0;
@@ -1998,6 +1998,34 @@ static cell AMX_NATIVE_CALL cs_get_user_weapon(AMX *amx, cell *params)
 	return 0;
 }
 
+// native cs_get_weaponbox_item(weaponboxIndex);
+static cell AMX_NATIVE_CALL cs_get_weaponbox_item(AMX *amx, cell *params)
+{
+	GET_OFFSET("CWeaponBox", m_rgpPlayerItems);
+
+	int weaponboxIndex = params[1];
+	CHECK_NONPLAYER(weaponboxIndex);
+	edict_t *pWeaponBox = TypeConversion.id_to_edict(weaponboxIndex);
+
+	if (strcmp(STRING(pWeaponBox->v.classname), "weaponbox") != 0)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Not a weaponbox entity! (%d)", weaponboxIndex);
+		return 0;
+	}
+
+	edict_t *pWeapon;
+	for (int i = 1; i < MAX_ITEM_TYPES; i++)
+	{
+		pWeapon = TypeConversion.cbase_to_edict(get_pdata<void *>(pWeaponBox, m_rgpPlayerItems, i));
+		if (!FNullEnt(pWeapon))
+		{
+			return TypeConversion.edict_to_id(pWeapon);
+		}
+	}
+
+	return 0;
+}
+
 AMX_NATIVE_INFO CstrikeNatives[] =
 {
 	{"cs_set_user_money",			cs_set_user_money},
@@ -2070,5 +2098,6 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_get_weapon_info",          cs_get_weapon_info},
 	{"cs_get_user_weapon_entity",   cs_get_user_weapon_entity},
 	{"cs_get_user_weapon",          cs_get_user_weapon},
+	{"cs_get_weaponbox_item",		cs_get_weaponbox_item},
 	{nullptr,						nullptr}
 };

@@ -21,6 +21,21 @@
 	#pragma loadlib fun
 #endif
 
+
+/**
+ * Parts of body for hits, for use with set_user_hitzones().
+ */
+const HITZONE_GENERIC  = (1 << HIT_GENERIC);   // 1
+const HITZONE_HEAD     = (1 << HIT_HEAD);      // 2
+const HITZONE_CHEST    = (1 << HIT_CHEST);     // 4
+const HITZONE_STOMACH  = (1 << HIT_STOMACH);   // 8
+const HITZONE_LEFTARM  = (1 << HIT_LEFTARM);   // 16
+const HITZONE_RIGHTARM = (1 << HIT_RIGHTARM);  // 32
+const HITZONE_LEFTLEG  = (1 << HIT_LEFTLEG);   // 64
+const HITZONE_RIGHTLEG = (1 << HIT_RIGHTLEG);  // 128
+const HITZONES_DEFAULT = HITZONE_GENERIC | HITZONE_HEAD     | HITZONE_CHEST   | HITZONE_STOMACH | 
+                         HITZONE_LEFTARM | HITZONE_RIGHTARM | HITZONE_LEFTLEG | HITZONE_RIGHTLEG; // 255
+
 /**
  * Tells whether receiver hears sender via voice communication.
  *
@@ -29,7 +44,7 @@
  *
  * @return              1 if receiver hears the sender, 0 otherwise.
  * @error               If receiver or sender are not connected or not
- *                      within the range of 1 to MaxClients.
+ *                      within the range of 1 to MaxClients
  */
 native get_client_listen(receiver, sender);
 
@@ -40,14 +55,14 @@ native get_client_listen(receiver, sender);
  * @param sender        Sender
  * @param listen        1 if receiver should be able to hear sender, 0 if not
  *
- * @return              0 if the setting can't be done for some reason.
+ * @return              0 if the setting can't be done for some reason
  * @error               If receiver or sender are not connected or not
  *                      within the range of 1 to MaxClients.
  */
 native set_client_listen(receiver, sender, listen);
 
 /**
- * Sets player's godmode
+ * Sets player's godmode.
  *
  * @param index         Client index
  * @param godmode       1 to enable godmode, 0 to disable
@@ -59,7 +74,7 @@ native set_client_listen(receiver, sender, listen);
 native set_user_godmode(index, godmode = 0);
 
 /**
- * Tells whether a player has godmode on
+ * Tells whether a player has godmode on.
  *
  * @param index         Client index
  *
@@ -70,7 +85,7 @@ native set_user_godmode(index, godmode = 0);
 native get_user_godmode(index);
 
 /**
- * Sets player's armor amount
+ * Sets player's armor amount.
  *
  * @param index         Client index
  * @param armor         The armor amount to set
@@ -82,7 +97,7 @@ native get_user_godmode(index);
 native set_user_armor(index, armor);
 
 /**
- * Sets player's health amount
+ * Sets player's health amount.
  *
  * @param index         Client index
  * @param health        The health amount to set
@@ -94,7 +109,7 @@ native set_user_armor(index, armor);
 native set_user_health(index, health);
 
 /**
- * Moves a player to the given origin
+ * Moves a player to the given origin.
  *
  * @param index         Client index
  * @param origin        Origin to move a player to
@@ -106,17 +121,17 @@ native set_user_health(index, health);
 native set_user_origin(index, const origin[3]);
 
 /**
- * Sets player's rendering mode
+ * Sets player's rendering mode.
  *
  * @note A really useful render modes reference:
  *		 https://sites.google.com/site/svenmanor/rendermodes
  *
  * @param index         Client index
- * @param fx            Rendering effects. One of kRenderFx* constants.
+ * @param fx            Rendering effects. One of kRenderFx* constants
  * @param r             The amount of red color (0 to 255)
  * @param g             The amount of green color (0 to 255)
  * @param b             The amount of blue color (0 to 255)
- * @param render        Render mode. One of kRender* constants.
+ * @param render        Render mode. One of kRender* constants
  * @param amount        Render amount (0 to 255)
  *
  * @noreturn
@@ -125,48 +140,62 @@ native set_user_origin(index, const origin[3]);
  */
 native set_user_rendering(index, fx = kRenderFxNone, r = 0, g = 0, b = 0, render = kRenderNormal, amount = 0);
 
- /**
- * Gives an item to a player.
+/**
+ * Gets player's rendering mode.
+ *
+ * @note A really useful render modes reference:
+ *		 https://sites.google.com/site/svenmanor/rendermodes
  *
  * @param index         Client index
- * @param item          Classname of the item to give. Should start with either
- *                      "weapon_", "ammo_", "item_" or "tf_weapon_".
- *
- * @noreturn
- * @error               If player is not connected or not within the range
- *                      of 1 to MaxClients or item creation fails.
- */
-native give_item(index, const item[]);
-
- /**
- * Sets (adds, removes) hit zones for a player.
- *
- * @note This actually set rules of how any player can hit any other. Example:
- *       set_user_hitzones(id, target, 2);
- *       makes @id be able to hit @target only in the head.
- *
- * @param index         Client index
- * @param target        The target player
- * @param body          A bitsum of the body parts that can/can't be shot.
- *                      1     generic
- *                      2   - head
- *                      4   - chest
- *                      8   - stomach
- *                      16  - left arm
- *                      32  - right arm
- *                      64  - left leg
- *                      128 - right leg
+ * @param fx            Variable to store the rendering effect
+ * @param r             Variable to store the amount of red color
+ * @param g             Variable to store the amount of green color
+ * @param b             Variable to store the amount of blue color
+ * @param render        Variable to store the render mode
+ * @param amount        Variable to store the render amount
  *
  * @noreturn
  * @error               If player is not connected or not within the range
  *                      of 1 to MaxClients.
  */
-native set_user_hitzones(index = 0, target = 0, body = 255);
+native get_user_rendering(index, &fx = kRenderFxNone, &r = 0, &g = 0, &b = 0, &render = kRenderNormal, &amount = 0);
+
+/**
+ * Gives an item to a player.
+ *
+ * @param index         Client index
+ * @param item          Classname of the item to give. Should start with either
+ *                      "weapon_", "ammo_", "item_" or "tf_weapon_"
+ *
+ * @return              Item entity index. If an invalid item name is
+ *                      given or the item failed to create, it will return 0.
+ *                      If the item was removed, it will return -1
+ * @error               If player is not connected or not within the range
+ *                      of 1 to MaxClients or item creation fails.
+ */
+native give_item(index, const item[]);
+
+/**
+ * Sets (adds, removes) hit zones for a player.
+ *
+ * @note This actually sets rules of how any player can hit any other.
+ *       Example: set_user_hitzones(id, target, 2) - makes @id able to
+ *       hit @target only in the head.
+ *
+ * @param index         Client index
+ * @param target        The target player
+ * @param body          A bitsum of the body parts that can/can't be shot. See HITZONE* constants.
+ *
+ * @noreturn
+ * @error               If player is not connected or not within the range
+ *                      of 1 to MaxClients.
+ */
+native set_user_hitzones(index = 0, target = 0, body = HITZONES_DEFAULT);
 
 /**
  * Gets the set of hit zone "rules" between @index and @target players.
  *
- * @note For the body part bitsum take a look at the set_user_hitzones() native.
+ * @note For the body part bitsum, see HITZONE* constants.
  *
  * @param index         Client index
  * @param target        The target player
@@ -178,7 +207,7 @@ native set_user_hitzones(index = 0, target = 0, body = 255);
 native get_user_hitzones(index, target);
 
 /**
- * Sets player's maximum movement speed
+ * Sets player's maximum movement speed.
  *
  * @param index         Client index
  * @param speed         The maximum speed player will be able to run at
@@ -190,7 +219,7 @@ native get_user_hitzones(index, target);
 native set_user_maxspeed(index, Float:speed = -1.0);
 
 /**
- * Gets player's maximum movement speed
+ * Gets player's maximum movement speed.
  *
  * @param index         Client index
  *
@@ -201,7 +230,7 @@ native set_user_maxspeed(index, Float:speed = -1.0);
 native Float:get_user_maxspeed(index);
 
 /**
- * Sets player's gravity
+ * Sets player's gravity.
  *
  * @param index         Client index
  * @param gravity       Gravity value to set, 1.0 being normal gravity (800)
@@ -213,7 +242,7 @@ native Float:get_user_maxspeed(index);
 native set_user_gravity(index, Float:gravity = 1.0);
 
 /**
- * Gets player's gravity
+ * Gets player's gravity.
  *
  * @param index         Client index
  *
@@ -224,7 +253,7 @@ native set_user_gravity(index, Float:gravity = 1.0);
 native Float:get_user_gravity(index);
 
 /**
- * Spawns an entity
+ * Spawns an entity.
  *
  * @param index         Entity index
  *
@@ -235,7 +264,7 @@ native Float:get_user_gravity(index);
 native spawn(index);
 
 /**
- * Sets player's noclip
+ * Enables or disables player's noclip.
  *
  * @param index         Client index
  * @param noclip        1 to enable noclip, 0 to disable
@@ -247,7 +276,7 @@ native spawn(index);
 native set_user_noclip(index, noclip = 0);
 
 /**
- * Gets player's noclip
+ * Gets whether a player has noclip enabled or not.
  *
  * @param index         Client index
  *
@@ -258,7 +287,7 @@ native set_user_noclip(index, noclip = 0);
 native get_user_noclip(index);
 
 /**
- * Tells whether a player has silent footsteps
+ * Tells whether a player has silent footsteps enabled.
  *
  * @param index         Client index
  *
@@ -269,7 +298,7 @@ native get_user_noclip(index);
 native get_user_footsteps(index);
 
 /**
- * Sets player's silent footsteps
+ * Enables or disables player's silent footsteps.
  *
  * @param index        Client index
  * @param set          1 if player should have silent footsteps, 0 otherwise
@@ -292,7 +321,7 @@ native set_user_footsteps(id, set = 1);
 native strip_user_weapons(index);
 
 /**
- * Sets player's frags amount
+ * Sets player's frags amount.
  *
  * @param index         Client index
  * @param frags         The amount of frags to set

@@ -107,6 +107,11 @@ void OnAmxxDetach()
 	ConfigManager->CloseGameConfigFile(CommonConfig);
 	ConfigManager->CloseGameConfigFile(GamerulesConfig);
 
+	if (HasRegameDll)
+	{
+		ReGameHookchains->InstallGameRules()->unregisterHook(InstallGameRules);
+	}
+
 	while (!g_FreeTRs.empty())
 	{
 		delete g_FreeTRs.front();

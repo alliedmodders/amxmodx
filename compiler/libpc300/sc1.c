@@ -408,11 +408,47 @@ void inst_datetime_defines()
   insert_subst("__TIME__", ltime, 8);
 }
 
+void inst_file_name(char *file, int strip_path)
+{
+  char newname[_MAX_PATH];
+  char *fileptr;
+
+  fileptr = NULL;
+
+  if (strip_path) {
+    size_t i, len;
+    int slashchar;
+
+    len = strlen(file);
+    for (i = len - 1; i < len; i--)
+    {
+      slashchar = file[i] == '/';
+    #if defined WIN32 || defined _WIN32
+      slashchar = slashchar || file[i] == '\\';
+    #endif
+      if (slashchar)
+      {
+        fileptr = &file[i + 1];
+        break;
+      }
+    }
+  }
+
+  if (fileptr == NULL) {
+    fileptr = file;
+  }
+
+  snprintf(newname, sizeof(newname), "\"%s\"", fileptr);
+
+  insert_subst("__FILE__", newname, 8);
+}
+
+
 static void inst_binary_name(char *binfname)
 {
   size_t i, len;
   char *binptr;
-  char newpath[512], newname[512];
+  char newname[_MAX_PATH];
   int slashchar;
 
   binptr = NULL;
@@ -435,11 +471,9 @@ static void inst_binary_name(char *binfname)
     binptr = binfname;
   }
 
-  snprintf(newpath, sizeof(newpath), "\"%s\"", binfname);
   snprintf(newname, sizeof(newname), "\"%s\"", binptr);
 
-  insert_subst("__BINARY_PATH__", newpath, 15);
-  insert_subst("__BINARY_NAME__", newname, 15);
+  insert_subst("__BINARY__", newname, 10);
 }
 
 /*  "main" of the compiler
@@ -598,6 +632,7 @@ int pc_compile(int argc, char *argv[])
       delete_substtable();
       inst_datetime_defines();
       inst_binary_name(binfname);
+      inst_file_name(inpfname, TRUE);
     #endif
     resetglobals();
     sc_ctrlchar=sc_ctrlchar_org;
@@ -663,6 +698,7 @@ int pc_compile(int argc, char *argv[])
     delete_substtable();
     inst_datetime_defines();
     inst_binary_name(binfname);
+    inst_file_name(inpfname, TRUE);
   #endif
   resetglobals();
   sc_ctrlchar=sc_ctrlchar_org;

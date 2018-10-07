@@ -55,9 +55,44 @@ public stock const NULL_STRING[1];
 public stock const Float:NULL_VECTOR[3];
 
 /**
- * The maximum buffer size required to store a clients name.
+ * The maximum buffer size required to store a client's name.
  */
 #define MAX_NAME_LENGTH 32
+
+/**
+ * The maximum buffer size required to store a client's IP address without a port.
+ */
+#define MAX_IP_LENGTH 16
+
+/**
+ * The maximum buffer size required to store a client's IP address with a port.
+ */
+#define MAX_IP_WITH_PORT_LENGTH 22
+
+/**
+ * The maximum buffer size required to store a client's AuthID.
+ */
+#define MAX_AUTHID_LENGTH 64
+
+/**
+ * The maximum buffer size required to store a resource path.
+ */
+#define MAX_RESOURCE_PATH_LENGTH 64
+
+/**
+ * The maximum buffer size that can be displayed in a MOTD.
+ */
+#define MAX_MOTD_LENGTH 1536
+
+/**
+ * The maximum size accepted by the user info buffer.
+ */
+#define MAX_USER_INFO_LENGTH 256
+
+/**
+ * The maximum buffer size that can be displayed in a menu.
+ */
+#define MAX_MENU_LENGTH 512
 
 /**
  * π
@@ -151,6 +186,7 @@ public stock const Float:NULL_VECTOR[3];
 #define HIT_LEFTLEG     6
 #define HIT_RIGHTLEG    7
 #define HIT_SHIELD      8 // CS only
+#define MAX_BODYHITS    8
 
 /**
  * @section emit_sound() constants
@@ -514,6 +550,34 @@ enum FindPlayerFlags (<<= 1)
 	FindPlayer_MatchUserId,        // Match with userid
 	FindPlayer_CaseInsensitive,    // Match case insensitively
 	FindPlayer_IncludeConnecting   // Include connecting clients
+}
+
+/**
+ * Constants for client statistics
+ */
+enum
+{
+	STATSX_KILLS = 0,
+	STATSX_DEATHS,
+	STATSX_HEADSHOTS,
+	STATSX_TEAMKILLS,
+	STATSX_SHOTS,
+	STATSX_HITS,
+	STATSX_DAMAGE,
+	STATSX_RANK,
+	STATSX_MAX_STATS
+}
+
+/**
+ *  Constants for get_user_origin()
+ */
+enum
+{
+	Origin_Client = 0,      // Client's Origin
+	Origin_Eyes,            // Eyes (and Weapon) Origin
+	Origin_AimEndClient,    // Aim End Origin from Client's Position
+	Origin_AimEndEyes,      // Aim End Origin from Eyes Position
+	Origin_CS_LastBullet    // Last Bullet's Origin (Counter-Strike)
 }
 
 #include <cstrike_const> // To keep backward compatibility

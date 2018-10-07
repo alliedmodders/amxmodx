@@ -10,6 +10,7 @@
 #include "amxmodx.h"
 #include "CMenu.h"
 #include "newmenus.h"
+#include "format.h"
 
 ke::Vector<Menu *> g_NewMenus;
 CStack<int> g_MenuFreeStack;
@@ -90,9 +91,9 @@ bool CloseNewMenus(CPlayer *pPlayer)
 	return true;
 }
 
-Menu::Menu(const char *title, AMX *amx, int fid) : m_Title(title), m_ItemColor("\\r"), 
+Menu::Menu(const char *title, AMX *amx, int fid, bool use_ml) : m_Title(title), m_ItemColor("\\r"), 
 m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
-isDestroying(false), pageCallback(-1), items_per_page(7)
+isDestroying(false), pageCallback(-1), showPageNumber(true), useMultilingual(use_ml), amx(amx), items_per_page(7)
 {
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
 	menuId = g_menucmds.registerMenuId(title, amx);
@@ -316,11 +317,6 @@ bool Menu::Display(int player, page_t page)
 
 	CPlayer *pPlayer = GET_PLAYER_POINTER_I(player);
 
-	pPlayer->keys = 0;
-	pPlayer->menu = 0;
-
-	UTIL_FakeClientCommand(pPlayer->pEdict, "menuselect", "10", 0);
-
 	pPlayer->keys = keys;
 	pPlayer->menu = menuId;
 	pPlayer->newmenu = thisId;
@@ -361,18 +357,32 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 
 	m_Text = nullptr;
 
+
+	auto title = m_Title.chars();
+
+	if (this->useMultilingual)
+	{
+		const auto language = playerlang(player);
+		const auto definition = translate(this->amx, language, title);
+
+		if (definition)
+		{
+			title = definition;
+		}
+	}
+
 	char buffer[255];
-	if (items_per_page && (pages != 1))
+	if (showPageNumber && items_per_page && (pages != 1))
 	{
 		if (m_AutoColors)
-			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s %d/%d\n\\w\n", m_Title.chars(), page + 1, pages);
+			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s %d/%d\n\\w\n", title, page + 1, pages);
 		else
-			ke::SafeSprintf(buffer, sizeof(buffer), "%s %d/%d\n\n", m_Title.chars(), page + 1, pages);
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s %d/%d\n\n", title, page + 1, pages);
 	} else {
 		if (m_AutoColors)
-			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s\n\\w\n", m_Title.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "\\y%s\n\\w\n", title);
 		else
-			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n\n", m_Title.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n\n", title);
 	}
 	
 	m_Text = m_Text + buffer;
@@ -467,24 +477,37 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			option_display = 0;
 		}
 
+		auto itemName = pItem->name.chars();
+
+		if (this->useMultilingual)
+		{
+			const auto language = playerlang(player);
+			const auto definition = translate(this->amx, language, itemName);
+
+			if (definition)
+			{
+				itemName = definition;
+			}
+		}
+
 		if (pItem->isBlank)
 		{
-			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n", pItem->name.chars());
+			ke::SafeSprintf(buffer, sizeof(buffer), "%s\n", itemName);
 		}
 		else if (enabled)
 		{
-			if (m_AutoColors) 
+			if (m_AutoColors)
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.\\w %s\n", m_ItemColor.chars(),option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.\\w %s\n", m_ItemColor.chars(),option_display, itemName);
 			} else {
-				ke::SafeSprintf(buffer, sizeof(buffer), "%d. %s\n", option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "%d. %s\n", option_display, itemName);
 			}
 		} else {
 			if (m_AutoColors)
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer), "\\d%d. %s\n\\w", option_display, pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "\\d%d. %s\n\\w", option_display, itemName);
 			} else {
-				ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", pItem->name.chars());
+				ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", itemName);
 			}
 		}
 		slots++;
@@ -625,38 +648,45 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d(%d)", p, g_NewMenus.length()); \
 	return 0; }
 
-//Makes a new menu handle (-1 for failure)
-//native csdm_makemenu(title[]);
+// native menu_create(const title[], const handler[], bool:ml = false);
 static cell AMX_NATIVE_CALL menu_create(AMX *amx, cell *params)
 {
-	int len;
-	char *title = get_amxstring(amx, params[1], 0, len);
-	validate_menu_text(title);
-	char *handler = get_amxstring(amx, params[2], 1, len);
+	enum args { arg_count, arg_title, arg_handler, arg_ml };
 
-	int func = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
-	
-	if (func == -1)
+	int length;
+	const auto title    = get_amxstring(amx, params[arg_title], 0, length);
+	const auto handler  = get_amxstring(amx, params[arg_handler], 1, length);
+	const auto callback = registerSPForwardByName(amx, handler, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+
+	if (callback == -1)
 	{
-		LogError(amx, AMX_ERR_NOTFOUND, "Invalid function \"%s\"", handler);
+		LogError(amx, AMX_ERR_NOTFOUND, R"(Invalid function "%s")", handler);
 		return 0;
 	}
 
-	Menu *pMenu = new Menu(title, amx, func);
+	validate_menu_text(title);
+
+	auto pMenu = new Menu(title, amx, callback, params[arg_ml] != 0);
 
 	if (g_MenuFreeStack.empty())
 	{
 		g_NewMenus.append(pMenu);
-		pMenu->thisId = (int)g_NewMenus.length() - 1;
-	} else {
-		int pos = g_MenuFreeStack.front();
+
+		pMenu->thisId = static_cast<int>(g_NewMenus.length()) - 1;
+	}
+	else
+	{
+		const auto position = g_MenuFreeStack.front();
+
 		g_MenuFreeStack.pop();
-		g_NewMenus[pos] = pMenu;
-		pMenu->thisId = pos;
+		g_NewMenus[position] = pMenu;
+
+		pMenu->thisId = position;
 	}
 
 	return pMenu->thisId;
 }
+
 static cell AMX_NATIVE_CALL menu_addblank(AMX *amx, cell *params)
 {
 	GETMENU(params[1]);
@@ -828,6 +858,20 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (g_bmod_cstrike)
+	{
+		enum JoinState { Joined = 0 };
+		enum MenuState { Menu_OFF = 0, Menu_ChooseTeam = 1, Menu_ChooseAppearance = 3 };
+
+		GET_OFFSET("CBasePlayer", m_iJoiningState);
+		GET_OFFSET("CBasePlayer", m_iMenu);
+
+		if (get_pdata<int>(pPlayer->pEdict, m_iJoiningState) == Joined || (get_pdata<int>(pPlayer->pEdict, m_iMenu) != Menu_ChooseTeam && get_pdata<int>(pPlayer->pEdict, m_iMenu) != Menu_ChooseAppearance))
+		{
+			set_pdata<int>(pPlayer->pEdict, m_iMenu, Menu_OFF);
+		}
+	}
+
 	int time = -1;
 	if (params[0] / sizeof(cell) >= 4)
 		time = params[4];
@@ -982,6 +1026,11 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 			unregisterSPForward(pMenu->pageCallback);
 			pMenu->pageCallback = callback;
 
+			break;
+		}
+	case MPROP_SHOWPAGE:
+		{
+			pMenu->showPageNumber = (get_amxaddr(amx, params[3]) != 0);
 			break;
 		}
 	case MPROP_SET_NUMBER_COLOR:

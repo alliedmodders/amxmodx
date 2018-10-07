@@ -4,7 +4,11 @@
 use strict;
 use Cwd;
 use File::Basename;
+use File::stat;
+use File::Temp qw/ tempfile :seekable/;
 use Net::FTP;
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+use Time::localtime;
 
 my ($ftp_file, $ftp_host, $ftp_user, $ftp_pass, $ftp_path);
 
@@ -33,6 +37,47 @@ $version .= '-git' . Build::GitRevNum('.');
 
 #Switch to the output folder.
 chdir(Build::PathFormat('../../../OUTPUT'));
+
+my $needNewGeoIP = 1;
+if (-e '../GeoLite2-Country.tar.gz')
+{
+	my $stats = stat('../GeoLite2-Country.tar.gz');
+	if ($stats->size != 0)
+	{
+		my $fileModifiedTime = $stats->mtime;
+		my $fileModifiedMonth = localtime($fileModifiedTime)->mon;
+		my $currentMonth = localtime->mon;
+		my $thirtyOneDays = 60 * 60 * 24 * 31;
+
+		# GeoIP file only updates once per month
+		if ($currentMonth == $fileModifiedMonth || (time() - $fileModifiedTime) < $thirtyOneDays)
+		{
+			$needNewGeoIP = 0;
+		}
+	}
+}
+
+if ($needNewGeoIP)
+{
+    print "Downloading GeoLite2-Country.mmdb...\n";
+    system('wget -q -O ../GeoLite2-Country.tar.gz https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz');
+}
+else
+{
+    print "Reusing existing GeoLite2-Country.mmdb\n";
+}
+
+my $geoIPfile = 'packages/base/addons/amxmodx/data/GeoLite2-Country.mmdb';
+if (-e $geoIPfile) {
+	unlink($geoIPfile);
+}
+
+open(my $fh, ">", $geoIPfile) 
+    	or die "cannot open $geoIPfile for writing: $!";
+binmode($fh);
+gunzip '../GeoLite2-Country.tar.gz' => $fh
+        or die "gunzip failed: $GunzipError\n";
+close($fh);
 
 my (@packages,@mac_exclude);
 @packages = ('base', 'cstrike', 'dod', 'esf', 'ns', 'tfc', 'ts');
@@ -82,17 +127,30 @@ if ($ftp_path ne '')
 $ftp->binary();
 for ($i = 0; $i <= $#packages; $i++) {
 	my ($filename);
+	my ($latest);
 	if ($^O eq "linux") {
 		$filename = "amxmodx-$version-" . $packages[$i] . "-linux.tar.gz";
+		$latest = "amxmodx-latest-" . $packages[$i] . "-linux";
 	} elsif ($^O eq "darwin") {
 		next if ($packages[$i] ~~ @mac_exclude);
 		$filename = "amxmodx-$version-" . $packages[$i] . "-mac.zip";
+		$latest = "amxmodx-latest-" . $packages[$i] . "-mac";
 	} else {
 		$filename = "amxmodx-$version-" . $packages[$i] . "-windows.zip";
+		$latest = "amxmodx-latest-" . $packages[$i] . "-windows";
 	}
+
+	my ($tmpfh, $tmpfile) = tempfile();
+	print $tmpfh $filename;
+	$tmpfh->seek( 0, SEEK_END );
+
 	print "Uploading $filename...\n";
 	$ftp->put($filename)
 		or die "Cannot drop file $filename ($ftp_path): " . $ftp->message . "\n";
+
+	print "Uploading $latest...\n";
+	$ftp->put($tmpfile, $latest)
+		or die "Cannot drop file $latest ($ftp_path): " . $ftp->message . "\n";
 }
 
 $ftp->close();

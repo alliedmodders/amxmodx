@@ -4,8 +4,8 @@ MSG_FREQ = Scrolling message displaying frequency: %d:%02d minutes
 MSG_DISABLED = Scrolling message disabled
 
 [de]
-MIN_FREQ = Minimale Frequenz fuer diese Anzeige sind %d Sekunden
-MSG_FREQ = Scrollnachricht Anzeigefrequenz: %d:%02d Minuten
+MIN_FREQ = Die minimale Frequenz fuer diese Anzeige sind %d Sekunden
+MSG_FREQ = Anzeigefrequenz der Scrollnachricht : %d:%02d Minuten
 MSG_DISABLED = Scrollnachrichten abgeschaltet
 
 [sr]

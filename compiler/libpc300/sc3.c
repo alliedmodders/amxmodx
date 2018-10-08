@@ -1012,11 +1012,13 @@ static int hier13(value *lval)
   if (matchtoken('?')) {
     int flab1=getlabel();
     int flab2=getlabel();
+    int flab3=getlabel();
     value lval2 = {0};
     int array1,array2;
 
     int orig_heap=decl_heap;
     int diff1=0,diff2=0;
+    int maxdiff;
     if (lvalue) {
       rvalue(lval);
     } else if (lval->ident==iCONSTEXPR) {
@@ -1054,20 +1056,26 @@ static int hier13(value *lval)
     /* ??? if both are arrays, should check dimensions */
     if (!matchtag(lval->tag,lval2.tag,FALSE))
       error(213);               /* tagname mismatch ('true' and 'false' expressions) */
-    setlabel(flab2);
-    if (lval->ident==iARRAY)
-      lval->ident=iREFARRAY;    /* iARRAY becomes iREFARRAY */
-    else if (lval->ident!=iREFARRAY)
-      lval->ident=iEXPRESSION;  /* iREFARRAY stays iREFARRAY, rest becomes iEXPRESSION */
     if (orig_heap!=decl_heap) {
       diff2=abs(decl_heap-orig_heap);
       decl_heap=orig_heap;
     }
-    if (diff1==diff2) {
-      decl_heap+=(diff1/2);
-    } else {
-      decl_heap+=(diff1+diff2);
-    }
+    maxdiff=diff1>diff2 ? diff1 : diff2;
+    pushreg(sALT);
+    modheap((maxdiff-diff2)*sizeof(cell));
+    popreg(sALT);
+    jumplabel(flab3);
+
+    setlabel(flab2);
+    pushreg(sALT);
+    modheap((maxdiff-diff1)*sizeof(cell));
+    popreg(sALT);
+    setlabel(flab3);
+    if (lval->ident==iARRAY)
+      lval->ident=iREFARRAY;    /* iARRAY becomes iREFARRAY */
+    else if (lval->ident!=iREFARRAY)
+      lval->ident=iEXPRESSION;  /* iREFARRAY stays iREFARRAY, rest becomes iEXPRESSION */
+    decl_heap+=maxdiff;
     return FALSE;               /* conditional expression is no lvalue */
   } else {
     return lvalue;

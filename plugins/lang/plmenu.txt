@@ -34,7 +34,7 @@ TRANSF_TO = zu den %s schieben
 TRANSF_SILENT = Stiller Transfer
 CL_CMD_MENU = Menü > Spielerbefehle
 NO_CMDS = keine Befehle verfügbar
-CANT_PERF_PLAYER = Diese Aktion kann nicht am spieler "%s" ausgeführt werden.
+CANT_PERF_PLAYER = Diese Aktion kann nicht am Spieler "%s" ausgeführt werden.
 
 [sr]
 ADMIN_BAN_1 = ADMIN: ban %s

@@ -88,7 +88,8 @@ CT = CT
 CTS = CTs
 TERRORIST = TERRORIST
 TERRORISTS = TERRORISTEN
-REMAINING = %d %s übrig...
+REMAINING_ENEMY = Ein Gegner übrig...
+REMAINING_ENEMIES = %d Gegner übrig...
 KILLS = kills
 HS = hs
 

@@ -20,21 +20,21 @@ CANT_PERF_PLAYER = That action can't be performed on player "%s"
 [de]
 ADMIN_BAN_1 = ADMIN: bannt %s
 ADMIN_BAN_2 = ADMIN %s: bannt %s
-BAN_MENU = Menu > bannen
-BAN_FOR_MIN = Bann fuer %d Minuten
-BAN_PERM = fuer immer bannen
-SLAP_SLAY_MENU = Schlagen/Toeten-Menu
-SLAP_WITH_DMG = Schlaegt mit %d Schaden
-SLAY = toeten
-KICK_MENU = Menu >kicken
+BAN_MENU = Menü > bannen
+BAN_FOR_MIN = für %d Minuten bannen
+BAN_PERM = für immer bannen
+SLAP_SLAY_MENU = Schlagen/Killen-Menü
+SLAP_WITH_DMG = mit %d Schaden schlagen
+SLAY = killen
+KICK_MENU = Menü > kicken
 ADMIN_TRANSF_1 = ADMIN: verschiebt %s zu den %s
 ADMIN_TRANSF_2 = ADMIN %s: verschiebt %s zu den %s
-TEAM_MENU = Menu > Team
-TRANSF_TO = zu den %s geschoben
+TEAM_MENU = Menü > Team
+TRANSF_TO = zu den %s schieben
 TRANSF_SILENT = Stiller Transfer
-CL_CMD_MENU = Menu > Spielerbefehle
-NO_CMDS = keine Befehle verfuegbar
-CANT_PERF_PLAYER = Diese Aktion kann nicht am spieler "%s" ausgefuehrt werden.
+CL_CMD_MENU = Menü > Spielerbefehle
+NO_CMDS = keine Befehle verfügbar
+CANT_PERF_PLAYER = Diese Aktion kann nicht am spieler "%s" ausgeführt werden.
 
 [sr]
 ADMIN_BAN_1 = ADMIN: ban %s

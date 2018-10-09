@@ -550,7 +550,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		{
 			new ppl[MAX_PLAYERS], pplnum, epplnum, a
 			get_players(ppl, epplnum, "ae", team == TEAM_T ? "CT" : "TERRORIST")
-			get_players(ppl, pplnum, "ae", team == TEAM_T ? "TERRORIST" : "CT")
+			get_players(ppl, pplnum, "ae", team == TEAM_CT ? "TERRORIST" : "CT")
 			if( victim_alive )
 			{
 				for(a=0; a<pplnum; a++)

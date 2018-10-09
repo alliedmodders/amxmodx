@@ -12,7 +12,7 @@ COL_MAROON = maroon
 PRINT_ALL = (ALL) %s :   %s
 
 [de]
-COL_WHITE = weiss
+COL_WHITE = weiß
 COL_RED = rot
 COL_GREEN = grün
 COL_BLUE = blau

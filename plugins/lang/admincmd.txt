@@ -146,8 +146,8 @@ ADMIN_LEAVE_2 = ADMIN %s: erlaubt %s %s %s %s
 ADMIN_NICK_1 = ADMIN: ändert Name von %s zu "%s"
 ADMIN_NICK_2 = ADMIN %s: ändert Name von %s zu "%s"
 CHANGED_NICK = Name von %s zu "%s" geändert
-ADMIN_EXTEND_1 = ADMIN: Verlängere Map für %d Minuten
-ADMIN_EXTEND_2 = ADMIN %s: Verlängere Map für %d Minuten
+ADMIN_EXTEND_1 = ADMIN: Verlängere Map um %d Minuten
+ADMIN_EXTEND_2 = ADMIN %s: Verlängere Map um %d Minuten
 MAP_EXTENDED = Map "%s" wurde um %d Minuten verlängert
 
 [sr]

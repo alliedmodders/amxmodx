@@ -14,7 +14,7 @@ PRINT_ALL = (ALL) %s :   %s
 [de]
 COL_WHITE = weiss
 COL_RED = rot
-COL_GREEN = gruen
+COL_GREEN = grün
 COL_BLUE = blau
 COL_YELLOW = gelb
 COL_MAGENTA = magenta-rot

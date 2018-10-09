@@ -8,13 +8,13 @@ EXTED_MAP = Extend map %s
 TIME_CHOOSE = It's time to choose the nextmap...
 
 [de]
-CHO_FIN_EXT = Auswahl beendet. Laufende Map wird um %.0f Minuten verlaengert.
-CHO_FIN_NEXT = Auswahl beendet. Naechste Map ist: %s
-CHOSE_EXT = %s waehlte: Map-Verlaengerung
-X_CHOSE_X = %s waehlte: %s
-CHOOSE_NEXTM = [AMXX] Waehlt die naechste Map
-EXTED_MAP = Verlaengere Map %s
-TIME_CHOOSE = Es ist an der Zeit, die naechste Map zu waehlen...
+CHO_FIN_EXT = Auswahl beendet. Laufende Map wird um %.0f Minuten verlängert.
+CHO_FIN_NEXT = Auswahl beendet. Nächste Map ist %s
+CHOSE_EXT = %s wählte Map-Verlängerung
+X_CHOSE_X = %s wählte %s
+CHOOSE_NEXTM = [AMXX] Wählt die nächste Map
+EXTED_MAP = Verlängere Map %s
+TIME_CHOOSE = Es ist an der Zeit, die nächste Map zu wählen...
 
 [sr]
 CHO_FIN_EXT = Biranje zavrseno. Sadasnja mapa ce biti produzena za %.0f minuta

@@ -75,8 +75,8 @@ COM_PAUSE_ADD = ^tadd <title> - markiert ein Plugin als nicht pausierbar
 SAVE_PAUSED = Speichere pausierte Plugins
 COM_PAUSE_SAVE_PAUSED = ^tsave - speichert die Liste der pausierten Plugins
 COM_PAUSE_CLEAR_PAUSED = ^tclear - leert die Liste der pausierten Plugins
-CANT_UNPAUSE_PLUGIN = Das Plugin "%s" ist gestoppt und kann nicht pausiert oder fortgesetzt werden.
-CLEAR_PAUSED = Löschen der Datei pausierten
+CANT_UNPAUSE_PLUGIN = Das Plugin "%s" ist gestoppt und kann nicht pausiert oder aktiviert werden.
+CLEAR_PAUSED = Löscht die Liste der pausierten Plugins
 
 [sr]
 PAUSE_COULDNT_FIND = Nije moguce naci plugin koji se poklapa sa "%s"

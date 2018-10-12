@@ -4,7 +4,7 @@ PLAYED_MAP = Played map
 FRIEND_FIRE = Friendly fire
 
 [de]
-NEXT_MAP = Naechste Map:
+NEXT_MAP = Nächste Map:
 PLAYED_MAP = Gespielte Maps
 FRIEND_FIRE = Friendly fire
 

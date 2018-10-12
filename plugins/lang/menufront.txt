@@ -19,7 +19,7 @@ TELE_PLAYER = Teleport Player
 [de]
 KICK_PLAYER = Kick Spieler
 BAN_PLAYER = Ban Spieler
-SLAP_SLAY = Schlage/Toete Spieler
+SLAP_SLAY = Schlage/Kille Spieler
 TEAM_PLAYER = Team Spieler ^n
 CHANGEL = Mapwechsel
 VOTE_MAPS = Map Abstimmung ^n

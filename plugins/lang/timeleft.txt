@@ -9,7 +9,7 @@ SECONDS = seconds
 
 [de]
 THE_TIME = Es ist
-TIME_LEFT = Zeit uebrig
+TIME_LEFT = Zeit übrig
 NO_T_LIMIT = Kein Zeitlimit
 MINUTE = Minute
 MINUTES = Minuten

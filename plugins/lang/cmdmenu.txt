@@ -4,9 +4,9 @@ CONF_MENU = Configs Menu
 SPE_MENU = Speech Menu
 
 [de]
-CMD_MENU = Menu > Befehle
-CONF_MENU = Menu > Konfiguration
-SPE_MENU = Menu > Sprechen
+CMD_MENU = Menü > Befehle
+CONF_MENU = Menü > Konfiguration
+SPE_MENU = Menü > Sprechen
 
 [sr]
 CMD_MENU = Komandne

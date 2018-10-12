@@ -158,9 +158,9 @@ ST_SPEC_RANK = Spec. Rang Info
 ST_BOMB_PLANTED_SOUND = Bombe platziert Sound
 ST_BOMB_DEF_SUCC_SOUND = Bombe entschärfen erf. Sound
 ST_BOMB_DEF_FAIL_SOUND = Bombe entschärfen fehl. Sound
-ST_BOMB_CD_HUD = Bomben Countdown Hud
+ST_BOMB_CD_HUD = Bomben Countdown HUD
 ST_LAST_MAN_SOUND = Letzter Mann Sound
-ST_LAST_MAN_HEALTH = Letzter Mann Health
+ST_LAST_MAN_HEALTH = Letzter Mann HP
 ST_HE_KILL_SOUND = Granatenkill Sound
 ST_HE_SUICIDE_SOUND = Granaten Selbstmord Sound
 

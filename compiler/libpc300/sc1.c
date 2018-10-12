@@ -628,6 +628,7 @@ int pc_compile(int argc, char *argv[])
     /* reset "defined" flag of all functions and global variables */
     reduce_referrers(&glbtab);
     delete_symbols(&glbtab,0,TRUE,FALSE);
+    delete_heaplisttable();
     #if !defined NO_DEFINE
       delete_substtable();
       inst_datetime_defines();
@@ -805,6 +806,7 @@ cleanup:
       free(sc_documentation);
   #endif
   delete_autolisttable();
+  delete_heaplisttable();
   if (errnum!=0) {
     if (strlen(errfname)==0)
       pc_printf("\n%d Error%s.\n",errnum,(errnum>1) ? "s" : "");

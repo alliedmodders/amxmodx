@@ -280,6 +280,12 @@ typedef struct s_stringpair {
   char *documentation;
 } stringpair;
 
+typedef struct s_valuepair {
+  struct s_valuepair *next;
+  long first;
+  long second;
+} valuepair;
+
 /* macros for code generation */
 #define opcodes(n)      ((n)*sizeof(cell))      /* opcode size */
 #define opargs(n)       ((n)*sizeof(cell))      /* size of typical argument */
@@ -700,6 +706,9 @@ SC_FUNC void delete_docstringtable(void);
 SC_FUNC stringlist *insert_autolist(char *string);
 SC_FUNC char *get_autolist(int index);
 SC_FUNC void delete_autolisttable(void);
+SC_FUNC valuepair *push_heaplist(long first, long second);
+SC_FUNC int popfront_heaplist(long *first, long *second);
+SC_FUNC void delete_heaplisttable(void);
 SC_FUNC stringlist *insert_dbgfile(const char *filename);
 SC_FUNC stringlist *insert_dbgline(int linenr);
 SC_FUNC stringlist *insert_dbgsymbol(symbol *sym);

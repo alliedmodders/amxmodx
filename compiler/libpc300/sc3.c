@@ -1010,6 +1010,8 @@ static int hier13(value *lval)
 {
   int lvalue=plnge1(hier12,lval);
   if (matchtoken('?')) {
+    int locheap=decl_heap;      /* save current heap delta */
+    long heap1,heap2; /* max. heap delta either branch */
     int flab1=getlabel();
     int flab2=getlabel();
     value lval2 = {0};
@@ -1021,21 +1023,41 @@ static int hier13(value *lval)
       ldconst(lval->constval,sPRI);
       error(lval->constval ? 206 : 205);        /* redundant test */
     } /* if */
+    if (sc_status!=statFIRST) {
+      #if !defined NDEBUG
+        int result=
+      #endif
+      popfront_heaplist(&heap1,&heap2);
+      assert(result);           /* pop off equally many items than were pushed */
+    } /* if */
     jmp_eq0(flab1);             /* go to second expression if primary register==0 */
     PUSHSTK_I(sc_allowtags);
     sc_allowtags=FALSE;         /* do not allow tagnames here (colon is a special token) */
+    if (sc_status==statWRITE) {
+      modheap(heap1*sizeof(cell));
+      decl_heap+=heap1;         /* equilibrate the heap (see comment below) */
+    } /* if */
     if (hier13(lval))
       rvalue(lval);
     if (lval->ident==iCONSTEXPR)        /* load constant here */
       ldconst(lval->constval,sPRI);
     sc_allowtags=(short)POPSTK_I();     /* restore */
+    heap1=decl_heap-locheap;    /* save heap space used in "true" branch */
+    assert(heap1>=0);
+    decl_heap=locheap; /* restore heap delta */
     jumplabel(flab2);
     setlabel(flab1);
     needtoken(':');
+    if (sc_status==statWRITE) {
+      modheap(heap2*sizeof(cell));
+      decl_heap+=heap2;         /* equilibrate the heap (see comment below) */
+    } /* if */
     if (hier13(&lval2))
       rvalue(&lval2);
     if (lval2.ident==iCONSTEXPR)        /* load constant here */
       ldconst(lval2.constval,sPRI);
+    heap2=decl_heap-locheap;    /* save heap space used in "false" branch */
+    assert(heap2>=0);
     array1= (lval->ident==iARRAY || lval->ident==iREFARRAY);
     array2= (lval2.ident==iARRAY || lval2.ident==iREFARRAY);
     if (array1 && !array2) {
@@ -1049,6 +1071,18 @@ static int hier13(value *lval)
     if (!matchtag(lval->tag,lval2.tag,FALSE))
       error(213);               /* tagname mismatch ('true' and 'false' expressions) */
     setlabel(flab2);
+    if (sc_status==statFIRST) {
+      /* Calculate the max. heap space used by either branch and save values of
+       * max - heap1 and max - heap2. On the second pass, we use these values
+       * to equilibrate the heap space used by either branch. This is needed
+       * because we don't know (at compile time) which branch will be taken,
+       * but the heap cannot be restored inside each branch because the result
+       * on the heap may needed by the remaining expression.
+       */
+      int max=(heap1>heap2) ? heap1 : heap2;
+      push_heaplist(max-heap1,max-heap2);
+    } /* if */
+    assert(sc_status!=statWRITE || heap1==heap2);
     if (lval->ident==iARRAY)
       lval->ident=iREFARRAY;    /* iARRAY becomes iREFARRAY */
     else if (lval->ident!=iREFARRAY)

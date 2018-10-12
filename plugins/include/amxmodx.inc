@@ -685,6 +685,42 @@ native disable_logevent(handle);
 native set_hudmessage(red = 200, green = 100, blue = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1);
 
 /**
+ * Sets display parameters for hudmessages.
+ *
+ * @note As of AMXX 1.61, setting the channel to -1 will automatically choose
+ *       the next available HUD channel for the client.
+ * @note There are four different HUD channels available on the client (1-4).
+ *       Sending a hudmessage to a channel will overwrite any existing messages
+ *       already displaying on that channel.
+ * @note If you plan to create a permanent message, don't forget to specify a
+ *       specific channel to avoid possible flickering due to auto-channeling.
+ * @note For the hudmessage coordinates x and y, -1.0 will center the message
+ *       on the respective axis.
+ * @note These parameters stay until the next call to set_hudmessage overwrites
+ *       them. Multiple calls to show_hudmessage will therefore re-use the same
+ *       parameters. The parameters are not stored per-plugin, so other plugins
+ *       can overwrite them.
+ *
+ * @param red1          Red component of hudmessage color
+ * @param green1        Green component of hudmessage color
+ * @param blue1         Blue component of hudmessage color
+ * @param red2          Red component of hudmessage color
+ * @param green2        Green component of hudmessage color
+ * @param blue2         Blue component of hudmessage color
+ * @param x             Location of the message on the x axis in percent
+ * @param y             Location of the message on the y axis in percent
+ * @param effects       Display effect
+ * @param fxtime        Duration of the effect
+ * @param holdtime      Time the message stays on screen
+ * @param fadeintime    Time it takes the message to fully appear (fade-in)
+ * @param fadeouttime   Time it takes the message to fully disappear (fade-out)
+ * @param channel       Channel to use on the client
+ *
+ * @noreturn
+ */
+native set_hudmessage_ex(red1 = 200, green1 = 100, blue1 = 0, red2 = 255, green2 = 255, blue2 = 250, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1);
+
+/**
  * Displays a message on the client HUD.
  *
  * @note Use set_hudmessage to define how the message should look on screen.
@@ -729,6 +765,34 @@ native show_hudmessage(index, const message[], any:...);
  * @noreturn
  */
 native set_dhudmessage(red = 200, green = 100, blue = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2);
+
+/**
+ * Sets display parameters for director hudmessages.
+ *
+ * @note For the hudmessage coordinates x and y, -1.0 will center the message
+ *       on the respective axis.
+ * @note These parameters stay until the next call to set_dhudmessage overwrites
+ *       them. Multiple calls to show_dhudmessage will therefore re-use the same
+ *       parameters. The parameters are not stored per-plugin, so other plugins
+ *       can overwrite them.
+ *
+ * @param red1          Red component of hudmessage color
+ * @param green1        Green component of hudmessage color
+ * @param blue1         Blue component of hudmessage color
+ * @param red2          Red component of hudmessage color
+ * @param green2        Green component of hudmessage color
+ * @param blue2         Blue component of hudmessage color
+ * @param x             Location of the message on the x axis in percent
+ * @param y             Location of the message on the y axis in percent
+ * @param effects       Display effect
+ * @param fxtime        Duration of the effect
+ * @param holdtime      Time the message stays on screen
+ * @param fadeintime    Time it takes the message to fully appear (fade-in)
+ * @param fadeouttime   Time it takes the message to fully disappear (fade-out)
+ *
+ * @noreturn
+ */
+native set_dhudmessage_ex(red1 = 200, green1 = 100, blue1 = 0, red2 = 255, green2 = 255, blue2 = 250, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2);
 
 /**
  * Displays a director message on the client HUD.

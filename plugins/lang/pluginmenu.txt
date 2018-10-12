@@ -54,3 +54,22 @@ CMD_EXECUTED = Komandata "%s" e izpulnena s "%s"
 COMMANDS = Komandi
 PLUGIN_CVAR_MENU = Menu s cvarove za pluginite
 PLUGIN_CMD_MENU = Menu s komandi za pluginite
+
+[de]
+PLUGINCVARMENU_DESC = - zeigt das Plugin-CVAR-Menü an
+PLUGINCMDMENU_DESC = - zeigt das Plugin-Befehlsmenü an
+PLUGIN_NOT_RUNNING = Plugin %s läuft nicht
+CVAR_NOT_CHANGED = CVAR unverändert
+CVAR_PTR_ERROR = Beim Versuch den Wert der CVAR (Name = "%s") auszugeben ist ein Fehler aufgetreten.
+CVAR_TYPE_NEW_VALUE = Geben Sie den neuen Wert für %s ein - oder "!cancel", um abzubrechen.
+CVARS = CVARs
+CMD_NAME_ERROR = Beim Versuch den Befehlsnamen auszugeben ist ein Fehler aufgetreten.
+CMD_TYPE_PARAMS = Geben Sie die Parameter für %s ein - oder "!cancel", um abzubrechen.
+CMD_EXEC_NO_PARAMS = Befehl "%s" wurde ohne Parameter ausgeführt.
+EXEC_WITH_PARAMS = Mit Parameter(n) ausführen
+EXEC_WITHOUT_PARAMS = Ohne Parameter ausführen
+CMD_NOT_EXECUTED = Befehl wurde nicht ausgeführt.
+CMD_EXECUTED = Befehl "%s" wurde mit "%s" ausgeführt.
+COMMANDS = Befehle
+PLUGIN_CVAR_MENU = Plugin-CVAR-Menü
+PLUGIN_CMD_MENU = Plugin-Befehlsmenü

@@ -136,7 +136,7 @@ extern bool gDoForwards;
 #define CHECK_RETURN_VEC()												\
 		if (thisresult < HAM_OVERRIDE)									\
 		{																\
-			memcpy(out, &origret, sizeof(Vector));						\
+			memcpy(static_cast<void *>(out), &origret, sizeof(Vector));						\
 			return;							\
 		}
 
@@ -852,8 +852,8 @@ void Hook_Vector_Float_Cbase_Int(Hook *hook, Vector *out, void *pthis, float f1,
 
 	MAKE_VECTOR()
 
-	memset(&ret, 0x0, sizeof(Vector));
-	memset(&origret, 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&ret), 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&origret), 0x0, sizeof(Vector));
 
 	int iEnt = TypeConversion.cbase_to_id(cb);
 	
@@ -879,7 +879,7 @@ void Hook_Vector_Float_Cbase_Int(Hook *hook, Vector *out, void *pthis, float f1,
 	POP()
 
 	CHECK_RETURN_VEC()
-	memcpy(out, &ret, sizeof(Vector));
+	memcpy(static_cast<void *>(out), &ret, sizeof(Vector));
 }
 
 void Hook_Void_Cbase_Cbase_Int_Float(Hook *hook, void *pthis, void *cb1, void *cb2, int i1, float f1)
@@ -1038,8 +1038,8 @@ void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
 
 	MAKE_VECTOR()
 
-	memset(&ret, 0x0, sizeof(Vector));
-	memset(&origret, 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&ret), 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&origret), 0x0, sizeof(Vector));
 
 	PRE_START()
 	PRE_END()
@@ -1056,7 +1056,7 @@ void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
 	KILL_VECTOR()
 	POP()
 	CHECK_RETURN_VEC()
-	memcpy(out, &ret, sizeof(Vector));
+	memcpy(static_cast<void *>(out), &ret, sizeof(Vector));
 
 }
 
@@ -1074,8 +1074,8 @@ void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1)
 	MAKE_VECTOR()
 	P_PTRVECTOR(v1)
 
-	memset(&ret, 0x0, sizeof(Vector));
-	memset(&origret, 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&ret), 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&origret), 0x0, sizeof(Vector));
 
 	PRE_START()
 		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
@@ -1094,7 +1094,7 @@ void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1)
 	KILL_VECTOR()
 	POP()
 	CHECK_RETURN_VEC()
-	memcpy(out, &ret, sizeof(Vector));
+	memcpy(static_cast<void *>(out), &ret, sizeof(Vector));
 }
 
 int Hook_Int_pVector(Hook *hook, void *pthis, Vector *v1)
@@ -1476,8 +1476,8 @@ void Hook_Vector_Float(Hook *hook, Vector *out, void *pthis, float f1)
 	MAKE_VECTOR()
 	P_FLOAT(f1)
 
-	memset(&ret, 0x0, sizeof(Vector));
-	memset(&origret, 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&ret), 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&origret), 0x0, sizeof(Vector));
 
 	PRE_START()
 		, f1
@@ -1496,7 +1496,7 @@ void Hook_Vector_Float(Hook *hook, Vector *out, void *pthis, float f1)
 	KILL_VECTOR()
 	POP()
 	CHECK_RETURN_VEC()
-	memcpy(out, &ret, sizeof(Vector));
+	memcpy(static_cast<void *>(out), &ret, sizeof(Vector));
 
 }
 
@@ -3269,8 +3269,8 @@ void Hook_Vector_Vector_Vector_Vector(Hook *hook, Vector *out, void *pthis, Vect
 	P_VECTOR(v2)
 	P_VECTOR(v3)
 
-	memset(&ret, 0x0, sizeof(Vector));
-	memset(&origret, 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&ret), 0x0, sizeof(Vector));
+	memset(static_cast<void *>(&origret), 0x0, sizeof(Vector));
 
 	PRE_START()
 		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(&v1), 3, false)
@@ -3294,7 +3294,7 @@ void Hook_Vector_Vector_Vector_Vector(Hook *hook, Vector *out, void *pthis, Vect
 	POP()
 	CHECK_RETURN_VEC()
 
-	memcpy(out, &ret, sizeof(Vector));
+	memcpy(static_cast<void *>(out), &ret, sizeof(Vector));
 }
 
 const char *Hook_Str_Str(Hook *hook, void *pthis, const char* str)

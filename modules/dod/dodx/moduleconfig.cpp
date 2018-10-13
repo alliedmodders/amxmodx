@@ -172,7 +172,7 @@ void PlayerPreThink_Post(edict_t *pEntity)
 	if(pPlayer->clearRound && pPlayer->clearRound < gpGlobals->time)
 	{
 		pPlayer->clearRound = 0.0f;
-		memset(&pPlayer->round,0,sizeof(pPlayer->round));
+		memset(static_cast<void *>(&pPlayer->round),0,sizeof(pPlayer->round));
 		memset(pPlayer->weaponsRnd,0,sizeof(pPlayer->weaponsRnd));
 	}
 

@@ -222,9 +222,9 @@ void UTIL_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const ch
 	WRITE_BYTE(textparms.g1);
 	WRITE_BYTE(textparms.b1);
 	WRITE_BYTE(0);
-	WRITE_BYTE(255);
-	WRITE_BYTE(255);
-	WRITE_BYTE(250);
+	WRITE_BYTE(textparms.r2);
+	WRITE_BYTE(textparms.g2);
+	WRITE_BYTE(textparms.b2);
 	WRITE_BYTE(0);
 	WRITE_SHORT(FixedUnsigned16(textparms.fadeinTime, (1<<8)));
 	WRITE_SHORT(FixedUnsigned16(textparms.fadeoutTime, (1<<8)));

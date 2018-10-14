@@ -26,8 +26,8 @@ public plugin_init()
 	register_dictionary("adminslots.txt");
 	register_dictionary("common.txt");
 
-	hook_cvar_change(create_cvar("amx_reservation", "0", FCVAR_PROTECTED, .has_min = true, .min_val = 0.0, .has_max = true, .max_val = float(MaxClients - 1)), "@OnReservationChange");
-	hook_cvar_change(create_cvar("amx_hideslots"  , "0", FCVAR_NONE     , .has_min = true, .min_val = 0.0, .has_max = true, .max_val = 1.0), "@OnHideSlotsChange");
+	hook_cvar_change(create_cvar("amx_reservation", "0", FCVAR_PROTECTED, fmt("%L", LANG_SERVER, "CVAR_RESERVATION"), .has_min = true, .min_val = 0.0, .has_max = true, .max_val = float(MaxClients - 1)), "@OnReservationChange");
+	hook_cvar_change(create_cvar("amx_hideslots"  , "0", FCVAR_NONE     , fmt("%L", LANG_SERVER, "CVAR_HIDESLOTS")  , .has_min = true, .min_val = 0.0, .has_max = true, .max_val = 1.0), "@OnHideSlotsChange");
 
 	CvarHandleMaxVisiblePlayers = get_cvar_pointer("sv_visiblemaxplayers");
 }

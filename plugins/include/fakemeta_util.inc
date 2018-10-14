@@ -325,7 +325,7 @@ stock fm_remove_entity_name(const classname[]) {
 
 stock fm_ViewContents(id) {
 	new origin[3], Float:Orig[3];
-	get_user_origin(id, origin, 3);
+	get_user_origin(id, origin, Origin_AimEndEyes);
 	IVecFVec(origin, Orig);
 
 	return fm_point_contents(Orig);

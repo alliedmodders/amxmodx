@@ -55,12 +55,10 @@ def output_version_headers():
   if m == None:
     raise Exception('Could not detremine product version')
   major, minor, release, tag = m.groups()
-  product = "{0}.{1}.{2}".format(major, minor, release)
+  product = "{0}.{1}.{2}.{3}".format(major, minor, release, count)
   fullstring = product
   if tag != "":
     fullstring += "-{0}".format(tag)
-    if tag == "dev":
-      fullstring += "+{0}".format(count)
 
   with open(os.path.join(OutputFolder, 'amxmodx_version_auto.h'), 'w') as fp:
     fp.write("""
@@ -74,10 +72,10 @@ def output_version_headers():
 #define AMXX_BUILD_RELEASE    \"{4}\"
 #define AMXX_BUILD_LOCAL_REV  \"{6}\"
 
-#define AMXX_BUILD_UNIQUEID   "{6}:" AMXX_BUILD_CSET
+#define AMXX_BUILD_UNIQUEID   AMXX_BUILD_LOCAL_REV \":\" AMXX_BUILD_CSET
 
 #define AMXX_VERSION_STRING   \"{5}\"
-#define AMXX_VERSION_FILE     {2},{3},{4},0
+#define AMXX_VERSION_FILE     {2},{3},{4},{6}
 
 #endif // _AMXMODX_AUTO_VERSION_INFORMATION_H_
     """.format(tag, shorthash, major, minor, release, fullstring, count))

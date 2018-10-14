@@ -27,7 +27,6 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 	}
 
 	cell *ptr = MF_GetAmxAddr(amx, params[2]);
-	edict_t *e;
 
 	switch (type)
 	{
@@ -85,12 +84,13 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 		}
 	case TR_pHit:
 		{
-			e = TypeConversion.id_to_edict(*ptr);
-			if (*ptr != -1 && FNullEnt(e))
-				return 0; //TODO: return error
-			gfm_tr->pHit = e;
+			const auto pEdict = TypeConversion.id_to_edict(*ptr);
+			if (pEdict == nullptr)
+			{
+				return 0;
+			}
+			gfm_tr->pHit = pEdict;
 			return 1;
-			break;
 		}
 	case TR_iHitgroup:
 		{

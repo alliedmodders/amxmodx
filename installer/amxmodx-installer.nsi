@@ -110,7 +110,6 @@ Section "MainSection" SEC01
   File "installer\files\base\addons\amxmodx\configs\core.ini"
   File "installer\files\base\addons\amxmodx\configs\custommenuitems.cfg"
   File "installer\files\base\addons\amxmodx\configs\cvars.ini"
-  File "installer\files\base\addons\amxmodx\configs\hamdata.ini"
   File "installer\files\base\addons\amxmodx\configs\maps.ini"
   File "installer\files\base\addons\amxmodx\configs\modules.ini"
   File "installer\files\base\addons\amxmodx\configs\plugins.ini"

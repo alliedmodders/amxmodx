@@ -35,6 +35,18 @@ folder_list = [
     'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/tfc',
     'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/gearbox',
     'base/addons/amxmodx/data/gamedata/common.games/gamerules.games/valve',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/ag',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/cstrike',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/dod',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/esf',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/esf_openbeta',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/gearbox',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/ns',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/svencoop',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/tfc',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/ts',
+    'base/addons/amxmodx/data/gamedata/common.games/virtual.games/valve',
     'base/addons/amxmodx/data/gamedata/modules.games',
     'base/addons/amxmodx/data/lang',
     'base/addons/amxmodx/dlls',
@@ -166,7 +178,6 @@ configs = [
   'core.ini',
   'custommenuitems.cfg',
   'cvars.ini',
-  'hamdata.ini',
   'maps.ini',
   'miscstats.ini',
   'modules.ini',
@@ -416,6 +427,72 @@ CopyFiles('gamedata/common.games', 'base/addons/amxmodx/data/gamedata/common.gam
     'master.games.txt',
     'functions.engine.txt',
     'globalvars.engine.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/ag', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/ag',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/cstrike', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/cstrike',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/dod', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/dod',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/esf', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/esf',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/esf_openbeta', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/esf_openbeta',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/gearbox', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/gearbox',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/ns', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/ns',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/svencoop', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/svencoop',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/tfc', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/tfc',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/ts', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/ts',
+  [
+    'offsets-common.txt',
+  ]
+)
+
+CopyFiles('gamedata/common.games/virtual.games/valve', 'base/addons/amxmodx/data/gamedata/common.games/virtual.games/valve',
+  [
+    'offsets-common.txt',
   ]
 )
 

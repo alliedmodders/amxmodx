@@ -21,7 +21,7 @@ ON = On
 OFF = Off
 
 [de]
-BACK = Zurueck
+BACK = Zurück
 EXIT = Beenden
 MORE = Mehr
 NONE = Keine
@@ -32,13 +32,13 @@ YES = Ja
 NO = Nein
 BAN = ban
 KICK = kick
-NO_ACC_COM = Du hast nicht genuegend Rechte, um diesen Befehl auszufuehren!
+NO_ACC_COM = Du hast nicht genügend Rechte, um diesen Befehl auszuführen!
 USAGE = Anwendung
 MORE_CL_MATCHT = Es gibt mehrere Spieler, auf die deine Angaben zutreffen
 CL_NOT_FOUND = Spieler mit diesem Namen oder dieser UserID nicht gefunden
-CLIENT_IMM = Spieler "%s" hat Immnuitaet
-CANT_PERF_DEAD = Diese Aktion kann nicht am toten Spieler "%s" ausgefuehrt werden.
-CANT_PERF_BOT = Diese Aktion kann nicht am Bot "%s" ausgefuehrt werden.
+CLIENT_IMM = Spieler "%s" hat Immunität
+CANT_PERF_DEAD = Diese Aktion kann nicht am toten Spieler "%s" ausgeführt werden.
+CANT_PERF_BOT = Diese Aktion kann nicht am Bot "%s" ausgeführt werden.
 ON = An
 OFF = Aus
 

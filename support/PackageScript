@@ -399,6 +399,7 @@ datafiles = [
   'nextmap.txt',
   'pausecfg.txt',
   'plmenu.txt',
+  'pluginmenu.txt',
   'restmenu.txt',
   'scrollmsg.txt',
   'stats_dod.txt',

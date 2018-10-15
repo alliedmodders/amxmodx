@@ -1,0 +1,75 @@
+[en]
+PLUGINCVARMENU_DESC = - displays the plugin cvar menu
+PLUGINCMDMENU_DESC = - displays the plugin command menu
+PLUGIN_NOT_RUNNING = Plugin %s is not running
+CVAR_NOT_CHANGED = Cvar not changed
+CVAR_PTR_ERROR = There was an error extracting the cvar pointer (name = "%s")
+CVAR_TYPE_NEW_VALUE = Type in the new value for %s or !cancel to cancel
+CVARS = Cvars
+CMD_NAME_ERROR = There was an error extracting the command name
+CMD_TYPE_PARAMS = Type in the parameters for %s or !cancel to cancel
+CMD_EXEC_NO_PARAMS = Command "%s" executed with no parameters
+EXEC_WITH_PARAMS = Execute with parameters
+EXEC_WITHOUT_PARAMS = Execute with no parameters
+CMD_NOT_EXECUTED = Command not executed
+CMD_EXECUTED = Command "%s" executed with "%s"
+COMMANDS = Commands
+PLUGIN_CVAR_MENU = Plugin Cvar Menu
+PLUGIN_CMD_MENU = Plugin Command Menu
+
+[mk]
+PLUGINCVARMENU_DESC = - prikazhuva menu so cvarovi za pluginite
+PLUGINCMDMENU_DESC = - prikazhuva menu so komandi za pluginite
+PLUGIN_NOT_RUNNING = Pluginot %s ne raboti
+CVAR_NOT_CHANGED = Cvarot ne e promenen
+CVAR_PTR_ERROR = Se pojavi greshka pri izvlekuvanje na cvar pointerot (ime = "%s")
+CVAR_TYPE_NEW_VALUE = Vnesete ja novata vrednost za %s ili !cancel za da otkazhete
+CVARS = Cvarovi
+CMD_NAME_ERROR = Se pojavi greshka pri izvlekuvanjeto na imeto na komandata
+CMD_TYPE_PARAMS = Vnesete gi parametrite za %s ili !cancel za da otkazhete
+CMD_EXEC_NO_PARAMS = Komandata "%s" e izvrshena bez parametri
+EXEC_WITH_PARAMS = Izvrshi so parametri
+EXEC_WITHOUT_PARAMS = Izvrshi bez parametri
+CMD_NOT_EXECUTED = Komandata ne e izvrshena
+CMD_EXECUTED = Komandata "%s" e izvrshena so "%s"
+COMMANDS = Komandi
+PLUGIN_CVAR_MENU = Menu so cvarovi za pluginite
+PLUGIN_CMD_MENU = Menu so komandi za pluginite
+
+[bg]
+PLUGINCVARMENU_DESC = - pokazva menu s cvarove za pluginite
+PLUGINCMDMENU_DESC = - pokazva menu s komandi za pluginite
+PLUGIN_NOT_RUNNING = Pluginut %s ne raboti
+CVAR_NOT_CHANGED = Cvarut ne e promenen
+CVAR_PTR_ERROR = Poqvi se greshka pri izvlichaneto na cvar pointera (ime = "%s")
+CVAR_TYPE_NEW_VALUE = Vuvedete novata stoinost za %s ili !cancel za da otkajete
+CVARS = Cvarove
+CMD_NAME_ERROR = Poqvi se gresha pri izvlichaneto na imeto na komandata
+CMD_TYPE_PARAMS = Vuvedete parametrite za %s ili !cancel za da otkajete
+CMD_EXEC_NO_PARAMS = Komandata "%s" e izpulnena bez parametri
+EXEC_WITH_PARAMS = Izpulni s parametri
+EXEC_WITHOUT_PARAMS = Izpulni bez parametri
+CMD_NOT_EXECUTED = Komandata ne e izpulnena
+CMD_EXECUTED = Komandata "%s" e izpulnena s "%s"
+COMMANDS = Komandi
+PLUGIN_CVAR_MENU = Menu s cvarove za pluginite
+PLUGIN_CMD_MENU = Menu s komandi za pluginite
+
+[de]
+PLUGINCVARMENU_DESC = - zeigt das Plugin-CVAR-Menü an
+PLUGINCMDMENU_DESC = - zeigt das Plugin-Befehlsmenü an
+PLUGIN_NOT_RUNNING = Plugin %s läuft nicht
+CVAR_NOT_CHANGED = CVAR unverändert
+CVAR_PTR_ERROR = Beim Versuch den Wert der CVAR (Name = "%s") auszugeben ist ein Fehler aufgetreten.
+CVAR_TYPE_NEW_VALUE = Geben Sie den neuen Wert für %s ein - oder "!cancel", um abzubrechen.
+CVARS = CVARs
+CMD_NAME_ERROR = Beim Versuch den Befehlsnamen auszugeben ist ein Fehler aufgetreten.
+CMD_TYPE_PARAMS = Geben Sie die Parameter für %s ein - oder "!cancel", um abzubrechen.
+CMD_EXEC_NO_PARAMS = Befehl "%s" wurde ohne Parameter ausgeführt.
+EXEC_WITH_PARAMS = Mit Parameter(n) ausführen
+EXEC_WITHOUT_PARAMS = Ohne Parameter ausführen
+CMD_NOT_EXECUTED = Befehl wurde nicht ausgeführt.
+CMD_EXECUTED = Befehl "%s" wurde mit "%s" ausgeführt.
+COMMANDS = Befehle
+PLUGIN_CVAR_MENU = Plugin-CVAR-Menü
+PLUGIN_CMD_MENU = Plugin-Befehlsmenü

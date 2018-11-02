@@ -443,6 +443,52 @@ SC_FUNC void delete_autolisttable(void)
 }
 
 
+/* ----- value pair list ----------------------------------------- */
+static valuepair heaplist = {NULL, 0, 0};
+
+SC_FUNC valuepair *push_heaplist(long first, long second)
+{
+  valuepair *cur, *last;
+  if ((cur=malloc(sizeof(valuepair)))==NULL)
+    error(103);       /* insufficient memory (fatal error) */
+
+  cur->first=first;
+  cur->second=second;
+  cur->next=NULL;
+
+  for (last=&heaplist; last->next!=NULL; last=last->next)
+    /* nothing */;
+  last->next=cur;
+  return cur;
+}
+
+SC_FUNC int popfront_heaplist(long *first, long *second)
+{
+  valuepair *front=heaplist.next;
+  if (front==NULL)
+    return 0;
+
+  /* copy fields */
+  *first=front->first;
+  *second=front->second;
+
+  /* unlink and free */
+  heaplist.next=front->next;
+  free(front);
+  return 1;
+}
+
+SC_FUNC void delete_heaplisttable(void)
+{
+  valuepair *cur;
+  while (heaplist.next!=NULL) {
+    cur=heaplist.next;
+    heaplist.next=cur->next;
+    free(cur);
+  } /* while */
+}
+
+
 /* ----- debug information --------------------------------------- */
 
 static stringlist dbgstrings = {NULL, NULL};

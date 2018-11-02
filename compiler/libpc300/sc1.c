@@ -628,6 +628,7 @@ int pc_compile(int argc, char *argv[])
     /* reset "defined" flag of all functions and global variables */
     reduce_referrers(&glbtab);
     delete_symbols(&glbtab,0,TRUE,FALSE);
+    delete_heaplisttable();
     #if !defined NO_DEFINE
       delete_substtable();
       inst_datetime_defines();
@@ -805,6 +806,7 @@ cleanup:
       free(sc_documentation);
   #endif
   delete_autolisttable();
+  delete_heaplisttable();
   if (errnum!=0) {
     if (strlen(errfname)==0)
       pc_printf("\n%d Error%s.\n",errnum,(errnum>1) ? "s" : "");
@@ -5450,6 +5452,16 @@ static void doreturn(void)
           /* nothing */;
         sub=addvariable(curfunc->name,(argcount+3)*sizeof(cell),iREFARRAY,sGLOBAL,curfunc->tag,dim,numdim,idxtag);
         sub->parent=curfunc;
+        /* Function that returns array can be used before it is defined, so at
+         * the call point (if it is before definition) we may not know if this
+         * function returns array and what is its size (for example inside the
+         * conditional operator), so we don't know how many cells on the heap
+         * we need. Calculating heap consumption is required for the fix of
+         * incorrect heap deallocation on conditional operator. That's why we
+         * need an additional pass.
+         */
+        if ((curfunc->usage & uREAD)!=0)
+          sc_reparse=TRUE;
       } /* if */
       /* get the hidden parameter, copy the array (the array is on the heap;
        * it stays on the heap for the moment, and it is removed -usually- at

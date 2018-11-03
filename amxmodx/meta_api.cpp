@@ -1143,17 +1143,24 @@ void C_ClientCommand(edict_t *pEntity)
 							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_BACK));
 
 						pMenu->Display(pPlayer->index, pPlayer->page - 1);
-					} else if (item == MENU_MORE) {
+					}
+					else if (item == MENU_MORE)
+					{
 						if (pMenu->pageCallback >= 0)
 							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_MORE));
 
 						pMenu->Display(pPlayer->index, pPlayer->page + 1);
-					} else {
-						ret = executeForwards(pMenu->func, static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(item));
+					}
+					else
+					{
+						auto pItem = pMenu->GetMenuItem(static_cast<item_t>(item));
+						ret = executeForwards(pMenu->func, static_cast<cell>(pPlayer->index), static_cast<cell>(menu), static_cast<cell>(item), pItem ? static_cast<cell>(pItem->data) : 0);
 						if (ret & 2)
 						{
 							result = MRES_SUPERCEDE;
-						} else if (ret & 1) {
+						}
+						else if (ret & 1)
+						{
 							RETURN_META(MRES_SUPERCEDE);
 						}
 					}

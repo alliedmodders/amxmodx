@@ -11,6 +11,7 @@
 #include "CMenu.h"
 #include "newmenus.h"
 #include "format.h"
+#include "CDataPack.h"
 
 ke::Vector<Menu *> g_NewMenus;
 CStack<int> g_MenuFreeStack;
@@ -120,9 +121,12 @@ isDestroying(false), pageCallback(-1), showPageNumber(true), useMultilingual(use
 
 Menu::~Menu()
 {
-	for (size_t i = 0; i < m_Items.length(); i++)
+	for (auto &item : m_Items)
 	{
-		delete m_Items[i];
+		if (item->isDataDataPack && item->data > 0)
+			DataPackHandles.destroy(item->data);
+
+		delete item;
 	}
 
 	unregisterSPForward(this->func);
@@ -131,7 +135,7 @@ Menu::~Menu()
 	m_Items.clear();
 }
 
-menuitem *Menu::AddItem(const char *name, const char *cmd, int access)
+menuitem *Menu::AddItem(const char *name, const char *cmd, int access, int handler = -1)
 {
 	menuitem *pItem = new menuitem;
 
@@ -139,7 +143,7 @@ menuitem *Menu::AddItem(const char *name, const char *cmd, int access)
 	pItem->cmd = cmd;
 	pItem->access = access;
 	pItem->id = m_Items.length();
-	pItem->handler = -1;
+	pItem->handler = handler;
 	pItem->isBlank = false;
 	pItem->pfn = NULL;
 
@@ -441,22 +445,26 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		
 		if (pItem->handler != -1)
 		{
-			ret = executeForwards(pItem->handler, static_cast<cell>(player), static_cast<cell>(thisId), static_cast<cell>(i));
+			ret = executeForwards(pItem->handler, static_cast<cell>(player), static_cast<cell>(thisId), static_cast<cell>(i), static_cast<cell>(pItem->data));
 			if (ret == ITEM_ENABLED)
 			{
 				enabled = true;
-			} else if (ret == ITEM_DISABLED) {
+			}
+			else if (ret == ITEM_DISABLED)
+			{
 				enabled = false;
 			}
 		}
 		
 		if (pItem->pfn)
 		{
-			ret = (pItem->pfn)(player, thisId, i);
+			ret = (pItem->pfn)(player, thisId, i, pItem->data);
 			if (ret == ITEM_ENABLED)
 			{
 				enabled = true;
-			} else if (ret == ITEM_DISABLED) {
+			}
+			else if (ret == ITEM_DISABLED)
+			{
 				enabled = false;
 			}
 		}
@@ -795,8 +803,6 @@ static cell AMX_NATIVE_CALL menu_addtext2(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 {
 	int len;
-	char *name, *cmd;
-	int access;
 
 	GETMENU(params[1]);
 
@@ -806,14 +812,36 @@ static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 		return 0;
 	}
 
-	name = get_amxstring(amx, params[2], 0, len);
+	auto name = get_amxstring(amx, params[2], 0, len);
 	validate_menu_text(name);
-	cmd = get_amxstring(amx, params[3], 1, len);
-	access = params[4];
+	auto cmd = get_amxstring(amx, params[3], 1, len);
 
-	menuitem *pItem = pMenu->AddItem(name, cmd, access);
+	pMenu->AddItem(name, cmd, params[4], params[5]);
 
-	pItem->handler = params[5];
+	return 1;
+}
+
+//Adds an item to the menu
+//native menu_additem2(menu, const name[], any:data = 0, access = 0, callback = -1, bool:dp_data = false);
+static cell AMX_NATIVE_CALL menu_additem2(AMX *amx, cell *params)
+{
+	int len;
+
+	GETMENU(params[1]);
+
+	if (!pMenu->items_per_page && pMenu->GetItemCount() >= 10)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
+		return 0;
+	}
+
+	auto name = get_amxstring(amx, params[2], 0, len);
+	validate_menu_text(name);
+
+	auto pItem = pMenu->AddItem(name, "", params[4], params[5]);
+
+	pItem->data = params[3];
+	pItem->isDataDataPack = params[6] != 0;
 
 	return 1;
 }
@@ -928,9 +956,9 @@ static cell AMX_NATIVE_CALL menu_item_getinfo(AMX *amx, cell *params)
 static cell AMX_NATIVE_CALL menu_makecallback(AMX *amx, cell *params)
 {
 	int len;
-	char *name = get_amxstring(amx, params[1], 0, len);
+	auto name = get_amxstring(amx, params[1], 0, len);
 
-	int id = registerSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+	auto id = registerSPForwardByName(amx, name, FP_CELL, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 
 	if (id == -1)
 	{
@@ -975,6 +1003,24 @@ static cell AMX_NATIVE_CALL menu_item_setcmd(AMX *amx, cell *params)
 	cmd = get_amxstring(amx, params[3], 0, len);
 
 	pItem->cmd = cmd;
+
+	return 1;
+}
+
+static cell AMX_NATIVE_CALL menu_item_setdata(AMX *amx, cell *params)
+{
+	GETMENU(params[1]);
+
+	auto pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+
+	if (!pItem)
+		return 0;
+
+	if (pItem->isDataDataPack && pItem->data > 0)
+		DataPackHandles.destroy(pItem->data);
+
+	pItem->data = params[3];
+	pItem->isDataDataPack = params[4] != 0;
 
 	return 1;
 }
@@ -1215,6 +1261,7 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 {
 	{"menu_create",				menu_create},
 	{"menu_additem",			menu_additem},
+	{"menu_additem2",			menu_additem2},
 	{"menu_addblank",			menu_addblank},
 	{"menu_addtext",			menu_addtext},
 	{"menu_pages",				menu_pages},
@@ -1225,6 +1272,7 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 	{"menu_makecallback",		menu_makecallback},
 	{"menu_item_setcall",		menu_item_setcall},
 	{"menu_item_setcmd",		menu_item_setcmd},
+	{"menu_item_setdata",		menu_item_setdata},
 	{"menu_item_setname",		menu_item_setname},
 	{"menu_destroy",			menu_destroy},
 	{"menu_setprop",			menu_setprop},

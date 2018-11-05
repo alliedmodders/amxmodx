@@ -39,6 +39,12 @@
     <Filter Include="ReSDK\cstrike">
       <UniqueIdentifier>{ba0b72ba-25d8-48c3-af84-c1d4d7436636}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ReSDK\cstrike\API">
+      <UniqueIdentifier>{67de85cb-b8e7-4cd6-b8cf-2ff7ed540c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{1b196636-b242-45a8-ad14-3fb21eb799f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CstrikeHacks.cpp">
@@ -127,9 +133,6 @@
     <ClInclude Include="..\..\..\..\public\resdk\cstrike\regamedll_const.h">
       <Filter>ReSDK\cstrike</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\public\resdk\cstrike\regamedll_interfaces.h">
-      <Filter>ReSDK\cstrike</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\public\resdk\engine\rehlds_api.h">
       <Filter>ReSDK\engine</Filter>
     </ClInclude>
@@ -142,6 +145,36 @@
     <ClInclude Include="..\..\..\..\public\resdk\mod_rehlds_api.h">
       <Filter>ReSDK</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSEntity.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSInterfaces.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSPlayer.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSPlayerItem.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSPlayerWeapon.h">
+      <Filter>ReSDK\cstrike\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\engine\cmd_rehlds.h">
+      <Filter>ReSDK\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\engine\FlightRecorder.h">
+      <Filter>ReSDK\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\engine\IObjectContainer.h">
+      <Filter>ReSDK\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\engine\ObjectList.h">
+      <Filter>ReSDK\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\public\resdk\engine\pr_dlls.h">
+      <Filter>ReSDK\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\plugins\include\cstrike.inc">
@@ -150,5 +183,10 @@
     <None Include="..\..\..\..\plugins\include\cstrike_const.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

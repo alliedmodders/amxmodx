@@ -6,7 +6,7 @@ binary = AMXX.MetaModule(builder, 'cstrike')
 binary.compiler.defines += [
   'HAVE_STDINT_H',
 ]
-  
+
 binary.sources = [
   '../../../public/sdk/amxxmodule.cpp',
   'CstrikeMain.cpp',
@@ -25,5 +25,9 @@ binary.sources = [
 
 if builder.target_platform == 'windows':
   binary.sources += ['version.rc']
-  
+  binary.compiler.linkflags += [
+    '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
+    '/SECTION:.data,RW',
+  ]
+
 AMXX.modules += [builder.Add(binary)]

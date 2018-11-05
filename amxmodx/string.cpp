@@ -1,4 +1,4 @@
-// vim: set ts=4 sw=4 tw=99 noet:
+﻿// vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
 // Copyright (C) The AMX Mod X Development Team.
@@ -11,6 +11,7 @@
 #include "amxmodx.h"
 #include "format.h"
 #include "binlog.h"
+#include <utf8rewind.h>
 
 const char* stristr(const char* str, const char* substr)
 {
@@ -169,11 +170,17 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 	return dest - start;
 }
 
+char *get_amxbuffer(int id)
+{
+	static char buffer[4][MAX_BUFFER_LENGTH];
+	return buffer[id];
+}
+
 char *get_amxstring(AMX *amx, cell amx_addr, int id, int& len)
 {
-	static char buffer[4][16384];
-	len = get_amxstring_r(amx, amx_addr, buffer[id], sizeof(buffer[id]) - 1);
-	return buffer[id];
+	auto buffer = get_amxbuffer(id);
+	len = get_amxstring_r(amx, amx_addr, buffer, MAX_BUFFER_LENGTH - 1);
+	return buffer;
 }
 
 char *get_amxstring_null(AMX *amx, cell amx_addr, int id, int& len)
@@ -203,6 +210,16 @@ void copy_amxmemory(cell* dest, cell* src, int len)
 		*dest++=*src++;
 }
 
+bool utf8isspace(const char* string)
+{
+	return utf8iscategory(string, 1, UTF8_CATEGORY_ISSPACE) != 0;
+}
+
+size_t utf8getspaces(const char* string)
+{
+	return utf8iscategory(string, SIZE_MAX, UTF8_CATEGORY_ISSPACE);
+}
+
 char* parse_arg(char** line, int& state)
 {
 	static char arg[3072];
@@ -211,7 +228,7 @@ char* parse_arg(char** line, int& state)
 	
 	while (**line)
 	{
-		if (isspace(**line))
+		if (utf8isspace(*line))
 		{
 			if (state == 1)
 				break;
@@ -302,58 +319,68 @@ static cell AMX_NATIVE_CALL replace(AMX *amx, cell *params) /* 4 param */
 	return 0;
 }
 
+// native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive = true);
 static cell AMX_NATIVE_CALL replace_string(AMX *amx, cell *params)
 {
-	int len;
-	size_t maxlength = (size_t)params[2];
+	enum args { arg_count, arg_text, arg_maxlength, arg_search, arg_replace, arg_casesensitive };
 
-	char *text = get_amxstring(amx, params[1], 0, len);
-	const char *search = get_amxstring(amx, params[3], 1, len);
-	const char *replace = get_amxstring(amx, params[4], 2, len);
+	auto textLength    = 0;
+	auto searchLength  = 0;
+	auto replaceLength = 0;
 
-	bool caseSensitive = params[5] ? true : false;
+	auto text    = get_amxstring(amx, params[arg_text]   , 0, textLength);
+	auto search  = get_amxstring(amx, params[arg_search] , 1, searchLength);
+	auto replace = get_amxstring(amx, params[arg_replace], 2, replaceLength);
 
-	if (search[0] == '\0')
+	auto textMaxLength = params[arg_maxlength];
+	auto caseSensitive = params[arg_casesensitive] != 0;
+
+	if (!*search)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Cannot replace searches of empty strings.");
 		return -1;
 	}
 
-	int count = UTIL_ReplaceAll(text, maxlength + 1, search, replace, caseSensitive); // + EOS
+	auto count = UTIL_ReplaceAll(text, textMaxLength + 1, search, searchLength, replace, replaceLength, caseSensitive); // + EOS
 
-	set_amxstring(amx, params[1], text, maxlength);
+	set_amxstring(amx, params[arg_text], text, textMaxLength);
 
 	return count;
 }
 
+// native replace_stringex(text[], maxlength, const search[], const replace[], searchLen = -1, replaceLen = -1, bool:caseSensitive = true);
 static cell AMX_NATIVE_CALL replace_stringex(AMX *amx, cell *params)
 {
-	int len;
-	size_t maxlength = (size_t)params[2];
+	enum args { arg_count, arg_text, arg_maxlength, arg_search, arg_replace, arg_searchlen, arg_replacelen, arg_casesensitive };
 
-	char *text = get_amxstring(amx, params[1], 0, len);
-	const char *search = get_amxstring(amx, params[3], 1, len);
-	const char *replace = get_amxstring(amx, params[4], 2, len);
+	auto textLength    = 0;
+	auto searchLength  = 0;
+	auto replaceLength = 0;
 
-	size_t searchLen = (params[5] == -1) ? strlen(search) : (size_t)params[5];
-	size_t replaceLen = (params[6] == -1) ? strlen(replace) : (size_t)params[6];
+	auto text    = get_amxstring(amx, params[arg_text]   , 0, textLength);
+	auto search  = get_amxstring(amx, params[arg_search] , 1, searchLength);
+	auto replace = get_amxstring(amx, params[arg_replace], 2, replaceLength);
 
-	bool caseSensitive = params[7] ? true : false;
+	auto textMaxLength = params[arg_maxlength];
+	auto caseSensitive = params[arg_casesensitive] != 0;
 
-	if (searchLen == 0)
+	if (params[arg_searchlen]  != -1) { searchLength  = params[arg_searchlen]; }
+	if (params[arg_replacelen] != -1) { replaceLength = params[arg_replacelen]; }
+
+	if (searchLength <= 0)
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Cannot replace searches of empty strings.");
 		return -1;
 	}
 
-	char *ptr = UTIL_ReplaceEx(text, maxlength + 1, search, searchLen, replace, replaceLen, caseSensitive); // + EOS
+	auto ptr = UTIL_ReplaceEx(text, textMaxLength + 1, search, searchLength, replace, replaceLength, caseSensitive); // + EOS
 
 	if (!ptr)
 	{
 		return -1;
 	}
 
-	set_amxstring(amx, params[1], text, maxlength);
+	set_amxstring(amx, params[arg_text], text, textMaxLength);
 
 	return ptr - text;
 }
@@ -382,27 +409,36 @@ static cell AMX_NATIVE_CALL contain(AMX *amx, cell *params) /* 2 param */
 	return -1;
 }
 
-static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params) /* 2 param */
+// native containi(const source[], const string[]);
+static cell AMX_NATIVE_CALL containi(AMX *amx, cell *params)
 {
-	register cell *a = get_amxaddr(amx, params[2]);
-	register cell *b = get_amxaddr(amx, params[1]);
-	register cell *c = b;
-	cell* str = b;
-	cell* substr = a;
-	
-	while (*c)
+	enum args { arg_count, arg_source, arg_search };
+
+	auto sourceLength = 0;
+	auto searchLength = 0;
+
+	auto source = get_amxstring(amx, params[arg_source], 0, sourceLength);
+	auto search = get_amxstring(amx, params[arg_search], 1, searchLength);
+
+	if (sourceLength && searchLength)
 	{
-		if (tolower(*c) == tolower(*a))
+		auto sourceFolded = get_amxbuffer(2);
+		auto searchFolded = get_amxbuffer(3);
+
+		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+
+		sourceFolded[sourceLength] = '\0';
+		searchFolded[searchLength] = '\0';
+
+		auto result = strstr(sourceFolded, searchFolded);
+
+		if (result)
 		{
-			c++;
-			if (!*++a)
-				return b - str;
-		} else {
-			c = ++b;
-			a = substr;
+			return result - sourceFolded;
 		}
 	}
-	
+
 	return -1;
 }
 
@@ -609,30 +645,34 @@ static cell AMX_NATIVE_CALL equal(AMX *amx, cell *params) /* 3 param */
 	return ret ? 0 : 1;
 }
 
-static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params) /* 3 param */
+// native equali(const a[], const b[], c = 0);
+static cell AMX_NATIVE_CALL equali(AMX *amx, cell *params)
 {
-	cell *a = get_amxaddr(amx, params[1]);
-	cell *b = get_amxaddr(amx, params[2]);
-	int f, l, c = params[3];
-	
-	if (c)
-	{
-		do
-		{
-			f = tolower(*a++);
-			l = tolower(*b++);
-		} while (--c && l && f && f == l);
-		
-		return (f - l) ? 0 : 1;
-	}
+	enum args { arg_count, arg_string1, arg_string2, arg_numbytes };
 
-	do
+	auto string1Length = 0;
+	auto string2Length = 0;
+
+	auto string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
+	auto string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
+
+	auto string1Folded = get_amxbuffer(2);
+	auto string2Folded = get_amxbuffer(3);
+
+	string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+
+	string1Folded[string1Length] = '\0';
+	string2Folded[string2Length] = '\0';
+
+	if (params[arg_numbytes] > 0)
 	{
-		f = tolower(*a++);
-		l = tolower(*b++);
-	} while (f && f == l);
-	
-	return (f - l) ? 0 : 1;
+		return static_cast<cell>(strncmp(string1Folded, string2Folded, params[arg_numbytes]) == 0);
+	}
+	else
+	{
+		return static_cast<cell>(strcmp(string1Folded, string2Folded) == 0);
+	}
 }
 
 static cell g_cpbuf[4096];
@@ -730,6 +770,29 @@ static cell AMX_NATIVE_CALL strtolower(AMX *amx, cell *params) /* 1 param */
 	return cptr - begin;
 }
 
+// native mb_strtolower(source[], maxlength = 0);
+static cell AMX_NATIVE_CALL mb_strtolower(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string, arg_maxlength };
+
+	auto sourceLength = 0;
+	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+
+	auto outputMaxLength = params[arg_maxlength];
+
+	if (outputMaxLength <= 0)
+	{
+		outputMaxLength = sourceLength;
+	}
+
+	auto output = get_amxbuffer(1);
+	auto outputLength = utf8tolower(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+	
+	output[outputLength] = '\0';
+
+	return set_amxstring_utf8(amx, params[arg_string], output, outputLength, outputMaxLength);
+}
+
 static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params) /* 1 param */
 {
 	cell *cptr = get_amxaddr(amx, params[1]);
@@ -742,6 +805,29 @@ static cell AMX_NATIVE_CALL strtoupper(AMX *amx, cell *params) /* 1 param */
 	}
 	
 	return cptr - begin;
+}
+
+// native mb_strtoupper(source[], maxlength = 0);
+static cell AMX_NATIVE_CALL mb_strtoupper(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string, arg_maxlength };
+
+	auto sourceLength = 0;
+	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+	
+	auto outputMaxLength = params[arg_maxlength];
+
+	if (outputMaxLength <= 0)
+	{
+		outputMaxLength = sourceLength;
+	}
+
+	auto output = get_amxbuffer(1);
+	auto outputLength = utf8toupper(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+
+	output[outputLength] = '\0';
+
+	return set_amxstring_utf8(amx, params[arg_string], output, outputLength, outputMaxLength);
 }
 
 int fo_numargs(AMX *amx)
@@ -843,6 +929,7 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 	int right_pos = 0;
 	unsigned int i = 0;
 	bool done_flag = false;
+	size_t spaces;
 	int len = 0;
 
 	//string[]
@@ -862,9 +949,9 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 	{
 		if (trim && !done_flag)
 		{
-			if (isspace(string[i]))
+			if ((spaces = utf8getspaces(string + i) > 0))
 			{
-				while (isspace(string[++i]));
+				i += spaces;
 				done_flag = true;
 			}
 		}
@@ -898,6 +985,7 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 {
 	int left_pos = 0, right_pos = 0, len, pos = -1;
 	unsigned int i = 0;
+	size_t spaces;
 
 	char *string = get_amxstring(amx, params[1], 0, len);
 	char *left = new char[len + 1], *right = new char[len + 1];
@@ -913,9 +1001,9 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 	int trim = params[7];
 
 	// ltrim left
-	if (trim & 1 && isspace(string[i]))
+	if (trim & 1 && (spaces = utf8getspaces(string)) > 0)
 	{
-		while (isspace(string[++i]));
+		i += spaces;
 	}
 
 	for (; i < (unsigned int) len; ++i)
@@ -931,17 +1019,17 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 	}
 
 	// rtrim left
-	if (trim & 2 && left_pos && isspace(left[left_pos - 1]))
+	if (trim & 2 && left_pos && utf8isspace(&left[left_pos - 1]))
 	{
-		while (--left_pos >= 0 && isspace(left[left_pos]));
+		while (--left_pos >= 0 && utf8isspace(&left[left_pos]));
 		
 		++left_pos;
 	}
 
 	// ltrim right
-	if (trim & 4 && isspace(string[i]))
+	if (trim & 4 && (spaces = utf8getspaces(string + i)) > 0)
 	{
-		while (isspace(string[++i]));
+		i += spaces;
 	}
 
 	for (; i < (unsigned int) len; ++i)
@@ -950,9 +1038,9 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 	}
 
 	// rtrim right
-	if (trim & 8 && right_pos && isspace(right[right_pos - 1]))
+	if (trim & 8 && right_pos && utf8isspace(&right[right_pos - 1]))
 	{
-		while (--right_pos >= 0 && isspace(right[right_pos]));
+		while (--right_pos >= 0 && utf8isspace(&right[right_pos]));
 
 		++right_pos;
 	}
@@ -982,8 +1070,12 @@ static cell AMX_NATIVE_CALL argparse(AMX *amx, cell *params)
 
 	// Strip all left-hand whitespace.
 	size_t i = start_pos;
-	while (i < input_len && isspace(input[i]))
-		i++;
+	size_t spaces;
+
+	if ((spaces = utf8getspaces(input + i)) > 0)
+	{
+		i += spaces;
+	}
 
 	if (i >= input_len) {
 		*buffer = '\0';
@@ -1002,7 +1094,7 @@ static cell AMX_NATIVE_CALL argparse(AMX *amx, cell *params)
 		}
 
 		// If not in quotes, and we see a space, stop.
-		if (isspace(input[i]) && !in_quote)
+		if (utf8isspace(input + i) && !in_quote)
 			break;
 
 		if (size_t(bufpos - buffer) < buflen)
@@ -1030,9 +1122,13 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 	int RightMax = params[5];
 
 	size_t len = (size_t)_len;
+	size_t spaces;
 
-	while (isspace(string[i]) && i<len)
-		i++;
+	if ((spaces = utf8getspaces(string)) > 0)
+	{
+		i += spaces;
+	}
+
 	beg = i;
 	for (; i<len; i++)
 	{
@@ -1044,12 +1140,12 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 			if (i == len-1)
 				goto do_copy;
 		} else {
-			if (isspace(string[i]) && !in_quote)
+			if (!in_quote && (spaces = utf8getspaces(string + i)) > 0)
 			{
 do_copy:
 				size_t pos = i;
-				while (isspace(string[i]))
-					i++;
+				i += spaces;
+
 				const char *start = had_quotes ? &(string[beg+1]) : &(string[beg]);
 				size_t _end = had_quotes ? (i==len-1 ? 1 : 2) : 0;
 				size_t end = (pos - _end > (size_t)LeftMax) ? (size_t)LeftMax : pos - _end;
@@ -1241,6 +1337,46 @@ static cell AMX_NATIVE_CALL amx_ucfirst(AMX *amx, cell *params)
 	return 1;
 }
 
+// native mb_ucfirst(string[], maxlength = 0);
+static cell AMX_NATIVE_CALL mb_ucfirst(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string, arg_maxlength };
+
+	auto sourceLength = 0;
+	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+
+	auto outputMaxLength = params[arg_maxlength];
+
+	if (outputMaxLength <= 0)
+	{
+		outputMaxLength = sourceLength;
+	}
+
+	// Retrieves the first character length in bytes.
+	auto firstChLength = utf8seek(source, sourceLength, source, 1, SEEK_CUR) - source;
+
+	if (firstChLength)
+	{
+		char output[8] = {};
+		auto outputLength = utf8toupper(source, firstChLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+
+		// The converted character is either larger or smaller in bytes.
+		if (firstChLength != outputLength)
+		{
+			// Calculates the new string length and makes sure we don't go over the buffer size (fairly unlikely).
+			sourceLength = ke::Min<int>(sourceLength + (outputLength - firstChLength), outputMaxLength);
+
+			// Move data forward or backward minus the first character (whathever its size).
+			memmove(source + outputLength, source + firstChLength, (sourceLength - outputLength) * sizeof(char));	
+		}
+
+		// Copy the new character at the start of the string.
+		memcpy(source, output, outputLength);
+	}
+
+	return set_amxstring_utf8(amx, params[arg_string], source, sourceLength, outputMaxLength);
+}
+
 static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 {
 	int len;
@@ -1251,18 +1387,27 @@ static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 {
-	int len, newlen;
-	char *str = get_amxstring(amx, params[1], 0, len);
+	int length;
+	auto string = get_amxstring(amx, params[1], 0, length);
 
-	UTIL_TrimLeft(str);
-	UTIL_TrimRight(str);
+	auto leftSpaces  = utf8getspaces(string);
+	auto rightSpaces = 0u;
 
-	newlen = strlen(str);
-	len -= newlen;
+	auto originalLength = length;
 
-	set_amxstring(amx, params[1], str, newlen);
+	if (leftSpaces < size_t(length))
+	{
+		while (--length >= 0 && utf8isspace(string + length))
+		{
+			++rightSpaces;
+		}
+	}
 
-	return len;
+	auto totalSpaces = leftSpaces + rightSpaces;
+
+	set_amxstring(amx, params[1], string + leftSpaces, originalLength - totalSpaces);
+
+	return totalSpaces;
 }
 
 static cell AMX_NATIVE_CALL n_strcat(AMX *amx, cell *params)
@@ -1292,62 +1437,105 @@ static cell AMX_NATIVE_CALL n_strcat(AMX *amx, cell *params)
 	return params[3] - num;
 }
 
+// native strcmp(const string1[], const string2[], bool:ignorecase = false);
 static cell AMX_NATIVE_CALL n_strcmp(AMX *amx, cell *params)
 {
-	int len;
-	char *str1 = get_amxstring(amx, params[1], 0, len);
-	char *str2 = get_amxstring(amx, params[2], 1, len);
+	enum args { arg_count, arg_string1, arg_string2, arg_ignorecase };
 
-	if (params[3])
-		return stricmp(str1, str2);
-	else
-		return strcmp(str1, str2);
-}
+	auto string1Length = 0;
+	auto string2Length = 0;
 
-static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
-{
-	int len;
-	char *str1 = get_amxstring(amx, params[1], 0, len);
-	char *str2 = get_amxstring(amx, params[2], 1, len);
+	auto string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
+	auto string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
 
-	if (params[4])
-		return strncasecmp(str1, str2, (size_t)params[3]);
-	else
-		return strncmp(str1, str2, (size_t)params[3]);
-}
-
-static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
-{
-	int len;
-	char *str = get_amxstring(amx, params[1], 0, len);
-	int sublen;
-	char *sub = get_amxstring(amx, params[2], 1, sublen);
-
-	bool igcase = params[3] ? true : false;
-	
-	if (igcase)
+	if (params[arg_ignorecase] != 0)
 	{
-		for (int i = 0; i < len; i++)
-		{
-			if (str[i] & (1<<5))
-				str[i] &= ~(1<<5);
-		}
-		for (int i = 0; i < sublen; i++)
-		{
-			if (str[i] & (1<<5))
-				str[i] &= ~(1<<5);			
-		}
+		auto string1Folded = get_amxbuffer(2);
+		auto string2Folded = get_amxbuffer(3);
+
+		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+
+		string1Folded[string1Length] = '\0';
+		string2Folded[string2Length] = '\0';
+
+		string1 = string1Folded;
+		string2 = string2Folded;
 	}
 
-	if (params[4] > len)
-		return -1;
+	return strcmp(string1, string2);
+}
 
-	char *find = strstr(str + params[4], sub);
+// native strncmp(const string1[], const string2[], num, bool:ignorecase = false);
+static cell AMX_NATIVE_CALL n_strncmp(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string1, arg_string2, arg_numbytes, arg_ignorecase };
+
+	auto string1Length = 0;
+	auto string2Length = 0;
+
+	auto string1 = get_amxstring(amx, params[arg_string1], 0, string1Length);
+	auto string2 = get_amxstring(amx, params[arg_string2], 1, string2Length);
+
+	if (params[arg_ignorecase] != 0)
+	{
+		auto string1Folded = get_amxbuffer(2);
+		auto string2Folded = get_amxbuffer(3);
+
+		string1Length = utf8casefold(string1, string1Length, string1Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		string2Length = utf8casefold(string2, string2Length, string2Folded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+
+		string1Folded[string1Length] = '\0';
+		string2Folded[string2Length] = '\0';
+
+		string1 = string1Folded;
+		string2 = string2Folded;
+	}
+
+	return strncmp(string1, string2, params[arg_numbytes]);
+}
+
+// native strfind(const string[], const sub[], bool:ignorecase = false, pos = 0);
+static cell AMX_NATIVE_CALL n_strfind(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_source, arg_search, arg_ignorecase, arg_startpos };
+
+	auto sourceLength = 0;
+	auto searchLength = 0;
+
+	auto source = get_amxstring(amx, params[arg_source], 0, sourceLength);
+	auto search = get_amxstring(amx, params[arg_search], 1, searchLength);
+
+	if (params[arg_ignorecase] != 0)
+	{
+		auto sourceFolded = get_amxbuffer(2);
+		auto searchFolded = get_amxbuffer(3);
+
+		sourceLength = utf8casefold(source, sourceLength, sourceFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+		searchLength = utf8casefold(search, searchLength, searchFolded, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+
+		sourceFolded[sourceLength] = '\0';
+		searchFolded[searchLength] = '\0';
+
+		source = sourceFolded;
+		search = searchFolded;
+	}
+
+	auto position = params[arg_startpos];
+	
+	if (position < 0 || position > sourceLength)
+	{
+		return -1;
+	}
+
+	auto find = strstr(source + position, search);
 
 	if (!find)
+	{
 		return -1;
+	}
 
-	return (find - str);
+	return (find - source);
 }
 
 static cell AMX_NATIVE_CALL vformat(AMX *amx, cell *params)
@@ -1424,6 +1612,60 @@ static cell AMX_NATIVE_CALL fmt(AMX *amx, cell *params)
 	return 1;
 };
 
+// native mb_strtotitle(source[], maxlength = 0);
+static cell AMX_NATIVE_CALL mb_strtotitle(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_string, arg_maxlength };
+
+	auto sourceLength = 0;
+	auto source = get_amxstring(amx, params[arg_string], 0, sourceLength);
+
+	auto outputMaxLength = params[arg_maxlength];
+
+	if (outputMaxLength <= 0)
+	{
+		outputMaxLength = sourceLength;
+	}
+
+	auto output = get_amxbuffer(1);
+	auto outputLength = utf8totitle(source, sourceLength, output, MAX_BUFFER_LENGTH - 1, UTF8_LOCALE_DEFAULT, nullptr, TRUE);
+
+	output[outputLength] = '\0';
+
+	return set_amxstring_utf8(amx, params[arg_string], output, outputLength, outputMaxLength);
+}
+
+// native bool:is_string_category(const input[], input_size, flags, &output_size = 0);
+static cell AMX_NATIVE_CALL is_string_category(AMX *amx, cell *params)
+{
+	enum args { arg_count, arg_input, arg_inputsize, arg_flags, arg_outputsize };
+
+	auto inputLength = 0;
+	auto input = get_amxstring(amx, params[arg_input], 0, inputLength);
+
+	auto inputMaxLength = ke::Min(params[arg_inputsize], inputLength);
+	auto outputSize = get_amxaddr(amx, params[arg_outputsize]);
+
+	// User wants to check only one character whatever its size.
+	if (inputMaxLength <= 1)
+	{
+		// Gets the character length.
+		inputMaxLength = utf8seek(input, inputLength, input, 1, SEEK_CUR) - input;
+
+		// Truncated character.
+		if (inputMaxLength > inputLength)
+		{
+			*outputSize = 0;
+			return FALSE;
+		}
+	}
+
+	// Checks input with the given flags.
+	*outputSize = utf8iscategory(input, inputMaxLength, params[arg_flags]);
+
+	// If function consumed input, then it's a success.
+	return static_cast<cell>(*outputSize == inputMaxLength);
+}
 
 AMX_NATIVE_INFO string_Natives[] =
 {
@@ -1445,7 +1687,12 @@ AMX_NATIVE_INFO string_Natives[] =
 	{"is_char_upper",	is_char_upper},
 	{"is_char_lower",	is_char_lower},
 	{"is_char_mb",		is_char_mb},
+	{"is_string_category", is_string_category },
 	{"get_char_bytes",	get_char_bytes},
+	{"mb_strtotitle",	mb_strtotitle},
+	{"mb_strtolower",	mb_strtolower},
+	{"mb_strtoupper",	mb_strtoupper},
+	{"mb_ucfirst",		mb_ucfirst},
 	{"num_to_str",		numtostr},
 	{"numtostr",		numtostr},
 	{"parse",			parse},

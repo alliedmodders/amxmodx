@@ -221,6 +221,16 @@ public cmdKick(id, level, cid)
 	return PLUGIN_HANDLED
 }
 
+/**
+ * ';' and '\n' are command delimiters. If a command arg contains these 2
+ * it is not safe to be passed to server_cmd() as it may be trying to execute
+ * a command.
+ */
+isCommandArgSafe(const arg[])
+{
+	return contain(arg, ";") == -1 && contain(arg, "\n") == -1;
+}
+
 public cmdUnban(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 2))
@@ -232,12 +242,12 @@ public cmdUnban(id, level, cid)
 
 	get_user_authid(id, authid, charsmax(authid))
 
-	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) )
+	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) )
 	{
 		new storedAdminAuth[32]
 		if( !TrieGetString(g_tempBans, arg, storedAdminAuth, charsmax(storedAdminAuth)) || !equal(storedAdminAuth, authid) )
 		{
-			console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
+			console_print(id, "%L", id, "ADMIN_MUST_TEMPUNBAN");
 			return PLUGIN_HANDLED;
 		}
 	}
@@ -247,7 +257,13 @@ public cmdUnban(id, level, cid)
 		server_cmd("removeip ^"%s^";writeip", arg)
 		console_print(id, "[AMXX] %L", id, "IP_REMOVED", arg)
 	} else {
-		server_cmd("removeid ^"%s^";writeid", arg)
+		if(!isCommandArgSafe(arg))
+		{
+			console_print(id, "%l", "CL_NOT_FOUND");
+			return PLUGIN_HANDLED;
+		}
+
+		server_cmd("removeid %s;writeid", arg)
 		console_print(id, "[AMXX] %L", id, "AUTHID_REMOVED", arg)
 	}
 
@@ -376,7 +392,13 @@ public cmdAddBan(id, level, cid)
 		server_cmd("addip ^"%s^" ^"%s^";wait;writeip", minutes, arg)
 		console_print(id, "[AMXX] Ip ^"%s^" added to ban list", arg)
 	} else {
-		server_cmd("banid ^"%s^" ^"%s^";wait;writeid", minutes, arg)
+		if(!isCommandArgSafe(arg))
+		{
+			console_print(id, "%l", "CL_NOT_FOUND");
+			return PLUGIN_HANDLED;
+		}
+
+		server_cmd("banid ^"%s^" %s;wait;writeid", minutes, arg)
 		console_print(id, "[AMXX] Authid ^"%s^" added to ban list", arg)
 	}
 
@@ -408,14 +430,15 @@ public cmdBan(id, level, cid)
 		return PLUGIN_HANDLED
 
 	new nNum = str_to_num(minutes)
+	new const tempBanMaxTime = get_pcvar_num(p_amx_tempban_maxtime);
 	if( nNum < 0 ) // since negative values result in permanent bans
 	{
 		nNum = 0;
 		minutes = "0";
 	}
-	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (nNum <= 0 || nNum > get_pcvar_num(p_amx_tempban_maxtime)) )
+	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) && (nNum <= 0 || nNum > tempBanMaxTime) )
 	{
-		console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
+		console_print(id, "%L", id, "ADMIN_MUST_TEMPBAN", tempBanMaxTime);
 		return PLUGIN_HANDLED
 	}
 
@@ -494,14 +517,15 @@ public cmdBanIP(id, level, cid)
 		return PLUGIN_HANDLED
 
 	new nNum = str_to_num(minutes)
+	new const tempBanMaxTime = get_pcvar_num(p_amx_tempban_maxtime);
 	if( nNum < 0 ) // since negative values result in permanent bans
 	{
 		nNum = 0;
 		minutes = "0";
 	}
-	if( ~get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON ) && (nNum <= 0 || nNum > get_pcvar_num(p_amx_tempban_maxtime)) )
+	if( !(get_user_flags(id) & ( ADMIN_BAN | ADMIN_RCON )) && (nNum <= 0 || nNum > tempBanMaxTime) )
 	{
-		console_print(id, "%L", id, "NO_ACC_COM"); // may be someone wants to create a new sentence and to translate it in all languages ?
+		console_print(id, "%L", id, "ADMIN_MUST_TEMPBAN", tempBanMaxTime);
 		return PLUGIN_HANDLED
 	}
 	
@@ -977,13 +1001,13 @@ public cmdPlugins(id, level, cid)
 	
 	if (EndPLID < num)
 	{
-		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_MORE", EndPLID + 1);
+		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_MORE", "amx_help", EndPLID + 1);
 		replace_all(Temp,charsmax(Temp),"amx_help","amx_plugins");
 		console_print(id,"%s",Temp);
 	}
 	else
 	{
-		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_BEGIN");
+		formatex(Temp,charsmax(Temp),"----- %L -----",id,"HELP_USE_BEGIN", "amx_help");
 		replace_all(Temp,charsmax(Temp),"amx_help","amx_plugins");
 		console_print(id,"%s",Temp);
 	}

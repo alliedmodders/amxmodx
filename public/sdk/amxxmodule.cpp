@@ -2312,86 +2312,10 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 	return TRUE;
 }
 
-
-
-#if defined(__linux__) || defined(__APPLE__)
-// linux prototype
-C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
-
-#else
-#ifdef _MSC_VER
-// MSVC: Simulate __stdcall calling convention
-C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
+C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
 {
-	__asm			// Prolog
-	{
-		// Save ebp
-		push		ebp
-		// Set stack frame pointer
-		mov			ebp, esp
-		// Allocate space for local variables
-		// The MSVC compiler gives us the needed size in __LOCAL_SIZE.
-		sub			esp, __LOCAL_SIZE
-		// Push registers
-		push		ebx
-		push		esi
-		push		edi
-	}
-#else	// _MSC_VER
-#ifdef __GNUC__
-// GCC can also work with this
-C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals )
-{
-#else	// __GNUC__
-// compiler not known
-#error There is no support (yet) for your compiler. Please use MSVC or GCC compilers or contact the AMX Mod X dev team.
-#endif	// __GNUC__
-#endif // _MSC_VER
-#endif // __linux__
-
-	// ** Function core <--
 	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
-	// NOTE!  Have to call logging function _after_ copying into g_engfuncs, so
-	// that g_engfuncs.pfnAlertMessage() can be resolved properly, heh. :)
-	// UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
-	// --> ** Function core
-
-#ifdef _MSC_VER
-	// Epilog
-	if (sizeof(int*) == 8)
-	{	// 64 bit
-		__asm
-		{
-			// Pop registers
-			pop	edi
-			pop	esi
-			pop	ebx
-			// Restore stack frame pointer
-			mov	esp, ebp
-			// Restore ebp
-			pop	ebp
-			// 2 * sizeof(int*) = 16 on 64 bit
-			ret 16
-		}
-	}
-	else
-	{	// 32 bit
-		__asm
-		{
-			// Pop registers
-			pop	edi
-			pop	esi
-			pop	ebx
-			// Restore stack frame pointer
-			mov	esp, ebp
-			// Restore ebp
-			pop	ebp
-			// 2 * sizeof(int*) = 8 on 32 bit
-			ret 8
-		}
-	}
-#endif // #ifdef _MSC_VER
 }
 
 #endif	// #ifdef USE_METAMOD
@@ -2475,6 +2399,7 @@ PFN_AMX_EXECV				g_fn_AmxExecv;
 PFN_AMX_ALLOT				g_fn_AmxAllot;
 PFN_AMX_FINDPUBLIC			g_fn_AmxFindPublic;
 PFN_LOAD_AMXSCRIPT			g_fn_LoadAmxScript;
+PFN_LOAD_AMXSCRIPT_EX		g_fn_LoadAmxScriptEx;
 PFN_UNLOAD_AMXSCRIPT		g_fn_UnloadAmxScript;
 PFN_REAL_TO_CELL			g_fn_RealToCell;
 PFN_CELL_TO_REAL			g_fn_CellToReal;
@@ -2567,7 +2492,8 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("GetAmxScript", g_fn_GetAmxScript, PFN_GET_AMXSCRIPT);
 	REQFUNC("FindAmxScriptByAmx", g_fn_FindAmxScriptByAmx, PFN_FIND_AMXSCRIPT_BYAMX);
 	REQFUNC("FindAmxScriptByName", g_fn_FindAmxScriptByName, PFN_FIND_AMXSCRIPT_BYNAME);
-	REQFUNC("LoadAmxScript", g_fn_LoadAmxScript, PFN_LOAD_AMXSCRIPT);
+	REQFUNC("LoadAmxScript", g_fn_LoadAmxScript, PFN_LOAD_AMXSCRIPT); // Deprecated. Please use LoadAmxScriptEx instead.
+	REQFUNC("LoadAmxScriptEx", g_fn_LoadAmxScriptEx, PFN_LOAD_AMXSCRIPT_EX);
 	REQFUNC("UnloadAmxScript", g_fn_UnloadAmxScript, PFN_UNLOAD_AMXSCRIPT);
     REQFUNC("GetAmxScriptName", g_fn_GetAmxScriptName, PFN_GET_AMXSCRIPTNAME);
 
@@ -2771,6 +2697,7 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_AmxFindPublic(0, 0, 0);
 	MF_AmxAllot(0, 0, 0, 0);
 	MF_LoadAmxScript(0, 0, 0, 0, 0);
+	MF_LoadAmxScriptEx(0, 0, 0, 0, 0, 0);
 	MF_UnloadAmxScript(0, 0);
 	MF_RegisterSPForward(0, 0, 0, 0, 0, 0);
 	MF_RegisterSPForwardByName(0, 0, 0, 0, 0, 0);

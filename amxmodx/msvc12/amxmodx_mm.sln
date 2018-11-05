@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amxmodx_mm", "amxmodx_mm.vcxproj", "{2BF64D1A-AC89-41B0-9D02-FB8CB610F850}"
 EndProject
@@ -50,6 +50,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amxxpc", "..\..\compiler\amxxpc\amxxpc.vcxproj", "{39412290-D01C-472F-A439-AB5592A04C08}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpc300", "..\..\compiler\libpc300\libpc300.vcxproj", "{19B72687-080B-437A-917A-12AEB0031635}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "json", "..\..\modules\json\msvc12\json.vcxproj", "{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -326,6 +328,18 @@ Global
 		{19B72687-080B-437A-917A-12AEB0031635}.JITReleaseBinLog|Win32.Build.0 = Release|Win32
 		{19B72687-080B-437A-917A-12AEB0031635}.Release|Win32.ActiveCfg = Release|Win32
 		{19B72687-080B-437A-917A-12AEB0031635}.Release|Win32.Build.0 = Release|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.Debug|Win32.Build.0 = Debug|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.JITDebug|Win32.ActiveCfg = Debug|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.JITDebug|Win32.Build.0 = Debug|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.JITDebugBinLog|Win32.ActiveCfg = Debug|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.JITDebugBinLog|Win32.Build.0 = Debug|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.JITRelease|Win32.ActiveCfg = Release|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.JITRelease|Win32.Build.0 = Release|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.JITReleaseBinLog|Win32.ActiveCfg = Release|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.JITReleaseBinLog|Win32.Build.0 = Release|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.Release|Win32.ActiveCfg = Release|Win32
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -352,5 +366,9 @@ Global
 		{7F18E00C-6271-4CAB-B18A-746BE3EC68E7} = {1A75873D-E05D-4F07-A4E2-28DC1BB03226}
 		{39412290-D01C-472F-A439-AB5592A04C08} = {0BB61E37-4EA5-4B18-A164-6CB4810E50F4}
 		{19B72687-080B-437A-917A-12AEB0031635} = {0BB61E37-4EA5-4B18-A164-6CB4810E50F4}
+		{4CF9D220-F318-4D1C-81DF-E2377A2D8FFE} = {1A75873D-E05D-4F07-A4E2-28DC1BB03226}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7D29DAA-4E6E-43AA-A2FC-7BD7758ABFD9}
 	EndGlobalSection
 EndGlobal

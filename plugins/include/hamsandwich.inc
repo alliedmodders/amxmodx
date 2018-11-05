@@ -15,7 +15,7 @@
  * Ham Sandwich is a module that is used to hook and call virtual functions of 
  *  entities.
  * Virtual functions are mod-specific functions.  This means that in order
- *  for this to work on a mod, it needs to be configured with the hamdata.ini
+ *  for this to work on a mod, it needs to be configured with the gamedata
  *  file.
  * Be very careful with parameter passing to these functions.
  */
@@ -265,10 +265,24 @@ native SetHamParamVector(which, const Float:value[3]);
  * Sets a parameter on the fly of the current hook.  This has no effect in post hooks.
  * Use this on parameters that are entities.
  *
+ * @note Due to a historical bug, the changes made by this native are not reflected in the corresponding post forward
+ *       for backward compatibility reasons. Use SetHamParamEntity2 if this is required.
+ *
  * @param which				Which parameter to change.  Starts at 1, and works up from the left to right.  1 is always "this".
  * @param value				The value to change it to.
  */
 native SetHamParamEntity(which, value);
+
+/**
+ * Sets a parameter on the fly of the current hook.  This has no effect in post hooks.
+ * Use this on parameters that are entities.
+ *
+ * @note Same as SetHamParamEntity except the changes made by this native are reflected in the corresponding post forward.
+ *
+ * @param which				Which parameter to change.  Starts at 1, and works up from the left to right.  1 is always "this".
+ * @param value				The value to change it to.
+ */
+native SetHamParamEntity2(which, value);
 
 /**
  * Sets a parameter on the fly of the current hook.  This has no effect in post hooks.

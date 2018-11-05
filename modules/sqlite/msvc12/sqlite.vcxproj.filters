@@ -39,6 +39,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{e0a36119-bb5b-4f07-9e0e-80f9aa7a7d21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{9595267e-27de-4ad9-b2cd-ecd10c9513ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\basic_sql.cpp">
@@ -144,5 +147,10 @@
     <None Include="..\..\..\plugins\include\sqlx.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

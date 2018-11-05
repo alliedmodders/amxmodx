@@ -12,30 +12,90 @@
 #endif
 #define _newmenus_included
 
-#define MEXIT_ALL		1		/* Menu will have an exit option (default)*/
-#define MEXIT_FORCE		2		/* Menu will have an exit option, even when pagination is disabled. 
+/**
+ * @section Menu properties for using in menu_setprop 
+ */
+
+/**
+ * Menu will have an exit option (default)
+ */
+#define MEXIT_ALL		1
+
+/**
+ * Menu will have an exit option, even when pagination is disabled. 
  * There have to be less than 10 items in the menu or it won't appear. The exit 
  * option will be appended to the last item with no extra slot padding. If you 
- * want it in the 10th slot you have to pad it manually with menu_addblank2 */
-#define MEXIT_NEVER		-1		/* Menu will not have an exit option */
+ * want it in the 10th slot you have to pad it manually with menu_addblank2 
+ */
+#define MEXIT_FORCE		2
 
-#define MPROP_PERPAGE	1		/* Number of items per page (param1 = number, 0=no paginating, 7=default) */
-#define MPROP_BACKNAME	2		/* Name of the back button (param1 = string) */
-#define MPROP_NEXTNAME	3		/* Name of the next button (param1 = string) */
-#define MPROP_EXITNAME	4		/* Name of the exit button (param1 = string) */
-#define MPROP_TITLE		5		/* Menu title text (param1 = string) */
-#define MPROP_EXIT		6		/* Exit functionality (param1 = number, see MEXIT constants) */
-#define MPROP_NOCOLORS	8		/* Sets whether colors are not auto (param1 = number, 0=default) */
-#define MPROP_NUMBER_COLOR	10	/* Color indicator to use for numbers (param1 = string, "\r"=default) */
-#define MPROP_PAGE_CALLBACK	11	/* Function to be called on Back and Next (param1 = string) */
-								/* public function(id, status); where status is either MENU_BACK or MENU_MORE */
-								/* Pass NULL_STRING to disable the callback */
+/**
+ * Menu will not have an exit option
+ */
+#define MEXIT_NEVER		-1
 
+/**
+ * Number of items per page (param1 = number, 0=no paginating, 7=default)
+ */
+#define MPROP_PERPAGE	1
+
+/**
+ * Name of the back button (param1 = string)
+ */
+#define MPROP_BACKNAME	2		
+
+/**
+ * Name of the next button (param1 = string)
+ */
+#define MPROP_NEXTNAME	3
+
+/**
+ * Name of the exit button (param1 = string)
+ */
+#define MPROP_EXITNAME	4
+
+/**
+ * Menu title text (param1 = string)
+ */
+#define MPROP_TITLE		5
+
+/**
+ * Exit functionality (param1 = number, see MEXIT constants)
+ */
+#define MPROP_EXIT		6
+
+/**
+ * Sets whether colors are not auto (param1 = number, 0=default)
+ */
+#define MPROP_NOCOLORS	8
+
+/**
+ * Color indicator to use for numbers (param1 = string, "\r"=default)
+ */
+#define MPROP_NUMBER_COLOR	10
+
+/**
+ * Function to be called on Back and Next (param1 = string)
+ * public function(id, status); where status is either MENU_BACK or MENU_MORE
+ * Pass NULL_STRING to disable the callback 
+ */
+#define MPROP_PAGE_CALLBACK	11	
+
+/**
+ * Whether to show the page number in menu title (param1 = bool, true = default)
+ */
+#define MPROP_SHOWPAGE 12
+
+/**
+ * @deprecated
+ */
 #define MEXIT_NORMAL	0		/* DEPRECATED, do not use (has no effect) */
 #define MENUPAD_NONE	0		/* DEPRECATED, do not use (has no effect) */
 #define MENUPAD_PAGE	1		/* DEPRECATED, do not use (has no effect) */
 #define MPROP_ORDER		7		/* DEPRECATED, do not use (has no effect) */
 #define MPROP_PADMENU	9		/* DEPRECATED, do not use (has no effect) */
+
+/** @endsection */
 
 /**
  * @brief Creates a new menu object.
@@ -58,13 +118,14 @@
  * @param title 		Title the menu should use.
  * @param handler		Name of the handler function.  The function will be invoked 
  *						once and only once to every menu_display() call.
- * @param ml			Unused (should be 0).
+ * @param ml			If true, the menu title and items will be looked up as multilingual keys
+ *                      when the menu displays.
  * @return				Menu resource identifier which must be destroyed via 
  *						menu_destroy().  All menus are destroyed when the plugin 
  *						unloads.
  * @error				Function name not found.
  */
-native menu_create(const title[], const handler[], ml=0);
+native menu_create(const title[], const handler[], bool:ml = false);
 
 /**
  * Creates a menu item callback handler.  
@@ -179,7 +240,7 @@ native menu_find_id(menu, page, key);
  * @return				1 on success, 0 on failure.
  * @error				Invalid menu resource.
  */
-native menu_item_getinfo(menu, item, &access, info[], infolen, name[]="", namelen=0, &callback);
+native menu_item_getinfo(menu, item, &access = 0, info[] = "", infolen = 0, name[]="", namelen=0, &callback = 0);
 
 /**
  * Sets an item's display text.

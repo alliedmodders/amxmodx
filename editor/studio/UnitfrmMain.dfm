@@ -7369,6 +7369,7 @@ object frmMain: TfrmMain
       'list_store_string'
       'log_amx'
       'log_message'
+      'elog_message'
       'log_to_file'
       'make_deathmsg'
       'make_string'

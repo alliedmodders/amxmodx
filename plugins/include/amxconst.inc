@@ -55,9 +55,44 @@ public stock const NULL_STRING[1];
 public stock const Float:NULL_VECTOR[3];
 
 /**
- * The maximum buffer size required to store a clients name.
+ * The maximum buffer size required to store a client's name.
  */
 #define MAX_NAME_LENGTH 32
+
+/**
+ * The maximum buffer size required to store a client's IP address without a port.
+ */
+#define MAX_IP_LENGTH 16
+
+/**
+ * The maximum buffer size required to store a client's IP address with a port.
+ */
+#define MAX_IP_WITH_PORT_LENGTH 22
+
+/**
+ * The maximum buffer size required to store a client's AuthID.
+ */
+#define MAX_AUTHID_LENGTH 64
+
+/**
+ * The maximum buffer size required to store a resource path.
+ */
+#define MAX_RESOURCE_PATH_LENGTH 64
+
+/**
+ * The maximum buffer size that can be displayed in a MOTD.
+ */
+#define MAX_MOTD_LENGTH 1536
+
+/**
+ * The maximum size accepted by the user info buffer.
+ */
+#define MAX_USER_INFO_LENGTH 256
+
+/**
+ * The maximum buffer size that can be displayed in a menu.
+ */
+#define MAX_MENU_LENGTH 512
 
 /**
  * π
@@ -151,6 +186,7 @@ public stock const Float:NULL_VECTOR[3];
 #define HIT_LEFTLEG     6
 #define HIT_RIGHTLEG    7
 #define HIT_SHIELD      8 // CS only
+#define MAX_BODYHITS    8
 
 /**
  * @section emit_sound() constants
@@ -450,5 +486,98 @@ enum HashType
 	Hash_Keccak_384, // Provides Keccak 384 bit hashing
 	Hash_Keccak_512  // Provides Keccak 512 bit hashing
 };
+
+/**
+ * SetTaskFlags constants for set_task_ex()
+ */
+enum SetTaskFlags (<<= 1)
+{
+	SetTask_Once = 0,          // None; execute callback after the specified amount of time (Default)
+	SetTask_RepeatTimes = 1,   // Repeat timer a set amount of times
+	SetTask_Repeat,            // Loop indefinitely until timer is stopped
+	SetTask_AfterMapStart,     // Time interval is treated as absolute time after map start
+	SetTask_BeforeMapChange    // Time interval is treated as absolute time before map change
+};
+
+/**
+ * RegisterEventFlags constants for register_event_ex()
+ */
+enum RegisterEventFlags (<<= 1)
+{
+	RegisterEvent_None = 0,        // None
+	RegisterEvent_Global = 1,      // Global event (sent to every client)
+	RegisterEvent_Single,          // Event sent to single client
+	RegisterEvent_OnceForMultiple, // Call only once when repeated to multiple clients
+	RegisterEvent_OnlyDead,        // Call only if sent to dead client
+	RegisterEvent_OnlyAlive,       // Call only if sent to alive client
+	RegisterEvent_OnlyHuman,       // Call only if sent to human client (RegisterEvent_Single required)
+	RegisterEvent_OnlyBots         // Call only if sent to bot (RegisterEvent_Single required)
+};
+
+/**
+ * GetPlayerFlags constants for get_players_ex()
+ */
+enum GetPlayersFlags (<<= 1)
+{
+	GetPlayers_None = 0,           // No filter (Default)
+	GetPlayers_ExcludeDead = 1,    // Do not include dead clients
+	GetPlayers_ExcludeAlive,       // Do not include alive clients
+	GetPlayers_ExcludeBots,        // Do not include bots
+	GetPlayers_ExcludeHuman,       // Do not include human clients
+	GetPlayers_MatchTeam,          // Match with team
+	GetPlayers_MatchNameSubstring, // Match with part of name
+	GetPlayers_CaseInsensitive,    // Match case insensitive
+	GetPlayers_ExcludeHLTV,        // Do not include HLTV proxies
+	GetPlayers_IncludeConnecting   // Include connecting clients
+};
+
+/**
+ * FindPlayerFlags constants for find_player_ex()
+ */
+enum FindPlayerFlags (<<= 1)
+{
+	FindPlayer_None = 0,           // None
+	FindPlayer_MatchName = 1,      // Match with name
+	FindPlayer_MatchNameSubstring, // Match with name substring
+	FindPlayer_MatchAuthId,        // Match with authid
+	FindPlayer_MatchIP,            // Match with ip
+	FindPlayer_MatchTeam,          // Match with team name
+	FindPlayer_ExcludeDead,        // Do not include dead clients
+	FindPlayer_ExcludeAlive,       // Do not include alive clients
+	FindPlayer_ExcludeBots,        // Do not include bots
+	FindPlayer_ExcludeHuman,       // Do not include human clients
+	FindPlayer_LastMatched,        // Return last matched client instead of the first
+	FindPlayer_MatchUserId,        // Match with userid
+	FindPlayer_CaseInsensitive,    // Match case insensitively
+	FindPlayer_IncludeConnecting   // Include connecting clients
+}
+
+/**
+ * Constants for client statistics
+ */
+enum
+{
+	STATSX_KILLS = 0,
+	STATSX_DEATHS,
+	STATSX_HEADSHOTS,
+	STATSX_TEAMKILLS,
+	STATSX_SHOTS,
+	STATSX_HITS,
+	STATSX_DAMAGE,
+	STATSX_RANK,
+	STATSX_MAX_STATS
+}
+
+/**
+ *  Constants for get_user_origin()
+ */
+enum
+{
+	Origin_Client = 0,      // Client's Origin
+	Origin_Eyes,            // Eyes (and Weapon) Origin
+	Origin_AimEndClient,    // Aim End Origin from Client's Position
+	Origin_AimEndEyes,      // Aim End Origin from Eyes Position
+	Origin_CS_LastBullet    // Last Bullet's Origin (Counter-Strike)
+}
 
 #include <cstrike_const> // To keep backward compatibility

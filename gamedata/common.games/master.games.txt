@@ -743,6 +743,25 @@
 		"game"  "czero"
 	}
 
+	"gamerules.games/cstrike/offsets-cgamerules.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"gamerules.games/cstrike/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"gamerules.games/cstrike/offsets-chalflifetraining.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+
 
 	//
 	// Day Of Defeat
@@ -1533,11 +1552,21 @@
 		"game"  "dod"
 	}
 
+	"gamerules.games/dod/offsets-cdodteamplay.txt"
+	{
+		"game"  "dod"
+	}
+
+	"gamerules.games/dod/offsets-cspdodrules.txt"
+	{
+		"game"  "dod"
+	}
+
 
 	//
 	// Team Fortress Classic
 	//
-    
+
 	"entities.games/tfc/offsets-cbaseentity.txt"
 	{
 		"game"  "tfc"
@@ -2158,6 +2187,20 @@
 		"game"  "tfc"
 	}
 
+	"gamerules.games/tfc/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"gamerules.games/tfc/offsets-chalflifeteamplay.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"gamerules.games/tfc/offsets-cteamfortress.txt"
+	{
+		"game"  "tfc"
+	}
 
 	//
 	// Half-Life: Opposing Force
@@ -3338,11 +3381,30 @@
 		"game"  "gearbox"
 	}
 
+	"gamerules.games/gearbox/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"gamerules.games/gearbox/offsets-chalflifectfplay.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"gamerules.games/gearbox/offsets-chalflifecoopplay.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"gamerules.games/gearbox/offsets-chalflifeteamplay.txt"
+	{
+		"game"  "gearbox"
+	}
 
  	//
 	// Half-Life: Deathmatch
 	//
-    
+
 	"entities.games/valve/offsets-cbaseentity.txt"
 	{
 		"game"  "valve"
@@ -4031,5 +4093,79 @@
 	"entities.games/valve/offsets-cworlditem.txt"
 	{
 		"game"  "valve"
+	}
+
+	"gamerules.games/valve/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "valve"
+	}
+
+	"gamerules.games/valve/offsets-chalflifeteamplay.txt"
+	{
+		"game"  "valve"
+	}
+
+
+
+	//
+	// Virtual Functions
+	//
+
+	"virtual.games/ag/offsets-common.txt"
+	{
+		"game"  "ag"
+	}
+
+	"virtual.games/cstrike/offsets-common.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"virtual.games/dod/offsets-common.txt"
+	{
+		"game"  "dod"
+	}
+
+	"virtual.games/esf/offsets-common.txt"
+	{
+		"game"  "esf"
+	}
+
+	"virtual.games/esf_openbeta/offsets-common.txt"
+	{
+		"game"  "esf_openbeta"
+	}
+
+	"virtual.games/gearbox/offsets-common.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"virtual.games/ns/offsets-common.txt"
+	{
+		"game"  "ns"
+		"game"  "nsp"
+	}
+
+	"virtual.games/svencoop/offsets-common.txt"
+	{
+		"game"  "svencoop"
+	}
+
+	"virtual.games/tfc/offsets-common.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"virtual.games/ts/offsets-common.txt"
+	{
+		"game"  "ts"
+	}
+
+	"virtual.games/valve/offsets-common.txt"
+	{
+		"game"  "valve"
+		"game"  "dmc"
 	}
 }

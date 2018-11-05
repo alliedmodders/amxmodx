@@ -37,7 +37,7 @@ public client_disconnected(id)
 
 	remove_task(id)
 	
-	new szTeam[16], szName[MAX_NAME_LENGTH], szAuthid[32], iStats[8], iHits[8], szWeapon[24]
+	new szTeam[16], szName[MAX_NAME_LENGTH], szAuthid[32], iStats[STATSX_MAX_STATS], iHits[MAX_BODYHITS], szWeapon[24]
 	new iUserid = get_user_userid(id)
 	new _max = xmod_get_maxweapons()
 	
@@ -52,9 +52,9 @@ public client_disconnected(id)
 			xmod_get_wpnname(i, szWeapon, charsmax(szWeapon))
 			
 			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^")", 
-						szName, iUserid, szAuthid, szTeam, szWeapon, iStats[4], iStats[5], iStats[0], iStats[2], iStats[3], iStats[6], iStats[1])
+						szName, iUserid, szAuthid, szTeam, szWeapon, iStats[STATSX_SHOTS], iStats[STATSX_HITS], iStats[STATSX_KILLS], iStats[STATSX_HEADSHOTS], iStats[STATSX_TEAMKILLS], iStats[STATSX_DAMAGE], iStats[STATSX_DEATHS])
 			log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")", 
-						szName, iUserid, szAuthid, szTeam, szWeapon, iHits[1], iHits[2], iHits[3], iHits[4], iHits[5], iHits[6], iHits[7])
+						szName, iUserid, szAuthid, szTeam, szWeapon, iHits[HIT_HEAD], iHits[HIT_CHEST], iHits[HIT_STOMACH], iHits[HIT_LEFTARM], iHits[HIT_RIGHTARM], iHits[HIT_LEFTLEG], iHits[HIT_RIGHTLEG])
 		}
 	}
 	

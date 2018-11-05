@@ -39,7 +39,7 @@ public:
 	char			*ent;     // ent name that's being hooked
 	int              trampSize;
 
-	Hook(void **vtable_, int entry_, void *target_, bool voidcall, bool retbuf, int paramcount, char *name) :
+	Hook(void **vtable_, int entry_, void *target_, bool voidcall, bool retbuf, int paramcount, const char *name) :
 		func(NULL), vtable(vtable_), entry(entry_), target(target_), exec(0), del(0), tramp(NULL), trampSize(0)
 		{
 			// original function is vtable[entry]

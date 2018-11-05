@@ -42,6 +42,9 @@
     <Filter Include="Third Party\Zlib">
       <UniqueIdentifier>{557b0e54-eb0e-488f-b8bc-3cee3f8ddfba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{746bb65b-17aa-4f58-8afc-0cfff3799bb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\basic_sql.cpp">
@@ -216,5 +219,10 @@
     <None Include="..\..\..\plugins\include\sqlx.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

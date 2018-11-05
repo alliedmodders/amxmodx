@@ -3,6 +3,11 @@ import os, platform
 
 lib = builder.compiler.StaticLibrary('zlib')
 
+if builder.target_platform is 'linux' or builder.target_platform is 'mac':
+  lib.compiler.defines += [
+    'HAVE_UNISTD_H'
+  ]
+
 lib.compiler.includes += [
   os.path.join(builder.sourcePath, 'third_party', 'zlib'),
 ]

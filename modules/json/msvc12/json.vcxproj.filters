@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{959a9831-eb53-4faa-b073-dad6790bc123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{72ab2480-daa0-43cc-9fe5-5710998b27b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module SDK">
+      <UniqueIdentifier>{c1f7d9b4-ea37-4980-b17f-f4ff55cb1990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module SDK\SDK Base">
+      <UniqueIdentifier>{259f5990-1378-4291-9f8e-d6e0ad89173a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Third Party">
+      <UniqueIdentifier>{ad24e0a6-afc1-4eb3-9c2d-2aaac86aa36c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Third Party\Parson">
+      <UniqueIdentifier>{dc99c702-9fc8-4e8c-ba44-959a066cdbe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pawn Includes">
+      <UniqueIdentifier>{aaebd544-6579-4a7e-9c6b-2ccc3c0280be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{50d2c03b-6783-40f5-8cb5-78ca29e9cfdc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\JsonMngr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JsonNatives.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp">
+      <Filter>Module SDK\SDK Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\third_party\parson\parson.c">
+      <Filter>Third Party\Parson</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\IJsonMngr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JsonMngr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\moduleconfig.h">
+      <Filter>Module SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\public\sdk\amxxmodule.h">
+      <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\third_party\parson\parson.h">
+      <Filter>Third Party\Parson</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\plugins\include\json.inc">
+      <Filter>Pawn Includes</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

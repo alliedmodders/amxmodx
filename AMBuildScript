@@ -17,8 +17,10 @@ class AMXXConfig(object):
     self.versionlib = None
     self.zlib = None
     self.hashing = None
+    self.utf8rewind = None
     self.csx_app = None
     self.stdcxx_path = None
+    self.nasm_path = None
 
   def use_auto_versioning(self):
     if builder.backend != 'amb2':
@@ -87,7 +89,7 @@ class AMXXConfig(object):
 
     mysql_path = builder.options.mysql_path
     if not len(mysql_path):
-      mysql_path = os.getenv('MYSQL5', '')
+      mysql_path = os.getenv('MYSQL55', '')
 
     if len(mysql_path):
       self.mysql_path = os.path.join(builder.originalCwd, mysql_path)
@@ -95,7 +97,7 @@ class AMXXConfig(object):
         raise Exception('Metamod path does not exist: {0}'.format(mysql_path))
     else:
       try_paths = [
-        os.path.join(builder.sourcePath, '..', 'mysql-5.0'),
+        os.path.join(builder.sourcePath, '..', 'mysql-5.5'),
       ]
       for try_path in try_paths:
         if os.path.exists(try_path):
@@ -103,6 +105,31 @@ class AMXXConfig(object):
           break
       if not self.mysql_path:
         raise Exception('Could not find MySQL! Try passing --mysql to configure.py.')
+
+  def detectNASM(self):
+    import subprocess
+
+    nasm_paths = [
+      getattr(builder.options, 'nasm_path', 'nasm'),
+    ]
+    if builder.target_platform == 'windows':
+      nasm_paths += [os.path.join(
+        builder.sourcePath,
+        'build_deps',
+        'nasm',
+        'nasm.exe')
+      ]
+
+    for nasm_path in nasm_paths:
+      try:
+        subprocess.check_output([nasm_path, '-v'])
+        self.nasm_path = nasm_path
+        break
+      except:
+        pass
+
+    if self.nasm_path is None:
+      raise Exception('Could not find a suitable path for nasm')
 
   # Returns list of lines of output from the compiler
   @staticmethod
@@ -164,6 +191,7 @@ class AMXXConfig(object):
     cxx.includes += [os.path.join(builder.sourcePath, 'third_party')]
     cxx.includes += [os.path.join(builder.sourcePath, 'third_party', 'hashing')]
     cxx.includes += [os.path.join(builder.sourcePath, 'third_party', 'zlib')]
+    cxx.includes += [os.path.join(builder.sourcePath, 'third_party', 'utf8rewind')]
 
   def configure_gcc(self, cxx):
     cxx.cflags += [
@@ -206,6 +234,10 @@ class AMXXConfig(object):
       cxx.cflags += ['-Wno-sometimes-uninitialized']
       if builder.target_platform == 'linux' and cxx.version >= '3.6':
         cxx.cxxflags += ['-Wno-inconsistent-missing-override']
+      if builder.target_platform == 'linux' and cxx.version >= '3.9':
+        cxx.cxxflags += ['-Wno-varargs']
+      if builder.target_platform == 'linux' and cxx.version >= '4.0':
+        cxx.cxxflags += ['-Wno-address-of-packed-member']
 
     if have_gcc:
       cxx.cflags += ['-Wno-parentheses']
@@ -258,6 +290,9 @@ class AMXXConfig(object):
       'odbc32.lib',
       'odbccp32.lib',
     ]
+
+    if cxx.version >= 1900:
+      cxx.linkflags += ['legacy_stdio_definitions.lib', 'legacy_stdio_wide_specifiers.lib']
 
     if builder.options.opt == '1':
       cxx.cflags += ['/Ox']
@@ -363,11 +398,42 @@ class AMXXConfig(object):
     binary = context.compiler.Program(name)
     return self.AddVersioning(binary)
 
+  def AddAssembly(self, context, binary, input_file, output_file, includes=[], extra_argv=[]):
+    if builder.target_platform == 'windows':
+      obj_type = 'win32'
+    elif builder.target_platform == 'linux':
+      obj_type = 'elf32'
+    elif builder.target_platform == 'mac':
+      obj_type = 'macho32'
+
+    input_path = os.path.join(context.currentSourcePath, input_file)
+    output_path = output_file
+
+    argv = [
+      self.nasm_path,
+      '-I{0}{1}'.format(context.currentSourcePath, os.sep),
+      input_path,
+      '-f', obj_type,
+      '-o', output_path,
+    ] + extra_argv
+
+    extra_includes = []
+    for include_file in includes:
+      extra_includes.append(os.path.join(context.currentSourcePath, include_file))
+
+    cmd_node, output_nodes = context.AddCommand(
+      inputs = [input_path] + extra_includes,
+      argv = argv,
+      outputs = [output_path])
+
+    binary.compiler.linkflags += [output_nodes[0]]
+
 AMXX = AMXXConfig()
 AMXX.detectProductVersion()
 AMXX.detectMetamod()
 AMXX.detectHlsdk()
 AMXX.detectMysql()
+AMXX.detectNASM()
 AMXX.configure()
 
 if AMXX.use_auto_versioning():
@@ -388,6 +454,10 @@ AMXX.hashing = builder.RunScript(
   'third_party/hashing/AMBuilder'
 )
 
+AMXX.utf8rewind = builder.RunScript(
+  'third_party/utf8rewind/AMBuilder'
+)
+
 builder.RunBuildScripts(
   [
     'amxmodx/AMBuilder',
@@ -402,6 +472,7 @@ builder.RunBuildScripts(
     'modules/fun/AMBuilder',
     'modules/geoip/AMBuilder',
     'modules/hamsandwich/AMBuilder',
+    'modules/json/AMBuilder',
     'modules/mysqlx/AMBuilder',
     'modules/ns/AMBuilder',
     'modules/nvault/AMBuilder',

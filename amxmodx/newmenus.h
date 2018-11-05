@@ -31,6 +31,7 @@
 #define MPROP_PADMENU	9
 #define MPROP_SET_NUMBER_COLOR	10
 #define MPROP_PAGE_CALLBACK 11
+#define MPROP_SHOWPAGE		12
 
 typedef int (*MENUITEM_CALLBACK)(int, int, int, int);
 
@@ -96,7 +97,7 @@ typedef unsigned int page_t;
 class Menu
 {
 public:
-	Menu(const char *title, AMX *amx, int fid);
+	Menu(const char *title, AMX *amx, int fid, bool use_ml);
 	~Menu();
 	
 	menuitem *GetMenuItem(item_t item);
@@ -127,6 +128,9 @@ public:
 	int func;
 	bool isDestroying;
 	int pageCallback;
+	bool showPageNumber;
+	bool useMultilingual;
+	AMX *amx;
 public:
 	unsigned int items_per_page;
 };

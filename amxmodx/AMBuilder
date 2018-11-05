@@ -9,35 +9,26 @@ binary.compiler.defines += [
   'HAVE_STDINT_H',
 ]
 
-if builder.target_platform == 'mac':
-  jit_objects = [
-    binary.Dep('JIT/amxexecn-darwin.o'),
-    binary.Dep('JIT/amxjitsn-darwin.o'),
-    binary.Dep('JIT/natives-darwin-x86.o'),
-    binary.Dep('JIT/helpers-darwin-x86.o'),
-  ]
-elif builder.target_platform == 'linux':
-  jit_objects = [
-    binary.Dep('JIT/amxexecn.o'),
-    binary.Dep('JIT/amxjitsn.o'),
-    binary.Dep('JIT/natives-x86.o'),
-    binary.Dep('JIT/helpers-x86.o'),
-  ]
-elif builder.target_platform == 'windows':
-  jit_objects = [
-    binary.Dep('JIT/amxexecn.obj'),
-    binary.Dep('JIT/amxjitsn.obj'),
-    binary.Dep('JIT/helpers-x86.obj'),
-    binary.Dep('JIT/natives-x86.obj'),
-  ]
-
-binary.compiler.linkflags += jit_objects
-binary.compiler.linkflags += [AMXX.zlib.binary, AMXX.hashing.binary]
+AMXX.AddAssembly(builder, binary, 'helpers-x86.asm', 'helpers-asm.obj')
+AMXX.AddAssembly(builder, binary, 'natives-x86.asm', 'natives-asm.obj')
+AMXX.AddAssembly(builder, binary, 'amxexecn.asm', 'amxexecn-asm.obj',
+  includes=['amxdefn.asm'])
+AMXX.AddAssembly(builder, binary, 'amxjitsn.asm', 'amxjitsn-asm.obj',
+  includes=['amxdefn.asm'],
+  # Opcode sizes must be maximum width for patching to work.
+  extra_argv=['-O0'])
 
 if builder.target_platform == 'mac':
   binary.compiler.postlink += [
     '-Wl,-read_only_relocs,suppress'
   ]
+elif builder.target_platform == 'windows':
+  binary.compiler.linkflags += [
+    '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
+    '/SECTION:.data,RW',
+  ]
+
+binary.compiler.linkflags += [AMXX.zlib.binary, AMXX.hashing.binary, AMXX.utf8rewind.binary]
 
 binary.sources = [
   'meta_api.cpp',

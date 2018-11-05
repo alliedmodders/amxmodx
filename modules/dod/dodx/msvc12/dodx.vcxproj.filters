@@ -18,6 +18,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{d13b95f6-bd1e-4c68-a7f1-57e4f39ffde3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{0f02323b-c637-4625-aa3c-03f1424de34c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CMisc.cpp">
@@ -72,5 +75,10 @@
     <None Include="..\..\..\..\plugins\include\dodx.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

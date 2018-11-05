@@ -95,6 +95,8 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalOptions>/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
+      <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -138,6 +140,8 @@
       <ImportLibrary>.\Release/cstrike_amx.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
       <SubSystem>Windows</SubSystem>
+      <AdditionalOptions>/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1 %(AdditionalOptions)</AdditionalOptions>
+      <SpecifySectionAttributes>.data,RW</SpecifySectionAttributes>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -161,9 +165,18 @@
     <ClInclude Include="..\..\..\..\public\memtools\CDetour\detours.h" />
     <ClInclude Include="..\..\..\..\public\memtools\MemoryUtils.h" />
     <ClInclude Include="..\..\..\..\public\resdk\common\hookchains.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSEntity.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSInterfaces.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSPlayer.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSPlayerItem.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\cstrike\API\CSPlayerWeapon.h" />
     <ClInclude Include="..\..\..\..\public\resdk\cstrike\regamedll_api.h" />
     <ClInclude Include="..\..\..\..\public\resdk\cstrike\regamedll_const.h" />
-    <ClInclude Include="..\..\..\..\public\resdk\cstrike\regamedll_interfaces.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\engine\cmd_rehlds.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\engine\FlightRecorder.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\engine\IObjectContainer.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\engine\ObjectList.h" />
+    <ClInclude Include="..\..\..\..\public\resdk\engine\pr_dlls.h" />
     <ClInclude Include="..\..\..\..\public\resdk\engine\rehlds_api.h" />
     <ClInclude Include="..\..\..\..\public\resdk\engine\rehlds_interfaces.h" />
     <ClInclude Include="..\..\..\..\public\resdk\mod_regamedll_api.h" />
@@ -180,6 +193,12 @@
   <ItemGroup>
     <None Include="..\..\..\..\plugins\include\cstrike.inc" />
     <None Include="..\..\..\..\plugins\include\cstrike_const.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../../../public;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../../../public;</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

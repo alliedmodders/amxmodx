@@ -313,6 +313,39 @@ int Hook_Int_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2)
 	return ret;
 }
 
+bool Hook_Bool_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+
+	MAKE_VECTOR()
+
+	P_FLOAT(f1)
+	P_INT(i1)
+	P_INT(i2)
+
+	PRE_START()
+		, f1, i1, i2
+	PRE_END()
+
+#if defined(_WIN32)
+		origret=reinterpret_cast<bool (__fastcall*)(void*, int, float, int, int)>(hook->func)(pthis, 0, f1, i1, i2);
+#elif defined(__linux__) || defined(__APPLE__)
+		origret=reinterpret_cast<bool (*)(void*, float, int, int)>(hook->func)(pthis, f1, i1, i2);
+#endif
+
+	POST_START()
+		, f1, i1, i2
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+
+	return ret;
+}
 void Hook_Void_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, int i1)
 {
 	PUSH_VOID()
@@ -429,6 +462,58 @@ void Hook_Void_Int_Int(Hook *hook, void *pthis, int i1, int i2)
 	POP()
 }
 
+void Hook_Void_Int_Bool(Hook *hook, void *pthis, int i1, bool i2)
+{
+	PUSH_VOID()
+
+	MAKE_VECTOR()
+
+	P_INT(i1)
+	P_BOOL(i2)
+
+	PRE_START()
+		, i1, i2
+	PRE_END()
+#if defined(_WIN32)
+	reinterpret_cast<void(__fastcall*)(void*, int, int, bool)>(hook->func)(pthis, 0, i1, i2);
+#elif defined(__linux__) || defined(__APPLE__)
+	reinterpret_cast<void(*)(void*, int, bool)>(hook->func)(pthis, i1, i2);
+#endif
+
+	POST_START()
+		, i1, i2
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+
+void Hook_Void_Bool_Bool(Hook *hook, void *pthis, bool i1, bool i2)
+{
+	PUSH_VOID()
+
+	MAKE_VECTOR()
+
+	P_BOOL(i1)
+	P_BOOL(i2)
+
+	PRE_START()
+		, i1, i2
+	PRE_END()
+#if defined(_WIN32)
+	reinterpret_cast<void(__fastcall*)(void*, int, bool, bool)>(hook->func)(pthis, 0, i1, i2);
+#elif defined(__linux__) || defined(__APPLE__)
+	reinterpret_cast<void(*)(void*, bool, bool)>(hook->func)(pthis, i1, i2);
+#endif
+
+	POST_START()
+		, i1, i2
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+
 int Hook_Int_Int_Str_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i2)
 {
 	int ret=0;
@@ -500,6 +585,42 @@ int Hook_Int_Int_Str_Int_Int(Hook *hook, void *pthis, int i1, const char *sz1, i
 	return ret;
 }
 
+int Hook_Int_Int_Str_Int_Bool(Hook *hook, void *pthis, int i1, const char *sz1, int i2, bool i3)
+{
+	int ret = 0;
+	int origret = 0;
+	ke::AString a;
+
+	PUSH_INT()
+
+	a = sz1;
+
+	MAKE_VECTOR()
+
+	P_INT(i1)
+	P_STR(a)
+	P_INT(i2)
+	P_BOOL(i3)
+
+	PRE_START()
+		, i1, a.chars(), i2, i3
+	PRE_END()
+#if defined(_WIN32)
+	origret = reinterpret_cast<int(__fastcall*)(void*, int, int, const char *, int, bool)>(hook->func)(pthis, 0, i1, a.chars(), i2, i3);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret = reinterpret_cast<int(*)(void*, int, const char *, int, bool)>(hook->func)(pthis, i1, a.chars(), i2, i3);
+#endif
+
+	POST_START()
+		, i1, a.chars(), i2, i3
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+	return ret;
+}
+
 int Hook_Int_Int(Hook *hook, void *pthis, int i1)
 {
 	int ret=0;
@@ -530,6 +651,38 @@ int Hook_Int_Int(Hook *hook, void *pthis, int i1)
 	CHECK_RETURN()
 	return ret;
 }
+
+bool Hook_Bool_Bool(Hook *hook, void *pthis, bool i1)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+	MAKE_VECTOR()
+	
+	P_BOOL(i1)
+
+	PRE_START()
+		,i1
+	PRE_END()
+
+#if defined(_WIN32)
+	origret = reinterpret_cast<bool (__fastcall*)(void*, int, bool)>(hook->func)(pthis, 0, i1);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret = reinterpret_cast<bool (*)(void*, bool)>(hook->func)(pthis, i1);
+#endif
+
+	POST_START()
+		,i1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+
+	return ret;
+}
+
 
 int Hook_Int_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
 {
@@ -973,6 +1126,36 @@ int Hook_Int_pVector(Hook *hook, void *pthis, Vector *v1)
 	return ret;
 }
 
+bool Hook_Bool_pVector(Hook *hook, void *pthis, Vector *v1)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+
+	MAKE_VECTOR()
+	P_PTRVECTOR(v1)
+
+	PRE_START()
+	, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
+	PRE_END()
+
+#if defined(_WIN32)
+	origret = reinterpret_cast<bool(__fastcall*)(void*, int, Vector *)>(hook->func)(pthis, 0, v1);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret = reinterpret_cast<bool(*)(void*, Vector *)>(hook->func)(pthis, v1);
+#endif
+
+	POST_START()
+	, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+	return ret;
+}
+
 void Hook_Void_Entvar_Float_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1, float f2)
 {
 	PUSH_VOID()
@@ -1080,9 +1263,13 @@ void Hook_Void_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2, int i3)
 	KILL_VECTOR()
 	POP()
 }
-void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
+
+int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 {
-	PUSH_VOID()
+	int ret = 0;
+	int origret = 0;
+
+	PUSH_INT()
 
 	MAKE_VECTOR()
 	
@@ -1092,9 +1279,9 @@ void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 		,iteminfo
 	PRE_END()
 #if defined(_WIN32)
-	reinterpret_cast<void (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, iteminfo);
+	origret = reinterpret_cast<int (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, iteminfo);
 #elif defined(__linux__) || defined(__APPLE__)
-	reinterpret_cast<void (*)(void*, void *)>(hook->func)(pthis, iteminfo);
+	origret = reinterpret_cast<int (*)(void*, void *)>(hook->func)(pthis, iteminfo);
 #endif
 
 	POST_START()
@@ -1103,6 +1290,41 @@ void Hook_Void_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 
 	KILL_VECTOR()
 	POP()
+
+	CHECK_RETURN()
+	return ret;
+}
+
+bool Hook_Bool_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+
+	MAKE_VECTOR()
+
+	P_ITEMINFO(iteminfo)
+
+	PRE_START()
+		,iteminfo
+	PRE_END()
+#if defined(_WIN32)
+	origret = reinterpret_cast<bool (__fastcall*)(void*, int, void *)>(hook->func)(pthis, 0, iteminfo);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret = reinterpret_cast<bool (*)(void*, void *)>(hook->func)(pthis, iteminfo);
+#endif
+
+	POST_START()
+		,iteminfo
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+
+	CHECK_RETURN()
+
+	return ret;
 }
 
 float Hook_Float_Void(Hook *hook, void *pthis)
@@ -1404,6 +1626,39 @@ int Hook_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2)
 	return ret;
 }
 
+bool Hook_Bool_Bool_Int(Hook *hook, void *pthis, bool i1, int i2)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+
+	MAKE_VECTOR()
+
+	P_BOOL(i1)
+	P_INT(i2)
+
+	PRE_START()
+		,i1, i2
+	PRE_END()
+
+#if defined(_WIN32)
+	origret = reinterpret_cast<bool (__fastcall*)(void*, int, bool, int)>(hook->func)(pthis, 0, i1, i2);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret = reinterpret_cast<bool (*)(void*, bool, int)>(hook->func)(pthis, i1, i2);
+#endif
+
+	POST_START()
+		,i1, i2
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+
+	return ret;
+}
+
 void Hook_Void_Str_Float_Float_Float(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3)
 {
 	ke::AString a;
@@ -1463,6 +1718,42 @@ void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const ch
 		reinterpret_cast<int (__fastcall*)(void*, int, const char *, float, float, float, int, void *)>(hook->func)(pthis, 0, a.chars(), f1, f2, f3, i1, cb);
 #elif defined(__linux__) || defined(__APPLE__)
 		reinterpret_cast<int (*)(void*, const char *, float, float, float, int, void *)>(hook->func)(pthis, a.chars(), f1, f2, f3, i1, cb);
+#endif
+
+	POST_START()
+		,a.chars(), f1, f2, f3, i1, iEnt
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+
+void Hook_Void_Str_Float_Float_Float_Bool_Cbase(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3, bool i1, void *cb)
+{
+	ke::AString a;
+
+	PUSH_VOID()
+
+	a = sz1;
+	int iEnt=TypeConversion.cbase_to_id(cb);
+
+	MAKE_VECTOR()
+
+		P_STR(a)
+		P_FLOAT(f1)
+		P_FLOAT(f2)
+		P_FLOAT(f3)
+		P_BOOL(i1)
+		P_CBASE(cb, iEnt)
+
+	PRE_START()
+		,a.chars(), f1, f2, f3, i1, iEnt
+	PRE_END()
+
+#if defined(_WIN32)
+		reinterpret_cast<int (__fastcall*)(void*, int, const char *, float, float, float, bool, void *)>(hook->func)(pthis, 0, a.chars(), f1, f2, f3, i1, cb);
+#elif defined(__linux__) || defined(__APPLE__)
+		reinterpret_cast<int (*)(void*, const char *, float, float, float, bool, void *)>(hook->func)(pthis, a.chars(), f1, f2, f3, i1, cb);
 #endif
 
 	POST_START()
@@ -1901,6 +2192,42 @@ void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2)
 	POP()
 }
 
+bool Hook_Bool_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
+{
+	bool ret = false;
+	bool origret = false;
+
+	PUSH_BOOL()
+
+	int iEnt =TypeConversion.cbase_to_id(p1);
+
+	MAKE_VECTOR()
+
+	P_CBASE(p1, iEnt)
+	P_INT(i1)
+
+	PRE_START()
+		, iEnt, i1
+	PRE_END()
+
+#if defined(_WIN32)
+		origret = reinterpret_cast<bool (__fastcall*)(void*, int, void *, int)>(hook->func)(pthis, 0, p1, i1);
+#elif defined(__linux__) || defined(__APPLE__)
+		origret = reinterpret_cast<bool (*)(void*, void *, int)>(hook->func)(pthis, p1, i1);
+#endif
+
+	POST_START()
+		, iEnt, i1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+
+	CHECK_RETURN()
+
+	return ret;
+}
+
 void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
 {
 	PUSH_VOID()
@@ -1923,6 +2250,35 @@ void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
 
 	POST_START()
 		, iEnt, i1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+}
+
+void Hook_Void_Cbase_Int_Float(Hook *hook, void *pthis, void *p1, int i1, float f1)
+{
+	PUSH_VOID()
+	int iEnt = TypeConversion.cbase_to_id(p1);
+
+	MAKE_VECTOR()
+
+	P_CBASE(p1, iEnt)
+	P_INT(i1)
+	P_FLOAT(f1)
+
+	PRE_START()
+	, iEnt, i1, f1
+	PRE_END()
+
+#if defined(_WIN32)
+		reinterpret_cast<void(__fastcall*)(void*, int, void *, int, float)>(hook->func)(pthis, 0, p1, i1, f1);
+#elif defined(__linux__) || defined(__APPLE__)
+		reinterpret_cast<void(*)(void*, void *, int, float)>(hook->func)(pthis, p1, i1, f1);
+#endif
+
+	POST_START()
+	, iEnt, i1, f1
 	POST_END()
 
 	KILL_VECTOR()
@@ -2268,6 +2624,39 @@ int Hook_Int_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1)
 	return ret;
 }
 
+bool Hook_Bool_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1)
+{
+	bool ret=false;
+	bool origret=false;
+
+	PUSH_BOOL()
+
+	int i1=TypeConversion.cbase_to_id(cb1);
+
+	MAKE_VECTOR()
+
+	P_CBASE(cb1, i1)
+	P_BOOL(b1)
+
+	PRE_START()
+		, i1, b1
+	PRE_END()
+#if defined(_WIN32)
+	origret=reinterpret_cast<bool (__fastcall*)(void*, int, void *, bool)>(hook->func)(pthis, 0, cb1, b1);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret=reinterpret_cast<bool (*)(void*, void *, bool)>(hook->func)(pthis, cb1, b1);
+#endif
+
+	POST_START()
+		, i1, b1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+	return ret;
+}
+
 int Hook_Int_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
 {
 	int ret=0;
@@ -2303,6 +2692,76 @@ int Hook_Int_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
 	return ret;
 }
 
+int Hook_Int_pVector_pVector(Hook *hook, void *pthis, Vector *v1, Vector *v2)
+{
+	int ret=0;
+	int origret=0;
+
+	PUSH_INT()
+
+	MAKE_VECTOR()
+
+	P_PTRVECTOR(v1)
+	P_PTRVECTOR(v2)
+
+	PRE_START()
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v2), 3, false)
+	PRE_END()
+
+#if defined(_WIN32)
+	origret=reinterpret_cast<int (__fastcall*)(void*, int, Vector*, Vector*)>(hook->func)(pthis, 0, v1, v2);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret=reinterpret_cast<int (*)(void*, Vector*, Vector*)>(hook->func)(pthis, v1, v2);
+#endif
+
+	POST_START()
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v2), 3, false)
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+
+	return ret;
+}
+
+bool Hook_Bool_pVector_pVector(Hook *hook, void *pthis, Vector *v1, Vector *v2)
+{
+	bool ret=false;
+	bool origret=false;
+
+	PUSH_BOOL()
+
+	MAKE_VECTOR()
+
+	P_PTRVECTOR(v1)
+	P_PTRVECTOR(v2)
+
+	PRE_START()
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v2), 3, false)
+	PRE_END()
+
+#if defined(_WIN32)
+	origret=reinterpret_cast<bool (__fastcall*)(void*, int, Vector*, Vector*)>(hook->func)(pthis, 0, v1, v2);
+#elif defined(__linux__) || defined(__APPLE__)
+	origret=reinterpret_cast<bool (*)(void*, Vector*, Vector*)>(hook->func)(pthis, v1, v2);
+#endif
+
+	POST_START()
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v1), 3, false)
+		, MF_PrepareCellArrayA(reinterpret_cast<cell *>(v2), 3, false)
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+
+	return ret;
+}
+
 int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 {
 	int ret=0;
@@ -2323,6 +2782,38 @@ int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 		origret=reinterpret_cast<int (__fastcall*)(void*, int, entvars_t *, float)>(hook->func)(pthis, 0, ev1, f1);
 #elif defined(__linux__) || defined(__APPLE__)
 		origret=reinterpret_cast<int (*)(void*, entvars_t *, float)>(hook->func)(pthis, ev1, f1);
+#endif
+
+	POST_START()
+		, i1, f1
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+	CHECK_RETURN()
+	return ret;
+}
+
+bool Hook_Bool_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
+{
+	bool ret=false;
+	bool origret=false;
+
+	PUSH_BOOL()
+	int i1=TypeConversion.entvars_to_id(ev1);
+
+	MAKE_VECTOR()
+	P_ENTVAR(ev1, i1)
+	P_FLOAT(f1)
+
+	PRE_START()
+		,i1, f1
+	PRE_END()
+
+#if defined(_WIN32)
+		origret=reinterpret_cast<bool(__fastcall*)(void*, int, entvars_t *, float)>(hook->func)(pthis, 0, ev1, f1);
+#elif defined(__linux__) || defined(__APPLE__)
+		origret=reinterpret_cast<bool(*)(void*, entvars_t *, float)>(hook->func)(pthis, ev1, f1);
 #endif
 
 	POST_START()
@@ -2628,6 +3119,40 @@ bool Hook_Bool_Cbase(Hook *hook, void *pthis, void *cb)
 
 	POST_START()
 		, iOther
+	POST_END()
+
+	KILL_VECTOR()
+	POP()
+
+	CHECK_RETURN()
+	return ret;
+}
+
+bool Hook_Bool_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
+{
+	bool ret = 0;
+	bool origret = 0;
+
+	PUSH_BOOL()
+
+	int e1 = TypeConversion.entvars_to_id(ev1);
+
+	MAKE_VECTOR()
+
+	P_ENTVAR(ev1, e1)
+
+	PRE_START()
+		, e1
+	PRE_END()
+
+#if defined(_WIN32)
+		origret = reinterpret_cast<bool(__fastcall*)(void*, int, entvars_t*)>(hook->func)(pthis, 0, ev1);
+#elif defined(__linux__) || defined(__APPLE__)
+		origret = reinterpret_cast<bool(*)(void*, entvars_t*)>(hook->func)(pthis, ev1);
+#endif
+
+	POST_START()
+		, e1
 	POST_END()
 
 	KILL_VECTOR()

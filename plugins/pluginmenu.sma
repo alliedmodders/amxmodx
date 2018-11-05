@@ -460,7 +460,7 @@ public CvarMenuSelection(id, menu, item, any:data)
 		
 		if (ExplicitPlugin[id]==-1)
 		{
-			DisplayPluginMenuDefault(id);
+			DisplayPluginMenu(id,"Plugin Cvar Menu:", "PluginMenuSelection","DisplayCvarMenu","GetNumberOfCvarsForPlid");
 		}
 	}
 	else if (item==MENU_BACK)
@@ -774,7 +774,7 @@ public CommandMenuSelection(id, menu, item, any:data)
 		
 		if (ExplicitPlugin[id]==-1)
 		{
-			client_cmd(id,"amx_plugincmdmenu");
+			DisplayPluginMenu(id,"Plugin Command Menu:", "PluginMenuSelection","DisplayCmdMenu","GetNumberOfCmdsForPlid");
 		}
 	}
 	else if (item==MENU_BACK)
@@ -891,7 +891,7 @@ public CommandMenuCommand(id, level, cid)
 	{
 		// We need to display a list of the plugins, instead of a specific plugin.
 		ExplicitPlugin[id]=-1;
-		DisplayPluginMenuDefault(id);
+		DisplayPluginMenu(id,"Plugin Command Menu:", "PluginMenuSelection","DisplayCmdMenu","GetNumberOfCmdsForPlid");
 	}
 	else
 	{
@@ -901,9 +901,4 @@ public CommandMenuCommand(id, level, cid)
 		DisplayCmdMenu(id,plid,0);
 	}
 	return PLUGIN_HANDLED;
-}
-
-DisplayPluginMenuDefault(id)
-{
-	DisplayPluginMenu(id,"Plugin Command Menu:", "PluginMenuSelection","DisplayCmdMenu","GetNumberOfCmdsForPlid");
 }

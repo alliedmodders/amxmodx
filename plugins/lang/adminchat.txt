@@ -12,9 +12,9 @@ COL_MAROON = maroon
 PRINT_ALL = (ALL) %s :   %s
 
 [de]
-COL_WHITE = weiss
+COL_WHITE = weiß
 COL_RED = rot
-COL_GREEN = gruen
+COL_GREEN = grün
 COL_BLUE = blau
 COL_YELLOW = gelb
 COL_MAGENTA = magenta-rot
@@ -168,17 +168,17 @@ COL_MAROON = viininpunainen
 PRINT_ALL = (KAIKKI) %s :   %s
 
 [bg]
-COL_WHITE = Bql
-COL_RED = 4erven
+COL_WHITE = bql
+COL_RED = cherven
 COL_GREEN = zelen
 COL_BLUE = sin
-COL_YELLOW = jalt
-COL_MAGENTA = magenta
-COL_CYAN = cyan
-COL_ORANGE = orangev
+COL_YELLOW = jult
+COL_MAGENTA = rozov
+COL_CYAN = cian
+COL_ORANGE = oranjev
 COL_OCEAN = okeanski
-COL_MAROON = maroon
-PRINT_ALL = (ALL) %s :   %s
+COL_MAROON = kafqv
+PRINT_ALL = (VSICHKI) %s :   %s
 
 [ro]
 COL_WHITE = alb
@@ -194,16 +194,16 @@ COL_MAROON = maro
 PRINT_ALL = (TOTI) %s :   %s
 
 [hu]
-COL_WHITE = feher
+COL_WHITE = fehér
 COL_RED = piros
-COL_GREEN = zold
-COL_BLUE = kek
-COL_YELLOW = csarga
+COL_GREEN = zöld
+COL_BLUE = kék
+COL_YELLOW = citrom
 COL_MAGENTA = magenta
-COL_CYAN = cyan
-COL_ORANGE = nsarga
-COL_OCEAN = ocean
-COL_MAROON = maroon
+COL_CYAN = cián
+COL_ORANGE = narancs
+COL_OCEAN = óceán
+COL_MAROON = barna
 PRINT_ALL = (MIND) %s :   %s
 
 [lt]
@@ -236,14 +236,14 @@ PRINT_ALL = (ALL) %s :   %s
 COL_WHITE = bela
 COL_RED = crvena
 COL_GREEN = zelena
-COL_BLUE = plava
-COL_YELLOW = zolta
-COL_MAGENTA = ljubicesta
+COL_BLUE = sina
+COL_YELLOW = zholta
+COL_MAGENTA = rozova
 COL_CYAN = tirkizna
 COL_ORANGE = portokalova
-COL_OCEAN = okean
-COL_MAROON = modra
-PRINT_ALL = (KON SITE) %s : %s
+COL_OCEAN = okeansko sino
+COL_MAROON = kafeava
+PRINT_ALL = (SITE) %s :   %s
 
 [hr]
 COL_WHITE = bijela

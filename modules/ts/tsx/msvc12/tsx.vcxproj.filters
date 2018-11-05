@@ -15,6 +15,9 @@
     <Filter Include="Module SDK\Base SDK">
       <UniqueIdentifier>{bb25b7bf-a54d-448d-998f-a5278f379fe8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{668912fb-d2b2-4cbe-b395-aa45a9663ee2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CMisc.cpp">
@@ -61,5 +64,10 @@
     <ClInclude Include="..\moduleconfig.h">
       <Filter>Module SDK</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

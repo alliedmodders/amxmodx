@@ -18,6 +18,9 @@
     <Filter Include="Module SDK\SDK Base">
       <UniqueIdentifier>{28f804b5-b177-4048-b0c6-36ba103593b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{4cc1fba9-04e0-4d8b-973a-e14073a505de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\amxxapi.cpp">
@@ -118,5 +121,10 @@
     <ClInclude Include="..\moduleconfig.h">
       <Filter>Module SDK</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

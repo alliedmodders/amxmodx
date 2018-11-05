@@ -21,6 +21,9 @@
     <Filter Include="Memtools">
       <UniqueIdentifier>{d2522a66-df9f-49c8-9f74-ee3738ae3d98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{200a07a6-c1a4-4ad1-bda3-3fb5ea7c106a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\fun.cpp">
@@ -54,5 +57,10 @@
     <None Include="..\..\..\plugins\include\fun.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

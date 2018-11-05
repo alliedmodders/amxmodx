@@ -84,7 +84,6 @@ SC_VDEFINE int sc_status;          /* read/write status */
 SC_VDEFINE int sc_rationaltag=0;   /* tag for rational numbers */
 SC_VDEFINE int rational_digits=0;  /* number of fractional digits */
 SC_VDEFINE int sc_allowproccall=0; /* allow/detect tagnames in lex() */
-SC_VDEFINE short sc_is_utf8=FALSE; /* is this source file in UTF-8 encoding */
 SC_VDEFINE char *pc_deprecate = NULL;/* if non-null, mark next declaration as deprecated */
 SC_VDEFINE int sc_showincludes=0;  /* show include files */
 SC_VDEFINE int sc_warnings_are_errors=0;

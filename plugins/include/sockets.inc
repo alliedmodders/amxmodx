@@ -96,6 +96,10 @@ native socket_close(_socket);
  *
  * @note The amount of bytes than you end up receiving can be less than the one you expected.
  *
+ * @note This function will completely block the server until some data arrives
+ *       to the given socket. Use this only if you are sure there is some data
+ *       to be retrieved. You can do that by polling with socket_is_readable().
+ *
  * @param _socket    Socket descriptor
  * @param _data      Array to save the data
  * @param _length    Length of the array

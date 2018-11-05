@@ -456,6 +456,13 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			plinfo[iIndex].iViewType = CAMERA_3RDPERSON;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
+
+			if (!pNewCamera)
+			{
+				MF_LogError(amx, AMX_ERR_NATIVE, "Could not create camera entity.");
+				return 0;
+			}
+
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
@@ -486,6 +493,13 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			plinfo[iIndex].iViewType = CAMERA_UPLEFT;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
+
+			if (!pNewCamera)
+			{
+				MF_LogError(amx, AMX_ERR_NATIVE, "Could not create camera entity.");
+				return 0;
+			}
+
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
@@ -516,6 +530,13 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 
 			plinfo[iIndex].iViewType = CAMERA_TOPDOWN;
 			pNewCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
+
+			if (!pNewCamera)
+			{
+				MF_LogError(amx, AMX_ERR_NATIVE, "Could not create camera entity.");
+				return 0;
+			}
+
 			pNewCamera->v.classname = MAKE_STRING("VexdCam");
 
 			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
@@ -557,11 +578,10 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 	glinfo.bCheckLights = true;
 
 	//Reset LastLights and store custom lighting
-	memset(glinfo.szLastLights, 0x0, 128);
-	memcpy(glinfo.szLastLights, szLights, ke::Min(iLength, 127));
+	ke::SafeStrcpy(glinfo.szLastLights, sizeof(glinfo.szLastLights), szLights);
 
 	LightStyleDetour->DisableDetour();
-	LIGHT_STYLE(0, szLights);
+	LIGHT_STYLE(0, glinfo.szLastLights);
 	LightStyleDetour->EnableDetour();
 
 	// These make it so that players/weaponmodels look like whatever the lighting is

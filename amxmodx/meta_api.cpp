@@ -120,6 +120,9 @@ int mState;
 int g_srvindex;
 
 CDetour *DropClientDetour;
+bool g_isDropClientHookEnabled = false;
+bool g_isDropClientHookAvailable = false;
+void SV_DropClient_RH(IRehldsHook_SV_DropClient *chain, IGameClient *cl, bool crash, const char *format);
 
 cvar_t init_amxmodx_version = {"amxmodx_version", "", FCVAR_SERVER | FCVAR_SPONLY};
 cvar_t init_amxmodx_modules = {"amxmodx_modules", "", FCVAR_SPONLY};
@@ -414,6 +417,7 @@ int	C_Spawn(edict_t *pent)
 
 	ArrayHandles.clear();
 	TrieHandles.clear();
+	TrieIterHandles.clear();
 	TrieSnapshotHandles.clear();
 	DataPackHandles.clear();
 	TextParsersHandles.clear();
@@ -623,9 +627,20 @@ void C_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 		}
 	}
 
-	if (DropClientDetour)
+	if (g_isDropClientHookAvailable)
 	{
-		DropClientDetour->EnableDetour();
+		if (!g_isDropClientHookEnabled)
+		{
+			if (RehldsApi)
+			{
+				RehldsHookchains->SV_DropClient()->registerHook(SV_DropClient_RH);
+			}
+			else
+			{
+				DropClientDetour->EnableDetour();
+			}
+			g_isDropClientHookEnabled = true;
+		}
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -642,10 +657,11 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 		pPlayer->Init(pEdictList + i, i);
 	}
 
+	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
+
 	executeForwards(FF_PluginInit);
 	executeForwards(FF_PluginCfg);
 
-	CoreCfg.ExecuteMainConfig();    // Execute amxx.cfg
 	CoreCfg.ExecuteAutoConfigs();   // Execute configs created with AutoExecConfig native.
 	CoreCfg.SetMapConfigTimer(6.1); // Prepare per-map configs to be executed 6.1 seconds later.
 	                                // Original value which was used in admin.sma.
@@ -683,7 +699,7 @@ void C_ServerDeactivate()
 			// deprecated
 			executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
 
-			if (DropClientDetour && !pPlayer->disconnecting)
+			if (g_isDropClientHookAvailable && !pPlayer->disconnecting)
 			{
 				executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
 			}
@@ -696,16 +712,27 @@ void C_ServerDeactivate()
 			pPlayer->Disconnect();
 			--g_players_num;
 
-			if (!wasDisconnecting && DropClientDetour)
+			if (!wasDisconnecting && g_isDropClientHookAvailable)
 			{
 				executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
 			}
 		}
 	}
 
-	if (DropClientDetour)
+	if (g_isDropClientHookAvailable)
 	{
-		DropClientDetour->DisableDetour();
+		if (g_isDropClientHookEnabled)
+		{
+			if (RehldsApi)
+			{
+				RehldsHookchains->SV_DropClient()->unregisterHook(SV_DropClient_RH);
+			}
+			else
+			{
+				DropClientDetour->DisableDetour();
+			}
+			g_isDropClientHookEnabled = false;
+		}
 	}
 
 	g_players_num	= 0;
@@ -724,8 +751,6 @@ void C_ServerDeactivate_Post()
 		RETURN_META(MRES_IGNORED);
 
 	modules_callPluginsUnloading();
-
-	detachReloadModules();
 
 	CoreCfg.Clear();
 
@@ -749,6 +774,8 @@ void C_ServerDeactivate_Post()
 
 	ClearPluginLibraries();
 	modules_callPluginsUnloaded();
+
+	detachReloadModules();
 
 	ClearMessages();
 
@@ -880,7 +907,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 		// deprecated
 		executeForwards(FF_ClientDisconnect, static_cast<cell>(pPlayer->index));
 
-		if (DropClientDetour && !pPlayer->disconnecting)
+		if (g_isDropClientHookAvailable && !pPlayer->disconnecting)
 		{
 			executeForwards(FF_ClientDisconnected, static_cast<cell>(pPlayer->index), FALSE, prepareCharArray(const_cast<char*>(""), 0), 0);
 		}
@@ -895,7 +922,7 @@ void C_ClientDisconnect(edict_t *pEntity)
 
 	pPlayer->Disconnect();
 
-	if (!wasDisconnecting && DropClientDetour)
+	if (!wasDisconnecting && g_isDropClientHookAvailable)
 	{
 		executeForwards(FF_ClientRemove, static_cast<cell>(pPlayer->index), FALSE, const_cast<char*>(""));
 	}
@@ -1414,8 +1441,15 @@ int	C_Cmd_Argc(void)
 // Only	here we	may	find out who is	an owner.
 void C_SetModel(edict_t *e, const char *m)
 {
-	if (e->v.owner && m[7]=='w' && m[8]=='_' && m[9]=='h')
-		g_grenades.put(e, 1.75, 4, GET_PLAYER_POINTER(e->v.owner));
+	if (!m || strcmp(m, "models/w_hegrenade.mdl") != 0)
+	{
+		RETURN_META(MRES_IGNORED);
+	}
+
+	if (e->v.owner)
+	{
+		g_grenades.put(e, 1.75f, 4, GET_PLAYER_POINTER(e->v.owner));
+	}
 
 	RETURN_META(MRES_IGNORED);
 }
@@ -1644,6 +1678,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	if (RehldsApi_Init())
 	{
 		RehldsHookchains->SV_DropClient()->registerHook(SV_DropClient_RH);
+		g_isDropClientHookAvailable = true;
+		g_isDropClientHookEnabled = true;
 	}
 	else
 	{
@@ -1652,6 +1688,8 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
 		{
 			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
+			g_isDropClientHookAvailable = true;
+			g_isDropClientHookEnabled = true;
 		}
 		else
 		{
@@ -1707,93 +1745,30 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	ClearLibraries(LibSource_Plugin);
 	ClearLibraries(LibSource_Module);
 
-	if (DropClientDetour)
+	if (g_isDropClientHookAvailable)
 	{
-		DropClientDetour->Destroy();
-	}
-	else if (RehldsApi)
-	{
-		RehldsHookchains->SV_DropClient()->unregisterHook(SV_DropClient_RH);
+		if (RehldsApi)
+		{
+			if (g_isDropClientHookEnabled)
+			{
+				RehldsHookchains->SV_DropClient()->unregisterHook(SV_DropClient_RH);
+			}
+		}
+		else
+		{
+			DropClientDetour->Destroy();
+		}
+		g_isDropClientHookAvailable = false;
+		g_isDropClientHookEnabled = false;
 	}
 
 	return (TRUE);
 }
 
-#if defined(__linux__) || defined(__APPLE__)
-// linux prototype
-C_DLLEXPORT void GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
+C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
 {
-#else
-#ifdef _MSC_VER
-// MSVC: Simulate __stdcall calling convention
-C_DLLEXPORT __declspec(naked) void GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
-{
-	__asm			// Prolog
-	{
-		// Save ebp
-		push		ebp
-		// Set stack frame pointer
-		mov			ebp, esp
-		// Allocate space for local variables
-		// The MSVC compiler gives us the needed size in __LOCAL_SIZE.
-		sub			esp, __LOCAL_SIZE
-		// Push registers
-		push		ebx
-		push		esi
-		push		edi
-	}
-#else	// _MSC_VER
-#ifdef __GNUC__
-// GCC can also work with this
-C_DLLEXPORT void __stdcall GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals)
-{
-#else	// __GNUC__
-// compiler not known
-#error There is no support (yet) for your compiler. Please use MSVC or GCC compilers or contact the AMX Mod X dev team.
-#endif	// __GNUC__
-#endif // _MSC_VER
-#endif // __linux__
-
-	// ** Function core <--
 	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
-	// --> ** Function core
-
-#ifdef _MSC_VER
-	// Epilog
-	if (sizeof(int*) == 8)
-	{	// 64 bit
-		__asm
-		{
-			// Pop registers
-			pop	edi
-			pop	esi
-			pop	ebx
-			// Restore stack frame pointer
-			mov	esp, ebp
-			// Restore ebp
-			pop	ebp
-			// 2 * sizeof(int*) = 16 on 64 bit
-			ret 16
-		}
-	}
-	else
-	{	// 32 bit
-		__asm
-		{
-			// Pop registers
-			pop	edi
-			pop	esi
-			pop	ebx
-			// Restore stack frame pointer
-			mov	esp, ebp
-			// Restore ebp
-			pop	ebp
-			// 2 * sizeof(int*) = 8 on 32 bit
-			ret 8
-		}
-	}
-#endif // #ifdef _MSC_VER
 }
 
 DLL_FUNCTIONS gFunctionTable;

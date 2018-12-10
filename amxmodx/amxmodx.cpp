@@ -1272,7 +1272,6 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 		// Fire newmenu callback so closing it can be handled by the plugin
 		if (!CloseNewMenus(pPlayer))
 		{
-			LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");
 			return 2;
 		}
 
@@ -1318,7 +1317,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			return 0;
 		}
 
-		if (closeMenu(index))
+		if (closeMenu(index) == 2)
 		{
 			return 0;
 		}

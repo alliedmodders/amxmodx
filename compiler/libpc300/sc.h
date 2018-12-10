@@ -54,7 +54,7 @@
 #define CTRL_CHAR   '^'    /* default control character */
 #define sCHARBITS   8       /* size of a packed character */
 
-#define sDIMEN_MAX     3    /* maximum number of array dimensions */
+#define sDIMEN_MAX     4    /* maximum number of array dimensions */
 #define sLINEMAX     4095    /* input line length (in characters) */
 #define sCOMP_STACK   32    /* maximum nesting of #if .. #endif sections */
 #define sDEF_LITMAX  500    /* initial size of the literal pool, in "cells" */
@@ -279,6 +279,12 @@ typedef struct s_stringpair {
   char flags;
   char *documentation;
 } stringpair;
+
+typedef struct s_valuepair {
+  struct s_valuepair *next;
+  long first;
+  long second;
+} valuepair;
 
 /* macros for code generation */
 #define opcodes(n)      ((n)*sizeof(cell))      /* opcode size */
@@ -700,6 +706,9 @@ SC_FUNC void delete_docstringtable(void);
 SC_FUNC stringlist *insert_autolist(char *string);
 SC_FUNC char *get_autolist(int index);
 SC_FUNC void delete_autolisttable(void);
+SC_FUNC valuepair *push_heaplist(long first, long second);
+SC_FUNC int popfront_heaplist(long *first, long *second);
+SC_FUNC void delete_heaplisttable(void);
 SC_FUNC stringlist *insert_dbgfile(const char *filename);
 SC_FUNC stringlist *insert_dbgline(int linenr);
 SC_FUNC stringlist *insert_dbgsymbol(symbol *sym);

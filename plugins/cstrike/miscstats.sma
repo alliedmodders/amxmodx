@@ -13,6 +13,7 @@
 
 #include <amxmodx>
 #include <amxmisc>
+#include <cstrike>
 #include <csx>
 
 public MultiKill
@@ -80,9 +81,6 @@ new g_pcvar_mp_c4timer, g_c4timer_value
 
 const TASK_BOMB_TIMER = 8038
 const TASK_DELAYED_NEW_ROUND = 98038
-
-const TEAM_T = 1
-const TEAM_CT = 2
 
 new g_connected[MAX_PLAYERS + 1]
 new g_msounds[MAX_PLAYERS + 1]
@@ -178,13 +176,7 @@ new g_HeadShots[7][] =
 	"HS_MSG_7"
 }
 
-new g_teamsNames[4][] =
-{
-	"TERRORIST", 
-	"CT", 
-	"TERRORISTS", 
-	"CTS"
-}
+new const g_teamsNames[CsTeams][] = { "", "TERRORIST" , "CT", "" };
 
 public plugin_init()
 {
@@ -543,48 +535,26 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		}
 	}
 
-	new team = get_user_team(victim)
-	if (EnemyRemaining && is_user_connected(victim))
+	new const CsTeams:team = cs_get_user_team(victim);
+
+	if (EnemyRemaining && CS_TEAM_T <= team <= CS_TEAM_CT && is_user_connected(victim))
 	{
-		if( TEAM_T <= team <= TEAM_CT )
+		new const victimTeammatesCount = get_playersnum_ex(GetPlayers_ExcludeDead | GetPlayers_MatchTeam, g_teamsNames[team]);
+
+		if (victimTeammatesCount)
 		{
-			new ppl[MAX_PLAYERS], pplnum, epplnum, a
-			get_players(ppl, epplnum, "ae", team == TEAM_T ? "CT" : "TERRORIST")
-			get_players(ppl, pplnum, "ae", team == TEAM_T ? "TERRORIST" : "CT")
-			if( victim_alive )
-			{
-				for(a=0; a<pplnum; a++)
-				{
-					if( ppl[a] == victim )
-					{
-						ppl[a] = ppl[--pplnum]
-						break
-					}
-				}
-			}
-			
-			if (pplnum && epplnum)
-			{
-				new message[128], team_name[32]
+			new killerTeammatesList[MAX_PLAYERS], killerTeammatesCount;
+			get_players_ex(killerTeammatesList, killerTeammatesCount, GetPlayers_ExcludeDead | GetPlayers_MatchTeam, g_teamsNames[CsTeams:(any:team % 2 + 1)]);
 
-				set_hudmessage(255, 255, 255, 0.02, 0.85, 2, 0.05, 0.1, 0.02, 3.0, -1)
-				
-				/* This is a pretty stupid thing to translate, but whatever */
-				new _teamname[32]
-				if (team == TEAM_T)
-				{
-					formatex(_teamname, charsmax(_teamname), "TERRORIST%s", (epplnum == 1) ? "" : "S")
-				} else {
-					formatex(_teamname, charsmax(_teamname), "CT%s", (epplnum == 1) ? "" : "S")
-				}
+			if (killerTeammatesCount)
+			{
+				set_hudmessage(255, 255, 255, 0.02, 0.85, 2, 0.05, 0.1, 0.02, 3.0, -1);
 
-				new id
-				for (a = 0; a < pplnum; ++a)
+				for (new teammate; teammate < killerTeammatesCount; ++teammate)
 				{
-					id = ppl[a]
-					formatex(team_name, charsmax(team_name), "%L", id, _teamname)
-					formatex(message, charsmax(message), "%L", id, "REMAINING", epplnum, team_name)
-					ShowSyncHudMsg(id, g_bottom_sync, "%s", message)
+					victimTeammatesCount > 1 ?
+						ShowSyncHudMsg(killerTeammatesList[teammate], g_bottom_sync, "%l", "REMAINING_ENEMIES", victimTeammatesCount) :
+						ShowSyncHudMsg(killerTeammatesList[teammate], g_bottom_sync, "%l","REMAINING_ENEMY");
 				}
 			}
 		}
@@ -600,7 +570,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		{
 			switch( team )
 			{
-				case TEAM_T:
+				case CS_TEAM_T:
 				{
 					for(b=0; b<tsnum; b++)
 					{
@@ -611,7 +581,7 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 						}
 					}
 				}
-				case TEAM_CT:
+				case CS_TEAM_CT:
 				{
 					for(b=0; b<ctsnum; b++)
 					{
@@ -653,19 +623,19 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		}
 		else if (!g_LastAnnounce)
 		{
-			new oposite = 0, _team = 0
+			new oposite = 0, CsTeams:_team
 			
 			if (ctsnum == 1 && tsnum > 1)
 			{
 				g_LastAnnounce = cts[0]
 				oposite = tsnum
-				_team = 0
+				_team = CS_TEAM_T
 			}
 			else if (tsnum == 1 && ctsnum > 1)
 			{
 				g_LastAnnounce = ts[0]
 				oposite = ctsnum
-				_team = 1
+				_team = CS_TEAM_CT
 			}
 
 			if (g_LastAnnounce)
@@ -818,7 +788,7 @@ public showStatus(id)
 		get_user_name(pid, name, charsmax(name))
 		new color1 = 0, color2 = 0
 	
-		if (get_user_team(pid) == TEAM_T)
+		if (cs_get_user_team(pid) == CS_TEAM_T)
 			color1 = 255
 		else
 			color2 = 255

@@ -8,7 +8,7 @@ SAVE_LOC = Save Location
 [de]
 ADMIN_TELEPORT_1 = ADMIN: teleportiert %s
 ADMIN_TELEPORT_2 = ADMIN %s: teleportiert %s
-TELE_MENU = Menu > Teleport
+TELE_MENU = Menü > Teleport
 CUR_LOC = Momentane Position
 SAVE_LOC = Position speichern
 

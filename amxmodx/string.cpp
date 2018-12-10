@@ -1,4 +1,4 @@
-// vim: set ts=4 sw=4 tw=99 noet:
+﻿// vim: set ts=4 sw=4 tw=99 noet:
 //
 // AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
 // Copyright (C) The AMX Mod X Development Team.
@@ -210,6 +210,16 @@ void copy_amxmemory(cell* dest, cell* src, int len)
 		*dest++=*src++;
 }
 
+bool utf8isspace(const char* string)
+{
+	return utf8iscategory(string, 1, UTF8_CATEGORY_ISSPACE) != 0;
+}
+
+size_t utf8getspaces(const char* string)
+{
+	return utf8iscategory(string, SIZE_MAX, UTF8_CATEGORY_ISSPACE);
+}
+
 char* parse_arg(char** line, int& state)
 {
 	static char arg[3072];
@@ -218,7 +228,7 @@ char* parse_arg(char** line, int& state)
 	
 	while (**line)
 	{
-		if (isspace(**line))
+		if (utf8isspace(*line))
 		{
 			if (state == 1)
 				break;
@@ -919,6 +929,7 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 	int right_pos = 0;
 	unsigned int i = 0;
 	bool done_flag = false;
+	size_t spaces;
 	int len = 0;
 
 	//string[]
@@ -938,9 +949,9 @@ static cell AMX_NATIVE_CALL amx_strtok(AMX *amx, cell *params)
 	{
 		if (trim && !done_flag)
 		{
-			if (isspace(string[i]))
+			if ((spaces = utf8getspaces(string + i) > 0))
 			{
-				while (isspace(string[++i]));
+				i += spaces;
 				done_flag = true;
 			}
 		}
@@ -974,6 +985,7 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 {
 	int left_pos = 0, right_pos = 0, len, pos = -1;
 	unsigned int i = 0;
+	size_t spaces;
 
 	char *string = get_amxstring(amx, params[1], 0, len);
 	char *left = new char[len + 1], *right = new char[len + 1];
@@ -989,9 +1001,9 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 	int trim = params[7];
 
 	// ltrim left
-	if (trim & 1 && isspace(string[i]))
+	if (trim & 1 && (spaces = utf8getspaces(string)) > 0)
 	{
-		while (isspace(string[++i]));
+		i += spaces;
 	}
 
 	for (; i < (unsigned int) len; ++i)
@@ -1007,17 +1019,17 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 	}
 
 	// rtrim left
-	if (trim & 2 && left_pos && isspace(left[left_pos - 1]))
+	if (trim & 2 && left_pos && utf8isspace(&left[left_pos - 1]))
 	{
-		while (--left_pos >= 0 && isspace(left[left_pos]));
+		while (--left_pos >= 0 && utf8isspace(&left[left_pos]));
 		
 		++left_pos;
 	}
 
 	// ltrim right
-	if (trim & 4 && isspace(string[i]))
+	if (trim & 4 && (spaces = utf8getspaces(string + i)) > 0)
 	{
-		while (isspace(string[++i]));
+		i += spaces;
 	}
 
 	for (; i < (unsigned int) len; ++i)
@@ -1026,9 +1038,9 @@ static cell AMX_NATIVE_CALL amx_strtok2(AMX *amx, cell *params)
 	}
 
 	// rtrim right
-	if (trim & 8 && right_pos && isspace(right[right_pos - 1]))
+	if (trim & 8 && right_pos && utf8isspace(&right[right_pos - 1]))
 	{
-		while (--right_pos >= 0 && isspace(right[right_pos]));
+		while (--right_pos >= 0 && utf8isspace(&right[right_pos]));
 
 		++right_pos;
 	}
@@ -1058,8 +1070,12 @@ static cell AMX_NATIVE_CALL argparse(AMX *amx, cell *params)
 
 	// Strip all left-hand whitespace.
 	size_t i = start_pos;
-	while (i < input_len && isspace(input[i]))
-		i++;
+	size_t spaces;
+
+	if ((spaces = utf8getspaces(input + i)) > 0)
+	{
+		i += spaces;
+	}
 
 	if (i >= input_len) {
 		*buffer = '\0';
@@ -1078,7 +1094,7 @@ static cell AMX_NATIVE_CALL argparse(AMX *amx, cell *params)
 		}
 
 		// If not in quotes, and we see a space, stop.
-		if (isspace(input[i]) && !in_quote)
+		if (utf8isspace(input + i) && !in_quote)
 			break;
 
 		if (size_t(bufpos - buffer) < buflen)
@@ -1106,9 +1122,13 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 	int RightMax = params[5];
 
 	size_t len = (size_t)_len;
+	size_t spaces;
 
-	while (isspace(string[i]) && i<len)
-		i++;
+	if ((spaces = utf8getspaces(string)) > 0)
+	{
+		i += spaces;
+	}
+
 	beg = i;
 	for (; i<len; i++)
 	{
@@ -1120,12 +1140,12 @@ static cell AMX_NATIVE_CALL strbreak(AMX *amx, cell *params)	/* 5 param */
 			if (i == len-1)
 				goto do_copy;
 		} else {
-			if (isspace(string[i]) && !in_quote)
+			if (!in_quote && (spaces = utf8getspaces(string + i)) > 0)
 			{
 do_copy:
 				size_t pos = i;
-				while (isspace(string[i]))
-					i++;
+				i += spaces;
+
 				const char *start = had_quotes ? &(string[beg+1]) : &(string[beg]);
 				size_t _end = had_quotes ? (i==len-1 ? 1 : 2) : 0;
 				size_t end = (pos - _end > (size_t)LeftMax) ? (size_t)LeftMax : pos - _end;
@@ -1367,18 +1387,27 @@ static cell AMX_NATIVE_CALL amx_strlen(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL amx_trim(AMX *amx, cell *params)
 {
-	int len, newlen;
-	char *str = get_amxstring(amx, params[1], 0, len);
+	int length;
+	auto string = get_amxstring(amx, params[1], 0, length);
 
-	UTIL_TrimLeft(str);
-	UTIL_TrimRight(str);
+	auto leftSpaces  = utf8getspaces(string);
+	auto rightSpaces = 0u;
 
-	newlen = strlen(str);
-	len -= newlen;
+	auto originalLength = length;
 
-	set_amxstring(amx, params[1], str, newlen);
+	if (leftSpaces < size_t(length))
+	{
+		while (--length >= 0 && utf8isspace(string + length))
+		{
+			++rightSpaces;
+		}
+	}
 
-	return len;
+	auto totalSpaces = leftSpaces + rightSpaces;
+
+	set_amxstring(amx, params[1], string + leftSpaces, originalLength - totalSpaces);
+
+	return totalSpaces;
 }
 
 static cell AMX_NATIVE_CALL n_strcat(AMX *amx, cell *params)

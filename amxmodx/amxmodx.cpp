@@ -401,6 +401,37 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 	return len;
 }
 
+static cell AMX_NATIVE_CALL client_kick(AMX *amx, cell *params) /* 2 param */
+{
+	enum { arg_index = 1, arg_reason };
+
+	int index = params[arg_index];
+
+	if (index < 1 || index > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d", index);
+		return 0;
+	}
+
+	int len;
+	char* message = format_amxstring(amx, params, arg_reason, len);
+ 	message[len++] = '\n';
+	message[len] = 0;
+
+ 	// Maybe g_pEngTable->??? How to do this correctly?
+
+//		if (RehldsApi)
+//		{
+//			RehldsHookchains->SV_DropClient(/*args*/);
+//		}
+//		else
+//		{
+//			DropClientDetour->DisableDetour(/*args*/);
+//		}
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL show_motd(AMX *amx, cell *params) /* 3 param */
 {
 	int ilen;
@@ -4624,6 +4655,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"client_cmd",				client_cmd},
 	{"client_print",			client_print},
 	{"client_print_color",		client_print_color},
+	{"client_kick",				client_kick},
 	{"console_cmd",				console_cmd},
 	{"console_print",			console_print},
 	{"emit_sound",				emit_sound},

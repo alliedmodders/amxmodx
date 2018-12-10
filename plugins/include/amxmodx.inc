@@ -3416,5 +3416,18 @@ native AutoExecConfig(bool:autoCreate = true, const name[] = "", const folder[] 
  */
 native RequestFrame(const callback[], any:data = 0);
 
+/**
+ * Kicks a client from server with message.
+ *
+ * @param id        Client index
+ * @param string    Formatting rules
+ * @param ...       Variable number of formatting parameters
+ *
+ * @noreturn
+ * @error           If the plugin attempts to access an address outside of the
+ *                  stack or heap limits of the plugin, an error will be thrown.
+ */
+native client_kick(id, message[] = "", any:...);
+
 // Always keep this at the bottom of this file
 #include <message_stocks>

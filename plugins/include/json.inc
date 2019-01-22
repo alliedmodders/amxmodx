@@ -64,7 +64,7 @@ enum JSON
  * @param is_file           True to treat string param as filename, false otherwise
  * @param with_comments     True if parsing JSON includes comments (it will ignore them), false otherwise
  *
- * @return                  JSON handle, Invalid_JSONValue if error occurred
+ * @return                  JSON handle, Invalid_JSON if error occurred
  */
 native JSON:json_parse(const string[], bool:is_file = false, bool:with_comments = false);
 

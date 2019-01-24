@@ -495,7 +495,6 @@ void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shoot
 		if (!(Players[shooterIndex].GetBodyHits(targetIndex) & (1 << ptr->iHitgroup)))
 		{
 			ptr->flFraction = 1.0;
-			RETURN_META(MRES_HANDLED);
 		}
 	}
 

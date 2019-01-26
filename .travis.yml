@@ -1,3 +1,4 @@
+dist: xenial
 addons:
   apt:
     packages:

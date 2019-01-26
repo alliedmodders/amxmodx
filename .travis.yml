@@ -2,8 +2,8 @@ dist: xenial
 addons:
   apt:
     packages:
-    - clang-3.7
-    - lld
+    - clang-4.0
+    - lld-4.0
     - lib32stdc++6
     - lib32z1-dev
     - libc6-dev-i386
@@ -12,7 +12,7 @@ addons:
     - g++-multilib
     - nasm
     sources:
-    - llvm-toolchain-precise-3.7
+    - llvm-toolchain-trusty-4.0
     - ubuntu-toolchain-r-test
 language: cpp
 sudo: false
@@ -25,5 +25,5 @@ before_script:
 script:
   - mkdir build && cd build
   - PATH="~/.local/bin:$PATH"
-  - CC=clang-3.7 CXX=clang-3.7 python ../configure.py --enable-optimize
+  - CC=clang-4.0 CXX=clang-4.0 python ../configure.py --enable-optimize
   - ambuild

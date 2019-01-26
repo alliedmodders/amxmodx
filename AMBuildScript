@@ -251,8 +251,8 @@ class AMXXConfig(object):
     ]
 
     if builder.options.opt == '1':
-      cxx.cflags += ['-O2', '-flto=thin']
-      cxx.linkflags += ['-O2', '-flto=thin', '-fuse-ld=lld', '-Wl,-z,notext']
+      cxx.cflags += ['-O2', '-flto=thin', '-fPIC']
+      cxx.linkflags += ['-O2', '-flto=thin', '-fuse-ld=lld']
 
   def configure_msvc(self, cxx):
     if builder.options.debug == '1':

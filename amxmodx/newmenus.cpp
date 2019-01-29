@@ -809,8 +809,21 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 
 	int player = params[1];
 	int page = params[3];
+	
+	if (player < 1 || player > gpGlobals->maxClients)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid player id %d.", player);
+		return 0;
+	}
+	
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(player);
-
+	
+	if (!pPlayer->ingame)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Player %d is not in game.", player);
+		return 0;
+	}
+	
 	if (!CloseNewMenus(pPlayer))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Plugin called menu_display when item=MENU_EXIT");

@@ -185,7 +185,7 @@ native get_user_vstats(index, victim, stats[STATSX_MAX_STATS], bodyhits[MAX_BODY
  *          6 - Damage
  *
  * @param index     Client index
- * @param wpnindex  Attacker client index, or 0 to retrieve the statistics from
+ * @param attackerindex  Attacker client index, or 0 to retrieve the statistics from
  *                  all attackers
  * @param stats     Buffer to copy statistics to
  * @param bodyhits  Buffer to copy body hits to
@@ -197,7 +197,7 @@ native get_user_vstats(index, victim, stats[STATSX_MAX_STATS], bodyhits[MAX_BODY
  * @error           If an invalid client index is provided, an error will be
  *                  thrown.
  */
-native get_user_astats(index, wpnindex, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS], wpnname[] = "", len = 0);
+native get_user_astats(index, attackerindex, stats[STATSX_MAX_STATS], bodyhits[MAX_BODYHITS], wpnname[] = "", len = 0);
 
 /**
  * Resets the current round weapon, attacker and victim statistics.

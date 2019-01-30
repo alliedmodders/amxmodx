@@ -151,6 +151,9 @@ stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], c
 		}
 	}
 
+	menu_setprop(Menu,MPROP_BACKNAME,fmt("%L", id, "BACK"));
+	menu_setprop(Menu,MPROP_NEXTNAME,fmt("%L", id, "MORE"));
+	menu_setprop(Menu,MPROP_EXITNAME,fmt("%L", id, "EXIT"));
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
 	menu_setprop(Menu,MPROP_EXIT,MEXIT_ALL);
 	menu_display(id,Menu,0);
@@ -564,6 +567,9 @@ public DisplayCvarMenu(id, plid, page)
 		}
 	}
 	
+	menu_setprop(Menu,MPROP_BACKNAME,fmt("%L", id, "BACK"));
+	menu_setprop(Menu,MPROP_NEXTNAME,fmt("%L", id, "MORE"));
+	menu_setprop(Menu,MPROP_EXITNAME,fmt("%L", id, "EXIT"));
 	menu_setprop(Menu,MPROP_EXIT,MEXIT_ALL);
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
 	menu_display(id,Menu,page);
@@ -882,6 +888,10 @@ public DisplayCmdMenu(id, plid, page)
 			}
 		}
 	}
+ 
+	menu_setprop(Menu,MPROP_BACKNAME,fmt("%L", id, "BACK"));
+	menu_setprop(Menu,MPROP_NEXTNAME,fmt("%L", id, "MORE"));
+	menu_setprop(Menu,MPROP_EXITNAME,fmt("%L", id, "EXIT"));
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
 	menu_display(id,Menu,page);
 

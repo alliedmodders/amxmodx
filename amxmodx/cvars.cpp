@@ -374,6 +374,19 @@ static cell AMX_NATIVE_CALL get_pcvar_bounds(AMX *amx, cell *params)
 	return hasBound;
 }
 
+// get_pcvar_name(pcvar, string[], maxlen)
+static cell AMX_NATIVE_CALL get_pcvar_name(AMX *amx, cell *params)
+{
+	cvar_t *ptr = reinterpret_cast<cvar_t *>(params[1]);
+	if (!ptr)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid CVAR pointer");
+		return 0;
+	}
+
+	return set_amxstring(amx, params[2], ptr->name, params[3]);
+}
+
 // bind_pcvar_float(pcvar, &Float:var)
 static cell AMX_NATIVE_CALL bind_pcvar_float(AMX *amx, cell *params)
 {
@@ -706,6 +719,7 @@ AMX_NATIVE_INFO g_CvarNatives[] =
 	{"get_pcvar_bool",			get_pcvar_bool},
 	{"get_pcvar_string",		get_pcvar_string},
 	{"get_pcvar_bounds",		get_pcvar_bounds},
+	{"get_pcvar_name",			get_pcvar_name},
 
 	{"set_pcvar_flags",			set_pcvar_flags},
 	{"set_pcvar_float",			set_pcvar_float},

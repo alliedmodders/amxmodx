@@ -400,6 +400,19 @@ native set_pcvar_float(pcvar, Float:num);
 native get_pcvar_string(pcvar, string[], maxlen);
 
 /**
+ * Returns a cvar name via direct pointer access.
+ *
+ * @param pcvar     Pointer to cvar to retrieve name
+ * @param string    Buffer to copy cvar name to
+ * @param maxlen    Maximum size of the buffer
+ *
+ * @return          Number of cells written to buffer.
+ * @error           If an invalid cvar pointer is provided, an error will be
+ *                  thrown.
+ */
+native get_pcvar_name(pcvar, string[], maxlen);
+
+/**
  * Sets a string value to a cvar via direct pointer access.
  *
  * @param pcvar     Pointer to cvar to retrieve value from

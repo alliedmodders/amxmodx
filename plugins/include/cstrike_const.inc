@@ -281,7 +281,7 @@ enum CsMenu
 };
 
 /**
- * Player's join states for use with m_iJointState.
+ * Player's join states for use with m_iJoiningState.
  */
 enum CsJoinState
 {

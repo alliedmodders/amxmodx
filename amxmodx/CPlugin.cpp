@@ -154,6 +154,11 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 				*get_amxaddr(plugin->getAMX(), addr) = gpGlobals->maxClients;
 			}
 
+			if (amx_FindPubVar(plugin->getAMX(), "MapName", &addr) != AMX_ERR_NOTFOUND)
+			{
+				set_amxstring(plugin->getAMX(), addr, STRING(gpGlobals->mapname), PLATFORM_MAX_PATH);
+			}
+
 			if (amx_FindPubVar(plugin->getAMX(), "NULL_STRING", &addr) != AMX_ERR_NOTFOUND)
 			{
 				plugin->m_pNullStringOfs = get_amxaddr(plugin->getAMX(), addr);

@@ -32,7 +32,7 @@
 /**
  * The maximum buffer size required to store a map's name.
  */
-#define MAX_MAPNAME_LENGTH 256
+#define MAX_MAPNAME_LENGTH 64
 
 /**
  * Defines and constants related to the maximum number of clients.

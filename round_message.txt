@@ -1,0 +1,64 @@
+//��
+
+[en]
+RND_MSG = !yRound: !t%d !y- Map: !t%s !y| Players: !g%d!y/!g%d !y!
+
+[de]
+RND_MSG = !yRunde: !t%d !y- Karte: !t%s !y| Spielers: !g%d!y/!g%d !y!
+
+[sr]
+RND_MSG = !yRound: !t%d !y- Mapa je: !t%s !y| Players: !g%d!y/!g%d !y!
+
+[tr]
+RND_MSG = !yTur: !t%d !y- Harita: !t%s !y| Oyuncular: !g%d!y/!g%d !y!
+
+[fr]
+RND_MSG = !yManche : !t%d !y- Carte : !t%s !y| Joueurs : !g%d!y/!g%d !y!
+
+[sv]
+RND_MSG = !yRunda: !t%d !y- Karta: !t%s !y| Spelare: !g%d!y/!g%d !y!
+
+[da]
+RND_MSG = !yRunder: !t%d !y- Banen er: !t%s !y| Spillere: !g%d!y/!g%d !y!
+
+[pl]
+RND_MSG = !yRunda: !t%d !y- Mapa: !t%s !y| Gracze: !g%d!y/!g%d !y!
+
+[nl]
+RND_MSG = !yRonde: !t%d !y- Map: !t%s !y| Spelers: !g%d!y/!g%d !y!
+
+[es]
+RND_MSG = !yRonda: !t%d !y- Mapa: !t%s !y| Jugadores: !g%d!y/!g%d !y!
+
+[bp]
+RND_MSG = !yRodada: !t%d !y- Mapa: !t%s !y| Jogadores: !g%d!y/!g%d !y!
+
+[cz]
+RND_MSG = !yKolo: !t%d !y- Mapa: !t%s !y| Hráči: !g%d!y/!g%d !y!
+
+[fi]
+RND_MSG = !yErä: !t%d !y- Kartta: !t%s !y| Pelaajat: !g%d!y/!g%d !y!
+
+[ls]
+RND_MSG = !y|20und: !t%d !y- |\/|@|>: !t%s !y| n00bs: !g%d!y/!g%d !y!
+
+[bg]
+RND_MSG = !yРунд: !t%d !y- Карта: !t%s !y| Играчи: !g%d!y/!g%d !y!
+
+[ro]
+RND_MSG = !yRunda: !t%d !y- Hartă: !t%s !y| Jucători: !g%d!y/!g%d !y!
+
+[hu]
+RND_MSG = !yKör: !t%d !y- Pálya: !t%s !y| Játékos: !g%d!y/!g%d !y!
+
+[lt]
+RND_MSG = !yRound: !t%d !y- Zemelapis: !t%s !y| Zaidejai: !g%d!y/!g%d !y!
+
+[sk]
+RND_MSG = !yRound: !t%d !y- Mapa je: !t%s !y| Hraci: !g%d!y/!g%d !y!
+
+[ru]
+RND_MSG = !yРаунд: !t%d !y- Карта: !t%s !y| Игроков: !g%d!y/!g%d !y!
+
+[cn]
+RND_MSG = !y回合: !t%d !y- 地图: !t%s !y| 玩家: !g%d!y/!g%d !y!

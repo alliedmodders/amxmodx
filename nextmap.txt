@@ -1,0 +1,121 @@
+//�
+
+[en]
+NEXT_MAP = Next Map:
+PLAYED_MAP = Played map
+FRIEND_FIRE = Friendly fire
+
+[de]
+NEXT_MAP = Näechste Karte:
+PLAYED_MAP = Gespielte Karte
+FRIEND_FIRE = Freundbeschuss
+
+[sr]
+NEXT_MAP = Sledeca Mapa:
+PLAYED_MAP = Igrana mapa
+FRIEND_FIRE = Friendly fire
+
+[tr]
+NEXT_MAP = Sonraki Harita:
+PLAYED_MAP = Oynanan harita
+FRIEND_FIRE = Dost ateşi
+
+[fr]
+NEXT_MAP = Prochaine Carte:
+PLAYED_MAP = Carte jouee
+FRIEND_FIRE = Friendly fire
+
+[sv]
+NEXT_MAP = Nästa karta:
+PLAYED_MAP = Spelade karta
+FRIEND_FIRE = Egna laget skada.
+
+[da]
+NEXT_MAP = Næste bane:
+PLAYED_MAP = Spillet bane
+FRIEND_FIRE = Venskablig ild
+
+[pl]
+NEXT_MAP = Następna Mapa:
+PLAYED_MAP = Mapy grane
+FRIEND_FIRE = Friendly fire
+
+[nl]
+NEXT_MAP = Volgende Map:
+PLAYED_MAP = Gespeelde map
+FRIEND_FIRE = Friendly fire
+
+[es]
+NEXT_MAP = Proximo Mapa:
+PLAYED_MAP = Mapa actual
+FRIEND_FIRE = Fuego amigo
+
+[bp]
+NEXT_MAP = Próximo Mapa:
+PLAYED_MAP = Mapa Jogado
+FRIEND_FIRE = Fogo Amigo
+
+[cz]
+NEXT_MAP = Další mapa:
+PLAYED_MAP = Aktualni mapa
+FRIEND_FIRE = Friendly fire
+
+[fi]
+NEXT_MAP = Seuraava mappi:
+PLAYED_MAP = Pelattu map
+FRIEND_FIRE = Friendly fire
+
+[ls]
+NEXT_MAP = N3xt M4p:
+PLAYED_MAP = P|4y3d m4p
+FRIEND_FIRE = |=r!3nd|y f!r3
+
+[bg]
+NEXT_MAP = Sledva6tata karta:
+PLAYED_MAP = Igrana karta
+FRIEND_FIRE = Friendly fire
+
+[ro]
+NEXT_MAP = Urmatoarea Harta:
+PLAYED_MAP = Harta Actuala
+FRIEND_FIRE = Friendly-Fire
+
+[hu]
+NEXT_MAP = A következő pálya:
+PLAYED_MAP = Jelenlegi Pálya
+FRIEND_FIRE = Csapattárs Sebzés
+
+[lt]
+NEXT_MAP = Kitas zemelapis:
+PLAYED_MAP = Zaide zemelapiu
+FRIEND_FIRE = Savu saudymas
+
+[sk]
+NEXT_MAP = Dalsia mapa:
+PLAYED_MAP = Aktualna mapa
+FRIEND_FIRE = Friendly fire
+
+[mk]
+NEXT_MAP = Slednata mapa ke bide:
+PLAYED_MAP = Mapata sto ja igras se vika
+FRIEND_FIRE = Friendly fire
+
+[hr]
+NEXT_MAP = Sljedeca mapa:
+PLAYED_MAP = Trenutna mapa
+FRIEND_FIRE = Prijateljska vatra
+
+[bs]
+NEXT_MAP = Slijedeca Mapa:
+PLAYED_MAP = Igrana mapa
+FRIEND_FIRE = Friendly fire
+
+[ru]
+NEXT_MAP = Следующая карта:
+PLAYED_MAP = Текущая карта
+FRIEND_FIRE = Огонь по своим
+
+[cn]
+NEXT_MAP = 下张地图:
+PLAYED_MAP = 已经玩过地图
+FRIEND_FIRE = 友军开火伤害

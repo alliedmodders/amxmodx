@@ -1,0 +1,264 @@
+[en]
+LANG_NOT_EXISTS = The language does not exist
+PERSO_LANG = Personal Language
+LANG_MENU = Language Menu
+SERVER_LANG = Server Language
+SAVE_LANG = Save Language
+SET_LANG_SERVER = The server language has been set to "%s"
+SET_LANG_USER = Your language has been set to "%s"
+TYPE_LANGMENU = Type 'amx_langmenu' in the console to display a menu where you can choose your language
+LANG_MENU_DISABLED = Language menu disabled.
+
+[de]
+LANG_NOT_EXISTS = Diese Sprache existiert nicht.
+PERSO_LANG = Eigene Sprache
+LANG_MENU = Sprachmenü
+SERVER_LANG = Sprache des Servers
+SAVE_LANG = Spracheinstellung speichern
+SET_LANG_SERVER = Die Sprache des Servers wurde auf "%s" geändert
+SET_LANG_USER = Deine Sprache wurde auf "%s" geändert
+TYPE_LANGMENU = Schreibe 'amx_langmenu' in die Konsole zum Anzeigen des Sprachmenüs
+LANG_MENU_DISABLED = Sprachmenü deaktiviert.
+
+[sr]
+LANG_NOT_EXISTS = Jezik ne postoji
+PERSO_LANG = Licni Jezik
+LANG_MENU = Meni Jezika
+SERVER_LANG = Jezik Servera
+SAVE_LANG = Sacuvaj Jezik
+SET_LANG_SERVER = Jezik Servera je postavljen na "%s"
+SET_LANG_USER = Vas jezik je postavljen na "%s"
+TYPE_LANGMENU = Unesi 'amx_langmenu' u konzoli da bi otvorio meni za menjanje jezika
+LANG_MENU_DISABLED = Meni za izbor jezika je iskljucen.
+
+[tr]
+LANG_NOT_EXISTS = Aradigin�z lisan mevcut degil
+PERSO_LANG = Şahsi Lisan
+LANG_MENU = Lisan Menü
+SERVER_LANG = Sunucunun Lisânı
+SAVE_LANG = Lisânı Kaydet
+SET_LANG_SERVER = Sunucunun lisânı "%s" olarak değiştirildi
+SET_LANG_USER = Şahsî lisânınız "%s" olarak değiştirildi
+TYPE_LANGMENU = Mevcut lisanların menüsünü görmek için konsola 'amx_langmenu' yazın
+LANG_MENU_DISABLED =Dil menusu kapatildi.
+
+[fr]
+LANG_NOT_EXISTS = Cette langue n'existe pas
+PERSO_LANG = Langue personnelle
+LANG_MENU = Menu Langue
+SERVER_LANG = Langue du serveur
+SAVE_LANG = Sauver la langue
+SET_LANG_SERVER = Langue du serveur : "%s"
+SET_LANG_USER = Langue personnelle : "%s"
+TYPE_LANGMENU = Tape 'amx_langmenu' dans la console pour afficher un menu ou tu pourras choisir ta langue
+LANG_MENU_DISABLED = Menu Langue Desactive.
+
+[sv]
+LANG_NOT_EXISTS = Det spraket existerar inte
+PERSO_LANG = Personligt sprak
+LANG_MENU = Sprakmeny
+SERVER_LANG = Serversprak
+SAVE_LANG = Spara sprak
+SET_LANG_SERVER = Serverspraket har satts till "%s"
+SET_LANG_USER = Ditt sprak har satts till "%s"
+TYPE_LANGMENU = Skriv 'amx_langmenu' i konsolen f'o'r att visa Sprakvalsmenyn
+LANG_MENU_DISABLED = Sprakmenyn avst'a'ngd.
+
+[da]
+LANG_NOT_EXISTS = Sproget eksisterer ikke
+PERSO_LANG = Personligt sprog
+LANG_MENU = Sprog Menu
+SERVER_LANG = Server Sprog
+SAVE_LANG = Gem Sprog
+SET_LANG_SERVER = Server sproget er sat til "%s"
+SET_LANG_USER = Dit sprog er sat til "%s"
+TYPE_LANGMENU = Skriv 'amx_langmenu' i konsollen for at vise en menu hvor du kan vaelge sprog
+LANG_MENU_DISABLED = Sprog menu slaaet fra.
+
+[pl]
+LANG_NOT_EXISTS = Ten jezyk nie istnieje
+PERSO_LANG = Twoj jezyk
+LANG_MENU = Menu jezykowe
+SERVER_LANG = Jezyk serwera
+SAVE_LANG = Zapisz jezyk
+SET_LANG_SERVER = Jezyk serwera zostal ustawiony na "%s"
+SET_LANG_USER = Twoj jezyk zostal ustawiony na "%s"
+TYPE_LANGMENU = Wpisz 'amx_langmenu' w konsoli aby wyswietlic menu z wyborem jezyka
+LANG_MENU_DISABLED = Menu jezykowe zostalo wylaczone.
+
+[nl]
+LANG_NOT_EXISTS = Deze taal bestaat niet
+PERSO_LANG = Persoonlijke Taal
+LANG_MENU = Taalmenu
+SERVER_LANG = Servertaal
+SAVE_LANG = Taal Bewaren
+SET_LANG_SERVER = De servertaal is veranderd naar "%s"
+SET_LANG_USER = Je taal is veranderd naar "%s"
+TYPE_LANGMENU = Typ 'amx_langmenu' in de console voor een menu waar je je taal kunt veranderen
+LANG_MENU_DISABLED = Taalmenu uitgeschakeld.
+
+[es]
+LANG_NOT_EXISTS = Este idioma no existe
+PERSO_LANG = Idioma Personal
+LANG_MENU = Menu de Idioma
+SERVER_LANG = Idioma del Servidor
+SAVE_LANG = Guardar Idioma
+SET_LANG_SERVER = El idioma del servidor se ha cambiado a "%s"
+SET_LANG_USER = Tu idioma se ha cambiado a "%s"
+TYPE_LANGMENU = Escribe 'amx_langmenu' en la consola para mostrar un menu en el cual puedes elegir tu idioma
+LANG_MENU_DISABLED = Menu de Idioma desactivado
+
+[bp]
+LANG_NOT_EXISTS = Este idioma nao existe
+PERSO_LANG = Idioma Pessoal
+LANG_MENU = Menu de Idioma
+SERVER_LANG = Idioma do Servidor
+SAVE_LANG = Salvar Idioma
+SET_LANG_SERVER = O idioma do servidor foi ajustada para "%s"
+SET_LANG_USER = Seu idioma foi configurado para "%s"
+TYPE_LANGMENU = Escreva 'amx_langmenu' no console para mostrar um menu onde voce pode escolher seu idioma preferido
+LANG_MENU_DISABLED = Menu de Idiomas desativado
+
+[cz]
+LANG_NOT_EXISTS = Zvoleny jazyk neexistuje
+PERSO_LANG = Jazyk klienta
+LANG_MENU = Nastaveni jazyka
+SERVER_LANG = Jazyk na serveru
+SAVE_LANG = Ulozit
+SET_LANG_SERVER = Na serveru zvolen jazyk "%s"
+SET_LANG_USER = Tvuj jazyk nastaven na "%s"
+TYPE_LANGMENU = Napis 'amx_langmenu' do konzole pro zobrazeni menu vyberu jazyku
+LANG_MENU_DISABLED = Volba jazyku nepovolena.
+
+[fi]
+LANG_NOT_EXISTS = Kielta ei ole olemassa
+PERSO_LANG = Henkilokohtainen kieli
+LANG_MENU = Kielivalikko
+SERVER_LANG = Palvelimen kieli
+SAVE_LANG = Tallenna kieli
+SET_LANG_SERVER = palvelimen kieli on nyt "%s"
+SET_LANG_USER = Kielesi on nyt "%s"
+TYPE_LANGMENU = Kirjoita 'amx_langmenu' konsoliin nahdaksesi kielivalikon
+LANG_MENU_DISABLED = Kielivalikko poistettu kaytosta
+
+[ls]
+LANG_NOT_EXISTS = s0z, b4d ch0!c3, nub
+PERSO_LANG = j00|2 l4ngu4g3
+LANG_MENU = l4ngu4g3 Menu
+SERVER_LANG = S3rv3r l4ngu4g3
+SAVE_LANG = S4v3 l4ngu4g3
+SET_LANG_SERVER = S3rv3r l4ngu4g3 = "%s"
+SET_LANG_USER = j00|2 l4ngu4g3 =  "%s"
+TYPE_LANGMENU = j00 u$3 'amx_langmenu' f0 j00|2 l4ngu4g3, k?
+LANG_MENU_DISABLED = l4ngu4g3 m3n|_| |3l0ck3d, f4c3!
+
+[bg]
+LANG_NOT_EXISTS = Nqma takav ezik
+PERSO_LANG = Li4ni Ezici
+LANG_MENU = Ezikovoto Menu
+SERVER_LANG = Server Ezik
+SAVE_LANG = Zapameti Ezik
+SET_LANG_SERVER = Ezika na servera e smenen na "%s"
+SET_LANG_USER = Tvoq ezik e smenen na "%s"
+TYPE_LANGMENU = Napi5i 'amx_langmenu' v consolata za da vidite menu kadeto mojete da si izberete ezik
+LANG_MENU_DISABLED = Ezikovoto menu e izklu4eno.
+
+[ro]
+LANG_NOT_EXISTS = Acest limbaj nu exista
+PERSO_LANG = Limbaj Personal
+LANG_MENU = Menu Limbaj
+SERVER_LANG = Limbaj Server
+SAVE_LANG = Salveaza Limbaj
+SET_LANG_SERVER = Limbajul server-ului a fost setat pe "%s"
+SET_LANG_USER = Limbajul tau a fost setat pe "%s"
+TYPE_LANGMENU = Scrie 'amx_langmenu' in consola pentru afisarea unui menu cu limbaje
+LANG_MENU_DISABLED = Menu limbaj dezactivat.
+
+[hu]
+LANG_NOT_EXISTS = A nyelv nem létezik
+PERSO_LANG = Személyi nyelv
+LANG_MENU = Nyelv menü
+SERVER_LANG = Szerver nyelv
+SAVE_LANG = Nyelv mentése
+SET_LANG_SERVER = A szerver nyelve mostantól: "%s".
+SET_LANG_USER = A nyelved mostantól: "%s".
+TYPE_LANGMENU = Írj 'amx_langmenu'-t a konzolba hogy nyelvet választhass.
+LANG_MENU_DISABLED = Nyelv menü letiltva.
+
+[lt]
+LANG_NOT_EXISTS = Kalba neegzistuoja
+PERSO_LANG = Asmenine kalba
+LANG_MENU = Kalbu meniu
+SERVER_LANG = Serverio kalba
+SAVE_LANG = Issaugoti kalba
+SET_LANG_SERVER = Serverio kalba buvo nustatyta i "%s"
+SET_LANG_USER = Tavo kalba buvo nustatyta i "%s"
+TYPE_LANGMENU = Rasyk 'amx_langmenu' konsoleje, kad parodytu meniu kur gali issirinkti kalba.
+LANG_MENU_DISABLED = Kalbu meniu atjungtas.
+
+[sk]
+LANG_NOT_EXISTS = Zvoleny jazyk neexistuje
+PERSO_LANG = Jazyk klienta
+LANG_MENU = Nastavenie jazyka
+SERVER_LANG = Jazyk na servery
+SAVE_LANG = Ulozit
+SET_LANG_SERVER = Na servery zvoleny jazyk "%s"
+SET_LANG_USER = Tvoj jazyk nastaveny na "%s"
+TYPE_LANGMENU = Napis amx_langmenu do konzoly pre zobrazenie menu vyberu jazyka
+LANG_MENU_DISABLED = Volba jazyka nepovolena.
+
+[mk]
+LANG_NOT_EXISTS = Jazikot ne postoi
+PERSO_LANG = Jazik
+LANG_MENU = Meni za jazikot
+SERVER_LANG = Jazik na serverot
+SAVE_LANG = Zacuvaj go izbraniot jazik
+SET_LANG_SERVER = Jazikot na serverot e postaven na "%s"
+SET_LANG_USER = Vasiot jazik e postaven na "%s"
+TYPE_LANGMENU = Napisi 'amx_langmenu' vo konzolata za da go otvoris menito za promena na jazikot
+LANG_MENU_DISABLED = Menito za izbor na jazik e iskluceno.
+
+
+[hr]
+LANG_NOT_EXISTS = Jezik ne postoji
+PERSO_LANG = Osobni jezik
+LANG_MENU = Izbornik jezika
+SERVER_LANG = Jezik servera
+SAVE_LANG = Sacuvaj jezik
+SET_LANG_SERVER = Jezik servera je postavljen na "%s"
+SET_LANG_USER = Vas jezik je postavljen na "%s"
+TYPE_LANGMENU = Upisite 'amx_langmenu' u konzoli da biste otvorili izbornik promjene jezika
+LANG_MENU_DISABLED = Izbornik jezika je iskljucen.
+
+[bs]
+LANG_NOT_EXISTS = Jezik ne postoji
+PERSO_LANG = Licni Jezik
+LANG_MENU = Meni Jezika
+SERVER_LANG = Jezik Servera
+SAVE_LANG = Sacuvaj Jezik
+SET_LANG_SERVER = Jezik Servera je postavljen na "%s"
+SET_LANG_USER = Vas jezik je postavljen na "%s"
+TYPE_LANGMENU = Unesi 'amx_langmenu' u konzoli da bi otvorio meni za mijenjanje jezika
+LANG_MENU_DISABLED = Meni za izbor jezika je iskljucen.
+
+[ru]
+LANG_NOT_EXISTS = Такой язык не существует
+PERSO_LANG = Персональный язык
+LANG_MENU = Меню выбора языка
+SERVER_LANG = Язык сервера
+SAVE_LANG = Сохранить язык
+SET_LANG_SERVER = Язык по-умолчанию изменен на "%s"
+SET_LANG_USER = Ваш язык изменен на "%s"
+TYPE_LANGMENU = Напишите 'amx_langmenu' в консоле для выбора языка
+LANG_MENU_DISABLED = Меню выбора языка заблокировано.
+
+[cn]
+LANG_NOT_EXISTS = 该语言不存在
+PERSO_LANG = 个人语言
+LANG_MENU = 语言菜单
+SERVER_LANG = 服务器语言
+SAVE_LANG = 保存语言设置
+SET_LANG_SERVER = 服务器语言被设置为 "%s"
+SET_LANG_USER = 你的语言被设置为 "%s"
+TYPE_LANGMENU = 在控制台输入'amx_langmenu'打开一个菜单来选择你的语言
+LANG_MENU_DISABLED = 语言菜单已禁用.

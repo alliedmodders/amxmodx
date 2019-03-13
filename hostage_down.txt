@@ -1,0 +1,55 @@
+//��
+
+[en]
+HOSTAGE_DOWN = (RADIO): Hostage down!
+
+[de]
+HOSTAGE_DOWN = (FUNK): Geisel ausgeschaltet!
+
+[tr]
+HOSTAGE_DOWN = (TELSİZ): Rehine öldü!
+
+[fr]
+HOSTAGE_DOWN = (RADIO): Otage à terre!
+
+[sv]
+HOSTAGE_DOWN = (RADIO): Gisslan har dödats!
+
+[da]
+HOSTAGE_DOWN = (RADIO): Gidsel skudt!
+
+[pl]
+HOSTAGE_DOWN = (RADIO): Zakładnik nie żyje!
+
+[nl]
+HOSTAGE_DOWN = (RADIO): Gijzelaar neer!
+
+[es]
+HOSTAGE_DOWN = (RADIO): Rehén eliminado!
+
+[bp]
+HOSTAGE_DOWN = (RÁDIO): Refém morto!
+
+[cz]
+HOSTAGE_DOWN = (RÁDIO): Rukojmí zabit!
+
+[fi]
+HOSTAGE_DOWN = (RADIO): Panttivanki maassa!
+
+[ls]
+HOSTAGE_DOWN = (|2@|)!0): |-|0s+4g3 d0\/\/n!
+
+[bg]
+HOSTAGE_DOWN = (РАДИО): Повален заложник!
+
+[ro]
+HOSTAGE_DOWN = (RADIO): A fost ucis un ostatic!
+
+[hu]
+HOSTAGE_DOWN = (RÁDIÓ): Túsz meghalt!
+
+[ru]
+HOSTAGE_DOWN = (РАДИО): Заложники!
+
+[cn]
+HOSTAGE_DOWN = (无线电): 人质被杀害了。!

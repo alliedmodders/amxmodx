@@ -1,0 +1,71 @@
+[en]
+FRIEND_MONEY = Friend:%s -- Money:%d
+ENEMY = Enemy:%s
+
+[de]
+FRIEND_MONEY = Freund:%s -- Geld:%d
+ENEMY = Gegner:%s
+
+[tr]
+FRIEND_MONEY = Arkadaş:%s -- Para:%d
+ENEMY = Düşman:%s �
+
+[fr]
+FRIEND_MONEY = Ami:%s -- Argent:%d
+ENEMY = Ennemi:%s
+
+[sv]
+FRIEND_MONEY = Vän:%s -- Pengar:%d
+ENEMY = Fiende:%s
+
+[da]
+FRIEND_MONEY = Ven:%s -- Penge:%d
+ENEMY = Fjende:%s
+
+[pl]
+FRIEND_MONEY = Znajomy:%s -- Saldo:%d
+ENEMY = Wróg:%s
+
+[nl]
+FRIEND_MONEY = Vriend:%s -- Geld:%d
+ENEMY = Vijand:%s
+
+[es]
+FRIEND_MONEY = Amigo:%s -- Dinero:%d
+ENEMY = Enemigo:%s
+
+[bp]
+FRIEND_MONEY = Amigo:%s -- Dinheiro:%d
+ENEMY = Inimigo:%s
+
+[cz]
+FRIEND_MONEY = Přítel:%s -- Peníze:%d
+ENEMY = Nepřítel:%s
+
+[fi]
+FRIEND_MONEY = Kaveri:%s -- Rahaa:%d
+ENEMY = Vihollinen:%s
+
+[ls]
+FRIEND_MONEY = |=r!3nd:%s -- |\/|0n3y:%d
+ENEMY = 3|\|3my:%s
+
+[ro]
+FRIEND_MONEY = Prieten:%s -- Bani:%d
+ENEMY = Inamic:%s
+
+[hu]
+FRIEND_MONEY = Barát:%s -- Pénz:%d
+ENEMY = Ellenség:%s
+
+[bg]
+FRIEND_MONEY = Приятел:%s -- Пари:%d
+ENEMY = Враг:%s
+
+[cn]
+FRIEND_MONEY = 队友:%s -- 金钱:%d
+ENEMY = 敌人:%s
+
+[ru]
+FRIEND_MONEY = Союзник:%s -- Деньги:%d
+ENEMY = Противник:%s

@@ -1,0 +1,271 @@
+[en]
+ATAC_BAD_AIM = Give Bad Aim
+ATAC_BLIND = Blind
+ATAC_BOMB = Turn into a Time Bomb
+ATAC_BURY = Bury
+ATAC_CHICKEN = Turn into a Chicken
+ATAC_DROP_REPEATEDLY = Drop Repeatedly
+ATAC_DRUG = Drug
+ATAC_FIRE = Set on Fire
+ATAC_GLOW = Glow Pink
+ATAC_JAIL = Place in Jail for %i seconds
+ATAC_ROCKET = Turn into a Rocket
+ATAC_SLAP_X_TIMES = Slap %i Times
+ATAC_SLAP_TO_1 = Slap to 1hp
+ATAC_SLAY = Slay Immediately
+ATAC_SLAY_SPAWN = Slay on Next Spawn
+
+[fr]
+ATAC_BAD_AIM = Donner une Mauvaise visee
+ATAC_BLIND = Aveugler
+ATAC_BOMB = Transformer en bombe a retardement
+ATAC_BURY = Enterrer
+ATAC_CHICKEN = Transformer en Poulet
+ATAC_DROP_REPEATEDLY = Transformer en Yoyo
+ATAC_DRUG = Droguer
+ATAC_FIRE = Mettre en Feu
+ATAC_GLOW = Teindre en Rose
+ATAC_JAIL = Placer en Prison pendant %i secondes
+ATAC_ROCKET = Transformer en Fusee
+ATAC_SLAP_X_TIMES = Baffer %i Fois
+ATAC_SLAP_TO_1 = Baffer a 1hp
+ATAC_SLAY = Foudrayer Immediatement
+ATAC_SLAY_SPAWN = Foudrayer au Prochain Spawn
+
+[de]
+ATAC_BAD_AIM = Gib ihm schlechtes Aiming
+ATAC_BLIND = Mach Ihn blind
+ATAC_BOMB = Verwandle Ihn in eine tickende Zeitbombe
+ATAC_BURY = Begrabe ihn
+ATAC_CHICKEN = Verwandle ihn in ein Huhn
+ATAC_DROP_REPEATEDLY = Lass Ihn mehrmals fallen
+ATAC_DRUG = Setze Ihn auf Drogen
+ATAC_FIRE = Lass ihn brennen
+ATAC_GLOW = Lass Ihn rosa gluehen
+ATAC_JAIL = Bring ihn fuer %i Sek. ins Gefaengnis
+ATAC_ROCKET = Verwandle Ihn in eine Rakete
+ATAC_SLAP_X_TIMES = Schlage ihn %i mal
+ATAC_SLAP_TO_1 = Schlage ihn auf 1hp
+ATAC_SLAY = Erschlage Ihn sofort
+ATAC_SLAY_SPAWN = Erschlage Ihn naechste Runde
+
+[pl]
+ATAC_BAD_AIM = Daj Zle Celowanie
+ATAC_BLIND = Oslep
+ATAC_BOMB = Zamien W Tykajaca Bombe
+ATAC_BURY = Zagrzeb
+ATAC_CHICKEN = Zamien W Kurczaka
+ATAC_DROP_REPEATEDLY = Rzucaj Powtarzalnie
+ATAC_DRUG = Nacpaj
+ATAC_FIRE = Podpal
+ATAC_GLOW = Zaswiec Na Rozowo
+ATAC_JAIL = Umiesc W Wiezieniu Na %i Sekund
+ATAC_ROCKET = Zamien W Rakiete
+ATAC_SLAP_X_TIMES = Uderz %i Razy
+ATAC_SLAP_TO_1 = Uderzaj do 1hp
+ATAC_SLAY = Zabij Natychmiast
+ATAC_SLAY_SPAWN = Zabij Przy Nastepnej Materializacji
+
+[sv]
+ATAC_BAD_AIM = Ge Darligt Sikte
+ATAC_BLIND = F'o'rblinda
+ATAC_BOMB = F'o'rvandla till en Tids Bomb
+ATAC_BURY = Begrav
+ATAC_CHICKEN = F'o'rvandla till en Kyckling
+ATAC_DROP_REPEATEDLY = Sl'a'pp gang pa gang
+ATAC_DRUG = Draga
+ATAC_FIRE = Ant'a'nd
+ATAC_GLOW = Gl'o'd Rosa
+ATAC_JAIL = S'a'tt i f'a'ngelse i %i sekunder
+ATAC_ROCKET = F'o'rvandla till en Raket
+ATAC_SLAP_X_TIMES = Sla %i Ganger
+ATAC_SLAP_TO_1 = Sla till 1hp
+ATAC_SLAY = Dr'a'p Omedelbart
+ATAC_SLAY_SPAWN = Dr'a'p N'a'sta Spawn
+
+[tr]
+ATAC_BAD_AIM = Kötü Hedef Ver
+ATAC_BLIND = Ağma
+ATAC_BOMB = Zaman bombaya dön
+ATAC_BURY = Göm
+ATAC_CHICKEN = Tavuğa dönüş�
+ATAC_DROP_REPEATEDLY = Durmadan düş
+ATAC_DRUG = Narkoz
+ATAC_FIRE = Ateşe ver
+ATAC_GLOW = Pembe Parla
+ATAC_JAIL = %i saniye mahpus et
+ATAC_ROCKET = Rokete dönüş
+ATAC_SLAP_X_TIMES = %i defa tokakla
+ATAC_SLAP_TO_1 = 1hp tokatla
+ATAC_SLAY = Derhâl katlet
+ATAC_SLAY_SPAWN = Sonraki doğuşta katlet
+
+[hu]
+ATAC_BAD_AIM = Rossz Celzas
+ATAC_BLIND = Vakitas
+ATAC_BOMB = Idozitett BOmba
+ATAC_BURY = Elasas
+ATAC_CHICKEN = Csirkeve Valtoztatas
+ATAC_DROP_REPEATEDLY = Dobalas
+ATAC_DRUG = Drogoztatas
+ATAC_FIRE = Felgyujtas
+ATAC_GLOW = Rozsaszin Burok
+ATAC_JAIL = Bezaras %i masodpercre
+ATAC_ROCKET = Raketava Valtoztatas
+ATAC_SLAP_X_TIMES = Megutes %i x
+ATAC_SLAP_TO_1 = Lesebzes 1 HP-ra
+ATAC_SLAY = Megoles
+ATAC_SLAY_SPAWN = Megoles Kov. Korben
+
+[es]
+ATAC_BAD_AIM = Darle Mala Punteria
+ATAC_BLIND = Cegar
+ATAC_BOMB = Convertirlo en Bomba andante
+ATAC_BURY = Enterrarlo
+ATAC_CHICKEN = Convertirlo en una Gallina
+ATAC_DROP_REPEATEDLY = Soltarlo Repetidamente
+ATAC_DRUG = Drogar
+ATAC_FIRE = Prenderle Fuego
+ATAC_GLOW = Hacer que brille de rosa
+ATAC_JAIL = Meterlo en la Carcel durante %i segundos
+ATAC_ROCKET = Convertir en cohete
+ATAC_SLAP_X_TIMES = Pegarle %i veces
+ATAC_SLAP_TO_1 = Pegarle hasta 1hp de Salud
+ATAC_SLAY = Matar Ahora
+ATAC_SLAY_SPAWN = Matarlo en el proximo Spawn
+
+[nl]
+ATAC_BAD_AIM = Geef slechte richtgevoel
+ATAC_BLIND = Blind
+ATAC_BOMB = Verander in tijdbom
+ATAC_BURY = Begraaf
+ATAC_CHICKEN = Verander in een kip
+ATAC_DROP_REPEATEDLY = Laat herhaaldelijk vallen
+ATAC_DRUG = Mediceer
+ATAC_FIRE = Zet in Brand
+ATAC_GLOW = Gloei Roze
+ATAC_JAIL = Zet in Gevangenis voor %i seconden
+ATAC_ROCKET = Verander in een Raket
+ATAC_SLAP_X_TIMES = Sla %i Keer
+ATAC_SLAP_TO_1 = Sla tot 1hp
+ATAC_SLAY = Maak onmiddelijk dood
+ATAC_SLAY_SPAWN = Maak dood op Volgende Spawn
+
+[sr]
+ATAC_BAD_AIM = Daj mu los Aim
+ATAC_BLIND = Oslepi
+ATAC_BOMB = Pretvori u Vremensku bombu
+ATAC_BURY = Zakopaj
+ATAC_CHICKEN = Pretvori u pile
+ATAC_DROP_REPEATEDLY = Neka ispusta oruzje
+ATAC_DRUG = Drogiraj
+ATAC_FIRE = Zapali
+ATAC_GLOW = Svetli ruzicasto
+ATAC_JAIL = Stavi u zatvor za %i sec
+ATAC_ROCKET = Pretvori u raketu
+ATAC_SLAP_X_TIMES = Slap %i puta
+ATAC_SLAP_TO_1 = Slap na 1hp
+ATAC_SLAY = Slay Odmah
+ATAC_SLAY_SPAWN = Slay na pocetku runde
+
+[ro]
+ATAC_BAD_AIM = Fa-i tinta aiurea
+ATAC_BLIND = Orbeste-l
+ATAC_BOMB = Transforma-l intr-o Bomba cu Ceas
+ATAC_BURY = Ingroapa-l
+ATAC_CHICKEN = Transforma-l intr-o Gaina
+ATAC_DROP_REPEATEDLY = Arunca-l in sus de mai multe ori
+ATAC_DRUG = Drogheaza-l
+ATAC_FIRE = Da-i foc
+ATAC_GLOW = Coloreaza-l in Roz
+ATAC_JAIL = Incarcereaza-l timp de %i secunde
+ATAC_ROCKET = Transforma-l intr-o Racheta
+ATAC_SLAP_X_TIMES = Da-i %i Palme
+ATAC_SLAP_TO_1 = Da-i o palma care sa-i lase 1 la viata
+ATAC_SLAY = Omoara-l acum
+ATAC_SLAY_SPAWN = Omoara-l runda viitoare
+
+[pl]
+ATAC_BAD_AIM = Pogorsz celownie
+ATAC_BLIND = Oslep
+ATAC_BOMB = Zamien w bombe czasowa
+ATAC_BURY = Zagrzeb
+ATAC_CHICKEN = Zamien w kurczaka
+ATAC_DROP_REPEATEDLY = Rzuc wielokrotnie
+ATAC_DRUG = Zamien w nacpanego
+ATAC_FIRE = Podpal
+ATAC_GLOW = Zarzenie na rozowo
+ATAC_JAIL = Wrzuc do wiezienia na %i sekund
+ATAC_ROCKET = Zamien w rakiete
+ATAC_SLAP_X_TIMES = Uderz %i razy
+ATAC_SLAP_TO_1 = Uderz do 1hp
+ATAC_SLAY = Zabij
+ATAC_SLAY_SPAWN = Zabij na poczatku kolejnej rundy
+
+[fi]
+ATAC_BAD_AIM = Anna Huono T'a'ht'a'ys
+ATAC_BLIND = Sokaise
+ATAC_BOMB = Muuta Aika Pommiksi
+ATAC_BURY = Hautaa
+ATAC_CHICKEN = Muuta Kanaksi
+ATAC_DROP_REPEATEDLY = Pudota Toistuvasti
+ATAC_DRUG = Huumaa
+ATAC_FIRE = Sytyt'a' Tuleen
+ATAC_GLOW = Pist'a' Hohtamaan Pinkkinä
+ATAC_JAIL = Laita Vankilaan %i sekunniksi
+ATAC_ROCKET = Muuta Raketiksi
+ATAC_SLAP_X_TIMES = L'a'im'a'ytä %i Kertaa
+ATAC_SLAP_TO_1 = L'a'im'a'yt'a' 1hp:een
+ATAC_SLAY = L'a'im'a'yt'a' V'a'litt'o'm'a'sti
+ATAC_SLAY_SPAWN = Surmaa Seuraavalla Ilmestymisell'a'
+
+[sk]
+ATAC_BAD_AIM = Daj zly Aim
+ATAC_BLIND = Oslepit
+ATAC_BOMB = Premenit na Casovanu Bombu
+ATAC_BURY = Zakopat do zeme
+ATAC_CHICKEN = Premenit na sliepku
+ATAC_DROP_REPEATEDLY = Opakovane tresnutie o zem
+ATAC_DRUG = Nadrogovat
+ATAC_FIRE = Zapalit
+ATAC_GLOW = Zamalovat na ruzovo
+ATAC_JAIL = Dat do vezenia na %i sec
+ATAC_ROCKET = Premenit na raketu
+ATAC_SLAP_X_TIMES = Slapnut %i krat
+ATAC_SLAP_TO_1 = Slap na 1hp
+ATAC_SLAY = Slay okamzite
+ATAC_SLAY_SPAWN = Slay v nasledujucom kole
+
+[bp]
+ATAC_BAD_AIM = Dar mira dificil
+ATAC_BLIND = Prender
+ATAC_BOMB = Transformar numa bomba
+ATAC_BURY = Enterrar
+ATAC_CHICKEN = Transformar numa galinha
+ATAC_DROP_REPEATEDLY = Fazer que fique caindo
+ATAC_DRUG = Drogar
+ATAC_FIRE = Queimar
+ATAC_GLOW = Faze-lo brilhar rosa
+ATAC_JAIL = Botar na cadeia por %i Segundos
+ATAC_ROCKET = Transformar num missel
+ATAC_SLAP_X_TIMES = Dar um tapa com %i de dano
+ATAC_SLAP_TO_1 = Deixar com 1hp
+ATAC_SLAY = Matar agora
+ATAC_SLAY_SPAWN = Matar quando renascer
+
+[ru]
+ATAC_BAD_AIM = Ухудшить стрельбу
+ATAC_BLIND = Ослепить
+ATAC_BOMB = Превратить в бомбу
+ATAC_BURY = Закопать
+ATAC_CHICKEN = Превратить в курицу
+ATAC_DROP_REPEATEDLY = Кинуть несколько раз
+ATAC_DRUG = Накачать наркотиками
+ATAC_FIRE = Поджечь
+ATAC_GLOW = Перекрасить в Розовый цвет
+ATAC_JAIL = Кинуть в тюрьму на %i секунд
+ATAC_ROCKET = Превратить в ракету
+ATAC_SLAP_X_TIMES = Пнуть %i раз
+ATAC_SLAP_TO_1 = Пнуть оставив 1хп
+ATAC_SLAY = Убить немедленно
+ATAC_SLAY_SPAWN = Убить в следующем раунде

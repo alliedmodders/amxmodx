@@ -1,0 +1,1246 @@
+[en]
+NANO_LOWRES_ON = Lowresources have been activated
+NANO_LOWRES_OFF = Lowresources have been deactivated
+NANO_ENERGY = %sEnergy: (%d%%)
+NANO_POINTS = %sHealth: %d Armor: %d
+NANO_STR = -= Maximum Strength =-
+NANO_ARM = -= Maximum Armor =-
+NANO_SPD = -= Maximum Speed =-
+NANO_CLO = -= Cloak Engaged =-
+NANO_CRITIC = -= Energy Critical =-
+NANO_ST_MODE = Maximum Strength
+NANO_A_MODE = Maximum Armor
+NANO_S_MODE = Maximum Speed
+NANO_C_MODE = Cloak Mode
+NANO_MODE = Current Mode:
+NANO_SPD_ST = %s Speed: Standing
+NANO_SPD_VS = %s Speed: Very Slow
+NANO_SPD_SL = %s Speed: Slow
+NANO_SPD_NO = %s Speed: Normal
+NANO_SPD_FA = %s Speed: Fast
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Need help? say /nanohelp!
+NANO_BUYZONE = You are not in a buyzone!
+NANO_BUY = You have bought a Nanosuit armor!
+NANO_NO = You don't have a nanosuit!
+
+NANO_HTML_BASIC :
+<p>List of commands (all of them are console commands, to use them with say you need to add a / in front of them)</p>
+<p>Example: nanosuit (console) for say becomes /nanosuit</p>
+<p>1. nanosuit (the basic command) - activates the menu of the armor (if you have one) (it is best to bind this 
+
+command)<br />
+2. nanolowres -  low resource toggle, if you have lag it is best to toggle them on<br />
+3. nanobuy - buy the nanosuit<br />
+4. nanohelp - shows the help screen</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximum Strength =-</strong><br />
+- jump higher<br />
+- melee attack critical damage<br />
+- throw players using the first melee attack</p>
+<p><strong>-= Maximum Armor =-</strong><br />
+- energy acts as shield<br />
+- smaller damage dealt to you</p>
+<p><strong>-= Maximum Speed =-</strong><br />
+- run faster</p>
+<p><strong>-= Cloak Mode=-</strong><br />
+- invisibility
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+ - if you shoot any weapon the energy will be set to 0<br />
+:
+
+NANO_HTML_CL_NADE :
+ - if you throw a grenade the energy will be set to 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+ - if you use the knife the energy will be set to 0<br />
+:
+
+[de]
+NANO_LOWRES_ON = Niedrige Ressourcen wurden aktiviert.
+NANO_LOWRES_OFF = Niedrige Ressourcen wurden deaktiviert.
+NANO_ENERGY = %sEnergie: (%d%%)
+NANO_POINTS = %sGesundheit: %d Ruestung: %d
+NANO_STR = -= Maximale Staerke =-
+NANO_ARM = -= Maximale Ruestung =-
+NANO_SPD = -= Maximale Geschwindigkeit =-
+NANO_CLO = -= Tarnmodus aktiviert =-
+NANO_CRITIC = -= Energie Kritisch =-
+NANO_ST_MODE = Maximale Staerke
+NANO_A_MODE = Maximale Ruestung
+NANO_S_MODE = Maximale Geschwindigkeit
+NANO_C_MODE = Tarnmodus
+NANO_MODE = Aktueller Modus:
+NANO_SPD_ST = %s Geschwindigkeit: Stehend
+NANO_SPD_VS = %s Geschwindigkeit: Sehr langsam
+NANO_SPD_SL = %s Geschwindigkeit: Langsam
+NANO_SPD_NO = %s Geschwindigkeit: Normal
+NANO_SPD_FA = %s Geschwindigkeit: Schnell
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Du brauchst hilfe? Sage /nanohelp!
+NANO_BUYZONE = Du bist nicht in einer Kaufzone!
+NANO_BUY = Du hast Nanosuit Ruestung gekauft!
+NANO_NO = Du hast keinen Nanosuit!
+
+NANO_HTML_BASIC :
+<p>Liste der Befehle (alle sind Konsolen-Befehle, wenn du sie im Chat benutzen willst, fuege ein / hinzu.)</p>
+<p>Beispiel: nanosuit (konsole) fuer den Chat: /nanosuit</p>
+<p>1. nanosuit (der Grund-Befehl) - aktiviert das Menu fuer die Ruestung (wenn du einen hast) (es waere besser, ihn zu binden.)<br />
+2. nanolowres - niedrige Ressourcen, wenn du lags hast, ist es besser es anzuschalten.<br />
+3. nanobuy - Kaufe einen Nanosuit<br />
+4. nanohelp - Zeigt den Hilfe-Bildschirm</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximale Staerke =-</strong><br />
+- springe Hoeher<br />
+- Faust-Attacken verursachen kritischen Schaden<br />
+- werfe mit der ersten Attacke Spieler durch die Gegend</p>
+<p><strong>-= Maximale Ruestung =-</strong><br />
+- Energie wirkt die ein Schild<br />
+- Du bekommst weniger Schaden</p>
+<p><strong>-= Maximale Geschwindigkeit =-</strong><br />
+- schneller Laufen</p>
+<p><strong>-= Tarnmodus =-</strong><br />
+- Unsichtbarkeit
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- Wenn du schiesst, wird deine Energie auf 0 gesetzt<br />
+:
+
+NANO_HTML_CL_NADE :
+- Wenn du eine Granate wirfst, wird deine Energie auf 0 gesetzt<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- Wenn du das Messer benutzt, wird deine Energie auf 0 gesetzt<br />
+:
+
+[sr]
+NANO_LOWRES_ON = Low-Resource mod je aktiviran
+NANO_LOWRES_OFF = Low-Resource mod je deaktiviran
+NANO_ENERGY = %sEnergija: (%d%%)
+NANO_POINTS = %sZdravlje: %d Oklop: %d
+NANO_STR = -= Maksimalna snaga =-
+NANO_ARM = -= Maksimalni oklop =-
+NANO_SPD = -= Maksimalna brzina =-
+NANO_CLO = -= Nevidljivost uključena =-
+NANO_CRITIC = -= Energija kritična =-
+NANO_ST_MODE = Maksimalna snaga
+NANO_A_MODE = Maksimalni oklop
+NANO_S_MODE = Maksimalna brzina
+NANO_C_MODE = Mod nevidljivosti
+NANO_MODE = Trenutni mod:
+NANO_SPD_ST = %s Brzina: Nepomično
+NANO_SPD_VS = %s Brzina: Veoma sporo
+NANO_SPD_SL = %s Brzina: Sporo
+NANO_SPD_NO = %s Brzina: Normalno
+NANO_SPD_FA = %s Brzina: Brzo
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Ako vam je potrebna pomoć kažite /nanohelp!
+NANO_BUYZONE = Niste u zoni kupovine!
+NANO_BUY = Kupili ste nanosuit oklop!
+NANO_NO = Nemate nanosuit oklop!
+NANO_HTML_BASIC :
+<p>Lista komandi ( sve komande se koriste u konzoli, da bi ste ih koristili sa komandom "kazi" dodajte / ispred njih )</p>
+<p>Primer: nanosuit ( konzola ) za "kazi" je /nanosuit</p>
+<p>1. nanosuit ( osnovna komanda ) - aktivira meni oklopa ( ako imate jedan ) ( najbolje je da bind-ujete ovu 
+komandu )<br />
+2. nanolowres - ukljucuje i iskljucuje Low-Resource mod, najbolje je da ukljucite ako vam je nizak FPS<br />
+3. nanobuy - kupuje nanosuit<br />
+4. nanohelp - pokazuje pomocnu stranicu</p>
+:
+NANO_HTML_MODES :
+<p><strong>-= Maksimalna snaga =-</strong><br />
+- veci skokovi<br />
+- kriticna steta prilikom melee napada<br />
+- bacanje igraca prvim melee napadom</p>
+<p><strong>-= Maksimalni oklop =-</strong><br />
+- energija se ponasa kao stit<br />
+- manja steta vam se nanosi</p>
+<p><strong>-= Maksimalna brzina =-</strong><br />
+- brze trcanje</p>
+<p><strong>-= Mod nevidljivosti=-</strong><br />
+- nevidljivost
+:
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+NANO_HTML_CL_FIRE :
+- ako budete pucali iz bilo kog oruzja, energija ce vam se smanjiti na 0<br />
+:
+NANO_HTML_CL_NADE :
+- ako budete bacili granatu, energija ce vam se smanjiti na 0<br />
+:
+NANO_HTML_CL_KNIFE :
+- ako budete koristili noz, energija ce vam se smanjiti na 0<br />
+:
+
+[tr]
+NANO_LOWRES_ON = Düşük kaynaklar aktifleştirildi
+NANO_LOWRES_OFF = Düşük kaynaklar artık aktif değil
+NANO_ENERGY = %sEnerji: (%d%%)
+NANO_POINTS = %sSağlık: %d Zırh: %d
+NANO_STR = -= Maksimum Güç =-
+NANO_ARM = -= Maksimum Zırh =-
+NANO_SPD = -= Maksimum Hız =-
+NANO_CLO = -= Pelerin Kullanımda =-
+NANO_CRITIC = -= Enerji Kritik Seviyede =-
+NANO_ST_MODE = Maksimum Güç
+NANO_A_MODE = Maksimum Zırh
+NANO_S_MODE = Maksimum Hız
+NANO_C_MODE = Pelerin Mod
+NANO_MODE = Şu anki Mod:
+NANO_SPD_ST = %s Hız: Durgun
+NANO_SPD_VS = %s Hız: Çok Yavaş
+NANO_SPD_SL = %s Hız: Yavaş
+NANO_SPD_NO = %s Hız: Normal
+NANO_SPD_FA = %s Hız: Hızlı
+NANO_MENU = -= Nano Giysi =-
+NANO_HELP = Yardım mı lâzım? sohbetten /nanohelp!
+NANO_BUYZONE = Şu an satın alma bölgesinde değilsin!
+NANO_BUY = Nano zırhı satın aldın!
+NANO_NO = Nano giysin yok!
+
+NANO_HTML_BASIC :
+<p>Emirlerin listesi (Bunlar�n hepsi konsol emirleri, sohbetten kullanmak i�in ba��na / ekleyip say olarak yazmal�s�n)</p>
+<p>Mis�l: Konsola nanosuit olarak yaz�l�r, sohbetten b�yle yaz�l�r /nanosuit</p>
+<p>1. nanosuit (Basit Emir) - Z�rh men� aktif eder (Bu emri bind ederek kullanabilirsin)<br />
+2. nanolowres - Al�ak kaynaklar� aktif et, uzun m�ddet taarruz yapmadan duracaksan al�ak kaynaklar� kullanman tavsiye edilir<br />
+3. nanobuy - nano giysi sat�n al<br />
+4. nanohelp - yard�m ekran�n� g�ster</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maksimum G�� =-</strong><br />
+- Y�ksek z�plama g�c�<br />
+- Ciddi hasarlar verme �zelli�i<br />
+- D��man� elinle f�rlatma �zelli�i</p>
+<p><strong>-= Maksimum Zirh =-</strong><br />
+- Enerjini koruyan g��l� bir z�rh<br />
+- G��l� z�rh s�yesinde d���k hasar alma �zelli�i</p>
+<p><strong>-= Maksimum H�z =-</strong><br />
+- H�zl� ko�ma</p>
+<p><strong>-= Pelerin Modu =-</strong><br />
+- G�r�nmezlik
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- Herhangi bir sil�hla ate� edersen enerjin 0 olur<br />
+:
+
+NANO_HTML_CL_NADE :
+- Bir bomba atarsan enerjin 0 olur<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- B��ak kullan�rsan enerjin 0 olur<br />
+:
+
+[fr]
+NANO_LOWRES_ON = Activation pour faibles ressources
+NANO_LOWRES_OFF = Desactivation des faibles ressources
+NANO_ENERGY = %sEnergie: (%d%%)
+NANO_POINTS = %sVie: %d Armure: %d
+NANO_STR = -= Force Maximale =-
+NANO_ARM = -= Amure Maximale =-
+NANO_SPD = -= Vitesse Maximale =-
+NANO_CLO = -= Camouflage Activé =-
+NANO_CRITIC = -= Energie Critique =-
+NANO_ST_MODE = Force Maximale
+NANO_A_MODE = Armure Maximale
+NANO_S_MODE = Vitesse Maximale
+NANO_C_MODE = Mode Camouflage
+NANO_MODE = Mode Actuel:
+NANO_SPD_ST = %s Vitesse: Immobile
+NANO_SPD_VS = %s Vitesse: Très Lente
+NANO_SPD_SL = %s Vitesse: Lente
+NANO_SPD_NO = %s Vitesse: Normale
+NANO_SPD_FA = %s Vitesse: Rapide
+NANO_MENU = -= Combinaison Nano =-
+NANO_HELP = Besoin d'aide? dites /nanohelp!
+NANO_BUYZONE = Vous n'êtes pas dans une zone d'achat!
+NANO_BUY = Vous avez acheté une combinaison Nano avec armure!
+NANO_NO = Vous ne possédez pas de combinaison Nano!
+
+NANO_HTML_BASIC :
+<p>Liste des commandes (ce sont toutes des commandes de console, pour les utiliser dans le canal de discussion ajouter un / avant)</p>
+<p>Exemple: nanosuit (dans la console) deviendra dans le chat /nanosuit</p>
+<p>1. nanosuit (les commandes basiques) - active le menu de l'armure (si vous en avez une) (il est preferable de binder cette commande)<br />
+2. nanolowres - fonction faibles ressources, si vous avez des lags, il est preferable de l'activer<br />
+3. nanobuy - acheter une combinaison Nano<br />
+4. nanohelp - affiche l'ecran d'aide</p>
+:
+
+NANO_HTML_BASIC :
+<p>Liste des commandes (ce sont toutes des commandes de console, pour les utiliser dans le canal de discussion ajouter un / avant)</p>
+<p>Exemple: nanosuit (dans la console) deviendra dans le chat /nanosuit</p>
+<p>1. nanosuit (les commandes basiques) - active le menu de l'armure (si vous en avez une) (il est pr�f�rable de binder cette commande)<br />
+2. nanolowres - fonction faibles ressources, si vous avez des lags, il est pr�f�rable de l'activer<br />
+3. nanobuy - acheter une combinaison Nano<br />
+4. nanohelp - affiche l'�cran d'aide</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Force Maximale =-</strong><br />
+- sauter plus haut<br />
+- dommages critiques pour les attaques au corps � corps<br />
+- jeter des joueurs � l'aide de la touche d'attaque au corps � corps</p>
+<p><strong>-= Armure Maximale =-</strong><br />
+- l'�nergie est utilis�e comme bouclier<br />
+- dommages re�us r�duits</p>
+<p><strong>-= Vitesse Maximale =-</strong><br />
+- courir plus vite</p>
+<p><strong>-= Camouflage Activ� =-</strong><br />
+- invisibilit�e
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- si vous tirez, l'�nergie reviendra � 0<br />
+:
+
+NANO_HTML_CL_NADE :
+- si vous jetez une grenade, l'�nergie reviendra � 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- si vous utilisez le couteau, l'�nergie reviendra � 0<br />
+:
+
+[sv]
+NANO_LOWRES_ON = Lagresurser har blivit aktiverat
+NANO_LOWRES_OFF = Lagresurser har blivit deaktiverat
+NANO_ENERGY = %sEnergi: (%d%%)
+NANO_POINTS = %sHälsa: %d Utrustning: %d
+NANO_STR = -= Maximala styrka =-
+NANO_ARM = -= Maximala utrustning =-
+NANO_SPD = -= Maximala snabbhet =-
+NANO_CLO = -= mantel engagerad =-
+NANO_CRITIC = -= Energi Kritisk=-
+NANO_ST_MODE = Maximala styrka
+NANO_A_MODE = Maximala utrustning
+NANO_S_MODE = Maximala snabbhet
+NANO_C_MODE = Dolt mod
+NANO_MODE = Nuvarande läge:
+NANO_SPD_ST = %s snabbhet: staende
+NANO_SPD_VS = %s snabbhet: väldigt langsam
+NANO_SPD_SL = %s snabbhet: langsam
+NANO_SPD_NO = %s snabbhet: Normal
+NANO_SPD_FA = %s snabbhet: snabb
+NANO_MENU = -= Nanodräkt =-
+NANO_HELP = Behöver du hjälp? säg /nanohelp!
+NANO_BUYZONE = Du är inte i en köp zon!
+NANO_BUY = Du har köpt en Nanodr'a'kt!
+NANO_NO = Du har ingen nanodräkt!
+
+NANO_HTML_BASIC :
+<p>Lista med kommandon (
+alla kommandon 'a'r konsol kommandon, f�r att anv�nda dem i vanlig chat l'a'gger du till en / framf'o'r dom)</p>
+<p>Ex'a'mple: nanosuit (konsol) i chaten blir det /nanosuit</p>
+<p>1. nanosuit (grundl'a'ggande kommandot) - aktiverar din rustnings meny (om du har en) (Det 'a'r b'a'st att binda detta kommando)<br />
+2. nanolowres - laga resurser v'a'xla, om du har eftersl'a'pning �r det b'a'st att v'a'xla dem p�<br />
+3. nanobuy - k'o'p nanodr'a'kt<br />
+4. nanohelp - visar hj'a'lp sk'a'rmen</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximala Styrka =-</strong><br />
+- hoppa h'o'gre<br />- 
+Fysisk attack kritisk skada
+<br />
+- kasta spelare med hj'a'lp av f�rsta fysiska attacken</p>
+<p><strong>-= <Maximala Utrustning =-</strong><br />
+- energi fungerar som sk'o'ld<br />
+- Du fick mindre skador</p>
+<p><strong>-= Maximala snabbhet =-</strong><br />
+- spring snabbare</p>
+<p><strong>-= Mantel pa =-</strong><br />
+- osynlighet
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- Om du skjuter med n�got vapen kommer energin s'a'ttas till 0<br />
+:
+
+NANO_HTML_CL_NADE :
+- Om du kastar en granat sa kommer energin s'a'ttas till 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- Om du anv'a'nder kniven kommer energin s'a'ttas till 0<br />
+:
+
+[da]
+NANO_LOWRES_ON = Mindre resurser er bleven activated
+NANO_LOWRES_OFF = Mindre resurser been deactivated
+NANO_ENERGY = %sEnergi: (%d%%)
+NANO_POINTS = %sLiv: %d Rustning: %d
+NANO_STR = -= Maximum Styrke =-
+NANO_ARM = -= Maximum Rustning =-
+NANO_SPD = -= Maximum Fart =-
+NANO_CLO = -= Hætte er tændt =-
+NANO_CRITIC = -= Meget lidt liv =-
+NANO_ST_MODE = Maximum Styrke
+NANO_A_MODE = Maximum Rustning
+NANO_S_MODE = Maximum Fart
+NANO_C_MODE = Hætte mode
+NANO_MODE = Er i øjeblikket i Mode:
+NANO_SPD_ST = %s Fart: Stående
+NANO_SPD_VS = %s Fart: Meget langsom
+NANO_SPD_SL = %s Fart: Langsom
+NANO_SPD_NO = %s Fart: Normal
+NANO_SPD_FA = %s Fart: Hurtig
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Mangler du hjælp? Sig /nanohelp!
+NANO_BUYZONE = Du er ikke i en købezone!
+NANO_BUY = Du har købt en Nanosuit rustning!
+NANO_NO = Du har ikke en nanosuit!
+
+NANO_HTML_BASIC :
+<p>Liste af alle kommandoer (Dem som er konsol kommandoer, for at bruge dem i chatten skal du lige s�tte et / foran)</p>
+<p>Eksempel: nanosuit (Konsol) i chatten /nanosuit</p>
+<p>1. nanosuit (basic kommandoen) - Aktiver men�en for rustningen (Hvis du har en) (Det bedste er at binde komandoen)<br />
+2. nanolowres - T�nde nanolowres, Hvis du f�r lag er det det bedste at aktivere dem<br />
+3. nanobuy - K�b nanosuiten<br />
+4. nanohelp - Viser hj�lpen</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximum Styrke =-</strong><br />
+- Hop h�jere<br />
+- T�t angreb (Med kniv eller lign.) Giver meget st�rkt angreb<br />
+- Kast spillere ved det f�rste t�tte angreb </p>
+<p><strong>-= Maximum rustning =-</strong><br />
+- Energi fungere som et skjold<br />
+- Mindre skade mod dig</p>
+<p><strong>-= Maximum Fart =-</strong><br />
+- L�b hurtigere</p>
+<p><strong>-= H�tte aktiveret =-</strong><br />
+- Usynlighed
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- Hvis du skyder et v�ben bliver dit energi sat til 0<br />
+:
+
+NANO_HTML_CL_NADE :
+- Hvis du kaster en granat, vi din energi blive sat til 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- Hvis du bruger kniv, vil energien blive sat til 0br />
+:
+
+[pl]
+NANO_LOWRES_ON = Niskie zasoby aktywowane
+NANO_LOWRES_OFF = Niskie zasoby dezaktywowane 
+NANO_ENERGY = %sEnergia: (%d%%)
+NANO_POINTS = %sZycie: %d Pancerz: %d
+NANO_STR = -= Maksymalna Sila =-
+NANO_ARM = -= Maksymalny Pancerz =-
+NANO_SPD = -= Maksymalna Predkosc =-
+NANO_CLO = -= Maskowanie Wlaczone =-
+NANO_CRITIC = -= Krytyczna Energia =-
+NANO_ST_MODE = Maksymalna Sila
+NANO_A_MODE = Maksymalny Pancerz
+NANO_S_MODE = Maksymalna Predkosc
+NANO_C_MODE = Tryb maskowania
+NANO_MODE = Aktualny tryb:
+NANO_SPD_ST = %s Predkosc: Stoi w miejscu
+NANO_SPD_VS = %s Predkosc: Bardzo wolna
+NANO_SPD_SL = %s Predkosc: Wolna
+NANO_SPD_NO = %s Predkosc: Normalna
+NANO_SPD_FA = %s Predkosc: Szybka
+NANO_MENU = -= Nanopancerz =-
+NANO_HELP = Potrzebujesz pomocy? say /nanohelp!
+NANO_BUYZONE = Nie jestes w strefie kupowania!
+NANO_BUY = Kupiles Nanopancerz!
+NANO_NO = Nie posiadasz Nanopancerza!
+
+NANO_HTML_BASIC :
+<p>Lista komend (wszystkie z nich to consolowe komendy, by uzyc przez chat wpisz / przed komenda)</p>
+<p>Przykladowo: nanosuit (consola) dla chat-u /nanosuit</p>
+<p>1. nanosuit (podstawowa komenda) - aktywuje menu pancerza (jesli go posiadasz) (najlepiej jest zbindowac klawisz, komende)<br />
+2. nanolowres - przycisk niskich zasobow, jesli masz laga wcisnij przycisk<br />
+3. nanobuy - kup nanopancerz<br />
+4. nanohelp - pokaz menu pomocy</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maksymalna Sila =-</strong><br />
+- wyzszy skok<br />
+- krytyczny atak<br />
+- odrzut</p>
+<p><strong>-= Maksymalny Pancerz =-</strong><br />
+- tarcza pochlania energie<br />
+- mniejsze obrazenia</p>
+<p><strong>-= Maksymalna Predkosc =-</strong><br />
+- szybszy bieg</p>
+<p><strong>-= Maskowanie wlaczone =-</strong><br />
+- niewidzialnosc
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+ - jesli strzelisz z broni energia ustawi sie na 0<br />
+:
+
+NANO_HTML_CL_NADE :
+ - jesli rzucisz granatem energia ustawi sie na 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+ - jesli uzyjesz noza energia ustawi sie na 0<br />
+:
+
+[nl]
+NANO_LOWRES_ON = Lowresources zijn geactiveerd.
+NANO_LOWRES_OFF = Lowresources zijn gedeactiveerd.
+NANO_ENERGY = %sEnergie: (%d%%)
+NANO_POINTS = %sLevens: %d Kogelvrij Pak: %d
+NANO_STR = -= Maximum Sterkte =-
+NANO_ARM = -= Maximum Kogelvrij Pak =-
+NANO_SPD = -= Maximum Snelheid =-
+NANO_CLO = -= Je draagt een mantel =-
+NANO_CRITIC = -= Lage energie =-
+NANO_ST_MODE = Maximum Sterkte
+NANO_A_MODE = Maximum Kogelvrij Pak
+NANO_S_MODE = Maximum Snelheid
+NANO_C_MODE = Mantel Modus
+NANO_MODE = Modus:
+NANO_SPD_ST = %s Snelheid: Stilstaand
+NANO_SPD_VS = %s Snelheid: Heel traag
+NANO_SPD_SL = %s Snelheid: Traag
+NANO_SPD_NO = %s Snelheid: Normaal
+NANO_SPD_FA = %s Snelheid: Snel
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Hulp nodig? Zeg /nanohelp!
+NANO_BUYZONE = Je bent niet in de buyzone!
+NANO_BUY = Je hebt een nanosuit gekocht!
+NANO_NO = Je hebt geen nanosuit!
+
+NANO_HTML_BASIC :
+<p>Lijst van commando's (het zijn allemaal console commando's, om ze te gebruiken in je chat, moet je er een / voor zetten)</p>
+<p>Voorbeeld: Zeg nanosuit in console of zeg /nanosuit in chat</p>
+<p>1. nanosuit (het normale commando) - activeert het menu voor je kogelvrij pak (als je er een hebt) (het is goed als je dit commando bind)<br />
+2. nanolowres - als je lagt, is het best dat je dit aanzet<br />
+3. nanobuy - koop het nanosuit<br />
+4. nanohelp - toont het help scherm</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximum Sterkte =-</strong><br />
+- springt hoger<br />
+- wanneer je iemand aanvalt met je mes, doe je veel damage<br />
+- gooit de spelers weg wanneer je de eerste keer met je mes aanvalt</p>
+<p><strong>-= Maximum Kogervrij Pak =-</strong><br />
+- een energie shild<br />
+- minder damage bij jouw</p>
+<p><strong>-= Maximum Snelheid =-</strong><br />
+- loop rapper</p>
+<p><strong>-= Bedekt met een mantel =-</strong><br />
+- onzichtbaarheid
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- wanneer je met een wapen schiet wordt de energie gezet tot 0<br />
+:
+
+NANO_HTML_CL_NADE :
+- als je een granaat gooit wordt de energie gezet to 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- als je je mes gebruikt wordt de energie gezet tot 0<br />
+:
+
+[es]
+NANO_LOWRES_ON = Modo de bajos recursos activado
+NANO_LOWRES_OFF = Modo de bajos recursos desactivado
+NANO_ENERGY = %sEnergia: (%d%%)
+NANO_POINTS = %sSalud: %d Armadura: %d
+NANO_STR = -= Fuerza Maxima =-
+NANO_ARM = -= Armadura Maxima =-
+NANO_SPD = -= Velocidad Maxima =-
+NANO_CLO = -= Camuflaje Activado =-
+NANO_CRITIC = -= Energia Critica =-
+NANO_ST_MODE = Fuerza Maxima
+NANO_A_MODE = Armadura Maxima
+NANO_S_MODE = Velocidad Maxima
+NANO_C_MODE = Modo Camuflaje
+NANO_MODE = Modo Actual:
+NANO_SPD_ST = %s Velocidad: Inmovil
+NANO_SPD_VS = %s Velocidad: Muy baja
+NANO_SPD_SL = %s Velocidad: Baja
+NANO_SPD_NO = %s Velocidad: Normal
+NANO_SPD_FA = %s Velocidad: Rapida
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Necesitas ayuda? escribe /nanohelp!
+NANO_BUYZONE = No estas en zona de compra!
+NANO_BUY = Has comprado una armadura Nanosuit!
+NANO_NO = No tienes un nanosuit!
+
+NANO_HTML_BASIC :
+<p>Lista de comandos (se usan en consola, o escribiendolos en chat con una / al frente)</p>
+<p>Ejemplo: nanosuit (consola) en chat seria /nanosuit</p>
+<p>1. nanosuit (comando basico) - muestra el menu de la armadura (si tienes una) (es mejor hacerlo un bind)<br />
+2. nanolowres - modo de bajos recursos, si tienes lag es mejor activarlo<br />
+3. nanobuy - compra un nanosuit<br />
+4. nanohelp - muestra la ayuda</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Fuerza Maxima =-</strong><br />
+- saltas mas alto<br />
+- danio critico con cuchillo<br />
+- puedes lanzar jugadores usando el ataque primario del cuchillo</p>
+<p><strong>-= Armadura Maxima =-</strong><br />
+- la energia actua como escudo<br />
+- recibes menos danio</p>
+<p><strong>-= Velocidad Maxima =-</strong><br />
+- corres mas rapido</p>
+<p><strong>-= Camuflaje Activado =-</strong><br />
+- invisibilidad
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- si disparas la energia se reducira a 0<br />
+:
+
+NANO_HTML_CL_NADE :
+- si tiras una granada la energia se reducira a 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- si usas el cuchillo la energia se reducira a 0<br />
+:
+
+[bp]
+NANO_LOWRES_ON = Lowresources foi ativado.
+NANO_LOWRES_OFF = Lowresources foi desativado
+NANO_ENERGY = %sEnergia: (%d%%)
+NANO_POINTS = %sHP: %d Colete: %d
+NANO_STR = -= Forca Maximo =-
+NANO_ARM = -= Colete Maximo =-
+NANO_SPD = -= Velocidade maxima =-
+NANO_CLO = -= Capa Engaged =-
+NANO_CRITIC = -= Energia critica =-
+NANO_ST_MODE = Forca Maximo
+NANO_A_MODE = Colete Maximo
+NANO_S_MODE = Velocidade Maxima
+NANO_C_MODE = Modo da capa
+NANO_MODE = modo atual:
+NANO_SPD_ST = %s velocidade: Em pe
+NANO_SPD_VS = %s velocidade: Muito lenta
+NANO_SPD_SL = %s Svelocidade: Lento
+NANO_SPD_NO = %s velocidade: Normal
+NANO_SPD_FA = %s velocidade: Rapido
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Precisa de ajuda?  say /nanohelp!
+NANO_BUYZONE = ocê nao está em um buyzone!
+NANO_BUY = Você comprou uma colete Nanosuit!
+NANO_NO = Você nao tem uma nanosuit!
+
+NANO_HTML_BASIC :
+<p>Lista de comandos (todos eles sao comandos do console, para usa-los com dizer que voc� precisa adicionar a /na frente deles)</p>
+<p>Exemplo: nanosuit (console) para se torna /nanosuitt</p>
+<p>1. Nanosuit (o comando basico) - ativa o menu da colete (se voce tiver um) (o melhor e ligar este comando)<br />
+2. nanoflowers - baixo recurso de alternancia, se voc� tiver lag a melhor alternar-las em<br />
+3. nanobuy - comprar o nanosuit<br />
+4. nanohelp - mostra a tela de ajuda</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Forca maxima =-</strong><br />
+- saltar mais alto<br />
+- refrega danos ataque cr�tico<br />
+- throw jogadores usando o primeiro ataque corpo a corpo</p>
+<p><strong>-= Colete maximo =-</strong><br />
+- atua como escudo de energia<br />
+- menor dano causado a voc�</p>
+<p><strong>-= Velocidade maxima=-</strong><br />
+- correr mais r�pido</p>
+<p><strong>-= capa Engaged =-</strong><br />
+- invisibilidade
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- se voce atirar qualquer arma a energia sera definido como 0<br />
+:
+
+NANO_HTML_CL_NADE :
+- se voce joga uma granada a energia sera definido como 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- se voce usar a faca a energia sera definido como 0<br />
+:
+
+[ls]
+NANO_LOWRES_ON = L0w|23s0u|2c3s h4\/3 b33n 4ct!\/4t3d
+NANO_LOWRES_OFF = L0w|23s0u|2c3s h4\/3 b33n d34ct!\/4t3d
+NANO_ENERGY = %sEn3rgy: (%d%%)
+NANO_POINTS = %s|-|34|th: %d @rm0r: %d
+NANO_STR = -= |\/|4x!mum $tr3ng+h =-
+NANO_ARM = -= |\/|4x!mum @rm0|2 =-
+NANO_SPD = -= |\/|4x!mum $p33d =-
+NANO_CLO = -= C|04|< Eng4g4d =-
+NANO_CRITIC = -= En3|2gy C|2!t!c4| =-\
+NANO_ST_MODE = |\/|4x!mum $+|23ng+h
+NANO_A_MODE = |\/|4x!mum 4rm0|2
+NANO_S_MODE = |\/|4x!mum $p33d
+NANO_C_MODE = C|04|< |\/|0d3
+NANO_MODE = Cu|2|23n7 |\/|0d3:
+NANO_SPD_ST = %s $p33d: $t4nd!ng
+NANO_SPD_VS = %s $p33d: \/3ry S|0w
+NANO_SPD_SL = %s $p33d: $|0w
+NANO_SPD_NO = %s $p33d: |\|0|2|\/|4|
+NANO_SPD_FA = %s $p33d: |=4s+
+NANO_MENU = -= |\|4n0su!t =-
+NANO_HELP = |\|33d h3|p? say /nanohelp!
+NANO_BUYZONE = j00 4|23 n0t !n 4 buyz0n3!
+NANO_BUY = j00 h4v3 b0ught 4 |\|4n0su|!t 4|2|\/|0|2!
+NANO_NO = j00 d0n't h4v3 4 n4n0su!t!
+
+NANO_HTML_BASIC :
+<p>|_!st 0|= c0mm4nds (4|| 0|= +h3m 4|23 c0ns0|3 c0mm4nds, +0 |_|s3 th3m w!+h say j00 n33d t0 4dd 4 / !n |=|20n+ 0|= +|-|3|\/|)</p>
+<p>E><4mp|3: nanosuit (c0|\|s0|3) f0r say b3<0m3s /nanosuit</p>
+<p>1. nanosuit (+h3 b4s!< <0|\/||\/|4nd) - 4c+!\/4+35 th3 m3n|_| 0|= t|-|3 4|2m0|2 (!f j00 h4\/3 0n3) (i+ is b3st t0 bind t|-|!s 
+
+c0mm4nd)<br />
+2. nanolowres -  |0\/\/ |23s0u|2(3 +0gg|3, !f joo h4\/3 |4g !t !s b3s+ +0 +0gg|3 +|-|3m 0n<br />
+3. nanobuy - buy +h3 nanosuit<br />
+4. nanohelp - 5h0ws +h3 h3||> sc|233n</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= |\/|4x!mum $tr3ng+h =-</strong><br />
+- j|_||\/||> |-|!g|-|3|2<br />
+- |\/|3|33 4++4c|< c|21t1c4| d4m4g3<br />
+- +h|20\/\/ n00bs u5!ng +h3 f!rs+ m3|33 4++4c|<</p>
+<p><strong>-= |\/|4x!mum @|2m0|2 =-</strong><br />
+- 3n3rgy 4c+s 4s sh!3|d<br />
+- sm4||3|2 d4m4g3 d34|+ +0 j00</p>
+<p><strong>-= |\/|4x!mum $p33d =-</strong><br />
+- |2|_||\| |=4s+3r</p>
+<p><strong>-= C|04|< |\/|0d3=-</strong><br />
+- !n\/!s!b!|!+y
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+ - !|= joo s|-|00t 4ny w34p0n th3 3n3|2gy w!|| b3 s3+ t0 0<br />
+:
+
+NANO_HTML_CL_NADE :
+ - !|= joo th|20w 4 gr3n4d3 th3 3n3rgy w!|| b3 s3t t0 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+ - !|= joo |_|s3 th3 |<n!|=3 th3 3n3|2gy w!|| b3 s3t t0 0<br />
+:
+
+[bg]
+NANO_LOWRES_ON = Niski resursi sa aktivirani.
+NANO_LOWRES_OFF = Niski resursi sa deaktivirani.
+NANO_ENERGY = %sEnergia: (%d%%)
+NANO_POINTS = %sKruv: %d Bronya: %d
+NANO_STR = -= Maximum Sila =-
+NANO_ARM = -= Maximum Bronya =-
+NANO_SPD = -= Maximum Skorost =-
+NANO_CLO = -= Nevidimost Aktivirana =-
+NANO_CRITIC = -= Kritichno nivo na energia =-
+NANO_ST_MODE = Maximum Sila
+NANO_A_MODE = Maximum Bronya
+NANO_S_MODE = Maximum Skorost
+NANO_C_MODE = Nevidimost
+NANO_MODE = Current Mode:
+NANO_SPD_ST = %s Skorost: Stoyasht
+NANO_SPD_VS = %s Skorost: Mnogo bavno
+NANO_SPD_SL = %s Skorost: Bavno
+NANO_SPD_NO = %s Skorost: Normalno
+NANO_SPD_FA = %s Skorost: Byrzo
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Nujda ot pomosht? say /nanohelp!
+NANO_BUYZONE = Ne si v buyzone!
+NANO_BUY = Ti kupi nanosuit bronya!
+NANO_NO = Ti nyamash nanosuit!
+
+NANO_HTML_BASIC :
+<p>List ot komandi (vsichki sa konzolni komandi, za da gi izpolzvash s say tryabva da dobavish / pred komandata)</p>
+<p>Primer: nanosuit (Konzola) kato say stava /nanosuit</p>
+<p>1. nanosuit (Bazova komanda) - aktivira menu za bronya (ako imash takava) (nai-dobre e da bind-nesh tazi komanda)<br />
+2. nanolowres - vkl/izkl. niski resursi, ako imash lag, nai-dobre e da go vkluchish<br />
+3. nanobuy - kupi nanosuit<br />
+4. nanohelp - pokazva pomoshtna stranica</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximum Sila =-</strong><br />
+- skok po navisoko<br />
+- critical damage s noj<br />
+- izbutai drugi igrachi s purva ataka na noj</p>
+<p><strong>-= Maximum Bronya =-</strong><br />
+- Energiyata deistva kato shtit<br />
+- po-malko damage e izvurshen varhu teb</p>
+<p><strong>-= Maximum Skorost =-</strong><br />
+- tichash po-burzo</p>
+<p><strong>-= Nevidimost =-</strong><br />
+- Nevidimost
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+ - Ako strelyash s koe da e oryjie , energiyata ti stava na 0<br />
+:
+
+NANO_HTML_CL_NADE :
+ - Ako hvyrlish granata, energiyata ti stava na 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+ - Ako izpolzvash noj, energiyata ti stava na 0<br />
+:
+
+[ro]
+NANO_LOWRES_ON = Mod-ul resurse putine a fost activat
+NANO_LOWRES_OFF = Mod-ul resurse putine a fost dezactivat
+NANO_ENERGY = %sEnergie: (%d%%)
+NANO_POINTS = %sViata: %d Armura: %d
+NANO_STR = -= Putere Maxima =-
+NANO_ARM = -= Armura Maxima =-
+NANO_SPD = -= Viteza Maxima =-
+NANO_CLO = -= Invizibilitate Activata =-
+NANO_CRITIC = -= Energie Critica =-
+NANO_ST_MODE = Putere Maxima
+NANO_A_MODE = Armura Maxima
+NANO_S_MODE = Viteza Maxima
+NANO_C_MODE = Invizibilitate
+NANO_MODE = Mod Curent:
+NANO_SPD_ST = %s Viteza: Pe Loc
+NANO_SPD_VS = %s Viteza: Foarte Incet
+NANO_SPD_SL = %s Viteza: Incet
+NANO_SPD_NO = %s Viteza: Normal
+NANO_SPD_FA = %s Viteza: Rapid
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Ai nevoie de ajutor? zi /nanohelp!
+NANO_BUYZONE = Nu esti in zona de cumparare!
+NANO_BUY = Ai cumparat o armura Nano!
+NANO_NO = Nu ai costumul Nano!
+
+NANO_HTML_BASIC :
+<p>Lista de comenzi (toate merg doar in consola, daca preferi sa le spui (adica sa apesi y) trebuie sa pui / in fata 
+
+lor)</p>
+<p>Exemplu: nanosuit (consola) pentru say devine /nanosuit</p>
+<p>1. nanosuit (the comanda de baza) - activeaza menu-ul armurii (este bine sa ii pui bind comnenzii)<br />
+2. nanolowres -  mod putine resurse buton de oprire/pornire, daca ai lag atunci e bine sa-l activezi<br />
+3. nanobuy - cumperi armura<br />
+4. nanohelp - arata ecranul ajutator</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maxima Putere =-</strong><br />
+- sari mai sus<br />
+- cutitul face x4 mai multe pagube<br />
+- arunci jucatorii folosind primul atac de cutit</p>
+<p><strong>-= Maxima Armura =-</strong><br />
+- energia e scutul tau<br />
+- rezisti mai mult la focul de arma</p>
+<p><strong>-= Maxima Viteza =-</strong><br />
+- fugi turbo</p>
+<p><strong>-= Invizibilitate =-</strong><br />
+- invisibilitate<br />
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+ - daca tragi cu arma, energia ta va fi setata la 0<br />
+:
+
+NANO_HTML_CL_NADE :
+ - daca arunci cu grenada, energia ta va fi setata la 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+ - daca folosesti cutitul, energia ta va fi setata la 0<br />
+:
+
+[hu]
+NANO_LOWRES_ON = Az alacsony mo'd aktiva'lva!
+NANO_LOWRES_OFF = Alacsony mo'd kikapcsolva
+NANO_ENERGY = %sEnergia: (%d%%)
+NANO_POINTS = %sÉlet: %d Pajzs: %d
+NANO_STR = -= Maximum Erő =-
+NANO_ARM = -= Maximum Pajzs =-
+NANO_SPD = -= Maximum Sebesség =-
+NANO_CLO = -= Álcázás bekapcsolva =-
+NANO_CRITIC = -= Túl kevés energia=-
+NANO_ST_MODE = Maximum Erő
+NANO_A_MODE = Maximum Pajzs
+NANO_S_MODE = Maximum Sebesség
+NANO_C_MODE = Álcázás
+NANO_MODE = Jelenlegi mód:
+NANO_SPD_ST = %s Sebesség: Àlló
+NANO_SPD_VS = %s Sebesség: Nagyon lassú
+NANO_SPD_SL = %s Sebesség: Lassú
+NANO_SPD_NO = %s Sebesség: Normál
+NANO_SPD_FA = %s Sebesség: Gyors
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Kell segítség? say /nanohelp!
+NANO_BUYZONE = Nem vagy va'sa'rlo'zo'na'ban!
+NANO_BUY = Megvetted a Nanosuit-ot!
+NANO_NO = Nincs Nanosuit-od!
+
+NANO_HTML_BASIC :
+<p>A parancsok lista'ja (Mind konzol utasi'ta'sok, a chat gomb haszna'latakor egy / jel kell minden ilyen 
+
+parancs elo''tt)</p>
+<p>Pe'lda: nanosuit (console) a chatbe ezt i'rd be: /nanosuit</p>
+<p>1. nanosuit (A Nanosuit men� parancsa) - Aktiva'lja a ruha men�j�t (Ha van neked) (a legjobb ha 
+
+bebindeled)<br />
+2. nanolowres - Ha laggol a szerver, ezt kapcsold be<br />
+3. nanobuy - Nanosuit va'sa'rla'sa<br />
+4. nanohelp - A segi'tse'g ke'pernyo'' megnyita'sa</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximum Ero'' =-</strong><br />
+- magasabra ugrasz<br />
+- nagyobbat sebzel a ke'ssel<br />
+- eldobhatod a t�bbieket az elso'' ta'mada'ssal</p>
+<p><strong>-= Maximum Pajzs =-</strong><br />
+- az energia felfogja a golyo'kat<br />
+- kevesebb sebze's</p>
+<p><strong>-= Maximum Sebesse'g =-</strong><br />
+- gyorsabb futa's</p>
+<p><strong>-= A'lca'za's=-</strong><br />
+- la'thatatlansa'g
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- Ha fegyverrel lo''sz akkor az energia 0 lesz<br />
+:
+
+NANO_HTML_CL_NADE :
+- Ha eldobsz egy gra'na'tot az energia 0 lesz<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- Ha ta'madsz a ke'ssel akkor az energia 0 lesz<br />
+:
+
+[lt]
+NANO_LOWRES_ON = Mazi istekliai buvo aktyvuoti
+NANO_LOWRES_OFF = Mazi istekliai buvo deaktyvuoti
+NANO_ENERGY =%sEnergy: (%d%%)
+NANO_POINTS =%sHealth: %d Armor: %d
+NANO_STR = -= Maksimali jėga =-
+NANO_ARM = -= Maksimalus Armor =-
+NANO_SPD = -= Maksimalus greitis =-
+NANO_CLO = -= Szatnia užsiima =-
+NANO_CRITIC = -= Cloak injungta =-
+NANO_ST_MODE = Maksimalus jėga
+NANO_A_MODE = Maksimalus Armor
+NANO_S_MODE = Maksimalus greitis
+NANO_C_MODE = Szatnia režimas
+NANO_MODE = Dabartinė būsena:
+NANO_SPD_ST =%s Greitis: Nuolatinis
+NANO_SPD_VS =%s Greitis: Labai letas
+NANO_SPD_SL =%s Greitis: Zemas
+NANO_SPD_NO =%s Greitis: Normalus
+NANO_SPD_FA =%s Greitis: Greitas
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Reikia pagalbos? pasakyti / nanohelp!
+NANO_BUYZONE = Jus esate NE buyzone!
+NANO_BUY = Jus nusipirkote Nanosuit sarvus!
+NANO_NO = Jus neturite nanosuit!
+
+NANO_HTML_BASIC:
+<p> Komandu sarasas (visi is ju yra konsoles komandos, kad naudotumete juos jums reikia prideti / pries juos)</ p>
+<p> Pavyzdys: nanosuit (console) ir pasakyti tampa /nanosuit</ p>
+<p> 1. nanosuit (pagrindine komanda) - aktyvuoja sarvu meniu (jei turite) (geriausia yra uzsibindinti sia komanda)<br />
+2. nanolowres - mazas istekliu ijungimas, jei jums lagina geriausia butu ji padaryti ON/Injungta<br />
+3. nanobuy - pirkti nanosuit<br />
+4. nanohelp - rodo pagalba</ p>
+:
+
+NANO_HTML_MODES:
+<p><strong> -= Maksimali jega =-</ strong><br />
+- Sokinek auksciau<br />
+- Paprasta ataka kritine zala<br />
+- Mesti zaidejus naudojant pirma paprasta ataka</ p>
+<p> <strong> -= Maksimalus Armor =-</ strong><br />
+- Energija veikia kaip skydas<br />
+- Mazesne zala padaryta jums</ p>
+<p><strong> -= Maksimalus greitis =-</ strong><br />
+- Begti greiciau</ p>
+<p><strong> -= Cloak injungta =-</ strong><br />
+- Nematomumas
+:
+
+NANO_HTML_ADVICE:
+</ p></ div></ body></ html>
+:
+
+NANO_HTML_CL_FIRE:
+- Jei saudysi su betkokiu ginklu, energija bus nustatyta 0<br />
+:
+
+NANO_HTML_CL_NADE:
+- Jei mesi granata energija bus nustatyta 0<br />
+:
+
+NANO_HTML_CL_KNIFE:
+- Jei jus naudosite peili energija bus nustatyta 0<br />
+:
+
+[sk]
+NANO_LOWRES_ON = Lowresources boli aktivovane
+NANO_LOWRES_OFF = Lowresources boli deaktivovane
+NANO_ENERGY = %sEnergia: (%d%%)
+NANO_POINTS = %sZivot: %d Vesta: %d
+NANO_STR = -= Maximalna Sila =-
+NANO_ARM = -= Maximalny Stit =-
+NANO_SPD = -= Maximalna Rychlost =-
+NANO_CLO = -= Plast Zapojeny =-
+NANO_CRITIC = -= Kriticka Energia =-
+NANO_ST_MODE = Maximalna Sila
+NANO_A_MODE = Maximalny Stit
+NANO_S_MODE = Maximalna Rychlost
+NANO_C_MODE = Mod Plasta
+NANO_MODE = Aktivovany Mod:
+NANO_SPD_ST = %s Rychlost: Trvala
+NANO_SPD_VS = %s Rychlost: Velmi Pomala
+NANO_SPD_SL = %s Rychlost: Pomala
+NANO_SPD_NO = %s Rychlost: Normalna
+NANO_SPD_FA = %s Rychlost: Rychla
+NANO_MENU = -= Nanosuit =-
+NANO_HELP = Potrebujes pomoc? napis /nanohelp!
+NANO_BUYZONE = Nie si v zone nakupovania!
+NANO_BUY = Kupil si -=Nanosuit=- Stit!
+NANO_NO = Nemas -=Nanosuit=-!
+
+NANO_HTML_BASIC :
+<p>List prikazov (Vsetky z nich su konzolove prikazy, pre ich pouzitie s prikazom say potrebujes pridat "/" pred prikazom)</p>
+<p>Priklad: nanosuit (konzola) sa pre say stane /nanosuit</p>
+<p>1. nanosuit (zakladny prikaz) - aktivuje menu stitu (Ak nejaky mas) (najlepsie je si tento prikaz nabindovat)<br />
+2. nanolowres - low resource toggle, if you have lag it is best to toggle them on<br />
+3. nanobuy - kupit nanosuit<br />
+4. nanohelp - ukaze obrazovku pomoci</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximalna Sila =-</strong><br />
+- vyskoc vyzsie<br />
+- kriticka damage uderom rukou<br />
+- odhod hracov pouzivajucich prvy uder rukou</p>
+<p><strong>-= Maximalny Stit =-</strong><br />
+- energeticke ukony stitu<br />
+- tebe udeleny mensi damage</p>
+<p><strong>-= Maximalna Rychlost =-</strong><br />
+- bez rychlejsie</p>
+<p><strong>-= Plast Zapojeny =-</strong><br />
+- neviditelnost
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+- ak vystrelis z hocijakej zbrani, energia bude nulova<br />
+:
+
+NANO_HTML_CL_NADE :
+- ak hodis granat, energia bude nulova<br />
+:
+
+NANO_HTML_CL_KNIFE :
+- ak pouzijes noz, energia bude nulova<br />
+:
+
+[ru]
+NANO_LOWRES_ON = Малопотребляемый режим энергии включен
+NANO_LOWRES_OFF = Малопотребляемый режим энергии выключен
+NANO_ENERGY = %sЭнергия: (%d%%)
+NANO_POINTS = %sЗдровье: %d Броня: %d
+NANO_STR = -= Максимум силы =-
+NANO_ARM = -= Маскимум брони =-
+NANO_SPD = -= Максимум скорости =-
+NANO_CLO = -= Режим маскеровки =-
+NANO_CRITIC = -= Недостаточно энергии =-
+NANO_ST_MODE = Максимум силы
+NANO_A_MODE = Маскимум брони
+NANO_S_MODE = Максимум скорости
+NANO_C_MODE = Режим маскеровки
+NANO_MODE = Текущий режим:
+NANO_SPD_ST = %s Скорость: Без движения
+NANO_SPD_VS = %s Скорость: Очень медленная
+NANO_SPD_SL = %s Скорость: Медленная
+NANO_SPD_NO = %s Скорость: Нормальная
+NANO_SPD_FA = %s Скорость: Быстрая
+NANO_MENU = -= Нанокостюм =-
+NANO_HELP = Нужна помощь по нанокостюму? Напиши /nanohelp!
+NANO_BUYZONE = Вы находитесь вне зоны скупки!
+NANO_BUY = Вы купили нанокостюм!
+NANO_NO = У Вас нет нанокостюма!
+
+NANO_HTML_BASIC :
+<p>List of commands (all of them are console commands, to use them with say you need to add a / in front of them)</p>
+<p>Example: nanosuit (console) for say becomes /nanosuit</p>
+<p>1. nanosuit (the basic command) - activates the menu of the armor (if you have one) (it is best to bind this 
+
+command)<br />
+2. nanolowres -  low resource toggle, if you have lag it is best to toggle them on<br />
+3. nanobuy - buy the nanosuit<br />
+4. nanohelp - shows the help screen</p>
+:
+
+NANO_HTML_MODES :
+<p><strong>-= Maximum Strength =-</strong><br />
+- jump higher<br />
+- melee attack critical damage<br />
+- throw players using the first melee attack</p>
+<p><strong>-= Maximum Armor =-</strong><br />
+- energy acts as shield<br />
+- smaller damage dealt to you</p>
+<p><strong>-= Maximum Speed =-</strong><br />
+- run faster</p>
+<p><strong>-= Cloak Mode=-</strong><br />
+- invisibility
+:
+
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+
+NANO_HTML_CL_FIRE :
+ - if you shoot any weapon the energy will be set to 0<br />
+:
+
+NANO_HTML_CL_NADE :
+ - if you throw a grenade the energy will be set to 0<br />
+:
+
+NANO_HTML_CL_KNIFE :
+ - if you use the knife the energy will be set to 0<br />
+:
+
+[cn]
+NANO_LOWRES_ON = 激活低资源
+NANO_LOWRES_OFF = 停用低资源
+NANO_ENERGY = %s能源: (%d%%)
+NANO_POINTS = %s生命: %d 护甲: %d
+NANO_STR = -= 最大压力 =-
+NANO_ARM = -= 最大护甲 =-
+NANO_SPD = -= 最高速率 =-
+NANO_CLO = -= 隐身启用 =-
+NANO_CRITIC = -= 能源关闭 =-
+NANO_ST_MODE = 最大压力
+NANO_A_MODE = 最大装甲
+NANO_S_MODE = 最快速率
+NANO_C_MODE = 隐身模式
+NANO_MODE = 当前模式:
+NANO_SPD_ST = %s 速度: 固定
+NANO_SPD_VS = %s 速度: 非常慢
+NANO_SPD_SL = %s 速度: 慢
+NANO_SPD_NO = %s 速度: 正常
+NANO_SPD_FA = %s 速度: 快速
+NANO_MENU = -= 纳米护甲 =-
+NANO_HELP = 需要帮助? say /nanohelp!
+NANO_BUYZONE = 你不是在购买区!
+NANO_BUY = 你已经购买了纳米护甲!
+NANO_NO = 你没有纳米护甲!
+NANO_HTML_BASIC :
+<p>命令列表 (这些都是控制台命令, 使用他们按 Y 需要在他们前面添加" / " )</p>
+<p>例如: nanosuit (在控制台) 应输入 /nanosuit</p>
+<p>1. nanosuit (基本命令) - 激活菜单的护甲 (如果有的话) (最好绑定此命令按键)<br />
+2. nanolowres - 低资源切换, 如果你滞后最好切换他们<br />
+3. nanobuy - 购买纳米护甲<br />
+4. nanohelp - 显示帮助屏幕</p>
+:
+NANO_HTML_MODES :
+<p><strong>-= 最大压力 =-</strong><br />
+- 跳高<br />
+- 混战攻击严重伤害<br />
+- 投掷玩家使用简单混战攻击</p>
+<p><strong>-= 最大护甲 =-</strong><br />
+- 能源当作盾牌<br />
+- 给你小的伤害</p>
+<p><strong>-= 最快速率 =-</strong><br />
+- 跑的跟快</p>
+<p><strong>-= 隐身模式=-</strong><br />
+- 隐形
+:
+NANO_HTML_ADVICE :
+</p></div></body></html>
+:
+NANO_HTML_CL_FIRE :
+- 如果你使用任何武器射击,能源将被设置为0<br />
+:
+NANO_HTML_CL_NADE :
+- 如果你扔任何手雷,能源将被设置为0<br />
+:
+NANO_HTML_CL_KNIFE :
+- 如果你使用刀,能源将被设置为0<br />
+:

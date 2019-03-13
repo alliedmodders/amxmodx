@@ -1,0 +1,73 @@
+//�
+
+[en]
+DROPPED_RES = Dropped due to slot reservation
+
+[de]
+DROPPED_RES = Sorry, dieser Slot ist reserviert.
+
+[sr]
+DROPPED_RES = Server je pun, nemate pristup rezervisanim mestima
+
+[tr]
+DROPPED_RES = Yer ayırtma sebebi ile atıldınız
+
+[fr]
+DROPPED_RES = Desole, un admin vient de prendre sa place reservee, tu as ete ejecte du serveur.
+
+[sv]
+DROPPED_RES = Nerkopplad pga platsreservation
+
+[da]
+DROPPED_RES = Frakoblet pga. plads reservation
+
+[pl]
+DROPPED_RES = Wyrzucony z powodu rezerwacji slotow
+
+[bp]
+DROPPED_RES = Desconectado pois o slot esta reservado
+
+[nl]
+DROPPED_RES = Sorry, deze plaats is gereserveerd
+
+[es]
+DROPPED_RES = Desconectado por reserva de plazas
+
+[cz]
+DROPPED_RES = Vyhozen, slot je rezervovan
+
+[fi]
+DROPPED_RES = Pudotettiin palvelimelta slotvarauksen takia (adminslot)
+
+[ls]
+DROPPED_RES = j00 r n0t l33t 3uff, s0z
+
+[bg]
+DROPPED_RES = Izklu4en poneje mqstoto e rezervirano
+
+[ro]
+DROPPED_RES = Ai primit kick pentru rezervare slot.
+
+[hu]
+DROPPED_RES = Helyfenntartás miatt kidobva.
+
+[lt]
+DROPPED_RES = Atjungtas, nes nera laisvos vietos
+
+[sk]
+DROPPED_RES = Prepac,ale slot je rezervovany
+
+[mk]
+DROPPED_RES = Serverot e poln, nemate pristap vo rezerviranite mesta
+
+[hr]
+DROPPED_RES = Server je pun, nemate pristup rezerviranim mjestima
+
+[bs]
+DROPPED_RES = Server je pun, nemate pristup rezervisanim mjestima
+
+[ru]
+DROPPED_RES = Извините, этот слот зарезервирован!
+
+[cn]
+DROPPED_RES = 由于你无法使用预留通道,以至于与服务器连接断开

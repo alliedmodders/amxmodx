@@ -1,0 +1,165 @@
+[en]
+MSG_CONNECT = You have a 1 in %d chance to revive when dead! Say reviveme for your chance!
+DISABLED = Respawning is currently disabled.
+SPEC = Spectators can't respawn!
+ROUND_ENDED = The round ended, you don't want to waste your chance!
+NOT_DEAD = You have to be dead before you can attempt to respawn!
+ALREADY = Sorry you can't try to respawn now. Try again in %d seconds.
+WON = You won! Prepare to be respawned!
+WON_PUBLIC = %s won and has been respawned!
+SORRY = Sorry, you didn't respawn this time!
+
+[de]
+MSG_CONNECT = Du hast eine 1/%d Chance fuer eine Wiederbelebung! Schreibe reviveme in den Chat fuer Deine Chance!
+DISABLED = Wiederbelebung ist derzeit deaktiviert.
+SPEC = Zuschauer koennen nicht wiederbelebt werden!
+ROUND_ENDED = Die Runde hat geendet, Du moechtest Deine Chance nicht verschwenden!
+NOT_DEAD = Du musst erst to sein, bevor Du versuchen kannst wiederbelebt zu werden!
+ALREADY = Entschuldige, aber Du kannst jetzt keinen Wiederbelebungsversuch starten. Versuch es in %d Sekunden erneut.
+WON = Du hast es geschafft! Mach' Dich bereit wiederbelebt zu werden!
+WON_PUBLIC = %s gewann und wurde wiederbelebt!
+SORRY = Entschuldige, Du bist diesmal nicht wiederbelebt worden!
+
+[sr]
+MSG_CONNECT = Imas 1 od %d sansi da ozivis. Reci reviveme da oprobas svoju srecu.
+DISABLED = Ozivljavanje je trenutno onemoguceno.
+SPEC = Spectatori nemogu oziveti!
+ROUND_ENDED = Runda je gotova, nisi oprobao svoje sanse!
+NOT_DEAD = Moras biti mrtav pre nego sto pokusas da ozivis!
+ALREADY = Nemozes sada oziveti. Pokusaj ponovo za %d sekundi.
+WON = Pobedio si! Spremi se da budes ozivljen.
+WON_PUBLIC = %s je pobedio i ponovo oziveo.
+SORRY = Izvini, nisi oziveo ovoga puta.
+
+[tr]
+MSG_CONNECT = Ölü iken 1 / %d kez canlanma şansınız var! Şansınız için sohbetten reviveme yazın!
+DISABLED = Yeniden canlanma şuan devre dışı.
+SPEC = Seyirciler yeniden canlanamaz!�
+ROUND_ENDED = Tur sona erdi, artık şans isteyemezsiniz!
+NOT_DEAD = Yeniden canlanmayı denemek için ölmek zorundasınız!
+ALREADY = Üzgünüz, şu an yeniden canlanmayı deneyemezsiniz. %d sâniye sonra tekrar deneyin.
+WON = Kazandınız! Yeniden canlandınız!
+WON_PUBLIC = %s kazandı ve yeniden canlandı!
+SORRY = Üzgünüm, yeniden canlanamadınız!
+
+
+[fr]
+MSG_CONNECT = Tu as %d  chance de ressusciter quand tu es mort ! Ecris reviveme pour tenter ta chance !
+DISABLED = Le respawn chance est actuellement desactive.
+SPEC = Les spectateurs ne peuvent pas revivre.
+ROUND_ENDED = Le round est fini, tu ne veux pas gaspiller ta chance !
+NOT_DEAD = Tu dois etre mort pour tenter de ressuciter !
+ALREADY = Desole mais tu ne peux pas essayer de ressuciter maintenant. Essaie encore dans %d secondes.
+WON = Tu gagnes ! Prepare toi a etre ressucite !
+WON_PUBLIC = Tu as %s chance d'etre ressuciter.  
+SORRY = Desole, tu ne ressucites pas cette fois ci
+
+[sv]
+MSG_CONNECT = Du har 1 pa %d chans att återuppstå när du dött! Skriv reviveme för att chansa!
+DISABLED = Återuppståndelse är just nu avstängt.
+SPEC = Åskådare kan inte återuppstå.
+ROUND_ENDED = Denna runda är slut, du vill inte slösa bort din chansning!
+NOT_DEAD = Du behöver dö innan du kan försöka att återuppstå!
+ALREADY = Tyvärr, du kan inte försöka att återuppstå just nu. Försök igen om %d sekunder.
+WON = Du vann! Förbered dig på att återuppstå!
+WON_PUBLIC = %s vann och har nu återuppstått!
+SORRY = Tyvärr, du återuppstod inte denna gång!
+
+[pl]
+MSG_CONNECT = Twoje szane na odrodzenie po smierci wynosza 1 do %d! Wpisz reviveme aby sprobowac szczescia!
+DISABLED = Odradzanie sie zostalo wylaczone.
+SPEC = Obserwatorzy nie moga sie odrodzic!
+ROUND_ENDED = Runda zakonczona, chcesz stracic swoja szczesliwa passe?!
+NOT_DEAD = Wpierw musisz zginac, aby sprobowac sie odrodzic!
+ALREADY = Przepraszamy, nie mozesz sie odrodzic. Sproboj ponownie za %d sekunde(y)
+WON = Wygrales! Przygotuj sie na cudowne odrodzenie!
+WON_PUBLIC = %s wygral i odrodzil sie!
+SORRY = Przepraszamy, nie mozesz sie odrodzic.
+
+[es]
+MSG_CONNECT = Tienes 1 chance de %d para revivir cuando estas muerto! Escribe reviveme para el chance!
+DISABLED = El respawn esta desactivado.
+SPEC = Los espectadores no pueden revivir!
+ROUND_ENDED = La ronda acabo, no quieres perder tu chance!
+NOT_DEAD = Debes estar muerto para que puedas revivir!
+ALREADY = Lo sentimos. No puedes revivir ahora. Intenta en %d segundos.
+WON = Ganaste! Preparate para revivir!
+WON_PUBLIC = %s gano y esta siendo revivido!
+SORRY = Lo sentimos, no reviviste esta vez.
+
+[bp]
+MSG_CONNECT = Voce tem uma chance de 1 em %d de reviver quando estiver morto! Digite reviveme para tentar renascer!
+DISABLED = Reviver ainda esta desativado.
+SPEC = Spectators nao poder reviver!
+ROUND_ENDED = O round acabou, voce nao quer perder sua chance!
+NOT_DEAD = Voce tem que estar morto antes de tentar renascer!
+ALREADY = Desculpa, voce nao pode tentar renascer agora. Tente depois em %d segundos.
+WON = Voce ganhou! Se prepare para renascer!
+WON_PUBLIC = %s ganhou e foi revivido!
+SORRY = Desculpa, voce nao reviveu desta vez!
+
+[ls]
+MSG_CONNECT = j00 h4v3 4 1 !n %d <h4nc3 +0 r3viv3 wh3n d34d! Say reviveme f0r j00|2 <h4nc3!
+DISABLED = |23sp4wn!ng !s <urr3nt|y d!s4bl3d.
+SPEC = Sp3ct4t0rs <4n't r3sp4wn!
+ROUND_ENDED = 7h3 r0u|\|d 3nd3d, y0u d0n't w4nt to w4st3 y0ur ch4nc3!
+NOT_DEAD = j00 h4v3 to b3 d34d b3for3 y0u <4n 4tt3mpt t0 r3sp4wn!
+ALREADY = S0rry y0u c4n't try t0 r3sp4wn n0w. 7ry 4g4in i|\| %d s3c0nds.
+WON =  j00 w0n! Pr3p4r3 t0 b3 r3sp4wn3d!
+WON_PUBLIC = %s w0n 4nd h4s b33n r3sp4wn3d!
+SORRY = S0rry, j00 d!d|\|'t r3sp4wn t|-|!s t!|\/|3!
+
+[bg]
+MSG_CONNECT = Imate 1 %d shans da se sajivite kogato umrete! Napishete reviveme za da si probvate kusmeta!
+DISABLED = Respawnvaneto v momenta e izkliucheno.
+SPEC = Spectatorite ne mogat da se respawnvat!
+ROUND_ENDED = Runda svurshi, ne si habete shansa!
+NOT_DEAD = Trqbva da ste murtvi za da imate shans da se sujivite!
+ALREADY = V momenta ne moje da se probvate da se sujivite. Probvaite pak sled %d sekundi.
+WON = Spechelihte! Podgotvete se da se respawnete!
+WON_PUBLIC = %s specheli i beshe respawnnut!
+SORRY = Za jalost tozi put ne se respawnna!
+
+[ro]
+MSG_CONNECT = Ai 1 in %d sanse sa reinvii cand esti mort! Scrie reviveme pentru sansa ta!
+DISABLED = Respawn-area este dezactivata momentan.
+SPEC = Spectatorii nu se pot respawn-a!
+ROUND_ENDED = Runda s-a incheiat, nu vrei sa-ti irosesti sansa!
+NOT_DEAD = Trebuie sa fii mort ca sa poti incerca sa te respawn-ezi!
+ALREADY = Scuze nu poti incerca sa te respawn-ezi acum. Incearca in %d secunde.
+WON = Ai castigat! Pregateste-te sa fii respawn-at!
+WON_PUBLIC = %s a castigat si a fost respawn-at!
+SORRY = Imi pare rau, nu ai fost respawn-at de data aceasta!
+
+[lt]
+MSG_CONNECT = Tu turi 1 is %d sansu buti prikeltas kai mirsti! Rasyk chate reviveme ir bandyk laime!
+DISABLED = Prisikelimas yra isjungtas.
+SPEC = Stebetojai negali buti prikelti.
+ROUND_ENDED = Raundas pasibaige - juk nenori issvaistyti savo sanso?!
+NOT_DEAD = Tu turi buti mires, norint prisikelti.
+ALREADY = Kolkas tu negali buti prikeltas. Bandyk uz %d sekundziu.
+WON = Tu laimejai, tuojaus busi prikeltas!
+WON_PUBLIC = %s laimejo ir buvo prikeltas!
+SORRY = Deja tu nebuvai prikeltas!
+
+[sk]
+MSG_CONNECT = Mas sancu 1 k %d k tvojmu oziveniu. Napis reviveme pre tvoju sancu!
+DISABLED = Respawnovanie je prave deaktivovane.
+SPEC = Spectator nemoze byt respawnnuty!
+ROUND_ENDED = Kolo skoncilo. Nechces zmeskat tvoju sancu!
+NOT_DEAD = Ak chces respawn, musis byt najskor mrtvy!
+ALREADY = Prepac, ale teraz sa nemozes respawnnut. Skus to o %dsec.
+WON = Vyhral si! Priprav sa na tvoj respawn!
+WON_PUBLIC = Hrac %s vyhral a bude respawnnuty!
+SORRY = Prepac, tento krat si sa nerespawnnol!
+
+[ru]
+MSG_CONNECT = У вас есть 1 из %d шанс для воскрешения себя ! Напишите в чат reviveme для использования вашего шанса!
+DISABLED = Воскрешение отключено.
+SPEC = Спектаторы не могут воскрешаться!
+ROUND_ENDED = Раунд закончился, вы же не хотите использовать свой шанс!
+NOT_DEAD = Вы должны умереть чтобы воскреснуть !
+ALREADY = Извините, вы не можете сейчас воскреснуть. Попробуйте через %d секунд.
+WON = Вы выйграли! Приготовтесь воскреснуть!
+WON_PUBLIC = %s выиграл и сейчас воскреснет!
+SORRY = Извините, вы не будете воскрешены в данный момент!

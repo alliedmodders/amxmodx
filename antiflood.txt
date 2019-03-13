@@ -1,0 +1,71 @@
+[en]
+STOP_FLOOD = Stop flooding the server!
+
+[de]
+STOP_FLOOD = Bitte nicht zu viele Eingaben auf einmal!
+
+[sr]
+STOP_FLOOD = Prestani da opterecujes server porukama!
+
+[tr]
+STOP_FLOOD = Sunucuyu yazı ile taşırmayın!�
+
+[fr]
+STOP_FLOOD = Arrete de flooder le serveur!
+
+[sv]
+STOP_FLOOD = Sluta flooda servern!
+
+[da]
+STOP_FLOOD = Stop med at oversvoemme serveren!
+
+[pl]
+STOP_FLOOD = Przestan zapychac serwer!
+
+[nl]
+STOP_FLOOD = Stop met de server vol te spammen!
+
+[es]
+STOP_FLOOD = Para de saturar el servidor!
+
+[bp]
+STOP_FLOOD = Parem com o flood no servidor!
+
+[cz]
+STOP_FLOOD = Prestan floodovat!
+
+[fi]
+STOP_FLOOD = Lopeta floodiminen!
+
+[ls]
+STOP_FLOOD = nu m0|2 fl00d, |<? DDoS !$ 4 cr|m3
+
+[bg]
+STOP_FLOOD = Sprete da pretovarvate servara!
+
+[ro]
+STOP_FLOOD = Nu mai flooda server-ul!
+
+[hu]
+STOP_FLOOD = Ne floodolj és ne spamelj!
+
+[lt]
+STOP_FLOOD = Nustok greitai rasyti!
+
+[sk]
+STOP_FLOOD = Prestan floodovat!
+
+[mk]
+STOP_FLOOD = Prestani na flodiras na serverot!
+
+[hr]
+STOP_FLOOD = Prestani opterecivati server porukama!
+
+[bs]
+STOP_FLOOD = Prestani da opterecujes server porukama!
+
+[ru]
+STOP_FLOOD = Прекратите флуд на сервере!
+
+[cn]
+STOP_FLOOD = 请停止愚弄服务器!

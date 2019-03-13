@@ -1,0 +1,303 @@
+[en]
+ATAC_TA_WARNING = TEAM ATTACK WARNING: %i/%i^nDamage Inflicted: %i (%s)
+ATAC_TK_WARNING = TEAM KILL WARNING: %i/%i
+ATAC_TK_KICK = TEAM KILL WARNING: %i/%i for %s.^nKicking...
+ATAC_TK_BAN_MIN = TEAM KILL WARNING: %i/%i for %s.^nBanning for %i minutes...
+ATAC_TK_BAN_PERM = TEAM KILL WARNING: %i/%i for %s.^nBanning permanently...
+ATAC_CHOOSE = %sChoose Punishment for %s%s
+ATAC_FORGIVE = Forgive
+ATAC_INCREASE_TK = Just Increase Team Kill
+ATAC_KICK = Kick
+ATAC_BAN_MIN = Ban For %i Minutes
+ATAC_BAN_PERM = Ban Permanently
+ATAC_MORE = More
+ATAC_BACK = Back
+ATAC_FORGAVE = %s Forgave %s
+ATAC_KICKED = %s Kicked %s
+ATAC_BANNED = %s Banned %s
+ATAC_PUNISHED = %s Punished %s
+
+[fr]
+ATAC_TA_WARNING = TEAM ATTACK - AVERTISSEMENT : %i/%i^nDegat Inflige : %i (%s)
+ATAC_TK_WARNING = TEAM KILL - AVERTISSEMENT : %i/%i
+ATAC_TK_KICK = TEAM KILL - AVERTISSEMENT : %i/%i pour %s.^nKicke...
+ATAC_TK_BAN_MIN = TEAM KILL - AVERTISSEMENT : %i/%i pour %s.^nBanne pour %i minutes...
+ATAC_TK_BAN_PERM = TEAM KILL - AVERTISSEMENT : %i/%i pour %s.^nBanne definitvement...
+ATAC_CHOOSE = %sChoix de la punition pour %s%s
+ATAC_FORGIVE = Pardonner
+ATAC_INCREASE_TK = Augmenter juste les Team Kills
+ATAC_KICK = Ejecter
+ATAC_BAN_MIN = Bannir pendant %i minutes
+ATAC_BAN_PERM = Ban permanent
+ATAC_MORE = Plus
+ATAC_BACK = Retour
+ATAC_FORGAVE = %s pardonne %s
+ATAC_KICKED = %s ejecte %s
+ATAC_BANNED = %s banne %s
+ATAC_PUNISHED = %s puni %s
+
+[de]
+ATAC_TA_WARNING = TEAM ATTACK WARNUNG: %i/%i^nSchaden zugefuegt: %i (%s)
+ATAC_TK_WARNING = TEAM KILL WARNUNG: %i/%i
+ATAC_TK_KICK = TEAM KILL WARNUNG: %i/%i fuer %s.^nKicke...
+ATAC_TK_BAN_MIN = TEAM KILL WARNUNG: %i/%i fuer %s.^nBanne fuer %i Minuten...
+ATAC_TK_BAN_PERM = TEAM KILL WARNUNG: %i/%i fuer %s.^nBanne dauerhaft...
+ATAC_CHOOSE = %sWaehle Bestrafung fuer %s%s
+ATAC_FORGIVE = Vergeben
+ATAC_INCREASE_TK = Nur Team Kills erhoehen
+ATAC_KICK = Kick
+ATAC_BAN_MIN = Bann ihn fuer %i Minuten
+ATAC_BAN_PERM = Bann ihn dauerhaft
+ATAC_MORE = Mehr
+ATAC_BACK = Zurueck
+ATAC_FORGAVE = %s vergiebt %s
+ATAC_KICKED = %s kickte %s
+ATAC_BANNED = %s bannte %s
+ATAC_PUNISHED = %s bestrafte %s
+
+[pl]
+ATAC_TA_WARNING = OSTRZEZENIE O ATAKOWANIU SWOICH: %i/%i^Zadane obrazenia: %i (%s)
+ATAC_TK_WARNING = OSTRZEZENIE O ZABIJANIU SWOICH (TK): %i/%i
+ATAC_TK_KICK = OSTRZEZENIE O ZABIJANIU SWOICH (TK): %i/%i dla %s.^nWyrzucenie...
+ATAC_TK_BAN_MIN = OSTRZEZENIE O ZABIJANIU SWOICH (TK): %i/%i dla %s.^nZbanowanie na %i minut...
+ATAC_TK_BAN_PERM = OSTRZEZENIE O ZABIJANIU SWOICH (TK): %i/%i dla %s.^nBan permanentny...
+ATAC_CHOOSE = %sWybierz kare dla %s%s
+ATAC_FORGIVE = Wybacz
+ATAC_INCREASE_TK = Po Prostu Zwieksz Ilosc Zabitych Swoich (TK)
+ATAC_KICK = Wyrzuc
+ATAC_BAN_MIN = Zbanuj na %i minut
+ATAC_BAN_PERM = Zbanuj permanentnie
+ATAC_MORE = Wiecej
+ATAC_BACK = Powrot
+ATAC_FORGAVE = %s wybaczyl %s
+ATAC_KICKED = %s wyrzucil %s
+ATAC_BANNED = %s zbanowal %s
+ATAC_PUNISHED = %s ukaral %s
+
+[sv]
+ATAC_TA_WARNING = LAG ATTACK VARNING: %i/%i^nSkada gjord: %i (%s)
+ATAC_TK_WARNING = LAG D'O'DS VARNING: %i/%i
+ATAC_TK_KICK = LAG D'O'DS VARNING: %i/%i f'o'r %s.^nSparkar...
+ATAC_TK_BAN_MIN = LAG D'O'DS VARNING: %i/%i f'o'r %s.^nBannlyser i %i minuter...
+ATAC_TK_BAN_PERM = LAG D'O'DS VARNING: %i/%i f'o'r %s.^nBannlyser permanent...
+ATAC_CHOOSE = %sV'a'lg Bestraffning f'o'r %s%s
+ATAC_FORGIVE = F'o'rlat
+ATAC_INCREASE_TK = 'O'kade precis Lag D'o'dningar
+ATAC_KICK = Sparka
+ATAC_BAN_MIN = Bannlys %i minuter
+ATAC_BAN_PERM = Bannlys permanent
+ATAC_MORE = Mera
+ATAC_BACK = Tillbaka
+ATAC_FORGAVE = %s f'o'rl'a't %s
+ATAC_KICKED = %s sparkade %s
+ATAC_BANNED = %s bannlyste %s
+ATAC_PUNISHED = %s straffade %s
+
+[tr]
+ATAC_TA_WARNING = TAKIM SALDIRI İKAZI: %i/%i^nZarara Çarptı: %i (%s)
+ATAC_TK_WARNING = TAKIM ÖLÜM İKAZI: %i/%i
+ATAC_TK_KICK = TAKIM ÖLÜM İKAZI: %i/%i için %s.^nAtılıyor...
+ATAC_TK_BAN_MIN = TAKIM ÖLÜM İKAZI: %i/%i içiç %s.^n%i dakika yasaklanıyor...
+ATAC_TK_BAN_PERM = TAKIM ÖLÜM İKAZI: %i/%i i�in %s.^nDâimi...
+ATAC_CHOOSE = %sİçin ceza kes %s%s
+ATAC_FORGIVE = Bağışla�
+ATAC_INCREASE_TK = Sâdece Takımın Ölmürme Artır
+ATAC_KICK = At
+ATAC_BAN_MIN = %i Dakika için yasakla
+ATAC_BAN_PERM = Dâimi yasak
+ATAC_MORE = Daha
+ATAC_BACK = Geri
+ATAC_FORGAVE = %s Bağışladı %s
+ATAC_KICKED = %s Attı %s
+ATAC_BANNED = %s Menetti %s
+ATAC_PUNISHED = %s Cezâlandırıldı %s
+
+[hu]
+ATAC_TA_WARNING = CSAPATTARS SEBZES VESZELY: %i/%i^nDamage Sebzes Okozba: %i (%s)
+ATAC_TK_WARNING = CSAPATTARS OLES VESZELY: %i/%i
+ATAC_TK_KICK = CSAPATTARS OLES VESZELY: %i/%i a %s.^nKirugas...
+ATAC_TK_BAN_MIN = CSAPATTARS OLES VESZELY: %i/%i a%s.^nBannolas %i percre...
+ATAC_TK_BAN_PERM = CSAPATTARS OLES VESZELY: %i/%i a%s.^nBannolas Vegleg...
+ATAC_CHOOSE = %sValasz Buntetest %s-nek%s
+ATAC_FORGIVE = Megbocsajtas
+ATAC_INCREASE_TK = Novelje a TK pontjait
+ATAC_KICK = Kirugas
+ATAC_BAN_MIN = Bannolas %i Percre
+ATAC_BAN_PERM = Vegleges Ban
+ATAC_MORE = Tovabb
+ATAC_BACK = Vissza
+ATAC_FORGAVE = %s megbocsajtott %s-nek
+ATAC_KICKED = %s kurgta %s-t
+ATAC_BANNED = %s bannolta %s-t
+ATAC_PUNISHED = %s megbuntette %s-t
+
+[es]
+ATAC_TA_WARNING = AVISO DE ATAQUE A EQUIPO: %i/%i^nDanyo Provocado: %i (%s)
+ATAC_TK_WARNING = AVISO DE TK: %i/%i
+ATAC_TK_KICK = AVISO DE TK: %i/%i para %s.^nExpulsado...
+ATAC_TK_BAN_MIN = AVISO DE TK: %i/%i para %s.^nBaneado %i minutos...
+ATAC_TK_BAN_PERM = AVISO DE TK: %i/%i for %s.^nBan permanente...
+ATAC_CHOOSE = %sElegir Castigo para %s%s
+ATAC_FORGIVE = Perdonar
+ATAC_INCREASE_TK = Anyadir TK
+ATAC_KICK = Kick
+ATAC_BAN_MIN = Banear %i minutos
+ATAC_BAN_PERM = Ban permanente
+ATAC_MORE = Mas
+ATAC_BACK = Atras
+ATAC_FORGAVE = %s perdonado %s
+ATAC_KICKED = %s expulsado %s
+ATAC_BANNED = %s baneado %s
+ATAC_PUNISHED = %s castigado %s
+
+[nl]
+ATAC_TA_WARNING = TEAM AANVALS WAARSCHUWING: %i/%i^nSchade Geinflicteerd: %i (%s)
+ATAC_TK_WARNING = TEAM KILL WAARSCHUWING: %i/%i
+ATAC_TK_KICK = TEAM KILL WAARSCHUWING: %i/%i for %s.^nVerwijderen...
+ATAC_TK_BAN_MIN = TEAM KILL WAARSCHUWING: %i/%i for %s.^nVerbannen voor %i minuten...
+ATAC_TK_BAN_PERM = TEAM KILL WAARSCHUWING: %i/%i for %s.^nPermanent verbannen...
+ATAC_CHOOSE = %sKies straf voor %s%s
+ATAC_FORGIVE = Vergeef
+ATAC_INCREASE_TK = Verhoog Team Kill
+ATAC_KICK = Verwijder
+ATAC_BAN_MIN = Verban voor %i minuten
+ATAC_BAN_PERM = Verban permanent
+ATAC_MORE = Meer
+ATAC_BACK = Terug
+ATAC_FORGAVE = %s heeft %s vergeven
+ATAC_KICKED = %s heeft %s verwijderd
+ATAC_BANNED = %s heeft %s verbannen
+ATAC_PUNISHED = %s heeft %s gestraft
+
+[sr]
+ATAC_TA_WARNING = TEAM ATTACK: %i/%i^nStete napravljeno: %i (%s)
+ATAC_TK_WARNING = TEAM KILL WARNING: %i/%i
+ATAC_TK_KICK = TEAM KILL WARNING: %i/%i za %s.^nKick...
+ATAC_TK_BAN_MIN = TEAM KILL WARNING: %i/%i for %s.^nBanujem na %i min...
+ATAC_TK_BAN_PERM = TEAM KILL WARNING: %i/%i for %s.^nBanujem za stalno...
+ATAC_CHOOSE = %sIzaberi kaznu za %s%s
+ATAC_FORGIVE = Oprosti
+ATAC_INCREASE_TK = Povecaj Team Kill
+ATAC_KICK = Kick
+ATAC_BAN_MIN = Ban na %i min
+ATAC_BAN_PERM = Ban za stalno
+ATAC_MORE = Josh
+ATAC_BACK = Nazad
+ATAC_FORGAVE = %s je oprostio(la) %s
+ATAC_KICKED = %s kikovao %s
+ATAC_BANNED = %s banovao %s
+ATAC_PUNISHED = %s kaznio %s
+
+[ro]
+ATAC_TA_WARNING = AVERTISMENT - Atac La Echipa: %i/%i^nDamage Provocat: %i (%s)
+ATAC_TK_WARNING = AVERTISMENT - Coechiper Omorat: %i/%i
+ATAC_TK_KICK = AVERTISMENT - Coechiper Omorat: %i/%i pentru %s.^nEste dat afara...
+ATAC_TK_BAN_MIN = AVERTISMENT - Coechiper Omorat: %i/%i pentru %s.^nEste ban-at timp de %i minute...
+ATAC_TK_BAN_PERM = AVERTISMENT - Coechiper Omorat: %i/%i pentru %s.^nEste ban-at permanent...
+ATAC_CHOOSE = %sAlege Pedeapsa pentru %s%s
+ATAC_FORGIVE = Iarta-l
+ATAC_INCREASE_TK = Inmulteste nr. de coechiperi omorati
+ATAC_KICK = Da-l Afara
+ATAC_BAN_MIN = Baneaza-l timp de %i minute
+ATAC_BAN_PERM = Ban permanent
+ATAC_MORE = Mai Multe
+ATAC_BACK = Inapoi
+ATAC_FORGAVE = %s iertat %s
+ATAC_KICKED = %s dat afara %s
+ATAC_BANNED = %s ban-at %s
+ATAC_PUNISHED = %s pedepsit %s
+
+[pl]
+ATAC_TA_WARNING = ATAKOWANIE SWOICH - OSTRZEZENIE: %i/%i^nZadane obrazenia: %i (%s)
+ATAC_TK_WARNING = ATAKOWANIE SWOICH - OSTRZEZENIE: %i/%i
+ATAC_TK_KICK = ATAKOWANIE SWOICH - OSTRZEZENIE: %i/%i for %s.^nWykopywanie...
+ATAC_TK_BAN_MIN = ATAKOWANIE SWOICH - OSTRZEZENIE: %i/%i for %s.^nBanowanie na %i minutt...
+ATAC_TK_BAN_PERM = ATATAKOWANIE SWOICH - OSTRZEZENIE: %i/%i for %s.^nBanowanie na zawsze...
+ATAC_CHOOSE = %sWybierz kare dla %s%s
+ATAC_FORGIVE = Wybacz
+ATAC_INCREASE_TK = Zwiekszenie TK
+ATAC_KICK = Kick
+ATAC_BAN_MIN = Ban na %i minut
+ATAC_BAN_PERM = Ban kompletny
+ATAC_MORE = Wiecej
+ATAC_BACK = Cofnij
+ATAC_FORGAVE = %s wybaczyl %s
+ATAC_KICKED = %s dal kicka %s
+ATAC_BANNED = %s zbanowal %s
+ATAC_PUNISHED = %s ukaral %s
+
+[fi]
+ATAC_TA_WARNING = TEAM ATTACK VAROITUS: %i/%i^nVahinkoa Aiheutettu: %i (%s)
+ATAC_TK_WARNING = TEAM KILL VAROITUS: %i/%i
+ATAC_TK_KICK = TEAM KILL VAROITUS: %i/%i %s takia.^nPotkitaan...
+ATAC_TK_BAN_MIN = TEAM KILL VAROITUS: %i/%i %s takia.^nAnnetaan Porttikielto %i Minuutiksi...
+ATAC_TK_BAN_PERM = TEAM KILL VAROITUS: %i/%i %s takia.^nAnnetaan Porttikielto Pysyv'a'sti...
+ATAC_CHOOSE = %sValitse Rangaistus %s%s:lle
+ATAC_FORGIVE = Anna Anteeksi
+ATAC_INCREASE_TK = Suurenna Team Kill:i'a'
+ATAC_KICK = Potki
+ATAC_BAN_MIN = Anna Prottikielto %i minuutiksi
+ATAC_BAN_PERM = Anna Prottikielto Pysyv'a'sti
+ATAC_MORE = Enemm'a'n
+ATAC_BACK = Takaisin
+ATAC_FORGAVE = %s antoi anteeksi %s
+ATAC_KICKED = %s potki %s
+ATAC_BANNED = %s antoi porttikiellon %s
+ATAC_PUNISHED = %s rankaisi %s
+
+[sk]
+ATAC_TA_WARNING = TEAM ATTACK WARNING: %i/%i^nPoskodenie sposobene: %i (%s)
+ATAC_TK_WARNING = TEAM KILL WARNING: %i/%i
+ATAC_TK_KICK = TEAM KILL WARNING: %i/%i pre %s.^nKick...
+ATAC_TK_BAN_MIN = TEAM KILL WARNING: %i/%i pre %s.^nBan na %i min...
+ATAC_TK_BAN_PERM = TEAM KILL WARNING: %i/%i pre %s.^nPermanentny ban...
+ATAC_CHOOSE = %sVyber trest %s%s
+ATAC_FORGIVE = Odpust
+ATAC_INCREASE_TK = Len pribudne Team Kill
+ATAC_KICK = Kick
+ATAC_BAN_MIN = Ban na %i min
+ATAC_BAN_PERM = Permanentny Ban
+ATAC_MORE = Viac
+ATAC_BACK = Back
+ATAC_FORGAVE = %s odpustil %s
+ATAC_KICKED = %s kickol %s
+ATAC_BANNED = %s zabanoval %s
+ATAC_PUNISHED = %s potrestal %s
+
+[bp]
+ATAC_TA_WARNING = Aviso de dano na equipe!: %i/%i^Dano causado: %i (%s)
+ATAC_TK_WARNING = Aviso de TK!: %i/%i
+ATAC_TK_KICK = Puni�ao de TK: %i/%i for %s.^nKickando...
+ATAC_TK_BAN_MIN = Puni�ao de TK: %i/%i for %s.^nBanido por %i minutos...
+ATAC_TK_BAN_PERM = Puni�ao de TK: %i/%i for %s.^nBanido Permanentemente...
+ATAC_CHOOSE = %sEscolha puni�ao para %s%s
+ATAC_FORGIVE = Perdoar
+ATAC_INCREASE_TK = Apenas aumentar TK
+ATAC_KICK = Kickar
+ATAC_BAN_MIN = Banir por %i minutos
+ATAC_BAN_PERM = Banir permanentemente
+ATAC_MORE = Mais
+ATAC_BACK = Voltar
+ATAC_FORGAVE = %s perdoou %s
+ATAC_KICKED = %s Kickou %s
+ATAC_BANNED = %s baniu %s
+ATAC_PUNISHED = %s Puniu %s
+
+[ru]
+ATAC_TA_WARNING = ПРЕДУПРЕЖДЕНИЕ О ДРУЖЕСТВЕННОМ ОГНЕ: %i/%i^nПричиненный ущерб: %i (%s)
+ATAC_TK_WARNING = ПРЕДУПРЕЖДЕНИЕ О ТИМКИЛЕ: %i/%i
+ATAC_TK_KICK = ПРЕДУПРЕЖДЕНИЕ О ТИМКИЛЕ: %i/%i for %s.^nВыкидываю...
+ATAC_TK_BAN_MIN = ПРЕДУПРЕЖДЕНИЕ О ТИМКИЛЕ: %i/%i for %s.^nБан на %i минут...
+ATAC_TK_BAN_PERM = ПРЕДУПРЕЖДЕНИЕ О ТИМКИЛЕ: %i/%i for %s.^nПерманентный бан...
+ATAC_CHOOSE = %sВыберите наказание для %s%s
+ATAC_FORGIVE = Простить
+ATAC_INCREASE_TK = Просто увеличить кол-во Тимкилов
+ATAC_KICK = Кикнуть
+ATAC_BAN_MIN = Бан на %i минут
+ATAC_BAN_PERM = Перманентные бан
+ATAC_MORE = Еще
+ATAC_BACK = Назад
+ATAC_FORGAVE = %s простил %s
+ATAC_KICKED = %s кикнул %s
+ATAC_BANNED = %s забанил %s
+ATAC_PUNISHED = %s наказал %s

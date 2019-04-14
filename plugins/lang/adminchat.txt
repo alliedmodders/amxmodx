@@ -296,3 +296,16 @@ COL_ORANGE = 橙色
 COL_OCEAN = 深蓝色
 COL_MAROON = 褐红色
 PRINT_ALL = (全部) %s :   %s
+
+[al]
+COL_WHITE = e bardhe
+COL_RED = e kuqe
+COL_GREEN = jeshile
+COL_BLUE = blu
+COL_YELLOW = e verdhe
+COL_MAGENTA = e purpurte
+COL_CYAN = bojeqielli
+COL_ORANGE = portokalli
+COL_OCEAN = oqean
+COL_MAROON = kafe
+PRINT_ALL = (ALL) %s :   %s

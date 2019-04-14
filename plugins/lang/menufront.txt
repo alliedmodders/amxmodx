@@ -411,3 +411,21 @@ STATS_SET = 统计设置 ^n
 PAUSE_PLUG = 暂停插件
 RES_WEAP = 限制武器
 TELE_PLAYER = 传送玩家
+
+[al]
+KICK_PLAYER = Largo Lojtarin
+BAN_PLAYER = Deno Lojtarin
+SLAP_SLAY = Godit/Vrit Lojtarin
+TEAM_PLAYER = Skuadra e Lojtarit ^n
+CHANGEL = Ndrysho pisten
+VOTE_MAPS = Voto per pistat ^n
+SPECH_STUFF = Menuja e Fjalimeve
+CLIENT_COM = Komandat e Klienteve
+SERVER_COM = Komandat e Serverit
+CVARS_SET = Cilesimet e Cvar-ave
+CONFIG = Konfigurimi
+LANG_SET = Cilesimet e Gjuhes
+STATS_SET = Cilesimet e Statistikave ^n
+PAUSE_PLUG = Ndalo Pluginsat
+RES_WEAP = Kufizo Armet
+TELE_PLAYER = Teleporto Lojtarin

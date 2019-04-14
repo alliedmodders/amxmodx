@@ -429,3 +429,22 @@ TRANSF_TO = 传送到 %s 队伍
 CL_CMD_MENU = 客户端命令菜单
 NO_CMDS = 无可用命令
 CANT_PERF_PLAYER = 该操作不能对玩家 "%s" 执行
+
+[al]
+ADMIN_BAN_1 = ADMIN: denoi %s
+ADMIN_BAN_2 = ADMIN %s: denoi %s
+BAN_MENU = Menuja e denimit
+BAN_FOR_MIN = Deno per %d minuta
+BAN_PERM = Deno pergjithmone
+SLAP_SLAY_MENU = Menuja e Godit/Vrit
+SLAP_WITH_DMG = Godit me %d gjak
+SLAY = Vrit
+KICK_MENU = Menuja e largimit
+ADMIN_TRANSF_1 = ADMIN: transferoi %s ne %s
+ADMIN_TRANSF_2 = ADMIN %s: transferoi %s ne %s
+TEAM_MENU = Menuja e Skuadres
+TRANSF_TO = Transferoi ne %s
+TRANSF_SILENT = Transferim silent
+CL_CMD_MENU = Menuja e Komandave te Klientit
+NO_CMDS = Nuk ka komanda te mundshme
+CANT_PERF_PLAYER = Ky veprim nuk mund te kryhet tek lojtari "%s"

@@ -330,7 +330,7 @@ void OnAmxxAttach() {
 	if ( path && *path ) 
 	{
 		char error[128];
-		g_rank.loadCalc( MF_BuildPathname("%s",path) , error  );
+		g_rank.loadCalc( MF_BuildPathname("%s",path), error, sizeof(error));
 	}
 	if ( !g_rank.begin() )
 	{		

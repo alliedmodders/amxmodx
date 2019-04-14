@@ -37,7 +37,8 @@ bool gDoForwards=true;
 ke::Vector<Hook *> hooks[HAM_LAST_ENTRY_DONT_USE_ME_LOL];
 CHamSpecialBotHandler SpecialbotHandler;
 
-#define V(__KEYNAME, __STUFF__) 0, 0, __KEYNAME, RT_##__STUFF__, RB_##__STUFF__, PC_##__STUFF__, reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
+#define V(__KEYNAME, __STUFF__) 0, 0, __KEYNAME, false, RT_##__STUFF__, RB_##__STUFF__, PC_##__STUFF__, reinterpret_cast<void *>(Hook_##__STUFF__), Create_##__STUFF__, Call_##__STUFF__
+#define V_REMOVED(__KEYNAME) 0, 0, __KEYNAME, true, RT_Void_Void, RB_Void_Void, PC_Void_Void, nullptr, 0, 0
 
 hook_t hooklist[] =
 {
@@ -229,7 +230,7 @@ hook_t hooklist[] =
 	{ V("checkmeleeattack2",		Int_Float_Float) },
 	{ V("schedulechange",			Void_Void) },
 	{ V("canplaysequence",			Int_Int_Int) },
-	{ V("canplaysentence",			Int_Int) },
+	{ V("canplaysentence2",			Int_Int) },
 	{ V("playsentence",				Void_Str_Float_Float_Float) },
 	{ V("playscriptedsentence",		Void_Str_Float_Float_Float_Int_Cbase) },
 	{ V("sentencestop",				Void_Void) },
@@ -401,23 +402,23 @@ hook_t hooklist[] =
 
 	/* Sven co-op */
 	{ V("sc_getclassification",		Int_Int) },
-	{ V("sc_ismonster",				Int_Void) },
-	{ V("sc_isphysx",				Int_Void) },
-	{ V("sc_ispointentity",			Int_Void) },
-	{ V("sc_ismachine",				Int_Void) },
-	{ V("sc_criticalremove",		Int_Void) },
+	{ V("sc_ismonster",				Bool_Void) },
+	{ V_REMOVED("sc_isphysx") },
+	{ V("sc_ispointentity",			Bool_Void) },
+	{ V("sc_ismachine",				Bool_Void) },
+	{ V("sc_criticalremove",		Bool_Void) },
 	{ V("sc_updateonremove",		Void_Void) },
-	{ V("sc_fvisible",				Int_Cbase_Bool) },
-	{ V("sc_fvisiblefrompos",		Int_Vector_Vector) },
-	{ V("sc_isfacing",				Int_Entvar_Float) },
+	{ V("sc_fvisible",				Bool_Cbase_Bool) },
+	{ V("sc_fvisiblefrompos",		Bool_pVector_pVector) },
+	{ V("sc_isfacing",				Bool_Entvar_Float) },
 	{ V("sc_getpointsfordamage",	Float_Float) },
 	{ V("sc_getdamagepoints",		Void_Entvar_Entvar_Float) },
 	{ V("sc_oncreate",				Void_Void) },
 	{ V("sc_ondestroy",				Void_Void) },
-	{ V("sc_isvalidentity",			Bool_Void) },
+	{ V_REMOVED("sc_isvalidentity") },
 	{ V("sc_shouldfadeondeath",		Int_Void) },
 	{ V("sc_setupfriendly",			Void_Void) },
-	{ V("sc_revivethink",			Void_Void) },
+	{ V_REMOVED("sc_revivethink") },
 	{ V("sc_revive",				Void_Void) },
 	{ V("sc_startmonster",			Void_Void) },
 	{ V("sc_checkrangeattack1_move",Int_Float_Float) },
@@ -440,10 +441,10 @@ hook_t hooklist[] =
 	{ V("sc_finbulletcone",			Int_Cbase_pVector) },
 	{ V("sc_callgibmonster",		Void_Void) },
 	{ V("sc_checktimebaseddamage",	Void_Void) },
-	{ V("sc_ismoving",				Int_Void) },
+	{ V("sc_ismoving",				Bool_Void) },
 	{ V("sc_isplayerfollowing",		Int_Void) },
-	{ V("sc_startplayerfollowing",	Void_Cbase) },
-	{ V("sc_stopplayerfollowing",	Void_Int) },
+	{ V("sc_startplayerfollowing",	Void_Cbase_Bool) },
+	{ V("sc_stopplayerfollowing",	Void_Bool_Bool) },
 	{ V("sc_usesound",				Void_Void) },
 	{ V("sc_unusesound",			Void_Void) },
 	{ V("sc_ridemonster",			Void_Cbase) },
@@ -454,8 +455,8 @@ hook_t hooklist[] =
 	{ V("sc_checkrevival",			Void_Void) },
 	{ V("sc_mediccallsound",		Void_Void) },
 
-	{ V("sc_player_menuinputperformed",		Void_Bool) },
-	{ V("sc_player_ismenuinputdone",Bool_Void) },
+	{ V_REMOVED("sc_player_menuinputperformed") },
+	{ V_REMOVED("sc_player_ismenuinputdone") },
 	{ V("sc_player_specialspawn",	Void_Void) },
 	{ V("sc_player_isvalidinfoentity",	Bool_Void) },
 	{ V("sc_player_levelend",		Void_Void) },
@@ -470,9 +471,9 @@ hook_t hooklist[] =
 	{ V("sc_player_resetview",		Void_Void) },
 	{ V("sc_player_getlogfrequency",Float_Void) },
 	{ V("sc_player_logplayerstats",	Bool_Void) },
-	{ V("sc_player_disablecollisionwithplayer",	Void_Cbase_Float) },
-	{ V("sc_player_enablecollisionwithplayer",	Void_Cbase_Bool) },
-	{ V("sc_player_cantouchplayer",	Bool_Cbase) },
+	{ V_REMOVED("sc_player_disablecollisionwithplayer") },
+	{ V_REMOVED("sc_player_enablecollisionwithplayer") },
+	{ V_REMOVED("sc_player_cantouchplayer") },
 
 	{ V("sc_item_materialize",		Void_Void) },
 
@@ -483,10 +484,10 @@ hook_t hooklist[] =
 	{ V("sc_weapon_getw_model",		Str_Str) },
 	{ V("sc_weapon_getv_model",		Str_Str) },
 	{ V("sc_weapon_precachecustommodels",	Void_Void) },
-	{ V("sc_weapon_ismultiplayer",	Int_Void) },
-	{ V("sc_weapon_frunfuncs",		Int_Void) },
+	{ V("sc_weapon_ismultiplayer",	Bool_Void) },
+	{ V("sc_weapon_frunfuncs",		Bool_Void) },
 	{ V("sc_weapon_setfov",			Void_Int) },
-	{ V("sc_weapon_fcanrun",		Int_Void) },
+	{ V("sc_weapon_fcanrun",		Bool_Void) },
 	{ V("sc_weapon_customdecrement",Void_Float) },
 	{ V("sc_weapon_setv_model",		Void_Str) },
 	{ V("sc_weapon_setp_model",		Void_Str) },
@@ -499,11 +500,11 @@ hook_t hooklist[] =
 	{ V("tfc_weapon_sendweaponanim", Void_Int_Int) },
 	{ V("tfc_weapon_getnextattackdelay", Float_Float) },
 
-	{ V("sc_takehealth",Int_Float_Int_Int) },
-	{ V("sc_takearmor", Int_Float_Int_Int) },
-	{ V("sc_giveammo", Int_Int_Str_Int_Int) },
+	{ V("sc_takehealth",Bool_Float_Int_Int) },
+	{ V("sc_takearmor", Bool_Float_Int_Int) },
+	{ V("sc_giveammo", Int_Int_Str_Int_Bool) },
 	{ V("sc_checkattacker", Int_Cbase) },
-	{ V("sc_player_isconnected", Int_Void) },
+	{ V("sc_player_isconnected", Bool_Void) },
 
 	{ V("dod_weapon_sendweaponanim", Void_Int_Int) },
 
@@ -514,7 +515,69 @@ hook_t hooklist[] =
 
 	{ V("ts_weapon_alternateattack", Void_Void) },
 
-	{ V("item_getiteminfo", Int_ItemInfo) }
+	{ V("item_getiteminfo", Int_ItemInfo) },
+
+	{ V("sc_prespawn",				Void_Void) },
+	{ V("sc_postspawn",				Void_Void) },
+	{ V("sc_onkeyvalueupdate",		Void_Str) },
+	{ V("sc_setclassification",		Void_Int) },
+	{ V("sc_istriggered",			Bool_Void) },
+	{ V("sc_mycustompointer",		Cbase_Void) },
+	{ V("sc_myitempointer",			Cbase_Void) },
+	{ V("sc_addpoints",				Void_Int_Bool) },
+	{ V("sc_addpointstoteam",		Void_Int_Bool) },
+	{ V("sc_removeplayeritem",		Bool_Cbase) },
+	{ V("sc_oncontrols",			Bool_Entvar) },
+	{ V("sc_issneaking",			Bool_Void) },
+	{ V("sc_isalive",				Bool_Void) },
+	{ V("sc_isbspmodel",			Bool_Void) },
+	{ V("sc_reflectgauss",			Bool_Void) },
+	{ V("sc_hastarget",				Bool_Int) },
+	{ V("sc_isinworld",				Bool_Void) },
+	{ V("sc_isplayer",				Bool_Void) },
+	{ V("sc_isnetclient",			Bool_Void) },
+	{ V("sc_isbreakable",			Bool_Void) },
+	{ V("sc_subusetargets",			Void_Cbase_Int_Float) },
+	{ V("sc_islockedbymaster",		Bool_Void) },
+	{ V("sc_fbecomeprone",			Bool_Cbase) },
+	{ V("sc_fvecvisible",			Bool_pVector) },
+	{ V("sc_setplayerally",			Void_Bool) },
+	{ V("sc_onsetoriginbymap",		Void_Void) },
+	{ V("sc_isrevivable",			Bool_Void) },
+	{ V("sc_beginrevive",			Void_Float) },
+	{ V("sc_endrevive",				Void_Float) },
+	{ V("sc_canplaysequence",		Bool_Bool_Int) },
+	{ V("sc_canplaysentence2",		Bool_Bool) },
+	{ V("sc_playscriptedsentence",	Void_Str_Float_Float_Float_Bool_Cbase) },
+	{ V("sc_item_addtoplayer",		Bool_Cbase) },
+	{ V("sc_item_addduplicate",		Bool_Cbase) },
+	{ V("sc_item_addammofromitem",	Bool_Cbase) },
+	{ V("sc_item_getpickupsound",	Str_Void) },
+	{ V("sc_item_cancollect",		Bool_Cbase_Int) },
+	{ V("sc_item_collect",			Void_Cbase_Int) },
+	{ V("sc_item_getiteminfo",		Bool_ItemInfo) },
+	{ V("sc_item_candeploy",		Bool_Void) },
+	{ V("sc_item_deploy",			Bool_Void) },
+	{ V("sc_item_canholster",		Bool_Void) },
+	{ V("sc_item_inactiveitempreframe",	Void_Void) },
+	{ V("sc_item_inactiveitempostframe",Void_Void) },
+	{ V("sc_item_detachfromplayer",	Void_Void) },
+	{ V("sc_item_updateclientdata", Bool_Cbase) },
+	{ V("sc_item_getrespawntime",	Float_Void) },
+	{ V("sc_item_canhaveduplicates",Bool_Void) },
+	{ V("sc_weapon_extractammofromitem",Bool_Cbase) },
+	{ V("sc_weapon_addweapon",		Bool_Void) },
+	{ V("sc_weapon_getammo1drop",	Int_Void) },
+	{ V("sc_weapon_getammo2drop",	Int_Void) },
+	{ V("sc_weapon_playemptysound",	Bool_Void) },
+	{ V("sc_weapon_isusable",		Bool_Void) },
+	{ V("sc_weapon_finishreload",	Void_Void) },
+	{ V("sc_weapon_shouldreload",	Bool_Void) },
+	{ V("sc_weapon_shouldweaponidle",Bool_Void) },
+	{ V("sc_weapon_usedecrement",	Bool_Void) },
+	{ V("sc_player_enteredobserver",Void_Void) },
+	{ V("sc_player_leftobserver",	Void_Void) },
+	{ V("sc_player_isobserver",		Bool_Void) },
 };
 
 
@@ -534,21 +597,24 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	CHECK_FUNCTION(func);
 
-	char *function=MF_GetAmxString(amx, params[3], 0, NULL);
-	char *classname=MF_GetAmxString(amx, params[2], 1, NULL);
-	
+	// Fixes a buffer issue by copying locally the strings.
+	// REMOVE_ENTITY invokes pfnOnFreeEntPrivateData which plugins can hook and `function` and `classname` strings are used after that
+	// but it is pointing to the AMXX static buffer. Basically, hooking this forward and doing stuff inside could invalid all RegisterHam calls.
+	ke::AString function(MF_GetAmxString(amx, params[3], 0, NULL));
+	ke::AString classname(MF_GetAmxString(amx, params[2], 1, NULL));
+
 	// Check the entity
 
 	// create an entity, assign it the gamedll's class, hook it and destroy it
 	edict_t *Entity=CREATE_ENTITY();
 
-	CALL_GAME_ENTITY(PLID,classname,&Entity->v);
+	CALL_GAME_ENTITY(PLID,classname.chars(),&Entity->v);
 
 	if (Entity->pvPrivateData == NULL)
 	{
 		REMOVE_ENTITY(Entity);
 
-		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname,function);
+		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve classtype for \"%s\", hook for \"%s\" not active.",classname.chars(),function.chars());
 
 		return 0;
 	}
@@ -558,18 +624,18 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 
 	if (vtable == NULL)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve vtable for \"%s\", hook for \"%s\" not active.",classname,function);
+		MF_LogError(amx, AMX_ERR_NATIVE,"Failed to retrieve vtable for \"%s\", hook for \"%s\" not active.",classname.chars(),function.chars());
 
 		return 0;
 	}
 
 	// Verify that the function is valid
 	// Don't fail the plugin if this fails, just emit a normal error
-	int fwd=hooklist[func].makefunc(amx, function);
+	int fwd=hooklist[func].makefunc(amx, function.chars());
 
 	if (fwd == -1)
 	{
-		MF_LogError(amx, AMX_ERR_NATIVE, "Function %s not found.", function);
+		MF_LogError(amx, AMX_ERR_NATIVE, "Function %s not found.", function.chars());
 
 		return 0;
 	}
@@ -586,9 +652,9 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	pfwd->AddRef();
 
 	// We've passed all tests...
-	if (strcmp(classname, "player") == 0 && enableSpecialBot)
+	if (strcmp(classname.chars(), "player") == 0 && enableSpecialBot)
 	{
-		SpecialbotHandler.RegisterHamSpecialBot(amx, func, function, post, pfwd);
+		SpecialbotHandler.RegisterHamSpecialBot(amx, func, function.chars(), post, pfwd);
 	}
 
 	int **ivtable=(int **)vtable;
@@ -615,7 +681,7 @@ static cell AMX_NATIVE_CALL RegisterHam(AMX *amx, cell *params)
 	}
 
 	// If we got here, the function is not hooked
-	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
+	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname.chars());
 	hooks[func].append(hook);
 
 	if (post)

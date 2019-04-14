@@ -5,9 +5,20 @@ extern "C" {
 #ifndef MAXMINDDB_H
 #define MAXMINDDB_H
 
+/* Request POSIX.1-2008. However, we want to remain compatible with
+ * POSIX.1-2001 (since we have been historically and see no reason to drop
+ * compatibility). By requesting POSIX.1-2008, we can conditionally use
+ * features provided by that standard if the implementation provides it. We can
+ * check for what the implementation provides by checking the _POSIX_VERSION
+ * macro after including unistd.h. If a feature is in POSIX.1-2008 but not
+ * POSIX.1-2001, check that macro before using the feature (or check for the
+ * feature directly if possible). */
 #ifndef _POSIX_C_SOURCE
-#define _POSIX_C_SOURCE 200112L
+#define _POSIX_C_SOURCE 200809L
 #endif
+
+/* libmaxminddb package version from configure */
+#define PACKAGE_VERSION "1.3.2"
 
 #include "maxminddb_config.h"
 #include <stdarg.h>
@@ -24,7 +35,7 @@ typedef ADDRESS_FAMILY sa_family_t;
 
 #if defined(_MSC_VER)
 /* MSVC doesn't define signed size_t, copy it from configure */
-#define ssize_t int
+#define ssize_t SSIZE_T
 
 /* MSVC doesn't support restricted pointers */
 #define restrict
@@ -34,9 +45,6 @@ typedef ADDRESS_FAMILY sa_family_t;
 #include <netinet/in.h>
 #include <sys/socket.h>
 #endif
-
-/* libmaxminddb package version from configure */
-#define PACKAGE_VERSION "1.1.0"
 
 #define MMDB_DATA_TYPE_EXTENDED (0)
 #define MMDB_DATA_TYPE_POINTER (1)
@@ -54,6 +62,11 @@ typedef ADDRESS_FAMILY sa_family_t;
 #define MMDB_DATA_TYPE_END_MARKER (13)
 #define MMDB_DATA_TYPE_BOOLEAN (14)
 #define MMDB_DATA_TYPE_FLOAT (15)
+
+#define MMDB_RECORD_TYPE_SEARCH_NODE (0)
+#define MMDB_RECORD_TYPE_EMPTY (1)
+#define MMDB_RECORD_TYPE_DATA (2)
+#define MMDB_RECORD_TYPE_INVALID (3)
 
 /* flags for open */
 #define MMDB_MODE_MMAP (1)
@@ -131,6 +144,7 @@ typedef struct MMDB_entry_data_s {
 typedef struct MMDB_entry_data_list_s {
     MMDB_entry_data_s entry_data;
     struct MMDB_entry_data_list_s *next;
+    void *pool;
 } MMDB_entry_data_list_s;
 
 typedef struct MMDB_description_s {
@@ -179,6 +193,10 @@ typedef struct MMDB_s {
 typedef struct MMDB_search_node_s {
     uint64_t left_record;
     uint64_t right_record;
+    uint8_t left_record_type;
+    uint8_t right_record_type;
+    MMDB_entry_s left_record_entry;
+    MMDB_entry_s right_record_entry;
 } MMDB_search_node_s;
 
     /* *INDENT-OFF* */

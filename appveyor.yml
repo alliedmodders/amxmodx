@@ -3,14 +3,20 @@ clone_folder: c:\projects\amxmodx
 install:
 - git submodule update --init --recursive
 - 'c:'
+- mkdir c:\nasm
+- set PATH=c:\nasm\nasm-2.13.03;%PATH%
+- curl -L -o "c:\nasm\nasm.zip" https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip
+- chdir c:\nasm
+- 7z x nasm.zip
 - chdir c:\projects
 - git clone https://github.com/alliedmodders/ambuild
 - git clone https://github.com/alliedmodders/metamod-hl1
 - git clone https://github.com/alliedmodders/hlsdk
-- ps: Start-FileDownload 'http://cdn.mysql.com/archives/mysql-5.5/mysql-5.5.54-win32.zip'
-- 7z x mysql-5.5.54-win32.zip -o"mysql"
+- ps: Start-FileDownload 'https://downloads.mysql.com/archives/get/file/mysql-connector-c-6.1.1-win32.zip'
+- 7z x mysql-connector-c-6.1.1-win32.zip -o"mysql"
 - cd mysql
-- ren mysql-5.5.54-win32 mysql-5.5
+- dir
+- ren mysql-connector-c-6.1.1-win32 mysql-5.5
 - move /Y mysql-5.5 ..\
 - cd ..\ambuild
 - c:\python27\python setup.py install
@@ -19,8 +25,8 @@ cache:
   - c:\projects\*.zip -> appveyor.yml
   - c:\projects\mysql-5.5 -> appveyor.yml
 build_script:
-- '"%VS120COMNTOOLS%\vsvars32.bat"'
+- '"%VS140COMNTOOLS%\vsvars32.bat"'
 - mkdir build
 - cd build
-- c:\python27\python ../configure.py --enable-optimize
+- c:\python27\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"
 - c:\python27\scripts\ambuild

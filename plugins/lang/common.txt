@@ -21,7 +21,7 @@ ON = On
 OFF = Off
 
 [de]
-BACK = Zurueck
+BACK = Zurück
 EXIT = Beenden
 MORE = Mehr
 NONE = Keine
@@ -32,13 +32,13 @@ YES = Ja
 NO = Nein
 BAN = ban
 KICK = kick
-NO_ACC_COM = Du hast nicht genuegend Rechte, um diesen Befehl auszufuehren!
+NO_ACC_COM = Du hast nicht genügend Rechte, um diesen Befehl auszuführen!
 USAGE = Anwendung
 MORE_CL_MATCHT = Es gibt mehrere Spieler, auf die deine Angaben zutreffen
 CL_NOT_FOUND = Spieler mit diesem Namen oder dieser UserID nicht gefunden
-CLIENT_IMM = Spieler "%s" hat Immnuitaet
-CANT_PERF_DEAD = Diese Aktion kann nicht am toten Spieler "%s" ausgefuehrt werden.
-CANT_PERF_BOT = Diese Aktion kann nicht am Bot "%s" ausgefuehrt werden.
+CLIENT_IMM = Spieler "%s" hat Immunität
+CANT_PERF_DEAD = Diese Aktion kann nicht am toten Spieler "%s" ausgeführt werden.
+CANT_PERF_BOT = Diese Aktion kann nicht am Bot "%s" ausgeführt werden.
 ON = An
 OFF = Aus
 
@@ -286,25 +286,25 @@ OFF = Poissa paalta
 
 [bg]
 BACK = Nazad
-EXIT = Izhot
-MORE = O6te
-NONE = nikolko
+EXIT = Izhod
+MORE = Oshte
+NONE = Nikolko
 ADMIN = ADMINISTRATOR
-PLAYER = Igra4
-ERROR = gre6ka
+PLAYER = IGRACH
+ERROR = greshka
 YES = Da
 NO = Ne
 BAN = ban
 KICK = kick
-NO_ACC_COM = Nqmate dostap do tazi commanda
-USAGE = Ispolzvane
-MORE_CL_MATCHT = eto o6te igra4i koito otgovarqt na commandata
-CL_NOT_FOUND = Igra4 s tova ime ili userid ne e nameren
-CLIENT_IMM = Igra4a "%s" ima immunity
-CANT_PERF_DEAD = Tazi comanda nemoje da se izpolzva na umrql igra4 "%s"
-CANT_PERF_BOT = Tazi comanda nemoje da se izpolzva na bot "%s"
-ON = Vklu4eno
-OFF = Isklu4eno
+NO_ACC_COM = Nqmate dostup do tazi komanda
+USAGE = Izpolzvane
+MORE_CL_MATCHT = Ima poveche igrachi koito se suvpadat s agrumenta
+CL_NOT_FOUND = Igrash s tova ime ili userid ne e nameren
+CLIENT_IMM = Igrachut "%s" ima imunitet
+CANT_PERF_DEAD = Tazi komanda ne moje da se izpolzva na murtviq igrach "%s"
+CANT_PERF_BOT = Tazi komanda ne moje da se izpolzva na bota "%s"
+ON = Vklucheno
+OFF = Isklucheno
 
 [ro]
 BACK = Inapoi
@@ -330,25 +330,25 @@ OFF = Dezactivat
 
 [hu]
 BACK = Vissza
-EXIT = Kilepes
-MORE = Tobb
+EXIT = Kilépés
+MORE = Több
 NONE = Egyiksem
 ADMIN = ADMIN
-PLAYER = Jatekos
+PLAYER = Játékos
 ERROR = hiba
 YES = Igen
 NO = Nem
 BAN = ban
-KICK = kirugas
-NO_ACC_COM = Nincs elerhetoseged ehhez a parancshoz.
-USAGE = Hasznalat
-MORE_CL_MATCHT = here are more clients matching to your argument
-CL_NOT_FOUND = Nincs ilyen nevu jatekos
-CLIENT_IMM = "%s" ellen all
-CANT_PERF_DEAD = Ezt az akciot nem hajthatod vegre "%s"-on mert halott
-CANT_PERF_BOT = Ezt az akciot nem hajthatod vegre "%s"-on mert bot
-ON = Be
-OFF = Ki
+KICK = kirúgás
+NO_ACC_COM = Nincs elérhetőséged ehhez a parancshoz.
+USAGE = Használat
+MORE_CL_MATCHT = Több játékosra is egyezik a megadott feltétel
+CL_NOT_FOUND = Nincs ilyen nevű játékos
+CLIENT_IMM = "%s" immunitás joggal rendelkezik
+CANT_PERF_DEAD = Ezt a műveletet nem hajthatod végre "%s" játékoson mert halott
+CANT_PERF_BOT = Ezt a műveletet nem hajthatod végre "%s" játékoson mert bot
+ON = BE
+OFF = KI
 
 [lt]
 BACK = Atgal
@@ -397,24 +397,24 @@ OFF = OFF
 [mk]
 BACK = Nazad
 EXIT = Izlez
-MORE = Uste
+MORE = Ushte
 NONE = Nema
 ADMIN = ADMIN
-PLAYER = IGRAC
-ERROR = greska
+PLAYER = IGRACH
+ERROR = greshka
 YES = Da
 NO = Ne
 BAN = ban
 KICK = kick
-NO_ACC_COM = Nemate pristap na dadenata komanda
+NO_ACC_COM = Nemate pristap do ovaa komanda
 USAGE = Koristenje
-MORE_CL_MATCHT = Poveke igraci go zadovoluvaat vaseto baranje
-CL_NOT_FOUND = Igrac so toa ime ili so toj korisnicki ID ne e najden
-CLIENT_IMM = Igracot "%s" ima imunitet
-CANT_PERF_DEAD = Komandata ne moze da bide izvrsena na igracot "%s" bidejki e mrtov
-CANT_PERF_BOT = Komandata ne moze da bide izvrsena na botot "%s"
-ON = Uklucen
-OFF = Isklucen
+MORE_CL_MATCHT = Povekje igrachi go zadovoluvaat vasheto baranje
+CL_NOT_FOUND = Igrach so toa ime ili so userid ne e pronajden
+CLIENT_IMM = Igrachot "%s" ima imunitet
+CANT_PERF_DEAD = Komandata ne mozhe da bide izvrshena na igrachot "%s" bidejkji e mrtov
+CANT_PERF_BOT = Komandata ne mozhe da bide izvrshena na botot "%s"
+ON = Ukluchen
+OFF = Iskluchen
 
 [hr]
 BACK = Nazad

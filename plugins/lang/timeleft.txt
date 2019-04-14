@@ -9,7 +9,7 @@ SECONDS = seconds
 
 [de]
 THE_TIME = Es ist
-TIME_LEFT = Zeit uebrig
+TIME_LEFT = Zeit übrig
 NO_T_LIMIT = Kein Zeitlimit
 MINUTE = Minute
 MINUTES = Minuten
@@ -116,13 +116,13 @@ SECOND = sekunti
 SECONDS = sekuntia
 
 [bg]
-THE_TIME = 4asa
-TIME_LEFT = Ostanalo Vreme
+THE_TIME = Chasut
+TIME_LEFT = Ostanalo vreme
 NO_T_LIMIT = Nqma limit na vremeto
 MINUTE = minuta
 MINUTES = minuti
-SECOND = secunda
-SECONDS = secundi
+SECOND = sekunda
+SECONDS = sekundi
 
 [ro]
 THE_TIME = Ora
@@ -134,13 +134,13 @@ SECOND = secunda
 SECONDS = secunde
 
 [hu]
-THE_TIME = Az ido
-TIME_LEFT = Hatralevo ido
-NO_T_LIMIT = NIncs idohatar
+THE_TIME = Az idő
+TIME_LEFT = Hátralévő idő
+NO_T_LIMIT = Nincs időhatár
 MINUTE = perc
 MINUTES = perc
-SECOND = masodperc
-SECONDS = masodperc
+SECOND = másodperc
+SECONDS = másodperc
 
 [lt]
 THE_TIME = Laikas
@@ -162,8 +162,8 @@ SECONDS = sekund
 
 [mk]
 THE_TIME = Vreme
-TIME_LEFT = Preostanato Vreme
-NO_T_LIMIT = Nema Ogranicuvanje Na Vremeto
+TIME_LEFT = Preostanato vreme
+NO_T_LIMIT = Nema ogranicuvanje na vremeto
 MINUTE = minuta
 MINUTES = minuti
 SECOND = sekunda

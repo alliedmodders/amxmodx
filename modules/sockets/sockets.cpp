@@ -15,14 +15,17 @@
 #include <amtl/am-string.h>
 
 #ifdef _WIN32
-	#include <winsock2.h>
-	#include <ws2tcpip.h>
+	#include <WinSock2.h>
+	#include <WS2tcpip.h>
 
 	#undef errno
 	#undef close
 
 	#define errno WSAGetLastError()
 	#define close(sockfd) closesocket(sockfd)
+
+	#undef EINPROGRESS
+	#undef EWOULDBLOCK
 
 	#define EINPROGRESS WSAEINPROGRESS
 	#define EWOULDBLOCK WSAEWOULDBLOCK

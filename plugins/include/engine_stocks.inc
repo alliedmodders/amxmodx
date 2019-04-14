@@ -125,7 +125,7 @@ stock remove_entity_name(const eName[])
 stock ViewContents(id)
 {
 	new origin[3], Float:Orig[3];
-	get_user_origin(id, origin, 3);
+	get_user_origin(id, origin, Origin_AimEndEyes);
 	Orig[0] = float(origin[0]);
 	Orig[1] = float(origin[1]);
 	Orig[2] = float(origin[2]);

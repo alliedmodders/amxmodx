@@ -18,6 +18,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{4722a41b-9bbc-4c55-b0da-315b9f16f618}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{9c53c0aa-9c17-4dce-a6c0-6f1e0675766d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\amxxapi.cpp">
@@ -66,5 +69,10 @@
     <None Include="..\..\..\plugins\include\nvault.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

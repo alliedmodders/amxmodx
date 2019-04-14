@@ -49,6 +49,10 @@ void UTIL_StringToLower(const char *str, char *buffer, size_t maxlength);
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
 				return 0; \
 			} \
+			else if (!MF_GetPlayerEdict(x)->pvPrivateData) { \
+				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (no private data)", x); \
+				return 0; \
+			} \
 		} else { \
 			if (x != 0 && FNullEnt(TypeConversion.id_to_edict(x))) { \
 				MF_LogError(amx, AMX_ERR_NATIVE, "Invalid entity %d", x); \
@@ -62,8 +66,12 @@ void UTIL_StringToLower(const char *str, char *buffer, size_t maxlength);
 		MF_LogError(amx, AMX_ERR_NATIVE, "Player out of range (%d)", x); \
 		return 0; \
 	} else { \
-		if (!MF_IsPlayerIngame(x) || FNullEnt(MF_GetPlayerEdict(x))) { \
-			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d", x); \
+		if (!MF_IsPlayerIngame(x)) { \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (not in-game)", x); \
+			return 0; \
+		} \
+		else if (!MF_GetPlayerEdict(x)->pvPrivateData) { \
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid player %d (no private data)", x); \
 			return 0; \
 		} \
 	}

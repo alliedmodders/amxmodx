@@ -15,7 +15,7 @@
  * Ham Sandwich is a module that is used to hook and call virtual functions of 
  *  entities.
  * Virtual functions are mod-specific functions.  This means that in order
- *  for this to work on a mod, it needs to be configured with the hamdata.ini
+ *  for this to work on a mod, it needs to be configured with the gamedata
  *  file.
  * Be very careful with parameter passing to these functions.
  */

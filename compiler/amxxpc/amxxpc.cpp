@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 # else
 		printf("compiler failed to instantiate: %d\n", GetLastError());
 # endif
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 
 	COMPILER sc32 = (COMPILER)dlsym(lib, "Compile32");
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 #else
 		printf("compiler failed to link: %d.\n", GetLastError());
 #endif
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 
 	pc_printf("AMX Mod X Compiler %s\n", AMXX_VERSION);
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 		pc_printf("Usage: <file.sma> [options]\n");
 		pc_printf("Use -? or --help to see full options\n\n");
 		getchar();
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 
 	if (!strcmp(argv[1], "-?") || !strcmp(argv[1], "--help"))
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 		show_help();
 		pc_printf("Press any key to continue.\n");
 		getchar();
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 
 	sc32(argc, argv);
@@ -109,16 +109,16 @@ int main(int argc, char **argv)
 	if (file == NULL)
 	{
 		pc_printf("Could not locate the output file.\n");
-		exit(0);
+		exit(EXIT_FAILURE);
 	} else if (strstr(file, ".asm")) {
 		pc_printf("Assembler output succeeded.\n");
-		exit(0);
+		exit(EXIT_SUCCESS);
 	} else {
 		FILE *fp = fopen(file, "rb");
 		if (fp == NULL)
 		{
 			pc_printf("Could not locate output file %s (compile failed).\n", file);
-			exit(0);
+			exit(EXIT_FAILURE);
 		}
 		ReadFileIntoPl(&pl32, fp);
 		pl32.cellsize = 4;
@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 	if (!fp)
 	{
 		pc_printf("Error trying to write file %s.\n", newfile);
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 
 	BinPlugin bh32;
@@ -179,7 +179,7 @@ int main(int argc, char **argv)
 #if !defined EMSCRIPTEN
 		dlclose(lib);
 #endif
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 
 	fclose(fp);
@@ -195,7 +195,7 @@ int main(int argc, char **argv)
 	dlclose(lib);
 #endif
 
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 void WriteBh(BinaryWriter *bw, BinPlugin *bh)
@@ -228,7 +228,7 @@ bool CompressPl(abl *pl)
 	if (err != Z_OK)
 	{
 		pc_printf("internal error - compression failed on first pass: %d\n", err);
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 
 	return true;

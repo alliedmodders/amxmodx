@@ -284,6 +284,7 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 
 int amxstring_len(cell* cstr);
 int load_amxscript(AMX* amx, void** program, const char* path, char error[64], int debug);
+int load_amxscript_ex(AMX* amx, void** program, const char* path, char *error, size_t maxLength, int debug);
 int set_amxnatives(AMX* amx, char error[64]);
 int set_amxstring(AMX *amx, cell amx_addr, const char *source, int max);
 int set_amxstring_simple(cell *dest, const char *source, int max);

@@ -408,11 +408,47 @@ void inst_datetime_defines()
   insert_subst("__TIME__", ltime, 8);
 }
 
+void inst_file_name(char *file, int strip_path)
+{
+  char newname[_MAX_PATH];
+  char *fileptr;
+
+  fileptr = NULL;
+
+  if (strip_path) {
+    size_t i, len;
+    int slashchar;
+
+    len = strlen(file);
+    for (i = len - 1; i < len; i--)
+    {
+      slashchar = file[i] == '/';
+    #if defined WIN32 || defined _WIN32
+      slashchar = slashchar || file[i] == '\\';
+    #endif
+      if (slashchar)
+      {
+        fileptr = &file[i + 1];
+        break;
+      }
+    }
+  }
+
+  if (fileptr == NULL) {
+    fileptr = file;
+  }
+
+  snprintf(newname, sizeof(newname), "\"%s\"", fileptr);
+
+  insert_subst("__FILE__", newname, 8);
+}
+
+
 static void inst_binary_name(char *binfname)
 {
   size_t i, len;
   char *binptr;
-  char newpath[512], newname[512];
+  char newname[_MAX_PATH];
   int slashchar;
 
   binptr = NULL;
@@ -435,11 +471,9 @@ static void inst_binary_name(char *binfname)
     binptr = binfname;
   }
 
-  snprintf(newpath, sizeof(newpath), "\"%s\"", binfname);
   snprintf(newname, sizeof(newname), "\"%s\"", binptr);
 
-  insert_subst("__BINARY_PATH__", newpath, 15);
-  insert_subst("__BINARY_NAME__", newname, 15);
+  insert_subst("__BINARY__", newname, 10);
 }
 
 /*  "main" of the compiler
@@ -594,10 +628,12 @@ int pc_compile(int argc, char *argv[])
     /* reset "defined" flag of all functions and global variables */
     reduce_referrers(&glbtab);
     delete_symbols(&glbtab,0,TRUE,FALSE);
+    delete_heaplisttable();
     #if !defined NO_DEFINE
       delete_substtable();
       inst_datetime_defines();
       inst_binary_name(binfname);
+      inst_file_name(inpfname, TRUE);
     #endif
     resetglobals();
     sc_ctrlchar=sc_ctrlchar_org;
@@ -663,6 +699,7 @@ int pc_compile(int argc, char *argv[])
     delete_substtable();
     inst_datetime_defines();
     inst_binary_name(binfname);
+    inst_file_name(inpfname, TRUE);
   #endif
   resetglobals();
   sc_ctrlchar=sc_ctrlchar_org;
@@ -769,6 +806,7 @@ cleanup:
       free(sc_documentation);
   #endif
   delete_autolisttable();
+  delete_heaplisttable();
   if (errnum!=0) {
     if (strlen(errfname)==0)
       pc_printf("\n%d Error%s.\n",errnum,(errnum>1) ? "s" : "");
@@ -2134,53 +2172,48 @@ static cell calc_arraysize(int dim[],int numdim,int cur)
   return dim[cur]+(dim[cur]*calc_arraysize(dim,numdim,cur+1));
 }
 
-static cell adjust_indirectiontables(int dim[],int numdim,int cur,cell increment,
-                                     int startlit,constvalue *lastdim,int *skipdim)
+static void adjust_indirectiontables(int dim[],int numdim,int startlit,
+                                     constvalue *lastdim,int *skipdim)
 {
 static int base;
-  int d;
+  int cur;
+  int i,d;
   cell accum;
+  cell size;
 
-  assert(cur>=0 && cur<numdim);
-  assert(increment>=0);
-  assert(cur>0 && startlit==-1 || startlit>=0 && startlit<=litidx);
-  if (cur==0)
-    base=startlit;
-  if (cur==numdim-1)
-    return 0;
-  /* 2 or more dimensions left, fill in an indirection vector */
-  assert(dim[cur]>0);
-  if (dim[cur+1]>0) {
-    for (d=0; d<dim[cur]; d++)
-      litq[base++]=(dim[cur]+d*(dim[cur+1]-1)+increment) * sizeof(cell);
-    accum=dim[cur]*(dim[cur+1]-1);
-  } else {
-    /* final dimension is variable length */
-    constvalue *ld;
-    assert(dim[cur+1]==0);
-    assert(lastdim!=NULL);
-    assert(skipdim!=NULL);
-    accum=0;
-    /* skip the final dimension sizes for all earlier major dimensions */
-    for (d=0,ld=lastdim->next; d<*skipdim; d++,ld=ld->next) {
-      assert(ld!=NULL);
-    } /* for */
-    for (d=0; d<dim[cur]; d++) {
-      assert(ld!=NULL);
-      assert(strtol(ld->name,NULL,16)==d);
-      litq[base++]=(dim[cur]+accum+increment) * sizeof(cell);
-      accum+=ld->value-1;
-      *skipdim+=1;
-      ld=ld->next;
-    } /* for */
-  } /* if */
-  /* create the indirection tables for the lower level */
-  if (cur+2<numdim) {   /* are there at least 2 dimensions below this one? */
-    increment+=(dim[cur]-1)*dim[cur+1]; /* this many indirection tables follow */
-    for (d=0; d<dim[cur]; d++)
-      increment+=adjust_indirectiontables(dim,numdim,cur+1,increment,-1,lastdim,skipdim);
-  } /* if */
-  return accum;
+  assert(startlit==-1 || startlit>=0 && startlit<=litidx);
+  base=startlit;
+  size=1;
+  for (cur=0; cur<numdim-1; cur++) {
+    /* 2 or more dimensions left, fill in an indirection vector */
+    if (dim[cur+1]>0) {
+      for (i=0; i<size; i++)
+        for (d=0; d<dim[cur]; d++)
+          litq[base++]=(size*dim[cur]+(dim[cur+1]-1)*(dim[cur]*i+d)) * sizeof(cell);
+    } else {
+      /* final dimension is variable length */
+      constvalue *ld;
+      assert(dim[cur+1]==0);
+      assert(lastdim!=NULL);
+      assert(skipdim!=NULL);
+      accum=0;
+      for (i=0; i<size; i++) {
+        /* skip the final dimension sizes for all earlier major dimensions */
+        for (d=0,ld=lastdim->next; d<*skipdim; d++,ld=ld->next) {
+          assert(ld!=NULL);
+        } /* for */
+        for (d=0; d<dim[cur]; d++) {
+          assert(ld!=NULL);
+          assert(strtol(ld->name,NULL,16)==d);
+          litq[base++]=(size*dim[cur]+accum) * sizeof(cell);
+          accum+=ld->value-1;
+          *skipdim+=1;
+          ld=ld->next;
+        } /* for */
+      } /* for */
+    } /* if */
+    size*=dim[cur];
+  } /* for */
 }
 
 /*  initials
@@ -2238,7 +2271,7 @@ static void initials2(int ident,int tag,cell *size,int dim[],int numdim,
       for (tablesize=calc_arraysize(dim,numdim-1,0); tablesize>0; tablesize--)
         litadd(0);
       if (dim[numdim-1]!=0)     /* error 9 has already been given */
-        adjust_indirectiontables(dim,numdim,0,0,curlit,NULL,NULL);
+        adjust_indirectiontables(dim,numdim,curlit,NULL,NULL);
     } /* if */
     return;
   } /* if */
@@ -2304,7 +2337,7 @@ static void initials2(int ident,int tag,cell *size,int dim[],int numdim,
        * of the array and we can properly adjust the indirection vectors
        */
       if (err==0)
-        adjust_indirectiontables(dim,numdim,0,0,curlit,&lastdim,&skipdim);
+        adjust_indirectiontables(dim,numdim,curlit,&lastdim,&skipdim);
       delete_consttable(&lastdim);  /* clear list of minor dimension sizes */
     } /* if */
   } /* if */
@@ -5419,6 +5452,16 @@ static void doreturn(void)
           /* nothing */;
         sub=addvariable(curfunc->name,(argcount+3)*sizeof(cell),iREFARRAY,sGLOBAL,curfunc->tag,dim,numdim,idxtag);
         sub->parent=curfunc;
+        /* Function that returns array can be used before it is defined, so at
+         * the call point (if it is before definition) we may not know if this
+         * function returns array and what is its size (for example inside the
+         * conditional operator), so we don't know how many cells on the heap
+         * we need. Calculating heap consumption is required for the fix of
+         * incorrect heap deallocation on conditional operator. That's why we
+         * need an additional pass.
+         */
+        if ((curfunc->usage & uREAD)!=0)
+          sc_reparse=TRUE;
       } /* if */
       /* get the hidden parameter, copy the array (the array is on the heap;
        * it stays on the heap for the moment, and it is removed -usually- at

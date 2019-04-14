@@ -18,6 +18,9 @@
     <Filter Include="Pawn Includes">
       <UniqueIdentifier>{c5722376-8e24-440a-9f13-023f19099b30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{2e1aa30c-3176-440f-a39c-3733f9f8d503}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CRegEx.cpp">
@@ -54,5 +57,10 @@
     <None Include="..\..\..\plugins\include\regex.inc">
       <Filter>Pawn Includes</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

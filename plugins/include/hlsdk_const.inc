@@ -210,6 +210,14 @@
 #define DMG_TIMEBASED                   (~(0x3fff)) // Mask for time-based damage
 
 /**
+* Gib values used on client kill based on instant damage values
+*/
+#define GIB_NORMAL                      0 // Gib if entity was overkilled
+#define GIB_NEVER                       1 // Never gib, no matter how much death damage is done ( freezing, etc )
+#define GIB_ALWAYS                      2 // Always gib ( Houndeye Shock, Barnacle Bite )
+#define GIB_TRY_HEALTH                	-9000 // Gib players if their health is under this value. (GIB_NEVER overrides this value)
+
+/**
  * Valid constants for fNoMonsters parameter of EngFunc_TraceLine,
  * EngFunc_TraceMonsterHull, EngFunc_TraceHull and EngFunc_TraceSphere.
  */
@@ -252,6 +260,7 @@
  * func_wall_toggle
  */
 #define SF_WALL_START_OFF               0x0001
+#define SF_WALL_NOTSOLID                0x0008
 
 /**
  * func_converyor
@@ -271,6 +280,7 @@
  * func_rot_button
  */
 #define SF_ROTBUTTON_NOTSOLID           1
+#define SF_ROTBUTTON_BACKWARDS          2
 
 /**
  * env_global
@@ -306,7 +316,8 @@
 #define SF_DOOR_ROTATE_X                128
 #define SF_DOOR_USE_ONLY                256         // Door must be opened by player's use button
 #define SF_DOOR_NOMONSTERS              512         // Monster can't open
-#define SF_DOOR_SILENT                  0x80000000
+#define SF_DOOR_TOUCH_ONLY_CLIENTS      1024       	// Only clients can touch
+#define SF_DOOR_SILENT                  0x80000000  // This bit marks that func_door are actually func_water
 
 /**
  * gibshooter
@@ -476,6 +487,27 @@
 #define SF_CORNER_FIREONCE              0x004
 
 /**
+* func_plat
+*/
+#define SF_PLAT_TOGGLE                  0x0001
+
+/**
+* path_track
+*/
+#define SF_PATH_DISABLED                0x00000001
+#define SF_PATH_FIREONCE                0x00000002
+#define SF_PATH_ALTREVERSE              0x00000004
+#define SF_PATH_DISABLE_TRAIN           0x00000008
+#define SF_PATH_ALTERNATE               0x00008000
+
+/**
+* path_corner
+*/
+#define SF_CORNER_WAITFORTRIG           0x001
+#define SF_CORNER_TELEPORT              0x002
+#define SF_CORNER_FIREONCE              0x004
+
+/**
  * trigger_push
  */
 #define SF_TRIGGER_PUSH_START_OFF       2           // Spawnflag that makes trigger_push spawn turned OFF
@@ -493,6 +525,7 @@
  * trigger_auto
  */
 #define SF_AUTO_FIREONCE                0x0001
+#define SF_AUTO_NORESET                 0x0002
 
 /**
  * trigger_relay
@@ -554,6 +587,16 @@
 #define SF_TRIGGER_PUSHABLES            4           // Only pushables can fire this trigger
 
 #define SF_TRIG_PUSH_ONCE               1
+
+/**
+* trigger_multiple
+*/
+#define SF_TRIGGER_MULTIPLE_NOTOUCH     0x0001
+
+/**
+* trigger_counter
+*/
+#define SF_TRIGGER_COUNTER_NOMESSAGE    0x0001
 
 /**
  * func_breakable
@@ -625,7 +668,7 @@
 #define TRAIN_MEDIUM  0x03
 #define TRAIN_FAST    0x04
 #define TRAIN_BACK    0x05
- 
+
 /**
  * Valve Mod Weapon Constants
  */
@@ -660,9 +703,11 @@
 #define ITEM_FLAG_NOAUTORELOAD      (1<<1)
 #define ITEM_FLAG_NOAUTOSWITCHEMPTY (1<<2)
 #define ITEM_FLAG_LIMITINWORLD      (1<<3)
-#define ITEM_FLAG_EXHAUSTIBLE		(1<<4)
+#define ITEM_FLAG_EXHAUSTIBLE       (1<<4)
 
-
+/**
+* PlaybackEvent flags
+*/
 #define FEV_NOTHOST     (1<<0)  // Skip local host for event send.
 #define FEV_RELIABLE    (1<<1)  // Send the event reliably.  You must specify the origin and angles
                                 // for this to work correctly on the server for anything
@@ -688,3 +733,76 @@
 #define FCAP_ONOFF_USE                  0x00000020      // can be used by the player
 #define FCAP_DIRECTIONAL_USE            0x00000040      // Player sends +/- 1 when using (currently only tracktrains)
 #define FCAP_MASTER                     0x00000080      // Can be used to "master" other entities (like multisource)
+#define FCAP_MUST_RESET                 0x00000100 // Should reset on the new round
+#define FCAP_MUST_RELEASE               0x00000200 // Should release on the new round
+#define FCAP_DONT_SAVE                  0x80000000 // Don't save this
+
+// UNDONE: This will ignore transition volumes (trigger_transition), but not the PVS!!!
+#define FCAP_FORCE_TRANSITION           0x00000080 // ALWAYS goes across transitions
+
+/**
+* All monsters need this data
+*/
+#define DONT_BLEED                      -1
+#define BLOOD_COLOR_RED                 247
+#define BLOOD_COLOR_YELLOW              195
+#define BLOOD_COLOR_GREEN               BLOOD_COLOR_YELLOW
+
+/**
+ * Player physics flags
+ */
+#define PFLAG_ONLADDER                  (1<<0)
+#define PFLAG_ONSWING                   (1<<0)
+#define PFLAG_ONTRAIN                   (1<<1)
+#define PFLAG_ONBARNACLE                (1<<2)
+#define PFLAG_DUCKING                   (1<<3) // In the process of ducking, but totally squatted yet
+#define PFLAG_USING                     (1<<4) // Using a continuous entity
+#define PFLAG_OBSERVER                  (1<<5) // Player is locked in stationary cam mode. Spectators can move, observers can't.
+
+/**
+* Player hide HUD values
+*/
+#define HIDEHUD_WEAPONS                 (1<<0)
+#define HIDEHUD_FLASHLIGHT              (1<<1)
+#define HIDEHUD_ALL                     (1<<2)
+#define HIDEHUD_HEALTH                  (1<<3)
+#define HIDEHUD_TIMER                   (1<<4)
+#define HIDEHUD_MONEY                   (1<<5)
+#define HIDEHUD_CROSSHAIR               (1<<6)
+#define HIDEHUD_OBSERVER_CROSSHAIR      (1<<7)
+
+/**
+* Entity classification
+*/
+#define CLASS_NONE              0
+#define CLASS_MACHINE           1
+#define CLASS_PLAYER            2
+#define CLASS_HUMAN_PASSIVE     3
+#define CLASS_HUMAN_MILITARY    4
+#define CLASS_ALIEN_MILITARY    5
+#define CLASS_ALIEN_PASSIVE     6
+#define CLASS_ALIEN_MONSTER     7
+#define CLASS_ALIEN_PREY        8
+#define CLASS_ALIEN_PREDATOR    9
+#define CLASS_INSECT            10
+#define CLASS_PLAYER_ALLY       11
+#define CLASS_PLAYER_BIOWEAPON  12 // hornets and snarks.launched by players
+#define CLASS_ALIEN_BIOWEAPON   13 // hornets and snarks.launched by the alien menace
+#define CLASS_VEHICLE           14
+#define CLASS_BARNACLE          99 // special because no one pays attention to it, and it eats a wide cross-section of creatures.
+
+/**
+* Entities that toggle (buttons/triggers/doors) need this
+*/
+#define TS_AT_TOP      0
+#define TS_AT_BOTTOM   1
+#define TS_GOING_UP    2
+#define TS_GOING_DOWN  3
+
+/**
+* Entity use states (buttons/triggers/platforms)
+*/
+#define USE_OFF     0
+#define USE_ON      1
+#define USE_SET     2
+#define USE_TOGGLE  3

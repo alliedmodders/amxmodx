@@ -151,6 +151,9 @@ stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], c
 		}
 	}
 
+	menu_setprop(Menu,MPROP_BACKNAME,fmt("%L", id, "BACK"));
+	menu_setprop(Menu,MPROP_NEXTNAME,fmt("%L", id, "MORE"));
+	menu_setprop(Menu,MPROP_EXITNAME,fmt("%L", id, "EXIT"));
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
 	menu_setprop(Menu,MPROP_EXIT,MEXIT_ALL);
 	menu_display(id,Menu,0);
@@ -468,7 +471,7 @@ public CvarMenuSelection(id, menu, item)
 		
 		if (ExplicitPlugin[id]==-1)
 		{
-			DisplayPluginMenuDefault(id);
+			DisplayPluginMenu(id,"Plugin Cvar Menu:", "PluginMenuSelection","DisplayCvarMenu","GetNumberOfCvarsForPlid");
 		}
 	}
 	else if (item==MENU_BACK)
@@ -564,6 +567,9 @@ public DisplayCvarMenu(id, plid, page)
 		}
 	}
 	
+	menu_setprop(Menu,MPROP_BACKNAME,fmt("%L", id, "BACK"));
+	menu_setprop(Menu,MPROP_NEXTNAME,fmt("%L", id, "MORE"));
+	menu_setprop(Menu,MPROP_EXITNAME,fmt("%L", id, "EXIT"));
 	menu_setprop(Menu,MPROP_EXIT,MEXIT_ALL);
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
 	menu_display(id,Menu,page);
@@ -790,7 +796,7 @@ public CommandMenuSelection(id, menu, item)
 		
 		if (ExplicitPlugin[id]==-1)
 		{
-			client_cmd(id,"amx_plugincmdmenu");
+			DisplayPluginMenu(id,"Plugin Command Menu:", "PluginMenuSelection","DisplayCmdMenu","GetNumberOfCmdsForPlid");
 		}
 	}
 	else if (item==MENU_BACK)
@@ -882,6 +888,10 @@ public DisplayCmdMenu(id, plid, page)
 			}
 		}
 	}
+ 
+	menu_setprop(Menu,MPROP_BACKNAME,fmt("%L", id, "BACK"));
+	menu_setprop(Menu,MPROP_NEXTNAME,fmt("%L", id, "MORE"));
+	menu_setprop(Menu,MPROP_EXITNAME,fmt("%L", id, "EXIT"));
 	menu_setprop(Menu,MPROP_NUMBER_COLOR,"\y");
 	menu_display(id,Menu,page);
 
@@ -914,7 +924,7 @@ public CommandMenuCommand(id, level, cid)
 	{
 		// We need to display a list of the plugins, instead of a specific plugin.
 		ExplicitPlugin[id]=-1;
-		DisplayPluginMenuDefault(id);
+		DisplayPluginMenu(id,"Plugin Command Menu:", "PluginMenuSelection","DisplayCmdMenu","GetNumberOfCmdsForPlid");
 	}
 	else
 	{
@@ -924,9 +934,4 @@ public CommandMenuCommand(id, level, cid)
 		DisplayCmdMenu(id,plid,0);
 	}
 	return PLUGIN_HANDLED;
-}
-
-DisplayPluginMenuDefault(id)
-{
-	DisplayPluginMenu(id,"Plugin Command Menu:", "PluginMenuSelection","DisplayCmdMenu","GetNumberOfCmdsForPlid");
 }

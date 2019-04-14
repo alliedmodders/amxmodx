@@ -1010,38 +1010,60 @@ static int hier13(value *lval)
 {
   int lvalue=plnge1(hier12,lval);
   if (matchtoken('?')) {
+    int locheap=decl_heap;      /* save current heap delta */
+    long heap1,heap2; /* max. heap delta either branch */
+    valuepair *heaplist_node;
     int flab1=getlabel();
     int flab2=getlabel();
     value lval2 = {0};
     int array1,array2;
 
-    int orig_heap=decl_heap;
-    int diff1=0,diff2=0;
     if (lvalue) {
       rvalue(lval);
     } else if (lval->ident==iCONSTEXPR) {
       ldconst(lval->constval,sPRI);
       error(lval->constval ? 206 : 205);        /* redundant test */
     } /* if */
+    if (sc_status==statFIRST) {
+      /* We should push a new node right now otherwise we will pop it in the
+       * wrong order on the write stage.
+       */
+      heaplist_node=push_heaplist(0,0); /* save the pointer to write the actual data later */
+    } else if (sc_status==statWRITE || sc_status==statSKIP) {
+      #if !defined NDEBUG
+        int result=
+      #endif
+      popfront_heaplist(&heap1,&heap2);
+      assert(result);           /* pop off equally many items than were pushed */
+    } /* if */
     jmp_eq0(flab1);             /* go to second expression if primary register==0 */
     PUSHSTK_I(sc_allowtags);
     sc_allowtags=FALSE;         /* do not allow tagnames here (colon is a special token) */
+    if (sc_status==statWRITE) {
+      modheap(heap1*sizeof(cell));
+      decl_heap+=heap1;         /* equilibrate the heap (see comment below) */
+    } /* if */
     if (hier13(lval))
       rvalue(lval);
     if (lval->ident==iCONSTEXPR)        /* load constant here */
       ldconst(lval->constval,sPRI);
     sc_allowtags=(short)POPSTK_I();     /* restore */
+    heap1=decl_heap-locheap;    /* save heap space used in "true" branch */
+    assert(heap1>=0);
+    decl_heap=locheap; /* restore heap delta */
     jumplabel(flab2);
     setlabel(flab1);
-    if (orig_heap!=decl_heap) {
-      diff1=abs(decl_heap-orig_heap);
-      decl_heap=orig_heap;
-    }
     needtoken(':');
+    if (sc_status==statWRITE) {
+      modheap(heap2*sizeof(cell));
+      decl_heap+=heap2;         /* equilibrate the heap (see comment below) */
+    } /* if */
     if (hier13(&lval2))
       rvalue(&lval2);
     if (lval2.ident==iCONSTEXPR)        /* load constant here */
       ldconst(lval2.constval,sPRI);
+    heap2=decl_heap-locheap;    /* save heap space used in "false" branch */
+    assert(heap2>=0);
     array1= (lval->ident==iARRAY || lval->ident==iREFARRAY);
     array2= (lval2.ident==iARRAY || lval2.ident==iREFARRAY);
     if (array1 && !array2) {
@@ -1055,19 +1077,26 @@ static int hier13(value *lval)
     if (!matchtag(lval->tag,lval2.tag,FALSE))
       error(213);               /* tagname mismatch ('true' and 'false' expressions) */
     setlabel(flab2);
+    if (sc_status==statFIRST) {
+      /* Calculate the max. heap space used by either branch and save values of
+       * max - heap1 and max - heap2. On the second pass, we use these values
+       * to equilibrate the heap space used by either branch. This is needed
+       * because we don't know (at compile time) which branch will be taken,
+       * but the heap cannot be restored inside each branch because the result
+       * on the heap may needed by the remaining expression.
+       */
+      int max=(heap1>heap2) ? heap1 : heap2;
+      heaplist_node->first=max-heap1;
+      heaplist_node->second=max-heap2;
+      decl_heap=locheap+max; /* otherwise it will contain locheap+heap2 and the
+                              * max. heap usage will be wrong for the upper
+                              * expression */
+    } /* if */
+    assert(sc_status!=statWRITE || heap1==heap2);
     if (lval->ident==iARRAY)
       lval->ident=iREFARRAY;    /* iARRAY becomes iREFARRAY */
     else if (lval->ident!=iREFARRAY)
       lval->ident=iEXPRESSION;  /* iREFARRAY stays iREFARRAY, rest becomes iEXPRESSION */
-    if (orig_heap!=decl_heap) {
-      diff2=abs(decl_heap-orig_heap);
-      decl_heap=orig_heap;
-    }
-    if (diff1==diff2) {
-      decl_heap+=(diff1/2);
-    } else {
-      decl_heap+=(diff1+diff2);
-    }
     return FALSE;               /* conditional expression is no lvalue */
   } else {
     return lvalue;
@@ -2058,7 +2087,8 @@ static int nesting=0;
             error(35,argidx+1); /* argument type mismatch */
           /* Verify that the dimensions match with those in arg[argidx].
            * A literal array always has a single dimension.
-           * An iARRAYCELL parameter is also assumed to have a single dimension.
+           * An iARRAYCELL parameter is also assumed to have a single dimension,
+           * but its size may be >1 in case of an enumeration pseudo-array.
            */
           if (lval.sym==NULL || lval.ident==iARRAYCELL) {
             if (arg[argidx].numdim!=1) {
@@ -2066,7 +2096,8 @@ static int nesting=0;
             } else if (arg[argidx].dim[0]!=0) {
               assert(arg[argidx].dim[0]>0);
               if (lval.ident==iARRAYCELL) {
-                error(47);        /* array sizes must match */
+                if (lval.constval==0 || arg[argidx].dim[0]!=lval.constval)
+                  error(47);        /* array sizes must match */
               } else {
                 assert(lval.constval!=0); /* literal array must have a size */
                 /* A literal array must have exactly the same size as the

@@ -24,7 +24,7 @@ public plugin_init()
 public client_disconnected(id) {
   if ( is_user_bot( id ) || !is_user_connected(id) || !isDSMActive() ) return PLUGIN_CONTINUE
   remove_task( id )
-  new szTeam[16],szName[MAX_NAME_LENGTH],szAuthid[32], iStats[9], iHits[8], szWeapon[16]
+  new szTeam[16],szName[MAX_NAME_LENGTH],szAuthid[32], iStats[DODX_MAX_STATS], iHits[MAX_BODYHITS], szWeapon[16]
   new iUserid = get_user_userid( id )
   get_user_info(id,"team", szTeam, charsmax(szTeam) )
   szTeam[0] -= 32;
@@ -34,9 +34,9 @@ public client_disconnected(id) {
     if( get_user_wstats( id , i ,iStats , iHits ) )   {
       xmod_get_wpnlogname( i , szWeapon , charsmax(szWeapon) )
       log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats^" (weapon ^"%s^") (shots ^"%d^") (hits ^"%d^") (kills ^"%d^") (headshots ^"%d^") (tks ^"%d^") (damage ^"%d^") (deaths ^"%d^") (score ^"%d^")",
-        szName,iUserid,szAuthid,szTeam,szWeapon,iStats[4],iStats[5],iStats[0], iStats[2],iStats[3],iStats[6],iStats[1],iStats[7])
+        szName,iUserid,szAuthid,szTeam,szWeapon,iStats[DODX_SHOTS],iStats[DODX_HITS],iStats[DODX_KILLS], iStats[DODX_HEADSHOTS],iStats[DODX_TEAMKILLS],iStats[DODX_DAMAGE],iStats[DODX_DEATHS],iStats[DODX_POINTS])
       log_message("^"%s<%d><%s><%s>^" triggered ^"weaponstats2^" (weapon ^"%s^") (head ^"%d^") (chest ^"%d^") (stomach ^"%d^") (leftarm ^"%d^") (rightarm ^"%d^") (leftleg ^"%d^") (rightleg ^"%d^")",
-        szName,iUserid,szAuthid,szTeam,szWeapon,iHits[1],iHits[2],iHits[3],  iHits[4],iHits[5],iHits[6],iHits[7])
+        szName,iUserid,szAuthid,szTeam,szWeapon,iHits[HIT_HEAD],iHits[HIT_CHEST],iHits[HIT_STOMACH],  iHits[HIT_LEFTARM],iHits[HIT_RIGHTARM],iHits[HIT_LEFTLEG],iHits[HIT_RIGHTLEG])
     }
   }
   new iTime = get_user_time( id , 1 )

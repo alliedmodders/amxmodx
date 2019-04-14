@@ -102,6 +102,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\third_party\libmaxminddb\data-pool.c" />
     <ClCompile Include="..\..\..\third_party\libmaxminddb\maxminddb.c" />
     <ClCompile Include="..\geoip_main.cpp" />
     <ClCompile Include="..\geoip_natives.cpp" />
@@ -109,6 +110,7 @@
     <ClCompile Include="..\..\..\public\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\third_party\libmaxminddb\data-pool.h" />
     <ClInclude Include="..\..\..\third_party\libmaxminddb\maxminddb-compat-util.h" />
     <ClInclude Include="..\..\..\third_party\libmaxminddb\maxminddb.h" />
     <ClInclude Include="..\..\..\third_party\libmaxminddb\maxminddb_config.h" />
@@ -120,6 +122,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\plugins\include\geoip.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\version.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../../public;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../../public;</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -38,13 +38,13 @@ STOP_FLOOD = Prestan floodovat!
 STOP_FLOOD = Lopeta floodiminen!
 
 [bg]
-STOP_FLOOD = Sprete da pretovarvate servara!
+STOP_FLOOD = Ne fluudvai servera!
 
 [ro]
 STOP_FLOOD = Nu mai flooda server-ul!
 
 [hu]
-STOP_FLOOD = Ne irj ilyen sokat!
+STOP_FLOOD = Ne floodolj és ne spamelj!
 
 [lt]
 STOP_FLOOD = Nustok greitai rasyti!
@@ -53,7 +53,7 @@ STOP_FLOOD = Nustok greitai rasyti!
 STOP_FLOOD = Prestan floodovat!
 
 [mk]
-STOP_FLOOD = Prestani na flodiras na serverot!
+STOP_FLOOD = Ne go floodiraj serverot!
 
 [hr]
 STOP_FLOOD = Prestani opterecivati server porukama!

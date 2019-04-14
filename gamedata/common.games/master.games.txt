@@ -1566,7 +1566,7 @@
 	//
 	// Team Fortress Classic
 	//
-    
+
 	"entities.games/tfc/offsets-cbaseentity.txt"
 	{
 		"game"  "tfc"
@@ -3404,7 +3404,7 @@
  	//
 	// Half-Life: Deathmatch
 	//
-    
+
 	"entities.games/valve/offsets-cbaseentity.txt"
 	{
 		"game"  "valve"
@@ -4105,4 +4105,67 @@
 		"game"  "valve"
 	}
 
+
+
+	//
+	// Virtual Functions
+	//
+
+	"virtual.games/ag/offsets-common.txt"
+	{
+		"game"  "ag"
+	}
+
+	"virtual.games/cstrike/offsets-common.txt"
+	{
+		"game"  "cstrike"
+		"game"  "czero"
+	}
+
+	"virtual.games/dod/offsets-common.txt"
+	{
+		"game"  "dod"
+	}
+
+	"virtual.games/esf/offsets-common.txt"
+	{
+		"game"  "esf"
+	}
+
+	"virtual.games/esf_openbeta/offsets-common.txt"
+	{
+		"game"  "esf_openbeta"
+	}
+
+	"virtual.games/gearbox/offsets-common.txt"
+	{
+		"game"  "gearbox"
+	}
+
+	"virtual.games/ns/offsets-common.txt"
+	{
+		"game"  "ns"
+		"game"  "nsp"
+	}
+
+	"virtual.games/svencoop/offsets-common.txt"
+	{
+		"game"  "svencoop"
+	}
+
+	"virtual.games/tfc/offsets-common.txt"
+	{
+		"game"  "tfc"
+	}
+
+	"virtual.games/ts/offsets-common.txt"
+	{
+		"game"  "ts"
+	}
+
+	"virtual.games/valve/offsets-common.txt"
+	{
+		"game"  "valve"
+		"game"  "dmc"
+	}
 }

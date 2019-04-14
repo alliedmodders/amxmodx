@@ -64,7 +64,7 @@ enum JSON
  * @param is_file           True to treat string param as filename, false otherwise
  * @param with_comments     True if parsing JSON includes comments (it will ignore them), false otherwise
  *
- * @return                  JSON handle, Invalid_JSONValue if error occurred
+ * @return                  JSON handle, Invalid_JSON if error occurred
  */
 native JSON:json_parse(const string[], bool:is_file = false, bool:with_comments = false);
 
@@ -594,10 +594,8 @@ native json_object_get_name(const JSON:object, index, buffer[], maxlen);
  *
  * @param object            Object handle
  * @param index             Position from which get key name
- * @param buffer            Buffer to copy string to
- * @param maxlen            Maximum size of the buffer
  *
- * @return                  The number of cells written to the buffer
+ * @return                  JSON handle, Invalid_JSON if error occurred
  * @error                   If passed handle is not a valid object
  */
 native JSON:json_object_get_value_at(const JSON:object, index);

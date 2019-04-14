@@ -204,3 +204,12 @@ X_CHOSE_X = %s 选择了 %s
 CHOOSE_NEXTM = AMX 选择下一张地图
 EXTED_MAP = 延长地图 %s
 TIME_CHOOSE = 是该选择下一张地图了...
+
+[al]
+CHO_FIN_EXT = Votimi perfundoi. Pista e tanishme eshte shtyher per %.0f minuta.
+CHO_FIN_NEXT = Votimi perfundoi. Pista e ardhshme do te jete %s
+CHOSE_EXT = %s zgjidh pisten per te shtyher
+X_CHOSE_X = %s zgjodhi %s
+CHOOSE_NEXTM = AMX Zgjidh pisten e ardhshme
+EXTED_MAP = Shtyhu pisten %s
+TIME_CHOOSE = Eshte koha per te zgjedhur per pisten e ardhshme...

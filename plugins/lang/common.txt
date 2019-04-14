@@ -503,3 +503,25 @@ CANT_PERF_DEAD = 玩家 "%s" 已经死亡,无法执行该命令
 CANT_PERF_BOT = 机器人 "%s" 无法执行该命令
 ON = 开启
 OFF = 关闭
+
+[al]
+BACK = Pas
+EXIT = Dil
+MORE = Me shume
+NONE = Bosh
+ADMIN = ADMIN
+PLAYER = LOJTARI
+ERROR = gabim
+YES = Po
+NO = Jo
+BAN = deno
+KICK = largo
+NO_ACC_COM = Ju nuk keni akses per kete komande
+USAGE = Perdorimi
+MORE_CL_MATCHT = Eshte me shume se nje klient i ngjashem me kete argument
+CL_NOT_FOUND = Klient me kete emer ose userid nuk eshte gjetur
+CLIENT_IMM = Klienti "%s" ka imunitet
+CANT_PERF_DEAD = Ky veprim nuk mund te kryhet ne klientin e vdekur "%s"
+CANT_PERF_BOT = Ky veprim nuk mund te kryhet ne bot-in "%s"
+ON = Ndezur
+OFF = Fikur

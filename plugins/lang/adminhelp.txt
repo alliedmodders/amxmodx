@@ -209,3 +209,15 @@ HELP_USE_BEGIN = 使用 '%s 1' 返回首页
 TYPE_HELP = 在控制台输入 '%s' '%s' 查看有效的命令
 TIME_INFO_1 = 剩余时间: %d:%02d 分钏. 下一张地图为: %s
 TIME_INFO_2 = 无时间限制. 下一张地图为: %s
+
+[al]
+HELP_COMS = Ndihma AMX Mod X: Komandat
+HELP_ENTRIES = Hyrjet %d - %d nga %d
+HELP_USE_MORE = Perdor 'amx_help %d' per me shume
+HELP_USE_BEGIN = Perdor 'amx_help 1' per te filluar
+TYPE_HELP = Shkruaj 'amx_help' ne konsole per te pare komandat ne dispozicion
+TIME_INFO_1 = Koha e mbetur: %d:%02d min. Pista e ardhshme: %s
+TIME_INFO_2 = Pa afat kohor. Pista e ardhshme: %s
+HELP_CMD_INFO = <hyrja nr.> [nr. i hyrjeve per te shfaqur (vetem server)] - shfaq informacion per komandat te disponueshme
+SEARCH_CMD_INFO = <gjetje> <hyrja nr.> [nr. i hyrjeve per te shfaqur (vetem server)] - shfaq informacion per komandat e gjetura te disponueshme
+NO_MATCHING_RESULTS = ^nAsnje rezultat i gjendur^n

@@ -250,3 +250,14 @@ SET_LANG_SERVER = 服务器语言被设置为 "%s"
 SET_LANG_USER = 你的语言被设置为 "%s"
 TYPE_LANGMENU = 在控制台输入'amx_langmenu'打开一个菜单来选择你的语言
 LANG_MENU_DISABLED = 语言菜单已禁用.
+
+[al]
+LANG_NOT_EXISTS = Kjo gjuhe nuk ekziston
+PERSO_LANG = Gjuha Personale
+LANG_MENU = Menuja e Gjuheve
+SERVER_LANG = Gjuha e Serverit
+SAVE_LANG = Ruaj Gjuhen
+SET_LANG_SERVER = Gjuha e serverit eshte percaktuar ne "%s"
+SET_LANG_USER = Gjuha juaj eshte percaktuar ne "%s"
+TYPE_LANGMENU = Shkruaj 'amx_langmenu' ne konsole per te shfaqur nje menu ku ju mund te zgjidhni gjuhen
+LANG_MENU_DISABLED = Menuja e gjuhes eshte e caktivizuar.

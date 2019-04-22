@@ -15,6 +15,7 @@
 #include "debugger.h"
 #include "libraries.h"
 #include <amxmodx_version.h>
+#include "engine_strucs.h"
 
 extern const char *no_function;
 
@@ -156,7 +157,7 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 
 			if (amx_FindPubVar(plugin->getAMX(), "MapName", &addr) != AMX_ERR_NOTFOUND)
 			{
-				set_amxstring(plugin->getAMX(), addr, STRING(gpGlobals->mapname), PLATFORM_MAX_PATH);
+				set_amxstring(plugin->getAMX(), addr, STRING(gpGlobals->mapname), MAX_MAPNAME_LENGTH - 1);
 			}
 
 			if (amx_FindPubVar(plugin->getAMX(), "NULL_STRING", &addr) != AMX_ERR_NOTFOUND)

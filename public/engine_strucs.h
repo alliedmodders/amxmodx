@@ -22,6 +22,7 @@
 #define MAX_LIGHTSTYLES        64
 #define MAX_PACKET_ENTITIES    256
 #define MAX_PATH_LENGTH        260
+#define MAX_MAPNAME_LENGTH	   64
 
 #define MAX_LATENT             32
 #define FRAGMENT_SIZE          1400

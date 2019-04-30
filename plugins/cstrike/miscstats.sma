@@ -91,7 +91,7 @@ new g_MultiKillMsg[7][] =
 	"Multi-Kill! %s^n%L %d %L (%d %L)", 
 	"Ultra-Kill!!! %s^n%L %d %L (%d %L)", 
 	"%s IS ON A KILLING SPREE!!!^n%L %d %L (%d %L)", 
-	"RAMPAGE!!! %s^n%L %d %L (%d hs)", 
+	"RAMPAGE!!! %s^n%L %d %L (%d %L)", 
 	"%s IS UNSTOPPABLE!!!^n%L %d %L (%d %L)", 
 	"%s IS A MONSTER!^n%L %d %L (%d %L)", 
 	"%s IS GODLIKE!!!!^n%L %d %L (%d %L)"

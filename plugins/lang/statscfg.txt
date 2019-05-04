@@ -321,6 +321,14 @@ ST_SAY_SCORE = Say /score
 ST_SAY_TOP15 = Say /top15
 ST_SAY_STATS = Say /stats
 ST_SPEC_RANK = Başarılı. Rütbe Bilgi
+ST_BOMB_PLANTED_SOUND = Bomba Kuruldu Sesi
+ST_BOMB_DEF_SUCC_SOUND = Bomb İmha Başarılı. Sesi
+ST_BOMB_DEF_FAIL_SOUND = Bomb İmh. Başarısız Sesi
+ST_BOMB_CD_HUD = Bomb Geri Sayım Hud	
+ST_LAST_MAN_SOUND = Son Adam Sesi	
+ST_LAST_MAN_HEALTH = Son Adam Sağlık
+ST_HE_KILL_SOUND = El Bomba ile Öldü Sesi	
+ST_HE_SUICIDE_SOUND = El Bomba İntihar Sesi
 
 [fr]
 NO_OPTION = Option(s) introuvable(s) avec cette variable (nom ^"%s^")

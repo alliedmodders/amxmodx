@@ -23,15 +23,30 @@
 extern CFlagManager FlagMan;
 ke::Vector<CAdminData *> DynamicAdmins;
 
+const char *g_sInaccessibleXVars[] =
+{
+	"MaxClients",
+	"MapName",
+	"PluginName",
+	"PluginVersion",
+	"PluginAuthor",
+	"PluginURL",
+	"NULL_STRING",
+	"NULL_VECTOR"
+};
+
 static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 {
 	int len;
 	char* sName = get_amxstring(amx, params[1], 0, len);
 	cell ptr;
 
-	if (!strcmp(sName, "MaxClients") || !strcmp(sName, "MapName") || !strcmp(sName, "NULL_STRING") || !strcmp(sName, "NULL_VECTOR"))
+	for (auto var : g_sInaccessibleXVars)
 	{
-		return -1;
+		if (!strcmp(sName, var))
+		{
+			return -1;
+		}
 	}
 
 	for (CPluginMngr::iterator a = g_plugins.begin(); a ; ++a)

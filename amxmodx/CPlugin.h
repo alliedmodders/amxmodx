@@ -56,6 +56,8 @@ public:
 		ke::AString version;
 		ke::AString title;
 		ke::AString author;
+		ke::AString url;
+		ke::AString description;
 		ke::AString errorMsg;
 		
 		unsigned int failcounter;
@@ -78,6 +80,8 @@ public:
 		inline const char* getVersion() { return version.chars();}
 		inline const char* getTitle() { return title.chars();}
 		inline const char* getAuthor() { return author.chars();}
+		inline const char* getUrl() { return url.chars(); }
+		inline const char* getDescription() { return description.chars(); }
 		inline const char* getError() { return errorMsg.chars();}
 		inline int getStatusCode() { return status; }
 		inline int getId() const { return id; }
@@ -86,6 +90,8 @@ public:
 		inline void setTitle(const char* n) { title = n; }
 		inline void setAuthor(const char* n) { author =n; }
 		inline void setVersion(const char* n) { version = n; }
+		inline void setUrl(const char* n) { url = n; }
+		inline void setDescription(const char* n) { description = n; }
 		inline void setError(const char* n) { errorMsg = n; }
 		inline bool isValid() const { return (status >= ps_paused); }
 		inline bool isPaused() const { return ((status == ps_paused) || (status == ps_stopped)); }

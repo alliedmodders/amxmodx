@@ -243,10 +243,12 @@ forward client_putinserver(id);
  * @param plugin_name   Name of the plugin
  * @param version       Version of the plugin
  * @param author        Author of the plugin
+ * @param url           URL of the plugin
+ * @param description   Description of plugin
  *
  * @return              Plugin id of the calling plugin
  */
-native register_plugin(const plugin_name[], const version[], const author[]);
+native register_plugin(const plugin_name[], const version[], const author[], const url[] = "", const description[] = "");
 
 /**
  * Precaches a model file.

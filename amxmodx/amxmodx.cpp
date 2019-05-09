@@ -1396,14 +1396,16 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 3 param */
+static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 5 param */
 {
 	CPluginMngr::CPlugin* a = g_plugins.findPluginFast(amx);
 	int i;
 
-	char *title = get_amxstring(amx, params[1], 0, i);
-	char *vers = get_amxstring(amx, params[2], 1, i);
-	char *author = get_amxstring(amx, params[3], 2, i);
+	const char *title = get_amxstring(amx, params[1], 0, i);
+	const char *vers = get_amxstring(amx, params[2], 1, i);
+	const char *author = get_amxstring(amx, params[3], 2, i);
+	const char *url = get_amxstring(amx, params[4], 3, i);
+	const char *description = get_amxstring(amx, params[5], 4, i);
 
 #if defined BINLOG_ENABLED
 	g_BinLog.WriteOp(BinLog_Registered, a->getId(), title, vers);
@@ -1412,6 +1414,8 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 3 param *
 	a->setTitle(title);
 	a->setVersion(vers);
 	a->setAuthor(author);
+	a->setUrl(url);
+	a->setDescription(description); 
 
 	/* Check if we need to add fail counters */
 	i = 0;

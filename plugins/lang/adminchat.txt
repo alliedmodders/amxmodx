@@ -298,12 +298,12 @@ COL_MAROON = 褐红色
 PRINT_ALL = (全部) %s :   %s
 
 [al]
-COL_WHITE = e bardhe
+COL_WHITE = e bardhë
 COL_RED = e kuqe
 COL_GREEN = jeshile
 COL_BLUE = blu
-COL_YELLOW = e verdhe
-COL_MAGENTA = e purpurte
+COL_YELLOW = e verdhë
+COL_MAGENTA = e purpurtë
 COL_CYAN = bojeqielli
 COL_ORANGE = portokalli
 COL_OCEAN = oqean

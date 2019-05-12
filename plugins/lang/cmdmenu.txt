@@ -114,6 +114,6 @@ CONF_MENU = 配置菜单
 SPE_MENU = 语音菜单
 
 [al]
-CMD_MENU = Menuja e komandave
-CONF_MENU = Menuja e konfigurimeve
-SPE_MENU = Menuja e fjalimit
+CMD_MENU = Menuja e Komandave
+CONF_MENU = Menuja e Konfigurimeve
+SPE_MENU = Menuja e Fjalimit

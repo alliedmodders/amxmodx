@@ -223,4 +223,4 @@ TIME_INFO_1 = Koha e mbetur: %d:%02d min. Pista e ardhshme: %s
 TIME_INFO_2 = Pa afat kohor. Pista e ardhshme: %s
 HELP_CMD_INFO = <hyrja nr.> [nr. i hyrjeve për të shfaqur (vetëm serveri)] - shfaq informacion për komandat në dispozicion
 SEARCH_CMD_INFO = <ngjasime> <hyrja nr.> [nr. i hyrjeve për të shfaqur (vetëm serveri)] - shfaq informacion rreth komandave të përputhura
-NO_MATCHING_RESULTS = ^nNuk u gjendën rezultate^n
+NO_MATCHING_RESULTS = ^nNuk u gjetën rezultate^n

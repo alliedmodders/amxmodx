@@ -216,11 +216,11 @@ TIME_INFO_2 = 无时间限制. 下一张地图为: %s
 [al]
 HELP_COMS = Ndihma AMX Mod X: Komandat
 HELP_ENTRIES = Hyrjet %d - %d nga %d
-HELP_USE_MORE = Perdor 'amx_help %d' per me shume
-HELP_USE_BEGIN = Perdor 'amx_help 1' per te filluar
-TYPE_HELP = Shkruaj 'amx_help' ne konsole per te pare komandat ne dispozicion
+HELP_USE_MORE = Përdor '%s %d' për më shumë
+HELP_USE_BEGIN = Përdor '%s 1' për të filluar
+TYPE_HELP = Shkruaj '%s' '%s' në konsole për të parë komandat në dispozicion
 TIME_INFO_1 = Koha e mbetur: %d:%02d min. Pista e ardhshme: %s
 TIME_INFO_2 = Pa afat kohor. Pista e ardhshme: %s
-HELP_CMD_INFO = <hyrja nr.> [nr. i hyrjeve per te shfaqur (vetem server)] - shfaq informacion per komandat te disponueshme
-SEARCH_CMD_INFO = <gjetje> <hyrja nr.> [nr. i hyrjeve per te shfaqur (vetem server)] - shfaq informacion per komandat e gjetura te disponueshme
-NO_MATCHING_RESULTS = ^nAsnje rezultat i gjendur^n
+HELP_CMD_INFO = <hyrja nr.> [nr. i hyrjeve për të shfaqur (vetëm serveri)] - shfaq informacion për komandat në dispozicion
+SEARCH_CMD_INFO = <ngjasime> <hyrja nr.> [nr. i hyrjeve për të shfaqur (vetëm serveri)] - shfaq informacion rreth komandave të përputhura
+NO_MATCHING_RESULTS = ^nNuk u gjendën rezultate^n

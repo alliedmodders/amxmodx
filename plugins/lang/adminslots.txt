@@ -68,4 +68,4 @@ DROPPED_RES = Извините мест нет, это зарезервиров�
 DROPPED_RES = 由于你无法使用预留通道,以至于与服务器连接断开
 
 [al]
-DROPPED_RES = Larguar per arse te rezervimit te slot-it
+DROPPED_RES = Larguar për arse të rezervimit të vendit

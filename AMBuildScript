@@ -71,7 +71,7 @@ class AMXXConfig(object):
     if len(hlsdk_path):
       self.hlsdk_path = os.path.join(builder.originalCwd, hlsdk_path)
       if not os.path.exists(self.hlsdk_path):
-        raise Exception('Metamod path does not exist: {0}'.format(hlsdk_path))
+        raise Exception('HLSDK path does not exist: {0}'.format(hlsdk_path))
     else:
       try_paths = [
         os.path.join(builder.sourcePath, '..', 'hlsdk'),
@@ -94,7 +94,7 @@ class AMXXConfig(object):
     if len(mysql_path):
       self.mysql_path = os.path.join(builder.originalCwd, mysql_path)
       if not os.path.exists(self.mysql_path):
-        raise Exception('Metamod path does not exist: {0}'.format(mysql_path))
+        raise Exception('MySQL path does not exist: {0}'.format(mysql_path))
     else:
       try_paths = [
         os.path.join(builder.sourcePath, '..', 'mysql-5.5'),

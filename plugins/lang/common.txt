@@ -345,8 +345,8 @@ USAGE = Használat
 MORE_CL_MATCHT = Több játékosra is egyezik a megadott feltétel
 CL_NOT_FOUND = Nincs ilyen nevű játékos
 CLIENT_IMM = "%s" immunitás joggal rendelkezik
-CANT_PERF_DEAD = Ezt a műveletet nem hajthatod végre "%s" játékoson mert halott
-CANT_PERF_BOT = Ezt a műveletet nem hajthatod végre "%s" játékoson mert bot
+CANT_PERF_DEAD = Ezt a műveletet nem hajthatod végre "%s" játékoson mivel halott
+CANT_PERF_BOT = Ezt a műveletet nem hajthatod végre "%s" játékoson mivel bot
 ON = BE
 OFF = KI
 

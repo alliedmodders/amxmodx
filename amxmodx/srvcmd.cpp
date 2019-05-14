@@ -82,8 +82,7 @@ void amx_command()
 				print_srvconsole("   Author: %s\n", plugin->getAuthor());
 				print_srvconsole("   URL: %s\n", plugin->getUrl());
 
-				auto description = plugin->getDescription(); 
-				if (description[0] != '\0')
+				if (auto description = plugin->getDescription(); description[0])
 				{
 					print_srvconsole("   Description: %s\n", description);
 				}

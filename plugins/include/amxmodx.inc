@@ -244,7 +244,7 @@ forward client_putinserver(id);
  * @param version       Version of the plugin
  * @param author        Author of the plugin
  * @param url           URL of the plugin
- * @param description   Description of plugin
+ * @param description   Description of the plugin
  *
  * @return              Plugin id of the calling plugin
  */

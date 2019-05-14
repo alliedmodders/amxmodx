@@ -65,14 +65,13 @@ void amx_command()
 	}
 	else if (!strcmp(cmd, "plugin"))
 	{
-		auto id = atoi(CMD_ARGV(2));
-
 		if (CMD_ARGC() < 3)
 		{
 			print_srvconsole("Usage: amxx plugin < plugin_id >\nFor a list of plugins, use the \"amxx plugins\" command\n");
 		}
 		else
 		{
+			auto id = atoi(CMD_ARGV(2));
 			auto plugin = g_plugins.findPlugin(id);
 
 			if (plugin && plugin->isValid())

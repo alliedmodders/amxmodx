@@ -1406,8 +1406,6 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 5 param *
 	const char *title = get_amxstring(amx, params[arg_title], arg_title - 1, i);
 	const char *vers = get_amxstring(amx, params[arg_version], arg_version - 1, i);
 	const char *author = get_amxstring(amx, params[arg_author], arg_author - 1, i);
-	const char *url = get_amxstring(amx, params[arg_url], arg_url - 1, i);
-	const char *description = get_amxstring(amx, params[arg_description], arg_description - 1, i);
 
 #if defined BINLOG_ENABLED
 	g_BinLog.WriteOp(BinLog_Registered, a->getId(), title, vers);
@@ -1416,8 +1414,15 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 5 param *
 	a->setTitle(title);
 	a->setVersion(vers);
 	a->setAuthor(author);
-	a->setUrl(url);
-	a->setDescription(description); 
+
+	if (params[arg_count] / sizeof(cell) > arg_author)
+	{
+		const char *url = get_amxstring(amx, params[arg_url], arg_url - 1, i);
+		const char *description = get_amxstring(amx, params[arg_description], arg_description - 1, i);
+
+		a->setUrl(url);
+		a->setDescription(description);
+	}
 
 	/* Check if we need to add fail counters */
 	i = 0;

@@ -84,7 +84,8 @@ void amx_command()
 					print_srvconsole("   URL: %s\n", plugin->getUrl());
 				}
 
-				if (auto description = plugin->getDescription(); description[0])
+				auto description = plugin->getDescription(); 
+				if (description[0] != '\0')
 				{
 					print_srvconsole("   Description: %s\n", description);
 				}

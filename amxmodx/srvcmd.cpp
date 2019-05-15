@@ -67,7 +67,7 @@ void amx_command()
 	{
 		if (CMD_ARGC() < 3)
 		{
-			print_srvconsole("Usage: amxx plugin < plugin_id >\nFor a list of plugins, use the \"amxx plugins\" command\n");
+			print_srvconsole("Usage: amxx plugin [ id ]\nFor a list of plugins, use the \"amxx plugins\" command\n");
 		}
 		else
 		{
@@ -282,7 +282,7 @@ void amx_command()
 		print_srvconsole("   version                    - display amxx version info\n");
 		print_srvconsole("   gpl                        - print the license\n");
 		print_srvconsole("   plugins [ criteria ]       - list plugins currently loaded or ones matching given search criteria\n");
-		print_srvconsole("   plugin < plugin_id >       - information about a plugin\n");
+		print_srvconsole("   plugin [ id ]              - information about a plugin\n");
 		print_srvconsole("   modules                    - list modules currently loaded\n");
 		print_srvconsole("   cvars [ plugin ] [ index ] - list cvars handled by amxx or show information about a cvar if index is provided\n");
 		print_srvconsole("   cmds [ plugin ]            - list commands registered by plugins\n");

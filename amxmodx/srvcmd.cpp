@@ -72,8 +72,9 @@ void amx_command()
 		else
 		{
 			auto id = atoi(CMD_ARGV(2));
-			
-			if (auto plugin = g_plugins.findPlugin(id); plugin && plugin->isValid())
+			auto plugin = g_plugins.findPlugin(id);
+
+			if (plugin && plugin->isValid())
 			{
 				print_srvconsole("   Name: %s\n", plugin->getTitle());
 				print_srvconsole("   Version: %s\n", plugin->getVersion());

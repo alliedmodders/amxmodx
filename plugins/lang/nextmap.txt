@@ -115,5 +115,5 @@ FRIEND_FIRE = 友军开火伤害
 
 [al]
 NEXT_MAP = Pista e Ardhshme:
-PLAYED_MAP = Pista e luajtur
+PLAYED_MAP = Pista që luajtëm
 FRIEND_FIRE = Zjarr ndaj shokut

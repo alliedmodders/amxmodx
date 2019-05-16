@@ -114,6 +114,6 @@ MSG_FREQ = 滚动信息的显示频率为每 ％d：％02d 分钟显示一次
 MSG_DISABLED = 滚动消息已禁用
 
 [al]
-MIN_FREQ = Frekuenca minimale per kete mesazh eshte %d sekonda
-MSG_FREQ = Shfaqja e frekuences se rreshqitjes se mesazhit: %d:%02d minuta
-MSG_DISABLED = Rreshqitja e mesazheve eshte bllokuar
+MIN_FREQ = Frekuenca minimale për këtë mesazh është %d sekonda
+MSG_FREQ = Shfaqja e frekuencës së rreshqitjes së mesazhit: %d:%02d minuta
+MSG_DISABLED = Rrëshqitja e mesazheve është bllokuar

@@ -279,10 +279,10 @@ SPECH_STUFF = Beszéd menü
 CLIENT_COM = Játekos parancsok
 SERVER_COM = Szerver parancsok
 CVARS_SET = Cvar Beállítások
-CONFIG = Configuráció
+CONFIG = Konfiguráció
 LANG_SET = Nyelv Beállítások
 STATS_SET = Stat beállítások ^n
-PAUSE_PLUG = Pillanat állj Pluginok
+PAUSE_PLUG = Pluginok Szüneteltetése
 RES_WEAP = Felfüggesztett fegyverek
 TELE_PLAYER = Játékos teleportálása
 

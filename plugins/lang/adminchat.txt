@@ -204,7 +204,7 @@ COL_CYAN = cián
 COL_ORANGE = narancs
 COL_OCEAN = óceán
 COL_MAROON = barna
-PRINT_ALL = (MIND) %s :   %s
+PRINT_ALL = (MIND) %s :  %s
 
 [lt]
 COL_WHITE = balta

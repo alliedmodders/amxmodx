@@ -80,10 +80,10 @@ void amx_command()
 				print_srvconsole("   Version: %s\n", plugin->getVersion());
 				print_srvconsole("   Author: %s\n", plugin->getAuthor());
 
-				auto url = plugin->getDescription();
+				auto url = plugin->getUrl();
 				if (url[0])
 				{
-					print_srvconsole("   URL: %s\n", plugin->getUrl());
+					print_srvconsole("   URL: %s\n", url);
 				}
 
 				auto description = plugin->getDescription(); 

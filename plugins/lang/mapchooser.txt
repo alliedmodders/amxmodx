@@ -206,10 +206,10 @@ EXTED_MAP = 延长地图 %s
 TIME_CHOOSE = 是该选择下一张地图了...
 
 [al]
-CHO_FIN_EXT = Votimi përfundoi. Pista e tanishme është shtyër me %.0f minuta.
-CHO_FIN_NEXT = Votimi perfundoi. Pista e ardhshme do të jetë %s
-CHOSE_EXT = %s zgjodhi pistën për të shtyer
-X_CHOSE_X = %s zgjodhi %s
-CHOOSE_NEXTM = AMX Zgjidh pistën e ardhshme
-EXTED_MAP = Shtyu pistën %s
-TIME_CHOOSE = Është koha per te zgjedhur per pisten e ardhshme...
+CHO_FIN_EXT = Zgjedhja përfundoi. Harta tanishme do të vazhdohet edhe për %.0f minuta
+CHO_FIN_NEXT = Zgjedhja përfundoi. Harta e ardhëshme do të jetë %s
+CHOSE_EXT = %s zgjedhi vazhdimin e hartës
+X_CHOSE_X = %s zgjedhi %s
+CHOOSE_NEXTM = AMX Zgjedh Hartën e Ardhëshme
+EXTED_MAP = Vazhdo hartën %s
+TIME_CHOOSE = Koha është të zgjedhni hartën e ardhëshme...

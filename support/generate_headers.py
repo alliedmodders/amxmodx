@@ -93,6 +93,7 @@ def output_version_headers():
 #define AMXX_VERSION_MAJOR      \"{major}\"
 #define AMXX_VERSION_MINOR      \"{minor}\"
 #define AMXX_VERSION_RELEASE    \"{release}\"
+#define AMXX_VERSION_LOCAL      {count}
 #define AMXX_VERSION_LOCAL_REV  \"{count}\"
 #define AMXX_VERSION            {major}.{minor}{release}
 #define AMXX_VERSION_NUM        {version_num}

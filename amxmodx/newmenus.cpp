@@ -1008,7 +1008,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		}
 	case MPROP_SHOWPAGE:
 		{
-			pMenu->showPageNumber = (get_amxaddr(amx, params[3]) != 0);
+			pMenu->showPageNumber = *get_amxaddr(amx, params[3]) != 0;
 			break;
 		}
 	case MPROP_SET_NUMBER_COLOR:

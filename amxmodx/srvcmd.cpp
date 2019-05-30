@@ -9,6 +9,7 @@
 
 #include "amxmodx.h"
 #include <amxmodx_version.h>
+#include <string>
 
 void amx_command()
 {
@@ -71,7 +72,7 @@ void amx_command()
 		}
 		else
 		{
-			auto id = atoi(CMD_ARGV(2));
+			auto id = std::stoi(CMD_ARGV(2));
 			auto plugin = g_plugins.findPlugin(id);
 
 			if (plugin && plugin->isValid())

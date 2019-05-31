@@ -317,12 +317,12 @@ void CoreConfig::CheckLegacyBufferedCommand(char *command)
 		return;
 	}
 
-	if (!m_LegacyMainConfigExecuted && strstr(command, MainConfigFile))
+	if (!m_LegacyMainConfigExecuted && strstr(command, MainConfigPath))
 	{
 		m_LegacyMainConfigExecuted = true;
 	}
 
-	if (!m_LegacyMapConfigsExecuted && strstr(command, MapConfigDir))
+	if (!m_LegacyMapConfigsExecuted && strstr(command, MapConfigPath))
 	{
 		m_LegacyMapConfigsExecuted = true;
 	}

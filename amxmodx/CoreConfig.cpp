@@ -19,6 +19,9 @@ const char *AutoConfigDir  = "/plugins";
 const char *MapConfigDir   = "/maps";
 const char *CommandFormat  = "exec %s\n";
 
+char MapConfigPath[PLATFORM_MAX_PATH + sizeof(CommandFormat)];
+char MainConfigPath[PLATFORM_MAX_PATH + sizeof(CommandFormat)];
+
 CoreConfig::CoreConfig()
 {
 	Clear();
@@ -51,12 +54,11 @@ void CoreConfig::ExecuteMainConfig()
 	}
 
 	char path[PLATFORM_MAX_PATH];
-	char command[PLATFORM_MAX_PATH + sizeof(CommandFormat)];
 
 	ke::SafeSprintf(path, sizeof(path), "%s/%s/%s", g_mod_name.chars(), get_localinfo("amxx_configsdir", "addons/amxmodx/configs"), MainConfigFile);
-	ke::SafeSprintf(command, sizeof(command), CommandFormat, path);
-
-	SERVER_COMMAND(command);
+	ke::SafeSprintf(MainConfigPath, sizeof(MainConfigPath), CommandFormat, path);
+	
+	SERVER_COMMAND(MainConfigPath);
 }
 
 void CoreConfig::ExecuteAutoConfigs()
@@ -258,7 +260,6 @@ void CoreConfig::ExecuteMapConfig()
 
 	char cfgPath[PLATFORM_MAX_PATH];
 	char mapName[PLATFORM_MAX_PATH];
-	char command[PLATFORM_MAX_PATH + sizeof(CommandFormat)];
 
 	strncopy(mapName, STRING(gpGlobals->mapname), sizeof(mapName));
 
@@ -270,8 +271,8 @@ void CoreConfig::ExecuteMapConfig()
 
 		if (g_LibSys.IsPathFile(cfgPath))
 		{
-			ke::SafeSprintf(command, sizeof(command), CommandFormat, cfgPath);
-			SERVER_COMMAND(command);
+			ke::SafeSprintf(MapConfigPath, sizeof(MapConfigPath), CommandFormat, cfgPath);
+			SERVER_COMMAND(MapConfigPath);
 		}
 	}
 
@@ -280,8 +281,8 @@ void CoreConfig::ExecuteMapConfig()
 
 	if (g_LibSys.IsPathFile(cfgPath))
 	{
-		ke::SafeSprintf(command, sizeof(command), CommandFormat, cfgPath);
-		SERVER_COMMAND(command);
+		ke::SafeSprintf(MapConfigPath, sizeof(MapConfigPath), CommandFormat, cfgPath);
+		SERVER_COMMAND(MapConfigPath);
 	}
 
 	// Consider all configs be executed to the next frame.

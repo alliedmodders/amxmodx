@@ -204,3 +204,12 @@ MINUTE = 分钟
 MINUTES = 分钟
 SECOND = 秒
 SECONDS = 秒
+
+[al]
+THE_TIME = Ora
+TIME_LEFT = Koha Mbetur
+NO_T_LIMIT = Koha Pakufizuar
+MINUTE = minut
+MINUTES = minuta
+SECOND = sekond
+SECONDS = sekonda

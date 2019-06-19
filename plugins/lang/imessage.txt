@@ -66,3 +66,6 @@ INF_REACH = Достигнут максимум информационных с�
 
 [cn] 
 INF_REACH=信息消息已达到限制数量！
+
+[al]
+INF_REACH = Limiti i mesazheve për informacion u arrit!

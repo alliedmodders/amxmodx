@@ -112,3 +112,8 @@ SPE_MENU = Меню звуков
 CMD_MENU = 命令菜单
 CONF_MENU = 配置菜单
 SPE_MENU = 语音菜单
+
+[al]
+CMD_MENU = Lista Komandave
+CONF_MENU = Lista Konfigurimeve
+SPE_MENU = Lista Fjalëve

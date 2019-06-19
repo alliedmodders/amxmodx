@@ -549,3 +549,27 @@ ADMIN_V_MAP_2 = 管理员 %s: 进行投票更改地图
 ADMIN_CHANGEL_1 = 管理员: 更改地图为 %s
 ADMIN_CHANGEL_2 = 管理员 %s: 更改地图为 %s
 CHANGLE_MENU = 更改地图菜单
+
+[al]
+RESULT_REF = Rezultati u refuzua
+RESULT_ACC = Rezultati u pranua
+VOTE_SUCCESS = Votimi përfundëoj me sukses. Harta do të ndryshohet në
+VOTE_FAILED = Votimi dështoi
+THE_WINNER = Fituesi
+WANT_CONT = A dëshironi të vazhdoni?
+VOT_CANC = Votimi është anuluar
+X_VOTED_FOR = %s votoj për opcionin #%d
+VOTEMAP_MENU = Lista Hartave Votimit
+START_VOT = Filloni Votimin
+SEL_MAPS = Zgjedh Hartat
+ALREADY_VOT = Ekziston tashmë një votim...
+NO_MAPS_MENU = Nuk ka harta në listë
+VOT_NOW_ALLOW = Votimi nuk lejohet në këtë kohë
+WHICH_MAP = Cilën hartë dëshironi?
+CHANGE_MAP_TO = Ndrysho hartën tek
+CANC_VOTE = Ndalo votimin
+ADMIN_V_MAP_1 = ADMIN: votoj hartën(s)
+ADMIN_V_MAP_2 = ADMIN %s: votoj hartën(s)
+ADMIN_CHANGEL_1 = ADMIN: ndryshoj hartën në %s
+ADMIN_CHANGEL_2 = ADMIN %s: ndryshoj hartën në %s
+CHANGLE_MENU = Lista Ndryshimeve Hartës

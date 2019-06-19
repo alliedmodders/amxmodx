@@ -66,3 +66,6 @@ DROPPED_RES = Извините мест нет, это зарезервиров�
 
 [cn]
 DROPPED_RES = 由于你无法使用预留通道,以至于与服务器连接断开
+
+[al]
+DROPPED_RES = U largua për shkak të rezervimit të vendit që është plugini aktiv në server!

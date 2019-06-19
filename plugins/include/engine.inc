@@ -117,8 +117,8 @@ native register_touch(const Touched[], const Toucher[], const function[]);
  *       blocking the think. To immediately block return PLUGIN_HANDLED_MAIN
  *       instead.
  *
- * @param Touched   Entity classname to hook
- * @param function  Name of callback function
+ * @param Classname	Entity classname to hook
+ * @param function	Name of callback function
  *
  * @return 	        Think forward id
  */

@@ -89,3 +89,7 @@ LANG_NAME_NATIVE = Русский
 [cn]
 LANG_NAME = Simplified Chinese
 LANG_NAME_NATIVE = 简体中文
+
+[al]
+LANG_NAME = Albanian
+LANG_NAME_NATIVE = Shqipë

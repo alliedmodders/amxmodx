@@ -112,3 +112,8 @@ FRIEND_FIRE = Огонь по своим
 NEXT_MAP = 下张地图:
 PLAYED_MAP = 已经玩过地图
 FRIEND_FIRE = 友军开火伤害
+
+[al]
+NEXT_MAP = Harta Ardhëshme:
+PLAYED_MAP = Harta që luajtëm
+FRIEND_FIRE = Sulmo shokët

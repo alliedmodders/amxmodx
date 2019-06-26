@@ -112,3 +112,8 @@ MSG_DISABLED = Бегущая строка заблокирована
 MIN_FREQ = 此消息的最小频率为 %d 秒
 MSG_FREQ = 滚动信息的显示频率为每 ％d：％02d 分钟显示一次
 MSG_DISABLED = 滚动消息已禁用
+
+[al]
+MIN_FREQ = Vlera minimale e frekuencës për këtë mesazhë është %d sekonda
+MSG_FREQ = Mesazhi që shfaq frekuencën qdo: %d:%02d minuta
+MSG_DISABLED = Diskutimi mesazhit është i q'aktivizuar

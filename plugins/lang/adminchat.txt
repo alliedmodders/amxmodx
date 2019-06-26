@@ -281,7 +281,7 @@ COL_MAGENTA = пурпурный
 COL_CYAN = голубой
 COL_ORANGE = оранжевый
 COL_OCEAN = океанический
-COL_MAROON = коричневый
+COL_MAROON = бордовый
 PRINT_ALL = (ВСЕМ) %s :  %s
 
 [cn]

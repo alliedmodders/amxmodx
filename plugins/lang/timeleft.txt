@@ -190,7 +190,7 @@ SECONDS = sekunde
 [ru]
 THE_TIME = Время
 TIME_LEFT = Осталось
-NO_T_LIMIT = Неограниченно
+NO_T_LIMIT = Не ограничено
 MINUTE = минута
 MINUTES = минут
 SECOND = секунда

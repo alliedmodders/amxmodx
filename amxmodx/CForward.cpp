@@ -323,7 +323,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 		amx_Push(m_Amx, realParams[i]);
 	
 	// exec
-	cell retVal;
+	cell retVal = 0;
 #if defined BINLOG_ENABLED
 	g_BinLog.WriteOp(BinLog_CallPubFunc, pPlugin->getId(), m_Func);
 #endif

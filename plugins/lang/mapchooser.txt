@@ -213,3 +213,12 @@ X_CHOSE_X = %s zgjedhi %s
 CHOOSE_NEXTM = AMX Zgjedh Hartën e Ardhëshme
 EXTED_MAP = Vazhdo hartën %s
 TIME_CHOOSE = Koha është të zgjedhni hartën e ardhëshme...
+
+[pt]
+CHO_FIN_EXT = A votação terminou. O mapa atual vai ser estendido por %.0f minutos
+CHO_FIN_NEXT = A votação terminou. O próximo mapa será %s
+CHOSE_EXT = %s escolheu estender o mapa
+X_CHOSE_X = %s escolheu %s
+CHOOSE_NEXTM = AMX Escolher próximo mapa
+EXTED_MAP = Estender o mapa %s
+TIME_CHOOSE = É hora de escolher o próximo mapa...

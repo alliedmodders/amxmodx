@@ -310,3 +310,15 @@ PAS_ACC = Fjalëkalimi i sakte
 PRIV_SET = Privilegjet u vendosën
 NO_ENTRY = Ju nuk mund të futeni në server...
 
+[pt]
+LOADED_ADMIN = 1 admin foi carregado do ficheiro
+LOADED_ADMINS = %d admins foram carregados do ficheiro
+SQL_CANT_CON = Erro de SQL: não foi possível conectar-se: '%s'
+SQL_CANT_LOAD_ADMINS = Erro de SQl: não foi possível carregar admins: '%s'
+NO_ADMINS = Não foram encontrados admins.
+SQL_LOADED_ADMIN = 1 admin foi carregado da base de dados
+SQL_LOADED_ADMINS = %d admins foram carregados da base de dados
+INV_PAS = Palavra-passe inválida!
+PAS_ACC = Palavra-passe aceite
+PRIV_SET = Previlégios postos
+NO_ENTRY = Tu não podes entrar no servidor...

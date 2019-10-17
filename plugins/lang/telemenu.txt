@@ -165,3 +165,10 @@ ADMIN_TELEPORT_2 = ADMIN %s: transferoj %s
 TELE_MENU = Lista Transferimit
 CUR_LOC = Vendi Tanishëm
 SAVE_LOC = Ruaj Vendin
+
+[pt]
+ADMIN_TELEPORT_1 = ADMIN: teleportou %s
+ADMIN_TELEPORT_2 = ADMIN %s: teleportou %s
+TELE_MENU = Menu de Teleporte
+CUR_LOC = Localização Atual
+SAVE_LOC = Guardar Localização

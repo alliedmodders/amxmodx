@@ -261,3 +261,14 @@ SET_LANG_SERVER = Gjuha e Serverit u vendos "%s"
 SET_LANG_USER = Gjuha juaj u vendos "%s"
 TYPE_LANGMENU = Shkruaj 'amx_langmenu' në konsole për të shfaqur listën e gjuhëve
 LANG_MENU_DISABLED = Lista e gjuhëve është e ndalur.
+
+[pt]
+LANG_NOT_EXISTS = A língua não existe
+PERSO_LANG = Língua Pessoal
+LANG_MENU = Menu de Línguas
+SERVER_LANG = Língua do Servidor
+SAVE_LANG = Guardar Língua
+SET_LANG_SERVER = A língua do servidor foi definida para "%s"
+SET_LANG_USER = A tua língua foi definida para "%s"
+TYPE_LANGMENU = Escreve 'amx_langmenu' na consola para apresentar um menu onde podes escolher a tua língua
+LANG_MENU_DISABLED = Menu de línguas desativado.

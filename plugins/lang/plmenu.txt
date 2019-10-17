@@ -448,3 +448,22 @@ TRANSF_SILENT = Transferim i heshtur
 CL_CMD_MENU = Lista e komandave lojtarit
 NO_CMDS = Nuk ka komanda të lira
 CANT_PERF_PLAYER = Ky veprim nuk mund të kryhet tek lojtari "%s"
+
+[pt]
+ADMIN_BAN_1 = ADMIN: baniu %s
+ADMIN_BAN_2 = ADMIN %s: baniu %s
+BAN_MENU = Menu de Banir
+BAN_FOR_MIN = Banir por %d minutos
+BAN_PERM = Banir permanentemente
+SLAP_SLAY_MENU = Menu de Esbofetear/Matar
+SLAP_WITH_DMG = Esbofetear com %d de dano
+SLAY = Matar
+KICK_MENU = Menu de Expulsar
+ADMIN_TRANSF_1 = ADMIN: transferiu %s para %s
+ADMIN_TRANSF_2 = ADMIN %s: transferiu %s para %s
+TEAM_MENU = Menu de Equipas
+TRANSF_TO = Transferir para %s
+TRANSF_SILENT = Transferência Silenciosa
+CL_CMD_MENU = Menu de Comandos do Cliente
+NO_CMDS = Não existem comandos disponíveis
+CANT_PERF_PLAYER = Essa ação não pode ser feita no jogador "%s"

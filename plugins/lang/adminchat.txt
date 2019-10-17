@@ -309,3 +309,16 @@ COL_ORANGE = portokalle
 COL_OCEAN = kaltër e mbylltë
 COL_MAROON = kaftë
 PRINT_ALL = (Gjithë) %s :   %s
+
+[pt]
+COL_WHITE = branco
+COL_RED = vermelho
+COL_GREEN = verde
+COL_BLUE = azul
+COL_YELLOW = amarelo
+COL_MAGENTA = magenta
+COL_CYAN = ciano
+COL_ORANGE = laranja
+COL_OCEAN = azul marinho
+COL_MAROON = castanho
+PRINT_ALL = (TODOS) %s :   %s

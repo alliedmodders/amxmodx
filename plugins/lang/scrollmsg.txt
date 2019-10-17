@@ -117,3 +117,8 @@ MSG_DISABLED = 滚动消息已禁用
 MIN_FREQ = Vlera minimale e frekuencës për këtë mesazhë është %d sekonda
 MSG_FREQ = Mesazhi që shfaq frekuencën qdo: %d:%02d minuta
 MSG_DISABLED = Diskutimi mesazhit është i q'aktivizuar
+
+[pt]
+MIN_FREQ = A Frequência Mínima para esta mensagem é de %d segundos
+MSG_FREQ = Frequência de exibição da Mensagem Rolante: %d:%02d minutos
+MSG_DISABLED = Mensagem Rolante desativada

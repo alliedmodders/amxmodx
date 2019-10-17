@@ -429,3 +429,21 @@ STATS_SET = Konfigurimet Statistikave ^n
 PAUSE_PLUG = Pusho Plugins
 RES_WEAP = Kufizo Armët
 TELE_PLAYER = Transporto Lojtarin
+
+[pt]
+KICK_PLAYER = Expulsar Jogador
+BAN_PLAYER = Banir Jogador
+SLAP_SLAY = Esbofetear/Matar Jogador
+TEAM_PLAYER = Equipa do Jogador ^n
+CHANGEL = Mudar de Mapa
+VOTE_MAPS = Votação de Mapas ^n
+SPECH_STUFF = Menu de Voz
+CLIENT_COM = Comandos do Client
+SERVER_COM = Comandos do Servidor
+CVARS_SET = Definições de Cvars
+CONFIG = Configuração
+LANG_SET = Definições de Linguagem
+STATS_SET = Definições de Stats ^n
+PAUSE_PLUG = Pausar Plugins
+RES_WEAP = Restringir Armas
+TELE_PLAYER = Teleportar Jogador

@@ -224,3 +224,15 @@ TIME_INFO_2 = Pakufizuar. Harta Ardhëshme: %s
 HELP_CMD_INFO = <hyrja nr.> [nr. e hyrjeve për t'u shfaqur (vetem serveri)] - tregon informacion në lidhje me komandat në dispozicion
 SEARCH_CMD_INFO = <ndeshje> <hyrja nr.> [nr. e hyrjeve për t'u shfaqur (vetem serveri)] - shfaq informacione rreth komandave të përputhura
 NO_MATCHING_RESULTS = ^nNuk u gjetën rezultate^n
+
+[pt]
+HELP_COMS = Ajuda do AMX Mod X: Comandos
+HELP_ENTRIES = Entradas %d - %d de %d
+HELP_USE_MORE = Usa '%s %d' para mostrar mais
+HELP_USE_BEGIN = Usa '%s 1' para voltar ao início
+TYPE_HELP = Escreve '%s' '%s' na consola para ver os comandos disponíveis
+TIME_INFO_1 = Tempo Restante: %d:%02d min. Próximo Mapa: %s
+TIME_INFO_2 = Sem Limite de Tempo. Próximo Mapa: %s
+HELP_CMD_INFO = <entrada no.> [no. de entradas para mostrar (do servidor)] - mostra informação acerca de comandos disponíveis
+SEARCH_CMD_INFO = <correspondência> <entrada no.> [no. de entradas para mostrar (do servidor)] - mostra informações acerca de comandos correspondentes á pesquisa
+NO_MATCHING_RESULTS = ^nSem resultados correspondentes^n

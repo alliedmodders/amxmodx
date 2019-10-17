@@ -573,3 +573,27 @@ ADMIN_V_MAP_2 = ADMIN %s: votoj hartën(s)
 ADMIN_CHANGEL_1 = ADMIN: ndryshoj hartën në %s
 ADMIN_CHANGEL_2 = ADMIN %s: ndryshoj hartën në %s
 CHANGLE_MENU = Lista Ndryshimeve Hartës
+
+[pt]
+RESULT_REF = Resultado recusado
+RESULT_ACC = Resultado aceite
+VOTE_SUCCESS = A votação terminou com sucesso. Vai ser mudado para o mapa
+VOTE_FAILED = A votação falhou
+THE_WINNER = O vencedor
+WANT_CONT = Queres continuar?
+VOT_CANC = A votação foi cancelada
+X_VOTED_FOR = %s votou a opção #%d
+VOTEMAP_MENU = Menu de Votação de Mapas
+START_VOT = Iniciar Votação
+SEL_MAPS = Mapas Selecionados
+ALREADY_VOT = Já existe uma votação a decorrer...
+NO_MAPS_MENU = Não existem mapas no menu
+VOT_NOW_ALLOW = Não é permitido agora uma votação
+WHICH_MAP = Que mapa queres?
+CHANGE_MAP_TO = Mudar o Mapa para
+CANC_VOTE = Cancelar Votação
+ADMIN_V_MAP_1 = ADMIN: começou uma votação de mapa(s)
+ADMIN_V_MAP_2 = ADMIN %s: começou uma votação de mapa(s)
+ADMIN_CHANGEL_1 = ADMIN: mudou de mapa para %s
+ADMIN_CHANGEL_2 = ADMIN %s: mudou de mapa para %s
+CHANGLE_MENU = Menu de Mudar de Mapa

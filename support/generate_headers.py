@@ -88,14 +88,17 @@ def output_version_headers():
 #endif
 #define _amxmodx_version_included
 
-#define AMXX_VERSION_TAG        \"{tag}\"
-#define AMXX_VERSION_CSET       \"{shorthash}\"
-#define AMXX_VERSION_MAJOR      \"{major}\"
-#define AMXX_VERSION_MINOR      \"{minor}\"
-#define AMXX_VERSION_RELEASE    \"{release}\"
-#define AMXX_VERSION_LOCAL_REV  \"{count}\"
-#define AMXX_VERSION            {major}.{minor}{release}
-#define AMXX_VERSION_NUM        {version_num}
+#define AMXX_VERSION_TAG            \"{tag}\"
+#define AMXX_VERSION_CSET           \"{shorthash}\"
+#define AMXX_VERSION_MAJOR          \"{major}\"
+#define AMXX_VERSION_MAJOR_NUM      {major}
+#define AMXX_VERSION_MINOR          \"{minor}\"
+#define AMXX_VERSION_MINOR_NUM      {minor}
+#define AMXX_VERSION_RELEASE        \"{release}\"
+#define AMXX_VERSION_LOCAL_REV_NUM  {count}
+#define AMXX_VERSION_LOCAL_REV      \"{count}\"
+#define AMXX_VERSION                {major}.{minor}{release}
+#define AMXX_VERSION_NUM            {version_num}
 
 stock const AMXX_VERSION_STR[] = "{fullstring}";
     """.format(

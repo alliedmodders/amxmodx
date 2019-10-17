@@ -7,7 +7,7 @@ use File::Basename;
 use File::stat;
 use File::Temp qw/ tempfile :seekable/;
 use Net::FTP;
-use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+use Archive::Tar;
 use Time::localtime;
 
 my ($ftp_file, $ftp_host, $ftp_user, $ftp_pass, $ftp_path);
@@ -72,12 +72,10 @@ if (-e $geoIPfile) {
 	unlink($geoIPfile);
 }
 
-open(my $fh, ">", $geoIPfile) 
-    	or die "cannot open $geoIPfile for writing: $!";
-binmode($fh);
-gunzip '../GeoLite2-Country.tar.gz' => $fh
-        or die "gunzip failed: $GunzipError\n";
-close($fh);
+my $next = Archive::Tar->iter('../GeoLite2-Country.tar.gz', 1, {filter => qr/\.mmdb$/});
+while (my $file = $next->()) {
+	$file->extract($geoIPfile) or warn "Extraction failed";
+}
 
 my (@packages,@mac_exclude);
 @packages = ('base', 'cstrike', 'dod', 'esf', 'ns', 'tfc', 'ts');

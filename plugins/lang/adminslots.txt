@@ -62,7 +62,10 @@ DROPPED_RES = Server je pun, nemate pristup rezerviranim mjestima
 DROPPED_RES = Server je pun, nemate pristup rezervisanim mjestima
 
 [ru]
-DROPPED_RES = Извините, этот слот зарезервирован!
+DROPPED_RES = Извините мест нет, это зарезервированный слот!
 
 [cn]
 DROPPED_RES = 由于你无法使用预留通道,以至于与服务器连接断开
+
+[al]
+DROPPED_RES = U largua për shkak të rezervimit të vendit që është plugini aktiv në server!

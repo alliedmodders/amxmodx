@@ -345,8 +345,8 @@ USAGE = Használat
 MORE_CL_MATCHT = Több játékosra is egyezik a megadott feltétel
 CL_NOT_FOUND = Nincs ilyen nevű játékos
 CLIENT_IMM = "%s" immunitás joggal rendelkezik
-CANT_PERF_DEAD = Ezt a műveletet nem hajthatod végre "%s" játékoson mivel halott
-CANT_PERF_BOT = Ezt a műveletet nem hajthatod végre "%s" játékoson mivel bot
+CANT_PERF_DEAD = Ezt a műveletet nem hajthatod végre "%s" játékoson mert halott
+CANT_PERF_BOT = Ezt a műveletet nem hajthatod végre "%s" játékoson mert bot
 ON = BE
 OFF = KI
 
@@ -503,3 +503,25 @@ CANT_PERF_DEAD = 玩家 "%s" 已经死亡,无法执行该命令
 CANT_PERF_BOT = 机器人 "%s" 无法执行该命令
 ON = 开启
 OFF = 关闭
+
+[al]
+BACK = Mbrapa
+EXIT = Mbylle
+MORE = Më shumë
+NONE = Asnjë
+ADMIN = ADMIN
+PLAYER = LOJTAR
+ERROR = gabim
+YES = Po
+NO = Jo
+BAN = dënim
+KICK = largim
+NO_ACC_COM = Nuk keni qasje në këtë komandë
+USAGE = Përdori
+MORE_CL_MATCHT = Ka më shumë se një lojtarë që përputhet me argumentin tuaj
+CL_NOT_FOUND = Lojtari me atë emër nuk është gjetur
+CLIENT_IMM = Lojtari "%s" ka imunitet
+CANT_PERF_DEAD = Ky veprim nuk mund të kryhet në një lojtar të vdekur "%s"
+CANT_PERF_BOT = Ky veprim nuk mund të kryhet në bot(jo lojtar) "%s"
+ON = Aktiv
+OFF = Joaktiv

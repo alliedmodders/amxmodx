@@ -141,13 +141,13 @@ TIME_INFO_2 = Nici o Limita a Timpului. Urmatoarea Harta: %s
 [hu]
 HELP_COMS = AMX Mod X segítség: Parancsok
 HELP_ENTRIES = Bejegyzés %d - %d of %d
-HELP_USE_MORE = Írj 'amx_help %d' többhöz
-HELP_USE_BEGIN = Írj 'amx_help 1'-et az első oldalhoz
-TYPE_HELP = Írj 'amx_help'-et a konzolba, hogy láthasd a parancsokat
+HELP_USE_MORE = Írj 'amx_help %d' -t többhöz
+HELP_USE_BEGIN = Yrj 'amx_help 1' -t az első oldalhoz
+TYPE_HELP = Írj 'amx_help' -t a konzolba hogy láthasd a parancsokat
 TIME_INFO_1 = Hátrálévő idő: %d:%02d perc. következő pálya: %s
 TIME_INFO_2 = Nincs időhatár. A következő pálya: %s
-HELP_CMD_INFO = <bejegyzés száma> [megjelenítendő bejegyzések száma (csak szerver)] - információt nyújt az elérhető parancsokhoz
-SEARCH_CMD_INFO = <egyezés> <bejegyzés száma> [megjelenítendő bejegyzések száma (csak szerver)] - információt nyújt a talált parancsokhoz
+HELP_CMD_INFO = <bejegyzés száma.> [megjeneítendő bejegyzések száma (csak szerver)] - információt nyújt az elérhető parancsokhoz
+SEARCH_CMD_INFO = <egyezés> <bejegyzés száma> [megjeneítendő bejegyzések száma (csak szerver)] - információt nyújt az egyező parancsokhoz
 NO_MATCHING_RESULTS = ^nNem található egyezés^n
 
 [lt]
@@ -200,7 +200,7 @@ HELP_COMS = AMX Mod X Помощь: Команды
 HELP_ENTRIES = Список доступных команд с %d по %d. Всего команд - %d
 HELP_USE_MORE = Напишите '%s %d" для продолжения
 HELP_USE_BEGIN = Напишите '%s 1' для просмотра с начала
-TYPE_HELP = Напишите в консоли '%s' '%s' для просмотра доступных команд
+TYPE_HELP = Напишите в консоле '%s' '%s' для просмотра доступных команд
 TIME_INFO_1 = До смены карты осталось: %d:%02d мин. Следующая карта: %s
 TIME_INFO_2 = Ограничения по времени нет. Следующая карта: %s
 
@@ -212,3 +212,15 @@ HELP_USE_BEGIN = 使用 '%s 1' 返回首页
 TYPE_HELP = 在控制台输入 '%s' '%s' 查看有效的命令
 TIME_INFO_1 = 剩余时间: %d:%02d 分钏. 下一张地图为: %s
 TIME_INFO_2 = 无时间限制. 下一张地图为: %s
+
+[al]
+HELP_COMS = AMX Mod X Ndihma: Komandat
+HELP_ENTRIES = Hyrje %d - %d prej %d
+HELP_USE_MORE = Përdorë '%s %d' për më shumë
+HELP_USE_BEGIN = Përdorë '%s 1' për të filluar
+TYPE_HELP = Shkruaj '%s' '%s' në konsole për ti shikuar komandat e lira
+TIME_INFO_1 = Koha Mbetur: %d:%02d min. Harta Ardhëshme: %s
+TIME_INFO_2 = Pakufizuar. Harta Ardhëshme: %s
+HELP_CMD_INFO = <hyrja nr.> [nr. e hyrjeve për t'u shfaqur (vetem serveri)] - tregon informacion në lidhje me komandat në dispozicion
+SEARCH_CMD_INFO = <ndeshje> <hyrja nr.> [nr. e hyrjeve për t'u shfaqur (vetem serveri)] - shfaq informacione rreth komandave të përputhura
+NO_MATCHING_RESULTS = ^nNuk u gjetën rezultate^n

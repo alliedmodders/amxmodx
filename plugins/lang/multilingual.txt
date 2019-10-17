@@ -237,7 +237,7 @@ SERVER_LANG = Язык сервера
 SAVE_LANG = Сохранить язык
 SET_LANG_SERVER = Язык по-умолчанию изменен на "%s"
 SET_LANG_USER = Ваш язык изменен на "%s"
-TYPE_LANGMENU = Напишите 'amx_langmenu' в консоли для выбора языка
+TYPE_LANGMENU = Напишите 'amx_langmenu' в консоле для выбора языка
 LANG_MENU_DISABLED = Меню выбора языка заблокировано.
 
 [cn]
@@ -250,3 +250,14 @@ SET_LANG_SERVER = 服务器语言被设置为 "%s"
 SET_LANG_USER = 你的语言被设置为 "%s"
 TYPE_LANGMENU = 在控制台输入'amx_langmenu'打开一个菜单来选择你的语言
 LANG_MENU_DISABLED = 语言菜单已禁用.
+
+[al]
+LANG_NOT_EXISTS = Kjo gjuhë nuk ekziston
+PERSO_LANG = Gjuha Personale
+LANG_MENU = Lista Gjuhës
+SERVER_LANG = Gjuha Serverit
+SAVE_LANG = Ruaj Gjuhën
+SET_LANG_SERVER = Gjuha e Serverit u vendos "%s"
+SET_LANG_USER = Gjuha juaj u vendos "%s"
+TYPE_LANGMENU = Shkruaj 'amx_langmenu' në konsole për të shfaqur listën e gjuhëve
+LANG_MENU_DISABLED = Lista e gjuhëve është e ndalur.

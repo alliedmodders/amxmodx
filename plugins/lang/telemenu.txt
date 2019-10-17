@@ -104,10 +104,10 @@ CUR_LOC = Locatia Actuala
 SAVE_LOC = Salveaza Locatie
 
 [hu]
-ADMIN_TELEPORT_1 = ADMIN: %s teleportálva
-ADMIN_TELEPORT_2 = ADMIN %s: %s teleportálva
-TELE_MENU = Teleport Menü
-CUR_LOC = Jelenlegi hely
+ADMIN_TELEPORT_1 = ADMIN: %s teleport
+ADMIN_TELEPORT_2 = ADMIN %s: %s teleport
+TELE_MENU = Teleport Menu
+CUR_LOC = Mostani hely
 SAVE_LOC = Hely mentése
 
 [lt]
@@ -158,3 +158,10 @@ ADMIN_TELEPORT_2 = 管理员 %s: 传送 %s
 TELE_MENU = 传送菜单
 CUR_LOC = 当前位置
 SAVE_LOC = 存储位置
+
+[al]
+ADMIN_TELEPORT_1 = ADMIN: transferoj %s
+ADMIN_TELEPORT_2 = ADMIN %s: transferoj %s
+TELE_MENU = Lista Transferimit
+CUR_LOC = Vendi Tanishëm
+SAVE_LOC = Ruaj Vendin

@@ -23,21 +23,12 @@
 					{
 						"type"      "float"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
-					}
-
-					"m_crabTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "664"
 						"linux"     "684"
 						"mac"       "684"
 					}
 
-					"m_mortarTime"  // float
+					"m_crabTime"  // float
 					{
 						"type"      "float"
 
@@ -46,7 +37,7 @@
 						"mac"       "688"
 					}
 
-					"m_painSoundTime"  // float
+					"m_mortarTime"  // float
 					{
 						"type"      "float"
 
@@ -55,13 +46,22 @@
 						"mac"       "692"
 					}
 
-					"m_crabCount"  // int
+					"m_painSoundTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "676"
 						"linux"     "696"
 						"mac"       "696"
+					}
+
+					"m_crabCount"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "680"
+						"linux"     "700"
+						"mac"       "700"
 					}
 				}
 			}

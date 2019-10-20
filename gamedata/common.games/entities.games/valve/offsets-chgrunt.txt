@@ -23,21 +23,12 @@
 					{
 						"type"      "float"
 
-						"windows"   "716"
-						"linux"     "736"
-						"mac"       "736"
-					}
-
-					"m_flNextPainTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
 					}
 
-					"m_flLastEnemySightTime"  // float
+					"m_flNextPainTime"  // float
 					{
 						"type"      "float"
 
@@ -46,25 +37,25 @@
 						"mac"       "744"
 					}
 
-					"m_vecTossVelocity"  // Vector
+					"m_flLastEnemySightTime"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "728"
 						"linux"     "748"
 						"mac"       "748"
 					}
 
-					"m_fThrowGrenade"  // BOOL
+					"m_vecTossVelocity"  // Vector
 					{
-						"type"      "integer"
+						"type"      "vector"
 
-						"windows"   "740"
-						"linux"     "760"
-						"mac"       "760"
+						"windows"   "732"
+						"linux"     "752"
+						"mac"       "752"
 					}
 
-					"m_fStanding"  // BOOL
+					"m_fThrowGrenade"  // BOOL
 					{
 						"type"      "integer"
 
@@ -73,7 +64,7 @@
 						"mac"       "764"
 					}
 
-					"m_fFirstEncounter"  // BOOL
+					"m_fStanding"  // BOOL
 					{
 						"type"      "integer"
 
@@ -82,7 +73,7 @@
 						"mac"       "768"
 					}
 
-					"m_cClipSize"  // int
+					"m_fFirstEncounter"  // BOOL
 					{
 						"type"      "integer"
 
@@ -91,7 +82,7 @@
 						"mac"       "772"
 					}
 
-					"m_voicePitch"  // int
+					"m_cClipSize"  // int
 					{
 						"type"      "integer"
 
@@ -100,7 +91,7 @@
 						"mac"       "776"
 					}
 
-					"m_iBrassShell"  // int
+					"m_voicePitch"  // int
 					{
 						"type"      "integer"
 
@@ -109,7 +100,7 @@
 						"mac"       "780"
 					}
 
-					"m_iShotgunShell"  // int
+					"m_iBrassShell"  // int
 					{
 						"type"      "integer"
 
@@ -118,13 +109,22 @@
 						"mac"       "784"
 					}
 
-					"m_iSentence"  // int
+					"m_iShotgunShell"  // int
 					{
 						"type"      "integer"
 
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
+					}
+
+					"m_iSentence"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "772"
+						"linux"     "792"
+						"mac"       "792"
 					}
 				}
 			}

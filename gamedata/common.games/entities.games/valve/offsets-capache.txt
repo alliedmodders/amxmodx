@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
-					}
-
-					"m_flForce"  // float
-					{
-						"type"      "float"
-
 						"windows"   "664"
 						"linux"     "684"
 						"mac"       "684"
 					}
 
-					"m_flNextRocket"  // float
+					"m_flForce"  // float
 					{
 						"type"      "float"
 
@@ -46,70 +37,70 @@
 						"mac"       "688"
 					}
 
-					"m_vecTarget"  // Vector
+					"m_flNextRocket"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "672"
 						"linux"     "692"
 						"mac"       "692"
 					}
 
+					"m_vecTarget"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "676"
+						"linux"     "696"
+						"mac"       "696"
+					}
+
 					"m_posTarget"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "684"
-						"linux"     "704"
-						"mac"       "704"
+						"windows"   "688"
+						"linux"     "708"
+						"mac"       "708"
 					}
 
 					"m_vecDesired"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "696"
-						"linux"     "716"
-						"mac"       "716"
+						"windows"   "700"
+						"linux"     "720"
+						"mac"       "720"
 					}
 
 					"m_posDesired"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 
 					"m_vecGoal"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "720"
-						"linux"     "740"
-						"mac"       "740"
+						"windows"   "724"
+						"linux"     "744"
+						"mac"       "744"
 					}
 
 					"m_angGun"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "732"
-						"linux"     "752"
-						"mac"       "752"
+						"windows"   "736"
+						"linux"     "756"
+						"mac"       "756"
 					}
 
 					"m_flLastSeen"  // float
-					{
-						"type"      "float"
-
-						"windows"   "744"
-						"linux"     "764"
-						"mac"       "764"
-					}
-
-					"m_flPrevSeen"  // float
 					{
 						"type"      "float"
 
@@ -118,16 +109,16 @@
 						"mac"       "768"
 					}
 
-					"m_iSoundState"  // int
+					"m_flPrevSeen"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"
 					}
 
-					"m_iSpriteTexture"  // int
+					"m_iSoundState"  // int
 					{
 						"type"      "integer"
 
@@ -136,7 +127,7 @@
 						"mac"       "776"
 					}
 
-					"m_iExplode"  // int
+					"m_iSpriteTexture"  // int
 					{
 						"type"      "integer"
 
@@ -145,7 +136,7 @@
 						"mac"       "780"
 					}
 
-					"m_iBodyGibs"  // int
+					"m_iExplode"  // int
 					{
 						"type"      "integer"
 
@@ -154,31 +145,40 @@
 						"mac"       "784"
 					}
 
-					"m_flGoalSpeed"  // float
+					"m_iBodyGibs"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
 					}
 
-					"m_iDoSmokePuff"  // int
+					"m_flGoalSpeed"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "772"
 						"linux"     "792"
 						"mac"       "792"
 					}
 
-					"m_pBeam"  // CBeam*
+					"m_iDoSmokePuff"  // int
 					{
-						"type"      "classptr"
+						"type"      "integer"
 
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
+					}
+
+					"m_pBeam"  // CBeam*
+					{
+						"type"      "classptr"
+
+						"windows"   "780"
+						"linux"     "800"
+						"mac"       "800"
 					}
 				}
 			}

@@ -23,84 +23,75 @@
 					{
 						"type"      "float"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
+						"windows"   "664"
+						"linux"     "684"
+						"mac"       "684"
 					}
 
 					"m_flNextPainSound"  // float
 					{
 						"type"      "float"
 
-						"windows"   "664"
-						"linux"     "684"
-						"mac"       "684"
+						"windows"   "668"
+						"linux"     "688"
+						"mac"       "688"
 					}
 
 					"m_velocity"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "668"
-						"linux"     "688"
-						"mac"       "688"
+						"windows"   "672"
+						"linux"     "692"
+						"mac"       "692"
 					}
 
 					"m_avelocity"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "680"
-						"linux"     "700"
-						"mac"       "700"
+						"windows"   "684"
+						"linux"     "704"
+						"mac"       "704"
 					}
 
 					"m_vecTarget"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "692"
-						"linux"     "712"
-						"mac"       "712"
+						"windows"   "696"
+						"linux"     "716"
+						"mac"       "716"
 					}
 
 					"m_posTarget"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "704"
-						"linux"     "724"
-						"mac"       "724"
+						"windows"   "708"
+						"linux"     "728"
+						"mac"       "728"
 					}
 
 					"m_vecDesired"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "716"
-						"linux"     "736"
-						"mac"       "736"
+						"windows"   "720"
+						"linux"     "740"
+						"mac"       "740"
 					}
 
 					"m_posDesired"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "728"
-						"linux"     "748"
-						"mac"       "748"
+						"windows"   "732"
+						"linux"     "752"
+						"mac"       "752"
 					}
 
 					"m_flMinZ"  // float
-					{
-						"type"      "float"
-
-						"windows"   "740"
-						"linux"     "760"
-						"mac"       "760"
-					}
-
-					"m_flMaxZ"  // float
 					{
 						"type"      "float"
 
@@ -109,25 +100,25 @@
 						"mac"       "764"
 					}
 
-					"m_vecGoal"  // Vector
+					"m_flMaxZ"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "748"
 						"linux"     "768"
 						"mac"       "768"
 					}
 
-					"m_flLastSeen"  // float
+					"m_vecGoal"  // Vector
 					{
-						"type"      "float"
+						"type"      "vector"
 
-						"windows"   "760"
-						"linux"     "780"
-						"mac"       "780"
+						"windows"   "752"
+						"linux"     "772"
+						"mac"       "772"
 					}
 
-					"m_flPrevSeen"  // float
+					"m_flLastSeen"  // float
 					{
 						"type"      "float"
 
@@ -136,16 +127,16 @@
 						"mac"       "784"
 					}
 
-					"m_irritation"  // int
+					"m_flPrevSeen"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
 					}
 
-					"m_iLevel"  // int
+					"m_irritation"  // int
 					{
 						"type"      "integer"
 
@@ -154,7 +145,7 @@
 						"mac"       "792"
 					}
 
-					"m_iTeleport"  // int
+					"m_iLevel"  // int
 					{
 						"type"      "integer"
 
@@ -163,13 +154,22 @@
 						"mac"       "796"
 					}
 
-					"m_hRecharger"  // EHANDLE
+					"m_iTeleport"  // int
 					{
-						"type"      "ehandle"
+						"type"      "integer"
 
 						"windows"   "780"
 						"linux"     "800"
 						"mac"       "800"
+					}
+
+					"m_hRecharger"  // EHANDLE
+					{
+						"type"      "ehandle"
+
+						"windows"   "784"
+						"linux"     "804"
+						"mac"       "804"
 					}
 
 					"m_hSphere"  // EHANDLE[20]
@@ -177,36 +177,36 @@
 						"type"      "ehandle"
 						"size"      "20"
 
-						"windows"   "788"
-						"linux"     "808"
-						"mac"       "808"
+						"windows"   "792"
+						"linux"     "812"
+						"mac"       "812"
 					}
 
 					"m_iActiveSpheres"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "948"
-						"linux"     "968"
-						"mac"       "968"
+						"windows"   "952"
+						"linux"     "972"
+						"mac"       "972"
 					}
 
 					"m_flAdj"  // float
 					{
 						"type"      "float"
 
-						"windows"   "952"
-						"linux"     "972"
-						"mac"       "972"
+						"windows"   "956"
+						"linux"     "976"
+						"mac"       "976"
 					}
 
 					"m_pBall"  // CSprite*
 					{
 						"type"      "classptr"
 
-						"windows"   "956"
-						"linux"     "976"
-						"mac"       "976"
+						"windows"   "960"
+						"linux"     "980"
+						"mac"       "980"
 					}
 
 					"m_szRechargerTarget"  // char[64]
@@ -214,9 +214,9 @@
 						"type"      "string"
 						"size"      "64"
 
-						"windows"   "960"
-						"linux"     "980"
-						"mac"       "980"
+						"windows"   "964"
+						"linux"     "984"
+						"mac"       "984"
 					}
 
 					"m_szDrawUse"  // char[64]
@@ -224,9 +224,9 @@
 						"type"      "string"
 						"size"      "64"
 
-						"windows"   "1024"
-						"linux"     "1044"
-						"mac"       "1044"
+						"windows"   "1028"
+						"linux"     "1048"
+						"mac"       "1048"
 					}
 
 					"m_szTeleportUse"  // char[64]
@@ -234,9 +234,9 @@
 						"type"      "string"
 						"size"      "64"
 
-						"windows"   "1088"
-						"linux"     "1108"
-						"mac"       "1108"
+						"windows"   "1092"
+						"linux"     "1112"
+						"mac"       "1112"
 					}
 
 					"m_szTeleportTouch"  // char[64]
@@ -244,9 +244,9 @@
 						"type"      "string"
 						"size"      "64"
 
-						"windows"   "1152"
-						"linux"     "1172"
-						"mac"       "1172"
+						"windows"   "1156"
+						"linux"     "1176"
+						"mac"       "1176"
 					}
 
 					"m_szDeadUse"  // char[64]
@@ -254,9 +254,9 @@
 						"type"      "string"
 						"size"      "64"
 
-						"windows"   "1216"
-						"linux"     "1236"
-						"mac"       "1236"
+						"windows"   "1220"
+						"linux"     "1240"
+						"mac"       "1240"
 					}
 
 					"m_szDeadTouch"  // char[64]
@@ -264,21 +264,12 @@
 						"type"      "string"
 						"size"      "64"
 
-						"windows"   "1280"
-						"linux"     "1300"
-						"mac"       "1300"
+						"windows"   "1284"
+						"linux"     "1304"
+						"mac"       "1304"
 					}
 
 					"m_flShootEnd"  // float
-					{
-						"type"      "float"
-
-						"windows"   "1344"
-						"linux"     "1364"
-						"mac"       "1364"
-					}
-
-					"m_flShootTime"  // float
 					{
 						"type"      "float"
 
@@ -287,14 +278,23 @@
 						"mac"       "1368"
 					}
 
+					"m_flShootTime"  // float
+					{
+						"type"      "float"
+
+						"windows"   "1352"
+						"linux"     "1372"
+						"mac"       "1372"
+					}
+
 					"m_hFriend"  // EHANDLE[3]
 					{
 						"type"      "ehandle"
 						"size"      "3"
 
-						"windows"   "1352"
-						"linux"     "1372"
-						"mac"       "1372"
+						"windows"   "1356"
+						"linux"     "1376"
+						"mac"       "1376"
 					}
 				}
 			}

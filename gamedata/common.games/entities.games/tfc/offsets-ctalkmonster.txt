@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "1700"
-						"linux"     "1720"
-						"mac"       "1720"
-					}
-
-					"m_nSpeak"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "1704"
 						"linux"     "1724"
 						"mac"       "1724"
 					}
 
-					"m_voicePitch"  // int
+					"m_nSpeak"  // int
 					{
 						"type"      "integer"
 
@@ -46,35 +37,35 @@
 						"mac"       "1728"
 					}
 
-					"m_szGrp"  // const char*[18]
+					"m_voicePitch"  // int
 					{
-						"type"      "stringptr"
-						"size"      "18"
+						"type"      "integer"
 
 						"windows"   "1712"
 						"linux"     "1732"
 						"mac"       "1732"
 					}
 
+					"m_szGrp"  // const char*[18]
+					{
+						"type"      "stringptr"
+						"size"      "18"
+
+						"windows"   "1716"
+						"linux"     "1736"
+						"mac"       "1736"
+					}
+
 					"m_useTime"  // float
 					{
 						"type"      "float"
-
-						"windows"   "1784"
-						"linux"     "1804"
-						"mac"       "1804"
-					}
-
-					"m_iszUse"  // int
-					{
-						"type"      "integer"
 
 						"windows"   "1788"
 						"linux"     "1808"
 						"mac"       "1808"
 					}
 
-					"m_iszUnUse"  // int
+					"m_iszUse"  // int
 					{
 						"type"      "integer"
 
@@ -83,16 +74,16 @@
 						"mac"       "1812"
 					}
 
-					"m_flLastSaidSmelled"  // float
+					"m_iszUnUse"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "1796"
 						"linux"     "1816"
 						"mac"       "1816"
 					}
 
-					"m_flStopTalkTime"  // float
+					"m_flLastSaidSmelled"  // float
 					{
 						"type"      "float"
 
@@ -101,13 +92,22 @@
 						"mac"       "1820"
 					}
 
-					"m_hTalkTarget"  // EHANDLE
+					"m_flStopTalkTime"  // float
 					{
-						"type"      "ehandle"
+						"type"      "float"
 
 						"windows"   "1804"
 						"linux"     "1824"
 						"mac"       "1824"
+					}
+
+					"m_hTalkTarget"  // EHANDLE
+					{
+						"type"      "ehandle"
+
+						"windows"   "1808"
+						"linux"     "1828"
+						"mac"       "1828"
 					}
 				}
 			}

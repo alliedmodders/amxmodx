@@ -23,18 +23,18 @@
 					{
 						"type"      "float"
 
-						"windows"   "1728"
-						"linux"     "1748"
-						"mac"       "1748"
+						"windows"   "1732"
+						"linux"     "1752"
+						"mac"       "1752"
 					}
 
 					"blastRadius"  // float
 					{
 						"type"      "float"
 
-						"windows"   "1732"
-						"linux"     "1752"
-						"mac"       "1752"
+						"windows"   "1736"
+						"linux"     "1756"
+						"mac"       "1756"
 					}
 				}
 			}

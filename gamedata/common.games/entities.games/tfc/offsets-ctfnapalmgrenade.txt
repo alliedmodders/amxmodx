@@ -23,36 +23,36 @@
 					{
 						"type"      "integer"
 
-						"windows"   "1736"
-						"linux"     "1756"
-						"mac"       "1756"
+						"windows"   "1740"
+						"linux"     "1760"
+						"mac"       "1760"
 					}
 
 					"m_bitsDamageType"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "1740"
-						"linux"     "1760"
-						"mac"       "1760"
+						"windows"   "1744"
+						"linux"     "1764"
+						"mac"       "1764"
 					}
 
 					"m_flEffectTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "1744"
-						"linux"     "1764"
-						"mac"       "1764"
+						"windows"   "1748"
+						"linux"     "1768"
+						"mac"       "1768"
 					}
 
 					"m_flDamageTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "1748"
-						"linux"     "1768"
-						"mac"       "1768"
+						"windows"   "1752"
+						"linux"     "1772"
+						"mac"       "1772"
 					}
 				}
 			}

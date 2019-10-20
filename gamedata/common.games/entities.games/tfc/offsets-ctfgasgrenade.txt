@@ -23,9 +23,9 @@
 					{
 						"type"      "integer"
 
-						"windows"   "1736"
-						"linux"     "1756"
-						"mac"       "1756"
+						"windows"   "1740"
+						"linux"     "1760"
+						"mac"       "1760"
 					}
 				}
 			}

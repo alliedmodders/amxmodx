@@ -23,30 +23,21 @@
 					{
 						"type"      "classptr"
 
-						"windows"   "1700"
-						"linux"     "1720"
-						"mac"       "1720"
+						"windows"   "1704"
+						"linux"     "1724"
+						"mac"       "1724"
 					}
 
 					"m_flInitialUseDelay"  // float
 					{
 						"type"      "float"
 
-						"windows"   "1704"
-						"linux"     "1724"
-						"mac"       "1724"
-					}
-
-					"m_iType"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "1708"
 						"linux"     "1728"
 						"mac"       "1728"
 					}
 
-					"m_iState"  // int
+					"m_iType"  // int
 					{
 						"type"      "integer"
 
@@ -55,7 +46,7 @@
 						"mac"       "1732"
 					}
 
-					"m_iDestroyed"  // int
+					"m_iState"  // int
 					{
 						"type"      "integer"
 
@@ -64,7 +55,7 @@
 						"mac"       "1736"
 					}
 
-					"m_iShardIndex"  // int
+					"m_iDestroyed"  // int
 					{
 						"type"      "integer"
 
@@ -73,22 +64,31 @@
 						"mac"       "1740"
 					}
 
-					"m_flMyNextThink"  // float
+					"m_iShardIndex"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "1724"
 						"linux"     "1744"
 						"mac"       "1744"
 					}
 
-					"m_flDamageDelay"  // float
+					"m_flMyNextThink"  // float
 					{
 						"type"      "float"
 
 						"windows"   "1728"
 						"linux"     "1748"
 						"mac"       "1748"
+					}
+
+					"m_flDamageDelay"  // float
+					{
+						"type"      "float"
+
+						"windows"   "1732"
+						"linux"     "1752"
+						"mac"       "1752"
 					}
 				}
 			}

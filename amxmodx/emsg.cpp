@@ -88,11 +88,14 @@ void Client_TeamInfo(void* mValue)
 			if (index < 1 || index > gpGlobals->maxClients) break;
 			char* msg = (char*)mValue;
 			if (!msg) break;
-			g_players[index].team = msg;
+
+			auto pPlayer = GET_PLAYER_POINTER_I(index);
+		
+			pPlayer->team = msg;
 			g_teamsIds.registerTeam(msg, -1);
-			g_players[index].teamId = g_teamsIds.findTeamId(msg);
+			pPlayer->teamId = g_teamsIds.findTeamId(msg);
 						
-			if (g_players[index].teamId == -1)
+			if (pPlayer->teamId == -1)
 			{
 				/**
 				 * CS fix for SPECTATOR team. 
@@ -103,7 +106,7 @@ void Client_TeamInfo(void* mValue)
 				 */
 				if (g_bmod_cstrike && !strcmp(msg, "SPECTATOR"))
 				{
-					g_players[index].teamId = 3;
+					pPlayer->teamId = 3;
 					g_teamsIds.registerTeam(msg, 3);
 				}
 
@@ -113,14 +116,14 @@ void Client_TeamInfo(void* mValue)
 				 * then changes team. Index will return -1 until ScoreInfo is sent, usually at the next spawn.
 				 */
 				else if ((g_bmod_cstrike || g_bmod_dod || g_bmod_tfc || g_bmod_gearbox || g_bmod_valve) 
-					&&  g_players[index].pEdict->pvPrivateData 
-					&& !g_players[index].IsAlive())
+					&&  pPlayer->pEdict->pvPrivateData 
+					&& !pPlayer->IsAlive())
 				{
 					GET_OFFSET_NO_ERROR("CBasePlayer", m_iTeam);
 
-					const auto teamId = get_pdata<int>(g_players[index].pEdict, m_iTeam);
+					const auto teamId = get_pdata<int>(pPlayer->pEdict, m_iTeam);
 					
-					g_players[index].teamId = teamId;
+					pPlayer->teamId = teamId;
 					g_teamsIds.registerTeam(msg, teamId);
 				}
 			}

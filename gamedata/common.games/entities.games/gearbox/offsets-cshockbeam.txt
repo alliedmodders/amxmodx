@@ -23,21 +23,12 @@
 					{
 						"type"      "classptr"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
-					}
-
-					"m_pBeam2"  // CBeam*
-					{
-						"type"      "classptr"
-
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
 					}
 
-					"m_pSprite"  // CSprite*
+					"m_pBeam2"  // CBeam*
 					{
 						"type"      "classptr"
 
@@ -46,13 +37,22 @@
 						"mac"       "740"
 					}
 
-					"m_iBeams"  // int
+					"m_pSprite"  // CSprite*
 					{
-						"type"      "integer"
+						"type"      "classptr"
 
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
+					}
+
+					"m_iBeams"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "728"
+						"linux"     "748"
+						"mac"       "748"
 					}
 				}
 			}

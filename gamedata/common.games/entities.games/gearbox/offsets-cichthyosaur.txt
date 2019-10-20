@@ -23,30 +23,12 @@
 					{
 						"type"      "vector"
 
-						"windows"   "736"
-						"linux"     "756"
-						"mac"       "756"
+						"windows"   "744"
+						"linux"     "764"
+						"mac"       "764"
 					}
 
 					"m_idealDist"  // float
-					{
-						"type"      "float"
-
-						"windows"   "748"
-						"linux"     "768"
-						"mac"       "768"
-					}
-
-					"m_flBlink"  // float
-					{
-						"type"      "float"
-
-						"windows"   "752"
-						"linux"     "772"
-						"mac"       "772"
-					}
-
-					"m_flEnemyTouched"  // float
 					{
 						"type"      "float"
 
@@ -55,16 +37,16 @@
 						"mac"       "776"
 					}
 
-					"m_bOnAttack"  // BOOL
+					"m_flBlink"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
 					}
 
-					"m_flMaxSpeed"  // float
+					"m_flEnemyTouched"  // float
 					{
 						"type"      "float"
 
@@ -73,16 +55,16 @@
 						"mac"       "784"
 					}
 
-					"m_flMinSpeed"  // float
+					"m_bOnAttack"  // BOOL
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
 					}
 
-					"m_flMaxDist"  // float
+					"m_flMaxSpeed"  // float
 					{
 						"type"      "float"
 
@@ -91,22 +73,58 @@
 						"mac"       "792"
 					}
 
-					"m_pBeam"  // CBeam*
+					"m_flMinSpeed"  // float
 					{
-						"type"      "classptr"
+						"type"      "float"
 
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
 					}
 
-					"m_flNextAlert"  // float
+					"m_flMaxDist"  // float
 					{
 						"type"      "float"
 
 						"windows"   "780"
 						"linux"     "800"
 						"mac"       "800"
+					}
+
+					"m_pBeam"  // CBeam*
+					{
+						"type"      "classptr"
+
+						"windows"   "784"
+						"linux"     "804"
+						"mac"       "804"
+					}
+
+					"m_flNextAlert"  // float
+					{
+						"type"      "float"
+
+						"windows"   "788"
+						"linux"     "808"
+						"mac"       "808"
+					}
+
+					"m_flLastPitchTime"  // float
+					{
+						"type"      "float"
+
+						"windows"   "792"
+						"linux"     "812"
+						"mac"       "812"
+					}
+
+					"m_flLastZYawTime"  // float
+					{
+						"type"      "float"
+
+						"windows"   "796"
+						"linux"     "816"
+						"mac"       "816"
 					}
 				}
 			}

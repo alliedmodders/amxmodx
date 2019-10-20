@@ -23,21 +23,12 @@
 					{
 						"type"      "float"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
-					}
-
-					"m_flDiviation"  // float
-					{
-						"type"      "float"
-
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
 					}
 
-					"m_flNextJump"  // float
+					"m_flDiviation"  // float
 					{
 						"type"      "float"
 
@@ -46,43 +37,43 @@
 						"mac"       "736"
 					}
 
-					"m_vecJumpVelocity"  // Vector
+					"m_flNextJump"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
 					}
 
+					"m_vecJumpVelocity"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "724"
+						"linux"     "744"
+						"mac"       "744"
+					}
+
 					"m_flNextGrenadeCheck"  // float
 					{
 						"type"      "float"
-
-						"windows"   "732"
-						"linux"     "752"
-						"mac"       "752"
-					}
-
-					"m_vecTossVelocity"  // Vector
-					{
-						"type"      "vector"
 
 						"windows"   "736"
 						"linux"     "756"
 						"mac"       "756"
 					}
 
-					"m_fThrowGrenade"  // BOOL
+					"m_vecTossVelocity"  // Vector
 					{
-						"type"      "integer"
+						"type"      "vector"
 
-						"windows"   "748"
-						"linux"     "768"
-						"mac"       "768"
+						"windows"   "740"
+						"linux"     "760"
+						"mac"       "760"
 					}
 
-					"m_iTargetRanderamt"  // int
+					"m_fThrowGrenade"  // BOOL
 					{
 						"type"      "integer"
 
@@ -91,7 +82,7 @@
 						"mac"       "772"
 					}
 
-					"m_iFrustration"  // int
+					"m_iTargetRanderamt"  // int
 					{
 						"type"      "integer"
 
@@ -100,13 +91,22 @@
 						"mac"       "776"
 					}
 
-					"m_iShell"  // int
+					"m_iFrustration"  // int
 					{
 						"type"      "integer"
 
 						"windows"   "760"
 						"linux"     "780"
 						"mac"       "780"
+					}
+
+					"m_iShell"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "764"
+						"linux"     "784"
+						"mac"       "784"
 					}
 				}
 			}

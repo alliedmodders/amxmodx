@@ -23,18 +23,18 @@
 					{
 						"type"      "integer"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 
 					"m_spriteScale"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 				}
 			}

@@ -23,9 +23,9 @@
 					{
 						"type"      "integer"
 
-						"windows"   "764"
-						"linux"     "784"
-						"mac"       "784"
+						"windows"   "768"
+						"linux"     "788"
+						"mac"       "788"
 					}
 
 					"m_pBeam"  // CBeam*[8]
@@ -33,45 +33,45 @@
 						"type"      "classptr"
 						"size"      "8"
 
-						"windows"   "768"
-						"linux"     "788"
-						"mac"       "788"
+						"windows"   "772"
+						"linux"     "792"
+						"mac"       "792"
 					}
 
 					"m_iBeams"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "800"
-						"linux"     "820"
-						"mac"       "820"
+						"windows"   "804"
+						"linux"     "824"
+						"mac"       "824"
 					}
 
 					"m_flNextAttack"  // float
 					{
 						"type"      "float"
 
-						"windows"   "804"
-						"linux"     "824"
-						"mac"       "824"
+						"windows"   "808"
+						"linux"     "828"
+						"mac"       "828"
 					}
 
 					"m_voicePitch"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "808"
-						"linux"     "828"
-						"mac"       "828"
+						"windows"   "812"
+						"linux"     "832"
+						"mac"       "832"
 					}
 
 					"m_hDead"  // EHANDLE
 					{
 						"type"      "ehandle"
 
-						"windows"   "812"
-						"linux"     "832"
-						"mac"       "832"
+						"windows"   "816"
+						"linux"     "836"
+						"mac"       "836"
 					}
 				}
 			}

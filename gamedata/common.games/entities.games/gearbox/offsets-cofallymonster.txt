@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
-					}
-
-					"m_nSpeak"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
 					}
 
-					"m_voicePitch"  // int
+					"m_nSpeak"  // int
 					{
 						"type"      "integer"
 
@@ -46,35 +37,35 @@
 						"mac"       "736"
 					}
 
-					"m_szGrp"  // const char*[18]
+					"m_voicePitch"  // int
 					{
-						"type"      "stringptr"
-						"size"      "18"
+						"type"      "integer"
 
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
 					}
 
+					"m_szGrp"  // const char*[18]
+					{
+						"type"      "stringptr"
+						"size"      "18"
+
+						"windows"   "724"
+						"linux"     "744"
+						"mac"       "744"
+					}
+
 					"m_useTime"  // float
 					{
 						"type"      "float"
-
-						"windows"   "792"
-						"linux"     "812"
-						"mac"       "812"
-					}
-
-					"m_iszUse"  // int
-					{
-						"type"      "integer"
 
 						"windows"   "796"
 						"linux"     "816"
 						"mac"       "816"
 					}
 
-					"m_iszUnUse"  // int
+					"m_iszUse"  // int
 					{
 						"type"      "integer"
 
@@ -83,16 +74,16 @@
 						"mac"       "820"
 					}
 
-					"m_flLastSaidSmelled"  // float
+					"m_iszUnUse"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "804"
 						"linux"     "824"
 						"mac"       "824"
 					}
 
-					"m_flStopTalkTime"  // float
+					"m_flLastSaidSmelled"  // float
 					{
 						"type"      "float"
 
@@ -101,13 +92,22 @@
 						"mac"       "828"
 					}
 
-					"m_hTalkTarget"  // EHANDLE
+					"m_flStopTalkTime"  // float
 					{
-						"type"      "ehandle"
+						"type"      "float"
 
 						"windows"   "812"
 						"linux"     "832"
 						"mac"       "832"
+					}
+
+					"m_hTalkTarget"  // EHANDLE
+					{
+						"type"      "ehandle"
+
+						"windows"   "816"
+						"linux"     "836"
+						"mac"       "836"
 					}
 				}
 			}

@@ -23,81 +23,81 @@
 					{
 						"type"      "float"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 
 					"m_vecDir"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "716"
-						"linux"     "736"
-						"mac"       "736"
+						"windows"   "720"
+						"linux"     "740"
+						"mac"       "740"
 					}
 
 					"m_vecEnd"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "728"
-						"linux"     "748"
-						"mac"       "748"
+						"windows"   "732"
+						"linux"     "752"
+						"mac"       "752"
 					}
 
 					"m_flBeamLength"  // float
 					{
 						"type"      "float"
 
-						"windows"   "740"
-						"linux"     "760"
-						"mac"       "760"
+						"windows"   "744"
+						"linux"     "764"
+						"mac"       "764"
 					}
 
 					"m_hOwner"  // EHANDLE
 					{
 						"type"      "ehandle"
 
-						"windows"   "744"
-						"linux"     "764"
-						"mac"       "764"
+						"windows"   "748"
+						"linux"     "768"
+						"mac"       "768"
 					}
 
 					"m_pBeam"  // CBeam*
 					{
 						"type"      "classptr"
 
-						"windows"   "752"
-						"linux"     "772"
-						"mac"       "772"
+						"windows"   "756"
+						"linux"     "776"
+						"mac"       "776"
 					}
 
 					"m_posOwner"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "756"
-						"linux"     "776"
-						"mac"       "776"
+						"windows"   "760"
+						"linux"     "780"
+						"mac"       "780"
 					}
 
 					"m_angleOwner"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "768"
-						"linux"     "788"
-						"mac"       "788"
+						"windows"   "772"
+						"linux"     "792"
+						"mac"       "792"
 					}
 
 					"m_pRealOwner"  // edict_t*
 					{
 						"type"      "edict"
 
-						"windows"   "780"
-						"linux"     "800"
-						"mac"       "800"
+						"windows"   "784"
+						"linux"     "804"
+						"mac"       "804"
 					}
 				}
 			}

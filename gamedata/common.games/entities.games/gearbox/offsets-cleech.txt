@@ -23,30 +23,21 @@
 					{
 						"type"      "float"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 
 					"m_fPathBlocked"  // BOOL
 					{
 						"type"      "integer"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
-					}
-
-					"m_flAccelerate"  // float
-					{
-						"type"      "float"
-
 						"windows"   "716"
 						"linux"     "736"
 						"mac"       "736"
 					}
 
-					"m_obstacle"  // float
+					"m_flAccelerate"  // float
 					{
 						"type"      "float"
 
@@ -55,7 +46,7 @@
 						"mac"       "740"
 					}
 
-					"m_top"  // float
+					"m_obstacle"  // float
 					{
 						"type"      "float"
 
@@ -64,7 +55,7 @@
 						"mac"       "744"
 					}
 
-					"m_bottom"  // float
+					"m_top"  // float
 					{
 						"type"      "float"
 
@@ -73,7 +64,7 @@
 						"mac"       "748"
 					}
 
-					"m_height"  // float
+					"m_bottom"  // float
 					{
 						"type"      "float"
 
@@ -82,7 +73,7 @@
 						"mac"       "752"
 					}
 
-					"m_waterTime"  // float
+					"m_height"  // float
 					{
 						"type"      "float"
 
@@ -91,7 +82,7 @@
 						"mac"       "756"
 					}
 
-					"m_sideTime"  // float
+					"m_waterTime"  // float
 					{
 						"type"      "float"
 
@@ -100,7 +91,7 @@
 						"mac"       "760"
 					}
 
-					"m_zTime"  // float
+					"m_sideTime"  // float
 					{
 						"type"      "float"
 
@@ -109,7 +100,7 @@
 						"mac"       "764"
 					}
 
-					"m_stateTime"  // float
+					"m_zTime"  // float
 					{
 						"type"      "float"
 
@@ -118,13 +109,22 @@
 						"mac"       "768"
 					}
 
-					"m_attackSoundTime"  // float
+					"m_stateTime"  // float
 					{
 						"type"      "float"
 
 						"windows"   "752"
 						"linux"     "772"
 						"mac"       "772"
+					}
+
+					"m_attackSoundTime"  // float
+					{
+						"type"      "float"
+
+						"windows"   "756"
+						"linux"     "776"
+						"mac"       "776"
 					}
 				}
 			}

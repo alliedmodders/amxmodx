@@ -180,15 +180,15 @@ class CGameConfigManager : public IGameConfigManager
 		member = type.fieldOffset;                                                  \
 	}
 
-#define GET_OFFSET_NO_ERROR(classname, member)										\
-	static int member = -1;															\
-	if (member == -1)																\
+#define GET_OFFSET_NO_ERROR(classname, member)                                      \
+	static int member = -1;                                                         \
+	if (member == -1)                                                               \
 	{                                                                               \
 		TypeDescription type;                                                       \
 		if (!CommonConfig->GetOffsetByClass(classname, #member, &type) || type.fieldOffset < 0)\
-		{																			\
-			return;																    \
-		}																			\
+		{                                                                           \
+			return;                                                                 \
+		}                                                                           \
 		member = type.fieldOffset;                                                  \
 	}
 

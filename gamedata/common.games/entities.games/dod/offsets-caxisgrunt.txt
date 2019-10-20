@@ -23,21 +23,12 @@
 					{
 						"type"      "float"
 
-						"windows"   "972"
-						"linux"     "992"
-						"mac"       "992"
-					}
-
-					"m_flNextPainTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "976"
 						"linux"     "996"
 						"mac"       "996"
 					}
 
-					"m_flLastEnemySightTime"  // float
+					"m_flNextPainTime"  // float
 					{
 						"type"      "float"
 
@@ -46,25 +37,25 @@
 						"mac"       "1000"
 					}
 
-					"m_vecTossVelocity"  // Vector
+					"m_flLastEnemySightTime"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "984"
 						"linux"     "1004"
 						"mac"       "1004"
 					}
 
-					"m_fThrowGrenade"  // BOOL
+					"m_vecTossVelocity"  // Vector
 					{
-						"type"      "integer"
+						"type"      "vector"
 
-						"windows"   "996"
-						"linux"     "1016"
-						"mac"       "1016"
+						"windows"   "988"
+						"linux"     "1008"
+						"mac"       "1008"
 					}
 
-					"m_fStanding"  // BOOL
+					"m_fThrowGrenade"  // BOOL
 					{
 						"type"      "integer"
 
@@ -73,7 +64,7 @@
 						"mac"       "1020"
 					}
 
-					"m_fFirstEncounter"  // BOOL
+					"m_fStanding"  // BOOL
 					{
 						"type"      "integer"
 
@@ -82,7 +73,7 @@
 						"mac"       "1024"
 					}
 
-					"m_cClipSize"  // int
+					"m_fFirstEncounter"  // BOOL
 					{
 						"type"      "integer"
 
@@ -91,7 +82,7 @@
 						"mac"       "1028"
 					}
 
-					"m_voicePitch"  // int
+					"m_cClipSize"  // int
 					{
 						"type"      "integer"
 
@@ -100,7 +91,7 @@
 						"mac"       "1032"
 					}
 
-					"m_iBrassShell"  // int
+					"m_voicePitch"  // int
 					{
 						"type"      "integer"
 
@@ -109,13 +100,22 @@
 						"mac"       "1036"
 					}
 
-					"m_iSentence"  // int
+					"m_iBrassShell"  // int
 					{
 						"type"      "integer"
 
 						"windows"   "1020"
 						"linux"     "1040"
 						"mac"       "1040"
+					}
+
+					"m_iSentence"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "1024"
+						"linux"     "1044"
+						"mac"       "1044"
 					}
 				}
 			}

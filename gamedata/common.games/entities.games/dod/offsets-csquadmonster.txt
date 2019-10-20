@@ -23,9 +23,9 @@
 					{
 						"type"      "ehandle"
 
-						"windows"   "916"
-						"linux"     "936"
-						"mac"       "936"
+						"windows"   "920"
+						"linux"     "940"
+						"mac"       "940"
 					}
 
 					"m_hSquadMember"  // EHANDLE[4]
@@ -33,45 +33,45 @@
 						"type"      "ehandle"
 						"size"      "4"
 
-						"windows"   "924"
-						"linux"     "944"
-						"mac"       "944"
+						"windows"   "928"
+						"linux"     "948"
+						"mac"       "948"
 					}
 
 					"m_afSquadSlots"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "956"
-						"linux"     "976"
-						"mac"       "976"
+						"windows"   "960"
+						"linux"     "980"
+						"mac"       "980"
 					}
 
 					"m_flLastEnemySightTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "960"
-						"linux"     "980"
-						"mac"       "980"
+						"windows"   "964"
+						"linux"     "984"
+						"mac"       "984"
 					}
 
 					"m_fEnemyEluded"  // BOOL
 					{
 						"type"      "integer"
 
-						"windows"   "964"
-						"linux"     "984"
-						"mac"       "984"
+						"windows"   "968"
+						"linux"     "988"
+						"mac"       "988"
 					}
 
 					"m_iMySlot"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "968"
-						"linux"     "988"
-						"mac"       "988"
+						"windows"   "972"
+						"linux"     "992"
+						"mac"       "992"
 					}
 				}
 			}

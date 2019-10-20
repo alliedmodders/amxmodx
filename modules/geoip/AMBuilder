@@ -3,7 +3,8 @@ import os.path
 
 binary = AMXX.MetaModule(builder, 'geoip')
 
-binary.compiler.cxxincludes += [
+binary.compiler.includes += [
+  os.path.join(builder.currentSourcePath, '..', '..', 'amxmodx'),
   os.path.join(builder.currentSourcePath, '..', '..', 'third_party', 'libmaxminddb')
 ]
 

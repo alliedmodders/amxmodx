@@ -23,21 +23,12 @@
 					{
 						"type"      "float"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
-					}
-
-					"m_spikeTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "712"
 						"linux"     "732"
 						"mac"       "732"
 					}
 
-					"m_painSoundTime"  // float
+					"m_spikeTime"  // float
 					{
 						"type"      "float"
 
@@ -46,25 +37,25 @@
 						"mac"       "736"
 					}
 
-					"m_slowMode"  // Activity
+					"m_painSoundTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
 					}
 
-					"m_slowTime"  // float
+					"m_slowMode"  // Activity
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "724"
 						"linux"     "744"
 						"mac"       "744"
 					}
 
-					"m_flHeadYaw"  // float
+					"m_slowTime"  // float
 					{
 						"type"      "float"
 
@@ -73,7 +64,7 @@
 						"mac"       "748"
 					}
 
-					"m_flHeadPitch"  // float
+					"m_flHeadYaw"  // float
 					{
 						"type"      "float"
 
@@ -82,7 +73,7 @@
 						"mac"       "752"
 					}
 
-					"m_flIdealHeadYaw"  // float
+					"m_flHeadPitch"  // float
 					{
 						"type"      "float"
 
@@ -91,7 +82,7 @@
 						"mac"       "756"
 					}
 
-					"m_flIdealHeadPitch"  // float
+					"m_flIdealHeadYaw"  // float
 					{
 						"type"      "float"
 
@@ -100,70 +91,70 @@
 						"mac"       "760"
 					}
 
-					"m_posTarget"  // Vector
+					"m_flIdealHeadPitch"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "744"
 						"linux"     "764"
 						"mac"       "764"
 					}
 
+					"m_posTarget"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "748"
+						"linux"     "768"
+						"mac"       "768"
+					}
+
 					"m_vecTarget"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "756"
-						"linux"     "776"
-						"mac"       "776"
+						"windows"   "760"
+						"linux"     "780"
+						"mac"       "780"
 					}
 
 					"m_pBeam"  // CBeam*
 					{
 						"type"      "classptr"
 
-						"windows"   "768"
-						"linux"     "788"
-						"mac"       "788"
+						"windows"   "772"
+						"linux"     "792"
+						"mac"       "792"
 					}
 
 					"m_posBeam"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "772"
-						"linux"     "792"
-						"mac"       "792"
+						"windows"   "776"
+						"linux"     "796"
+						"mac"       "796"
 					}
 
 					"m_vecBeam"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "784"
-						"linux"     "804"
-						"mac"       "804"
+						"windows"   "788"
+						"linux"     "808"
+						"mac"       "808"
 					}
 
 					"m_angleBeam"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "796"
-						"linux"     "816"
-						"mac"       "816"
+						"windows"   "800"
+						"linux"     "820"
+						"mac"       "820"
 					}
 
 					"m_offsetBeam"  // float
-					{
-						"type"      "float"
-
-						"windows"   "808"
-						"linux"     "828"
-						"mac"       "828"
-					}
-
-					"m_flBeamExpireTime"  // float
 					{
 						"type"      "float"
 
@@ -172,7 +163,7 @@
 						"mac"       "832"
 					}
 
-					"m_flBeamDir"  // float
+					"m_flBeamExpireTime"  // float
 					{
 						"type"      "float"
 
@@ -181,13 +172,22 @@
 						"mac"       "836"
 					}
 
-					"m_NextActivity"  // Activity
+					"m_flBeamDir"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"
+					}
+
+					"m_NextActivity"  // Activity
+					{
+						"type"      "integer"
+
+						"windows"   "824"
+						"linux"     "844"
+						"mac"       "844"
 					}
 				}
 			}

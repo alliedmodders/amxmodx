@@ -23,9 +23,9 @@
 					{
 						"type"      "ehandle"
 
-						"windows"   "820"
-						"linux"     "840"
-						"mac"       "840"
+						"windows"   "824"
+						"linux"     "844"
+						"mac"       "844"
 					}
 
 					"m_hSquadMember"  // EHANDLE[4]
@@ -33,57 +33,48 @@
 						"type"      "ehandle"
 						"size"      "4"
 
-						"windows"   "828"
-						"linux"     "848"
-						"mac"       "848"
+						"windows"   "832"
+						"linux"     "852"
+						"mac"       "852"
 					}
 
 					"m_afSquadSlots"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "860"
-						"linux"     "880"
-						"mac"       "880"
+						"windows"   "864"
+						"linux"     "884"
+						"mac"       "884"
 					}
 
 					"m_flLastEnemySightTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "864"
-						"linux"     "884"
-						"mac"       "884"
+						"windows"   "868"
+						"linux"     "888"
+						"mac"       "888"
 					}
 
 					"m_fEnemyEluded"  // BOOL
 					{
 						"type"      "integer"
 
-						"windows"   "868"
-						"linux"     "888"
-						"mac"       "888"
+						"windows"   "872"
+						"linux"     "892"
+						"mac"       "892"
 					}
 
 					"m_hWaitMedic"  // EHANDLE
 					{
 						"type"      "ehandle"
 
-						"windows"   "872"
-						"linux"     "892"
-						"mac"       "892"
+						"windows"   "876"
+						"linux"     "896"
+						"mac"       "896"
 					}
 
 					"m_flMedicWaitTime"  // float
-					{
-						"type"      "float"
-
-						"windows"   "880"
-						"linux"     "900"
-						"mac"       "900"
-					}
-
-					"m_flLastHitByPlayer"  // float
 					{
 						"type"      "float"
 
@@ -92,22 +83,31 @@
 						"mac"       "904"
 					}
 
-					"m_iPlayerHits"  // int
+					"m_flLastHitByPlayer"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "888"
 						"linux"     "908"
 						"mac"       "908"
 					}
 
-					"m_iMySlot"  // int
+					"m_iPlayerHits"  // int
 					{
 						"type"      "integer"
 
 						"windows"   "892"
 						"linux"     "912"
 						"mac"       "912"
+					}
+
+					"m_iMySlot"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "896"
+						"linux"     "916"
+						"mac"       "916"
 					}
 				}
 			}

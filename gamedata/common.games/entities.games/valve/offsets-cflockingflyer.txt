@@ -23,30 +23,21 @@
 					{
 						"type"      "classptr"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
+						"windows"   "664"
+						"linux"     "684"
+						"mac"       "684"
 					}
 
 					"m_pSquadNext"  // CFlockingFlyer*
 					{
 						"type"      "classptr"
 
-						"windows"   "664"
-						"linux"     "684"
-						"mac"       "684"
-					}
-
-					"m_fTurning"  // BOOL
-					{
-						"type"      "integer"
-
 						"windows"   "668"
 						"linux"     "688"
 						"mac"       "688"
 					}
 
-					"m_fCourseAdjust"  // BOOL
+					"m_fTurning"  // BOOL
 					{
 						"type"      "integer"
 
@@ -55,7 +46,7 @@
 						"mac"       "692"
 					}
 
-					"m_fPathBlocked"  // BOOL
+					"m_fCourseAdjust"  // BOOL
 					{
 						"type"      "integer"
 
@@ -64,34 +55,34 @@
 						"mac"       "696"
 					}
 
-					"m_vecReferencePoint"  // Vector
+					"m_fPathBlocked"  // BOOL
 					{
-						"type"      "vector"
+						"type"      "integer"
 
 						"windows"   "680"
 						"linux"     "700"
 						"mac"       "700"
 					}
 
+					"m_vecReferencePoint"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "684"
+						"linux"     "704"
+						"mac"       "704"
+					}
+
 					"m_vecAdjustedVelocity"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "692"
-						"linux"     "712"
-						"mac"       "712"
+						"windows"   "696"
+						"linux"     "716"
+						"mac"       "716"
 					}
 
 					"m_flGoalSpeed"  // float
-					{
-						"type"      "float"
-
-						"windows"   "704"
-						"linux"     "724"
-						"mac"       "724"
-					}
-
-					"m_flLastBlockedTime"  // float
 					{
 						"type"      "float"
 
@@ -100,7 +91,7 @@
 						"mac"       "728"
 					}
 
-					"m_flFakeBlockedTime"  // float
+					"m_flLastBlockedTime"  // float
 					{
 						"type"      "float"
 
@@ -109,7 +100,7 @@
 						"mac"       "732"
 					}
 
-					"m_flAlertTime"  // float
+					"m_flFakeBlockedTime"  // float
 					{
 						"type"      "float"
 
@@ -118,13 +109,22 @@
 						"mac"       "736"
 					}
 
-					"m_flFlockNextSoundTime"  // float
+					"m_flAlertTime"  // float
 					{
 						"type"      "float"
 
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
+					}
+
+					"m_flFlockNextSoundTime"  // float
+					{
+						"type"      "float"
+
+						"windows"   "724"
+						"linux"     "744"
+						"mac"       "744"
 					}
 				}
 			}

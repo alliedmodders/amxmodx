@@ -23,27 +23,27 @@
 					{
 						"type"      "float"
 
-						"windows"   "772"
-						"linux"     "792"
-						"mac"       "792"
+						"windows"   "776"
+						"linux"     "796"
+						"mac"       "796"
 					}
 
 					"m_healTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "776"
-						"linux"     "796"
-						"mac"       "796"
+						"windows"   "780"
+						"linux"     "800"
+						"mac"       "800"
 					}
 
 					"m_fearTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "780"
-						"linux"     "800"
-						"mac"       "800"
+						"windows"   "784"
+						"linux"     "804"
+						"mac"       "804"
 					}
 				}
 			}

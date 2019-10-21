@@ -1729,6 +1729,33 @@
 						"linux"     "2468"
 						"mac"       "2468"
 					}
+
+					"m_iLastAccount"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "2480"
+						"linux"     "2500"
+						"mac"       "2500"
+					}
+
+					"m_iLastClientHealth"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "2484"
+						"linux"     "2504"
+						"mac"       "2504"
+					}
+
+					"m_tmNextAccountHealthUpdate"  // float
+					{
+						"type"      "float"
+
+						"windows"   "2488"
+						"linux"     "2508"
+						"mac"       "2508"
+					}
 				}
 			}
 		}

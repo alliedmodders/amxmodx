@@ -23,93 +23,84 @@
 					{
 						"type"      "float"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 
 					"m_vecTarget"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 
 					"m_posTarget"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "724"
-						"linux"     "744"
-						"mac"       "744"
+						"windows"   "728"
+						"linux"     "748"
+						"mac"       "748"
 					}
 
 					"m_vecDesired"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "736"
-						"linux"     "756"
-						"mac"       "756"
+						"windows"   "740"
+						"linux"     "760"
+						"mac"       "760"
 					}
 
 					"m_posDesired"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "748"
-						"linux"     "768"
-						"mac"       "768"
+						"windows"   "752"
+						"linux"     "772"
+						"mac"       "772"
 					}
 
 					"m_offsetBeam"  // float
 					{
 						"type"      "float"
 
-						"windows"   "760"
-						"linux"     "780"
-						"mac"       "780"
+						"windows"   "764"
+						"linux"     "784"
+						"mac"       "784"
 					}
 
 					"m_posBeam"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "764"
-						"linux"     "784"
-						"mac"       "784"
+						"windows"   "768"
+						"linux"     "788"
+						"mac"       "788"
 					}
 
 					"m_vecBeam"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "776"
-						"linux"     "796"
-						"mac"       "796"
+						"windows"   "780"
+						"linux"     "800"
+						"mac"       "800"
 					}
 
 					"m_angleBeam"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "788"
-						"linux"     "808"
-						"mac"       "808"
+						"windows"   "792"
+						"linux"     "812"
+						"mac"       "812"
 					}
 
 					"m_flBeamExpireTime"  // float
-					{
-						"type"      "float"
-
-						"windows"   "800"
-						"linux"     "820"
-						"mac"       "820"
-					}
-
-					"m_flBeamDir"  // float
 					{
 						"type"      "float"
 
@@ -118,7 +109,7 @@
 						"mac"       "824"
 					}
 
-					"m_flTorsoYaw"  // float
+					"m_flBeamDir"  // float
 					{
 						"type"      "float"
 
@@ -127,7 +118,7 @@
 						"mac"       "828"
 					}
 
-					"m_flHeadYaw"  // float
+					"m_flTorsoYaw"  // float
 					{
 						"type"      "float"
 
@@ -136,7 +127,7 @@
 						"mac"       "832"
 					}
 
-					"m_flHeadPitch"  // float
+					"m_flHeadYaw"  // float
 					{
 						"type"      "float"
 
@@ -145,7 +136,7 @@
 						"mac"       "836"
 					}
 
-					"m_flIdealTorsoYaw"  // float
+					"m_flHeadPitch"  // float
 					{
 						"type"      "float"
 
@@ -154,7 +145,7 @@
 						"mac"       "840"
 					}
 
-					"m_flIdealHeadYaw"  // float
+					"m_flIdealTorsoYaw"  // float
 					{
 						"type"      "float"
 
@@ -163,7 +154,7 @@
 						"mac"       "844"
 					}
 
-					"m_flIdealHeadPitch"  // float
+					"m_flIdealHeadYaw"  // float
 					{
 						"type"      "float"
 
@@ -172,14 +163,23 @@
 						"mac"       "848"
 					}
 
+					"m_flIdealHeadPitch"  // float
+					{
+						"type"      "float"
+
+						"windows"   "832"
+						"linux"     "852"
+						"mac"       "852"
+					}
+
 					"m_flLevels"  // float[4]
 					{
 						"type"      "float"
 						"size"      "4"
 
-						"windows"   "832"
-						"linux"     "852"
-						"mac"       "852"
+						"windows"   "836"
+						"linux"     "856"
+						"mac"       "856"
 					}
 
 					"m_flTargetLevels"  // float[4]
@@ -187,21 +187,12 @@
 						"type"      "float"
 						"size"      "4"
 
-						"windows"   "848"
-						"linux"     "868"
-						"mac"       "868"
+						"windows"   "852"
+						"linux"     "872"
+						"mac"       "872"
 					}
 
 					"m_flLastSeen"  // float
-					{
-						"type"      "float"
-
-						"windows"   "864"
-						"linux"     "884"
-						"mac"       "884"
-					}
-
-					"m_flPrevSeen"  // float
 					{
 						"type"      "float"
 
@@ -210,34 +201,34 @@
 						"mac"       "888"
 					}
 
-					"m_iLevel"  // int
+					"m_flPrevSeen"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "872"
 						"linux"     "892"
 						"mac"       "892"
 					}
 
-					"m_flLevelSpeed"  // float
+					"m_iLevel"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "876"
 						"linux"     "896"
 						"mac"       "896"
 					}
 
-					"m_pBeam"  // CBeam*
+					"m_flLevelSpeed"  // float
 					{
-						"type"      "classptr"
+						"type"      "float"
 
 						"windows"   "880"
 						"linux"     "900"
 						"mac"       "900"
 					}
 
-					"m_pSprite"  // CSprite*
+					"m_pBeam"  // CBeam*
 					{
 						"type"      "classptr"
 
@@ -246,16 +237,16 @@
 						"mac"       "904"
 					}
 
-					"m_fAttacking"  // BOOL
+					"m_pSprite"  // CSprite*
 					{
-						"type"      "integer"
+						"type"      "classptr"
 
 						"windows"   "888"
 						"linux"     "908"
 						"mac"       "908"
 					}
 
-					"m_fLockHeight"  // BOOL
+					"m_fAttacking"  // BOOL
 					{
 						"type"      "integer"
 
@@ -264,7 +255,7 @@
 						"mac"       "912"
 					}
 
-					"m_fLockYaw"  // BOOL
+					"m_fLockHeight"  // BOOL
 					{
 						"type"      "integer"
 
@@ -273,7 +264,7 @@
 						"mac"       "916"
 					}
 
-					"m_iWasHit"  // int
+					"m_fLockYaw"  // BOOL
 					{
 						"type"      "integer"
 
@@ -282,16 +273,16 @@
 						"mac"       "920"
 					}
 
-					"m_flTakeHitTime"  // float
+					"m_iWasHit"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "904"
 						"linux"     "924"
 						"mac"       "924"
 					}
 
-					"m_flHitTime"  // float
+					"m_flTakeHitTime"  // float
 					{
 						"type"      "float"
 
@@ -300,7 +291,7 @@
 						"mac"       "928"
 					}
 
-					"m_flNextMeleeTime"  // float
+					"m_flHitTime"  // float
 					{
 						"type"      "float"
 
@@ -309,7 +300,7 @@
 						"mac"       "932"
 					}
 
-					"m_flNextRangeTime"  // float
+					"m_flNextMeleeTime"  // float
 					{
 						"type"      "float"
 
@@ -318,7 +309,7 @@
 						"mac"       "936"
 					}
 
-					"m_flDeathStartTime"  // float
+					"m_flNextRangeTime"  // float
 					{
 						"type"      "float"
 
@@ -327,16 +318,16 @@
 						"mac"       "940"
 					}
 
-					"m_fFirstSighting"  // BOOL
+					"m_flDeathStartTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "924"
 						"linux"     "944"
 						"mac"       "944"
 					}
 
-					"m_fTopLevelLocked"  // BOOL
+					"m_fFirstSighting"  // BOOL
 					{
 						"type"      "integer"
 
@@ -345,16 +336,16 @@
 						"mac"       "948"
 					}
 
-					"m_flLastBlinkTime"  // float
+					"m_fTopLevelLocked"  // BOOL
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "932"
 						"linux"     "952"
 						"mac"       "952"
 					}
 
-					"m_flLastBlinkInterval"  // float
+					"m_flLastBlinkTime"  // float
 					{
 						"type"      "float"
 
@@ -363,13 +354,22 @@
 						"mac"       "956"
 					}
 
-					"m_flLastEventTime"  // float
+					"m_flLastBlinkInterval"  // float
 					{
 						"type"      "float"
 
 						"windows"   "940"
 						"linux"     "960"
 						"mac"       "960"
+					}
+
+					"m_flLastEventTime"  // float
+					{
+						"type"      "float"
+
+						"windows"   "944"
+						"linux"     "964"
+						"mac"       "964"
 					}
 				}
 			}

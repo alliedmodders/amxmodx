@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
-					}
-
-					"m_iszPlay"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "664"
 						"linux"     "684"
 						"mac"       "684"
 					}
 
-					"m_iszEntity"  // int
+					"m_iszPlay"  // int
 					{
 						"type"      "integer"
 
@@ -46,7 +37,7 @@
 						"mac"       "688"
 					}
 
-					"m_fMoveTo"  // int
+					"m_iszEntity"  // int
 					{
 						"type"      "integer"
 
@@ -55,7 +46,7 @@
 						"mac"       "692"
 					}
 
-					"m_iFinishSchedule"  // int
+					"m_fMoveTo"  // int
 					{
 						"type"      "integer"
 
@@ -64,16 +55,16 @@
 						"mac"       "696"
 					}
 
-					"m_flRadius"  // float
+					"m_iFinishSchedule"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "680"
 						"linux"     "700"
 						"mac"       "700"
 					}
 
-					"m_flRepeat"  // float
+					"m_flRadius"  // float
 					{
 						"type"      "float"
 
@@ -82,34 +73,34 @@
 						"mac"       "704"
 					}
 
-					"m_iDelay"  // int
+					"m_flRepeat"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "688"
 						"linux"     "708"
 						"mac"       "708"
 					}
 
-					"m_startTime"  // float
+					"m_iDelay"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "692"
 						"linux"     "712"
 						"mac"       "712"
 					}
 
-					"m_saved_movetype"  // int
+					"m_startTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "696"
 						"linux"     "716"
 						"mac"       "716"
 					}
 
-					"m_saved_solid"  // int
+					"m_saved_movetype"  // int
 					{
 						"type"      "integer"
 
@@ -118,7 +109,7 @@
 						"mac"       "720"
 					}
 
-					"m_saved_effects"  // int
+					"m_saved_solid"  // int
 					{
 						"type"      "integer"
 
@@ -127,13 +118,22 @@
 						"mac"       "724"
 					}
 
-					"m_interruptable"  // BOOL
+					"m_saved_effects"  // int
 					{
 						"type"      "integer"
 
 						"windows"   "708"
 						"linux"     "728"
 						"mac"       "728"
+					}
+
+					"m_interruptable"  // BOOL
+					{
+						"type"      "integer"
+
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 				}
 			}

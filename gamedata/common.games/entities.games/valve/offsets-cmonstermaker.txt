@@ -23,21 +23,12 @@
 					{
 						"type"      "stringint"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
-					}
-
-					"m_cNumMonsters"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "664"
 						"linux"     "684"
 						"mac"       "684"
 					}
 
-					"m_cLiveChildren"  // int
+					"m_cNumMonsters"  // int
 					{
 						"type"      "integer"
 
@@ -46,7 +37,7 @@
 						"mac"       "688"
 					}
 
-					"m_iMaxLiveChildren"  // int
+					"m_cLiveChildren"  // int
 					{
 						"type"      "integer"
 
@@ -55,31 +46,40 @@
 						"mac"       "692"
 					}
 
-					"m_flGround"  // float
+					"m_iMaxLiveChildren"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "676"
 						"linux"     "696"
 						"mac"       "696"
 					}
 
-					"m_fActive"  // BOOL
+					"m_flGround"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "680"
 						"linux"     "700"
 						"mac"       "700"
 					}
 
-					"m_fFadeChildren"  // BOOL
+					"m_fActive"  // BOOL
 					{
 						"type"      "integer"
 
 						"windows"   "684"
 						"linux"     "704"
 						"mac"       "704"
+					}
+
+					"m_fFadeChildren"  // BOOL
+					{
+						"type"      "integer"
+
+						"windows"   "688"
+						"linux"     "708"
+						"mac"       "708"
 					}
 				}
 			}

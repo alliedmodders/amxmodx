@@ -23,36 +23,36 @@
 					{
 						"type"      "float"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 
 					"m_flNextThrowTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 
 					"m_pGonomeGuts"  // COFGonomeGuts*
 					{
 						"type"      "classptr"
 
-						"windows"   "716"
-						"linux"     "736"
-						"mac"       "736"
+						"windows"   "720"
+						"linux"     "740"
+						"mac"       "740"
 					}
 
 					"m_fPlayerLocked"  // BOOL
 					{
 						"type"      "integer"
 
-						"windows"   "720"
-						"linux"     "740"
-						"mac"       "740"
+						"windows"   "724"
+						"linux"     "744"
+						"mac"       "744"
 					}
 				}
 			}

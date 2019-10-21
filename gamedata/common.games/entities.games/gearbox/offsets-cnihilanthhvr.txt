@@ -23,45 +23,45 @@
 					{
 						"type"      "float"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 
 					"m_vecIdeal"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 
 					"m_pNihilanth"  // CNihilanth*
 					{
 						"type"      "classptr"
 
-						"windows"   "724"
-						"linux"     "744"
-						"mac"       "744"
+						"windows"   "728"
+						"linux"     "748"
+						"mac"       "748"
 					}
 
 					"m_hTouch"  // EHANDLE
 					{
 						"type"      "ehandle"
 
-						"windows"   "728"
-						"linux"     "748"
-						"mac"       "748"
+						"windows"   "732"
+						"linux"     "752"
+						"mac"       "752"
 					}
 
 					"m_nFrames"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "736"
-						"linux"     "756"
-						"mac"       "756"
+						"windows"   "740"
+						"linux"     "760"
+						"mac"       "760"
 					}
 				}
 			}

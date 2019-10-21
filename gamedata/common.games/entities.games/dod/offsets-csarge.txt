@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "1040"
-						"linux"     "1060"
-						"mac"       "1060"
-					}
-
-					"m_painTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "1044"
 						"linux"     "1064"
 						"mac"       "1064"
 					}
 
-					"m_checkAttackTime"  // float
+					"m_painTime"  // float
 					{
 						"type"      "float"
 
@@ -46,13 +37,22 @@
 						"mac"       "1068"
 					}
 
-					"m_lastAttackCheck"  // BOOL
+					"m_checkAttackTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "1052"
 						"linux"     "1072"
 						"mac"       "1072"
+					}
+
+					"m_lastAttackCheck"  // BOOL
+					{
+						"type"      "integer"
+
+						"windows"   "1056"
+						"linux"     "1076"
+						"mac"       "1076"
 					}
 				}
 			}

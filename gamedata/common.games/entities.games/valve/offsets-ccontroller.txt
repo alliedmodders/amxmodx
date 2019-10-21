@@ -23,21 +23,12 @@
 					{
 						"type"      "float"
 
-						"windows"   "716"
-						"linux"     "736"
-						"mac"       "736"
-					}
-
-					"m_flShootTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
 					}
 
-					"m_flShootEnd"  // float
+					"m_flShootTime"  // float
 					{
 						"type"      "float"
 
@@ -46,14 +37,23 @@
 						"mac"       "744"
 					}
 
+					"m_flShootEnd"  // float
+					{
+						"type"      "float"
+
+						"windows"   "728"
+						"linux"     "748"
+						"mac"       "748"
+					}
+
 					"m_pBall"  // CSprite*[2]
 					{
 						"type"      "classptr"
 						"size"      "2"
 
-						"windows"   "728"
-						"linux"     "748"
-						"mac"       "748"
+						"windows"   "732"
+						"linux"     "752"
+						"mac"       "752"
 					}
 
 					"m_iBall"  // int[2]
@@ -61,9 +61,9 @@
 						"type"      "integer"
 						"size"      "2"
 
-						"windows"   "736"
-						"linux"     "756"
-						"mac"       "756"
+						"windows"   "740"
+						"linux"     "760"
+						"mac"       "760"
 					}
 
 					"m_iBallTime"  // float[2]
@@ -71,9 +71,9 @@
 						"type"      "float"
 						"size"      "2"
 
-						"windows"   "744"
-						"linux"     "764"
-						"mac"       "764"
+						"windows"   "748"
+						"linux"     "768"
+						"mac"       "768"
 					}
 
 					"m_iBallCurrent"  // int[2]
@@ -81,36 +81,36 @@
 						"type"      "integer"
 						"size"      "2"
 
-						"windows"   "752"
-						"linux"     "772"
-						"mac"       "772"
+						"windows"   "756"
+						"linux"     "776"
+						"mac"       "776"
 					}
 
 					"m_vecEstVelocity"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "760"
-						"linux"     "780"
-						"mac"       "780"
+						"windows"   "764"
+						"linux"     "784"
+						"mac"       "784"
 					}
 
 					"m_velocity"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "772"
-						"linux"     "792"
-						"mac"       "792"
+						"windows"   "776"
+						"linux"     "796"
+						"mac"       "796"
 					}
 
 					"m_fInCombat"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "784"
-						"linux"     "804"
-						"mac"       "804"
+						"windows"   "788"
+						"linux"     "808"
+						"mac"       "808"
 					}
 				}
 			}

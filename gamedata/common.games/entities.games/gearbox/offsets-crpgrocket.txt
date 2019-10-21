@@ -23,27 +23,27 @@
 					{
 						"type"      "integer"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 
 					"m_flIgniteTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "716"
-						"linux"     "736"
-						"mac"       "736"
+						"windows"   "720"
+						"linux"     "740"
+						"mac"       "740"
 					}
 
 					"m_pLauncher"  // CRpg*
 					{
 						"type"      "classptr"
 
-						"windows"   "720"
-						"linux"     "740"
-						"mac"       "740"
+						"windows"   "724"
+						"linux"     "744"
+						"mac"       "744"
 					}
 				}
 			}

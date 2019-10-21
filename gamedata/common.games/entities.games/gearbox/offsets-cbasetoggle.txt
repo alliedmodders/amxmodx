@@ -145,11 +145,20 @@
 						"mac"       "224"
 					}
 
+					"m_pfnCallWhenMoveDone"  // (*__pfn)(CBaseToggle*)
+					{
+						"type"      "function"
+
+						"windows"   "216"
+						"linux"     "232"
+						"mac"       "232"
+					}
+
 					"m_vecFinalDest"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "224"
+						"windows"   "220"
 						"linux"     "240"
 						"mac"       "240"
 					}
@@ -158,7 +167,7 @@
 					{
 						"type"      "vector"
 
-						"windows"   "236"
+						"windows"   "232"
 						"linux"     "252"
 						"mac"       "252"
 					}
@@ -167,7 +176,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "248"
+						"windows"   "244"
 						"linux"     "264"
 						"mac"       "264"
 					}
@@ -176,7 +185,7 @@
 					{
 						"type"      "stringint"
 
-						"windows"   "252"
+						"windows"   "248"
 						"linux"     "268"
 						"mac"       "268"
 					}

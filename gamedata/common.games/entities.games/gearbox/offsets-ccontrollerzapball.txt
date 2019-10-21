@@ -23,9 +23,9 @@
 					{
 						"type"      "ehandle"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 				}
 			}

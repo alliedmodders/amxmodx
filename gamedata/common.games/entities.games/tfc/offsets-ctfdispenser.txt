@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "1700"
-						"linux"     "1720"
-						"mac"       "1720"
-					}
-
-					"m_flNextUseTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "1704"
 						"linux"     "1724"
 						"mac"       "1724"
 					}
 
-					"m_flInitialUseDelay"  // float
+					"m_flNextUseTime"  // float
 					{
 						"type"      "float"
 
@@ -46,7 +37,7 @@
 						"mac"       "1728"
 					}
 
-					"m_flNextRefillTime"  // float
+					"m_flInitialUseDelay"  // float
 					{
 						"type"      "float"
 
@@ -55,13 +46,22 @@
 						"mac"       "1732"
 					}
 
-					"m_iDestroyed"  // int
+					"m_flNextRefillTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "1716"
 						"linux"     "1736"
 						"mac"       "1736"
+					}
+
+					"m_iDestroyed"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "1720"
+						"linux"     "1740"
+						"mac"       "1740"
 					}
 				}
 			}

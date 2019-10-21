@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "824"
-						"linux"     "844"
-						"mac"       "844"
-					}
-
-					"m_painTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "828"
 						"linux"     "848"
 						"mac"       "848"
 					}
 
-					"m_checkAttackTime"  // float
+					"m_painTime"  // float
 					{
 						"type"      "float"
 
@@ -46,16 +37,16 @@
 						"mac"       "852"
 					}
 
-					"m_lastAttackCheck"  // BOOL
+					"m_checkAttackTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "836"
 						"linux"     "856"
 						"mac"       "856"
 					}
 
-					"m_iOtisBody"  // int
+					"m_lastAttackCheck"  // BOOL
 					{
 						"type"      "integer"
 
@@ -64,7 +55,7 @@
 						"mac"       "860"
 					}
 
-					"m_iOtisHead"  // int
+					"m_iOtisBody"  // int
 					{
 						"type"      "integer"
 
@@ -73,13 +64,22 @@
 						"mac"       "864"
 					}
 
-					"m_flPlayerDamage"  // float
+					"m_iOtisHead"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "848"
 						"linux"     "868"
 						"mac"       "868"
+					}
+
+					"m_flPlayerDamage"  // float
+					{
+						"type"      "float"
+
+						"windows"   "852"
+						"linux"     "872"
+						"mac"       "872"
 					}
 				}
 			}

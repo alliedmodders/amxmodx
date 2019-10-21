@@ -23,21 +23,12 @@
 					{
 						"type"      "float"
 
-						"windows"   "764"
-						"linux"     "784"
-						"mac"       "784"
-					}
-
-					"m_flNextPainTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
 					}
 
-					"m_flLastEnemySightTime"  // float
+					"m_flNextPainTime"  // float
 					{
 						"type"      "float"
 
@@ -46,25 +37,25 @@
 						"mac"       "792"
 					}
 
-					"m_vecTossVelocity"  // Vector
+					"m_flLastEnemySightTime"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
 					}
 
-					"m_fThrowGrenade"  // BOOL
+					"m_vecTossVelocity"  // Vector
 					{
-						"type"      "integer"
+						"type"      "vector"
 
-						"windows"   "788"
-						"linux"     "808"
-						"mac"       "808"
+						"windows"   "780"
+						"linux"     "800"
+						"mac"       "800"
 					}
 
-					"m_fStanding"  // BOOL
+					"m_fThrowGrenade"  // BOOL
 					{
 						"type"      "integer"
 
@@ -73,7 +64,7 @@
 						"mac"       "812"
 					}
 
-					"m_fFirstEncounter"  // BOOL
+					"m_fStanding"  // BOOL
 					{
 						"type"      "integer"
 
@@ -82,7 +73,7 @@
 						"mac"       "816"
 					}
 
-					"m_cClipSize"  // int
+					"m_fFirstEncounter"  // BOOL
 					{
 						"type"      "integer"
 
@@ -91,43 +82,43 @@
 						"mac"       "820"
 					}
 
-					"m_flLastShot"  // float
+					"m_cClipSize"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "804"
 						"linux"     "824"
 						"mac"       "824"
 					}
 
-					"m_fStandingGround"  // BOOL
+					"m_flLastShot"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "808"
 						"linux"     "828"
 						"mac"       "828"
 					}
 
-					"m_flStandGroundRange"  // float
+					"m_fStandingGround"  // BOOL
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "812"
 						"linux"     "832"
 						"mac"       "832"
 					}
 
-					"m_voicePitch"  // int
+					"m_flStandGroundRange"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "816"
 						"linux"     "836"
 						"mac"       "836"
 					}
 
-					"m_iBrassShell"  // int
+					"m_voicePitch"  // int
 					{
 						"type"      "integer"
 
@@ -136,7 +127,7 @@
 						"mac"       "840"
 					}
 
-					"m_iSentence"  // int
+					"m_iBrassShell"  // int
 					{
 						"type"      "integer"
 
@@ -145,13 +136,22 @@
 						"mac"       "844"
 					}
 
-					"m_iAssassinHead"  // int
+					"m_iSentence"  // int
 					{
 						"type"      "integer"
 
 						"windows"   "828"
 						"linux"     "848"
 						"mac"       "848"
+					}
+
+					"m_iAssassinHead"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "832"
+						"linux"     "852"
+						"mac"       "852"
 					}
 				}
 			}

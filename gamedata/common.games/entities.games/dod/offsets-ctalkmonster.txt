@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "916"
-						"linux"     "936"
-						"mac"       "936"
-					}
-
-					"m_nSpeak"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "920"
 						"linux"     "940"
 						"mac"       "940"
 					}
 
-					"m_voicePitch"  // int
+					"m_nSpeak"  // int
 					{
 						"type"      "integer"
 
@@ -46,35 +37,35 @@
 						"mac"       "944"
 					}
 
-					"m_szGrp"  // const char*[19]
+					"m_voicePitch"  // int
 					{
-						"type"      "stringptr"
-						"size"      "19"
+						"type"      "integer"
 
 						"windows"   "928"
 						"linux"     "948"
 						"mac"       "948"
 					}
 
+					"m_szGrp"  // const char*[19]
+					{
+						"type"      "stringptr"
+						"size"      "19"
+
+						"windows"   "932"
+						"linux"     "952"
+						"mac"       "952"
+					}
+
 					"m_useTime"  // float
 					{
 						"type"      "float"
-
-						"windows"   "1004"
-						"linux"     "1024"
-						"mac"       "1024"
-					}
-
-					"m_iszUse"  // int
-					{
-						"type"      "integer"
 
 						"windows"   "1008"
 						"linux"     "1028"
 						"mac"       "1028"
 					}
 
-					"m_iszUnUse"  // int
+					"m_iszUse"  // int
 					{
 						"type"      "integer"
 
@@ -83,7 +74,7 @@
 						"mac"       "1032"
 					}
 
-					"m_iszDecline"  // int
+					"m_iszUnUse"  // int
 					{
 						"type"      "integer"
 
@@ -92,7 +83,7 @@
 						"mac"       "1036"
 					}
 
-					"m_iszSpeakAs"  // int
+					"m_iszDecline"  // int
 					{
 						"type"      "integer"
 
@@ -101,16 +92,16 @@
 						"mac"       "1040"
 					}
 
-					"m_flLastSaidSmelled"  // float
+					"m_iszSpeakAs"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "1024"
 						"linux"     "1044"
 						"mac"       "1044"
 					}
 
-					"m_flStopTalkTime"  // float
+					"m_flLastSaidSmelled"  // float
 					{
 						"type"      "float"
 
@@ -119,13 +110,22 @@
 						"mac"       "1048"
 					}
 
-					"m_hTalkTarget"  // EHANDLE
+					"m_flStopTalkTime"  // float
 					{
-						"type"      "ehandle"
+						"type"      "float"
 
 						"windows"   "1032"
 						"linux"     "1052"
 						"mac"       "1052"
+					}
+
+					"m_hTalkTarget"  // EHANDLE
+					{
+						"type"      "ehandle"
+
+						"windows"   "1036"
+						"linux"     "1056"
+						"mac"       "1056"
 					}
 				}
 			}

@@ -24,30 +24,21 @@
 						"type"      "classptr"
 						"size"      "8"
 
-						"windows"   "764"
-						"linux"     "784"
-						"mac"       "784"
+						"windows"   "768"
+						"linux"     "788"
+						"mac"       "788"
 					}
 
 					"m_iBeams"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "796"
-						"linux"     "816"
-						"mac"       "816"
-					}
-
-					"m_flNextBeamAttackCheck"  // float
-					{
-						"type"      "float"
-
 						"windows"   "800"
 						"linux"     "820"
 						"mac"       "820"
 					}
 
-					"m_flNextPainTime"  // float
+					"m_flNextBeamAttackCheck"  // float
 					{
 						"type"      "float"
 
@@ -56,7 +47,7 @@
 						"mac"       "824"
 					}
 
-					"m_flNextSpeakTime"  // float
+					"m_flNextPainTime"  // float
 					{
 						"type"      "float"
 
@@ -65,7 +56,7 @@
 						"mac"       "828"
 					}
 
-					"m_flNextWordTime"  // float
+					"m_flNextSpeakTime"  // float
 					{
 						"type"      "float"
 
@@ -74,16 +65,16 @@
 						"mac"       "832"
 					}
 
-					"m_iLastWord"  // int
+					"m_flNextWordTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "816"
 						"linux"     "836"
 						"mac"       "836"
 					}
 
-					"m_iBabyVoltigoreGibs"  // int
+					"m_iLastWord"  // int
 					{
 						"type"      "integer"
 
@@ -92,7 +83,7 @@
 						"mac"       "840"
 					}
 
-					"m_fDeathCharge"  // BOOL
+					"m_iBabyVoltigoreGibs"  // int
 					{
 						"type"      "integer"
 
@@ -101,13 +92,22 @@
 						"mac"       "844"
 					}
 
-					"m_flDeathStartTime"  // float
+					"m_fDeathCharge"  // BOOL
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "828"
 						"linux"     "848"
 						"mac"       "848"
+					}
+
+					"m_flDeathStartTime"  // float
+					{
+						"type"      "float"
+
+						"windows"   "832"
+						"linux"     "852"
+						"mac"       "852"
 					}
 				}
 			}

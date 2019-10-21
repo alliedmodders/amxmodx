@@ -23,39 +23,30 @@
 					{
 						"type"      "float"
 
-						"windows"   "916"
-						"linux"     "936"
-						"mac"       "936"
+						"windows"   "920"
+						"linux"     "940"
+						"mac"       "940"
 					}
 
 					"m_iSpin"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "920"
-						"linux"     "940"
-						"mac"       "940"
+						"windows"   "924"
+						"linux"     "944"
+						"mac"       "944"
 					}
 
 					"m_pEyeGlow"  // CSprite*
 					{
 						"type"      "classptr"
 
-						"windows"   "924"
-						"linux"     "944"
-						"mac"       "944"
-					}
-
-					"m_eyeBrightness"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "928"
 						"linux"     "948"
 						"mac"       "948"
 					}
 
-					"m_iDeployHeight"  // int
+					"m_eyeBrightness"  // int
 					{
 						"type"      "integer"
 
@@ -64,7 +55,7 @@
 						"mac"       "952"
 					}
 
-					"m_iRetractHeight"  // int
+					"m_iDeployHeight"  // int
 					{
 						"type"      "integer"
 
@@ -73,7 +64,7 @@
 						"mac"       "956"
 					}
 
-					"m_iMinPitch"  // int
+					"m_iRetractHeight"  // int
 					{
 						"type"      "integer"
 
@@ -82,7 +73,7 @@
 						"mac"       "960"
 					}
 
-					"m_iBaseTurnRate"  // int
+					"m_iMinPitch"  // int
 					{
 						"type"      "integer"
 
@@ -91,25 +82,25 @@
 						"mac"       "964"
 					}
 
-					"m_fTurnRate"  // float
+					"m_iBaseTurnRate"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "948"
 						"linux"     "968"
 						"mac"       "968"
 					}
 
-					"m_iOrientation"  // int
+					"m_fTurnRate"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "952"
 						"linux"     "972"
 						"mac"       "972"
 					}
 
-					"m_iOn"  // int
+					"m_iOrientation"  // int
 					{
 						"type"      "integer"
 
@@ -118,7 +109,7 @@
 						"mac"       "976"
 					}
 
-					"m_fBeserk"  // int
+					"m_iOn"  // int
 					{
 						"type"      "integer"
 
@@ -127,7 +118,7 @@
 						"mac"       "980"
 					}
 
-					"m_iAutoStart"  // int
+					"m_fBeserk"  // int
 					{
 						"type"      "integer"
 
@@ -136,25 +127,25 @@
 						"mac"       "984"
 					}
 
-					"m_vecLastSight"  // Vector
+					"m_iAutoStart"  // int
 					{
-						"type"      "vector"
+						"type"      "integer"
 
 						"windows"   "968"
 						"linux"     "988"
 						"mac"       "988"
 					}
 
-					"m_flLastSight"  // float
+					"m_vecLastSight"  // Vector
 					{
-						"type"      "float"
+						"type"      "vector"
 
-						"windows"   "980"
-						"linux"     "1000"
-						"mac"       "1000"
+						"windows"   "972"
+						"linux"     "992"
+						"mac"       "992"
 					}
 
-					"m_flMaxWait"  // float
+					"m_flLastSight"  // float
 					{
 						"type"      "float"
 
@@ -163,58 +154,67 @@
 						"mac"       "1004"
 					}
 
-					"m_iSearchSpeed"  // int
+					"m_flMaxWait"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "988"
 						"linux"     "1008"
 						"mac"       "1008"
 					}
 
-					"m_flStartYaw"  // float
+					"m_iSearchSpeed"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "992"
 						"linux"     "1012"
 						"mac"       "1012"
 					}
 
-					"m_vecCurAngles"  // Vector
+					"m_flStartYaw"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "996"
 						"linux"     "1016"
 						"mac"       "1016"
 					}
 
+					"m_vecCurAngles"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "1000"
+						"linux"     "1020"
+						"mac"       "1020"
+					}
+
 					"m_vecGoalAngles"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "1008"
-						"linux"     "1028"
-						"mac"       "1028"
+						"windows"   "1012"
+						"linux"     "1032"
+						"mac"       "1032"
 					}
 
 					"m_flPingTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "1020"
-						"linux"     "1040"
-						"mac"       "1040"
+						"windows"   "1024"
+						"linux"     "1044"
+						"mac"       "1044"
 					}
 
 					"m_flSpinUpTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "1024"
-						"linux"     "1044"
-						"mac"       "1044"
+						"windows"   "1028"
+						"linux"     "1048"
+						"mac"       "1048"
 					}
 				}
 			}

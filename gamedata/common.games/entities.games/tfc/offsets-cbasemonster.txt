@@ -428,6 +428,15 @@
 						"linux"     "1716"
 						"mac"       "1716"
 					}
+
+					"m_flLastYawTime"  // float
+					{
+						"type"      "float"
+
+						"windows"   "1700"
+						"linux"     "1720"
+						"mac"       "1720"
+					}
 				}
 			}
 		}

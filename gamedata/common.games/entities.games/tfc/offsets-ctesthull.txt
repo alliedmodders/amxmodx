@@ -23,9 +23,9 @@
 					{
 						"type"      "vector"
 
-						"windows"   "1700"
-						"linux"     "1720"
-						"mac"       "1720"
+						"windows"   "1704"
+						"linux"     "1724"
+						"mac"       "1724"
 					}
 				}
 			}

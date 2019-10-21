@@ -23,36 +23,36 @@
 					{
 						"type"      "integer"
 
-						"windows"   "916"
-						"linux"     "936"
-						"mac"       "936"
+						"windows"   "920"
+						"linux"     "940"
+						"mac"       "940"
 					}
 
 					"m_flNextAttack"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "920"
-						"linux"     "940"
-						"mac"       "940"
+						"windows"   "924"
+						"linux"     "944"
+						"mac"       "944"
 					}
 
 					"m_vecIdeal"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "924"
-						"linux"     "944"
-						"mac"       "944"
+						"windows"   "928"
+						"linux"     "948"
+						"mac"       "948"
 					}
 
 					"m_hOwner"  // EHANDLE
 					{
 						"type"      "ehandle"
 
-						"windows"   "936"
-						"linux"     "956"
-						"mac"       "956"
+						"windows"   "940"
+						"linux"     "960"
+						"mac"       "960"
 					}
 				}
 			}

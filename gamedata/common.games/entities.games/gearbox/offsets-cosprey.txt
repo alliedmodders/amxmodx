@@ -23,75 +23,66 @@
 					{
 						"type"      "classptr"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 
 					"m_vel1"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 
 					"m_vel2"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "724"
-						"linux"     "744"
-						"mac"       "744"
+						"windows"   "728"
+						"linux"     "748"
+						"mac"       "748"
 					}
 
 					"m_pos1"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "736"
-						"linux"     "756"
-						"mac"       "756"
+						"windows"   "740"
+						"linux"     "760"
+						"mac"       "760"
 					}
 
 					"m_pos2"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "748"
-						"linux"     "768"
-						"mac"       "768"
+						"windows"   "752"
+						"linux"     "772"
+						"mac"       "772"
 					}
 
 					"m_ang1"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "760"
-						"linux"     "780"
-						"mac"       "780"
+						"windows"   "764"
+						"linux"     "784"
+						"mac"       "784"
 					}
 
 					"m_ang2"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "772"
-						"linux"     "792"
-						"mac"       "792"
+						"windows"   "776"
+						"linux"     "796"
+						"mac"       "796"
 					}
 
 					"m_startTime"  // float
-					{
-						"type"      "float"
-
-						"windows"   "784"
-						"linux"     "804"
-						"mac"       "804"
-					}
-
-					"m_dTime"  // float
 					{
 						"type"      "float"
 
@@ -100,25 +91,25 @@
 						"mac"       "808"
 					}
 
-					"m_velocity"  // Vector
+					"m_dTime"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "792"
 						"linux"     "812"
 						"mac"       "812"
 					}
 
-					"m_flIdealtilt"  // float
+					"m_velocity"  // Vector
 					{
-						"type"      "float"
+						"type"      "vector"
 
-						"windows"   "804"
-						"linux"     "824"
-						"mac"       "824"
+						"windows"   "796"
+						"linux"     "816"
+						"mac"       "816"
 					}
 
-					"m_flRotortilt"  // float
+					"m_flIdealtilt"  // float
 					{
 						"type"      "float"
 
@@ -127,7 +118,7 @@
 						"mac"       "828"
 					}
 
-					"m_flRightHealth"  // float
+					"m_flRotortilt"  // float
 					{
 						"type"      "float"
 
@@ -136,7 +127,7 @@
 						"mac"       "832"
 					}
 
-					"m_flLeftHealth"  // float
+					"m_flRightHealth"  // float
 					{
 						"type"      "float"
 
@@ -145,13 +136,22 @@
 						"mac"       "836"
 					}
 
-					"m_iUnits"  // int
+					"m_flLeftHealth"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "820"
 						"linux"     "840"
 						"mac"       "840"
+					}
+
+					"m_iUnits"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "824"
+						"linux"     "844"
+						"mac"       "844"
 					}
 
 					"m_hGrunt"  // EHANDLE[24]
@@ -159,9 +159,9 @@
 						"type"      "ehandle"
 						"size"      "24"
 
-						"windows"   "824"
-						"linux"     "844"
-						"mac"       "844"
+						"windows"   "828"
+						"linux"     "848"
+						"mac"       "848"
 					}
 
 					"m_vecOrigin"  // Vector[24]
@@ -169,9 +169,9 @@
 						"type"      "vector"
 						"size"      "24"
 
-						"windows"   "1016"
-						"linux"     "1036"
-						"mac"       "1036"
+						"windows"   "1020"
+						"linux"     "1040"
+						"mac"       "1040"
 					}
 
 					"m_hRepel"  // EHANDLE[4]
@@ -179,21 +179,12 @@
 						"type"      "ehandle"
 						"size"      "4"
 
-						"windows"   "1304"
-						"linux"     "1324"
-						"mac"       "1324"
+						"windows"   "1308"
+						"linux"     "1328"
+						"mac"       "1328"
 					}
 
 					"m_iSoundState"  // int
-					{
-						"type"      "integer"
-
-						"windows"   "1336"
-						"linux"     "1356"
-						"mac"       "1356"
-					}
-
-					"m_iSpriteTexture"  // int
 					{
 						"type"      "integer"
 
@@ -202,7 +193,7 @@
 						"mac"       "1360"
 					}
 
-					"m_iPitch"  // int
+					"m_iSpriteTexture"  // int
 					{
 						"type"      "integer"
 
@@ -211,7 +202,7 @@
 						"mac"       "1364"
 					}
 
-					"m_iExplode"  // int
+					"m_iPitch"  // int
 					{
 						"type"      "integer"
 
@@ -220,7 +211,7 @@
 						"mac"       "1368"
 					}
 
-					"m_iTailGibs"  // int
+					"m_iExplode"  // int
 					{
 						"type"      "integer"
 
@@ -229,7 +220,7 @@
 						"mac"       "1372"
 					}
 
-					"m_iBodyGibs"  // int
+					"m_iTailGibs"  // int
 					{
 						"type"      "integer"
 
@@ -238,7 +229,7 @@
 						"mac"       "1376"
 					}
 
-					"m_iEngineGibs"  // int
+					"m_iBodyGibs"  // int
 					{
 						"type"      "integer"
 
@@ -247,7 +238,7 @@
 						"mac"       "1380"
 					}
 
-					"m_iDoLeftSmokePuff"  // int
+					"m_iEngineGibs"  // int
 					{
 						"type"      "integer"
 
@@ -256,13 +247,22 @@
 						"mac"       "1384"
 					}
 
-					"m_iDoRightSmokePuff"  // int
+					"m_iDoLeftSmokePuff"  // int
 					{
 						"type"      "integer"
 
 						"windows"   "1368"
 						"linux"     "1388"
 						"mac"       "1388"
+					}
+
+					"m_iDoRightSmokePuff"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "1372"
+						"linux"     "1392"
+						"mac"       "1392"
 					}
 				}
 			}

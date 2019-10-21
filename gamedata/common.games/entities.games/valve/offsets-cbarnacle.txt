@@ -23,30 +23,21 @@
 					{
 						"type"      "float"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
+						"windows"   "664"
+						"linux"     "684"
+						"mac"       "684"
 					}
 
 					"m_flKillVictimTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "664"
-						"linux"     "684"
-						"mac"       "684"
-					}
-
-					"m_cGibs"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "668"
 						"linux"     "688"
 						"mac"       "688"
 					}
 
-					"m_fTongueExtended"  // BOOL
+					"m_cGibs"  // int
 					{
 						"type"      "integer"
 
@@ -55,7 +46,7 @@
 						"mac"       "692"
 					}
 
-					"m_fLiftingPrey"  // BOOL
+					"m_fTongueExtended"  // BOOL
 					{
 						"type"      "integer"
 
@@ -64,13 +55,22 @@
 						"mac"       "696"
 					}
 
-					"m_flTongueAdj"  // float
+					"m_fLiftingPrey"  // BOOL
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "680"
 						"linux"     "700"
 						"mac"       "700"
+					}
+
+					"m_flTongueAdj"  // float
+					{
+						"type"      "float"
+
+						"windows"   "684"
+						"linux"     "704"
+						"mac"       "704"
 					}
 				}
 			}

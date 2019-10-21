@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "896"
-						"linux"     "916"
-						"mac"       "916"
-					}
-
-					"m_flPlayerDamage"  // float
-					{
-						"type"      "float"
-
 						"windows"   "900"
 						"linux"     "920"
 						"mac"       "920"
 					}
 
-					"m_flNextGrenadeCheck"  // float
+					"m_flPlayerDamage"  // float
 					{
 						"type"      "float"
 
@@ -46,7 +37,7 @@
 						"mac"       "924"
 					}
 
-					"m_flNextPainTime"  // float
+					"m_flNextGrenadeCheck"  // float
 					{
 						"type"      "float"
 
@@ -55,7 +46,7 @@
 						"mac"       "928"
 					}
 
-					"m_flLastEnemySightTime"  // float
+					"m_flNextPainTime"  // float
 					{
 						"type"      "float"
 
@@ -64,25 +55,25 @@
 						"mac"       "932"
 					}
 
-					"m_vecTossVelocity"  // Vector
+					"m_flLastEnemySightTime"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "916"
 						"linux"     "936"
 						"mac"       "936"
 					}
 
-					"m_fThrowGrenade"  // BOOL
+					"m_vecTossVelocity"  // Vector
 					{
-						"type"      "integer"
+						"type"      "vector"
 
-						"windows"   "928"
-						"linux"     "948"
-						"mac"       "948"
+						"windows"   "920"
+						"linux"     "940"
+						"mac"       "940"
 					}
 
-					"m_fStanding"  // BOOL
+					"m_fThrowGrenade"  // BOOL
 					{
 						"type"      "integer"
 
@@ -91,7 +82,7 @@
 						"mac"       "952"
 					}
 
-					"m_fFirstEncounter"  // BOOL
+					"m_fStanding"  // BOOL
 					{
 						"type"      "integer"
 
@@ -100,7 +91,7 @@
 						"mac"       "956"
 					}
 
-					"m_cClipSize"  // int
+					"m_fFirstEncounter"  // BOOL
 					{
 						"type"      "integer"
 
@@ -109,7 +100,7 @@
 						"mac"       "960"
 					}
 
-					"m_iBrassShell"  // int
+					"m_cClipSize"  // int
 					{
 						"type"      "integer"
 
@@ -118,7 +109,7 @@
 						"mac"       "964"
 					}
 
-					"m_iShotgunShell"  // int
+					"m_iBrassShell"  // int
 					{
 						"type"      "integer"
 
@@ -127,7 +118,7 @@
 						"mac"       "968"
 					}
 
-					"m_iSawShell"  // int
+					"m_iShotgunShell"  // int
 					{
 						"type"      "integer"
 
@@ -136,7 +127,7 @@
 						"mac"       "972"
 					}
 
-					"m_iSawLink"  // int
+					"m_iSawShell"  // int
 					{
 						"type"      "integer"
 
@@ -145,7 +136,7 @@
 						"mac"       "976"
 					}
 
-					"m_iSentence"  // int
+					"m_iSawLink"  // int
 					{
 						"type"      "integer"
 
@@ -154,7 +145,7 @@
 						"mac"       "980"
 					}
 
-					"m_iWeaponIdx"  // int
+					"m_iSentence"  // int
 					{
 						"type"      "integer"
 
@@ -163,7 +154,7 @@
 						"mac"       "984"
 					}
 
-					"m_iGruntHead"  // int
+					"m_iWeaponIdx"  // int
 					{
 						"type"      "integer"
 
@@ -172,13 +163,22 @@
 						"mac"       "988"
 					}
 
-					"m_iGruntTorso"  // int
+					"m_iGruntHead"  // int
 					{
 						"type"      "integer"
 
 						"windows"   "972"
 						"linux"     "992"
 						"mac"       "992"
+					}
+
+					"m_iGruntTorso"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "976"
+						"linux"     "996"
+						"mac"       "996"
 					}
 				}
 			}

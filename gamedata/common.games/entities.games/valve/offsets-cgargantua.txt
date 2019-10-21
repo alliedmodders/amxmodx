@@ -23,9 +23,9 @@
 					{
 						"type"      "classptr"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
+						"windows"   "664"
+						"linux"     "684"
+						"mac"       "684"
 					}
 
 					"m_pFlame"  // CBeam*[4]
@@ -33,30 +33,21 @@
 						"type"      "classptr"
 						"size"      "4"
 
-						"windows"   "664"
-						"linux"     "684"
-						"mac"       "684"
+						"windows"   "668"
+						"linux"     "688"
+						"mac"       "688"
 					}
 
 					"m_eyeBrightness"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "680"
-						"linux"     "700"
-						"mac"       "700"
-					}
-
-					"m_seeTime"  // float
-					{
-						"type"      "float"
-
 						"windows"   "684"
 						"linux"     "704"
 						"mac"       "704"
 					}
 
-					"m_flameTime"  // float
+					"m_seeTime"  // float
 					{
 						"type"      "float"
 
@@ -65,7 +56,7 @@
 						"mac"       "708"
 					}
 
-					"m_painSoundTime"  // float
+					"m_flameTime"  // float
 					{
 						"type"      "float"
 
@@ -74,7 +65,7 @@
 						"mac"       "712"
 					}
 
-					"m_streakTime"  // float
+					"m_painSoundTime"  // float
 					{
 						"type"      "float"
 
@@ -83,7 +74,7 @@
 						"mac"       "716"
 					}
 
-					"m_flameX"  // float
+					"m_streakTime"  // float
 					{
 						"type"      "float"
 
@@ -92,13 +83,22 @@
 						"mac"       "720"
 					}
 
-					"m_flameY"  // float
+					"m_flameX"  // float
 					{
 						"type"      "float"
 
 						"windows"   "704"
 						"linux"     "724"
 						"mac"       "724"
+					}
+
+					"m_flameY"  // float
+					{
+						"type"      "float"
+
+						"windows"   "708"
+						"linux"     "728"
+						"mac"       "728"
 					}
 				}
 			}

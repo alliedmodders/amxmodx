@@ -23,36 +23,36 @@
 					{
 						"type"      "float"
 
-						"windows"   "916"
-						"linux"     "936"
-						"mac"       "936"
+						"windows"   "920"
+						"linux"     "940"
+						"mac"       "940"
 					}
 
 					"m_flNextSmellTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "920"
-						"linux"     "940"
-						"mac"       "940"
+						"windows"   "924"
+						"linux"     "944"
+						"mac"       "944"
 					}
 
 					"m_fLightHacked"  // BOOL
 					{
 						"type"      "integer"
 
-						"windows"   "924"
-						"linux"     "944"
-						"mac"       "944"
+						"windows"   "928"
+						"linux"     "948"
+						"mac"       "948"
 					}
 
 					"m_iMode"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "928"
-						"linux"     "948"
-						"mac"       "948"
+						"windows"   "932"
+						"linux"     "952"
+						"mac"       "952"
 					}
 				}
 			}

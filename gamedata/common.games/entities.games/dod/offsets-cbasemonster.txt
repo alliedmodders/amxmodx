@@ -429,13 +429,22 @@
 						"mac"       "928"
 					}
 
-					"m_iClass"  // int
+					"m_flLastYawTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "912"
 						"linux"     "932"
 						"mac"       "932"
+					}
+
+					"m_iClass"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "916"
+						"linux"     "936"
+						"mac"       "936"
 					}
 				}
 			}

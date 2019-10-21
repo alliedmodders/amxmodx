@@ -55,11 +55,47 @@
 						"mac"       "16"
 					}
 
+					"m_pfnThink"  // (*__pfn)(CBaseEntity*)
+					{
+						"type"      "function"
+
+						"windows"   "20"
+						"linux"     "20"
+						"mac"       "20"
+					}
+
+					"m_pfnTouch"  // (*__pfn)(CBaseEntity*, CBaseEntity*)
+					{
+						"type"      "function"
+
+						"windows"   "24"
+						"linux"     "28"
+						"mac"       "28"
+					}
+
+					"m_pfnUse"  // (*__pfn)(CBaseEntity*, CBaseEntity*, CBaseEntity*, USE_TYPE, float)
+					{
+						"type"      "function"
+
+						"windows"   "28"
+						"linux"     "36"
+						"mac"       "36"
+					}
+
+					"m_pfnBlocked"  // (*__pfn)(CBaseEntity*, CBaseEntity*)
+					{
+						"type"      "function"
+
+						"windows"   "32"
+						"linux"     "44"
+						"mac"       "44"
+					}
+
 					"ammo_9mm"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "52"
+						"windows"   "36"
 						"linux"     "52"
 						"mac"       "52"
 					}
@@ -68,7 +104,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "56"
+						"windows"   "40"
 						"linux"     "56"
 						"mac"       "56"
 					}
@@ -77,7 +113,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "60"
+						"windows"   "44"
 						"linux"     "60"
 						"mac"       "60"
 					}
@@ -86,7 +122,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "64"
+						"windows"   "48"
 						"linux"     "64"
 						"mac"       "64"
 					}
@@ -95,7 +131,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "68"
+						"windows"   "52"
 						"linux"     "68"
 						"mac"       "68"
 					}
@@ -104,7 +140,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "72"
+						"windows"   "56"
 						"linux"     "72"
 						"mac"       "72"
 					}
@@ -113,7 +149,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "76"
+						"windows"   "60"
 						"linux"     "76"
 						"mac"       "76"
 					}
@@ -122,7 +158,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "80"
+						"windows"   "64"
 						"linux"     "80"
 						"mac"       "80"
 					}
@@ -131,7 +167,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "84"
+						"windows"   "68"
 						"linux"     "84"
 						"mac"       "84"
 					}
@@ -140,7 +176,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "88"
+						"windows"   "72"
 						"linux"     "88"
 						"mac"       "88"
 					}
@@ -149,7 +185,7 @@
 					{
 						"type"      "float"
 
-						"windows"   "92"
+						"windows"   "76"
 						"linux"     "92"
 						"mac"       "92"
 					}
@@ -158,7 +194,7 @@
 					{
 						"type"      "float"
 
-						"windows"   "96"
+						"windows"   "80"
 						"linux"     "96"
 						"mac"       "96"
 					}
@@ -167,7 +203,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "100"
+						"windows"   "84"
 						"linux"     "100"
 						"mac"       "100"
 					}
@@ -176,7 +212,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "104"
+						"windows"   "88"
 						"linux"     "104"
 						"mac"       "104"
 					}
@@ -185,7 +221,7 @@
 					{
 						"type"      "integer"
 
-						"windows"   "108"
+						"windows"   "92"
 						"linux"     "108"
 						"mac"       "108"
 					}

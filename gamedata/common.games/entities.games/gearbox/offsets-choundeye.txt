@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "764"
-						"linux"     "784"
-						"mac"       "784"
-					}
-
-					"m_fAsleep"  // BOOL
-					{
-						"type"      "integer"
-
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
 					}
 
-					"m_fDontBlink"  // BOOL
+					"m_fAsleep"  // BOOL
 					{
 						"type"      "integer"
 
@@ -46,13 +37,22 @@
 						"mac"       "792"
 					}
 
-					"m_vecPackCenter"  // Vector
+					"m_fDontBlink"  // BOOL
 					{
-						"type"      "vector"
+						"type"      "integer"
 
 						"windows"   "776"
 						"linux"     "796"
 						"mac"       "796"
+					}
+
+					"m_vecPackCenter"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "780"
+						"linux"     "800"
+						"mac"       "800"
 					}
 				}
 			}

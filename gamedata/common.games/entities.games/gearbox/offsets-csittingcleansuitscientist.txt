@@ -23,27 +23,27 @@
 					{
 						"type"      "integer"
 
-						"windows"   "836"
-						"linux"     "856"
-						"mac"       "856"
+						"windows"   "840"
+						"linux"     "860"
+						"mac"       "860"
 					}
 
 					"m_headTurn"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "840"
-						"linux"     "860"
-						"mac"       "860"
+						"windows"   "844"
+						"linux"     "864"
+						"mac"       "864"
 					}
 
 					"m_flResponseDelay"  // float
 					{
 						"type"      "float"
 
-						"windows"   "844"
-						"linux"     "864"
-						"mac"       "864"
+						"windows"   "848"
+						"linux"     "868"
+						"mac"       "868"
 					}
 				}
 			}

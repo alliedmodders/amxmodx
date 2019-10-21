@@ -23,18 +23,18 @@
 					{
 						"type"      "integer"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 
 					"m_vecForward"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "716"
-						"linux"     "736"
-						"mac"       "736"
+						"windows"   "720"
+						"linux"     "740"
+						"mac"       "740"
 					}
 				}
 			}

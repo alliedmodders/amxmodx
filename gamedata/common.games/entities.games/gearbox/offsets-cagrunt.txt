@@ -23,21 +23,12 @@
 					{
 						"type"      "integer"
 
-						"windows"   "764"
-						"linux"     "784"
-						"mac"       "784"
-					}
-
-					"m_flNextHornetAttackCheck"  // float
-					{
-						"type"      "float"
-
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
 					}
 
-					"m_flNextPainTime"  // float
+					"m_flNextHornetAttackCheck"  // float
 					{
 						"type"      "float"
 
@@ -46,7 +37,7 @@
 						"mac"       "792"
 					}
 
-					"m_flNextSpeakTime"  // float
+					"m_flNextPainTime"  // float
 					{
 						"type"      "float"
 
@@ -55,7 +46,7 @@
 						"mac"       "796"
 					}
 
-					"m_flNextWordTime"  // float
+					"m_flNextSpeakTime"  // float
 					{
 						"type"      "float"
 
@@ -64,13 +55,22 @@
 						"mac"       "800"
 					}
 
-					"m_iLastWord"  // int
+					"m_flNextWordTime"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "784"
 						"linux"     "804"
 						"mac"       "804"
+					}
+
+					"m_iLastWord"  // int
+					{
+						"type"      "integer"
+
+						"windows"   "788"
+						"linux"     "808"
+						"mac"       "808"
 					}
 				}
 			}

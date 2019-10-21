@@ -23,39 +23,30 @@
 					{
 						"type"      "integer"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 
 					"d_y"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "712"
-						"linux"     "732"
-						"mac"       "732"
+						"windows"   "716"
+						"linux"     "736"
+						"mac"       "736"
 					}
 
 					"m_lastupdate"  // float
 					{
 						"type"      "float"
 
-						"windows"   "716"
-						"linux"     "736"
-						"mac"       "736"
-					}
-
-					"m_playsound"  // int
-					{
-						"type"      "integer"
-
 						"windows"   "720"
 						"linux"     "740"
 						"mac"       "740"
 					}
 
-					"m_updated"  // int
+					"m_playsound"  // int
 					{
 						"type"      "integer"
 
@@ -64,7 +55,7 @@
 						"mac"       "744"
 					}
 
-					"m_direction"  // int
+					"m_updated"  // int
 					{
 						"type"      "integer"
 
@@ -73,34 +64,34 @@
 						"mac"       "748"
 					}
 
-					"m_start"  // Vector
+					"m_direction"  // int
 					{
-						"type"      "vector"
+						"type"      "integer"
 
 						"windows"   "732"
 						"linux"     "752"
 						"mac"       "752"
 					}
 
+					"m_start"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "736"
+						"linux"     "756"
+						"mac"       "756"
+					}
+
 					"m_end"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "744"
-						"linux"     "764"
-						"mac"       "764"
+						"windows"   "748"
+						"linux"     "768"
+						"mac"       "768"
 					}
 
 					"m_velocity"  // int
-					{
-						"type"      "integer"
-
-						"windows"   "756"
-						"linux"     "776"
-						"mac"       "776"
-					}
-
-					"m_hmin"  // int
 					{
 						"type"      "integer"
 
@@ -109,7 +100,7 @@
 						"mac"       "780"
 					}
 
-					"m_hmax"  // int
+					"m_hmin"  // int
 					{
 						"type"      "integer"
 
@@ -118,16 +109,16 @@
 						"mac"       "784"
 					}
 
-					"m_fireLast"  // float
+					"m_hmax"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "768"
 						"linux"     "788"
 						"mac"       "788"
 					}
 
-					"m_maxRange"  // float
+					"m_fireLast"  // float
 					{
 						"type"      "float"
 
@@ -136,7 +127,7 @@
 						"mac"       "792"
 					}
 
-					"m_minRange"  // float
+					"m_maxRange"  // float
 					{
 						"type"      "float"
 
@@ -145,25 +136,25 @@
 						"mac"       "796"
 					}
 
-					"m_iEnemyType"  // int
+					"m_minRange"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "780"
 						"linux"     "800"
 						"mac"       "800"
 					}
 
-					"m_fireDelay"  // float
+					"m_iEnemyType"  // int
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "784"
 						"linux"     "804"
 						"mac"       "804"
 					}
 
-					"m_trackDelay"  // float
+					"m_fireDelay"  // float
 					{
 						"type"      "float"
 
@@ -172,49 +163,58 @@
 						"mac"       "808"
 					}
 
-					"m_tracking"  // BOOL
+					"m_trackDelay"  // float
 					{
-						"type"      "integer"
+						"type"      "float"
 
 						"windows"   "792"
 						"linux"     "812"
 						"mac"       "812"
 					}
 
-					"m_zeroYaw"  // float
+					"m_tracking"  // BOOL
 					{
-						"type"      "float"
+						"type"      "integer"
 
 						"windows"   "796"
 						"linux"     "816"
 						"mac"       "816"
 					}
 
-					"m_vGunAngle"  // Vector
+					"m_zeroYaw"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "800"
 						"linux"     "820"
 						"mac"       "820"
 					}
 
+					"m_vGunAngle"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "804"
+						"linux"     "824"
+						"mac"       "824"
+					}
+
 					"m_vIdealGunVector"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "812"
-						"linux"     "832"
-						"mac"       "832"
+						"windows"   "816"
+						"linux"     "836"
+						"mac"       "836"
 					}
 
 					"m_vIdealGunAngle"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "824"
-						"linux"     "844"
-						"mac"       "844"
+						"windows"   "828"
+						"linux"     "848"
+						"mac"       "848"
 					}
 				}
 			}

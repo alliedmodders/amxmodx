@@ -23,30 +23,21 @@
 					{
 						"type"      "float"
 
-						"windows"   "664"
-						"linux"     "684"
-						"mac"       "684"
+						"windows"   "668"
+						"linux"     "688"
+						"mac"       "688"
 					}
 
 					"m_vecTarget"  // Vector
 					{
 						"type"      "vector"
 
-						"windows"   "668"
-						"linux"     "688"
-						"mac"       "688"
+						"windows"   "672"
+						"linux"     "692"
+						"mac"       "692"
 					}
 
 					"m_flNextHunt"  // float
-					{
-						"type"      "float"
-
-						"windows"   "680"
-						"linux"     "700"
-						"mac"       "700"
-					}
-
-					"m_flNextHit"  // float
 					{
 						"type"      "float"
 
@@ -55,31 +46,40 @@
 						"mac"       "704"
 					}
 
-					"m_posPrev"  // Vector
+					"m_flNextHit"  // float
 					{
-						"type"      "vector"
+						"type"      "float"
 
 						"windows"   "688"
 						"linux"     "708"
 						"mac"       "708"
 					}
 
+					"m_posPrev"  // Vector
+					{
+						"type"      "vector"
+
+						"windows"   "692"
+						"linux"     "712"
+						"mac"       "712"
+					}
+
 					"m_hOwner"  // EHANDLE
 					{
 						"type"      "ehandle"
 
-						"windows"   "700"
-						"linux"     "720"
-						"mac"       "720"
+						"windows"   "704"
+						"linux"     "724"
+						"mac"       "724"
 					}
 
 					"m_iMyClass"  // int
 					{
 						"type"      "integer"
 
-						"windows"   "708"
-						"linux"     "728"
-						"mac"       "728"
+						"windows"   "712"
+						"linux"     "732"
+						"mac"       "732"
 					}
 				}
 			}

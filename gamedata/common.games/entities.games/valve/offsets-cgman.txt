@@ -23,27 +23,27 @@
 					{
 						"type"      "ehandle"
 
-						"windows"   "660"
-						"linux"     "680"
-						"mac"       "680"
+						"windows"   "664"
+						"linux"     "684"
+						"mac"       "684"
 					}
 
 					"m_hTalkTarget"  // EHANDLE
 					{
 						"type"      "ehandle"
 
-						"windows"   "668"
-						"linux"     "688"
-						"mac"       "688"
+						"windows"   "672"
+						"linux"     "692"
+						"mac"       "692"
 					}
 
 					"m_flTalkTime"  // float
 					{
 						"type"      "float"
 
-						"windows"   "676"
-						"linux"     "696"
-						"mac"       "696"
+						"windows"   "680"
+						"linux"     "700"
+						"mac"       "700"
 					}
 				}
 			}

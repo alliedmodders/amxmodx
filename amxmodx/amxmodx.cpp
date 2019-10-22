@@ -2531,7 +2531,7 @@ static cell AMX_NATIVE_CALL read_argv(AMX *amx, cell *params) /* 3 param */
 {
 	int argc = params[1];
 
-	const char *value = g_fakecmd.notify ? (argc >= 0 && argc < 3 ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
+	const char *value = g_fakecmd.notify ? ((argc >= 0 && argc < 3 && g_fakecmd.argv[argc] != nullptr) ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
 	return set_amxstring_utf8(amx, params[2], value, strlen(value), params[3]);
 }
 
@@ -2544,7 +2544,7 @@ static cell AMX_NATIVE_CALL read_argv_int(AMX *amx, cell *params) /* 1 param */
 		return 0;
 	}
 
-	const char *value = g_fakecmd.notify ? (argc >= 1 && argc < 3 ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
+	const char *value = g_fakecmd.notify ? ((argc >= 1 && argc < 3 && g_fakecmd.argv[argc] != nullptr) ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
 
 	return atoi(value);
 }
@@ -2558,7 +2558,7 @@ static cell AMX_NATIVE_CALL read_argv_float(AMX *amx, cell *params) /* 1 param *
 		return 0;
 	}
 
-	const char *value = g_fakecmd.notify ? (argc >= 1 && argc < 3 ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
+	const char *value = g_fakecmd.notify ? ((argc >= 1 && argc < 3 && g_fakecmd.argv[argc] != nullptr) ? g_fakecmd.argv[argc] : "") : CMD_ARGV(argc);
 	float flValue = atof(value);
 
 	return amx_ftoc(flValue);
@@ -2566,7 +2566,7 @@ static cell AMX_NATIVE_CALL read_argv_float(AMX *amx, cell *params) /* 1 param *
 
 static cell AMX_NATIVE_CALL read_args(AMX *amx, cell *params) /* 2 param */
 {
-	const char* sValue = g_fakecmd.notify ? (g_fakecmd.argc > 1 ? g_fakecmd.args : g_fakecmd.argv[0]) : CMD_ARGS();
+	const char* sValue = g_fakecmd.notify ? (g_fakecmd.argc > 1 ? g_fakecmd.args : "") : CMD_ARGS();
 	return set_amxstring_utf8(amx, params[1], sValue ? sValue : "", sValue ? strlen(sValue) : 0, params[2]);
 }
 

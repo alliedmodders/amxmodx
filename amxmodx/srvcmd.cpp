@@ -72,7 +72,15 @@ void amx_command()
 		}
 		else
 		{
-			auto id = std::stoi(CMD_ARGV(2));
+			char *pEnd;
+			auto id = strtol(CMD_ARGV(2), &pEnd, 10);
+
+			if (!pEnd)
+			{
+				print_srvconsole("Invalid plugin index %i.\n", id);
+				return;
+			}
+
 			auto plugin = g_plugins.findPlugin(id);
 
 			if (plugin && plugin->isValid())

@@ -1403,25 +1403,19 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 5 param *
 	CPluginMngr::CPlugin* a = g_plugins.findPluginFast(amx);
 	int i;
 
-	auto title = get_amxstring(amx, params[arg_title], arg_title - 1, i);
-	auto vers = get_amxstring(amx, params[arg_version], arg_version - 1, i);
-	auto author = get_amxstring(amx, params[arg_author], arg_author - 1, i);
+
+	a->setTitle(get_amxstring(amx, params[arg_title], 0, i));
+	a->setVersion(get_amxstring(amx, params[arg_version], 0, i));
+	a->setAuthor(get_amxstring(amx, params[arg_author], 0, i));
 
 #if defined BINLOG_ENABLED
-	g_BinLog.WriteOp(BinLog_Registered, a->getId(), title, vers);
+	g_BinLog.WriteOp(BinLog_Registered, a->getId(), a->getTitle(), a->getVersion());
 #endif
-
-	a->setTitle(title);
-	a->setVersion(vers);
-	a->setAuthor(author);
 
 	if (params[arg_count] / sizeof(cell) > arg_author)
 	{
-		auto url = get_amxstring(amx, params[arg_url], arg_url - 1, i);
-		auto description = get_amxstring(amx, params[arg_description], arg_description - 1, i);
-
-		a->setUrl(url);
-		a->setDescription(description);
+		a->setUrl(get_amxstring(amx, params[arg_url], 0, i));
+		a->setDescription(get_amxstring(amx, params[arg_description], 0, i));
 	}
 
 	/* Check if we need to add fail counters */
@@ -1429,7 +1423,7 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 5 param *
 	unsigned int counter = 0;
 	while (NONGPL_PLUGIN_LIST[i].author != NULL)
 	{
-		if (strcmp(NONGPL_PLUGIN_LIST[i].author, author) == 0)
+		if (strcmp(NONGPL_PLUGIN_LIST[i].author, a->getAuthor()) == 0)
 		{
 			counter++;
 		}
@@ -1437,7 +1431,7 @@ static cell AMX_NATIVE_CALL register_plugin(AMX *amx, cell *params) /* 5 param *
 		{
 			counter++;
 		}
-		if (stricmp(NONGPL_PLUGIN_LIST[i].title, title) == 0)
+		if (stricmp(NONGPL_PLUGIN_LIST[i].title, a->getTitle()) == 0)
 		{
 			counter++;
 		}

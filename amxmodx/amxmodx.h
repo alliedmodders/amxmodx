@@ -53,7 +53,6 @@
 #include "CFrameAction.h"
 #include <amxmodx_version.h>
 #include <HLTypeConversion.h>
-#include "extdef.h"
 
 #define AMXXLOG_Log g_log.Log
 #define AMXXLOG_Error g_log.LogError

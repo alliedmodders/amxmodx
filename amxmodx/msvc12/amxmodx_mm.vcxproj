@@ -429,7 +429,6 @@ md -p JIT 2&gt;NUL
     <ClInclude Include="..\CVault.h" />
     <ClInclude Include="..\datastructs.h" />
     <ClInclude Include="..\debugger.h" />
-    <ClInclude Include="..\extdef.h" />
     <ClInclude Include="..\fakemeta.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\gameconfigs.h" />

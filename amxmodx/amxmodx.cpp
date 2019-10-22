@@ -43,7 +43,7 @@ static cell AMX_NATIVE_CALL get_xvar_id(AMX *amx, cell *params)
 
 	for (auto name : g_sInaccessibleXVars)
 	{
-		if (likely(!strcmp(sName, name)))
+		if (!strcmp(sName, name))
 		{
 			return -1;
 		}

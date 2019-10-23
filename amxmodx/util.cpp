@@ -260,15 +260,15 @@ void UTIL_DHudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const c
 	MESSAGE_END();
 }
 
-/* warning - buffer of msg must be longer than 190 chars!
+/* warning - buffer of msg must be longer than 187 chars!
 (here in AMX it is always longer) */
 void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 {
 	if (!gmsgTextMsg)
 		return;				// :TODO: Maybe output a warning log?
 
-	char c = msg[190];
-	msg[190] = 0;			// truncate without checking with strlen()
+	char c = msg[187];
+	msg[187] = 0;			// truncate without checking with strlen()
 	
 	if (pEntity)
 		MESSAGE_BEGIN(MSG_ONE, gmsgTextMsg, NULL, pEntity);
@@ -279,7 +279,7 @@ void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 	WRITE_STRING("%s");
 	WRITE_STRING(msg);
 	MESSAGE_END();
-	msg[190] = c;
+	msg[187] = c;
 }
 
 void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
@@ -287,15 +287,15 @@ void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
 	if (!gmsgSayText)
 		return;				// :TODO: Maybe output a warning log?
 
-	char c = msg[190];
-	msg[190] = 0;			// truncate without checking with strlen()
+	char c = msg[187];
+	msg[187] = 0;			// truncate without checking with strlen()
 
 	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEntity);
 	WRITE_BYTE(sender);
 	WRITE_STRING("%s");
 	WRITE_STRING(msg);
 	MESSAGE_END();
-	msg[190] = c;
+	msg[187] = c;
 }
 
 void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName)

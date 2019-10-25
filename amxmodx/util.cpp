@@ -260,8 +260,10 @@ void UTIL_DHudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const c
 	MESSAGE_END();
 }
 
-/* warning - buffer of msg must be longer than 187 chars!
-(here in AMX it is always longer) */
+/**
+ * User message size limit: 192 bytes
+ * Actual available size: 188 bytes (with EOS)
+ */
 void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 {
 	if (!gmsgTextMsg)
@@ -275,13 +277,17 @@ void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 	else
 		MESSAGE_BEGIN(MSG_BROADCAST, gmsgTextMsg);
 	
-	WRITE_BYTE(msg_dest);
-	WRITE_STRING("%s");
-	WRITE_STRING(msg);
-	MESSAGE_END();
+	WRITE_BYTE(msg_dest);	// 1 byte
+	WRITE_STRING("%s");		// 3 bytes (2 + EOS)
+	WRITE_STRING(msg);		// max 188 bytes (187 + EOS)
+	MESSAGE_END();			// max 192 bytes
 	msg[187] = c;
 }
 
+/**
+ * User message size limit: 192 bytes
+ * Actual available size: 188 bytes (with EOS)
+ */
 void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
 {
 	if (!gmsgSayText)
@@ -291,10 +297,10 @@ void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
 	msg[187] = 0;			// truncate without checking with strlen()
 
 	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEntity);
-	WRITE_BYTE(sender);
-	WRITE_STRING("%s");
-	WRITE_STRING(msg);
-	MESSAGE_END();
+	WRITE_BYTE(sender);		// 1 byte
+	WRITE_STRING("%s");		// 3 bytes (2 + EOS)
+	WRITE_STRING(msg);		// max 188 bytes (187 + EOS)
+	MESSAGE_END();			// max 192 bytes
 	msg[187] = c;
 }
 

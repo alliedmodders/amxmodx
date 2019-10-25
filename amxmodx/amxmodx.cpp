@@ -229,7 +229,7 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 			message[len++] = '\n';    // when pre-formatted string in TextMSg is passed as argument.
 			message[len] = 0;
 
-			UTIL_ClientPrint(pPlayer->pEdict, 2, message);
+			UTIL_ClientPrint(pPlayer->pEdict, HUD_PRINTCONSOLE, message);
 		}
 	}
 
@@ -255,7 +255,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 				msg = format_amxstring(amx, params, 3, len);
 
 				// params[2]: print_notify = 1, print_console = 2, print_chat = 3, print_center = 4
-				if (((params[2] == 1) || (params[2] == 2)) && (len > 125))	// Client console truncates after byte 127. (125 + \n\n = 127)
+				if (((params[2] == HUD_PRINTNOTIFY) || (params[2] == HUD_PRINTCONSOLE)) && (len > 125))	// Client console truncates after byte 127. (125 + \n\n = 127)
 				{
 					len = 125;
 					if ((msg[len - 1] & 1 << 7))
@@ -264,8 +264,8 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 					}
 				}
 				msg[len++] = '\n';
-
-				if (!g_bmod_cstrike || ((params[2] == 1 || params[2] == 2))
+				
+				if (!g_bmod_cstrike || (params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE))
 				{
 					msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMSg is passed as argument.
 				}
@@ -295,7 +295,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 			msg = format_amxstring(amx, params, 3, len);
 
 			// params[2]: print_notify = 1, print_console = 2, print_chat = 3, print_center = 4
-			if (((params[2] == 1) || (params[2] == 2)) && (len > 125))	// Client console truncates after byte 127. (125 + \n\n = 127)
+			if (((params[2] == HUD_PRINTNOTIFY) || (params[2] == HUD_PRINTCONSOLE)) && (len > 125))	// Client console truncates after byte 127. (125 + \n\n = 127)
 			{
 				len = 125;
 				if ((msg[len - 1] & 1 << 7))
@@ -305,7 +305,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 			}
 			msg[len++] = '\n';
 
-			if (!g_bmod_cstrike || ((params[2] == 1 || params[2] == 2))
+			if (!g_bmod_cstrike || (params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE))
 			{
 				msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMSg is passed as argument.
 			}

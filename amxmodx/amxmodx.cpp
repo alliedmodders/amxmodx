@@ -358,16 +358,15 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 					*msg = 1;
 				}
 
-				if (len > 190)	// Server crashes after byte 190. (190 + \n = 191)
+				if (len > 187)	// Max available bytes: 188
 				{
-					len = 190;
+					len = 187;
 					if ((msg[len - 1] & 1 << 7))
 					{
 						len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
 					}
 				}
-
-				msg[len++] = '\n';
+				
 				msg[len] = 0;
 
 				UTIL_ClientSayText(pPlayer->pEdict, sender ? sender : i, msg);
@@ -396,16 +395,15 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 				*msg = 1;
 			}
 
-			if (len > 190)	// Server crashes after byte 190. (190 + \n = 191)
+			if (len > 187)	// Max available bytes: 188
 			{
-				len = 190;
+				len = 187;
 				if ((msg[len - 1] & 1 << 7))
 				{
 					len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
 				}
 			}
 
-			msg[len++] = '\n';
 			msg[len] = 0;
 
 			UTIL_ClientSayText(pPlayer->pEdict, sender ? sender : index, msg);

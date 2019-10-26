@@ -269,8 +269,10 @@ void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 	if (!gmsgTextMsg)
 		return;				// :TODO: Maybe output a warning log?
 
-	char c = msg[187];
-	msg[187] = 0;			// truncate without checking with strlen()
+	const auto canUseFormatString = g_official_mod && !g_bmod_dod; // Temporary exclusion for DoD until officially supported
+	const auto index = canUseFormatString ? 187 : 190;
+	char c = msg[index];
+	msg[index] = 0;			// truncate without checking with strlen()
 	
 	if (pEntity)
 		MESSAGE_BEGIN(MSG_ONE, gmsgTextMsg, NULL, pEntity);
@@ -278,10 +280,11 @@ void UTIL_ClientPrint(edict_t *pEntity, int msg_dest, char *msg)
 		MESSAGE_BEGIN(MSG_BROADCAST, gmsgTextMsg);
 	
 	WRITE_BYTE(msg_dest);	// 1 byte
-	WRITE_STRING("%s");		// 3 bytes (2 + EOS)
+	if (canUseFormatString) 
+		WRITE_STRING("%s");	// 3 bytes (2 + EOS)
 	WRITE_STRING(msg);		// max 188 bytes (187 + EOS)
 	MESSAGE_END();			// max 192 bytes
-	msg[187] = c;
+	msg[index] = c;
 }
 
 /**
@@ -293,15 +296,18 @@ void UTIL_ClientSayText(edict_t *pEntity, int sender, char *msg)
 	if (!gmsgSayText)
 		return;				// :TODO: Maybe output a warning log?
 
-	char c = msg[187];
-	msg[187] = 0;			// truncate without checking with strlen()
+	const auto canUseFormatString = g_official_mod && !g_bmod_dod; // Temporary exclusion for DoD until officially supported
+	const auto index = canUseFormatString ? 187 : 190;
+	char c = msg[index];
+	msg[index] = 0;			// truncate without checking with strlen()
 
 	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEntity);
 	WRITE_BYTE(sender);		// 1 byte
-	WRITE_STRING("%s");		// 3 bytes (2 + EOS)
+	if (canUseFormatString) 
+		WRITE_STRING("%s");	// 3 bytes (2 + EOS)
 	WRITE_STRING(msg);		// max 188 bytes (187 + EOS)
 	MESSAGE_END();			// max 192 bytes
-	msg[187] = c;
+	msg[index] = c;
 }
 
 void UTIL_TeamInfo(edict_t *pEntity, int playerIndex, const char *pszTeamName)

@@ -194,7 +194,7 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 
 	int len;
 	char* message = format_amxstring(amx, params, 2, len);
-	
+
 	if (index < 1 || index > gpGlobals->maxClients)	// Server console
 	{
 		if (len > 254) // Server console truncates after byte 255. (254 + \n = 255)
@@ -230,7 +230,7 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 
 			if (canUseFormatString)
 			{
-				message[len++] = '\n';    //  Double newline is required when pre-formatted string in TextMSg is passed as argument.
+				message[len++] = '\n';    //  Double newline is required when pre-formatted string in TextMsg is passed as argument.
 			}
 			
 			message[len] = 0;
@@ -279,7 +279,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 				
 				if (canUseFormatString && (!g_bmod_cstrike || (params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE)))
 				{
-					msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMSg is passed as argument.
+					msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMsg is passed as argument.
 				}
 				
 				msg[len] = 0;
@@ -323,7 +323,7 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 
 			if (canUseFormatString && (!g_bmod_cstrike || (params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE)))
 			{
-				msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMSg is passed as argument.
+				msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMsg is passed as argument.
 			}
 			
 			msg[len] = 0;

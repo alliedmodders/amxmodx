@@ -277,9 +277,12 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 				}
 				msg[len++] = '\n';
 				
-				if (canUseFormatString && (!g_bmod_cstrike || (params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE)))
+				if (canUseFormatString)
 				{
-					msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMsg is passed as argument.
+					if (!g_bmod_cstrike || params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE)
+					{
+						msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMsg is passed as argument.
+					}
 				}
 				
 				msg[len] = 0;
@@ -321,9 +324,12 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 			}
 			msg[len++] = '\n';
 
-			if (canUseFormatString && (!g_bmod_cstrike || (params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE)))
+			if (canUseFormatString)
 			{
-				msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMsg is passed as argument.
+				if (!g_bmod_cstrike || params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE)
+				{
+					msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMsg is passed as argument.
+				}
 			}
 			
 			msg[len] = 0;

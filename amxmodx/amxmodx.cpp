@@ -197,7 +197,7 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 
 	if (index < 1 || index > gpGlobals->maxClients)	// Server console
 	{
-		if (len > 254)
+		if (len > 254) // Server console truncates after byte 255. (254 + \n = 255)
 		{
 			len = 254;
 			if ((message[len - 1] & 1 << 7))
@@ -216,18 +216,26 @@ static cell AMX_NATIVE_CALL console_print(AMX *amx, cell *params) /* 2 param */
 
 		if (pPlayer->ingame && !pPlayer->IsBot())
 		{
-			if (len > 126)	// Client console truncates after byte 127. (126 + \n = 127)
+			if (len > 125)	// Client console truncates after byte 127. (125 + \n\n = 127)
 			{
-				len = 126;
+				len = 125;
 				if ((message[len - 1] & 1 << 7))
 				{
 					len -= UTIL_CheckValidChar(message + len - 1); // Don't truncate a multi-byte character
 				}
 			}
-			message[len++] = '\n';      // Client expects newline from the server
+			message[len++] = '\n';
+
+			const auto canUseFormatString = g_official_mod && !g_bmod_dod; // Temporary exclusion for DoD until officially supported
+
+			if (canUseFormatString)
+			{
+				message[len++] = '\n';    //  Double newline is required when pre-formatted string in TextMsg is passed as argument.
+			}
+			
 			message[len] = 0;
 
-			UTIL_ClientPrint(pPlayer->pEdict, 2, message);
+			UTIL_ClientPrint(pPlayer->pEdict, HUD_PRINTCONSOLE, message);
 		}
 	}
 
@@ -241,6 +249,8 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 	int len = 0;
 	char *msg;
 
+	const auto canUseFormatString = g_official_mod && !g_bmod_dod; // Temporary exclusion for DoD until officially supported
+
 	if (params[1] == 0)	// 0 = All players
 	{
 		for (int i = 1; i <= gpGlobals->maxClients; ++i)
@@ -252,16 +262,38 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 				g_langMngr.SetDefLang(i);
 				msg = format_amxstring(amx, params, 3, len);
 
-				// params[2]: print_notify = 1, print_console = 2, print_chat = 3, print_center = 4
-				if (((params[2] == 1) || (params[2] == 2)) && (len > 126))	// Client console truncates after byte 127. (126 + \n = 127)
+				// Client console truncates after byte 127.
+				// If format string is used, limit includes double new lines (125 + \n\n), otherwise one new line (126 + \n).
+				const auto bytesLimit = canUseFormatString ? 125 : 126;
+
+				if (g_bmod_cstrike && params[2] == HUD_PRINTCENTER) // Likely a temporary fix.
 				{
-					len = 126;
+					for (int j = 0; j < len; ++j)
+					{
+						if (msg[j] == '\n')
+						{
+							msg[j] = '\r';
+						}
+					}
+				}
+				else if (((params[2] == HUD_PRINTNOTIFY) || (params[2] == HUD_PRINTCONSOLE)) && (len > bytesLimit))	
+				{
+					len = bytesLimit;
 					if ((msg[len - 1] & 1 << 7))
 					{
 						len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
 					}
 				}
-				msg[len++] = '\n';	// Client expects newline from the server
+				msg[len++] = '\n';
+				
+				if (canUseFormatString)
+				{
+					if (!g_bmod_cstrike || params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE)
+					{
+						msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMsg is passed as argument.
+					}
+				}
+				
 				msg[len] = 0;
 
 				UTIL_ClientPrint(pPlayer->pEdict, params[2], msg);
@@ -286,16 +318,38 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 
 			msg = format_amxstring(amx, params, 3, len);
 
-			// params[2]: print_notify = 1, print_console = 2, print_chat = 3, print_center = 4
-			if (((params[2] == 1) || (params[2] == 2)) && (len > 126))	// Client console truncates after byte 127. (126 + \n = 127)
+			// Client console truncates after byte 127.
+			// If format string is used, limit includes double new lines (125 + \n\n), otherwise one new line (126 + \n).
+			const auto bytesLimit = canUseFormatString ? 125 : 126;
+			
+			if (g_bmod_cstrike && params[2] == HUD_PRINTCENTER) // Likely a temporary fix.
 			{
-				len = 126;
+				for (int j = 0; j < len; ++j)
+				{
+					if (msg[j] == '\n')
+					{
+						msg[j] = '\r';
+					}
+				}
+			}
+			else if (((params[2] == HUD_PRINTNOTIFY) || (params[2] == HUD_PRINTCONSOLE)) && (len > bytesLimit))	// Client console truncates after byte 127. (125 + \n\n = 127)
+			{
+				len = bytesLimit;
 				if ((msg[len - 1] & 1 << 7))
 				{
 					len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
 				}
 			}
-			msg[len++] = '\n';	// Client expects newline from the server
+			msg[len++] = '\n';
+
+			if (canUseFormatString)
+			{
+				if (!g_bmod_cstrike || params[2] == HUD_PRINTNOTIFY || params[2] == HUD_PRINTCONSOLE)
+				{
+					msg[len++] = '\n';  // Double newline is required when pre-formatted string in TextMsg is passed as argument.
+				}
+			}
+			
 			msg[len] = 0;
 
 			UTIL_ClientPrint(pPlayer->pEdict, params[2], msg);
@@ -344,16 +398,15 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 					*msg = 1;
 				}
 
-				if (len > 190)	// Server crashes after byte 190. (190 + \n = 191)
+				if (len > 187)	// Max available bytes: 188
 				{
-					len = 190;
+					len = 187;
 					if ((msg[len - 1] & 1 << 7))
 					{
 						len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
 					}
 				}
-
-				msg[len++] = '\n';
+				
 				msg[len] = 0;
 
 				UTIL_ClientSayText(pPlayer->pEdict, sender ? sender : i, msg);
@@ -382,16 +435,15 @@ static cell AMX_NATIVE_CALL client_print_color(AMX *amx, cell *params) /* 3 para
 				*msg = 1;
 			}
 
-			if (len > 190)	// Server crashes after byte 190. (190 + \n = 191)
+			if (len > 187)	// Max available bytes: 188
 			{
-				len = 190;
+				len = 187;
 				if ((msg[len - 1] & 1 << 7))
 				{
 					len -= UTIL_CheckValidChar(msg + len - 1); // Don't truncate a multi-byte character
 				}
 			}
 
-			msg[len++] = '\n';
 			msg[len] = 0;
 
 			UTIL_ClientSayText(pPlayer->pEdict, sender ? sender : index, msg);

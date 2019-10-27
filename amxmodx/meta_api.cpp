@@ -88,6 +88,11 @@ XVars g_xvars;
 bool g_bmod_tfc;
 bool g_bmod_cstrike;
 bool g_bmod_dod;
+bool g_bmod_dmc;
+bool g_bmod_ricochet;
+bool g_bmod_valve;
+bool g_bmod_gearbox;
+bool g_official_mod;
 bool g_dontprecache;
 bool g_forcedmodules;
 bool g_forcedsounds;
@@ -1800,6 +1805,7 @@ C_DLLEXPORT	int	GetEntityAPI2_Post(DLL_FUNCTIONS *pFunctionTable, int *interface
 }
 
 enginefuncs_t meta_engfuncs;
+
 C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion)
 {
 	memset(&meta_engfuncs, 0, sizeof(enginefuncs_t));
@@ -1809,10 +1815,16 @@ C_DLLEXPORT	int	GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 		meta_engfuncs.pfnSetModel =	C_SetModel;
 		g_bmod_cstrike = true;
 	} else {
-		g_bmod_cstrike = false;
-		g_bmod_dod = !stricmp(g_mod_name.chars(), "dod");
-		g_bmod_tfc = !stricmp(g_mod_name.chars(), "tfc");
+		g_bmod_cstrike  = false;
+		g_bmod_dod      = !stricmp(g_mod_name.chars(), "dod");
+		g_bmod_dmc      = !stricmp(g_mod_name.chars(), "dmc");
+		g_bmod_tfc      = !stricmp(g_mod_name.chars(), "tfc");
+		g_bmod_ricochet = !stricmp(g_mod_name.chars(), "ricochet");
+		g_bmod_valve    = !stricmp(g_mod_name.chars(), "valve");
+		g_bmod_gearbox  = !stricmp(g_mod_name.chars(), "gearbox");
 	}
+
+	g_official_mod = g_bmod_cstrike || g_bmod_dod || g_bmod_dmc || g_bmod_ricochet || g_bmod_tfc || g_bmod_valve || g_bmod_gearbox;
 
 	meta_engfuncs.pfnCmd_Argc = C_Cmd_Argc;
 	meta_engfuncs.pfnCmd_Argv = C_Cmd_Argv;

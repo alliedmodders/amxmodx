@@ -265,9 +265,18 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 				// Client console truncates after byte 127.
 				// If format string is used, limit includes double new lines (125 + \n\n), otherwise one new line (126 + \n).
 				const auto bytesLimit = canUseFormatString ? 125 : 126;
-				
-				// params[2]: print_notify = 1, print_console = 2, print_chat = 3, print_center = 4
-				if (((params[2] == HUD_PRINTNOTIFY) || (params[2] == HUD_PRINTCONSOLE)) && (len > bytesLimit))	
+
+				if (g_bmod_cstrike && params[2] == HUD_PRINTCENTER) // Likely a temporary fix.
+				{
+					for (int j = 0; j < len; ++j)
+					{
+						if (msg[j] == '\n')
+						{
+							msg[j] = '\r';
+						}
+					}
+				}
+				else if (((params[2] == HUD_PRINTNOTIFY) || (params[2] == HUD_PRINTCONSOLE)) && (len > bytesLimit))	
 				{
 					len = bytesLimit;
 					if ((msg[len - 1] & 1 << 7))
@@ -313,8 +322,17 @@ static cell AMX_NATIVE_CALL client_print(AMX *amx, cell *params) /* 3 param */
 			// If format string is used, limit includes double new lines (125 + \n\n), otherwise one new line (126 + \n).
 			const auto bytesLimit = canUseFormatString ? 125 : 126;
 			
-			// params[2]: print_notify = 1, print_console = 2, print_chat = 3, print_center = 4
-			if (((params[2] == HUD_PRINTNOTIFY) || (params[2] == HUD_PRINTCONSOLE)) && (len > bytesLimit))	// Client console truncates after byte 127. (125 + \n\n = 127)
+			if (g_bmod_cstrike && params[2] == HUD_PRINTCENTER) // Likely a temporary fix.
+			{
+				for (int j = 0; j < len; ++j)
+				{
+					if (msg[j] == '\n')
+					{
+						msg[j] = '\r';
+					}
+				}
+			}
+			else if (((params[2] == HUD_PRINTNOTIFY) || (params[2] == HUD_PRINTCONSOLE)) && (len > bytesLimit))	// Client console truncates after byte 127. (125 + \n\n = 127)
 			{
 				len = bytesLimit;
 				if ((msg[len - 1] & 1 << 7))

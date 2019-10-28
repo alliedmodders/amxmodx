@@ -1465,31 +1465,34 @@ static cell AMX_NATIVE_CALL register_menucmd(AMX *amx, cell *params) /* 3 param 
 	return 1;
 }
 
-static cell AMX_NATIVE_CALL get_plugin(AMX *amx, cell *params) /* 11 param */
+static cell AMX_NATIVE_CALL get_plugin(AMX *amx, cell *params) /* 15 param */
 {
+	enum
+	{ 
+		arg_count, arg_plugin, arg_name, arg_namelen, arg_title, arg_titlelen, 
+		arg_version, arg_versionlen, arg_author, arg_authorlen, arg_status, arg_statuslen,
+		arg_url, arg_urllen, arg_description, arg_descriptionlen 
+	};
+
 	CPluginMngr::CPlugin* a;
 
-	if (params[1] < 0)
+	if (params[arg_plugin] < 0)
 		a = g_plugins.findPluginFast(amx);
 	else
-		a = g_plugins.findPlugin((int)params[1]);
+		a = g_plugins.findPlugin((int)params[arg_plugin]);
 
 	if (a)
 	{
-		set_amxstring(amx, params[2], a->getName(), params[3]);
-		set_amxstring(amx, params[4], a->getTitle(), params[5]);
-		set_amxstring(amx, params[6], a->getVersion(), params[7]);
-		set_amxstring(amx, params[8], a->getAuthor(), params[9]);
-		set_amxstring(amx, params[10], a->getStatus(), params[11]);
+		set_amxstring(amx, params[arg_name], a->getName(), params[arg_namelen]);
+		set_amxstring(amx, params[arg_title], a->getTitle(), params[arg_titlelen]);
+		set_amxstring(amx, params[arg_version], a->getVersion(), params[arg_versionlen]);
+		set_amxstring(amx, params[arg_author], a->getAuthor(), params[arg_authorlen]);
+		set_amxstring(amx, params[arg_status], a->getStatus(), params[arg_statuslen]);
 
-		if (params[0] / sizeof(cell) >= 12)
+		if (params[arg_count] / sizeof(cell) > arg_url)
 		{
-			cell *jit_info = get_amxaddr(amx, params[12]);
-#if defined AMD64 || !defined JIT
-			*jit_info = 0;
-#else
-			*jit_info = a->isDebug() ? 0 : 1;
-#endif
+			set_amxstring(amx, params[arg_url], a->getUrl(), params[arg_urllen]);
+			set_amxstring(amx, params[arg_description], a->getDescription(), params[arg_descriptionlen]);
 		}
 
 		return a->getId();

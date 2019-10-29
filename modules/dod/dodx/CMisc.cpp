@@ -95,14 +95,14 @@ void CPlayer::restartStats(bool all)
 	if ( all )
 	{
 		memset(weapons,0,sizeof(weapons));
-		memset(&round,0,sizeof(round));
+		memset(static_cast<void *>(&round),0,sizeof(round));
 		memset(weaponsRnd,0,sizeof(weaponsRnd));
 	}
 
 	memset(weaponsLife,0,sizeof(weaponsLife));   //DEC-Weapon (Round) stats
 	memset(attackers,0,sizeof(attackers));
 	memset(victims,0,sizeof(victims));
-	memset(&life,0,sizeof(life));
+	life = {};
 }
 
 void CPlayer::Init( int pi, edict_t* pe )

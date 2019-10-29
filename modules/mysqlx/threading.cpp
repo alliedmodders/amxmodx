@@ -178,7 +178,7 @@ void MysqlThread::RunThread(IThreadHandle *pHandle)
 
 	float save_time = m_qrInfo.queue_time;
 
-	memset(&m_qrInfo, 0, sizeof(m_qrInfo));
+	memset(static_cast<void *>(&m_qrInfo), 0, sizeof(m_qrInfo));
 
 	m_qrInfo.queue_time = save_time;
 

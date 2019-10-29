@@ -1255,7 +1255,7 @@ static cell AMX_NATIVE_CALL create_tr2(AMX *amx, cell *params)
 		tr = g_FreeTRs.front();
 		g_FreeTRs.pop();
 	}
-	memset(tr, 0, sizeof(TraceResult));
+	memset(static_cast<void *>(tr), 0, sizeof(TraceResult));
 	return reinterpret_cast<cell>(tr);
 }
 

@@ -82,7 +82,7 @@ void CPlayer::restartStats(bool all)
 	memset(weaponsRnd,0,sizeof(weaponsRnd));   //DEC-Weapon (Round) stats
 	memset(attackers,0,sizeof(attackers));
 	memset(victims,0,sizeof(victims));
-	memset(static_cast<void *>(&life),0,sizeof(life));
+	life = {};
 }
 
 void CPlayer::Init( int pi, edict_t* pe )

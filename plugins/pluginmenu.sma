@@ -469,7 +469,7 @@ public CvarMenuSelection(id, menu, item)
 	{
 		menu_destroy(menu);
 		
-		if (ExplicitPlugin[id]==-1)
+		if (ExplicitPlugin[id]==-1 && is_user_connected(id)) // Fix
 		{
 			DisplayPluginMenu(id,"Plugin Cvar Menu:", "PluginMenuSelection","DisplayCvarMenu","GetNumberOfCvarsForPlid");
 		}

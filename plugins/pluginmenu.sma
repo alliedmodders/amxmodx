@@ -114,6 +114,10 @@ public client_connect(id)
  */
 stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], const Callback[])
 {
+	// Fix
+	if(!is_user_connected(id))
+		return;
+	
 	new Menu=menu_create(MenuText,Handler);
 	
 	
@@ -469,7 +473,7 @@ public CvarMenuSelection(id, menu, item)
 	{
 		menu_destroy(menu);
 		
-		if (ExplicitPlugin[id]==-1 && is_user_connected(id)) // Fix
+		if (ExplicitPlugin[id]==-1)
 		{
 			DisplayPluginMenu(id,"Plugin Cvar Menu:", "PluginMenuSelection","DisplayCvarMenu","GetNumberOfCvarsForPlid");
 		}

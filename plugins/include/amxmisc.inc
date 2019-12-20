@@ -761,12 +761,8 @@ stock constraint_offset(low, high, seed, offset)
 	{
 		return low + (offset % numElements);
 	}
-	else
-	{
-		return high - (abs(offset) % numElements) + 1;
-	}
-
-	return 0;	// Makes the compiler happy -_-
+	
+	return high - (abs(offset) % numElements) + 1;
 }
 
 /**

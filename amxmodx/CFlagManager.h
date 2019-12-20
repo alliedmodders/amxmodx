@@ -143,6 +143,10 @@ private:
 				fclose(fp);
 			};
 		}
+		else
+		{
+			fclose(fp);
+		}
 	};
 	/**
 	 * Returns 1 if the timestamp for the file is different than the one we have loaded

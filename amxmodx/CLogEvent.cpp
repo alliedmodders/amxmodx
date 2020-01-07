@@ -171,6 +171,11 @@ void LogEventsMngr::CLogEvent::setForwardState(ForwardState state)
 	m_State = state;
 }
 
+ForwardState LogEventsMngr::CLogEvent::getForwardState()
+{
+	return m_State = state;
+}
+
 int LogEventsMngr::registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos)
 {
 	if (pos < 1 || pos > MAX_LOGARGS)

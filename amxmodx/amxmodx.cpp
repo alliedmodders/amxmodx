@@ -1937,6 +1937,19 @@ static cell AMX_NATIVE_CALL disable_event(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_event_state(AMX *amx, cell *params)
+{
+	auto handle = EventHandles.lookup(params[1]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid event handle: %d", params[1]);
+		return 0;
+	}
+
+	return handle->m_event->getForwardState() == FSTATE_ACTIVE ? 1 : 0;
+}
+
 static cell AMX_NATIVE_CALL user_kill(AMX *amx, cell *params) /* 2 param */
 {
 	int index = params[1];

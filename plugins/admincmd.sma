@@ -668,7 +668,7 @@ public cmdMap(id, level, cid)
 	new arg[32]
 	new arglen = read_argv(1, arg, charsmax(arg))
 	
-	if (!is_map_valid(arg))
+	if (!is_map_valid(arg) || contain(arg, "..") != -1)
 	{
 		console_print(id, "[AMXX] %L", id, "MAP_NOT_FOUND")
 		return PLUGIN_HANDLED

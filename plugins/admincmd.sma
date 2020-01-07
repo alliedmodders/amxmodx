@@ -788,10 +788,14 @@ public cmdCvar(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	if (equali(arg, "servercfgfile") || equali(arg, "lservercfgfile"))
+	if (equali(arg, "servercfgfile") || equali(arg, "lservercfgfile") || equali(arg, "mapchangecfgfile"))
 	{
 		new pos = contain(arg2, ";")
 		if (pos != -1)
+		{
+			arg2[pos] = '^0'
+		}
+		else if ((pos = contain(arg2, "^n")) != -1)
 		{
 			arg2[pos] = '^0'
 		}

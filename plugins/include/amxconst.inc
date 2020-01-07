@@ -510,6 +510,15 @@ enum SetTaskFlags (<<= 1)
 };
 
 /**
+ * Event states constants for get_event_state and get_logevent_state
+ */
+enum ForwardState
+{
+	FSTATE_STOP = 0,
+	FSTATE_ACTIVE = 1
+};
+
+/**
  * RegisterEventFlags constants for register_event_ex()
  */
 enum RegisterEventFlags (<<= 1)

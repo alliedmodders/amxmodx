@@ -3356,6 +3356,19 @@ static cell AMX_NATIVE_CALL disable_logevent(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL get_logevent_state(AMX *amx, cell *params)
+{
+	auto handle = LogEventHandles.lookup(params[1]);
+
+	if (!handle)
+	{
+		LogError(amx, AMX_ERR_NATIVE, "Invalid log event handle: %d", params[1]);
+		return 0;
+	}
+
+	return handle->m_logevent->getForwardState() == FSTATE_ACTIVE ? 1 : 0;
+}
+
 // native is_module_loaded(const name[]);
 static cell AMX_NATIVE_CALL is_module_loaded(AMX *amx, cell *params)
 {

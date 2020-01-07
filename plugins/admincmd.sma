@@ -222,13 +222,13 @@ public cmdKick(id, level, cid)
 }
 
 /**
- * ';' and '\n' are command delimiters. If a command arg contains these 2
+ * ';' and '^n' are command delimiters. If a command arg contains these 2
  * it is not safe to be passed to server_cmd() as it may be trying to execute
  * a command.
  */
 isCommandArgSafe(const arg[])
 {
-	return contain(arg, ";") == -1 && contain(arg, "\n") == -1;
+	return contain(arg, ";") == -1 && contain(arg, "^n") == -1;
 }
 
 public cmdUnban(id, level, cid)

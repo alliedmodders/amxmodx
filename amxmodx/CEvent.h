@@ -91,6 +91,7 @@ public:
 		inline int getFunction();
 		void registerFilter(char* filter);			// add a condition
 		void setForwardState(ForwardState value);
+		ForwardState getForwardState();
 	};
 
 private:

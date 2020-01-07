@@ -173,7 +173,7 @@ void LogEventsMngr::CLogEvent::setForwardState(ForwardState state)
 
 ForwardState LogEventsMngr::CLogEvent::getForwardState()
 {
-	return m_State = state;
+	return m_State;
 }
 
 int LogEventsMngr::registerLogEvent(CPluginMngr::CPlugin* plugin, int func, int pos)

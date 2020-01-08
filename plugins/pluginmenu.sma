@@ -504,6 +504,7 @@ public CvarMenuSelection(id, menu, item)
 
 		if ((get_pcvar_flags(CurrentCvar[id]) & FCVAR_SPONLY) && MaxClients != 1)
 		{
+			CurrentCvar[id] = 0;
 			client_print(id,print_chat,"[AMXX] Cvar cannot be changed.");
 			menu_destroy(menu);
 			return PLUGIN_HANDLED;

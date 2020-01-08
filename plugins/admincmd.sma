@@ -788,6 +788,12 @@ public cmdCvar(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
+	if ((get_pcvar_flags(pointer) & FCVAR_SPONLY) && MaxClients != 1)
+	{
+		console_print(id, "[AMXX] %L", id, "CVAR_NO_ACC")
+		return PLUGIN_HANDLED
+	}
+	
 	if (equali(arg, "servercfgfile") || equali(arg, "lservercfgfile") || equali(arg, "mapchangecfgfile"))
 	{
 		new pos = contain(arg2, ";")

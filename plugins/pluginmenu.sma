@@ -497,9 +497,17 @@ public CvarMenuSelection(id, menu, item)
 		if (CurrentCvar[id]==0) // This should never happen, but just incase..
 		{
 			client_print(id,print_chat,"[AMXX] There was an error extracting the cvar pointer. (Name=^"%s^")",CvarName);
+			menu_destroy(menu);
 			return PLUGIN_HANDLED;
 		}
 		// TODO: ML this
+
+		if ((get_pcvar_flags(CurrentCvar[id]) & FCVAR_SPONLY) && MaxClients != 1)
+		{
+			client_print(id,print_chat,"[AMXX] Cvar cannot be changed.");
+			menu_destroy(menu);
+			return PLUGIN_HANDLED;
+		}
 		
 		// Scan up "CvarName" and stop at the first space
 		for (new i=0;i<charsmax(CvarName);i++)

@@ -258,6 +258,17 @@ native menu_item_setcmd(menu, item, const info[]);
 native menu_item_setcall(menu, item, callback=-1);
 
 /**
+ * Sets an item's access.
+ *
+ * @param menu			Menu resource identifier.
+ * @param item			Item identifier.
+ * @param callback		New access required by the player viewing the menu.
+ * @return				1 on success, 0 on failure.
+ * @error				Invalid menu resource.
+ */
+native menu_item_setaccess(menu, item, callback=-1);
+
+/**
  * Destroys a menu.  Player menus will be cancelled (although may still linger 
  * on the HUD), and future attempts to access the menu resource will result in 
  * an error.

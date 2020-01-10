@@ -1006,6 +1006,20 @@ static cell AMX_NATIVE_CALL menu_item_setcall(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL menu_item_setaccess(AMX *amx, cell *params)
+{
+	GETMENU(params[1]);
+
+	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[2]));
+
+	if (!pItem)
+		return 0;
+
+	pItem->access = params[3];
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 {
 	GETMENU(params[1]);
@@ -1237,6 +1251,7 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 	{"menu_item_getinfo",		menu_item_getinfo},
 	{"menu_makecallback",		menu_makecallback},
 	{"menu_item_setcall",		menu_item_setcall},
+	{"menu_item_setaccess",		menu_item_setaccess},
 	{"menu_item_setcmd",		menu_item_setcmd},
 	{"menu_item_setname",		menu_item_setname},
 	{"menu_destroy",			menu_destroy},

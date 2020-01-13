@@ -94,7 +94,7 @@ showMenu(id)
 	
 	new len = formatex(menuBody, charsmax(menuBody), (g_coloredMenus ? "\y%L\w^n^n" : "%L^n^n"), id, "LANG_MENU")
 	
-	len += formatex(menuBody[len], charsmax(menuBody) - len, (g_coloredMenus ? "1. %L\R\r%L\w^n" : "1. %L %L^n"), id, "PERSO_LANG", pLang, "LANG_NAME")
+	len += formatex(menuBody[len], charsmax(menuBody) - len, (g_coloredMenus ? "1. %L	\r%L\w^n" : "1. %L %L^n"), id, "PERSO_LANG", pLang, "LANG_NAME")
 	len += formatex(menuBody[len], charsmax(menuBody) - len, "^n2. %L", id, "SAVE_LANG")
 	formatex(menuBody[len], charsmax(menuBody) - len, "^n^n0. %L", id, "EXIT")
 	

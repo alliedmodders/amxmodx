@@ -1,4 +1,10 @@
-#!/bin/bash -e
+# AMX Mod X
+#
+# by the AMX Mod X Development Team
+#  originally developed by OLO
+#
+# This file is part of AMX Mod X.
+
 cd "$(dirname "$0")"
 
 test -e compiled || mkdir compiled

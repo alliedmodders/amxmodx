@@ -262,11 +262,11 @@ native menu_item_setcall(menu, item, callback=-1);
  *
  * @param menu			Menu resource identifier.
  * @param item			Item identifier.
- * @param callback		New access required by the player viewing the menu.
+ * @param access		New access required by the player viewing the menu.
  * @return				1 on success, 0 on failure.
  * @error				Invalid menu resource.
  */
-native menu_item_setaccess(menu, item, callback=-1);
+native menu_item_setaccess(menu, item, access=0);
 
 /**
  * Destroys a menu.  Player menus will be cancelled (although may still linger 

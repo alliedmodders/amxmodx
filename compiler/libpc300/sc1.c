@@ -140,7 +140,7 @@ static int nestlevel  = 0;      /* number of active (open) compound statements *
 static int rettype    = 0;      /* the type that a "return" expression should have */
 static int skipinput  = 0;      /* number of lines to skip from the first input file */
 static int optproccall = TRUE;  /* support "procedure call" */
-static int verbosity  = 3;      /* verbosity level, 0=quiet, 1=normal, 2=verbose */
+static int verbosity  = 1;      /* verbosity level, 0=quiet, 1=normal, 2=verbose */
 static int sc_reparse = 0;      /* needs 3th parse because of changed prototypes? */
 static int sc_parsenum = 0;     /* number of the extra parses */
 static int wq[wqTABSZ];         /* "while queue", internal stack for nested loops */

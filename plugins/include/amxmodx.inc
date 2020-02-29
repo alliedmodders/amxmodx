@@ -930,7 +930,7 @@ native is_user_hltv(index);
  *
  * @param index     Client index
  *
- * @return          1 if client is connected, 0 otherwise
+ * @return          1 if client is authorized, 0 otherwise
  */
 native is_user_authorized(index);
 

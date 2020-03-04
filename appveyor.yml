@@ -12,7 +12,7 @@ install:
 - git clone https://github.com/alliedmodders/ambuild
 - git clone https://github.com/alliedmodders/metamod-hl1
 - git clone https://github.com/alliedmodders/hlsdk
-- ps: Start-FileDownload 'https://downloads.mysql.com/archives/get/file/mysql-connector-c-6.1.1-win32.zip'
+- ps: Start-FileDownload 'https://downloads.mysql.com/archives/get/p/19/file/mysql-connector-c-6.1.1-win32.zip'
 - 7z x mysql-connector-c-6.1.1-win32.zip -o"mysql"
 - cd mysql
 - dir

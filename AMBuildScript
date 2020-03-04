@@ -205,7 +205,7 @@ class AMXXConfig(object):
       '-Wno-format',
       '-Wno-format-security',
       '-Wno-stringop-truncation',
-      '-Wno-address-of-packed-member'
+      '-Wno-address-of-packed-member',
       '-m32',
     ]
     cxx.cxxflags += [

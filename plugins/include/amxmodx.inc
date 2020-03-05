@@ -922,6 +922,19 @@ native is_user_bot(index);
 native is_user_hltv(index);
 
 /**
+ * Returns if the client is authorized.
+ *
+ * @note This does not throw an error if the provided index is out of the
+ *       1 to MaxClients range. That means you can safely use this native
+ *       without manually verifying that the index is a valid client index.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if client is authorized, 0 otherwise
+ */
+native is_user_authorized(index);
+
+/**
  * Returns if the client is connected.
  *
  * @note This does not throw an error if the provided index is out of the

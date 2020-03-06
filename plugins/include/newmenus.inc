@@ -262,7 +262,7 @@ native menu_item_setcall(menu, item, callback=-1);
  *
  * @param menu			Menu resource identifier.
  * @param item			Item identifier.
- * @param access		New access required by the player viewing the menu.
+ * @param access		New access required by the player for access to the item.
  * @return				1 on success, 0 on failure.
  * @error				Invalid menu resource.
  */

@@ -498,6 +498,13 @@ native free_kvd(kvd_handle);
 native get_cd(cd_handle, ClientData:member, any:...);
 native set_cd(cd_handle, ClientData:member, any:...);
 
+// These functions are used with the weapon_data data structure (FM_GetWeaponData)
+// Get: 0 extra params - Return integer; 1 extra param - by ref float or vector; 2 extra params - string and length
+// Set: Use anything
+// Use 0 for cd_handle to specify the global weapon_data handle
+native get_wd(wd_handler, index, WeaponData:member, any:...);
+native set_wd(wd_handler, index, WeaponData:member, any:...);
+
 // These functions are used with the entity_state data structure (FM_AddToFullPack)
 // Get: 0 extra params - Return integer; 1 extra param - by ref float or vector or array
 // Set: Use anything

@@ -26,6 +26,8 @@ extern entity_state_t g_es_glb;
 extern entity_state_t *g_es_hook;
 extern usercmd_t g_uc_glb;
 extern usercmd_t *g_uc_hook;
+extern weapon_data_t g_wd_glb;
+extern weapon_data_t *g_wd_hook;
 
 struct KVD_Wrapper
 {
@@ -216,6 +218,32 @@ enum UserCmd
 	// Experimental player impact stuff
 	UC_ImpactIndex,
 	UC_ImpactPosition
+};
+
+enum WeaponData
+{
+	WD_iId,
+	WD_iClip,
+	WD_flNextPrimaryAttack,
+	WD_flNextSecondaryAttack,
+	WD_flTimeWeaponIdle,
+	WD_fInReload,
+	WD_fInSpecialReload,
+	WD_flNextReload,
+	WD_flPumpTime,
+	WD_fReloadTime,
+	WD_fAimedDamage,
+	WD_fNextAimBonus,
+	WD_fInZoom,
+	WD_iWeaponState,
+	WD_iUser1,
+	WD_iUser2,
+	WD_iUser3,
+	WD_iUser4,
+	WD_flUser1,
+	WD_flUser2,
+	WD_flUser3,
+	WD_flUser4,
 };
 
 extern AMX_NATIVE_INFO tr_Natives[];

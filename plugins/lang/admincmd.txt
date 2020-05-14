@@ -226,7 +226,7 @@ ADMIN_EXTEND_2 = ADMIN %s: produziti mapu za %d minuta
 MAP_EXTENDED = Mapa "%s" je produzena za %d minuta
 
 [tr]
-ADMIN_KICK_1 = ADMIN: %s kisisini atti
+ADMIN_KICK_1 = ADMIN, %s kisisini atti
 ADMIN_KICK_2 = ADMIN %s, %s kisisini atti
 IP_REMOVED = Ip "%s" ban listesinden kaldirildi
 AUTHID_REMOVED = Authid "%s" ban listesinden kaldirildi
@@ -236,7 +236,7 @@ ADMIN_ADDBAN_1 = ADMIN, %s kisisini banladi
 ADMIN_ADDBAN_2 = ADMIN %s, %s kisisini banladi
 BANNED = banlandi
 REASON = neden
-FOR_MIN = %s dakikaligina
+FOR_MIN = %s dakika
 PERM = kalici olarak
 CLIENT_BANNED = Kullanici "%s" banlandi
 ADMIN_SLAY_1 = ADMIN, %s kisisini oldurdu

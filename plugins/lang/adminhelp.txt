@@ -29,13 +29,13 @@ TIME_INFO_1 = Preostalo Vreme: %d:%02d min. Sledeca Mapa: %s
 TIME_INFO_2 = Nema vremenskog ogranicenja. Sledeca Mapa: %s
 
 [tr]
-HELP_COMS = AMX Mod X Yardim: Emirler
-HELP_ENTRIES = Girisler %d - %d of %d
-HELP_USE_MORE = '%s %d' kullanin gerisini gormek icin
-HELP_USE_BEGIN = Baslatmak icin '%s 1' i kullanin
-TYPE_HELP = Consolda '%s' '%s' yazin, mevcud olan emirleri gormek icin
-TIME_INFO_1 = Geri kalan zaman: %d:%02d dak. Diger Map: %s
-TIME_INFO_2 = Zaman sureci yokdur. Diger Map: %s
+HELP_COMS = AMX Mod X Yardim: Komutlar
+HELP_ENTRIES = Girisler %d - %d / %d
+HELP_USE_MORE = Daha fazlasi icin '%s %d' kullanin
+HELP_USE_BEGIN = Baslamak icin '%s 1' kullanin
+TYPE_HELP = Mevcut komutlari gormek icin konsola '%s' '%s' yazin
+TIME_INFO_1 = Kalan Zaman: %d:%02d dk. Sonraki Harita: %s
+TIME_INFO_2 = Zaman Limiti Yok. Sonraki Harita: %s
 
 [fr]
 HELP_COMS = Aide AMX Mod X: Commandes

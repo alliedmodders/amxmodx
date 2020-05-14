@@ -36,6 +36,9 @@ HELP_USE_BEGIN = Baslamak icin '%s 1' kullanin
 TYPE_HELP = Mevcut komutlari gormek icin konsola '%s' '%s' yazin
 TIME_INFO_1 = Kalan Zaman: %d:%02d dk. Sonraki Harita: %s
 TIME_INFO_2 = Zaman Limiti Yok. Sonraki Harita: %s
+HELP_CMD_INFO = <giris no.> [gosterilecek giris no. (sadece server)] - mevcut komutlar hakkinda bilgi gosterir
+SEARCH_CMD_INFO = <eslesme> <giris no.> [gosterilecek girislerin no.su (sadece server)] - eslesen komutlar hakkinda bilgi verir
+NO_MATCHING_RESULTS = ^nHic eslesen sonuc bulunamadi^n
 
 [fr]
 HELP_COMS = Aide AMX Mod X: Commandes

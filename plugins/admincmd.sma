@@ -222,13 +222,13 @@ public cmdKick(id, level, cid)
 }
 
 /**
- * ';' and '\n' are command delimiters. If a command arg contains these 2
+ * ';' and '^n' are command delimiters. If a command arg contains these 2
  * it is not safe to be passed to server_cmd() as it may be trying to execute
  * a command.
  */
 isCommandArgSafe(const arg[])
 {
-	return contain(arg, ";") == -1 && contain(arg, "\n") == -1;
+	return contain(arg, ";") == -1 && contain(arg, "^n") == -1;
 }
 
 public cmdUnban(id, level, cid)
@@ -668,7 +668,7 @@ public cmdMap(id, level, cid)
 	new arg[32]
 	new arglen = read_argv(1, arg, charsmax(arg))
 	
-	if (!is_map_valid(arg))
+	if (!is_map_valid(arg) || contain(arg, "..") != -1)
 	{
 		console_print(id, "[AMXX] %L", id, "MAP_NOT_FOUND")
 		return PLUGIN_HANDLED
@@ -788,10 +788,20 @@ public cmdCvar(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	if (equali(arg, "servercfgfile") || equali(arg, "lservercfgfile"))
+	if ((get_pcvar_flags(pointer) & FCVAR_SPONLY) && MaxClients != 1)
+	{
+		console_print(id, "[AMXX] %L", id, "CVAR_NO_ACC")
+		return PLUGIN_HANDLED
+	}
+	
+	if (equali(arg, "servercfgfile") || equali(arg, "lservercfgfile") || equali(arg, "mapchangecfgfile"))
 	{
 		new pos = contain(arg2, ";")
 		if (pos != -1)
+		{
+			arg2[pos] = '^0'
+		}
+		else if ((pos = contain(arg2, "^n")) != -1)
 		{
 			arg2[pos] = '^0'
 		}

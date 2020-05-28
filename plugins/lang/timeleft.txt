@@ -27,12 +27,12 @@ SECONDS = sekundi
 
 [tr]
 THE_TIME = Saat
-TIME_LEFT = Kalan zaman
-NO_T_LIMIT = Suresiz zaman
+TIME_LEFT = Kalan Zaman
+NO_T_LIMIT = Zaman Limiti Yok
 MINUTE = dakika
-MINUTES = dakikalar
+MINUTES = dakikal
 SECOND = saniye
-SECONDS = saniyeler
+SECONDS = saniye
 
 [fr]
 THE_TIME = Il est

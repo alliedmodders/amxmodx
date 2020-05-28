@@ -14,9 +14,9 @@ MSG_FREQ = Vreme prikazivanja prolazece poruke: %d:%02d minut(a)
 MSG_DISABLED = Prolazeca poruka iskljucna
 
 [tr]
-MIN_FREQ = Bu mesajin en az frekansi %d saniyedir
-MSG_FREQ = Kaydirilan mesaj gosterme frekansi: %d:%02d dakika
-MSG_DISABLED = Kaydirilan mesaj kullanimda degil
+MIN_FREQ = Bu mesaj icin minimum siklik %d saniyedir
+MSG_FREQ = Kaydirmali mesaj gosterme sikligi: %d:%02d dakika
+MSG_DISABLED = Kaydirmali mesaj devre disi
 
 [fr]
 MIN_FREQ = La frequence minimale pour ce message est de %d secondes

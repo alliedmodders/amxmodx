@@ -8,7 +8,7 @@ STOP_FLOOD = Bitte nicht zu viele Eingaben auf einmal!
 STOP_FLOOD = Prestani da opterecujes server porukama!
 
 [tr]
-STOP_FLOOD = Serveri yazi ile doldurmayin!
+STOP_FLOOD = Serveri floodlamayi kes!
 
 [fr]
 STOP_FLOOD = Arrete de flooder le serveur!

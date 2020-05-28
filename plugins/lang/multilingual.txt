@@ -32,15 +32,15 @@ TYPE_LANGMENU = Unesi 'amx_langmenu' u konzoli da bi otvorio meni za menjanje je
 LANG_MENU_DISABLED = Meni za izbor jezika je iskljucen.
 
 [tr]
-LANG_NOT_EXISTS = Aradiginiz dil mevcud degildir
-PERSO_LANG = Sahiz dil
-LANG_MENU = Lisan/dil menusu
-SERVER_LANG = Serverin dili
-SAVE_LANG = Lisan/dili saklayin
-SET_LANG_SERVER = Serverin dili "%s" buna degisdirildi
-SET_LANG_USER = Sahiz diliniz "%s" buna degisdirildi
-TYPE_LANGMENU = Konsolda mevcud olan dillerin menusunu gormek icin 'amx_langmenu' yazin
-LANG_MENU_DISABLED = Lisan menusu kapatildi.
+LANG_NOT_EXISTS = O dil yer almiyor
+PERSO_LANG = Kisisel Dil
+LANG_MENU = Dil Menu
+SERVER_LANG = Server Dili
+SAVE_LANG = Dili Kaydedin
+SET_LANG_SERVER = Server dili "%s" olarak ayarlandi
+SET_LANG_USER = Dilin "%s" olarak ayarlandi
+TYPE_LANGMENU = Dilini secebilecegin bir menuyu gormek icin konsola 'amx_langmenu' yaz
+LANG_MENU_DISABLED = Dil menu devre disi.
 
 [fr]
 LANG_NOT_EXISTS = Cette langue n'existe pas

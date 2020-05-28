@@ -43,11 +43,11 @@ COL_RED = kirmizi
 COL_GREEN = yesil
 COL_BLUE = mavi
 COL_YELLOW = sari
-COL_MAGENTA = magenta
-COL_CYAN = cian
+COL_MAGENTA = eflatun
+COL_CYAN = camgobegi
 COL_ORANGE = turuncu
 COL_OCEAN = deniz
-COL_MAROON = kahverengi
+COL_MAROON = kestane rengi
 PRINT_ALL = (HEPSI) %s : %s
 
 [fr]

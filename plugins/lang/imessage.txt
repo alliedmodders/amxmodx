@@ -8,7 +8,7 @@ INF_REACH = Nachrichtenlimit erreicht!
 INF_REACH = Dostignut limit Informacione Poruke!
 
 [tr]
-INF_REACH = Informasyon mesajlari sinirina ulasildi!
+INF_REACH = Bilgilendirme Mesajlari limitine ulasildi!
 
 [fr]
 INF_REACH = Limite de Messages d'Information atteinte!

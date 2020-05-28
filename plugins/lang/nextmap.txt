@@ -14,8 +14,8 @@ PLAYED_MAP = Igrana mapa
 FRIEND_FIRE = Friendly fire
 
 [tr]
-NEXT_MAP = Diger Map:
-PLAYED_MAP = Oynanan map
+NEXT_MAP = Sonraki Harita:
+PLAYED_MAP = Oynanan harita
 FRIEND_FIRE = Dost atesi
 
 [fr]

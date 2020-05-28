@@ -785,7 +785,7 @@ YOU_DID_DMG = Te %d sebzést okoztál neki %d találattal.
 EFF = Hatékonyság
 BEST_SCORE = Legjobb pont
 KILL_S = Ölés
-TOTAL = Totál
+TOTAL = Teljes
 SHOT_S = Lövések
 HITS_YOU_IN = %s eltalált téged
 KILLED_BY_WITH = Megölt %s, %s fegyverrel %0.0f méterről
@@ -811,7 +811,7 @@ STATS_ANNOUNCE = Statisztika bejelentések %s
 ENABLED = engedélyezve
 DISABLED = letiltva
 SERVER_STATS = Szerver státusz
-X_RANK_IS = %s helyezése %d a %d-ból
+X_RANK_IS = %s helyezése %d a(z) %d játékosból.
 DISABLED_MSG = A szerver letiltotta ezt az opciót
 
 [lt]

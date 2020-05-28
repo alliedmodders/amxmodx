@@ -1130,7 +1130,7 @@ MAP_EXTENDED   = Harta "%s" a fost extinsa pentru %d minute
 [hu]
 ADMIN_KICK_1 = ADMIN: %s kirúgva
 ADMIN_KICK_2 = ADMIN %s: %s kirúgva
-IP_REMOVED = IP "%s" eltávolítva a banlistárol
+IP_REMOVED = IP "%s" eltávolítva a banlistáról
 AUTHID_REMOVED = Authid "%s" eltávolítva a banlistáról
 ADMIN_UNBAN_1 = ADMIN: %s ban visszavonva
 ADMIN_UNBAN_2 = ADMIN %s: %s ban visszavonva

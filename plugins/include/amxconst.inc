@@ -21,6 +21,7 @@
  *       from plugins. Most natives that take strings as arguments will
  *       implicitly truncate them to this maximum length. This has been raised
  *       to the current value with AMXX 1.8.3. Previously the limit was 3072.
+ *
  * @note This is here mainly for documentation purposes. By default plugins
  *       don't have enough memory available to allocate an array of this size.
  *       You probably should not use this to actually declare a buffer unless
@@ -45,9 +46,9 @@
 #define MAX_PLAYERS 32 /* Maximum number of players AMX Mod X supports */
 
 /**
- * Maximum number of players the server supports 
+ * Maximum number of players the server supports
  */
-public stock const MaxClients; 
+public stock const MaxClients;
 
 /**
  * Current map name
@@ -55,7 +56,7 @@ public stock const MaxClients;
 public stock const MapName[MAX_MAPNAME_LENGTH];
 
 /**
- * Pass this into certain functions to act as a C++ NULL 
+ * Pass this into certain functions to act as a C++ NULL
  */
 public stock const NULL_STRING[1];
 
@@ -116,41 +117,41 @@ public stock const Float:NULL_VECTOR[3];
 /**
  * Admin level constants
  */
-#define ADMIN_ALL           0       /* everyone */
-#define ADMIN_IMMUNITY      (1<<0)  /* flag "a" */
-#define ADMIN_RESERVATION   (1<<1)  /* flag "b" */
-#define ADMIN_KICK          (1<<2)  /* flag "c" */
-#define ADMIN_BAN           (1<<3)  /* flag "d" */
-#define ADMIN_SLAY          (1<<4)  /* flag "e" */
-#define ADMIN_MAP           (1<<5)  /* flag "f" */
-#define ADMIN_CVAR          (1<<6)  /* flag "g" */
-#define ADMIN_CFG           (1<<7)  /* flag "h" */
-#define ADMIN_CHAT          (1<<8)  /* flag "i" */
-#define ADMIN_VOTE          (1<<9)  /* flag "j" */
-#define ADMIN_PASSWORD      (1<<10) /* flag "k" */
-#define ADMIN_RCON          (1<<11) /* flag "l" */
-#define ADMIN_LEVEL_A       (1<<12) /* flag "m" */
-#define ADMIN_LEVEL_B       (1<<13) /* flag "n" */
-#define ADMIN_LEVEL_C       (1<<14) /* flag "o" */
-#define ADMIN_LEVEL_D       (1<<15) /* flag "p" */
-#define ADMIN_LEVEL_E       (1<<16) /* flag "q" */
-#define ADMIN_LEVEL_F       (1<<17) /* flag "r" */
-#define ADMIN_LEVEL_G       (1<<18) /* flag "s" */
-#define ADMIN_LEVEL_H       (1<<19) /* flag "t" */
-#define ADMIN_MENU          (1<<20) /* flag "u" */
-#define ADMIN_BAN_TEMP      (1<<21) /* flag "v" */
-#define ADMIN_ADMIN         (1<<24) /* flag "y" */
-#define ADMIN_USER          (1<<25) /* flag "z" */
+#define ADMIN_ALL           0         /* everyone */
+#define ADMIN_IMMUNITY      (1 << 0)  /* flag "a" */
+#define ADMIN_RESERVATION   (1 << 1)  /* flag "b" */
+#define ADMIN_KICK          (1 << 2)  /* flag "c" */
+#define ADMIN_BAN           (1 << 3)  /* flag "d" */
+#define ADMIN_SLAY          (1 << 4)  /* flag "e" */
+#define ADMIN_MAP           (1 << 5)  /* flag "f" */
+#define ADMIN_CVAR          (1 << 6)  /* flag "g" */
+#define ADMIN_CFG           (1 << 7)  /* flag "h" */
+#define ADMIN_CHAT          (1 << 8)  /* flag "i" */
+#define ADMIN_VOTE          (1 << 9)  /* flag "j" */
+#define ADMIN_PASSWORD      (1 << 10) /* flag "k" */
+#define ADMIN_RCON          (1 << 11) /* flag "l" */
+#define ADMIN_LEVEL_A       (1 << 12) /* flag "m" */
+#define ADMIN_LEVEL_B       (1 << 13) /* flag "n" */
+#define ADMIN_LEVEL_C       (1 << 14) /* flag "o" */
+#define ADMIN_LEVEL_D       (1 << 15) /* flag "p" */
+#define ADMIN_LEVEL_E       (1 << 16) /* flag "q" */
+#define ADMIN_LEVEL_F       (1 << 17) /* flag "r" */
+#define ADMIN_LEVEL_G       (1 << 18) /* flag "s" */
+#define ADMIN_LEVEL_H       (1 << 19) /* flag "t" */
+#define ADMIN_MENU          (1 << 20) /* flag "u" */
+#define ADMIN_BAN_TEMP      (1 << 21) /* flag "v" */
+#define ADMIN_ADMIN         (1 << 24) /* flag "y" */
+#define ADMIN_USER          (1 << 25) /* flag "z" */
 
 /**
  * Admin authentication behavior flags
  */
-#define FLAG_KICK           (1<<0)  /* flag "a" */
-#define FLAG_TAG            (1<<1)  /* flag "b" */
-#define FLAG_AUTHID         (1<<2)  /* flag "c" */
-#define FLAG_IP             (1<<3)  /* flag "d" */
-#define FLAG_NOPASS         (1<<4)  /* flag "e" */
-#define FLAG_CASE_SENSITIVE (1<<10) /* flag "k" */
+#define FLAG_KICK           (1 << 0)  /* flag "a" */
+#define FLAG_TAG            (1 << 1)  /* flag "b" */
+#define FLAG_AUTHID         (1 << 2)  /* flag "c" */
+#define FLAG_IP             (1 << 3)  /* flag "d" */
+#define FLAG_NOPASS         (1 << 4)  /* flag "e" */
+#define FLAG_CASE_SENSITIVE (1 << 10) /* flag "k" */
 
 /**
  * @endsection
@@ -195,7 +196,7 @@ public stock const Float:NULL_VECTOR[3];
 #define HIT_RIGHTARM    5
 #define HIT_LEFTLEG     6
 #define HIT_RIGHTLEG    7
-#define HIT_SHIELD      8 // CS only
+#define HIT_SHIELD      8   /* CS only */
 #define MAX_BODYHITS    8
 
 /**
@@ -205,15 +206,15 @@ public stock const Float:NULL_VECTOR[3];
 /**
  * Channels
  */
-#define CHAN_AUTO       0
-#define CHAN_WEAPON     1
-#define CHAN_VOICE      2
-#define CHAN_ITEM       3
-#define CHAN_BODY       4
-#define CHAN_STREAM     5   /* allocate stream channel from the static or dynamic area */
-#define CHAN_STATIC     6   /* allocate channel from the static area  */
-#define CHAN_NETWORKVOICE_BASE  7   /* voice data coming across the network */
-#define CHAN_NETWORKVOICE_END   500 /* network voice data reserves slots (CHAN_NETWORKVOICE_BASE through CHAN_NETWORKVOICE_END). */
+#define CHAN_AUTO               0
+#define CHAN_WEAPON             1
+#define CHAN_VOICE              2
+#define CHAN_ITEM               3
+#define CHAN_BODY               4
+#define CHAN_STREAM             5    /* allocate stream channel from the static or dynamic area */
+#define CHAN_STATIC             6    /* allocate channel from the static area  */
+#define CHAN_NETWORKVOICE_BASE  7    /* voice data coming across the network */
+#define CHAN_NETWORKVOICE_END   500  /* network voice data reserves slots (CHAN_NETWORKVOICE_BASE through CHAN_NETWORKVOICE_END) */
 
 /**
  *Attenuation values
@@ -227,7 +228,7 @@ public stock const Float:NULL_VECTOR[3];
  * Pitch values
  */
 #define PITCH_NORM      100 /* non-pitch shifted */
-#define PITCH_LOW       95  /* other values are possible - 0-255, where 255 is very high */
+#define PITCH_LOW       95  /* other values are possible 0 - 255, where 255 is very high */
 #define PITCH_HIGH      120
 
 /**
@@ -238,10 +239,10 @@ public stock const Float:NULL_VECTOR[3];
 /**
  * Sound behavior constants
  */
-#define SND_SPAWNING        (1<<8)      // we're spawing, used in some cases for ambients
-#define SND_STOP            (1<<5)      // stop sound
-#define SND_CHANGE_VOL      (1<<6)      // change sound vol
-#define SND_CHANGE_PITCH    (1<<7)      // change sound pitch
+#define SND_SPAWNING        (1 << 8)      // we're spawing, used in some cases for ambients
+#define SND_STOP            (1 << 5)      // stop sound
+#define SND_CHANGE_VOL      (1 << 6)      // change sound vol
+#define SND_CHANGE_PITCH    (1 << 7)      // change sound pitch
 
 /**
  * @endsection
@@ -250,16 +251,16 @@ public stock const Float:NULL_VECTOR[3];
 /**
  * Menu keys
  */
-#define MENU_KEY_1      (1<<0)
-#define MENU_KEY_2      (1<<1)
-#define MENU_KEY_3      (1<<2)
-#define MENU_KEY_4      (1<<3)
-#define MENU_KEY_5      (1<<4)
-#define MENU_KEY_6      (1<<5)
-#define MENU_KEY_7      (1<<6)
-#define MENU_KEY_8      (1<<7)
-#define MENU_KEY_9      (1<<8)
-#define MENU_KEY_0      (1<<9)
+#define MENU_KEY_1      (1 << 0)
+#define MENU_KEY_2      (1 << 1)
+#define MENU_KEY_3      (1 << 2)
+#define MENU_KEY_4      (1 << 3)
+#define MENU_KEY_5      (1 << 4)
+#define MENU_KEY_6      (1 << 5)
+#define MENU_KEY_7      (1 << 6)
+#define MENU_KEY_8      (1 << 7)
+#define MENU_KEY_9      (1 << 8)
+#define MENU_KEY_0      (1 << 9)
 
 /**
  * Language constants
@@ -280,7 +281,7 @@ enum
 	print_console,
 	print_chat,
 	print_center,
-	print_radio     /* Counter-Strike only */
+	print_radio        /* Counter-Strike only */
 };
 
 /**
@@ -289,9 +290,9 @@ enum
 enum
 {
 	print_team_default = 0,
-	print_team_grey = -1,
-	print_team_red = -2,
-	print_team_blue = -3,
+	print_team_grey    = -1,
+	print_team_red     = -2,
+	print_team_blue    = -3,
 };
 
 /**
@@ -437,10 +438,10 @@ enum
 /**
  * Stop types for plugin forwards
  */
-#define ET_IGNORE       0   //ignore return val
-#define ET_STOP         1   //stop on PLUGIN_HANDLED
-#define ET_STOP2        2   //same, except return biggest
-#define ET_CONTINUE     3   //no stop, return biggest
+#define ET_IGNORE       0   // ignore return val
+#define ET_STOP         1   // stop on PLUGIN_HANDLED
+#define ET_STOP2        2   // same, except return biggest
+#define ET_CONTINUE     3   // no stop, return biggest
 
 /**
  * Parameter types for plugin forwards
@@ -449,7 +450,7 @@ enum
 #define FP_FLOAT        1
 #define FP_STRING       2
 #define FP_ARRAY        4
-#define FP_VAL_BYREF    5   //cell & float are handled in the same way
+#define FP_VAL_BYREF    5   // cell & float are handled in the same way
 
 /**
  * @endsection

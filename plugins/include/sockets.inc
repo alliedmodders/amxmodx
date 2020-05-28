@@ -61,13 +61,13 @@
  *
  * @note If no flags are set, the behaviour of the function will not be modified.
  *
- * @note Multiple flags may be set at the same time using the | operator. 
+ * @note Multiple flags may be set at the same time using the | operator.
  *       For example, SOCK_NON_BLOCKING|SOCK_LIBC_ERRORS will create a nonblocking socket with libc error codes.
  *
- * @note If you're creating a new nonblocking socket, _hostname should be numeric to avoid calling the 
+ * @note If you're creating a new nonblocking socket, _hostname should be numeric to avoid calling the
  *       name resolution server and potentially blocking the call.
  *
- * @note If the socket is a nonblocking one, the returned socket descriptor may be still connecting and 
+ * @note If the socket is a nonblocking one, the returned socket descriptor may be still connecting and
  *       further checks should be done with socket_is_writable() before trying to send data.
  *
  * @param _hostname    Node to connect to

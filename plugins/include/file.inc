@@ -20,10 +20,10 @@
  * @note All paths in AMX Mod X natives are relative to the mod folder
  * unless otherwise noted.
  *
- * Most functions in AMX Mod X (at least, ones that deal with direct 
+ * Most functions in AMX Mod X (at least, ones that deal with direct
  * file manipulation) will support an alternate path specification.
  */
- 
+
 /**
  * Maximum path length.
  */
@@ -173,7 +173,7 @@ native file_exists(const file[], bool:use_valve_fs = false);
   *
   * @param oldname      New path to the file
   * @param newname      Path to the existing file
-  * @param relative     If true, native  will act like other natives which
+  * @param relative     If true, native will act like other natives which
   *                     use the moddir as a base directory. Otherwise, the
   *                     current directory is undefined (but assumed to be hlds).
   *
@@ -340,7 +340,7 @@ native fwrite_blocks(file, const any:data[], blocks, mode);
  * Writes raw binary data to a file.
  *
  * @param file          Handle to the file.
- * @param stream        Array of items to write.  The data is written directly.
+ * @param stream        Array of items to write. The data is written directly.
  *                      That is, in 1 or 2-byte mode, the lower byte(s) in
  *                      each cell are used directly, rather than performing
  *                      any casts from a 4-byte number to a smaller number.
@@ -476,8 +476,8 @@ native rmdir(const path[]);
  * Creates a directory.
  *
  * @param path          Path to create
- * @param mode          Permissions (default is o=rx,g=rx,u=rwx).  Note that folders must have
- *                      the execute bit set on Linux.  On Windows, the mode is ignored.
+ * @param mode          Permissions (default is o = rx, g = rx, u = rwx). Note that folders must have
+ *                      the execute bit set on Linux. On Windows, the mode is ignored.
  * @param use_valve_fs  If true, the Valve file system will be used instead
  *                      This can be used to create folders in the game's
  *                      Valve search paths, rather than directly in the gamedir.
@@ -546,15 +546,15 @@ native close_dir(dirh);
 /**
  * Loads a file using the LoadFileForMe engine function.
  *
- * The data is truncated if there is not enough space.  No null-terminator
+ * The data is truncated if there is not enough space. No null-terminator
  * is applied; the data is the raw contents of the file.
  *
  * @param file          File to load (may be a file from the GCF)
  * @param buffer        Buffer to store file contents
  * @param maxlength     Maximum size of the file buffer
- * @param length        Variable to store the file length.  This may return
+ * @param length        Variable to store the file length. This may return
  *                      a number larger than the buffer size
- * @return              -1 if the file could not be loaded.  Otherwise,
+ * @return              -1 if the file could not be loaded. Otherwise,
  *                      the number of cells actually written to the buffer
  *                      are returned.
  */

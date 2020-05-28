@@ -7,17 +7,17 @@
 // This software is licensed under the GNU General Public License, version 3 or higher.
 // Additional exceptions apply. For full license details, see LICENSE.txt or visit:
 //     https://alliedmods.net/amxmodx-license
- 
+
 #if defined _esfconst_included
   #endinput
 #endif
 #define _esfconst_included
 
-enum 
+enum
 {
-	Character_Buu = 1,		
+	Character_Buu = 1,
 	Character_Goku = 2,
-	Character_Gohan = 3,	//my favorite :)
+	Character_Gohan = 3,
 	Character_Krillin = 4,
 	Character_Frieza = 5,
 	Character_Piccolo = 6,
@@ -40,7 +40,7 @@ enum
 
 enum
 {
-	Attack_Kamehameha=1,
+	Attack_Kamehameha = 1,
 	Attack_SpiritBomb,
 	Attack_GalletGun,
 	Attack_FinalFlash,
@@ -52,7 +52,7 @@ enum
 
 enum
 {
-	Direction_Left=1,
+	Direction_Left = 1,
 	Direction_Right,
 	Direction_Up,
 	Direction_Down,
@@ -60,9 +60,9 @@ enum
 	Direction_Backward,
 };
 
-enum 
+enum
 {
-	Recovery_Kicked=1,
+	Recovery_Kicked = 1,
 	Recovery_Tumbled,
 	Recovery_Lying,
 	Recovery_Thrown,

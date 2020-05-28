@@ -181,7 +181,7 @@ native ArrayGetString(Array:which, item, output[], size);
  * @error               If an invalid handle or an invalid index is provided an
  *                      error will be thrown.
  */
-native ArraySetArray(Array:which, item, const any:input[], size =-1);
+native ArraySetArray(Array:which, item, const any:input[], size = -1);
 
 /**
  * Sets an item's data to a single cell value.
@@ -361,7 +361,7 @@ native ArrayInsertStringBefore(Array:which, item, const input[]);
  * Swaps the position of two items.
  *
  * @param which         Array handle
- * @param item1,item2   Item pair to swap
+ * @param item1, item2  Item pair to swap
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an
@@ -470,7 +470,7 @@ native ArrayDestroy(&Array:which);
  * @error               If an invalid handle or an invalid callback is provided
  *                      an error will be thrown.
  */
-native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
+native ArraySort(Array:array, const comparefunc[], data[] = "", data_size = 0);
 
 /**
  * A faster version of ArraySort, the sorting algorithm then uses the custom
@@ -522,4 +522,4 @@ native ArraySort(Array:array, const comparefunc[], data[]="", data_size=0);
  * @error               If an invalid handle or an invalid callback is provided
  *                      an error will be thrown.
  */
-native ArraySortEx(Array:array, const comparefunc[], data[]="", data_size=0);
+native ArraySortEx(Array:array, const comparefunc[], data[] = "", data_size = 0);

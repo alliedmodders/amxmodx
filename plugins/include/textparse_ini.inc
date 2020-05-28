@@ -17,16 +17,16 @@
 #define _textparse_ini_included
 
 /**
- * This parser API is entirely event based.  
+ * This parser API is entirely event based.
  * You must hook events to receive data.
  */
- 
+
 /**
  * The INI file format is defined as:
  *    WHITESPACE: 0x20, \n, \t, \r
- *    IDENTIFIER: A-Z a-z 0-9 _ - , + . $ ? / 
+ *    IDENTIFIER: A-Z a-z 0-9 _ - , + . $ ? /
  *    STRING    : Any set of symbols
- * 
+ *
  * Basic syntax is comprised of SECTIONs.
  *    A SECTION is defined as:
  *    [SECTIONNAME]
@@ -41,12 +41,12 @@
  *      KEY = VALUE
  *      KEY
  *    Where KEY is an IDENTIFIER and VALUE is a STRING.
- * 
+ *
  * WHITESPACE should always be omitted.
  *    COMMENTS should be stripped, and are defined as text occurring in:
  *    ;<TEXT>
- * 
- * Example file below.  Note that the second line is technically invalid.  
+ *
+ * Example file below. Note that the second line is technically invalid.
  * The event handler must decide whether this should be allowed.
  *    --FILE BELOW--
  *    [gaben]
@@ -58,7 +58,7 @@
  *    maintain
  *    products
  */
-  
+
 /**
  * Parser invalid code.
  */
@@ -68,7 +68,7 @@ enum INIParser
 };
 
 /**
- * Creates a new INI parser.  
+ * Creates a new INI parser.
  * This is used to set parse hooks.
  *
  * @return              A new handle to an INI Parse structure.
@@ -94,7 +94,7 @@ native INI_DestroyParser(&INIParser:handle);
  * @param data          An optional handle or value to pass through to callback functions
  *
  * @return              An SMCParseError result.
- * @error               Invalid or corrupt handle. 
+ * @error               Invalid or corrupt handle.
  */
 native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0, any:data = 0);
 
@@ -116,7 +116,7 @@ native bool:INI_ParseFile(INIParser:handle, const file[], &line = 0, &col = 0, a
  * @param func          A ParseStart callback.
  *
  * @noreturn
- * @error               Invalid or corrupt handle. 
+ * @error               Invalid or corrupt handle.
  */
 native INI_SetParseStart(INIParser:handle, const func[]);
 
@@ -139,7 +139,7 @@ native INI_SetParseStart(INIParser:handle, const func[]);
  * @param func          A ParseEnd callback.
  *
  * @noreturn
- * @error               Invalid or corrupt handle. 
+ * @error               Invalid or corrupt handle.
  */
 native INI_SetParseEnd(INIParser:handle, const func[]);
 
@@ -148,7 +148,7 @@ native INI_SetParseEnd(INIParser:handle, const func[]);
  *
  * @note  Below is the prototype of callback:
  *        -
- *          NewSection: 
+ *          NewSection:
  *              Called when the parser finds a new section.
  *
  *              @param handle           Handle to an INI Parse structure.
@@ -164,7 +164,7 @@ native INI_SetParseEnd(INIParser:handle, const func[]);
  *
  *              public bool:OnNewSection(INIParser:handle, const section[], bool:invalid_tokens, bool:close_bracket, bool:extra_tokens, curtok, any:data)
  *
- *          KeyValue: 
+ *          KeyValue:
  *              Called when the parser finds a new key/value pair.
  *
  *              @param handle           Handle to an INI Parse structure.
@@ -173,17 +173,17 @@ native INI_SetParseEnd(INIParser:handle, const func[]);
  *              @param invalid_tokens   Whether or not the key contained invalid tokens.
  *              @param equal_token      There was an '=' sign present (in case the value is missing).
  *              @param quotes           Whether value was enclosed in quotes.
- *              @param curtok           Contains the token index of the start of the value string.  
+ *              @param curtok           Contains the token index of the start of the value string.
  *                                      This can be changed when returning false.
  *              @param data             Handle or value passed in INI_ParseFile
  *
  *              @return                 True to keep parsing, false otherwise.
- * 
+ *
  *              public bool:OnKeyValue(INIParser:handle, const key[], const value[], bool:invalid_tokens, bool:equal_token, bool:quotes, curtok, any:data)
- *        -  
+ *        -
  * @param handle        Handle to an INI Parse structure.
- * @param kv            A KeyValue callback. 
- * @param ns            An optional NewSection callback. 
+ * @param kv            A KeyValue callback.
+ * @param ns            An optional NewSection callback.
  *
  * @noreturn
  */

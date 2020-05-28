@@ -19,7 +19,7 @@
 /**
  * Returns the number of languages loaded.
  *
- * @return 			Number of languages loaded.		
+ * @return 			Number of languages loaded.
  */
 native get_langsnum();
 
@@ -68,7 +68,7 @@ enum TransKey
  * @return			Key index
  */
 native TransKey:CreateLangKey(const key[]);
- 
+
 /**
  * Finds a translation key index without adding on failure.
  *
@@ -77,7 +77,7 @@ native TransKey:CreateLangKey(const key[]);
  * @return			Key index, or -1 if not found
  */
 native TransKey:GetLangTransKey(const key[]);
- 
+
 /**
  * Adds a new translation.
  *

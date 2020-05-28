@@ -39,7 +39,7 @@
  * @error             If an invalid message id is specified or an invalid number
  *                    of parameters is passed, an error will be thrown.
  */
-native message_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
+native message_begin(dest, msg_type, const origin[3] = {0, 0, 0}, player = 0);
 
 /**
  * Marks the beginning of a client message.
@@ -64,7 +64,7 @@ native message_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
  * @error             If an invalid message id is specified or an invalid number
  *                    of parameters is passed, an error will be thrown.
  */
-native message_begin_f(dest, msg_type, const Float:origin[3] = {0.0,0.0,0.0}, player = 0);
+native message_begin_f(dest, msg_type, const Float:origin[3] = {0.0, 0.0, 0.0}, player = 0);
 
 /**
  * Ends a message that was started with message_begin() or message_begin_f().
@@ -233,7 +233,7 @@ native write_string(const x[]);
  * @error             If an invalid message id is specified or an invalid number
  *                    of parameters is passed, an error will be thrown.
  */
-native emessage_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
+native emessage_begin(dest, msg_type, const origin[3] = {0, 0, 0}, player = 0);
 
 /**
  * Marks the beginning of a client message.
@@ -264,7 +264,7 @@ native emessage_begin(dest, msg_type, const origin[3] = {0,0,0}, player = 0);
  * @error             If an invalid message id is specified or an invalid number
  *                    of parameters is passed, an error will be thrown.
  */
-native emessage_begin_f(dest, msg_type, const Float:origin[3] = {0.0,0.0,0.0}, player = 0);
+native emessage_begin_f(dest, msg_type, const Float:origin[3] = {0.0, 0.0, 0.0}, player = 0);
 
 /**
  * Ends a message that was started with emessage_begin() or emessage_begin_f().

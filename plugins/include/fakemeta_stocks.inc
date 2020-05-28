@@ -377,7 +377,7 @@ stock DF_MetaFunc_CallGameEntity(const STRING[], const ENTITY) {
 stock DF_ClientUserInfoChanged(const IDPLAYER) {
 	return dllfunc(DLLFunc_ClientUserInfoChanged, IDPLAYER);
 }
-	
+
 stock DF_UpdateClientData(const ENTITY, sendweapons, const cd/* = 0*/) {
 	return dllfunc(DLLFunc_UpdateClientData, ENTITY, sendweapons, cd);
 }

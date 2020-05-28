@@ -55,11 +55,11 @@ native SortStrings(array[][], num_strings, SortMethod:order = Sort_Ascending);
  * Custom sorting functions below.
  */
 
-/** 
- * Sorts a custom 1D array.  You must pass in a comparison function.
+/**
+ * Sorts a custom 1D array. You must pass in a comparison function.
  * The sorting algorithm then uses your comparison function to sort the data.
  * The function is called in the following manner:
- * 
+ *
  * public MySortFunc(elem1, elem2, const array[], const data[], data_size)
  *
  *  elem1, elem2	- Current element pair being compared
@@ -73,10 +73,10 @@ native SortStrings(array[][], num_strings, SortMethod:order = Sort_Ascending);
  *   1 if elem1 should go after elem2
  * Note that the parameters after elem2 are all optional and you do not need to specify them.
  */
-native SortCustom1D(array[], array_size, const comparefunc[], data[]="", data_size=0);
+native SortCustom1D(array[], array_size, const comparefunc[], data[] = "", data_size = 0);
 
 
-/** 
+/**
  * Sorts a custom 2D array.
  * The sorting algorithm then uses your comparison function to sort the data.
  * The function is called in the following manner:
@@ -94,7 +94,7 @@ native SortCustom1D(array[], array_size, const comparefunc[], data[]="", data_si
  *   1 if elem1[] should go after elem2[]
  * Note that the parameters after elem2[] are all optional and you do not need to specify them.
  */
-native SortCustom2D(array[][], array_size, const comparefunc[], data[]="", data_size=0);
+native SortCustom2D(array[][], array_size, const comparefunc[], data[] = "", data_size = 0);
 
 /**
  * Sort an ADT Array. Specify the type as Integer, Float, or String.

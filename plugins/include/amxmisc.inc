@@ -118,10 +118,10 @@ stock access(id, level)
 /**
  * cmd_target flags
  */
-#define CMDTARGET_OBEY_IMMUNITY (1<<0) // Obey immunity
-#define CMDTARGET_ALLOW_SELF    (1<<1) // Allow self targeting
-#define CMDTARGET_ONLY_ALIVE    (1<<2) // Target must be alive
-#define CMDTARGET_NO_BOTS       (1<<3) // Target can't be a bot
+#define CMDTARGET_OBEY_IMMUNITY (1 << 0) // Obey immunity
+#define CMDTARGET_ALLOW_SELF    (1 << 1) // Allow self targeting
+#define CMDTARGET_ONLY_ALIVE    (1 << 2) // Target must be alive
+#define CMDTARGET_NO_BOTS       (1 << 3) // Target can't be a bot
 
 /**
  * Processes a generic target pattern and tries to match it to a client based
@@ -283,7 +283,7 @@ stock show_activity(id, const name[], const fmt[], any:...)
 		}
 		case 2: // show name to all
 		{
-			client_print(0, print_chat, "%L %s: %s", LANG_PLAYER, prefix , name , buffer);
+			client_print(0, print_chat, "%L %s: %s", LANG_PLAYER, prefix, name, buffer);
 		}
 		case 1: // hide name to all
 		{
@@ -379,7 +379,7 @@ stock show_activity_id(idtarget, idadmin, const name[], const fmt[], any:...)
  * These keys need to be in the format of standard AMXX keys:
  *   eg: ADMIN_KICK_1 = ADMIN: kick %s
  *       ADMIN_KICK_2 = ADMIN %s: kick %s
- * This depends on the amx_show_activity cvar.  See documentation for more details.
+ * This depends on the amx_show_activity cvar. See documentation for more details.
  *
  * @param KeyWithoutName   The language key that does not have the name field.
  * @param KeyWithName      The language key that does have the name field.

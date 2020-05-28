@@ -16,12 +16,12 @@
 #endif
 #define _string_const_included
 
-#define charsmax(%1) (sizeof(%1)-1)
+#define charsmax(%1) (sizeof(%1) - 1)
 
 /**
  * @global  Unless otherwise noted, all string functions which take in a
  *          writable buffer and maximum length should NOT have the null terminator INCLUDED
- *          in the length.  This means that this is valid:
+ *          in the length. This means that this is valid:
  *          copy(string, charsmax(string), ...)
  */
 
@@ -64,14 +64,14 @@
  * strtok2(str4, left, 24, right, 24, '.', LTRIM_LEFT|LTRIM_RIGHT)
  *  left will be "Final  ", right will be "example  "
 */
-#define LTRIM_LEFT (1<<0)
-#define RTRIM_LEFT (1<<1)
-#define LTRIM_RIGHT (1<<2)
-#define RTRIM_RIGHT (1<<3)
+#define LTRIM_LEFT   (1 << 0)
+#define RTRIM_LEFT   (1 << 1)
+#define LTRIM_RIGHT  (1 << 2)
+#define RTRIM_RIGHT  (1 << 3)
 
-#define TRIM_INNER RTRIM_LEFT|LTRIM_RIGHT
-#define TRIM_OUTER LTRIM_LEFT|RTRIM_RIGHT
-#define TRIM_FULL TRIM_OUTER|TRIM_INNER
+#define TRIM_INNER   (RTRIM_LEFT | LTRIM_RIGHT)
+#define TRIM_OUTER   (LTRIM_LEFT | RTRIM_RIGHT)
+#define TRIM_FULL    (TRIM_OUTER | TRIM_INNER)
 
 /**
  * Category flags to be used with is_string_category(), to check whether code points in a
@@ -85,7 +85,7 @@
 
 // Combined flag for all letter categories with case mapping
 // Combined flag for all letter categories
-const UTF8C_LETTER      = (UTF8C_LETTER_UPPERCASE | UTF8C_LETTER_LOWERCASE | UTF8C_LETTER_TITLECASE | UTF8C_LETTER_MODIFIER  | UTF8C_LETTER_OTHER);
+const UTF8C_LETTER      = (UTF8C_LETTER_UPPERCASE | UTF8C_LETTER_LOWERCASE | UTF8C_LETTER_TITLECASE | UTF8C_LETTER_MODIFIER | UTF8C_LETTER_OTHER);
 const UTF8C_CASE_MAPPED = (UTF8C_LETTER_UPPERCASE | UTF8C_LETTER_LOWERCASE | UTF8C_LETTER_TITLECASE);
 
 #define UTF8C_MARK_NON_SPACING          0x00000020    // Non-spacing mark code points, Mn in the Unicode database.

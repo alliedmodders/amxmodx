@@ -79,7 +79,7 @@ enum {
 	EngFunc_TraceModel,					// void )			(const float *v1, const float *v2, int hullNumber, edict_t *pent, TraceResult *ptr);
 	EngFunc_TraceTexture,				// const char *)	(edict_t *pTextureEntity, const float *v1, const float *v2 );
 	EngFunc_TraceSphere,				// void )			(const float *v1, const float *v2, int fNoMonsters, float radius, edict_t *pentToSkip, TraceResult *ptr);
-	
+
 	EngFunc_GetAimVector,				// void )			(edict_t *ent, float speed, float *rgflReturn);
 	EngFunc_ParticleEffect,				// void )			(const float *org, const float *dir, float color, float count);
 	EngFunc_LightStyle,					// void )			(int style, char *val);
@@ -93,13 +93,13 @@ enum {
 	EngFunc_GetBonePosition,			// void )			(const edict_t *pEdict, int iBone, float *rgflOrigin, float *rgflAngles);
 	EngFunc_GetAttachment,				// void	)			(const edict_t *pEdict, int iAttachment, float *rgflOrigin, float *rgflAngles);
 	EngFunc_SetView,					// void )			(const edict_t *pClient, const edict_t *pViewent);
-	EngFunc_Time,						// float)			( void );
+	EngFunc_Time,						// float)			(void);
 	EngFunc_CrosshairAngle,				// void )			(const edict_t *pClient, float pitch, float yaw);
 	EngFunc_FadeClientVolume,			// void )			(const edict_t *pEdict, int fadePercent, int fadeOutSeconds, int holdTime, int fadeInSeconds);
 	EngFunc_SetClientMaxspeed,			// void )			(const edict_t *pEdict, float fNewMaxspeed);
 	EngFunc_CreateFakeClient,			// edict)			(const char *netname);	// returns NULL if fake client can't be created
 	EngFunc_RunPlayerMove,				// void )			(edict_t *fakeclient, const float *viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec);
-	EngFunc_NumberOfEntities,			// int  )			( void );
+	EngFunc_NumberOfEntities,			// int  )			(void);
 	EngFunc_StaticDecal,				// void )			(const float *origin, int decalIndex, int entityIndex, int modelIndex);
 	EngFunc_PrecacheGeneric,			// int  )			(char* s);
 	EngFunc_BuildSoundMsg,				// void )			(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch, int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
@@ -109,7 +109,7 @@ enum {
 	EngFunc_PrecacheEvent,				// unsigned short)	(int type, const char*psz);
 	EngFunc_PlaybackEvent,				// void )			(int flags, const edict_t *pInvoker, unsigned short eventindex, float delay, float *origin, float *angles, float fparam1, float fparam2, int iparam1, int iparam2, int bparam1, int bparam2);
 	EngFunc_CheckVisibility,			// int  )			(const edict_t *entity, unsigned char *pset);
-	EngFunc_GetCurrentPlayer,			// int  )			( void );
+	EngFunc_GetCurrentPlayer,			// int  )			(void);
 	EngFunc_CanSkipPlayer,				// int  )			(const edict_t *player);
 	EngFunc_SetGroupMask,				// void )			(int mask, int op);
 	EngFunc_GetClientListening,			// bool )			(int iReceiver, int iSender)
@@ -121,7 +121,7 @@ enum {
 	EngFunc_SetKeyValue,				// void )			(char *infobuffer, char *key, char *value);
 	EngFunc_SetClientKeyValue,			// void )			(int clientIndex, char *infobuffer, char *key, char *value);
 	EngFunc_CreateInstBaseline,			// int  )			(int classname, struct entity_state_s *baseline);
-	
+
 	// Returns pointer to info buffer that can be used with the infobuffer param of InfoKeyValue, SetKeyValue, and SetClientKeyValue
 	EngFunc_GetInfoKeyBuffer,			// char*)			(edict_t *e);
 	EngFunc_AlertMessage,				// void )			(ALERT_TYPE atype, char *szFmt, ...);
@@ -133,55 +133,55 @@ enum {
  */
 enum
 {
-	DLLFunc_GameInit,					// void )			( void );				
+	DLLFunc_GameInit,					// void )			(void);
 	DLLFunc_Spawn,						// int  )			(edict_t *pent);
 	DLLFunc_Think,						// void )			(edict_t *pent);
 	DLLFunc_Use,						// void )			(edict_t *pentUsed, edict_t *pentOther);
 	DLLFunc_Touch,						// void )			(edict_t *pentTouched, edict_t *pentOther);
 	DLLFunc_Blocked,					// void )			(edict_t *pentBlocked, edict_t *pentOther);
-	
+
 	//You can pass in 0 for glb kvd handle or a kvd handle here
 	DLLFunc_KeyValue,					// void )			(edict_t *pentKeyvalue, KeyValueData *pkvd);
 	DLLFunc_SetAbsBox,					// void )			(edict_t *pent);
 	DLLFunc_ClientConnect,				// bool )			(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128]);
-	
+
 	DLLFunc_ClientDisconnect,			// void )			(edict_t *pEntity);
 	DLLFunc_ClientKill,					// void )			(edict_t *pEntity);
 	DLLFunc_ClientPutInServer,			// void )			(edict_t *pEntity);
 	DLLFunc_ClientCommand,				// void )			(edict_t *pEntity);
 
-	DLLFunc_ServerDeactivate,			// void )			( void );
+	DLLFunc_ServerDeactivate,			// void )			(void);
 
 	DLLFunc_PlayerPreThink,				// void )			(edict_t *pEntity);
 	DLLFunc_PlayerPostThink,			// void )			(edict_t *pEntity);
 
-	DLLFunc_StartFrame,					// void )			( void );
-	DLLFunc_ParmsNewLevel,				// void )			( void );
-	DLLFunc_ParmsChangeLevel,			// void )			( void );
+	DLLFunc_StartFrame,					// void )			(void);
+	DLLFunc_ParmsNewLevel,				// void )			(void);
+	DLLFunc_ParmsChangeLevel,			// void )			(void);
 
-	// Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
+	// Returns string describing current .dll. E.g., TeamFotrress 2, Half-Life
 	// This also gets called when the server is queried for information (for example, by a server browser tool)
-	DLLFunc_GetGameDescription,	 		// const char *)	( void );     
+	DLLFunc_GetGameDescription,	 		// const char *)	(void);
 
 	// Spectator funcs
 	DLLFunc_SpectatorConnect,			// void )			(edict_t *pEntity);
 	DLLFunc_SpectatorDisconnect,		// void )			(edict_t *pEntity);
 	DLLFunc_SpectatorThink,				// void )			(edict_t *pEntity);
 
-	// Notify game .dll that engine is going to shut down.  Allows mod authors to set a breakpoint.
+	// Notify game .dll that engine is going to shut down. Allows mod authors to set a breakpoint.
 	DLLFunc_Sys_Error,					// void )			(const char *error_string);
 
 	DLLFunc_PM_FindTextureType,			// char )			(char *name);
-	DLLFunc_RegisterEncoders,			// void )			( void );
+	DLLFunc_RegisterEncoders,			// void )			(void);
 
-	// Enumerates player hulls.  Returns 0 if the hull number doesn't exist, 1 otherwise
+	// Enumerates player hulls. Returns 0 if the hull number doesn't exist, 1 otherwise
 	DLLFunc_GetHullBounds,				// int  )			(int hullnumber, float *mins, float *maxs);
 
 	// Create baselines for certain "unplaced" items.
-	DLLFunc_CreateInstBaselines,		// void )			( void );
-	DLLFunc_pfnAllowLagCompensation,	// int  )			( void );
+	DLLFunc_CreateInstBaselines,		// void )			(void);
+	DLLFunc_pfnAllowLagCompensation,	// int  )			(void);
 	// I know this does not fit with DLLFUNC(), but I don't want another native just for it.
-	MetaFunc_CallGameEntity,			// bool	)			(plid_t plid, const char *entStr,entvars_t *pev);
+	MetaFunc_CallGameEntity,			// bool	)			(plid_t plid, const char *entStr, entvars_t *pev);
 	DLLFunc_ClientUserInfoChanged,		// void	)			(edict *pEntity, char *infobuffer);
 	// You can pass in 0 for global cd handle or another cd handle here
 	DLLFunc_UpdateClientData,			// void )			(const struct edict_s *ent, int sendweapons, struct clientdata_s *cd);
@@ -349,47 +349,47 @@ enum {
  */
 enum
 {
-	glb_start_int = 0, 
-	glb_trace_hitgroup, 
-	glb_trace_flags, 
-	glb_msg_entity, 
-	glb_cdAudioTrack, 
-	glb_maxClients, 
-	glb_maxEntities, 
-	glb_end_int, 
-	glb_start_float, 
-	glb_time, 
-	glb_frametime, 
-	glb_force_retouch, 
-	glb_deathmatch, 
-	glb_coop, 
-	glb_teamplay, 
-	glb_serverflags, 
-	glb_found_secrets, 
-	glb_trace_allsolid, 
-	glb_trace_startsolid, 
-	glb_trace_fraction, 
-	glb_trace_plane_dist, 
-	glb_trace_inopen, 
-	glb_trace_inwater, 
-	glb_end_float, 
-	glb_start_edict, 
-	glb_trace_ent, 
-	glb_end_edict, 
-	glb_start_vector, 
-	glb_v_forward, 
-	glb_v_up, 
-	glb_v_right, 
-	glb_trace_endpos, 
-	glb_trace_plane_normal, 
+	glb_start_int = 0,
+	glb_trace_hitgroup,
+	glb_trace_flags,
+	glb_msg_entity,
+	glb_cdAudioTrack,
+	glb_maxClients,
+	glb_maxEntities,
+	glb_end_int,
+	glb_start_float,
+	glb_time,
+	glb_frametime,
+	glb_force_retouch,
+	glb_deathmatch,
+	glb_coop,
+	glb_teamplay,
+	glb_serverflags,
+	glb_found_secrets,
+	glb_trace_allsolid,
+	glb_trace_startsolid,
+	glb_trace_fraction,
+	glb_trace_plane_dist,
+	glb_trace_inopen,
+	glb_trace_inwater,
+	glb_end_float,
+	glb_start_edict,
+	glb_trace_ent,
+	glb_end_edict,
+	glb_start_vector,
+	glb_v_forward,
+	glb_v_up,
+	glb_v_right,
+	glb_trace_endpos,
+	glb_trace_plane_normal,
 	glb_vecLandmarkOffset,
 	glb_end_vector,
-	glb_start_string, 
-	glb_mapname, 
-	glb_startspot, 
-	glb_end_string, 
-	glb_start_pchar, 
-	glb_pStringBase, 
+	glb_start_string,
+	glb_mapname,
+	glb_startspot,
+	glb_end_string,
+	glb_start_pchar,
+	glb_pStringBase,
 	glb_end_pchar
 };
 
@@ -398,7 +398,7 @@ enum
 enum {
 	FM_PrecacheModel = 1,
 	FM_PrecacheSound,
-	FM_SetModel,	
+	FM_SetModel,
 	FM_ModelIndex,
 	FM_ModelFrames,
 	FM_SetSize,
@@ -495,7 +495,7 @@ enum {
 	FM_KeyValue,
 	FM_SetAbsBox,
 	FM_ClientConnect,
-	
+
 	FM_ClientDisconnect,
 	FM_ClientKill,
 	FM_ClientPutInServer,
@@ -510,7 +510,7 @@ enum {
 	FM_ParmsNewLevel,
 	FM_ParmsChangeLevel,
 
-	// Returns string describing current .dll.  E.g., TeamFotrress 2, Half-Life
+	// Returns string describing current .dll. E.g., TeamFotrress 2, Half-Life
 	// This also gets called when the server is queried for information (for example, by a server browser tool)
 	FM_GetGameDescription,
 
@@ -519,7 +519,7 @@ enum {
 	FM_SpectatorDisconnect,
 	FM_SpectatorThink,
 
-	// Notify game .dll that engine is going to shut down.  Allows mod authors to set a breakpoint.
+	// Notify game .dll that engine is going to shut down. Allows mod authors to set a breakpoint.
 	FM_Sys_Error,
 
 	FM_PM_FindTextureType,
@@ -527,18 +527,18 @@ enum {
 
 	// Create baselines for certain "unplaced" items.
 	FM_CreateInstBaselines,
-	
+
 	FM_AllowLagCompensation,
 	FM_AlertMessage,
-	
+
 	// NEW_DLL_FUNCTIONS:
 	FM_OnFreeEntPrivateData,
 	FM_GameShutdown,
 	FM_ShouldCollide,
-	
+
 	// LATE ADDITIONS (v1.71)
 	FM_ClientUserInfoChanged,
-	
+
 	// LATE ADDITIONS (v1.75)
 	FM_UpdateClientData,
 	FM_AddToFullPack,
@@ -548,7 +548,7 @@ enum {
 	FM_CreateBaseline,
 	FM_GetInfoKeyBuffer,
 	FM_ClientPrintf,
-	
+
 	// LATE ADDITIONS (v1.80)
 	FM_ServerPrint
 };
@@ -626,30 +626,30 @@ enum EntityState
 	// Index into cl_entities array for this entity
 	ES_Number,			// int
 	ES_MsgTime,			// float
-	
+
 	// Message number last time the player/entity state was updated
 	ES_MessageNum,		// int
-	
+
 	// Fields which can be transitted and reconstructed over the network stream
 	ES_Origin,			// float array[3]
 	ES_Angles,			// float array[3]
-	
+
 	ES_ModelIndex,		// int
 	ES_Sequence,		// int
 	ES_Frame,			// float
 	ES_ColorMap,		// int
 	ES_Skin,			// short
 	ES_Solid,			// short
-	ES_Effects,			// int 
+	ES_Effects,			// int
 	ES_Scale,			// float
 	ES_eFlags,			// byte
-	
+
 	// Render information
 	ES_RenderMode,		// int
 	ES_RenderAmt,		// int
 	ES_RenderColor,		// byte array[3], RGB value
 	ES_RenderFx,		// int
-	
+
 	ES_MoveType,		// int
 	ES_AnimTime,		// float
 	ES_FrameRate,		// float
@@ -657,20 +657,20 @@ enum EntityState
 	ES_Controller,		// byte array[4]
 	ES_Blending,		// byte array[4]
 	ES_Velocity,		// float array[3]
-	
+
 	// Send bbox down to client for use during prediction
 	ES_Mins,			// float array[3]
 	ES_Maxs,			// float array[3]
-	
+
 	ES_AimEnt,			// int
 	// If owned by a player, the index of that player (for projectiles)
 	ES_Owner,			// int
-	
+
 	// Friction, for prediction
 	ES_Friction,		// float
 	// Gravity multiplier
 	ES_Gravity,			// float
-	
+
 	// PLAYER SPECIFIC
 	ES_Team,			// int
 	ES_PlayerClass,		// int
@@ -689,16 +689,16 @@ enum EntityState
 	ES_iStepLeft,		// int
 	// How fast we are falling
 	ES_flFallVelocity,	// float
-	
+
 	ES_FOV,				// float
-	ES_WeaponAnim,		// int	
-	
+	ES_WeaponAnim,		// int
+
 	// Parametric movement overrides
 	ES_StartPos,		// float array[3]
 	ES_EndPos,			// float array[3]
 	ES_ImpactTime,		// float
 	ES_StartTime,		// float
-	
+
 	// For mods
 	ES_iUser1,			// int
 	ES_iUser2,			// int
@@ -722,7 +722,7 @@ enum UserCmd
 	UC_Msec,			// byte
 	// Command view angles
 	UC_ViewAngles,		// float array[3]
-	
+
 	// Intended velocities
 	// Forward velocity
 	UC_ForwardMove,		// float
@@ -738,7 +738,7 @@ enum UserCmd
 	UC_Impulse,			// byte
 	// Current weapon id
 	UC_WeaponSelect,	// byte
-	
+
 	// Experimental player impact stuff
 	UC_ImpactIndex,		// int
 	UC_ImpactPosition	// float array[3]

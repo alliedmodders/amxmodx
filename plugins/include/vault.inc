@@ -22,11 +22,11 @@
  *
  * @param key           Key to get the value from
  * @param data          Buffer to copy the value to
- * @param len           Buffer size. If len is set to 0 then the function will 
+ * @param len           Buffer size. If len is set to 0 then the function will
  * 			        	 return the value as a number
  *
  * @return              If len is not 0 the function will return the number of characters written.
-					 If len is 0 the function will return the numerical value associated with the key.	
+					 If len is 0 the function will return the numerical value associated with the key.
  */
 native get_vaultdata(const key[], data[] = "", len = 0);
 

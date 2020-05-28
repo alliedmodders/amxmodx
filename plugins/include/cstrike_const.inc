@@ -21,7 +21,7 @@
  */
 #define CSW_NONE            0
 #define CSW_P228            1
-#define CSW_GLOCK           2  // Unused by game, See CSW_GLOCK18.
+#define CSW_GLOCK           2        // Unused by game, See CSW_GLOCK18
 #define CSW_SCOUT           3
 #define CSW_HEGRENADE       4
 #define CSW_XM1014          5
@@ -51,21 +51,21 @@
 #define CSW_AK47            28
 #define CSW_KNIFE           29
 #define CSW_P90             30
-#define CSW_VEST            31  // Custom
-#define CSW_VESTHELM        32  // Custom
+#define CSW_VEST            31       // Custom
+#define CSW_VESTHELM        32       // Custom
 #define CSW_SHIELDGUN       99
 #define CSW_LAST_WEAPON     CSW_P90
 
-const CSW_ALL_WEAPONS      = (~(1<<CSW_VEST));
-const CSW_ALL_PISTOLS      = (1<<CSW_P228  | 1<<CSW_ELITE | 1<<CSW_FIVESEVEN | 1<<CSW_USP | 1<<CSW_GLOCK18 | 1<<CSW_DEAGLE);
-const CSW_ALL_SHOTGUNS     = (1<<CSW_M3    | 1<<CSW_XM1014);
-const CSW_ALL_SMGS         = (1<<CSW_MAC10 | 1<<CSW_UMP45 | 1<<CSW_MP5NAVY | 1<<CSW_TMP  | 1<<CSW_P90);
-const CSW_ALL_RIFLES       = (1<<CSW_AUG   | 1<<CSW_GALIL | 1<<CSW_FAMAS   | 1<<CSW_M4A1 | 1<<CSW_AK47 | 1<<CSW_SG552);
-const CSW_ALL_SNIPERRIFLES = (1<<CSW_SCOUT | 1<<CSW_AWP   | 1<<CSW_G3SG1   | 1<<CSW_SG550);
-const CSW_ALL_MACHINEGUNS  = (1<<CSW_M249);
-const CSW_ALL_GRENADES     = (1<<CSW_HEGRENADE | 1<<CSW_SMOKEGRENADE | 1<<CSW_FLASHBANG);
-const CSW_ALL_ARMORS       = (1<<CSW_VEST | 1<<CSW_VESTHELM);
-const CSW_ALL_GUNS         = (CSW_ALL_PISTOLS | CSW_ALL_SHOTGUNS | CSW_ALL_SMGS | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS);
+const CSW_ALL_WEAPONS      = (~(1 << CSW_VEST));
+const CSW_ALL_PISTOLS      = (1 << CSW_P228      | 1 << CSW_ELITE        | 1 << CSW_FIVESEVEN | 1 << CSW_USP   | 1 << CSW_GLOCK18     | 1 << CSW_DEAGLE);
+const CSW_ALL_SHOTGUNS     = (1 << CSW_M3        | 1 << CSW_XM1014);
+const CSW_ALL_SMGS         = (1 << CSW_MAC10     | 1 << CSW_UMP45        | 1 << CSW_MP5NAVY   | 1 << CSW_TMP   | 1 << CSW_P90);
+const CSW_ALL_RIFLES       = (1 << CSW_AUG       | 1 << CSW_GALIL        | 1 << CSW_FAMAS     | 1 << CSW_M4A1  | 1 << CSW_AK47        | 1 << CSW_SG552);
+const CSW_ALL_SNIPERRIFLES = (1 << CSW_SCOUT     | 1 << CSW_AWP          | 1 << CSW_G3SG1     | 1 << CSW_SG550);
+const CSW_ALL_MACHINEGUNS  = (1 << CSW_M249);
+const CSW_ALL_GRENADES     = (1 << CSW_HEGRENADE | 1 << CSW_SMOKEGRENADE | 1 << CSW_FLASHBANG);
+const CSW_ALL_ARMORS       = (1 << CSW_VEST      | 1 << CSW_VESTHELM);
+const CSW_ALL_GUNS         = (CSW_ALL_PISTOLS    | CSW_ALL_SHOTGUNS      | CSW_ALL_SMGS       | CSW_ALL_RIFLES | CSW_ALL_SNIPERRIFLES | CSW_ALL_MACHINEGUNS);
 
 /**
  * @section Team and team model constants, used by cs_[get|set]_user_team().
@@ -122,11 +122,11 @@ enum CsArmorType
 /**
  * Map zone flags returned by cs_get_user_mapzones().
  */
-#define CS_MAPZONE_BUY              (1<<0) // Buyzone
-#define CS_MAPZONE_BOMBTARGET       (1<<1) // Bomb target zone
-#define CS_MAPZONE_HOSTAGE_RESCUE   (1<<2) // Hostage rescue zone
-#define CS_MAPZONE_ESCAPE           (1<<3) // Terrorist escape zone
-#define CS_MAPZONE_VIP_SAFETY       (1<<4) // VIP escape zone
+#define CS_MAPZONE_BUY              (1 << 0) // Buyzone
+#define CS_MAPZONE_BOMBTARGET       (1 << 1) // Bomb target zone
+#define CS_MAPZONE_HOSTAGE_RESCUE   (1 << 2) // Hostage rescue zone
+#define CS_MAPZONE_ESCAPE           (1 << 3) // Terrorist escape zone
+#define CS_MAPZONE_VIP_SAFETY       (1 << 4) // VIP escape zone
 
 /**
  * Constants used for cs_[get|set]_user_zoom().
@@ -149,7 +149,7 @@ enum
  */
 #define CSI_NONE                CSW_NONE
 #define CSI_P228                CSW_P228
-#define CSI_GLOCK               CSW_GLOCK  // Unused by game, See CSI_GLOCK18.
+#define CSI_GLOCK               CSW_GLOCK               // Unused by game, See CSI_GLOCK18
 #define CSI_SCOUT               CSW_SCOUT
 #define CSI_HEGRENADE           CSW_HEGRENADE
 #define CSI_XM1014              CSW_XM1014
@@ -178,14 +178,14 @@ enum
 #define CSI_AK47                CSW_AK47
 #define CSI_KNIFE               CSW_KNIFE
 #define CSI_P90                 CSW_P90
-#define CSI_SHIELDGUN           CSW_SHIELDGUN   // The real CS value, use CSI_SHELD instead.
-#define CSI_VEST                CSW_VEST        // Custom
-#define CSI_VESTHELM            CSW_VESTHELM    // Custom
-#define CSI_DEFUSER             33              // Custom
-#define CSI_NVGS                34              // Custom
-#define CSI_SHIELD              35              // Custom - The value passed by the forward, more convenient for plugins.
-#define CSI_PRIAMMO             36              // Custom
-#define CSI_SECAMMO             37              // Custom
+#define CSI_SHIELDGUN           CSW_SHIELDGUN           // The real CS value, use CSI_SHELD instead
+#define CSI_VEST                CSW_VEST                // Custom
+#define CSI_VESTHELM            CSW_VESTHELM            // Custom
+#define CSI_DEFUSER             33                      // Custom
+#define CSI_NVGS                34                      // Custom
+#define CSI_SHIELD              35                      // Custom - The value passed by the forward, more convenient for plugins
+#define CSI_PRIAMMO             36                      // Custom
+#define CSI_SECAMMO             37                      // Custom
 #define CSI_MAX_COUNT           38
 #define CSI_LAST_WEAPON         CSW_LAST_WEAPON
 
@@ -212,26 +212,26 @@ enum
 /**
  * Hint message flags for use with m_flDisplayHistory.
  */
-#define CS_HINT_ROUND_STARTED     (1<<1)
-#define CS_HINT_HOSTAGE_SEEN_FAR  (1<<2)
-#define CS_HINT_HOSTAGE_SEEN_NEAR (1<<3)
-#define CS_HINT_HOSTAGE_USED      (1<<4)
-#define CS_HINT_HOSTAGE_INJURED   (1<<5)
-#define CS_HINT_HOSTAGE_KILLED    (1<<6)
-#define CS_HINT_FRIEND_SEEN       (1<<7)
-#define CS_HINT_ENEMY_SEEN        (1<<8)
-#define CS_HINT_FRIEND_INJURED    (1<<9)
-#define CS_HINT_FRIEND_KILLED     (1<<10)
-#define CS_HINT_ENEMY_KILLED      (1<<11)
-#define CS_HINT_BOMB_RETRIEVED    (1<<12)
-#define CS_HINT_AMMO_EXHAUSTED    (1<<15)
-#define CS_HINT_IN_TARGET_ZONE    (1<<16)
-#define CS_HINT_IN_RESCUE_ZONE    (1<<17)
-#define CS_HINT_IN_ESCAPE_ZONE    (1<<18)
-#define CS_HINT_IN_VIPSAFETY_ZONE (1<<19)
-#define CS_HINT_NIGHTVISION       (1<<20)
-#define CS_HINT_HOSTAGE_CTMOVE    (1<<21)
-#define	CS_HINT_SPEC_DUCK         (1<<22)
+#define CS_HINT_ROUND_STARTED     (1 << 1)
+#define CS_HINT_HOSTAGE_SEEN_FAR  (1 << 2)
+#define CS_HINT_HOSTAGE_SEEN_NEAR (1 << 3)
+#define CS_HINT_HOSTAGE_USED      (1 << 4)
+#define CS_HINT_HOSTAGE_INJURED   (1 << 5)
+#define CS_HINT_HOSTAGE_KILLED    (1 << 6)
+#define CS_HINT_FRIEND_SEEN       (1 << 7)
+#define CS_HINT_ENEMY_SEEN        (1 << 8)
+#define CS_HINT_FRIEND_INJURED    (1 << 9)
+#define CS_HINT_FRIEND_KILLED     (1 << 10)
+#define CS_HINT_ENEMY_KILLED      (1 << 11)
+#define CS_HINT_BOMB_RETRIEVED    (1 << 12)
+#define CS_HINT_AMMO_EXHAUSTED    (1 << 15)
+#define CS_HINT_IN_TARGET_ZONE    (1 << 16)
+#define CS_HINT_IN_RESCUE_ZONE    (1 << 17)
+#define CS_HINT_IN_ESCAPE_ZONE    (1 << 18)
+#define CS_HINT_IN_VIPSAFETY_ZONE (1 << 19)
+#define CS_HINT_NIGHTVISION       (1 << 20)
+#define CS_HINT_HOSTAGE_CTMOVE    (1 << 21)
+#define CS_HINT_SPEC_DUCK         (1 << 22)
 
 /**
  * Constants for use with m_iIgnoreGlobalChat (ignoremsg client's command)
@@ -380,20 +380,20 @@ enum CsWeaponClassType
  */
 enum CsAutoBuyClassType
 {
-	CS_AUTOBUYCLASS_PRIMARY     = (1<<0),
-	CS_AUTOBUYCLASS_SECONDARY   = (1<<1),
-	CS_AUTOBUYCLASS_AMMO        = (1<<2),
-	CS_AUTOBUYCLASS_ARMOR       = (1<<3),
-	CS_AUTOBUYCLASS_DEFUSER     = (1<<4),
-	CS_AUTOBUYCLASS_PISTOL      = (1<<5),
-	CS_AUTOBUYCLASS_SMG         = (1<<6),
-	CS_AUTOBUYCLASS_RIFLE       = (1<<7),
-	CS_AUTOBUYCLASS_SNIPERRIFLE = (1<<8),
-	CS_AUTOBUYCLASS_SHOTGUN     = (1<<9),
-	CS_AUTOBUYCLASS_MACHINEGUN  = (1<<10),
-	CS_AUTOBUYCLASS_GRENADE     = (1<<11),
-	CS_AUTOBUYCLASS_NIGHTVISION = (1<<12),
-	CS_AUTOBUYCLASS_SHIELD      = (1<<13),
+	CS_AUTOBUYCLASS_PRIMARY     = (1 << 0),
+	CS_AUTOBUYCLASS_SECONDARY   = (1 << 1),
+	CS_AUTOBUYCLASS_AMMO        = (1 << 2),
+	CS_AUTOBUYCLASS_ARMOR       = (1 << 3),
+	CS_AUTOBUYCLASS_DEFUSER     = (1 << 4),
+	CS_AUTOBUYCLASS_PISTOL      = (1 << 5),
+	CS_AUTOBUYCLASS_SMG         = (1 << 6),
+	CS_AUTOBUYCLASS_RIFLE       = (1 << 7),
+	CS_AUTOBUYCLASS_SNIPERRIFLE = (1 << 8),
+	CS_AUTOBUYCLASS_SHOTGUN     = (1 << 9),
+	CS_AUTOBUYCLASS_MACHINEGUN  = (1 << 10),
+	CS_AUTOBUYCLASS_GRENADE     = (1 << 11),
+	CS_AUTOBUYCLASS_NIGHTVISION = (1 << 12),
+	CS_AUTOBUYCLASS_SHIELD      = (1 << 13),
 };
 
 /**
@@ -492,12 +492,12 @@ enum CsAmmoCostType
 /**
  * Weapon state for use with m_iWeaponState.
  */
-#define CS_WPNSTATE_USP_SILENCED       (1<<0)
-#define CS_WPNSTATE_GLOCK18_BURST_MODE (1<<1)
-#define CS_WPNSTATE_M4A1_SILENCED      (1<<2)
-#define CS_WPNSTATE_ELITE_LEFT         (1<<3)
-#define CS_WPNSTATE_FAMAS_BURST_MODE   (1<<4)
-#define CS_WPNSTATE_SHIELD_DRAWN       (1<<5)
+#define CS_WPNSTATE_USP_SILENCED       (1 << 0)
+#define CS_WPNSTATE_GLOCK18_BURST_MODE (1 << 1)
+#define CS_WPNSTATE_M4A1_SILENCED      (1 << 2)
+#define CS_WPNSTATE_ELITE_LEFT         (1 << 3)
+#define CS_WPNSTATE_FAMAS_BURST_MODE   (1 << 4)
+#define CS_WPNSTATE_SHIELD_DRAWN       (1 << 5)
 
 /**
  * Internal commands, for use with m_flLastCommandTime.
@@ -514,8 +514,8 @@ enum CsAmmoCostType
 /**
  * Signal state for use with m_signals.
  */
-#define CS_SIGNAL_BUY        (1<<0)
-#define CS_SIGNAL_BOMB       (1<<1)
-#define CS_SIGNAL_RESCUE     (1<<2)
-#define CS_SIGNAL_ESCAPE     (1<<3)
-#define CS_SIGNAL_VIPSAFETY  (1<<4)
+#define CS_SIGNAL_BUY        (1 << 0)
+#define CS_SIGNAL_BOMB       (1 << 1)
+#define CS_SIGNAL_RESCUE     (1 << 2)
+#define CS_SIGNAL_ESCAPE     (1 << 3)
+#define CS_SIGNAL_VIPSAFETY  (1 << 4)

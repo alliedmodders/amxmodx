@@ -28,8 +28,8 @@
  * Called whenever the client's class is changed.
  *
  * @param	id			The index of the player who changed.
- * @param 	newclass	The class the client changed to.  Check the class enum in ns_const.inc.
- * @param 	oldclass	The class the client changed from.  Check the class enum in ns_const.inc.
+ * @param 	newclass	The class the client changed to. Check the class enum in ns_const.inc.
+ * @param 	oldclass	The class the client changed from. Check the class enum in ns_const.inc.
  * @noreturn
  */
 forward client_changeclass(id, newclass, oldclass);
@@ -56,7 +56,7 @@ native ns_is_combat();
  * Returns the gameplay type for the currently active map.
  * Refer to ns_const.inc's NSGameplay enum for details.
  *
- * @note		The earliest this is guaranteed to be accurate is during plugin_init().  It needs
+ * @note		The earliest this is guaranteed to be accurate is during plugin_init(). It needs
  *				the info_gameplay entity to be properly set within the map, or it will return "Unknown",
  *				or "Cantfind".
  *
@@ -76,16 +76,16 @@ native ns_get_user_team(id, buff[], len);
 
 /**
  * Send an NS-style popup message.
- * 
- * @param target		The client to receive the message.  Set to 0 to send to everybody.
+ *
+ * @param target		The client to receive the message. Set to 0 to send to everybody.
  * @param szMsg		The message to send, 180 characters max.
  * @param ah			Whether to only display the message on clients who have the cvar "cl_autohelp" set to 1.
  * @noreturn
  */
-native ns_popup(target, const szMsg[180], ah=0);
+native ns_popup(target, const szMsg[180], ah = 0);
 
 /**
- * Sets a player model.  Omit the second parameter to return to default
+ * Sets a player model. Omit the second parameter to return to default
  *
  * @note				The model does not revert on death, teamswitch, gestation, etc.
  *
@@ -93,10 +93,10 @@ native ns_popup(target, const szMsg[180], ah=0);
  * @param szModel		The model to change to.
  * @noreturn
  */
-native ns_set_player_model(id, const szModel[]="");
+native ns_set_player_model(id, const szModel[] = "");
 
 /**
- * Sets a player skin.  Omit the second parameter to return to default
+ * Sets a player skin. Omit the second parameter to return to default
  *
  * @note				The skin does not revert on death, teamswitch, gestation, etc.
  *
@@ -104,10 +104,10 @@ native ns_set_player_model(id, const szModel[]="");
  * @param skin			The skin number to change to.
  * @noreturn
  */
-native ns_set_player_skin(id, skin=-1);
+native ns_set_player_skin(id, skin = -1);
 
 /**
- * Sets a player body.  Omit the second parameter to return to default
+ * Sets a player body. Omit the second parameter to return to default
  *
  * @note				The body does not revert on death, teamswitch, gestation, etc.
  *
@@ -115,7 +115,7 @@ native ns_set_player_skin(id, skin=-1);
  * @param body			The body number to change to.
  * @noreturn
  */
-native ns_set_player_body(id, body=-1);
+native ns_set_player_body(id, body = -1);
 
 /**
  * Set this to modify the player's speed by a certain amount.
@@ -123,10 +123,10 @@ native ns_set_player_body(id, body=-1);
  * @note				The speed does not revert on death, teamswitch, gestation, etc.
  *
  * @param id			The player id to change.
- * @param speedchange	The speed to modify the player speed by.  Set to 0 to revert to default speed.
+ * @param speedchange	The speed to modify the player speed by. Set to 0 to revert to default speed.
  * @noreturn
  */
-native ns_set_speedchange(id, speedchange=0);
+native ns_set_speedchange(id, speedchange = 0);
 
 /**
  * Returns a client's current speed modifier.
@@ -144,11 +144,11 @@ native ns_get_speedchange(id);
  */
 native ns_get_maxspeed(id);
 
-/* Returns whether or not this mask is set from the entity's iuser4 field.  Use the "mask" enum for reference. */
-native ns_get_mask(id,mask);
+/* Returns whether or not this mask is set from the entity's iuser4 field. Use the "mask" enum for reference. */
+native ns_get_mask(id, mask);
 
 /* Sets or removes the mask from the entity's iuser4 field. Set "value" to 1 to turn the mask on, 0 to turn it off. */
-native ns_set_mask(id,mask,value);
+native ns_set_mask(id, mask, value);
 
 /* Returns built/unbuilt structures.
 	If:
@@ -156,33 +156,33 @@ native ns_set_mask(id,mask,value);
 			Only fully built structures are counted.
 		builtOnly is 0:
 			Any structure meeting the classname is counted.
-		
+
 		Number is 0 (default):
 			The total number of matching structures is returned.
 		Number is any other value:
 			The index of the #th matching structure is returned.
 */
-native ns_get_build(const classname[],builtOnly=1,Number=0);
+native ns_get_build(const classname[], builtOnly = 1, Number = 0);
 
 /* Returns if the player has the weapon or not in their pev->weapons field.
    set "setweapon" to 0 to turn the bit off, set to 1 to turn it on. Or omit it to just return the value. */
-native ns_has_weapon(id,weapon,setweapon=-1);
+native ns_has_weapon(id, weapon, setweapon = -1);
 
-/* Gets spawn point for specified team (type). 
+/* Gets spawn point for specified team (type).
 	If:
 		Team is equal to 0:
 			Ready room spawns are returned.
 		Team is greater than 0:
 			Spawns for the team are returned.
-			
+
 		Number is equal to 0:
 			Total number of spawns is returned.
 		Number is greater than 0:
 			The location of the specified spawn is returned.
 */
-native ns_get_spawn(team,number=0,Float:ret[3]);
+native ns_get_spawn(team, number = 0, Float:ret[3]);
 
-/* Returns the class of the player.  Look in the classes enum in ns_const.inc for the value's meaning. */
+/* Returns the class of the player. Look in the classes enum in ns_const.inc for the value's meaning. */
 native ns_get_class(id);
 
 /**
@@ -269,20 +269,20 @@ native Float:ns_add_res(id, Float:amount);
 
 /**
  * Returns the team's resources.
- * 
+ *
  * @param Team		1 for teama, 2 for teamb. (eg: in MvA maps, 1 is marines,
-					2 is aliens.  In mvm, 1 is marine1, 2 is marine2)
+					2 is aliens. In mvm, 1 is marine1, 2 is marine2)
  * @return			The amount of resources in this team's resource pool.
  */
 native Float:ns_get_teamres(Team);
 
 /**
  * Sets the team's resources in the resource pool.
- * 
+ *
  * @note			If this is used on an alien team, the resources will be
  *					distributed between all of the players who need resources.
  * @param Team		1 for teama, 2 for teamb. (eg: in MvA maps, 1 is marines,
- *					2 is aliens.  In mvm, 1 is marine1, 2 is marine2)
+ *					2 is aliens. In mvm, 1 is marine1, 2 is marine2)
  * @param value	The amount to set the resources to set to.
  * @noreturn
  */
@@ -290,15 +290,15 @@ native ns_set_teamres(Team, Float:value);
 
 /**
  * Adds to the team's resources in the resource pool.
- * 
+ *
  * @note			If this is used on an alien team, the resources will be
  *					distributed between all of the players who need resources.
  * @param Team		1 for teama, 2 for teamb. (eg: in MvA maps, 1 is marines,
- *					2 is aliens.  In mvm, 1 is marine1, 2 is marine2)
+ *					2 is aliens. In mvm, 1 is marine1, 2 is marine2)
  * @param value	The amount to set the resources to add to the pool
  * @return			The new amount of resources in the resource pool.
  */
-native Float:ns_add_teamres(Team,Float:value);
+native Float:ns_add_teamres(Team, Float:value);
 
 
 /**
@@ -318,7 +318,7 @@ native Float:ns_get_exp(id);
  * @param exp		The amount of experience this player will have.
  * @noreturn
  */
-native ns_set_exp(id,Float:exp);
+native ns_set_exp(id, Float:exp);
 
 /**
  * Adds to the player's experience.
@@ -354,7 +354,7 @@ native ns_set_points(id, points);
  * @param value	The value to add to the points spent.
  * @return			The new value of the points spent variable.
  */
-native ns_add_points(id,points);
+native ns_add_points(id, points);
 
 /**
  * Gets the damage for this weapon.
@@ -422,7 +422,7 @@ native ns_set_weap_clip(idWeapon, clipsize);
  * @param weapon	The weapon type to check ammo count for.
  * @return			The ammunition count in the player's reserve.
  */
-native ns_get_weap_reserve(id,weapon);
+native ns_get_weap_reserve(id, weapon);
 
 /**
  * Sets the player's weapon reserve (backpack ammo) for the specified
@@ -434,7 +434,7 @@ native ns_get_weap_reserve(id,weapon);
  * @param ammo		The ammunition count to set.
  * @noreturn
  */
-native ns_set_weap_reserve(id,weapon,ammo);
+native ns_set_weap_reserve(id, weapon, ammo);
 
 /**
  * Gets the player's score.
@@ -458,33 +458,33 @@ native ns_set_score(idPlayer, score);
 /* Adds to a player's score
  * Returns the new score on success
  */
-native ns_add_score(idPlayer,score);
+native ns_add_score(idPlayer, score);
 
 /* Gets a player's death count. */
 native ns_get_deaths(idPlayer);
 
 /* Sets a player's death count. */
-native ns_set_deaths(idPlayer,numdeaths);
+native ns_set_deaths(idPlayer, numdeaths);
 
 /* Adds to a player's death count
  * Returns the new death count on success
  */
-native ns_add_deaths(idPlayer,numdeaths);
+native ns_add_deaths(idPlayer, numdeaths);
 
 /* Gets the index of the owner of a structure. -1 for no owner. */
 native ns_get_struct_owner(idStructsure);
 
 /* Sets the index of the owner of a structure. -1 for no owner. */
-native ns_set_struct_owner(idStructure,indexOwner);
+native ns_set_struct_owner(idStructure, indexOwner);
 
-/* Gets the trait type tied to the hive.  Look at the hivetrait enum for the values. */
+/* Gets the trait type tied to the hive. Look at the hivetrait enum for the values. */
 native ns_get_hive_trait(idHive);
 
-/* Sets the trait type tied to the hive.  Look at the hivetrait enum for the values. */
-native ns_set_hive_trait(idHive,trait);
+/* Sets the trait type tied to the hive. Look at the hivetrait enum for the values. */
+native ns_set_hive_trait(idHive, trait);
 
 /* Sets the players field of view, set "_fov" to 0.0 (or omit it) to return to normal. FOV change will persist until disconnect unless reset by a plugin */
-native ns_set_fov(idPlayer,Float:_fov=0.0);
+native ns_set_fov(idPlayer, Float:_fov = 0.0);
 
 /**
  * Give the player an item.
@@ -504,7 +504,7 @@ native ns_give_item(id, const class[]);
  * @return			If ability is != 0, returns 1 or 0 depending on if the client has the ability.
  *					If ability is 0, returns the number of active hives.
  */
-native ns_get_hive_ability(idPlayer, ability=0);
+native ns_get_hive_ability(idPlayer, ability = 0);
 
 /**
  * Triggered whenever a client's pev->team changes.
@@ -543,15 +543,15 @@ native ns_takedamage(IDVictim, IDInflictor, IDAttacker, Float:Damage, DamageType
 /**
  * Attempts to unstick a player.
  *
- * @param id				Player to unstick.
- * @param StartDistance	Distance to start from the player to check for a new location.
- * @param MaxAttempts		How many attempts to try to find a new spot before giving up.
- * @return					1 on success, 0 on cannot find a place to move player to,
- *							-1 on invalid state (stunned/webbed), -2 on invalid class (comm/egg)
- *							-3 if the player is dead or a spectator, -4 on invalid player,
- *							-5 if the player is not connected.
+ * @param id               Player to unstick.
+ * @param StartDistance    Distance to start from the player to check for a new location.
+ * @param MaxAttempts      How many attempts to try to find a new spot before giving up.
+ * @return                 1 on success, 0 on cannot find a place to move player to,
+ *                         -1 on invalid state (stunned/webbed), -2 on invalid class (comm/egg)
+ *                         -3 if the player is dead or a spectator, -4 on invalid player,
+ *                         -5 if the player is not connected.
  */
-native ns_unstick_player(id, StartDistance=32, MaxAttempts=128);
+native ns_unstick_player(id, StartDistance = 32, MaxAttempts = 128);
 
 /**
  * Whether or not there is a game in progress.
@@ -577,7 +577,7 @@ forward round_end(Float:roundtime);
 
 forward map_reset(isload);
 
-native ns_get_weapon(idPlayer,weaponid,&weapontype=0);
+native ns_get_weapon(idPlayer, weaponid, &weapontype = 0);
 
 /* Returns the location name of the provided x/y position
  * (z origin is ignored; can't have location over location)
@@ -591,7 +591,7 @@ native ns_get_weapon(idPlayer,weaponid,&weapontype=0);
  * Passing the 5th parameter as non zero will auto look up
  * the title if it exists.
  */
-native ns_get_locationname(Float:x, Float:y, name[], len, titlelookup=0);
+native ns_get_locationname(Float:x, Float:y, name[], len, titlelookup = 0);
 
 /* Looks up a key from titles.txt
  * Returns -1 if the key is not found
@@ -605,7 +605,7 @@ native ns_lookup_title(const KeyName[], Output[], length);
  */
 native ns_build_structure(idStructure);
 
-/* Forces the structure to begin recycling 
+/* Forces the structure to begin recycling
  * Passing an index other than a marine structure will
  * have undefined results!
  * -
@@ -636,13 +636,13 @@ native Float:ns_get_weld_time(idWeldable);
 /* Sets the total time needed to weld this
  * func_weldable shut.
  */
-native ns_set_weld_time(idWeldable,Float:value);
+native ns_set_weld_time(idWeldable, Float:value);
 
-/* Adds to the weldable's time required to open. 
+/* Adds to the weldable's time required to open.
  * Returns the new required time on success.
  * Note this native clamps the low value to 0.
  */
-native Float:ns_add_weld_time(idWeldable,Float:value);
+native Float:ns_add_weld_time(idWeldable, Float:value);
 
 /* Gets the total time this func_weldable
  * has been welded.
@@ -652,23 +652,23 @@ native Float:ns_get_weld_done(idWeldable);
 /* Sets the total time this func_weldable
  * has been welded.
  */
-native ns_set_weld_done(idWeldable,Float:value);
+native ns_set_weld_done(idWeldable, Float:value);
 
 /* Adds to the total time this func_weldable
- * has been welded.  Returns the new value.
+ * has been welded. Returns the new value.
  * Note this native clamps the low value to 0.0
  */
-native Float:ns_add_weld_done(idWeldable,Float:value);
+native Float:ns_add_weld_done(idWeldable, Float:value);
 
 /* Gets/sets/adds to the energy pool of this observatory. */
 native Float:ns_get_obs_energy(idObs);
-native ns_set_obs_energy(idObs,Float:value);
-native Float:ns_add_obs_energy(idObs,Float:value);
+native ns_set_obs_energy(idObs, Float:value);
+native Float:ns_add_obs_energy(idObs, Float:value);
 
 /**
  * Removes an upgrade from the player's bought and active upgrade lists.
  * This will not refund the points spent on the upgrade, nor will it
- * immediately strip the upgrade if the player is alive.  Rather, it will
+ * immediately strip the upgrade if the player is alive. Rather, it will
  * make it so the player no longer receives the upgrade on spawn.
  *
  * @note This only works in combat.
@@ -694,7 +694,7 @@ native ns_remove_upgrade(idPlayer, upgrade);
 
 /* Creates a handle to the a particle system to configure
  * -
- * Note! this is not a particle system you can pass to 
+ * Note! this is not a particle system you can pass to
  * ns_fire_ps()!
  */
 native RawPS:ns_create_ps();
@@ -710,12 +710,12 @@ native ns_set_ps_name(RawPS:system, const name[]);
 /* Sets the sprite to use for the particle system
  * -
  * You do NOT have to precache the sprite, BUT
- * the sprite must obviously be on the client to 
+ * the sprite must obviously be on the client to
  * display.
  */
 native ns_set_ps_sprite(RawPS:system, const sprite[]);
 
-/* Finalizes the particle system.  Do not configure it after this.
+/* Finalizes the particle system. Do not configure it after this.
  * A usable particle system handle is returned.
  */
 native Particle:ns_spawn_ps(RawPS:system);
@@ -724,15 +724,15 @@ native Particle:ns_spawn_ps(RawPS:system);
  * Flags are the FEV_* defines from hlsdk_const.inc
  * Only use handles returned by ns_spawn_ps or ns_get_ps_id here!
  */
-native ns_fire_ps(Particle:system,const Float:origin[3],const Float:angles[3]={0.0,0.0,0.0}, flags=0);
+native ns_fire_ps(Particle:system, const Float:origin[3], const Float:angles[3] = {0.0, 0.0, 0.0}, flags = 0);
 
 /* Looks up a particle system by name
  * Returns a usable particle system handle.
  */
 native Particle:ns_get_ps_id(const Name[]);
 
-/* The following are the parameters for configuring the 
- * particle system.  Look through the fgd and NSPSEdit
+/* The following are the parameters for configuring the
+ * particle system. Look through the fgd and NSPSEdit
  * for details!
  */
 native ns_set_ps_genrate(RawPS:system, genrate);

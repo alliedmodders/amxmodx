@@ -101,7 +101,7 @@ enum /*RegexError*/
  * @note  Use this if you intend on using the same expression multiple times.
  *        Pass the regex handle returned here to regex_match_c to check for matches.
  *
- * @note  This handle is automatically freed on map change.  However,
+ * @note  This handle is automatically freed on map change. However,
  *        if you are completely done with it before then, you should
  *        call regex_free on this handle.
  *
@@ -122,7 +122,7 @@ enum /*RegexError*/
  *
  * @return              -1 on error in the pattern, > valid regex handle (> 0) on success.
  */
-native Regex:regex_compile(const pattern[], &ret = 0, error[] = "", maxLen = 0, const flags[]="");
+native Regex:regex_compile(const pattern[], &ret = 0, error[] = "", maxLen = 0, const flags[] = "");
 
 /**
  * Matches a string against a pre-compiled regular expression pattern.
@@ -313,9 +313,9 @@ stock regex_match_simple(const str[], const pattern[], flags = 0, error[]= "", m
 /**
  * Flags used with regex_replace to control the replacement behavior.
  */
-#define REGEX_FORMAT_DEFAULT   0       /* Uses the standard formatting rules to replace matches */
-#define REGEX_FORMAT_NOCOPY    (1<<0)  /* The sections that do not match the regular expression are not copied when replacing matches. */
-#define REGEX_FORMAT_FIRSTONLY (1<<1)  /* Only the first occurrence of a regular expression is replaced. */
+#define REGEX_FORMAT_DEFAULT   0         /* Uses the standard formatting rules to replace matches */
+#define REGEX_FORMAT_NOCOPY    (1 << 0)  /* The sections that do not match the regular expression are not copied when replacing matches. */
+#define REGEX_FORMAT_FIRSTONLY (1 << 1)  /* Only the first occurrence of a regular expression is replaced. */
 
 /**
  * Perform a regular expression search and replace.

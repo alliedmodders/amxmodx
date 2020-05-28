@@ -18,7 +18,7 @@
 
 /**
  * Everything below describes the SMC Parse, or "SourceMod Configuration" format.
- * This parser is entirely event based.  You must hook events to receive data.
+ * This parser is entirely event based. You must hook events to receive data.
  * The file format itself is nearly identical to Valve's KeyValues format (also known as VDF).
  */
 

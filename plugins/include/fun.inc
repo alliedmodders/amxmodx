@@ -33,14 +33,14 @@ const HITZONE_LEFTARM  = (1 << HIT_LEFTARM);   // 16
 const HITZONE_RIGHTARM = (1 << HIT_RIGHTARM);  // 32
 const HITZONE_LEFTLEG  = (1 << HIT_LEFTLEG);   // 64
 const HITZONE_RIGHTLEG = (1 << HIT_RIGHTLEG);  // 128
-const HITZONES_DEFAULT = HITZONE_GENERIC | HITZONE_HEAD     | HITZONE_CHEST   | HITZONE_STOMACH | 
+const HITZONES_DEFAULT = HITZONE_GENERIC | HITZONE_HEAD     | HITZONE_CHEST   | HITZONE_STOMACH |
                          HITZONE_LEFTARM | HITZONE_RIGHTARM | HITZONE_LEFTLEG | HITZONE_RIGHTLEG; // 255
 
 /**
  * Tells whether receiver hears sender via voice communication.
  *
  * @param receiver      Receiver
- * @param sender        Sender 
+ * @param sender        Sender
  *
  * @return              1 if receiver hears the sender, 0 otherwise.
  * @error               If receiver or sender are not connected or not

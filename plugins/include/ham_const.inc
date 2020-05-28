@@ -38,7 +38,7 @@
  *       careful, and test carefully and adequately!
  * @note All functions take (and pass) a "this" index as the first param.
  *       This is the entity from which the function is being executed on.
- * @note All functions and forwards (eg: {Register,Execute}Ham[B]) require
+ * @note All functions and forwards (eg: {Register, Execute} Ham[B]) require
  *       the mod to have the pev and base keys in addition to the function
  *       keys for the corresponding mod/operating system in gamedata
  * @note Some functions that return booleans may need to be logically ANDed
@@ -121,7 +121,7 @@ enum Ham
 	 * Description:		Usually called whenever an entity gets attacked by a hitscan (such as a gun) weapon.
 	 *					Use the get/set tr2 natives in fakemeta to handle the traceresult data.
 	 *					Do not use a handle of 0 as a traceresult in execution, use create_tr2() from Fakemeta
-	 *					to pass a custom handle instead.  (Don't forget to free the handle when you're done.)
+	 *					to pass a custom handle instead. (Don't forget to free the handle when you're done.)
 	 * Forward params:	function(this, idattacker, Float:damage, Float:direction[3], traceresult, damagebits)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_TraceAttack, this, idattacker, Float:damage, Float:direction[3], tracehandle, damagebits);
@@ -607,7 +607,7 @@ enum Ham
 	Ham_Player_ImpulseCommands,
 
 	/**
-	 * Description:		Updates the client's data for hud changes (such as ammo).  Usually called every frame.
+	 * Description:		Updates the client's data for hud changes (such as ammo). Usually called every frame.
 	 *					This function is not supported by Team Fortress Classic mod.
 	 * Forward param:	function(this)
 	 * Return type:		None.
@@ -1146,7 +1146,7 @@ enum Ham
 	Ham_NS_GetPointValue,
 
 	/**
-	 * Description:		Unsure.  Probably awards this with the killing of idvictim.
+	 * Description:		Unsure. Probably awards this with the killing of idvictim.
 	 * Forward params:	function(this, idvictim)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_NS_AwardKill, this, idvictim);
@@ -1183,7 +1183,7 @@ enum Ham
 	Ham_TS_GiveSlowMul,
 
 	/**
-	 * Description:		Unsure.  The second paramater is actually a char.
+	 * Description:		Unsure. The second paramater is actually a char.
 	 * Forward params:	function(this, Float:someval, someotherval)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_TS_GoSlow, this, Float:someval, someotherval)

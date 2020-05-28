@@ -15,7 +15,7 @@
 // Notes - Read the comments! Make sure your plugins use
 //  nice ANSI SQL and don't use database column names like "key"
 //  otherwise this API will be a nightmare
-// 
+//
 // Never do error checking with the not operator! This is bad:
 //   if (!dbi_query())
 // You should do:
@@ -38,13 +38,13 @@
 
 enum Sql
 {
-	SQL_FAILED=0,
+	SQL_FAILED = 0,
 	SQL_OK
 };
 
 enum Result
 {
-	RESULT_FAILED=-1,
+	RESULT_FAILED = -1,
 	RESULT_NONE,
 	RESULT_OK
 };
@@ -54,7 +54,7 @@ enum Result
  * The return value will otherwise be a resource handle, not an
  * OK code or cell pointer.
  */
-native Sql:dbi_connect(_host[], _user[], _pass[], _dbname[], _error[]="", _maxlength=0);
+native Sql:dbi_connect(_host[], _user[], _pass[], _dbname[], _error[] = "", _maxlength = 0);
 
 /* This will do a simple query execution on the SQL server.
  * If it fails, it will return a number BELOW ZERO (0)
@@ -75,8 +75,8 @@ native Result:dbi_query2(Sql:_sql, &rows, _query[], any:...);
  */
 native dbi_nextrow(Result:_result);
 
-/* Gets a field by number.  Returns 0 on failure.
- * Although internally fields always start from 0, 
+/* Gets a field by number. Returns 0 on failure.
+ * Although internally fields always start from 0,
  * This function takes fieldnum starting from 1.
  * No extra params: returns int
  * One extra param: returns Float: byref
@@ -84,7 +84,7 @@ native dbi_nextrow(Result:_result);
  */
 native dbi_field(Result:_result, _fieldnum, any:... );
 
-/* Gets a field by name.  Returns 0 on failure.
+/* Gets a field by name. Returns 0 on failure.
  * One extra param: returns Float: byref
  * Two extra param: Stores string with length
  */
@@ -94,24 +94,24 @@ native dbi_result(Result:_result, _field[], any:... );
  */
 native dbi_num_rows(Result:_result);
 
-/* Frees memory used by a result handle.  Do this or get memory leaks.
+/* Frees memory used by a result handle. Do this or get memory leaks.
  */
 native dbi_free_result(&Result:result);
 
-/* Closes a database handle.  Internally, it will also 
+/* Closes a database handle. Internally, it will also
  * mark the handle as free, so this particular handle may
  * be re-used in the future to save time.
  */
 native dbi_close(&Sql:_sql);
 
-/* Returns an error message set.  For PGSQL and MySQL,
+/* Returns an error message set. For PGSQL and MySQL,
  * this is a direct error return from the database handle/API.
- * For MSSQL, it returns the last error message found from a 
+ * For MSSQL, it returns the last error message found from a
  * thrown exception.
  */
 native dbi_error(Sql:_sql, _error[], _len);
 
-/* Returns the type of database being used.  So far:
+/* Returns the type of database being used. So far:
  * "mysql", "pgsql", "mssql", "sqlite"
  */
 native dbi_type(_type[], _len);
@@ -128,7 +128,7 @@ native dbi_field_name(Result:result, field, name[], maxLength);
 
 /* This function can be used to find out if a table in a Sqlite database exists.
  */
-stock bool:sqlite_table_exists(Sql:sql, table[]) 
+stock bool:sqlite_table_exists(Sql:sql, table[])
 {
 	new bool:exists;
 	new query[128];

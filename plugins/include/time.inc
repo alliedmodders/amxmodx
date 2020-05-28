@@ -17,7 +17,7 @@
 #define _time_included
 
 /* Time unit types for get_time_length() */
-enum 
+enum
 {
     timeunit_seconds = 0,
     timeunit_minutes,
@@ -88,7 +88,7 @@ stock get_time_length(id, unitCnt, type, output[], outputLen)
         if (secondCnt > 0)
             format(timeElement[++maxElementIdx], charsmax(timeElement[]), "%i %L", secondCnt, id, (secondCnt == 1) ? "TIME_ELEMENT_SECOND" : "TIME_ELEMENT_SECONDS");
 
-        switch(maxElementIdx)
+        switch (maxElementIdx)
         {
             case 0: formatex(output, outputLen, "%s", timeElement[0]);
             case 1: formatex(output, outputLen, "%s %L %s", timeElement[0], id, "TIME_ELEMENT_AND", timeElement[1]);

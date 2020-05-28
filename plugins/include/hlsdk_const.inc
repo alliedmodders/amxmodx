@@ -19,56 +19,56 @@
 /**
  * pev(entity, pev_button) or pev(entity, pev_oldbuttons) values
  */
-#define IN_ATTACK                       (1<<0)
-#define IN_JUMP                         (1<<1)
-#define IN_DUCK                         (1<<2)
-#define IN_FORWARD                      (1<<3)
-#define IN_BACK                         (1<<4)
-#define IN_USE                          (1<<5)
-#define IN_CANCEL                       (1<<6)
-#define IN_LEFT                         (1<<7)
-#define IN_RIGHT                        (1<<8)
-#define IN_MOVELEFT                     (1<<9)
-#define IN_MOVERIGHT                    (1<<10)
-#define IN_ATTACK2                      (1<<11)
-#define IN_RUN                          (1<<12)
-#define IN_RELOAD                       (1<<13)
-#define IN_ALT1                         (1<<14)
-#define IN_SCORE                        (1<<15)     // Used by client.dll for when scoreboard is held down
+#define IN_ATTACK                       (1 << 0)
+#define IN_JUMP                         (1 << 1)
+#define IN_DUCK                         (1 << 2)
+#define IN_FORWARD                      (1 << 3)
+#define IN_BACK                         (1 << 4)
+#define IN_USE                          (1 << 5)
+#define IN_CANCEL                       (1 << 6)
+#define IN_LEFT                         (1 << 7)
+#define IN_RIGHT                        (1 << 8)
+#define IN_MOVELEFT                     (1 << 9)
+#define IN_MOVERIGHT                    (1 << 10)
+#define IN_ATTACK2                      (1 << 11)
+#define IN_RUN                          (1 << 12)
+#define IN_RELOAD                       (1 << 13)
+#define IN_ALT1                         (1 << 14)
+#define IN_SCORE                        (1 << 15)   // Used by client.dll for when scoreboard is held down
 
 /**
  * pev(entity, pev_flags) values
  */
-#define FL_FLY                          (1<<0)      // Changes the SV_Movestep() behavior to not need to be on ground
-#define FL_SWIM                         (1<<1)      // Changes the SV_Movestep() behavior to not need to be on ground (but stay in water)
-#define FL_CONVEYOR                     (1<<2)
-#define FL_CLIENT                       (1<<3)
-#define FL_INWATER                      (1<<4)
-#define FL_MONSTER                      (1<<5)
-#define FL_GODMODE                      (1<<6)
-#define FL_NOTARGET                     (1<<7)
-#define FL_SKIPLOCALHOST                (1<<8)      // Don't send entity to local host, it's predicting this entity itself
-#define FL_ONGROUND                     (1<<9)      // At rest / on the ground
-#define FL_PARTIALGROUND                (1<<10)     // Not all corners are valid
-#define FL_WATERJUMP                    (1<<11)     // Player jumping out of water
-#define FL_FROZEN                       (1<<12)     // Player is frozen for 3rd person camera
-#define FL_FAKECLIENT                   (1<<13)     // JAC: fake client, simulated server side; don't send network messages to them
-#define FL_DUCKING                      (1<<14)     // Player flag -- Player is fully crouched
-#define FL_FLOAT                        (1<<15)     // Apply floating force to this entity when in water
-#define FL_GRAPHED                      (1<<16)     // Worldgraph has this ent listed as something that blocks a connection
-#define FL_IMMUNE_WATER                 (1<<17)
-#define FL_IMMUNE_SLIME                 (1<<18)
-#define FL_IMMUNE_LAVA                  (1<<19)
-#define FL_PROXY                        (1<<20)     // This is a spectator proxy
-#define FL_ALWAYSTHINK                  (1<<21)     // Brush model flag -- call think every frame regardless of nextthink - ltime (for constantly changing velocity/path)
-#define FL_BASEVELOCITY                 (1<<22)     // Base velocity has been applied this frame (used to convert base velocity into momentum)
-#define FL_MONSTERCLIP                  (1<<23)     // Only collide in with monsters who have FL_MONSTERCLIP set
-#define FL_ONTRAIN                      (1<<24)     // Player is _controlling_ a train, so movement commands should be ignored on client during prediction.
-#define FL_WORLDBRUSH                   (1<<25)     // Not moveable/removeable brush entity (really part of the world, but represented as an entity for transparency or something)
-#define FL_SPECTATOR                    (1<<26)     // This client is a spectator, don't run touch functions, etc.
-#define FL_CUSTOMENTITY                 (1<<29)     // This is a custom entity
-#define FL_KILLME                       (1<<30)     // This entity is marked for death -- This allows the engine to kill ents at the appropriate time
-#define FL_DORMANT                      (1<<31)     // Entity is dormant, no updates to client
+#define FL_FLY                          (1 << 0)    // Changes the SV_Movestep() behavior to not need to be on ground
+#define FL_SWIM                         (1 << 1)    // Changes the SV_Movestep() behavior to not need to be on ground (but stay in water)
+#define FL_CONVEYOR                     (1 << 2)
+#define FL_CLIENT                       (1 << 3)
+#define FL_INWATER                      (1 << 4)
+#define FL_MONSTER                      (1 << 5)
+#define FL_GODMODE                      (1 << 6)
+#define FL_NOTARGET                     (1 << 7)
+#define FL_SKIPLOCALHOST                (1 << 8)    // Don't send entity to local host, it's predicting this entity itself
+#define FL_ONGROUND                     (1 << 9)    // At rest / on the ground
+#define FL_PARTIALGROUND                (1 << 10)   // Not all corners are valid
+#define FL_WATERJUMP                    (1 << 11)   // Player jumping out of water
+#define FL_FROZEN                       (1 << 12)   // Player is frozen for 3rd person camera
+#define FL_FAKECLIENT                   (1 << 13)   // JAC: fake client, simulated server side; don't send network messages to them
+#define FL_DUCKING                      (1 << 14)   // Player flag -- Player is fully crouched
+#define FL_FLOAT                        (1 << 15)   // Apply floating force to this entity when in water
+#define FL_GRAPHED                      (1 << 16)   // Worldgraph has this ent listed as something that blocks a connection
+#define FL_IMMUNE_WATER                 (1 << 17)
+#define FL_IMMUNE_SLIME                 (1 << 18)
+#define FL_IMMUNE_LAVA                  (1 << 19)
+#define FL_PROXY                        (1 << 20)   // This is a spectator proxy
+#define FL_ALWAYSTHINK                  (1 << 21)   // Brush model flag -- call think every frame regardless of nextthink - ltime (for constantly changing velocity/path)
+#define FL_BASEVELOCITY                 (1 << 22)   // Base velocity has been applied this frame (used to convert base velocity into momentum)
+#define FL_MONSTERCLIP                  (1 << 23)   // Only collide in with monsters who have FL_MONSTERCLIP set
+#define FL_ONTRAIN                      (1 << 24)   // Player is _controlling_ a train, so movement commands should be ignored on client during prediction.
+#define FL_WORLDBRUSH                   (1 << 25)   // Not moveable/removeable brush entity (really part of the world, but represented as an entity for transparency or something)
+#define FL_SPECTATOR                    (1 << 26)   // This client is a spectator, don't run touch functions, etc.
+#define FL_CUSTOMENTITY                 (1 << 29)   // This is a custom entity
+#define FL_KILLME                       (1 << 30)   // This entity is marked for death -- This allows the engine to kill ents at the appropriate time
+#define FL_DORMANT                      (1 << 31)   // Entity is dormant, no updates to client
 
 /**
  * engfunc(EngFunc_WalkMove, entity, Float:yaw, Float:dist, iMode) iMode values
@@ -183,39 +183,39 @@
  * message.
  */
 #define DMG_GENERIC                     0           // Generic damage was done
-#define DMG_CRUSH                       (1<<0)      // Crushed by falling or moving object
-#define DMG_BULLET                      (1<<1)      // Shot
-#define DMG_SLASH                       (1<<2)      // Cut, clawed, stabbed
-#define DMG_BURN                        (1<<3)      // Heat burned
-#define DMG_FREEZE                      (1<<4)      // Frozen
-#define DMG_FALL                        (1<<5)      // Fell too far
-#define DMG_BLAST                       (1<<6)      // Explosive blast damage
-#define DMG_CLUB                        (1<<7)      // Crowbar, punch, headbutt
-#define DMG_SHOCK                       (1<<8)      // Electric shock
-#define DMG_SONIC                       (1<<9)      // Sound pulse shockwave
-#define DMG_ENERGYBEAM                  (1<<10)     // Laser or other high energy beam
-#define DMG_NEVERGIB                    (1<<12)     // With this bit OR'd in, no damage type will be able to gib victims upon death
-#define DMG_ALWAYSGIB                   (1<<13)     // With this bit OR'd in, any damage type can be made to gib victims upon death.
-#define DMG_DROWN                       (1<<14)     // Drowning
-#define DMG_PARALYZE                    (1<<15)     // Slows affected creature down
-#define DMG_NERVEGAS                    (1<<16)     // Nerve toxins, very bad
-#define DMG_POISON                      (1<<17)     // Blood poisioning
-#define DMG_RADIATION                   (1<<18)     // Radiation exposure
-#define DMG_DROWNRECOVER                (1<<19)     // Drowning recovery
-#define DMG_ACID                        (1<<20)     // Toxic chemicals or acid burns
-#define DMG_SLOWBURN                    (1<<21)     // In an oven
-#define DMG_SLOWFREEZE                  (1<<22)     // In a subzero freezer
-#define DMG_MORTAR                      (1<<23)     // Hit by air raid (done to distinguish grenade from mortar)
-#define DMG_GRENADE                     (1<<24)     // Counter-Strike only - Hit by HE grenade
+#define DMG_CRUSH                       (1 << 0)    // Crushed by falling or moving object
+#define DMG_BULLET                      (1 << 1)    // Shot
+#define DMG_SLASH                       (1 << 2)    // Cut, clawed, stabbed
+#define DMG_BURN                        (1 << 3)    // Heat burned
+#define DMG_FREEZE                      (1 << 4)    // Frozen
+#define DMG_FALL                        (1 << 5)    // Fell too far
+#define DMG_BLAST                       (1 << 6)    // Explosive blast damage
+#define DMG_CLUB                        (1 << 7)    // Crowbar, punch, headbutt
+#define DMG_SHOCK                       (1 << 8)    // Electric shock
+#define DMG_SONIC                       (1 << 9)    // Sound pulse shockwave
+#define DMG_ENERGYBEAM                  (1 << 10)   // Laser or other high energy beam
+#define DMG_NEVERGIB                    (1 << 12)   // With this bit OR'd in, no damage type will be able to gib victims upon death
+#define DMG_ALWAYSGIB                   (1 << 13)   // With this bit OR'd in, any damage type can be made to gib victims upon death.
+#define DMG_DROWN                       (1 << 14)   // Drowning
+#define DMG_PARALYZE                    (1 << 15)   // Slows affected creature down
+#define DMG_NERVEGAS                    (1 << 16)   // Nerve toxins, very bad
+#define DMG_POISON                      (1 << 17)   // Blood poisioning
+#define DMG_RADIATION                   (1 << 18)   // Radiation exposure
+#define DMG_DROWNRECOVER                (1 << 19)   // Drowning recovery
+#define DMG_ACID                        (1 << 20)   // Toxic chemicals or acid burns
+#define DMG_SLOWBURN                    (1 << 21)   // In an oven
+#define DMG_SLOWFREEZE                  (1 << 22)   // In a subzero freezer
+#define DMG_MORTAR                      (1 << 23)   // Hit by air raid (done to distinguish grenade from mortar)
+#define DMG_GRENADE                     (1 << 24)   // Counter-Strike only - Hit by HE grenade
 #define DMG_TIMEBASED                   (~(0x3fff)) // Mask for time-based damage
 
 /**
 * Gib values used on client kill based on instant damage values
 */
-#define GIB_NORMAL                      0 // Gib if entity was overkilled
-#define GIB_NEVER                       1 // Never gib, no matter how much death damage is done ( freezing, etc )
-#define GIB_ALWAYS                      2 // Always gib ( Houndeye Shock, Barnacle Bite )
-#define GIB_TRY_HEALTH                	-9000 // Gib players if their health is under this value. (GIB_NEVER overrides this value)
+#define GIB_NORMAL                      0      // Gib if entity was overkilled
+#define GIB_NEVER                       1      // Never gib, no matter how much death damage is done (freezing, etc)
+#define GIB_ALWAYS                      2      // Always gib (Houndeye Shock, Barnacle Bite)
+#define GIB_TRY_HEALTH                  -9000  // Gib players if their health is under this value. (GIB_NEVER overrides this value)
 
 /**
  * Valid constants for fNoMonsters parameter of EngFunc_TraceLine,
@@ -238,7 +238,7 @@
 /**
  * global_get(glb_trace_flags)
  */
-#define FTRACE_SIMPLEBOX                (1<<0)      // Traceline with a simple box
+#define FTRACE_SIMPLEBOX                (1 << 0)    // Traceline with a simple box
 
 /**
  * Used with get/set_es(es_handle, ES_eFlags, ...) (entity_state data structure)
@@ -386,12 +386,12 @@
 /**
  * env_explosion
  */
-#define SF_ENVEXPLOSION_NODAMAGE        (1<<0)      // When set, ENV_EXPLOSION will not actually inflict damage
-#define SF_ENVEXPLOSION_REPEATABLE      (1<<1)      // Can this entity be refired?
-#define SF_ENVEXPLOSION_NOFIREBALL      (1<<2)      // Don't draw the fireball
-#define SF_ENVEXPLOSION_NOSMOKE         (1<<3)      // Don't draw the smoke
-#define SF_ENVEXPLOSION_NODECAL         (1<<4)      // Don't make a scorch mark
-#define SF_ENVEXPLOSION_NOSPARKS        (1<<5)      // Don't make a scorch mark
+#define SF_ENVEXPLOSION_NODAMAGE        (1 << 0)    // When set, ENV_EXPLOSION will not actually inflict damage
+#define SF_ENVEXPLOSION_REPEATABLE      (1 << 1)    // Can this entity be refired?
+#define SF_ENVEXPLOSION_NOFIREBALL      (1 << 2)    // Don't draw the fireball
+#define SF_ENVEXPLOSION_NOSMOKE         (1 << 3)    // Don't draw the smoke
+#define SF_ENVEXPLOSION_NODECAL         (1 << 4)    // Don't make a scorch mark
+#define SF_ENVEXPLOSION_NOSPARKS        (1 << 5)    // Don't make a scorch mark
 
 /**
  * func_tank
@@ -543,10 +543,10 @@
  * @note These are flags to indicate masking off various render parameters that
  *       are usually copied to the targets
  */
-#define SF_RENDER_MASKFX                (1<<0)
-#define SF_RENDER_MASKAMT               (1<<1)
-#define SF_RENDER_MASKMODE              (1<<2)
-#define SF_RENDER_MASKCOLOR             (1<<3)
+#define SF_RENDER_MASKFX                (1 << 0)
+#define SF_RENDER_MASKAMT               (1 << 1)
+#define SF_RENDER_MASKMODE              (1 << 2)
+#define SF_RENDER_MASKCOLOR             (1 << 3)
 
 /**
  * trigger_changelevel
@@ -650,7 +650,7 @@
 /**
  * Set this bit on guns and stuff that should never respawn
  */
-#define SF_NORESPAWN                    (1<<30)
+#define SF_NORESPAWN                    (1 << 30)
 
 /**
  * @endsection
@@ -694,31 +694,31 @@
 #define HLW_SATCHEL         14
 #define HLW_SNARK           15
 #define HLW_SUIT            31
-#define HLW_ALLWEAPONS      (~(1<<HLW_SUIT))
+#define HLW_ALLWEAPONS      (~(1 << HLW_SUIT))
 
 /**
  * Item's flags
  */
-#define ITEM_FLAG_SELECTONEMPTY     (1<<0)
-#define ITEM_FLAG_NOAUTORELOAD      (1<<1)
-#define ITEM_FLAG_NOAUTOSWITCHEMPTY (1<<2)
-#define ITEM_FLAG_LIMITINWORLD      (1<<3)
-#define ITEM_FLAG_EXHAUSTIBLE       (1<<4)
+#define ITEM_FLAG_SELECTONEMPTY     (1 << 0)
+#define ITEM_FLAG_NOAUTORELOAD      (1 << 1)
+#define ITEM_FLAG_NOAUTOSWITCHEMPTY (1 << 2)
+#define ITEM_FLAG_LIMITINWORLD      (1 << 3)
+#define ITEM_FLAG_EXHAUSTIBLE       (1 << 4)
 
 /**
 * PlaybackEvent flags
 */
-#define FEV_NOTHOST     (1<<0)  // Skip local host for event send.
-#define FEV_RELIABLE    (1<<1)  // Send the event reliably.  You must specify the origin and angles
-                                // for this to work correctly on the server for anything
-                                // that depends on the event origin/angles.  I.e., the origin/angles are not
-                                // taken from the invoking edict for reliable events.
-#define FEV_GLOBAL      (1<<2)  // Don't restrict to PAS/PVS, send this event to _everybody_ on the server ( useful for stopping CHAN_STATIC
-                                //  sounds started by client event when client is not in PVS anymore ( hwguy in TFC e.g. ).
-#define FEV_UPDATE      (1<<3)  // If this client already has one of these events in its queue, just update the event instead of sending it as a duplicate
-#define FEV_HOSTONLY    (1<<4)  // Only send to entity specified as the invoker
-#define FEV_SERVER      (1<<5)  // Only send if the event was created on the server.
-#define FEV_CLIENT      (1<<6)  // Only issue event client side ( from shared code )
+#define FEV_NOTHOST     (1 << 0)  // Skip local host for event send.
+#define FEV_RELIABLE    (1 << 1)  // Send the event reliably. You must specify the origin and angles
+                                  // for this to work correctly on the server for anything
+                                  // that depends on the event origin/angles. I.e., the origin/angles are not
+                                  // taken from the invoking edict for reliable events.
+#define FEV_GLOBAL      (1 << 2)  // Don't restrict to PAS/PVS, send this event to _everybody_ on the server (useful for stopping CHAN_STATIC
+                                  //  sounds started by client event when client is not in PVS anymore (hwguy in TFC e.g.).
+#define FEV_UPDATE      (1 << 3)  // If this client already has one of these events in its queue, just update the event instead of sending it as a duplicate
+#define FEV_HOSTONLY    (1 << 4)  // Only send to entity specified as the invoker
+#define FEV_SERVER      (1 << 5)  // Only send if the event was created on the server.
+#define FEV_CLIENT      (1 << 6)  // Only issue event client side (from shared code)
 
 /**
  * Cap bits to indicate what an object's capabilities are, currently used for
@@ -733,12 +733,13 @@
 #define FCAP_ONOFF_USE                  0x00000020      // can be used by the player
 #define FCAP_DIRECTIONAL_USE            0x00000040      // Player sends +/- 1 when using (currently only tracktrains)
 #define FCAP_MASTER                     0x00000080      // Can be used to "master" other entities (like multisource)
-#define FCAP_MUST_RESET                 0x00000100 // Should reset on the new round
-#define FCAP_MUST_RELEASE               0x00000200 // Should release on the new round
-#define FCAP_DONT_SAVE                  0x80000000 // Don't save this
+#define FCAP_MUST_RESET                 0x00000100      // Should reset on the new round
+#define FCAP_MUST_RELEASE               0x00000200      // Should release on the new round
+#define FCAP_DONT_SAVE                  0x80000000      // Don't save this
 
 // UNDONE: This will ignore transition volumes (trigger_transition), but not the PVS!!!
-#define FCAP_FORCE_TRANSITION           0x00000080 // ALWAYS goes across transitions
+//
+#define FCAP_FORCE_TRANSITION           0x00000080      // ALWAYS goes across transitions
 
 /**
 * All monsters need this data
@@ -751,25 +752,25 @@
 /**
  * Player physics flags
  */
-#define PFLAG_ONLADDER                  (1<<0)
-#define PFLAG_ONSWING                   (1<<0)
-#define PFLAG_ONTRAIN                   (1<<1)
-#define PFLAG_ONBARNACLE                (1<<2)
-#define PFLAG_DUCKING                   (1<<3) // In the process of ducking, but totally squatted yet
-#define PFLAG_USING                     (1<<4) // Using a continuous entity
-#define PFLAG_OBSERVER                  (1<<5) // Player is locked in stationary cam mode. Spectators can move, observers can't.
+#define PFLAG_ONLADDER                  (1 << 0)
+#define PFLAG_ONSWING                   (1 << 0)
+#define PFLAG_ONTRAIN                   (1 << 1)
+#define PFLAG_ONBARNACLE                (1 << 2)
+#define PFLAG_DUCKING                   (1 << 3) // In the process of ducking, but totally squatted yet
+#define PFLAG_USING                     (1 << 4) // Using a continuous entity
+#define PFLAG_OBSERVER                  (1 << 5) // Player is locked in stationary cam mode. Spectators can move, observers can't.
 
 /**
 * Player hide HUD values
 */
-#define HIDEHUD_WEAPONS                 (1<<0)
-#define HIDEHUD_FLASHLIGHT              (1<<1)
-#define HIDEHUD_ALL                     (1<<2)
-#define HIDEHUD_HEALTH                  (1<<3)
-#define HIDEHUD_TIMER                   (1<<4)
-#define HIDEHUD_MONEY                   (1<<5)
-#define HIDEHUD_CROSSHAIR               (1<<6)
-#define HIDEHUD_OBSERVER_CROSSHAIR      (1<<7)
+#define HIDEHUD_WEAPONS                 (1 << 0)
+#define HIDEHUD_FLASHLIGHT              (1 << 1)
+#define HIDEHUD_ALL                     (1 << 2)
+#define HIDEHUD_HEALTH                  (1 << 3)
+#define HIDEHUD_TIMER                   (1 << 4)
+#define HIDEHUD_MONEY                   (1 << 5)
+#define HIDEHUD_CROSSHAIR               (1 << 6)
+#define HIDEHUD_OBSERVER_CROSSHAIR      (1 << 7)
 
 /**
 * Entity classification

@@ -38,7 +38,7 @@ native nvault_open(const name[]);
 
 /**
  * Retrieves a value from the given key.
- * 
+ *
  * @note An example of retrieving a string:
  *       nvault_get(vaultHandle, "myKey", myString, charsmax(myString));
  *
@@ -47,7 +47,7 @@ native nvault_open(const name[]);
  * @param ...           If three argument are given, gets a float value and
  *                      puts it in the third argument by reference.
  *                      If four arguments are given, gets a string from the
- *                      vault and copies it to the third argument, up to 
+ *                      vault and copies it to the third argument, up to
  *                      4th argument characters.
  *
  * @return              Result as integer if only the first two arguments
@@ -103,7 +103,7 @@ native nvault_pset(vault, const key[], const value[]);
 
 /**
  * Prunes the vault for entries that are within the given timestamps.
- * 
+ *
  * @note This will not erase values set with nvault_pset().
  * @note An example of pruning all entries that are older than 24 hours:
  *       nvault_prune(vaultHandle, 0, get_systime() - (60 * 60 * 24));
@@ -140,7 +140,7 @@ native nvault_remove(vault, const key[]);
 
 /**
  * "Touches" an entry in the vault, updating its timestamp.
- * 
+ *
  * @note If timestamp is equal to -1, it will use the current time.
  * @note An empty entry is created if one with the given key doesn't exist.
  *
@@ -151,4 +151,4 @@ native nvault_remove(vault, const key[]);
  * @noreturn
  * @error               On invalid vault handle.
  */
-native nvault_touch(vault, const key[], timestamp=-1);
+native nvault_touch(vault, const key[], timestamp = -1);

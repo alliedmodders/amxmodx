@@ -203,7 +203,7 @@ native set_cvar_flags(const cvar[], flags);
  *
  * @return          1 on success, 0 if cvar does not exist or is not permitted
  */
-native remove_cvar_flags(const cvar[], flags=-1);
+native remove_cvar_flags(const cvar[], flags = -1);
 
 /**
  * Gets a string value from a cvar. The cvar is accessed by name.

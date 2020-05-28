@@ -221,7 +221,7 @@ native TrieGetSize(Trie:handle);
 
 /**
  * Creates a snapshot of all keys in a hash map. If the map is changed
- * afterwards,  the changes are not reflected in the snapshot.
+ * afterwards, the changes are not reflected in the snapshot.
  * Keys are not sorted.
  *
  * @param handle    Map handle
@@ -291,10 +291,10 @@ native TrieSnapshotDestroy(&Snapshot:handle);
  * maps contents.
  *
  * @note Removing or adding keys to the underlying map will invalidate all its
- *       iterators. Updating values of existing keys is allowed and the changes 
+ *       iterators. Updating values of existing keys is allowed and the changes
  *       will be immediately reflected in the iterator.
  * @note Iterators are designed to be short-lived and not stored, and creating
- *       them is very cheap. Reading data from an iterator is just as fast as 
+ *       them is very cheap. Reading data from an iterator is just as fast as
  *       reading directly from the map.
  * @note Just like in snapshots the keys are not sorted.
  *

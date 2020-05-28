@@ -25,23 +25,23 @@
   #include <engine>
 #endif
 
-stock fakedamage(idvictim,const szClassname[],Float:takedmgdamage,damagetype)
+stock fakedamage(idvictim, const szClassname[], Float:takedmgdamage, damagetype)
 {
 	new entity = create_entity("trigger_hurt");
 	if (entity)
 	{
-		DispatchKeyValue(entity,"classname","trigger_hurt");
+		DispatchKeyValue(entity, "classname", "trigger_hurt");
 		new szDamage[16];
 		// Takedamages only do half damage per attack (damage is damage per second, and it's triggered in 0.5 second intervals).
 		// Compensate for that.
-		format(szDamage,15,"%f",takedmgdamage * 2);
-		DispatchKeyValue(entity,"dmg",szDamage);
-		format(szDamage,15,"%i",damagetype);
-		DispatchKeyValue(entity,"damagetype",szDamage);
-		DispatchKeyValue(entity,"origin","8192 8192 8192");
+		format(szDamage, 15, "%f", takedmgdamage * 2);
+		DispatchKeyValue(entity, "dmg", szDamage);
+		format(szDamage, 15, "%i", damagetype);
+		DispatchKeyValue(entity, "damagetype", szDamage);
+		DispatchKeyValue(entity, "origin", "8192 8192 8192");
 		DispatchSpawn(entity);
 		entity_set_string(entity, EV_SZ_classname, szClassname);
-		fake_touch(entity,idvictim);
+		fake_touch(entity, idvictim);
 		remove_entity(entity);
 		return 1;
 	}
@@ -81,9 +81,9 @@ stock get_entity_distance(ent1, ent2)
 stock get_grenade(id)
 {
 	new iGrenade = find_ent_by_class(-1, "grenade");
-	while(iGrenade > 0)
+	while (iGrenade > 0)
 	{
-		if(entity_get_edict(iGrenade, EV_ENT_owner) == id)
+		if (entity_get_edict(iGrenade, EV_ENT_owner) == id)
 			return iGrenade;
 
 		iGrenade = find_ent_by_class(iGrenade, "grenade");
@@ -100,7 +100,7 @@ stock get_brush_entity_origin(ent, Float:orig[3])
 	entity_get_vector(ent, EV_VEC_origin, orig);
 	entity_get_vector(ent, EV_VEC_mins, Min);
 	entity_get_vector(ent, EV_VEC_maxs, Max);
-	
+
 	orig[0] += (Min[0] + Max[0]) * 0.5;
 	orig[1] += (Min[1] + Max[1]) * 0.5;
 	orig[2] += (Min[2] + Max[2]) * 0.5;
@@ -142,40 +142,47 @@ stock get_speed(ent)
 }
 
 /*  Set rendering of an entity */
-stock set_rendering(index, fx=kRenderFxNone, r=255, g=255, b=255, render=kRenderNormal, amount=16)
+stock set_rendering(index, fx = kRenderFxNone, r = 255, g = 255, b = 255, render = kRenderNormal, amount = 16)
 {
-	entity_set_int(index,EV_INT_renderfx,fx);
+	entity_set_int(index, EV_INT_renderfx, fx);
 	new Float:RenderColor[3];
 	RenderColor[0] = float(r);
 	RenderColor[1] = float(g);
 	RenderColor[2] = float(b);
-	entity_set_vector(index,EV_VEC_rendercolor,RenderColor);
-	entity_set_int(index,EV_INT_rendermode,render);
-	entity_set_float(index,EV_FL_renderamt,float(amount));
+	entity_set_vector(index, EV_VEC_rendercolor, RenderColor);
+	entity_set_int(index, EV_INT_rendermode, render);
+	entity_set_float(index, EV_FL_renderamt, float(amount));
 
 	return 1;
 }
 
 /* Set flags on an entity */
-stock set_entity_flags(ent,flag,onoff)
+stock set_entity_flags(ent, flag, onoff)
 {
 	new iFlags = entity_get_int(ent, EV_INT_flags);
-	if(iFlags & flag)
+
+	if (iFlags & flag)
 	{
-		if(onoff == 1) return 2;
+		if (onoff == 1)
+			return 2;
+
 		iFlags &= ~flag;
 	}
+
 	else
 	{
-		if(onoff == 0) return 2;
+		if (onoff == 0)
+			return 2;
+
 		iFlags |= flag;
 	}
+
 	entity_set_int(ent, EV_INT_flags, iFlags);
 	return 1;
 }
 
 /* If visible = 1, entity will be set to be visible, else invisible. */
-stock set_entity_visibility(entity, visible = 1) 
+stock set_entity_visibility(entity, visible = 1)
 {
 	entity_set_int(entity, EV_INT_effects, visible == 1 ? entity_get_int(entity, EV_INT_effects) & ~EF_NODRAW : entity_get_int(entity, EV_INT_effects) | EF_NODRAW);
 
@@ -183,7 +190,7 @@ stock set_entity_visibility(entity, visible = 1)
 }
 
 /* Returns 1 if entity is visible. */
-stock get_entity_visibility(entity) 
+stock get_entity_visibility(entity)
 {
 	return !(entity_get_int(entity, EV_INT_effects) & EF_NODRAW);
 }
@@ -200,32 +207,33 @@ stock get_user_velocity(entity, Float:vec[3])
 
 /* Backwards compatible */
 /* Hurts/Kills players in a sphere, like an explosion, Multiplier determines damage. */
-stock RadiusDamage(const Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier) 
+stock RadiusDamage(const Float:fExplodeAt[3], iDamageMultiplier, iRadiusMultiplier)
 {
 	return radius_damage(fExplodeAt, iDamageMultiplier, iRadiusMultiplier);
 }
 /* Gives you a velocity in the direction a player is looking, iVelocity is the multiplier. */
-stock VelocityByAim(iIndex,iVelocity, Float:vRetValue[3]) 
+stock VelocityByAim(iIndex, iVelocity, Float:vRetValue[3])
 {
-	return velocity_by_aim(iIndex,iVelocity,vRetValue);
+	return velocity_by_aim(iIndex, iVelocity, vRetValue);
 }
 /* Will return the contents of a point (inside map? in sky? outside map? etc.). */
-stock PointContents(const Float:fCheckAt[3]) 
+stock PointContents(const Float:fCheckAt[3])
 {
 	return point_contents(fCheckAt);
 }
 
-stock set_size(index, const Float:mins[3], const Float:maxs[3]) 
+stock set_size(index, const Float:mins[3], const Float:maxs[3])
 {
-	return entity_set_size(index,mins,maxs);
+	return entity_set_size(index, mins, maxs);
 }
 
-//by Twilight Suzuka, request addition at29428
-//"Lifted from HLSDK"
-stock IsInWorld( ent )
+// by Twilight Suzuka, request addition at29428
+// "Lifted from HLSDK"
+//
+stock IsInWorld(ent)
 {
    new Float:origin[3];
-   entity_get_vector(ent,EV_VEC_origin,origin);
+   entity_get_vector(ent, EV_VEC_origin, origin);
 
    if (origin[0] >= 4096.0) return 0;
    if (origin[1] >= 4096.0) return 0;
@@ -235,7 +243,7 @@ stock IsInWorld( ent )
    if (origin[2] <= -4096.0) return 0;
 
    new Float:velocity[3];
-   entity_get_vector(ent,EV_VEC_velocity,velocity);
+   entity_get_vector(ent, EV_VEC_velocity, velocity);
 
    if (velocity[0] >= 2000) return 0;
    if (velocity[1] >= 2000) return 0;

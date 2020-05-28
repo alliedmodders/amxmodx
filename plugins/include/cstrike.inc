@@ -229,8 +229,8 @@ native cs_get_user_model(index, model[], len);
  * @note This is not a one-time set. The CStrike module will remember the
  *       selected model and try to prevent attempts at changing the player
  *       model, or immediately re-apply it if necessary.
- * @note Updating modelindex is useful for custom models which don't have 
- *       the same structure as the default ones (hitbox, etc..). Model must 
+ * @note Updating modelindex is useful for custom models which don't have
+ *       the same structure as the default ones (hitbox, etc..). Model must
  *       be precached before.
  *
  * @param index           Client index
@@ -240,7 +240,7 @@ native cs_get_user_model(index, model[], len);
  * @noreturn
  * @error                 If the client index is not within the range of 1 to
  *                        MaxClients, the client is not connected, the provided
- *                        model is empty, or if modeindex is updated and the 
+ *                        model is empty, or if modeindex is updated and the
  *                        provided model is not precached, an error will be thrown.
  */
 native cs_set_user_model(index, const model[], bool:update_index = false);
@@ -706,7 +706,7 @@ native cs_user_spawn(player);
  *          CSW_SG552, CSW_AK47, CSW_P90
  *
  * @param index     Armoury entity index
- * @param count     Optional variable to store in the number of times that an item can be retrieved  
+ * @param count     Optional variable to store in the number of times that an item can be retrieved
  *                  from the same entity before being hidden
  *
  * @return          Weapon id
@@ -729,7 +729,7 @@ native cs_get_armoury_type(index, &count = 1);
  *
  * @param index     Armoury entity index
  * @param type      Weapon id
- * @param count     Number of times that an item can be retrieved from 
+ * @param count     Number of times that an item can be retrieved from
  *                  the same entity before being hidden
  *                  If zero, the entity is hidden
  *                  If below zero, nothing is set
@@ -1073,12 +1073,12 @@ native cs_set_ent_class(index, const classname[]);
 /**
  * Returns the item id associated with an item name and its aliases.
  *
- * @note The item name is case sensitive an can be with or without 
+ * @note The item name is case sensitive an can be with or without
  *       weapon_ and item_ prefixes. This can be a command alias as well.
  *       Values examples: ak47, weapon_ak47, kevlar, item_kevlar, vest, bullpup, ...
  *
  * @param name          Alias or classname
- * @param classid       If item is a weapon, variable to store the associated 
+ * @param classid       If item is a weapon, variable to store the associated
  *                      weapon class id in (CS_WEAPONCLASS_* constants)
  *
  * @return              Item id (CSI_* constants)
@@ -1166,11 +1166,11 @@ stock CsWeaponClassType:cs_get_weapon_class(weapon_id)
 	{
 		switch (weapon_id)
 		{
-			case CSI_SHIELDGUN, CSI_SHIELD: 
+			case CSI_SHIELDGUN, CSI_SHIELD:
 			{
 				type = CS_WEAPONCLASS_PISTOL;
 			}
-			case CSI_KNIFE: 
+			case CSI_KNIFE:
 			{
 				type = CS_WEAPONCLASS_KNIFE;
 			}
@@ -1178,31 +1178,31 @@ stock CsWeaponClassType:cs_get_weapon_class(weapon_id)
 			{
 				new const bits = (1 << weapon_id);
 
-				if(bits & CSI_ALL_PISTOLS)
+				if (bits & CSI_ALL_PISTOLS)
 				{
 					type = CS_WEAPONCLASS_PISTOL;
 				}
-				else if(bits & CSI_ALL_GRENADES)
+				else if (bits & CSI_ALL_GRENADES)
 				{
 					type = CS_WEAPONCLASS_GRENADE;
 				}
-				else if(bits & CSI_ALL_SMGS)
+				else if (bits & CSI_ALL_SMGS)
 				{
 					type = CS_WEAPONCLASS_SUBMACHINEGUN;
 				}
-				else if(bits & CSI_ALL_SHOTGUNS)
+				else if (bits & CSI_ALL_SHOTGUNS)
 				{
 					type = CS_WEAPONCLASS_SHOTGUN;
 				}
-				else if(bits & CSI_ALL_MACHINEGUNS)
+				else if (bits & CSI_ALL_MACHINEGUNS)
 				{
 					type = CS_WEAPONCLASS_MACHINEGUN;
 				}
-				else if(bits & CSI_ALL_RIFLES)
+				else if (bits & CSI_ALL_RIFLES)
 				{
 					type = CS_WEAPONCLASS_RIFLE;
 				}
-				else if(bits & CSI_ALL_SNIPERRIFLES)
+				else if (bits & CSI_ALL_SNIPERRIFLES)
 				{
 					type = CS_WEAPONCLASS_SNIPERRIFLE;
 				}
@@ -1216,9 +1216,9 @@ stock CsWeaponClassType:cs_get_weapon_class(weapon_id)
 /**
  * Checks whether an item id is not out of bounds.
  *
- * @param id           Item id (CSI_* constants) 
+ * @param id           Item id (CSI_* constants)
  * @param weapon_only  If true, only the real weapon ids will be checked,
- *                     including shield as well 
+ *                     including shield as well
  *
  * @return             True if item id is valid, false otherwise
  */

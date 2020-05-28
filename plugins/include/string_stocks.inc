@@ -23,7 +23,7 @@
 /**
  * @global  Unless otherwise noted, all string functions which take in a
  *          writable buffer and maximum length should NOT have the null terminator INCLUDED
- *          in the length.  This means that this is valid:
+ *          in the length. This means that this is valid:
  *          copy(string, charsmax(string), ...)
  */
 
@@ -59,7 +59,7 @@ stock char_to_upper(chr)
 {
 	if (is_char_lower(chr))
 	{
-		return (chr & ~(1<<5));
+		return (chr & ~(1 << 5));
 	}
 
 	return chr;
@@ -78,7 +78,7 @@ stock char_to_lower(chr)
 {
 	if (is_char_upper(chr))
 	{
-		return (chr | (1<<5));
+		return (chr | (1 << 5));
 	}
 
 	return chr;
@@ -104,7 +104,7 @@ stock strbreak(const text[], Left[], leftLen, Right[], rightLen)
  * @param rightlen      Maximum length of the string part buffer.
  *
  * @return              -1 if no match was found; otherwise, an index into source
- *                      marking the first index after the searched text.  The
+ *                      marking the first index after the searched text. The
  *                      index is always relative to the start of the input string.
  */
 stock argbreak(const text[], left[], leftlen, right[], rightlen)
@@ -285,7 +285,7 @@ stock explode_string(const text[], const split[], buffers[][], maxStrings, maxSt
 
 /**
  * Joins an array of strings into one string, with a "join" string inserted in
- * between each given string.  This function complements ExplodeString.
+ * between each given string. This function complements ExplodeString.
  *
  * @param strings       An array of strings.
  * @param numStrings    Number of strings in the array.
@@ -299,9 +299,9 @@ stock implode_strings(const strings[][], numStrings, const join[], buffer[], max
 	new total, length, part_length;
 	new join_length = strlen(join);
 
-	for (new i=0; i<numStrings; i++)
+	for (new i = 0; i < numStrings; i++)
 	{
-		length = copy(buffer[total], maxLength-total, strings[i]);
+		length = copy(buffer[total], maxLength - total, strings[i]);
 		total += length;
 
 		if (length < part_length)
@@ -311,7 +311,7 @@ stock implode_strings(const strings[][], numStrings, const join[], buffer[], max
 
 		if (i != numStrings - 1)
 		{
-			length = copy(buffer[total], maxLength-total, join);
+			length = copy(buffer[total], maxLength - total, join);
 			total += length;
 
 			if (length < join_length)

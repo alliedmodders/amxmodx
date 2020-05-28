@@ -49,7 +49,7 @@
 #endif
 #define _xs_included
 
-// **** CONFIG CHECK
+// **** CONFIG CHECK ****
 
 #if !defined XS_FLEQ_TOLERANCE
 	#define XS_FLEQ_TOLERANCE 0.000005
@@ -91,34 +91,38 @@ enum xs_logtypes
 	xs__assertionfailed,
 
 	// must come last
+	//
 	xs_logtypes_count
 }
 
 stock const xs__logtypenames[xs_logtypes_count][] = {"DEBUG", "", "WARNING", "ERROR", "FATAL ERROR", "DEBUG ASSERTION FAILED"};
 
 // tested
+//
 stock xs_log(xs_logtypes:logtype, any:...)
 {
 	// WARNING: Don't try to use assert in here; it uses this func
 
 	// Don't log debug if not in debug mode
+	//
 	#if !XS_DEBUG
 		if (logtype == xs_debug)
 			return;
 	#endif
 
-	new buffer[XS_LOGBUFFER_SIZE+1];
-	buffer[XS_LOGBUFFER_SIZE]=0;
-	format_args(buffer, XS_LOGBUFFER_SIZE, 1 /* go from SECOND argument*/);
+	new buffer[XS_LOGBUFFER_SIZE + 1];
+	buffer[XS_LOGBUFFER_SIZE] = 0;
+	format_args(buffer, XS_LOGBUFFER_SIZE, 1 /* go from SECOND argument */);
 	new bool:addLogTypeName = strlen(xs__logtypenames[logtype]) ? true : false;
 
 	// Use AMXX's logging system
-	log_amx("%s%s%s", addLogTypeName ? xs__logtypenames[logtype] : "",
-		addLogTypeName ? ": " : "", buffer);
+	//
+	log_amx("%s%s%s", addLogTypeName ? xs__logtypenames[logtype] : "", addLogTypeName ? ": " : "", buffer);
 }
 
 // Assertion
 // tested
+//
 stock xs_assertfunc(any:exp, const desc[])
 {
 	// Check exp
@@ -132,13 +136,14 @@ stock xs_assertfunc(any:exp, const desc[])
 
 	return 0;
 }
-#define xs_assert(%1,%2) if (!xs_assertfunc(%1,%2)) xs__global_null /= xs__global_null
 
+#define xs_assert(%1,%2) if (!xs_assertfunc(%1, %2)) xs__global_null /= xs__global_null
 
 // Assertion; only in debug mode
 // untested; logical flow says it should work
+//
 #if XS_DEBUG
-	#define xs_assert_dbg(%1,%2) if (!xs_assertfunc(%1,%2)) xs__global_null /= xs__global_null
+	#define xs_assert_dbg(%1,%2) if (!xs_assertfunc(%1, %2)) xs__global_null /= xs__global_null
 #else
 	#define xs_assert_dbg(%1,%2)
 #endif
@@ -198,7 +203,7 @@ stock xs_abs(num)
  */
 stock xs_is_2power(x)
 {
-	return (x!=0) && ((x&(x-1))==0);
+	return (x != 0) && ((x & (x - 1)) == 0);
 }
 
 /**
@@ -286,6 +291,7 @@ stock Float:xs_sqrt(Float:x)
 }
 
 // These functions generate errors if you use the macros with wrong parameter count.
+//
 stock Float:xs_fabs(Float:pa)
 {
 	#pragma unused pa
@@ -293,50 +299,57 @@ stock Float:xs_fabs(Float:pa)
 	rawr = warning_below_shows_line_number;
 	#pragma unused rawr
 }
-stock Float:xs_asin(Float:pa,Float:pb)
+
+stock Float:xs_asin(Float:pa, Float:pb)
 {
-	#pragma unused pa,pb
+	#pragma unused pa, pb
 	new rawr = you_need_two_params_for_asin;
 	rawr = warning_below_shows_line_number;
 	#pragma unused rawr
 }
-stock Float:xs_sin(Float:pa,Float:pb)
+
+stock Float:xs_sin(Float:pa, Float:pb)
 {
-	#pragma unused pa,pb
+	#pragma unused pa, pb
 	new rawr = you_need_two_params_for_sin;
 	#pragma unused rawr
 }
-stock Float:xs_acos(Float:pa,Float:pb)
+
+stock Float:xs_acos(Float:pa, Float:pb)
 {
-	#pragma unused pa,pb
+	#pragma unused pa, pb
 	new rawr = you_need_two_params_for_acos;
 	rawr = warning_below_shows_line_number;
 	#pragma unused rawr
 }
-stock Float:xs_cos(Float:pa,Float:pb)
+
+stock Float:xs_cos(Float:pa, Float:pb)
 {
-	#pragma unused pa,pb
+	#pragma unused pa, pb
 	new rawr = you_need_two_params_for_cos;
 	rawr = warning_below_shows_line_number;
 	#pragma unused rawr
 }
-stock Float:xs_atan(Float:pa,Float:pb)
+
+stock Float:xs_atan(Float:pa, Float:pb)
 {
-	#pragma unused pa,pb
+	#pragma unused pa, pb
 	new rawr = you_need_two_params_for_atan;
 	rawr = warning_below_shows_line_number;
 	#pragma unused rawr
 }
-stock Float:xs_atan2(Float:pa,Float:pb)
+
+stock Float:xs_atan2(Float:pa, Float:pb)
 {
-	#pragma unused pa,pb
+	#pragma unused pa, pb
 	new rawr = you_need_two_params_for_atan2;
 	rawr = warning_below_shows_line_number;
 	#pragma unused rawr
 }
+
 stock Float:xs_tan(Float:pa, Float:pb)
 {
-	#pragma unused pa,pb
+	#pragma unused pa, pb
 	new rawr = you_need_two_params_for_tan;
 	rawr = warning_below_shows_line_number;
 	#pragma unused rawr
@@ -355,8 +368,9 @@ stock Float:xs_tan(Float:pa, Float:pb)
 // This routine comes from the book "Inner Loops" by Rick Booth, Addison-Wesley
 // (ISBN 0-201-47960-5). This is a "multiplicative congruential random number
 // generator" that has been extended to 31-bits
+//
 
-stock xs__internalseed=0x546875;
+stock xs__internalseed = 0x546875;
 
 #define XS__IL_RMULT 1103515245
 
@@ -390,6 +404,7 @@ stock xs_irand()
 	hl = hi * (XS__IL_RMULT  & 0xffff);
 	hh = hi * (XS__IL_RMULT >> 16    );
 	result = xs_abs(((ll + 12345) >> 16) + lh + hl + (hh << 16));
+
 	return result;
 }
 
@@ -400,7 +415,7 @@ stock xs_irand()
  */
 stock Float:xs_frand()
 {
-	return float(xs_irand()) / float(xs_get_maxnum());		// -1/2 should be the biggest possible positive number
+	return float(xs_irand()) / float(xs_get_maxnum());		// -1 / 2 should be the biggest possible positive number
 }
 
 /**
@@ -424,7 +439,7 @@ stock xs_irand_range(pmin, pmax)
 
 /****** VECTORS & PLANES ******/
 
-// *** vectors
+// *** vectors ***
 
 /**
  * Sets vector's components to specified values.
@@ -569,6 +584,7 @@ stock xs_vec_mul_scalar(const Float:vec[], Float:scalar, Float:out[])
 stock xs_vec_div_scalar(const Float:vec[], Float:scalar, Float:out[])
 {
 	new Float:__tmp = 1.0 / scalar;
+
 	out[0] = vec[0] * __tmp;
 	out[1] = vec[1] * __tmp;
 	out[2] = vec[2] * __tmp;
@@ -583,7 +599,7 @@ stock xs_vec_div_scalar(const Float:vec[], Float:scalar, Float:out[])
  */
 stock Float:xs_vec_len(const Float:vec[])
 {
-	return xs_sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
+	return xs_sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
 }
 
 /**
@@ -595,7 +611,7 @@ stock Float:xs_vec_len(const Float:vec[])
  */
 stock Float:xs_vec_len_2d(const Float:vec[])
 {
-	return xs_sqrt(vec[0]*vec[0] + vec[1]*vec[1]);
+	return xs_sqrt(vec[0] * vec[0] + vec[1] * vec[1]);
 }
 
 /**
@@ -608,9 +624,9 @@ stock Float:xs_vec_len_2d(const Float:vec[])
  */
 stock Float:xs_vec_distance(const Float:vec1[], const Float:vec2[])
 {
-	return xs_sqrt((vec1[0]-vec2[0]) * (vec1[0]-vec2[0]) +
-	               (vec1[1]-vec2[1]) * (vec1[1]-vec2[1]) +
-	               (vec1[2]-vec2[2]) * (vec1[2]-vec2[2]));
+	return xs_sqrt((vec1[0] - vec2[0]) * (vec1[0] - vec2[0]) +
+	               (vec1[1] - vec2[1]) * (vec1[1] - vec2[1]) +
+	               (vec1[2] - vec2[2]) * (vec1[2] - vec2[2]));
 }
 
 /**
@@ -623,8 +639,8 @@ stock Float:xs_vec_distance(const Float:vec1[], const Float:vec2[])
  */
 stock Float:xs_vec_distance_2d(const Float:vec1[], const Float:vec2[])
 {
-	return xs_sqrt((vec1[0]-vec2[0]) * (vec1[0]-vec2[0]) +
-	               (vec1[1]-vec2[1]) * (vec1[1]-vec2[1]));
+	return xs_sqrt((vec1[0] - vec2[0]) * (vec1[0] - vec2[0]) +
+	               (vec1[1] - vec2[1]) * (vec1[1] - vec2[1]));
 }
 
 /**
@@ -638,9 +654,9 @@ stock Float:xs_vec_distance_2d(const Float:vec1[], const Float:vec2[])
  */
 stock Float:xs_vec_sqdistance(const Float:vec1[], const Float:vec2[])
 {
-	return (vec1[0]-vec2[0]) * (vec1[0]-vec2[0]) +
-	               (vec1[1]-vec2[1]) * (vec1[1]-vec2[1]) +
-	               (vec1[2]-vec2[2]) * (vec1[2]-vec2[2]);
+	return (vec1[0] - vec2[0]) * (vec1[0] - vec2[0]) +
+		   (vec1[1] - vec2[1]) * (vec1[1] - vec2[1]) +
+		   (vec1[2] - vec2[2]) * (vec1[2] - vec2[2]);
 }
 
 /**
@@ -654,8 +670,8 @@ stock Float:xs_vec_sqdistance(const Float:vec1[], const Float:vec2[])
  */
 stock Float:xs_vec_sqdistance_2d(const Float:vec1[], const Float:vec2[])
 {
-	return (vec1[0]-vec2[0]) * (vec1[0]-vec2[0]) +
-	               (vec1[1]-vec2[1]) * (vec1[1]-vec2[1]);
+	return (vec1[0] - vec2[0]) * (vec1[0] - vec2[0]) +
+		   (vec1[1] - vec2[1]) * (vec1[1] - vec2[1]);
 }
 
 /**
@@ -669,7 +685,8 @@ stock Float:xs_vec_sqdistance_2d(const Float:vec1[], const Float:vec2[])
  */
 stock xs_vec_normalize(const Float:vec[], Float:out[])
 {
-	new Float:invlen = xs_rsqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
+	new Float:invlen = xs_rsqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
+
 	out[0] = vec[0] * invlen;
 	out[1] = vec[1] * invlen;
 	out[2] = vec[2] * invlen;
@@ -686,9 +703,9 @@ stock xs_vec_normalize(const Float:vec[], Float:out[])
  */
 stock xs_vec_cross(const Float:vec1[], const Float:vec2[], Float:out[])
 {
-	out[0] = vec1[1]*vec2[2] - vec1[2]*vec2[1];
-	out[1] = vec1[2]*vec2[0] - vec1[0]*vec2[2];
-	out[2] = vec1[0]*vec2[1] - vec1[1]*vec2[0];
+	out[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
+	out[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
+	out[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
 }
 
 /**
@@ -701,7 +718,7 @@ stock xs_vec_cross(const Float:vec1[], const Float:vec2[], Float:out[])
  */
 stock Float:xs_vec_dot(const Float:vec1[], const Float:vec2[])
 {
-	return vec1[0]*vec2[0] + vec1[1]*vec2[1] + vec1[2]*vec2[2];
+	return vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2];
 }
 
 /**
@@ -792,15 +809,17 @@ stock xs_vec_make2d(const Float:vec[3], Float:out[2])
 	out[1] = vec[1];
 }
 
-// *** planes
+// *** planes ***
 
 // normal
+//
 #define XS_PLANE_A 0
 #define XS_PLANE_B 1
 #define XS_PLANE_C 2
-// plane shift distance
-#define XS_PLANE_D 3
 
+// plane shift distance
+//
+#define XS_PLANE_D 3
 
 /**
  * Sets a plane to the specified values.
@@ -855,7 +874,6 @@ stock xs_plane_3p(Float:plane[], const Float:p1[], const Float:p2[], const Float
 	new Float:__tmp[3];
 	xs_vec_neg(plane, __tmp);
 	plane[XS_PLANE_D] = xs_vec_dot(__tmp, p1);
-
 }
 
 /**
@@ -871,11 +889,12 @@ stock xs_plane_3p(Float:plane[], const Float:p1[], const Float:p2[], const Float
  */
 stock bool:xs_plane_equal(const Float:plane1[], const Float:plane2[])
 {
-	if (	(plane1[0] == plane2[0]) &&
+	if ((plane1[0] == plane2[0]) &&
 		(plane1[1] == plane2[1]) &&
 		(plane1[2] == plane2[2]) &&
 		(plane1[3] == plane2[3]))
 		return true;
+
 	return false;
 }
 
@@ -892,11 +911,12 @@ stock bool:xs_plane_equal(const Float:plane1[], const Float:plane2[])
  */
 stock bool:xs_plane_nearlyequal(const Float:plane1[], const Float:plane2[])
 {
-	if (	XS_FLEQ(plane1[0], plane2[0]) &&
+	if (XS_FLEQ(plane1[0], plane2[0]) &&
 		XS_FLEQ(plane1[1], plane2[1]) &&
 		XS_FLEQ(plane1[2], plane2[2]) &&
 		XS_FLEQ(plane1[3], plane2[3]))
 		return true;
+
 	return false;
 }
 
@@ -911,6 +931,7 @@ stock bool:xs_plane_nearlyequal(const Float:plane1[], const Float:plane2[])
 stock Float:xs_plane_dst2point(const Float:plane[], const Float:point[])
 {
 	// return normal dot point + D
+	//
 	return xs_vec_dot(plane, point) + plane[XS_PLANE_D];
 }
 
@@ -935,6 +956,7 @@ stock bool:xs_plane_rayintersect(const Float:plane[], const Float:rayStart[], co
 
 	// if (distance plane<->(rayStart + rayDir) > distance plane<->rayStart) and both have the same sign, the ray
 	// goes away from the plane
+	//
 	new Float:rsplusrd[3];
 	xs_vec_add(rayStart, rayDir, rsplusrd);
 	new Float:dst1 = xs_plane_dst2point(plane, rsplusrd);
@@ -942,10 +964,10 @@ stock bool:xs_plane_rayintersect(const Float:plane[], const Float:rayStart[], co
 	if (xs_fabs(dst1) > xs_fabs(dst2) && xs_fsign(dst1) == xs_fsign(dst2))
 		return false;
 
-
 	// out = rayStart - rayDir * ((distance plane<->rayStart) / a)
 	new Float:__tmp[3];
 	xs_vec_mul_scalar(rayDir, xs_plane_dst2point(plane, rayStart) / a, __tmp);
+
 	// out = rayStart - tmp
 	xs_vec_sub(rayStart, __tmp, out);
 
@@ -1002,6 +1024,7 @@ stock xs_plane_copy(const Float:planeIn[], Float:planeOut[])
 /****** HL ENGINE SPECIFIC STUFF ******/
 
 // angle indexes
+//
 #define	XS_PITCH				0		// up / down
 #define	XS_YAW					1		// left / right
 #define	XS_ROLL					2		// fall over
@@ -1028,18 +1051,19 @@ stock xs_anglevectors(const Float:angles[3], Float:fwd[3], Float:right[3], Float
 	sr = xs_sin(angles[XS_ROLL], degrees);
 	cr = xs_cos(angles[XS_ROLL], degrees);
 
-	fwd[0] = cp*cy;
-	fwd[1] = cp*sy;
+	fwd[0] = cp * cy;
+	fwd[1] = cp * sy;
 	fwd[2] = -sp;
 
-	right[0] = (-1*sr*sp*cy + -1*cr*-sy);
-	right[1] = (-1*sr*sp*sy + -1*cr*cy);
-	right[2] = -1*sr*cp;
+	right[0] = (-1 * sr * sp * cy + -1 * cr * -sy);
+	right[1] = (-1 * sr * sp * sy + -1 * cr * cy);
+	right[2] = -1 * sr * cp;
 
-	up[0] = (cr*sp*cy + -sr*-sy);
-	up[1] = (cr*sp*sy + -sr*cy);
-	up[2] = cr*cp;
+	up[0] = (cr * sp * cy + -sr * -sy);
+	up[1] = (cr * sp * sy + -sr * cy);
+	up[2] = cr * cp;
 }
+
 /****** STRING FUNCS *******/
 
 /**
@@ -1057,6 +1081,7 @@ stock xs_strchr(const str[], chr)
 		if (str[i] == chr)
 			return i;
 	}
+
 	return -1;
 }
 
@@ -1085,6 +1110,7 @@ stock xs_strtrim(stringtotrim[], charstotrim, bool:fromleft = true)
 		// In format, input and output regions can overlap
 		format(stringtotrim, maxlen, "%s", stringtotrim[charstotrim]);
 	}
+
 	else
 	{
 		new maxlen = strlen(stringtotrim) - charstotrim;
@@ -1110,20 +1136,20 @@ stock xs_strtrim(stringtotrim[], charstotrim, bool:fromleft = true)
  *
  * @noreturn
  */
-stock xs_strmid(const oldmsg[], newmsg[], start, end, outlen=-1)
+stock xs_strmid(const oldmsg[], newmsg[], start, end, outlen = -1)
 {
 	new len = strlen(oldmsg);
 
-	if(start < 0)
+	if (start < 0)
 		start = 0;
 
 	++end;		// Include end
 
-	if(end <= start || end > len)
+	if (end <= start || end > len)
 		end = len;
 
 	new j = 0, i = start;
-	for(; (i < end) && (outlen--);)
+	for (; (i < end) && (outlen--); )
 		newmsg[j++] = oldmsg[i++];
 
 	newmsg[j] = 0;
@@ -1145,26 +1171,30 @@ stock xs_explode(const input[], output[][], delimiter, maxelems, elemsize)
 {
 	new nIdx = 0;
 	new nLen = 0;
-
 	new copied = 0;
-	while(nLen < strlen(input) && nIdx < maxelems)
+
+	while (nLen < strlen(input) && nIdx < maxelems)
 	{
 		copied = copyc(output[nIdx++], elemsize, input[nLen], delimiter);
+
 		if (copied == elemsize)
 		{
 			// maybe it got force-stopped because of maxsize
 			// so check whether we have to skip something
+			//
 			if (input[nLen + copied] != delimiter && input[nLen + copied] != 0)
 			{
 				new found = xs_strchr(input[nLen + copied], delimiter);
 				if (found == -1)
 					break;
+
 				copied += found;
 			}
 		}
 
-		nLen += copied + 1;	// +1: skip delimiter
+		nLen += copied + 1;	// + 1 : skip delimiter
 	}
+
 	return nIdx;
 }
 
@@ -1184,15 +1214,18 @@ stock xs_implode(output[], outsize, delimiter, const input[][], elemsnum)
 {
 	new pos = 0;
 	new copied;
+
 	for (new i = 0; i < elemsnum; ++i)
 	{
 		copied = copy(output[pos], outsize - pos, input[i]);
 		pos += copied;
 		if (pos >= outsize)
 			return outsize;
+
 		// append delimiter
 		output[pos] = delimiter;
 		++pos;
+
 		// last check
 		if (pos >= outsize)
 			return outsize;
@@ -1201,7 +1234,6 @@ stock xs_implode(output[], outsize, delimiter, const input[][], elemsnum)
 	output[--pos] = 0;		// The last char would be delimiter, so skip it.
 	return pos;
 }
-
 
 stock xs__replace_buf[XS_REPLACEBUF_SIZE];
 
@@ -1222,34 +1254,44 @@ stock xs_replace(text[], len, const what[], const with[])
 	new bufPos = 0;
 	new replaceLen = strlen(with);
 	new whatLen = strlen(what);
+
 	for (; text[i]; ++i)
 	{
 		if (text[i] == what[0])
 		{
-			new posInWhat=0;
+			new posInWhat = 0;
 			new j;
-			for (j = i; j-i < replaceLen && text[j]; ++j, ++posInWhat)
+
+			for (j = i; j - i < replaceLen && text[j]; ++j, ++posInWhat)
 			{
 				if (text[j] != what[posInWhat])
 					break;
 			}
+
 			if (whatLen == posInWhat)
 			{
 				for (new i2 = 0; i2 < replaceLen && bufPos < XS_REPLACEBUF_SIZE; ++i2)
 					xs__replace_buf[bufPos++] = with[i2];
+
 				i = j - 1;
 				++occur;
+
 				if (bufPos >= XS_REPLACEBUF_SIZE)
 					return occur;
+
 				continue;
 			}
 		}
+
 		if (bufPos >= XS_REPLACEBUF_SIZE)
 			return occur;
+
 		xs__replace_buf[bufPos++] = text[i];
 	}
+
 	xs__replace_buf[bufPos] = 0;
 	copy(text, len, xs__replace_buf);
+
 	return occur;
 }
 
@@ -1303,6 +1345,7 @@ stock xs_concmd_name(cid, namestr[], namelen)
 stock bool:xs_freevisibleslots(num)
 {
 	new maxplayers = get_cvar_num("sv_visiblemaxplayers");
+
 	if (maxplayers <= 0)
 		maxplayers = MaxClients;
 
@@ -1322,12 +1365,14 @@ stock xs_get_maxnum()
 	{
 		// build it
 		xs__maxnum = ((1 << (cellbits - 2)) - 1 ) | (1 << (cellbits - 2));
+
 		/*
 		new bits = get_cellsize() * 8 - 1;
 		for (new i = 0; i < bits; ++i)
 			xs__maxnum |= 1 << i;
 		*/
 	}
+
 	return xs__maxnum;
 }
 
@@ -1341,15 +1386,18 @@ stock xs_get_minnum()
 	return xs_get_maxnum() + 1;
 }
 
-
-// *** The following two functions were created by Damaged Soul.
+// *** The following two functions were created by Damaged Soul ***
 
 // Max messages reserved by engine (DO NOT MODIFY)
+//
 #define XS__MAX_ENGINE_MESSAGES 63
+
 // Max possible messages for mod, is 255 really the limit?
+//
 #define XS__MAX_POSSIBLE_MESSAGES 255
 
 // Returns max number of messages for mod
+//
 stock xs_get_maxmessages()
 {
 	new name[2];
@@ -1362,6 +1410,7 @@ stock xs_get_maxmessages()
 }
 
 // Returns true if msgid is a valid message
+//
 stock bool:xs_is_msg_valid(msgid)
 {
 	new name[2];
@@ -1376,6 +1425,7 @@ stock bool:xs_is_msg_valid(msgid)
 /****** MANAGED TASKS ******/
 
 // ***** managed task ids
+//
 stock xs_find_freetaskid()
 {
 	for (new i = 1; i <= XS_TASK_MANAGEDIDS; ++i)
@@ -1387,6 +1437,7 @@ stock xs_find_freetaskid()
 }
 
 // ***** managed tasks
+//
 enum xs_paramtypes
 {
 	xs_invalid = 0,
@@ -1396,9 +1447,10 @@ enum xs_paramtypes
 }
 
 // new task
-stock xs__TaskParam[	1 +						// number of parameters
-			XS_TASK_MAXPARAMS +						// parameter types
-			(XS_TASK_MAXPARAMSIZE char) * XS_TASK_MAXPARAMS];		// space for len + value
+//
+stock xs__TaskParam[1 +                                               // number of parameters
+                    XS_TASK_MAXPARAMS +                               // parameter types
+                    (XS_TASK_MAXPARAMSIZE char) * XS_TASK_MAXPARAMS]; // space for len + value
 
 stock Float:xs__TaskInterval = 0.0;
 stock xs__TaskFlags[5];
@@ -1413,9 +1465,11 @@ stock xs__TaskRepeat;
 
 
 // incoming task
-stock xs__ITaskParam[	1 +						// number of parameters
-			XS_TASK_MAXPARAMS +						// parameter types
-			(XS_TASK_MAXPARAMSIZE char) * XS_TASK_MAXPARAMS];		// space for len + value
+//
+stock xs__ITaskParam[1 +                                               // number of parameters
+                     XS_TASK_MAXPARAMS +                               // parameter types
+                     (XS_TASK_MAXPARAMSIZE char) * XS_TASK_MAXPARAMS]; // space for len + value
+
 stock xs__ITaskId;
 
 #define xs__ITaskParamCount xs__ITaskParam[0]
@@ -1424,6 +1478,7 @@ stock xs__ITaskId;
 #define xs__ITaskParamValue[%1] xs__ITaskParam[1 + XS_TASK_MAXPARAMS + (%1 * (XS_TASK_MAXPARAMSIZE char))]
 
 // tested
+//
 stock xs_task_begin(Float:interval, const func[], id = 0, const flags[] = "", repeat = 0)
 {
 	xs_assert(xs__TaskInterval == 0.0, "New xs_task_begin called before xs_task_end");
@@ -1441,7 +1496,8 @@ stock xs_task_begin(Float:interval, const func[], id = 0, const flags[] = "", re
 }
 
 // tested
-stock xs_task_pushint(value, bool:__isfl=false /*internal use only*/)
+//
+stock xs_task_pushint(value, bool:__isfl = false /* internal use only */)
 {
 	xs_assert(xs__TaskInterval, "xs_task_push* called without xs_task_begin");
 	if (xs__TaskParamCount >= XS_TASK_MAXPARAMS)
@@ -1455,12 +1511,14 @@ stock xs_task_pushint(value, bool:__isfl=false /*internal use only*/)
 }
 
 // tested
+//
 stock xs_task_pushfl(Float:value)
 {
 	return xs_task_pushint(_:value, true);
 }
 
 // tested
+//
 stock xs_task_pushstr(const value[])
 {
 	xs_assert(xs__TaskInterval, "xs_task_push* called without xs_task_begin");
@@ -1474,6 +1532,7 @@ stock xs_task_pushstr(const value[])
 }
 
 // tested
+//
 stock xs_task_end()
 {
 	xs_assert(xs__TaskInterval, "xs_task_end called without xs_task_begin");
@@ -1498,33 +1557,38 @@ stock xs_task_end()
 	return xs__TaskId;
 }
 
+// tested
+//
+#define XS_MAKE_TASKFUNC(%1) public %1(const _xs__taskparam[], _xs__taskid) if (xs__task_setup(_xs__taskparam, _xs__taskid))
 
 // tested
-#define XS_MAKE_TASKFUNC(%1) public %1(const _xs__taskparam[], _xs__taskid) if(xs__task_setup(_xs__taskparam, _xs__taskid))
-
-// tested
+//
 stock xs__task_setup(const param[], taskid)
 {
 	xs__ITaskId = taskid;
 	new len = 1 + param[0] * (XS_TASK_MAXPARAMSIZE char);
 	for (new i = 0; i < len; ++i)
 		xs__ITaskParam[i] = param[i];
+
 	return 1;
 }
 
 // tested
+//
 stock xs_task_readid()
 {
 	return xs__ITaskId;
 }
 
 // tested
+//
 stock xs_task_paramcount()
 {
 	return xs__ITaskParamCount;
 }
 
 // tested
+//
 stock xs_paramtypes:xs_task_paramtype(paramid)
 {
 	if (paramid < 0 || paramid >= xs__ITaskParamCount)
@@ -1534,10 +1598,12 @@ stock xs_paramtypes:xs_task_paramtype(paramid)
 }
 
 // tested
+//
 stock xs_task_paramint(paramid)
 {
 	if (paramid < 0 || paramid >= xs__ITaskParamCount)
 		return 0;
+
 	if (xs__ITaskParamType[paramid] != _:xs_int)
 		return 0;
 
@@ -1545,10 +1611,12 @@ stock xs_task_paramint(paramid)
 }
 
 // tested
+//
 stock Float:xs_task_paramfl(paramid)
 {
 	if (paramid < 0 || paramid >= xs__ITaskParamCount)
 		return 0.0;
+
 	if (xs__ITaskParamType[paramid] != _:xs_float)
 		return 0.0;
 
@@ -1556,12 +1624,14 @@ stock Float:xs_task_paramfl(paramid)
 }
 
 // tested
+//
 stock xs_task_paramstr(paramid, out[], maxlen)
 {
 	#pragma unused maxlen
 
 	if (paramid < 0 || paramid >= xs__ITaskParamCount)
 		return 0;
+
 	if (xs__ITaskParamType[paramid] != _:xs_string)
 		return 0;
 

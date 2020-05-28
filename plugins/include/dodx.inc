@@ -36,11 +36,11 @@ enum {
 /* Use this function to register forwards */
 native register_statsfwd(ftype);
 
-/* Function is called after player to player attacks ,
+/* Function is called after player to player attacks,
 * if players were damaged by teammate TA is set to 1 */
 forward client_damage(attacker, victim, damage, wpnindex, hitplace, TA);
 
-/* Function is called after player death ,
+/* Function is called after player death,
 * if player was killed by teammate TK is set to 1 */
 forward client_death(killer, victim, wpnindex, hitplace, TK);
 
@@ -61,13 +61,13 @@ value = 1 scope up
 value = 0 scope down */
 forward dod_client_scope(id, value);
 
-/* This will be called whenever a player drops a weapon 
-weapon is weapon dropped or picked up 
+/* This will be called whenever a player drops a weapon
+weapon is weapon dropped or picked up
 value = 1 picked up
 value = 0 dropped */
 forward dod_client_weaponpickup(id, weapon, value);
 
-/* Called whenever the the player goes to or comes from prone position 
+/* Called whenever the the player goes to or comes from prone position
 value = 1 going down
 value = 0 getting up */
 forward dod_client_prone(id, value);
@@ -87,7 +87,7 @@ forward dod_client_objectpickup(id, objid, Float:pos[3], value);
 /* Forward for when a users stamina decreases */
 forward dod_client_stamina(id, stamina);
 
-/* We want to get just the weapon of whichever type that the player is on him 
+/* We want to get just the weapon of whichever type that the player is on him
 Use DODWT_* in dodconst.inc for type */
 native dod_weapon_type(id, type);
 
@@ -105,13 +105,13 @@ native dod_clear_model(id);
 
 /* Custom Weapon Support */
 /* function will return index of new weapon */
-native custom_weapon_add( const wpnname[], melee = 0, const logname[]="" ); 
+native custom_weapon_add(const wpnname[], melee = 0, const logname[] = "");
 
 /* Function will pass damage done by this custom weapon to stats module and other plugins */
-native custom_weapon_dmg( weapon, att, vic, damage, hitplace=0 ); 
+native custom_weapon_dmg(weapon, att, vic, damage, hitplace = 0);
 
 /* Function will pass info about custom weapon shot to stats module */
-native custom_weapon_shot( weapon, index ); // weapon id , player id
+native custom_weapon_shot(weapon, index); // weapon id, player id
 
 /* function will return 1 if true */
 native xmod_is_melee_wpn(wpnindex);
@@ -125,7 +125,7 @@ native xmod_get_wpnlogname(wpnindex, name[], len);
 /* Returns weapons array size */
 native xmod_get_maxweapons();
 
-/* Returns stats array size ex. 8 in TS , 9 in DoD */
+/* Returns stats array size ex. 8 in TS, 9 in DoD */
 native xmod_get_stats_size();
 
 /* Returns 1 if true */
@@ -134,16 +134,16 @@ native xmod_is_custom_wpn(wpnindex);
 /************* Shared Natives End ********************************/
 
 /* weapon logname to weapon name convertion */
-native dod_wpnlog_to_name(const logname[],name[],len);
+native dod_wpnlog_to_name(const logname[], name[], len);
 
 /* weapon logname to weapon index convertion */
 native dod_wpnlog_to_id(const logname[]);
 
-native dod_get_map_info( info );
+native dod_get_map_info(info);
 
-/* Returns id of currently carried weapon. Gets also 
+/* Returns id of currently carried weapon. Gets also
 * ammount of ammo in clip and backpack. */
-native dod_get_user_weapon(index,&clip=0,&ammo=0);
+native dod_get_user_weapon(index, &clip = 0, &ammo = 0);
 
 /* Returns team score */
 native dod_get_team_score(teamId);

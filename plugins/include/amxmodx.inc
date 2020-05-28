@@ -64,6 +64,7 @@ forward plugin_unpause();
  *       server command "changelevel", which is used by many plugins, will not
  *       trigger this forward. Unfortunately, this means that in practice this
  *       forward can be unreliable and will not be called in many situations.
+ *
  * @note AMXX 1.8.3 has added the engine_changelevel() function, which will utilize
  *       the correct engine function to change the map, and therefore trigger
  *       this forward.
@@ -114,6 +115,7 @@ forward plugin_log();
  *
  * @note Adding files to the precaching tables will trigger the client to
  *       download them to its local filesystem.
+ *
  * @note There is a hard upper limit of entries in the precaching tables for
  *       every game, this limit is 512 in most cases. The entries will be filled
  *       and indexed incrementally. Going over this limit will crash the server.
@@ -181,10 +183,11 @@ forward client_disconnect(id);
 /**
  * Called when a client is disconnected from the server.
  *
- * @note This will be called in some additional cases that client_disconnect doesn't cover, 
- *       most notably when a client aborts the connection process. It is guaranteed to pair 
+ * @note This will be called in some additional cases that client_disconnect doesn't cover,
+ *       most notably when a client aborts the connection process. It is guaranteed to pair
  *       with the client_connect() forward.
- * @note When this fires the player entity is still valid (e.g. is_user_connected(id) will 
+ *
+ * @note When this fires the player entity is still valid (e.g. is_user_connected(id) will
  *       return true), but no networked commands will reach the client.
  *
  * @param id         Client index
@@ -265,9 +268,11 @@ native precache_model(const name[]);
  * Precaches a sound file.
  *
  * @note Can only be used inside of the plugin_precache() forward.
+ *
  * @note The filepath is always relative to the "sound" folder, and the file has
  *       to be a wav file. Precaching a file with this will add it to the engine
  *       sound table, making it available for usage in emit_sound() for example.
+ *
  * @note Precaching other filetypes (such as mp3 music), optionally in different
  *       locations, has to be done with precache_generic()
  *
@@ -297,6 +302,7 @@ native precache_generic(const szFile[]);
  * Precaches an event file.
  *
  * @note The event type should always be 1.
+ *
  * @note Contrary to the other precache_* natives, this can be used outside of
  *       the plugin_precache() forward, e.g. in plugin_init() or plugin_cfg().
  *       A bug in some clients makes this necessary, as plugin_precache() is
@@ -882,7 +888,7 @@ native read_logargv(id, output[], len);
  * @error           If the provided string is not valid client log data, an
  *                  error will be thrown.
  */
-native parse_loguser(const text[], name[], nlen, &userid =-2, authid[] = "", alen = 0, team[] = "", tlen = 0);
+native parse_loguser(const text[], name[], nlen, &userid = -2, authid[] = "", alen = 0, team[] = "", tlen = 0);
 
 /**
  * Sends a message to the console of the server.
@@ -1470,8 +1476,8 @@ native read_argc();
 /**
  * Converts a flag string to a bitflag value.
  *
- * @note Example: The string "abcd" represents the sum of 1, 2, 4, and 8 - or
- *       (1<<0)|(1<<1)|(1<<2)|(1<<3). The function will return 15.
+ * @note Example:   The string "abcd" represents the sum of 1, 2, 4, and 8 - or
+ *                  (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3). The function will return 15.
  *
  * @param flags     Flag string to convert
  *
@@ -1482,7 +1488,7 @@ native read_flags(const flags[]);
 /**
  * Converts a bitflag value to a flag string.
  *
- * @note Example: The value 3 will yield the string "ab"
+ * @note Example:   The value 3 will yield the string "ab"
  *
  * @param flags     Bitflag value to convert
  * @param output    Buffer to copy flag string to
@@ -2431,7 +2437,7 @@ native callfunc_begin_i(func, plugin = -1);
  * @param pluginId  Plugin id, if -1 the calling plugin is targeted
  *                  The plugin id can be retrieved using find_plugin_byfile()
  *
- * @return          >=0 Function id on success
+ * @return          >= 0 Function id on success
  *                  -1 if plugin or function was not found
  */
 native get_func_id(const funcName[], pluginId = -1);
@@ -3379,8 +3385,8 @@ native bool:has_map_ent_class(const classname[]);
  * This includes servercfgfile (server.cfg), amxx.cfg, plugin's config, and
  * per-map config.
  *
- * @note This is best place to initialize plugin functions which are based on cvar data.  
- * @note This will always be called once and only once per map.  It will be 
+ * @note This is best place to initialize plugin functions which are based on cvar data.
+ * @note This will always be called once and only once per map. It will be
  *       called few seconds after plugin_cfg().
  *
  * @noreturn
@@ -3388,8 +3394,8 @@ native bool:has_map_ent_class(const classname[]);
 forward OnConfigsExecuted();
 
 /**
- * Called when the map has loaded, right after plugin_cfg() but any time 
- * before OnConfigsExecuted.  It's called after amxx.cfg and  all 
+ * Called when the map has loaded, right after plugin_cfg() but any time
+ * before OnConfigsExecuted. It's called after amxx.cfg and all
  * AutoExecConfig() exec commands have been added to the server command buffer.
  *
  * @note This will always be called once and only once per map.

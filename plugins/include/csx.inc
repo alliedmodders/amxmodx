@@ -28,10 +28,10 @@
  */
 enum MapObjective
 {
-	MapObjective_Bomb    = (1<<0),
-	MapObjective_Hostage = (1<<1),
-	MapObjective_Vip     = (1<<2),
-	MapObjective_Escape  = (1<<3),
+	MapObjective_Bomb    = (1 << 0),
+	MapObjective_Hostage = (1 << 1),
+	MapObjective_Vip     = (1 << 2),
+	MapObjective_Escape  = (1 << 3),
 };
 
 /**

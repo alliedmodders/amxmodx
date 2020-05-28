@@ -19,9 +19,9 @@
 #include <string_const>
 
 /**
- * @global 	Unless otherwise noted, all string functions which take in a 
+ * @global 	Unless otherwise noted, all string functions which take in a
  *			writable buffer and maximum length should NOT have the null terminator INCLUDED
- * 			in the length.  This means that this is valid: 
+ * 			in the length. This means that this is valid:
  * 			copy(string, charsmax(string), ...)
  */
 
@@ -58,7 +58,7 @@ native contain(const source[], const string[]);
 native containi(const source[], const string[]);
 
 /**
- * Given a string, replaces the first occurrence of a search string with a 
+ * Given a string, replaces the first occurrence of a search string with a
  * replacement string.
  *
  * @param text			String to perform search and replacements on.
@@ -71,14 +71,14 @@ native containi(const source[], const string[]);
 native replace(text[], len, const what[], const with[]);
 
 /**
- * Given a string, replaces all occurrences of a search string with a 
+ * Given a string, replaces all occurrences of a search string with a
  * replacement string.
  *
- * @note Similar to replace_all() stock, but implemented as native and 
- *       with different algorithm. This native doesn't error on bad 
- *       buffer size and will smartly cut off the string in a way 
+ * @note Similar to replace_all() stock, but implemented as native and
+ *       with different algorithm. This native doesn't error on bad
+ *       buffer size and will smartly cut off the string in a way
  *       that pushes old data out.
- *	
+ *
  * @note Only available in 1.8.3 and above.
  * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
  *
@@ -93,14 +93,14 @@ native replace(text[], len, const what[], const with[]);
 native replace_string(text[], maxlength, const search[], const replace[], bool:caseSensitive = true);
 
 /**
- * Given a string, replaces the first occurrence of a search string with a 
+ * Given a string, replaces the first occurrence of a search string with a
  * replacement string.
  *
- * @note Similar to replace() native, but implemented with more options and 
- *       with different algorithm. This native doesn't error on bad 
- *       buffer size and will smartly cut off the string in a way 
+ * @note Similar to replace() native, but implemented with more options and
+ *       with different algorithm. This native doesn't error on bad
+ *       buffer size and will smartly cut off the string in a way
  *       that pushes old data out.
- *	
+ *
  * @note Only available in 1.8.3 and above.
  * @note This supports multi-byte characters (UTF-8) on case insensitive comparison.
  *
@@ -130,14 +130,14 @@ native replace_stringex(text[], maxlength, const search[], const replace[], sear
  *
  * @return				Number of of all merged characters.
  */
-native add(dest[],len,const src[],max=0);
+native add(dest[], len, const src[], max = 0);
 
 /**
  * Formats a string according to the AMX Mod X format rules (see documentation).
  *
  * @note Example: format(dest, "Hello %s. You are %d years old", "Tom", 17).
  *       If any of your input buffers overlap with the destination buffer,
- *       format() falls back to a "copy-back" version as of 1.65.  This is 
+ *       format() falls back to a "copy-back" version as of 1.65. This is
  *       slower, so you should using a source string that is the same as
  *       the destination.
  *
@@ -159,7 +159,7 @@ native format(output[], len, const format[], any:...);
  *         formatex(buffer, len, "%s", buffer)
  *         formatex(buffer, len, buffer, buffer)
  *         formatex(buffer, len, "%s", buffer[5])
- *       This is because the output is directly stored into "buffer", 
+ *       This is because the output is directly stored into "buffer",
  *       rather than copied back at the end.
  *
  * @param output		Destination string buffer.
@@ -191,15 +191,15 @@ native [MAX_FMT_LENGTH]fmt(const format[], any:...);
 /**
  * Formats a string according to the AMX Mod X format rules (see documentation).
  *
- * @note This is the same as format(), except it grabs parameters from a 
- *       parent parameter stack, rather than a local.  This is useful for 
+ * @note This is the same as format(), except it grabs parameters from a
+ *       parent parameter stack, rather than a local. This is useful for
  *       implementing your own variable argument functions.
  *
- * @note Replacement for format_args.  Much faster and %L compatible.
+ * @note Replacement for format_args. Much faster and %L compatible.
  *       This works exactly like vsnprintf() from C.
  *       You must pass in the output buffer and its size,
  *        the string to format, and the number of the FIRST variable
- *        argument parameter.  For example, for:
+ *        argument parameter. For example, for:
  *        function (a, b, c, ...)
  *        You would pass 4 (a is 1, b is 2, c is 3, et cetera).
  *       There is no vformatex().
@@ -217,9 +217,9 @@ native vformat(buffer[], len, const fmt[], vararg);
  * Formats a string according to the AMX Mod X format rules (see documentation).
  *
  * @note Same as vformat(), except works in normal style dynamic natives.
- *       Instead of passing the format arg string, you can only pass the 
+ *       Instead of passing the format arg string, you can only pass the
  *       actual format argument number itself.
- *       If you pass 0, it will read the format string from an optional 
+ *       If you pass 0, it will read the format string from an optional
  *       fifth parameter.
  *
  * @param buffer		Destination string buffer.
@@ -232,7 +232,7 @@ native vformat(buffer[], len, const fmt[], vararg);
 native vdformat(buffer[], len, fmt_arg, vararg, ...);
 
 /**
- * Gets parameters from function as formated string. 
+ * Gets parameters from function as formated string.
  *
  * @param output		Destination string buffer.
  * @param len			Maximum length of output string buffer.
@@ -251,7 +251,7 @@ native format_args(output[], len, pos = 0);
  *
  * @return				Number of cells written to buffer.
  */
-native num_to_str(num,string[],len);
+native num_to_str(num, string[], len);
 
 /**
  * Converts a string to an integer.
@@ -262,27 +262,27 @@ native num_to_str(num,string[],len);
 native str_to_num(const string[]);
 
 /**
- * Parses the 'string' interpreting its content as an integral number of the specified 'base', 
- * which is returned as integer value. The function also sets the value of 'endPos' to point 
+ * Parses the 'string' interpreting its content as an integral number of the specified 'base',
+ * which is returned as integer value. The function also sets the value of 'endPos' to point
  * to the position of the first character after the number.
- * 
+ *
  * This is the same as C++ strtol function with a difference on second param.
- * 
- * The function first discards as many whitespace characters as necessary until the first 
- * non-whitespace character is found. Then, starting from this character, takes as many 
+ *
+ * The function first discards as many whitespace characters as necessary until the first
+ * non-whitespace character is found. Then, starting from this character, takes as many
  * characters as possible that are valid following a syntax that depends on the 'base' parameter,
  * and interprets them as a numerical value. Finally, a position of the first character following
  * the integer representation in 'string' is stored in 'endPos'.
- * 
- * If the value of 'base' is zero, the syntax expected is similar to that of integer constants, 
+ *
+ * If the value of 'base' is zero, the syntax expected is similar to that of integer constants,
  * which is formed by a succession of :
  *    An optional sign character (+ or -)
  *    An optional prefix indicating octal or hexadecimal base ("0" or "0x"/"0X" respectively)
  *    A sequence of decimal digits (if no base prefix was specified) or either octal or hexadecimal digits if a specific prefix is present
  *
- * If the 'base' value is between 2 and 36, the format expected for the integral number is a succession 
- * of any of the valid digits and/or letters needed to represent integers of the specified radix 
- * (starting from '0' and up to 'z'/'Z' for radix 36). The sequence may optionally be preceded by 
+ * If the 'base' value is between 2 and 36, the format expected for the integral number is a succession
+ * of any of the valid digits and/or letters needed to represent integers of the specified radix
+ * (starting from '0' and up to 'z'/'Z' for radix 36). The sequence may optionally be preceded by
  * a sign (either + or -) and, if base is 16, an optional "0x" or "0X" prefix.
  *
  * If the first sequence of non-whitespace characters in 'string' is not a valid integral number
@@ -297,7 +297,7 @@ native str_to_num(const string[]);
  *                  If this is 0, the base used is determined by the format in the sequence.
  * @return          On success, the function returns the converted integral number as integer value.
  *                  If no valid conversion could be performed, a zero value is returned.
- *                  If the value read is out of the range of representable values by a cell, 
+ *                  If the value read is out of the range of representable values by a cell,
  *                  the function returns 'cellmin' or 'cellmax'.
  */
 native strtol(const string[], &endPos = 0, base = 0);
@@ -305,15 +305,15 @@ native strtol(const string[], &endPos = 0, base = 0);
 /**
  * Parses the 'string' interpreting its content as an floating point number and returns its value as a float.
  * The function also sets the value of 'endPos' to point to the position of the first character after the number.
- * 
+ *
  * This is the same as C++ strtod function with a difference on second param.
- * 
- * The function first discards as many whitespace characters as necessary until the first 
- * non-whitespace character is found. Then, starting from this character, takes as many 
- * characters as possible that are valid and interprets them as a numerical value. 
- * Finally, a position of the first character following the float representation in 'string' 
+ *
+ * The function first discards as many whitespace characters as necessary until the first
+ * non-whitespace character is found. Then, starting from this character, takes as many
+ * characters as possible that are valid and interprets them as a numerical value.
+ * Finally, a position of the first character following the float representation in 'string'
  * is stored in 'endPos'.
- * 
+ *
  * If the first sequence of non-whitespace characters in 'string' is not a valid float number
  * as defined above, or if no such sequence exists because either 'string' is empty or it contains
  * only whitespace characters, no conversion is performed.
@@ -338,7 +338,7 @@ native Float:strtof(const string[], &endPos = 0);
  */
 native float_to_str(Float:fl, string[], len);
 
-/** 
+/**
  * Converts a string to a floating point number.
  *
  * @param string		String to convert to a foat.
@@ -355,7 +355,7 @@ native Float:str_to_float(const string[]);
  *
  * @return				True if equal, false otherwise.
  */
-native equal(const a[],const b[],c=0);
+native equal(const a[], const b[], c = 0);
 
 /**
  * Returns whether two strings are equal with case ignoring.
@@ -373,7 +373,7 @@ native equali(const a[], const b[], c = 0);
 /**
  * Copies one string to another string.
  *
- * @note If the destination buffer is too small to hold the source string, the 
+ * @note If the destination buffer is too small to hold the source string, the
  *       destination will be truncated.
  *
  * @param dest			Destination string buffer to copy to.
@@ -382,7 +382,7 @@ native equali(const a[], const b[], c = 0);
  *
  * @return				Number of cells written.
  */
-native copy(dest[],len,const src[]);
+native copy(dest[], len, const src[]);
 
 /**
  * Copies one string to another string until ch is found.
@@ -394,7 +394,7 @@ native copy(dest[],len,const src[]);
  *
  * @return				Number of cells written.
  */
-native copyc(dest[],len,const src[],ch);
+native copyc(dest[], len, const src[], ch);
 
 /**
  * Sets string with given character.
@@ -405,13 +405,13 @@ native copyc(dest[],len,const src[],ch);
  *
  * @noreturn
  */
-native setc(src[],len,ch);
+native setc(src[], len, ch);
 
 /**
  * Gets parameters from text.
  *
  * @note Example: to split text: "^"This is^" the best year",
- *       call function like this: parse(text,arg1,len1,arg2,len2,arg3,len3,arg4,len4)
+ *       call function like this: parse(text, arg1, len1, arg2, len2, arg3, len3, arg4, len4)
  *       and you will get: "This is", "the", "best", "year"
  *       Function returns number of parsed parameters.
  *
@@ -445,7 +445,7 @@ native parse(const text[], ... );
  *
  * @noreturn
  */
-native strtok(const text[], Left[], leftLen, Right[], rightLen, token=' ', trimSpaces=0);
+native strtok(const text[], Left[], leftLen, Right[], rightLen, token = ' ', trimSpaces = 0);
 
 /**
  * Breaks a string in two by token.
@@ -460,7 +460,7 @@ native strtok(const text[], Left[], leftLen, Right[], rightLen, token=' ', trimS
  * @param token			Token to split by
  * @param trim			Flags for trimming behavior, see above
  *
- * @return				Returns position of token in string if found, 
+ * @return				Returns position of token in string if found,
  *						-1 if token was not found
  */
 native strtok2(const text[], left[], const llen, right[], const rlen, const token = ' ', const trim = 0);
@@ -662,9 +662,9 @@ native bool:is_char_upper(ch);
  */
 native bool:is_char_lower(ch);
 
-/** 
- * Returns the number of bytes a character is using.  This is
- * for multi-byte characters (UTF-8).  For normal ASCII characters,
+/**
+ * Returns the number of bytes a character is using. This is
+ * for multi-byte characters (UTF-8). For normal ASCII characters,
  * this will return 1.
  *
  * @note Only available in 1.8.3 and above.
@@ -776,7 +776,7 @@ native argparse(const text[], pos, argbuffer[], maxlen);
  * @param partLen		Maximum length of the string part buffer.
  *
  * @return				-1 if no match was found; otherwise, an index into source
- *						marking the first index after the searched text.  The
+ *						marking the first index after the searched text. The
  *						index is always relative to the start of the input string.
  */
 native split_string(const source[], const split[], part[], partLen);

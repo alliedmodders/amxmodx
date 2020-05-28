@@ -541,7 +541,7 @@ native entity_set_edict(iIndex, iKey, iNewIndex);
  * @param szReturn  Buffer to copy value to
  * @param iRetLen   Maximum size of buffer
  *
- * @return          Number of cells written to buffer,  0 if an invalid entry
+ * @return          Number of cells written to buffer, 0 if an invalid entry
  *                  was specified
  * @error           If an invalid entity index is provided, an error will be
  *                  thrown.
@@ -586,7 +586,7 @@ native entity_get_byte(iIndex, iKey);
  *
  * @note For a list of valid bytearray type entries, see the EV_BYTE_* constants
  *       in engine_const.inc
- * @note The value is automatically clamped to [0,255].
+ * @note The value is automatically clamped to [0, 255].
  *
  * @param iIndex    Entity index
  * @param iKey      Entry to write to

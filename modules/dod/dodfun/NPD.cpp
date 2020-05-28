@@ -206,7 +206,7 @@ static cell AMX_NATIVE_CALL set_user_teamname(AMX *amx, cell *params){
 	if ( pPlayer->ingame ){
 		
 		int iLen;
-		char *szTeamName = MF_GetAmxString(amx, params[1], 0, &iLen);
+		char *szTeamName = MF_GetAmxString(amx, params[2], 0, &iLen);
 
 		pPlayer->setTeamName(szTeamName);
 	

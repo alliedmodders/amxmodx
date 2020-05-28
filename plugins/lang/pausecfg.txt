@@ -591,11 +591,11 @@ CLEAR_PAUSED = Goleste fisier-ul cu cele oprite
 [hu]
 PAUSE_COULDNT_FIND = Nem található a plugin "%s"
 PAUSE_PLUGIN_MATCH = Plugin egyezik "%s"		
-PAUSE_CONF_CLEARED = Beállitások fájl betöltve. Válts pályát a használatához
+PAUSE_CONF_CLEARED = Beállítások fájl betöltve. Válts pályát a használatához!
 PAUSE_ALR_CLEARED = A beállítások már ki vannak ürítve!
 PAUSE_CONF_SAVED = Beállítások sikeresen elmentve
 PAUSE_SAVE_FAILED = Nem sikerült a mentés!!!
-LOCKED = LEZARVA
+LOCKED = LEZÁRVA
 PAUSE_UNPAUSE = Pluginok Ki-/Bekapcsolása
 CLEAR_STOPPED = A leállított pluginok fájljának ürítése
 SAVE_STOPPED = Leállítottak mentése
@@ -608,7 +608,7 @@ PAUSE_LOADED = Pluginok szüneteltetése: Betöltött pluginok
 STOPPED = leállítva
 VERSION = verzió
 FILE = fájl
-PAUSE_ENTRIES = Bejegyzés %d - %d a %d-bol (%d fut)
+PAUSE_ENTRIES = Bejegyzés %d - %d / %d (%d fut)
 PAUSE_USE_MORE = Írj 'amx_pausecfg list %d' a többihez
 PAUSE_USE_BEGIN = Írj 'amx_pausecfg list 1' az elejéhez
 PAUSE_USAGE = Használat:  amx_pausecfg <parancs> [név]
@@ -625,7 +625,7 @@ COM_PAUSE_ADD = ^tadd <nev> - megjelölni a plugint megallíthatóként
 SAVE_PAUSED = Szüneteltetettek mentése
 COM_PAUSE_SAVE_PAUSED = ^tsave - menti a szünetelt pluginok listáját
 COM_PAUSE_CLEAR_PAUSED = ^tclear - törli a szünetelt pluginok listáját
-CANT_UNPAUSE_PLUGIN = A "%s" plugint nemlehet szüneteltetni vagy engedályezni.
+CANT_UNPAUSE_PLUGIN = A "%s" plugint nem lehet szüneteltetni vagy engedélyezni.
 CLEAR_PAUSED = Törli a szüneteltetett pluginok listáját
 
 [lt]

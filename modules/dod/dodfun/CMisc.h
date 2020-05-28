@@ -24,14 +24,14 @@
 #define DODFUN_VERSION "1.0.2"
 
 // DoD Player
-#define STEAM_PDOFFSET_WDEPLOY		229	 + LINUXOFFSET // weapon deploy
+#define STEAM_PDOFFSET_WDEPLOY		230	 + LINUXOFFSET // weapon deploy
 
-#define STEAM_PDOFFSET_TEAMNAME		1396 + (LINUXOFFSET * sizeof(char)) // team name 349 char[16]
-#define STEAM_PDOFFSET_CLASS		366  + LINUXOFFSET // player class
-#define STEAM_PDOFFSET_RCLASS		367  + LINUXOFFSET // random class  
+#define STEAM_PDOFFSET_TEAMNAME		1400 + (LINUXOFFSET * sizeof(char)) // team name 349 char[16]
+#define STEAM_PDOFFSET_CLASS		367  + LINUXOFFSET // player class
+#define STEAM_PDOFFSET_RCLASS		368  + LINUXOFFSET // random class  
 
-#define STEAM_PDOFFSET_SCORE		475  + LINUXOFFSET // score
-#define STEAM_PDOFFSET_DEATHS		476  + LINUXOFFSET // deaths
+#define STEAM_PDOFFSET_SCORE		476  + LINUXOFFSET // score
+#define STEAM_PDOFFSET_DEATHS		477  + LINUXOFFSET // deaths
 
 // DoD Control Point
 struct pd_dcp {

@@ -53,22 +53,22 @@ RES_WEAP = Ogranici Oruzja
 TELE_PLAYER = Teleport Igraca
 
 [tr]
-KICK_PLAYER = Oyuncuyu at
-BAN_PLAYER = Oyuncuyu banla
-SLAP_SLAY = Oyuncuyu tokatla/oldur
-TEAM_PLAYER = Takim oyuncusu ^n
-CHANGEL = Bolum degisdir
-VOTE_MAPS = Mapler icin oylama ^n
-SPECH_STUFF = Konusma cihazlari
-CLIENT_COM = Oyuncu emirleri
-SERVER_COM = Server emirleri
-CVARS_SET = Cvars ayarlari
-CONFIG = Config ayarlari
-LANG_SET = Dil ayarlari
-STATS_SET = Statistik ayarlari ^n
-PAUSE_PLUG = Pluginleri durdurun
-RES_WEAP = Yasakli silahlar
-TELE_PLAYER = Oyuncuyu teleport yapi
+KICK_PLAYER = Oyuncu At
+BAN_PLAYER = Oyuncu Banla
+SLAP_SLAY = Oyuncu Tokatla/Oldur
+TEAM_PLAYER = Takim Oyuncusu ^n
+CHANGEL = Harita Degis
+VOTE_MAPS = Harita oylamasi yap ^n
+SPECH_STUFF = Konusma Zirvalari
+CLIENT_COM = Kullanici Komutlari
+SERVER_COM = Server Komutlari
+CVARS_SET = Cvar Ayarlari
+CONFIG = Yapilandirma
+LANG_SET = Dil Ayarlari
+STATS_SET = Istatistik Ayarlari ^n
+PAUSE_PLUG = Eklentileri Durdur
+RES_WEAP = Silahlari Yasakla
+TELE_PLAYER = Oyuncu Isinla
 
 [fr]
 KICK_PLAYER = Kicker Joueur

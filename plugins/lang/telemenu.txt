@@ -20,11 +20,11 @@ CUR_LOC = Sadasnja Lokacija
 SAVE_LOC = Sacuvaj Lokaciju
 
 [tr]
-ADMIN_TELEPORT_1 = ADMIN: teleportladi %s
-ADMIN_TELEPORT_2 = ADMIN %s: teleportladi %s
-TELE_MENU = Teleport Menusu
-CUR_LOC = Oldugu su anki yer
-SAVE_LOC = Oldugu yeri saklayin
+ADMIN_TELEPORT_1 = ADMIN, %s kisisini teleportladi
+ADMIN_TELEPORT_2 = ADMIN %s, %s kisisini teleportladi
+TELE_MENU = Teleport Menu
+CUR_LOC = Suanki Konum
+SAVE_LOC = Konumu Kaydet
 
 [fr]
 ADMIN_TELEPORT_1 = ADMIN: teleporte %s

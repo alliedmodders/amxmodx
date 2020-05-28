@@ -8,7 +8,7 @@ DROPPED_RES = Sorry, dieser Slot ist reserviert
 DROPPED_RES = Server je pun, nemate pristup rezervisanim mestima
 
 [tr]
-DROPPED_RES = Reservasyon nedeniyle atildiniz
+DROPPED_RES = Slot rezervasyonundan dolayi dusuruldun
 
 [fr]
 DROPPED_RES = Desole, un admin vient de prendre sa place reservee, tu as ete ejecte du serveur

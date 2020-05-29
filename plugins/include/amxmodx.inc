@@ -243,10 +243,12 @@ forward client_putinserver(id);
  * @param plugin_name   Name of the plugin
  * @param version       Version of the plugin
  * @param author        Author of the plugin
+ * @param url           URL of the plugin
+ * @param description   Description of the plugin
  *
  * @return              Plugin id of the calling plugin
  */
-native register_plugin(const plugin_name[], const version[], const author[]);
+native register_plugin(const plugin_name[], const version[], const author[], const url[] = "", const description[] = "");
 
 /**
  * Precaches a model file.
@@ -2329,12 +2331,15 @@ native is_plugin_loaded(const name[], bool:usefilename = false);
  * @param len4      Maximum author buffer size
  * @param status    Buffer to copy plugin status flags to
  * @param len5      Maximum status buffer size
- * @param ...       Unused and ignored
+ * @param url       Buffer to copy plugin url to
+ * @param len6      Maximum url buffer size
+ * @param desc      Buffer to copy plugin description to
+ * @param len7      Maximum description buffer size
  *
  * @return          Plugin index on success, -1 if there is no plugin with given
  *                  index
  */
-native get_plugin(index, filename[] = "", len1 = 0, name[] = "", len2 = 0, version[] = "", len3 = 0, author[] = "", len4 = 0, status[] = "", len5 = 0, ...);
+native get_plugin(index, filename[] = "", len1 = 0, name[] = "", len2 = 0, version[] = "", len3 = 0, author[] = "", len4 = 0, status[] = "", len5 = 0, url[] = "", len6 = 0, desc[] = "", len7 = 0);
 
 /**
  * Returns the number of loaded AMXX plugins.

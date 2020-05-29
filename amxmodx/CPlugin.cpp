@@ -160,6 +160,32 @@ int CPluginMngr::loadPluginsFromFile(const char* filename, bool warn)
 				set_amxstring(plugin->getAMX(), addr, STRING(gpGlobals->mapname), MAX_MAPNAME_LENGTH - 1);
 			}
 
+			auto length = 0;
+			if (amx_FindPubVar(plugin->getAMX(), "PluginName", &addr) != AMX_ERR_NOTFOUND)
+			{
+				plugin->setTitle(get_amxstring(plugin->getAMX(), addr, 0, length));
+			}
+
+			if (amx_FindPubVar(plugin->getAMX(), "PluginVersion", &addr) != AMX_ERR_NOTFOUND)
+			{
+				plugin->setVersion(get_amxstring(plugin->getAMX(), addr, 0, length));
+			}
+
+			if (amx_FindPubVar(plugin->getAMX(), "PluginAuthor", &addr) != AMX_ERR_NOTFOUND)
+			{
+				plugin->setAuthor(get_amxstring(plugin->getAMX(), addr, 0, length));
+			}
+
+			if (amx_FindPubVar(plugin->getAMX(), "PluginURL", &addr) != AMX_ERR_NOTFOUND)
+			{
+				plugin->setUrl(get_amxstring(plugin->getAMX(), addr, 0, length));
+			}
+
+			if (amx_FindPubVar(plugin->getAMX(), "PluginDescription", &addr) != AMX_ERR_NOTFOUND)
+			{
+				plugin->setDescription(get_amxstring(plugin->getAMX(), addr, 0, length));
+			}
+
 			if (amx_FindPubVar(plugin->getAMX(), "NULL_STRING", &addr) != AMX_ERR_NOTFOUND)
 			{
 				plugin->m_pNullStringOfs = get_amxaddr(plugin->getAMX(), addr);
@@ -281,6 +307,7 @@ CPluginMngr::CPlugin::CPlugin(int i, const char* p, const char* n, char* e, size
 	title = unk;
 	author = unk;
 	version = unk;
+	url = unk;
 
 	char file[PLATFORM_MAX_PATH];
 	char* path = build_pathname_r(file, sizeof(file), "%s/%s", p, n);

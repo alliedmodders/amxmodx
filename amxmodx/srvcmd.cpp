@@ -9,6 +9,7 @@
 
 #include "amxmodx.h"
 #include <amxmodx_version.h>
+#include <string>
 
 void amx_command()
 {
@@ -25,7 +26,7 @@ void amx_command()
 	if (!strcmp(cmd, "plugins") || !strcmp(cmd, "list"))
 	{
 		print_srvconsole("Currently loaded plugins:\n");
-		print_srvconsole("       %-23.22s %-11.10s %-17.16s %-16.15s %-9.8s\n", "name", "version", "author", "file", "status");
+		print_srvconsole("       %-3.2s %-23.22s %-11.10s %-17.16s %-32.31s %-12.11s %-9.8s\n", "id", "name", "version", "author", "url", "file", "status");
 
 		int plugins = 0;
 		int	running = 0;
@@ -40,7 +41,7 @@ void amx_command()
 				if ((*a).isValid() && !(*a).isPaused())
 					++running;
 
-				print_srvconsole(" [%3d] %-23.22s %-11.10s %-17.16s %-16.15s %-9.8s\n", plugins, (*a).getTitle(), (*a).getVersion(), (*a).getAuthor(), (*a).getName(), (*a).getStatus());
+				print_srvconsole(" [%3d] %-3i %-23.22s %-11.10s %-17.16s %-32.31s %-12.11s %-9.8s\n", plugins, (*a).getId(), (*a).getTitle(), (*a).getVersion(), (*a).getAuthor(), (*a).getUrl(), (*a).getName(), (*a).getStatus());
 			}
 			++a;
 		}
@@ -62,6 +63,52 @@ void amx_command()
 		}
 
 		print_srvconsole("%d plugins, %d running\n", plugins, running);
+	}
+	else if (!strcmp(cmd, "plugin"))
+	{
+		if (CMD_ARGC() < 3)
+		{
+			print_srvconsole("Usage: amxx plugin [ id ]\nFor a list of plugins, use the \"amxx plugins\" command\n");
+		}
+		else
+		{
+			char *pEnd;
+			auto id = strtol(CMD_ARGV(2), &pEnd, 10);
+
+			if (!pEnd)
+			{
+				print_srvconsole("Invalid plugin index %i.\n", id);
+				return;
+			}
+
+			auto plugin = g_plugins.findPlugin(id);
+
+			if (plugin && plugin->isValid())
+			{
+				print_srvconsole("   Name: %s\n", plugin->getTitle());
+				print_srvconsole("   Version: %s\n", plugin->getVersion());
+				print_srvconsole("   Author: %s\n", plugin->getAuthor());
+
+				auto url = plugin->getUrl();
+				if (url[0])
+				{
+					print_srvconsole("   URL: %s\n", url);
+				}
+
+				auto description = plugin->getDescription(); 
+				if (description[0])
+				{
+					print_srvconsole("   Description: %s\n", description);
+				}
+
+				print_srvconsole("   Filename: %s\n", plugin->getName());
+				print_srvconsole("   Status: %s\n", plugin->getStatus());
+			}
+			else
+			{
+				print_srvconsole("Plugin index %i not found.\n", id);
+			}
+		}
 	}
 	else if (!strcmp(cmd, "pause") && CMD_ARGC() > 2)
 	{
@@ -244,6 +291,7 @@ void amx_command()
 		print_srvconsole("   version                    - display amxx version info\n");
 		print_srvconsole("   gpl                        - print the license\n");
 		print_srvconsole("   plugins [ criteria ]       - list plugins currently loaded or ones matching given search criteria\n");
+		print_srvconsole("   plugin [ id ]              - information about a plugin\n");
 		print_srvconsole("   modules                    - list modules currently loaded\n");
 		print_srvconsole("   cvars [ plugin ] [ index ] - list cvars handled by amxx or show information about a cvar if index is provided\n");
 		print_srvconsole("   cmds [ plugin ]            - list commands registered by plugins\n");

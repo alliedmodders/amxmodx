@@ -873,6 +873,7 @@ static cell AMX_NATIVE_CALL menu_display(AMX *amx, cell *params)
 
 	if (g_bmod_cstrike)
 	{
+		if(!pPlayer->pEdict || !pPlayer->pEdict->pvPrivateData)return 0;
 		enum JoinState { Joined = 0 };
 		enum MenuState { Menu_OFF = 0, Menu_ChooseTeam = 1, Menu_ChooseAppearance = 3 };
 

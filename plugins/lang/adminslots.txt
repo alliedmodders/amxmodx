@@ -1,8 +1,12 @@
 [en]
 DROPPED_RES = Dropped due to slot reservation
+CVAR_RESERVATION = Amount of slots to reserve
+CVAR_HIDESLOTS = If you set this to 1, you can hide slots on your server.^nIf the server's public and hidden slots are full, you must manually connect with the "connect" console command.
 
 [de]
 DROPPED_RES = Sorry, dieser Slot ist reserviert
+CVAR_RESERVATION = Anzahl der zu reservierenden Slots
+CVAR_HIDESLOTS = Wenn diese CVAR auf 1 gesetzt wird, können Slots auf Ihrem Server ausgeblendet werden.^nWenn die öffentlichen Slots auf dem Server "voll" sind und weitere freie Slots ausgeblendet sind, müssen Sie die Verbindung manuell über den Konsolenbefehl "connect" herstellen.
 
 [sr]
 DROPPED_RES = Server je pun, nemate pristup rezervisanim mestima

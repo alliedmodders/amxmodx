@@ -88,21 +88,44 @@ void Client_TeamInfo(void* mValue)
 			if (index < 1 || index > gpGlobals->maxClients) break;
 			char* msg = (char*)mValue;
 			if (!msg) break;
-			g_players[index].team = msg;
-			g_teamsIds.registerTeam(msg, -1);
-			g_players[index].teamId = g_teamsIds.findTeamId(msg);
 
-			/**
-			* CS fix for SPECTATOR team. 
-			* -
-			* When a player chooses spectator, ScoreInfo is sent before TeamInfo and with 0 as index.
-			* This means for the first round of first spectator, SPECTATOR name is not associated with its index.
-			* The following fix manually sets the team index when we hit SPECTATOR team.
-			*/
-			if (g_players[index].teamId == -1 && g_bmod_cstrike && !strcmp(msg, "SPECTATOR"))
+			auto pPlayer = GET_PLAYER_POINTER_I(index);
+		
+			pPlayer->team = msg;
+			g_teamsIds.registerTeam(msg, -1);
+			pPlayer->teamId = g_teamsIds.findTeamId(msg);
+						
+			if (pPlayer->teamId == -1)
 			{
-				g_players[index].teamId = 3;
-				g_teamsIds.registerTeam(msg, 3);
+				/**
+				 * CS fix for SPECTATOR team. 
+				 * -
+				 * When a player chooses spectator, ScoreInfo is sent before TeamInfo and with 0 as index.
+				 * This means for the first round of first spectator, SPECTATOR name is not associated with its index.
+				 *  The following fix manually sets the team index when we hit SPECTATOR team.
+				 */
+				if (g_bmod_cstrike && !strcmp(msg, "SPECTATOR"))
+				{
+					pPlayer->teamId = 3;
+					g_teamsIds.registerTeam(msg, 3);
+				}
+
+				/**
+				 * Fixes in-between situation where the team name is not yet associated with a valid index
+				 * and ScoreInfo is executed later (used to retrieve the index). E.g. a player is dead,
+				 * then changes team. Index will return -1 until ScoreInfo is sent, usually at the next spawn.
+				 */
+				else if ((g_bmod_cstrike || g_bmod_dod || g_bmod_tfc || g_bmod_gearbox || g_bmod_valve) 
+					&&  pPlayer->pEdict->pvPrivateData 
+					&& !pPlayer->IsAlive())
+				{
+					GET_OFFSET_NO_ERROR("CBasePlayer", m_iTeam);
+
+					const auto teamId = get_pdata<int>(pPlayer->pEdict, m_iTeam);
+					
+					pPlayer->teamId = teamId;
+					g_teamsIds.registerTeam(msg, teamId);
+				}
 			}
 
 			break;

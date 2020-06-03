@@ -5,6 +5,8 @@ CVAR_HIDESLOTS = If you set this to 1, you can hide slots on your server.^nIf th
 
 [de]
 DROPPED_RES = Sorry, dieser Slot ist reserviert
+CVAR_RESERVATION = Anzahl der zu reservierenden Slots
+CVAR_HIDESLOTS = Wenn diese CVAR auf 1 gesetzt wird, können Slots auf Ihrem Server ausgeblendet werden.^nWenn die öffentlichen Slots auf dem Server "voll" sind und weitere freie Slots ausgeblendet sind, müssen Sie die Verbindung manuell über den Konsolenbefehl "connect" herstellen.
 
 [sr]
 DROPPED_RES = Server je pun, nemate pristup rezervisanim mestima

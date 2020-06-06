@@ -20,10 +20,13 @@ if [ $# != 0 ]
 	then
 		for src in "$@"
 		do
-			amxxfile="`echo $src | sed -e 's/\.sma$/.amxx/'`"
-			echo -n "Compiling $src ..."
-			./amxxpc $src -ocompiled/$amxxfile >> temp.txt
-			echo "done"
+			if [[ $src == *.sma ]]
+			then
+				amxxfile="`echo $src | sed -e 's/\.sma$/.amxx/'`"
+				echo -n "Compiling $src ..."
+				./amxxpc $src -ocompiled/$amxxfile >> temp.txt
+				echo "done"
+			fi
 		done
 	else
 		for sourcefile in *.sma

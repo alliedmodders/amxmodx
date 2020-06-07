@@ -17,6 +17,11 @@ case "$os" in
 	*)
 esac
 
+quit_script(){
+	echo "Exiting..."
+	exit 1
+}
+
 check_if_gameserver () {
 	if [ ! -d "../configs" -a ! -d "../data" -a ! -d "../dlls" -a ! -d "../modules" -a ! -d "../plugins" ]
 	then
@@ -38,9 +43,8 @@ get_base () {
 		else
 			echo "  type: brew install tar"
 		fi
-		 
-		echo "Exiting..."
-		exit 1
+		
+		quit_script
 	fi
 	
 	ran=$RANDOM
@@ -53,8 +57,7 @@ get_base () {
 	if [ $? -ne 0 ]
 	then
 		echo "Internet connection is required"
-		echo "Exiting..."
-		exit 1
+		quit_script
 	fi
 	echo -ne "####                 (20%)\r"
 	wget -q https://www.amxmodx.org/amxxdrop/$version/$latest
@@ -142,13 +145,20 @@ get_game () {
 	echo "  6) Team Fortress Classic"
 	echo "  7) The Specialists"
 	echo "  0) Exit"
+	
+	latest=$(wget -qO- https://www.amxmodx.org/)
+	if [ $? -ne 0 ]
+	then
+		echo "Internet connection is required"
+		quit_script
+	fi
+	
 	echo -n "Number: "
 	read -r id
 	
 	if (( id == 0 )) || (( id > 7 ))
 	then
-		echo "Exiting..."
-		exit 1
+		quit_script
 	fi
 	
 	echo -e "\nAMX MOD X Version"
@@ -164,16 +174,18 @@ get_game () {
 	then
 		version="1.10"
 	else
-		echo "Exiting..."
-		exit 1
+		quit_script
 	fi
 	
 	echo -e "\nBefore updating files, note that all modifications"
 	echo "  of default files will be reset"
 	echo "Default files are shown below"
-	echo "      configs   / hamdata.ini"
+	if (( ver == 1 ))
+	then
+		echo "      configs   / hamdata.ini"
+	fi
 	echo "      data      / all default files"
-	echo "      dlls      / amxmodx_mm_i386.so"
+	echo "      dlls      / all default files"
 	echo "      modules   / all default files"
 	echo "      plugins   / all default files"
 	echo "      scripting / all default files"
@@ -182,8 +194,7 @@ get_game () {
 	
 	if [ ! "$answer" == "Y" ]
 	then
-		echo "Exiting..."
-		exit 1
+		quit_script
 	fi
 }
 

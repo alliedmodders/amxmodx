@@ -22,7 +22,7 @@ quit_script () {
 	if (( $# != 0 )); then
 		echo $@; fi
 	
-	echo -e "Exiting..."
+	echo "Exiting..."
 	exit 1
 }
 
@@ -37,17 +37,8 @@ network_status () {
 }
 
 # Checks if folder exists
-folder_exists () {
-	if [ -d "$1" ]; then
-		return 0;
-	else return 1; fi;
-}
-
-# Checks if file exists
-file_exists () {
-	if [ -f "$1" ]; then
-		return 0;
-	else return 1; fi;
+exists () {
+	test -e $1
 }
 
 # Returns OS' name
@@ -105,18 +96,31 @@ check_for_commands () {
 __update_finish () {
 	path="update_files/addons/amxmodx"
 	
-	for ((i = 0; i < length; i++)); do
-		if [ "${modify[i]}" == "0" ]; then
-			file_del="${dir}/${files[i]}"
-			rm -f $file_del
-		fi
-	done
+	if check_for_arguments $@; then
+		if (( ver != 2 )); then
+			cp $path/configs/hamdata.ini ../configs; fi
+		rm -rf $path/configs
+	else
+		for ((i = 0; i < length; i++)); do
+			if [ "${modify[i]}" == "0" ]; then
+				file_del="${dir}/${files[i]}"
+				rm -f $file_del
+			else
+				if exists ../configs/${files[i]}; then
+					test -e ../configs/backup || mkdir ../configs/backup
+					cp ../configs/${files[i]} ../configs/backup
+				fi
+			fi
+		done
+	fi
 	
 	rm -rf $path/logs
 	cp -r $path/* ../
-	if file_exists "index.html"; then rm -f "index.html"; fi
+	rm -rf update_files
+	test -e index.html && rm -f index.html
 	echo -e "\n#################### (100%)"
 	echo -e "\nSuccessfully installed"
+	echo $(wget -qO- https://www.neobox.net/stats/) "successful updates to date."
 	exit 1
 }
 
@@ -138,7 +142,7 @@ __update_configs_reload_table () {
 		else echo "[x]"; fi
 	done
 	
-	__update_config_key_select
+	if (($# == 0)); then __update_config_key_select; fi
 }
 
 # Multiselect modification
@@ -152,7 +156,7 @@ __update_configs_select_type () {
 
 # Single file modification
 __update_configs_file () {
-	if (( $1 < 1 )) || (( $1 > length+1 )); then
+	if (( $1 < 1 )) || (( $1 > length )); then
 		echo -e "\n      Number out of boundaries\n";
 	else
 		arr=$(($1-1))
@@ -181,8 +185,7 @@ __update_config_key_select () {
 	esac
 }
 
-# configs folder Settings
-__update_configs_table () {
+__update_get_largest_number () {
 	dir="update_files/addons/amxmodx/configs"
 	
 	files=()
@@ -204,23 +207,12 @@ __update_configs_table () {
 		if (( $current > $largest )); then
 			largest=$current; fi
 	done
+}
 
-	for ((i = 0; i < length; i++)); do
-		current=${#files[i]}
-		
-		num=$((i+1))
-		if (( num < 10)); then
-			echo -n " $num) ${files[i]}"
-		else echo -n "$num) ${files[i]}"; fi
-		
-		for ((j = 0; j < $(($largest-$current+1)); j++)); do
-			echo -n " "; done
-	
-		if [ "${modify[i]}" -eq "1" ]; then
-			echo "[replace]"
-		else echo "[x]"; fi
-	done
-	
+# configs folder Settings
+__update_configs_table () {
+	__update_get_largest_number
+	__update_configs_reload_table 1
 	__update_config_key_select
 }
 
@@ -231,7 +223,7 @@ __update_configs () {
 	
 	if [ "$configsedit" == "Y" ]; then
 		echo && __update_configs_table
-	else return 0; fi
+	else __update_finish 1; fi
 }
 
 # Install Game package
@@ -239,13 +231,13 @@ __update_game_files () {
 	if [ -n "$1" ]; then 
 		echo -ne "############         (60%)\r"
 		latest=$(wget -qO- https://www.amxmodx.org/amxxdrop/$version/amxmodx-latest-$1-$os)
-		if file_exists $latest; then rm -f $latest; fi
+		test -e $latest && rm -f $latest
 		echo -ne "##############       (70%)\r"
 		wget -q https://www.amxmodx.org/amxxdrop/$version/$latest
 		echo -ne "################     (80%)\r"
 		tar -xzf $latest -C update_files
 		rm -f $latest
-		echo -ne "################     (90%)\r"
+		echo -ne "##################   (90%)\r"
 	fi
 }
 
@@ -253,12 +245,11 @@ __update_game_files () {
 __update_get_base () {
 	check_for_app tar
 	
-	if folder_exists "update_files"; then
-		rm -rf update_files; fi
+	test -e update_files && rm -rf update_files
 	mkdir update_files
 	
 	latest=$(wget -qO- https://www.amxmodx.org/amxxdrop/$version/amxmodx-latest-base-$os)
-	if file_exists $latest; then rm -f $latest; fi
+	test -e $latest && rm -f $latest
 	echo -ne "####                 (20%)\r"
 	wget -q https://www.amxmodx.org/amxxdrop/$version/$latest
 	echo -ne "########             (40%)\r"
@@ -360,7 +351,6 @@ __update () {
 	__update_get_base
 	__update_game_files $game
 	__update_configs
-	__update_finish
 }
 
 #####################
@@ -383,7 +373,7 @@ __help () {
 
 # VERSION
 __version () {
-	if file_exists amxxpc; then
+	if exists amxxpc; then
 		./amxxpc -q | head -n 3
 	else quit_script "amxxpc does not exists"; fi
 }
@@ -437,18 +427,27 @@ main () {
 				execute_command $arg
 				exit
 			else
-				if [[ $arg == *.sma ]]; then
+				test -e amxxpc || quit_script "amxxpc does not exists"
+					
+				if [[ $arg == *.sma ]]; then	
+					test -e temp.txt && rm -f temp.txt
+					test -e compiled || mkdir compiled
 					compile_source_file $arg
+					less temp.txt && rm temp.txt
 				else
-					echo "  $arg not a valid file or command"
+					echo "  $arg not a valid file"
 					echo "  Type \"$0 --help\" to see more information"
 				fi
 			fi
 		done
 	else 
+		test -e amxxpc || quit_script "amxxpc does not exists"
+		test -e compiled || mkdir compiled
+		test -e temp.txt && rm -f temp.txt
 		for sourcefile in *.sma; do
 			compile_source_file $sourcefile
 		done
+		less temp.txt && rm temp.txt
 	fi
 }
 

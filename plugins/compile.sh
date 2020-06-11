@@ -20,7 +20,7 @@
 # Quit script
 quit_script () {
 	if (( $# != 0 )); then
-		echo $@; fi
+		echo "$@"; fi
 	
 	echo "Exiting..."
 	exit 1
@@ -38,17 +38,20 @@ network_status () {
 
 # Checks if folder exists
 exists () {
-	test -e $1
+	test -e $script_path/$1
 }
 
 # Returns OS' name
 get_os_name () {
+	script_path="$(dirname $(readlink -f $0))"
+	cd $script_path
 	os="$(uname -s)"
 	
 	case "$os" in
-		"Linux"  ) os="linux" ;;
-		"Darwin" ) os="mac" ;;
-	*) esac
+		"Linux"  ) os="linux"   ;;
+		"Darwin" ) os="mac"     ;;
+	*) quit_script "Unsupported OS" ;;
+	esac
 }
 
 # Checks if app is installed
@@ -58,12 +61,12 @@ check_for_app () {
 	else quit_script "Script requires $1 package"; fi
 }
 
-# Checks if variable is number
+# unused ; Checks if variable is number
 is_number () {
 	if ! [[ $1 =~ ^-?[0-9]+([.][0-9]+)?$ ]]; then 
-		quit_script "Invalid number"
-	fi
-}  
+		return 1
+	else return 0; fi
+}
 
 ##################### 
 # ARGUMENT CHECKING #
@@ -84,6 +87,111 @@ check_for_commands () {
 }
 
 #####################
+# SETUP AUTOUPDATER #
+#####################
+
+__setup_save_data () {
+	if [ "$setup_amxx" == "1.9" ]; then configs="0000000100000000"
+	else configs="000000000000000"; fi
+	
+	echo "game=$game" > .save_data
+	echo "amxx=$setup_amxx" >> .save_data
+	echo "build=$setup_build" >> .save_data
+	echo "configs=$configs" >> .save_data
+	echo -e "\nConfigs: $configs"
+	echo -e "\nConfiguration file saved in" && echo "$script_path/.save_data"
+}
+
+__setup_get_amxx_version () {
+	setup_amxx=$(./amxxpc -q | head -n 1 | grep -o -P '(?<=Compiler ).{3}(?=.*)')
+	if [ "${setup_amxx: -1}" == "1" ]; then setup_amxx="1.10"; fi
+	setup_build=$(./amxxpc -q | head -n 1 | tail -c 5)
+	echo "AMX MOD X Version: $setup_amxx $setup_build"
+}
+
+__setup_check_for_amxxpc () {
+	if ! exists amxxpc; then
+		quit_script "amxxpc does not exists"; fi
+}
+
+__setup () {
+	__setup_check_for_amxxpc
+	__update_list_games 2
+	__update_game 1
+	__setup_get_amxx_version
+	__setup_save_data
+}
+
+##################### 
+# AUTOMATED UPDATE  #
+#####################
+	
+__auto_check_if_new_version () {
+	latestbuild=$(wget -qO- https://www.amxmodx.org/amxxdrop/$saved_amxx/amxmodx-latest-base-$os | grep -o -P '(?<=git).*(?=-base)')
+	if [ "$latestbuild" == "$saved_build" ]; then
+		echo "You are already running the latest version of AMXX"
+		quit_script "AMX MOD X $saved_amxx $latestbuild"
+	else
+		echo "You are currently running AMXX $saved_amxx $saved_build"
+		echo "Newest version of AMXX $saved_amxx $latestbuild"
+		echo "Running autoupdater"
+	fi
+}
+
+__auto_check_if_valid_data () {
+	case "$saved_game" in
+		"cstrike" | "dod" | "cstrike" | "esf" | "halflife" | "ns" | "tfc" | "ts" ) : ;;
+		*) 
+			echo "Could not autoupdate"
+			echo "Game mod is not valid, please modify .save_data or"
+			quit_script "run $0 --upgrade to fix this issue"
+	esac
+	
+	if [ "$saved_amxx" != "1.9" -a "$saved_amxx" != "1.10" ]; then
+		echo "Could not autoupdate"
+		echo "AMXX version is not valid, please modify .save_data or"
+		quit_script "run $0 --upgrade to fix this issue"; fi
+	if (( ${#saved_configs[@]} > 16 )) && (( ${#saved_configs[@]} < 15 )); then
+		echo "Could not autoupdate"
+		echo "Configs configuration is not formated correctly, please modify .save_data or"
+		quit_script "run $0 --upgrade to fix this issue"
+	fi
+}
+
+__auto_load_saved_data () {
+	if exists .save_data; then
+		saved_game=$(   head -1 .save_data           | sed 's/^.\{5\}//')
+		saved_amxx=$(   head -2 .save_data | tail -1 | sed 's/^.\{5\}//')
+		saved_build=$(  head -3 .save_data | tail -1 | sed 's/^.\{6\}//')
+		saved_configs=$(head -4 .save_data | tail -1 | sed 's/^.\{8\}//')
+		
+		if [ "$saved_game" == "" -o "$saved_amxx" == "" -o "$saved_build" == "" -o "$saved_configs" == "" ]; then
+			echo "Could not autoupdate"
+			echo ".save_data configuration is not formated correctly, please modify the file or"
+			quit_script "run $0 --upgrade to fix this issue"
+		else
+			__update_files_to_array
+			
+			for (( f = 0; f < ${#saved_configs}; f++ )); do 
+				modify[i]=$(echo "${saved_configs:$i:1}")
+			done
+		fi
+	else
+		echo ".save_data file does not exist"
+		quit_script "Please use $0 --update or see $0 --help for more information"
+	fi
+}
+
+__auto () {
+	__auto_load_saved_data
+	__auto_check_if_valid_data
+	__auto_check_if_new_version
+	__update_get_base 1 && game=$saved_game
+	__update_game_files $game
+	__update_finish 1
+}
+
+#####################
 # UPDATE FUNCTIONS  #
 #####################
 
@@ -93,12 +201,14 @@ check_for_commands () {
 #}
 
 # END
+
 __update_finish () {
 	path="update_files/addons/amxmodx"
-	
-	if check_for_arguments $@; then
+	if check_for_arguments "$@"; then
 		if (( ver != 2 )); then
-			cp $path/configs/hamdata.ini ../configs; fi
+			cp $path/configs/hamdata.ini ../configs
+			configs+="0000000100000000"
+		else configs+="000000000000000"; fi
 		rm -rf $path/configs
 	else
 		for ((i = 0; i < length; i++)); do
@@ -111,16 +221,24 @@ __update_finish () {
 					cp ../configs/${files[i]} ../configs/backup
 				fi
 			fi
+			configs+=${modify[i]}
 		done
 	fi
 	
 	rm -rf $path/logs
 	cp -r $path/* ../
 	rm -rf update_files
-	test -e index.html && rm -f index.html
-	echo -e "\n#################### (100%)"
+	while IFS= read -r id; do
+		rm -f $id
+	done< <(ls | grep index.html)
+	echo -ne "#################### (100%)\r"
 	echo -e "\nSuccessfully installed"
 	echo $(wget -qO- https://www.neobox.net/stats/) "successful updates to date."
+	
+	echo "game=$game" > .save_data
+	echo "amxx=$version" >> .save_data
+	echo "build=$(wget -qO- https://www.amxmodx.org/amxxdrop/$version/amxmodx-latest-base-$os | grep -o -P '(?<=git).*(?=-base)')" >> .save_data
+	echo "configs=$configs" >> .save_data
 	exit 1
 }
 
@@ -151,7 +269,7 @@ __update_configs_select_type () {
 		modify[i]=$1;
 	done
 	
-	__update_configs_reload_table
+	echo && __update_configs_reload_table
 }
 
 # Single file modification
@@ -174,28 +292,33 @@ __update_configs_file () {
 # Read key
 __update_config_key_select () {
 	echo -e "\nPlease select which files you want to replace or not"
-	echo -n "00) Continue | 88) Deselect All | 99) Select All | Number: "; read -r fileedit
+	echo -n "00) Continue | 88) Deselect All | 99) Select All | Number: "; read -n 2 fileedit 
 	
-	is_number $fileedit
+	#is_number $fileedit
 	case $fileedit in
-		00 ) __update_finish                 ;;
+		00 ) echo && __update_finish         ;;
 		88 ) __update_configs_select_type 0  ;;
 		99 ) __update_configs_select_type 1  ;;
-		 * ) __update_configs_file $fileedit ;;
-	esac
+		 * ) if (( fileedit > 0 )) || (( fileedit < length )) && [ "$fileedit" != "" ]; then
+		 	__update_configs_file $fileedit
+		     else __update_configs_reload_table; fi
+	;; esac
+}
+
+__update_files_to_array () {
+	files=()
+	modify=()
+	
+	while IFS= read -r line; do
+		files+=("$line")
+	done< <(ls $dir)
+	length=${#files[@]}
 }
 
 __update_get_largest_number () {
 	dir="update_files/addons/amxmodx/configs"
-	
-	files=()
-	modify=()
 	largest=0
-	
-	while IFS= read -r line; do
-		files+=("$line")
-	done< <(ls $dir| sort)
-	length=${#files[@]}
+	__update_files_to_array
 
 	for ((i = 0; i < length; i++)); do
 		current=${#files[i]}
@@ -218,24 +341,27 @@ __update_configs_table () {
 
 # Replace specific files in configs directory
 __update_configs () {
-	echo -ne "\n\nReplace specific files in configs folder ? "
-	echo -ne "[Y/n] : "; read -r configsedit
+	echo -ne "\nReplace specific files in configs folder ? "
+	read -p "[Y/n] (default: n) : " -n 1 configsedit
 	
-	if [ "$configsedit" == "Y" ]; then
-		echo && __update_configs_table
-	else __update_finish 1; fi
+	case "$configsedit" in
+		     "Y" | "y" ) echo && __update_configs_table ;;
+		"" | "N" | "n" ) echo && __update_finish 1 ;;
+		             * ) echo -e "\n\n      Please type a valid character" && __update_configs
+	;; esac
 }
 
 # Install Game package
 __update_game_files () {
-	if [ -n "$1" ]; then 
+	if [ -n "$1" -a "$1" != "halflife" ] ; then 
 		echo -ne "############         (60%)\r"
 		latest=$(wget -qO- https://www.amxmodx.org/amxxdrop/$version/amxmodx-latest-$1-$os)
 		test -e $latest && rm -f $latest
 		echo -ne "##############       (70%)\r"
 		wget -q https://www.amxmodx.org/amxxdrop/$version/$latest
 		echo -ne "################     (80%)\r"
-		tar -xzf $latest -C update_files
+		if [ "$os" == "linux" ]; then tar -xzf $latest -C update_files
+		else unzip $latest -d update_files; fi
 		rm -f $latest
 		echo -ne "##################   (90%)\r"
 	fi
@@ -243,40 +369,47 @@ __update_game_files () {
 
 # Install Base package
 __update_get_base () {
-	check_for_app tar
-	
-	test -e update_files && rm -rf update_files
+	if [ "$os" == "linux" ]; then check_for_app tar
+        else check_for_app unzip; fi
+        
+	exists update_files && rm -rf update_files
 	mkdir update_files
+	
+	if check_for_arguments "$@"; then version=$saved_amxx; fi
 	
 	latest=$(wget -qO- https://www.amxmodx.org/amxxdrop/$version/amxmodx-latest-base-$os)
 	test -e $latest && rm -f $latest
 	echo -ne "####                 (20%)\r"
 	wget -q https://www.amxmodx.org/amxxdrop/$version/$latest
 	echo -ne "########             (40%)\r"
-	tar -xzf $latest -C update_files
+	if [ "$os" == "linux" ]; then tar -xzf $latest -C update_files
+	else unzip $latest -d update_files; fi
 	echo -ne "##########           (50%)\r"
 	rm -f $latest
 }
 
 # Update Game files
 __update_game () {
-	echo -ne "\nUpdating AMXX $version "
+	if ! check_for_arguments "$@"; then
+	echo -ne "\nUpdating AMXX $version "; else echo -ne "\n\nGame Selected: "; fi
 	
 	case $game in
-		1 ) echo -e "Counter-Strike\n";         game="cstrike" ;;
-		2 ) echo -e "Day of Defeat\n";          game="dod"     ;;
-		3 ) echo -e "Earth's Special Forces\n"; game="esf"     ;;
-		4 ) echo -e "Half-Life\n";                             ;;
-		5 ) echo -e "Natural Selection\n";      game="ns"      ;;
-		6 ) echo -e "Team Fortress Classic\n";  game="tfc"     ;;
-		7 ) echo -e "The Specialists\n";        game="ts"      ;;
+		1 ) echo -e "Counter-Strike\n";         game="cstrike"  ;;
+		2 ) echo -e "Day of Defeat\n";          game="dod"      ;;
+		3 ) echo -e "Earth's Special Forces\n"; game="esf"      ;;
+		4 ) echo -e "Half-Life\n";              game="halflife" ;;
+		5 ) echo -e "Natural Selection\n";      game="ns"       ;;
+		6 ) echo -e "Team Fortress Classic\n";  game="tfc"      ;;
+		7 ) echo -e "The Specialists\n";        game="ts"       ;;
 	*) esac
 	
-	echo -ne "##                   (10%)\r"
+	if ! check_for_arguments "$@"; then
+	echo -ne "##                   (10%)\r"; fi
 }
 
 # Lists Notes before updating
 __update_list_notes () {
+	if ! check_for_arguments "$@"; then echo; fi
 	echo -e "\nBefore updating files, note that all modifications"
 	echo "  of default files will be reset"
 	echo -e "Default files are shown below\r"
@@ -287,11 +420,14 @@ __update_list_notes () {
 	echo "      dlls      / all default files"
 	echo "      modules   / all default files"
 	echo "      plugins   / all default files"
-	echo "      scripting / all default files"
-	echo -ne "\nContinue ? [Y/n] : "; read -r answer
+	echo -e "      scripting / all default files\n"
+	read -p "Continue ? [Y/n] (default: Y) : " -n 1 answer
 	
-	if [ ! "$answer" == "Y" ]; then
-		quit_script
+	if [ "$answer" == "Y" -o "$answer" == "y" -o "$answer" == "" ]; then return 0;
+	elif [ "$answer" == "N" -o "$answer" == "n" ]; then quit_script ""
+	else
+		echo -e "\n\n      Please select a valid character" 
+		__update_list_notes 1
 	fi
 }
 
@@ -300,9 +436,16 @@ __update_amxx_version () {
 	echo -e "\nAMX MOD X Version"
 	echo "  1) 1.9"
 	echo "  2) 1.10"
-	echo -n "Number: "; read -r ver
+	echo "  0) Exit"
+	read -p "Number (default: 1) : " -n 1 ver
 	
-	is_number $ver
+	if ! is_number $ver; then
+		if [ "$ver" == "" ]; then ver=1
+		else echo -e "\n\n      Please select a valid number"  && __update_amxx_version; fi
+	elif (( ver == 0 )); then quit_script ""
+	elif (( ver < 0 )) || (( ver > 2 )); then
+		echo -e "\n\n      Please select a valid number" && __update_amxx_version; fi
+	
 	case $ver in
 		1 ) version="1.9"   ;;
 		2 ) version="1.10"  ;;
@@ -311,10 +454,15 @@ __update_amxx_version () {
 
 # Lists all Games
 __update_list_games () {
-	check_for_app wget
-	network_status
+	if ! check_for_arguments "$@"; then
+		if [ "$1" == "1" ]; then
+			check_for_app wget
+			network_status
+			repeat=1
+		else repeat=2; fi
+	else repeat=1; fi
 
-	echo -e "Please select the Game"
+	echo "Please select the Game"
 	echo "  1) Counter-Strike"
 	echo "  2) Day of Defeat"
 	echo "  3) Earth's Special Forces"
@@ -323,21 +471,21 @@ __update_list_games () {
 	echo "  6) Team Fortress Classic"
 	echo "  7) The Specialists"
 	echo "  0) Exit"
+	read -p "Number: (default: 1) : " -n 1 game
 	
-	echo -n "Number: "; read -r game
-	
-	is_number $game
-	if (( game <= 0 )) || (( game > 7 )); then
-		quit_script
-	fi
+	if ! is_number $game; then
+		if [ "$game" == "" ]; then game=1;
+		else echo -e "\n\n      Please select a valid number\n" && __update_list_games $repeat; fi
+	elif (( game == 0 )); then quit_script ""
+	elif (( game < 0 )) || (( game > 7 )); then
+		echo -e "\n\n      Please select a valid number\n" && __update_list_games $repeat; fi
 }
 
 # Check if directories exists
 __update_check_if_gameserver () {
-	if [ ! -d "../configs" -a ! -d "../data" -a ! -d "../dlls" -a ! -d "../modules" -a ! -d "../plugins" ]; then
+	if ! exists "../configs" && ! exists "../data" -a ! exists "../dlls" -a ! exists "../modules" -a ! exists "../plugins"; then
 		echo "Make sure that folders configs, data, dlls, modules and plugins"
-		echo "  exist and run the script again"
-		quit_script
+		quit_script "  exist and run the script again"
 	fi
 }
 
@@ -363,7 +511,9 @@ __help () {
 	echo "--help    (-h) : This menu"
 	echo "--version (-v) : AMX MOD X Compiler version"
 	echo "--latest  (-l) : Latest AMX MOD X version"
-	echo -e "--update  (-u) : Update files\n"
+	echo "--update  (-u) : Update files"
+	echo "--auto    (-a) : Autoupdates AMXX"
+	echo -e "--setup   (-s) : Set up autoupdater\n"
 	echo "To compile all source files in the directory"
 	echo "  execute the script without any parameters"
 	echo "To compile specific or multiple source files"
@@ -373,6 +523,7 @@ __help () {
 
 # VERSION
 __version () {
+	if [ "$(pwd)" != "$script_path" ]; then cd $script_path; fi
 	if exists amxxpc; then
 		./amxxpc -q | head -n 3
 	else quit_script "amxxpc does not exists"; fi
@@ -396,6 +547,8 @@ execute_command () {
 		"--version" | "-v" ) __version ;;
 		"--latest"  | "-l" ) __latest  ;;
 		"--update"  | "-u" ) __update  ;;
+		"--auto"    | "-a" ) __auto    ;;
+		"--setup"   | "-s" ) __setup   ;;
 	*) 
 	echo "  $1 is not a valid command"
 	echo "  Type \"$0 --help\" to see more information"
@@ -421,14 +574,13 @@ compile_source_file () {
 # Main function
 main () {
 	get_os_name
-	if check_for_arguments $@; then
+	if check_for_arguments "$@"; then
 		for arg in "$@"; do
 			if check_for_commands $arg; then
 				execute_command $arg
 				exit
 			else
 				test -e amxxpc || quit_script "amxxpc does not exists"
-					
 				if [[ $arg == *.sma ]]; then	
 					test -e temp.txt && rm -f temp.txt
 					test -e compiled || mkdir compiled
@@ -441,8 +593,8 @@ main () {
 			fi
 		done
 	else 
-		test -e amxxpc || quit_script "amxxpc does not exists"
 		test -e compiled || mkdir compiled
+		test -e amxxpc || quit_script "amxxpc does not exists"
 		test -e temp.txt && rm -f temp.txt
 		for sourcefile in *.sma; do
 			compile_source_file $sourcefile
@@ -454,5 +606,5 @@ main () {
 #####################
 # EXECUTE MAIN FUNC #
 #####################
-main $@
+main "$@"
 #####################

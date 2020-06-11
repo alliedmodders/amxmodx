@@ -260,6 +260,7 @@ public stock const Float:NULL_VECTOR[3];
 #define MENU_KEY_8      (1<<7)
 #define MENU_KEY_9      (1<<8)
 #define MENU_KEY_0      (1<<9)
+#define MENU_KEY_ALL    MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4|MENU_KEY_5|MENU_KEY_6|MENU_KEY_7|MENU_KEY_8|MENU_KEY_9|MENU_KEY_0
 
 /**
  * Language constants

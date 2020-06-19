@@ -86,6 +86,11 @@
  */
 #define MPROP_SHOWPAGE 12
 
+/*
+ * Number format (param1 = string, "#num."=default, should contain "#num")
+ */
+#define MPROP_NUMBER_FORMAT 13
+
 /**
  * @deprecated
  */

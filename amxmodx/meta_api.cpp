@@ -214,20 +214,33 @@ void BuildPluginFileList(const char *initialdir, CStack<ke::AString *> & files)
 	_findclose(handle);
 #elif defined(__linux__) || defined(__APPLE__)
 	build_pathname_r(path, sizeof(path), "%s/", initialdir);
-	struct dirent *ep;
 	DIR *dp;
-
+	
 	if ((dp = opendir(path)) == NULL)
 	{
 		return;
 	}
 
-	while ( (ep=readdir(dp)) != NULL )
+	closedir (dp);
+
+	struct dirent **namelist;
+	int iFilesCount;
+
+	if ((iFilesCount = scandir(path, &namelist, 0, alphasort)) == -1)
 	{
-		ParseAndOrAdd(files, ep->d_name);
+		return;
 	}
 
-	closedir (dp);
+	// In reversed order there, because LoadExtraPluginsTo gonna reverse it again (That's how CStack works, yes...)...
+	// It's hardcoded because function name is BuildPLUGINFileList and we shouldn't give a damn about anything else.
+
+	while(iFilesCount--)
+	{
+		ParseAndOrAdd(files, namelist[iFilesCount]->d_name);
+		free(namelist[iFilesCount]);
+	}
+
+	free(namelist);
 #endif
 }
 

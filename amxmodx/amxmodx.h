@@ -13,6 +13,7 @@
 #if defined PLATFORM_POSIX
 #include <unistd.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include "sclinux.h"
 #endif
 #include <ctype.h>				//tolower, etc

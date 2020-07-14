@@ -114,15 +114,15 @@
  * any old menu handlers from potentially feeding on the menu, unless 
  * that is the desired functionality.
  *
- * @param title 		Title the menu should use.
- * @param handler		Name of the handler function.  The function will be invoked 
- *						once and only once to every menu_display() call.
- * @param ml			If true, the menu title and items will be looked up as multilingual keys
- *                      when the menu displays.
- * @return				Menu resource identifier which must be destroyed via 
- *						menu_destroy().  All menus are destroyed when the plugin 
- *						unloads.
- * @error				Function name not found.
+ * @param title 		    Title the menu should use.
+ * @param handler		    Name of the handler function.  The function will be invoked 
+ *						    once and only once to every menu_display() call.
+ * @param ml			    If true, the menu title and items will be looked up as multilingual keys
+ *                          when the menu displays.
+ * @return				    Menu resource identifier which must be destroyed via 
+ *						    menu_destroy().  All menus are destroyed when the plugin 
+ *						    unloads.
+ * @error				    Function name not found.
  */
 native menu_create(const title[], const handler[], bool:ml = false);
 
@@ -132,46 +132,48 @@ native menu_create(const title[], const handler[], bool:ml = false);
  * The handler function should be prototyped as:
  *
  * public <function>(id, menu, item)
- *  id      - Client index being displayed to.
- *  menu    - Menu resource identifier.
- *  item    - Item being drawn.
+ *  id           - Client index being displayed to.
+ *  menu         - Menu resource identifier.
+ *  item         - Item being drawn.
+ *  isEnabled    - Is enabled (related to paccess checks).
  * <return> - ITEM_IGNORE to use the default functionality.  ITEM_ENABLED to 
  *            explicitly enable or ITEM_DISABLED to explicitly disable.
  *
- * @param function		Function name.
- * @return				Menu callback ID.
+ * @param function		    Function name.
+ * @return				    Menu callback ID.
  */
 native menu_makecallback(const function[]);
 
 /**
  * Adds an menu to a menu.
  *
- * @param menu			Menu resource identifier.
- * @param name			Item text to display.
- * @param info			Item info string for internal information.
- * @param paccess		Access required by the player viewing the menu.
- * @param callback		If set to a valid ID from menu_makecallback(), the 
- *						callback will be invoked before drawing the item.
+ * @param menu			    Menu resource identifier.
+ * @param name			    Item text to display.
+ * @param info		        Item info string for internal information.
+ * @param paccess		    Access required by the player viewing the menu.
+ * @param callback		    If set to a valid ID from menu_makecallback(), the 
+ *						    callback will be invoked before drawing the item.
+ * @param enabled_color		Item color on enabled state
  * @noreturn
  * @error				Invalid menu resource.
  */
-native menu_additem(menu, const name[], const info[]="", paccess=0, callback=-1);
+native menu_additem(menu, const name[], const info[]="", paccess=0, callback=-1, const enabled_color[]="");
 
 /**
  * Returns the number of pages in a menu.
  *
- * @param menu			Menu resource identifier.
- * @return				Number of pages in the menu.
- * @error				Invalid menu resource.
+ * @param menu			    Menu resource identifier.
+ * @return				    Number of pages in the menu.
+ * @error				    Invalid menu resource.
  */
 native menu_pages(menu);
 
 /**
  * Returns the number of items in a menu.
  *
- * @param menu			Menu resource identifier.
- * @return				Number of items in the menu.
- * @error				Invalid menu resource.
+ * @param menu			    Menu resource identifier.
+ * @return				    Number of items in the menu.
+ * @error				    Invalid menu resource.
  */
 native menu_items(menu);
 
@@ -187,12 +189,12 @@ native menu_items(menu);
  * client selecting an item or disconnecting and calling menu_cancel or 
  * menu_destroy on a live menu.
  *
- * @param id			Client index.
- * @param menu			Menu resource identifier.
- * @param page			Page to start from (starting from 0).
- * @param time			If >=0 menu will timeout after this many seconds
+ * @param id			    Client index.
+ * @param menu			    Menu resource identifier.
+ * @param page			    Page to start from (starting from 0).
+ * @param time			    If >=0 menu will timeout after this many seconds
  * @noreturn
- * @error				Invalid menu resource or client index.
+ * @error				    Invalid menu resource or client index.
  */
 native menu_display(id, menu, page=0, time=-1);
 
@@ -200,73 +202,84 @@ native menu_display(id, menu, page=0, time=-1);
  * Given a page on a menu and a keypress on that page, returns the item id selected.
  * If the item is less than 0, a special option was chosen (such as MENU_EXIT).
  *
- * @param menu			Menu resource identifier.
- * @param page			Page on the menu.
- * @param key			Key pressed (from 1 to 10).
- * @return				Item identifier, or <0 for a special selection code.
- * @error				Invalid menu resource.
+ * @param menu			    Menu resource identifier.
+ * @param page			    Page on the menu.
+ * @param key			    Key pressed (from 1 to 10).
+ * @return				    Item identifier, or <0 for a special selection code.
+ * @error				    Invalid menu resource.
  */
 native menu_find_id(menu, page, key);
 
 /**
  * Retrieves info about a menu item.
  *
- * @param menu			Menu resource identifier.
- * @param item			Item identifier.
- * @param access		Variable to store access value.
- * @param info			Buffer to store item info.
- * @param infolen		Item info buffer length.
- * @param name			Buffer to store item display text.
- * @param namelen		Item name buffer length.
- * @param callback		Callback ID.
- * @return				1 on success, 0 on failure.
- * @error				Invalid menu resource.
+ * @param menu			    Menu resource identifier.
+ * @param item			    Item identifier.
+ * @param access		    Variable to store access value.
+ * @param info			    Buffer to store item info.
+ * @param infolen		    Item info buffer length.
+ * @param name			    Buffer to store item display text.
+ * @param namelen		    Item name buffer length.
+ * @param callback		    Callback ID.
+ * @return				    1 on success, 0 on failure.
+ * @error				    Invalid menu resource.
  */
 native menu_item_getinfo(menu, item, &access = 0, info[] = "", infolen = 0, name[]="", namelen=0, &callback = 0);
 
 /**
  * Sets an item's display text.
  *
- * @param menu			Menu resource identifier.
- * @param item			Item identifier.
- * @param name			New item display text.
- * @return				1 on success, 0 on failure.
- * @error				Invalid menu resource.
+ * @param menu			    Menu resource identifier.
+ * @param item			    Item identifier.
+ * @param name			    New item display text.
+ * @return				    1 on success, 0 on failure.
+ * @error				    Invalid menu resource.
  */
 native menu_item_setname(menu, item, const name[]);
 
 /**
  * Sets an item's info string.
  *
- * @param menu			Menu resource identifier.
- * @param item			Item identifier.
- * @param info			New item info string.
- * @return				1 on success, 0 on failure.
- * @error				Invalid menu resource.
+ * @param menu			    Menu resource identifier.
+ * @param item			    Item identifier.
+ * @param info			    New item info string.
+ * @return				    1 on success, 0 on failure.
+ * @error				    Invalid menu resource.
  */
 native menu_item_setcmd(menu, item, const info[]);
 
 /**
  * Sets an item's callback.
  *
- * @param menu			Menu resource identifier.
- * @param item			Item identifier.
- * @param callback		New callback from menu_makecallback(), or -1 to clear.
- * @return				1 on success, 0 on failure.
- * @error				Invalid menu resource.
+ * @param menu			    Menu resource identifier.
+ * @param item			    Item identifier.
+ * @param callback		    New callback from menu_makecallback(), or -1 to clear.
+ * @return				    1 on success, 0 on failure.
+ * @error				    Invalid menu resource.
  */
 native menu_item_setcall(menu, item, callback=-1);
 
 /**
  * Sets an item's access.
  *
- * @param menu			Menu resource identifier.
- * @param item			Item identifier.
- * @param access		New access required by the player for access to the item.
- * @return				1 on success, 0 on failure.
- * @error				Invalid menu resource.
+ * @param menu			    Menu resource identifier.
+ * @param item			    Item identifier.
+ * @param access		    New access required by the player for access to the item.
+ * @return				    1 on success, 0 on failure.
+ * @error				    Invalid menu resource.
  */
 native menu_item_setaccess(menu, item, access=0);
+
+/**
+ * Sets an item's enabled color string.
+ *
+ * @param menu			    Menu resource identifier.
+ * @param item			    Item identifier.
+ * @param info			    New item info string.
+ * @return				    1 on success, 0 on failure.
+ * @error				    Invalid menu resource.
+ */
+native menu_item_setenabled_color(menu, item, const enabled_color[]);
 
 /**
  * Destroys a menu.  Player menus will be cancelled (although may still linger 
@@ -278,9 +291,9 @@ native menu_item_setaccess(menu, item, access=0);
  * handler function (remembering to handle the case of a menu being cancelled, 
  * it must still be destroyed).
  *
- * @param menu			Menu resource identifier.
+ * @param menu			    Menu resource identifier.
  * @noreturn
- * @error				Invalid menu resource.
+ * @error				    Invalid menu resource.
  */
 native menu_destroy(menu);
 
@@ -293,14 +306,14 @@ native menu_destroy(menu);
  *
  * Both may be invalid if the player is not viewing a menu.
  *
- * @param id			Client index.
- * @param menu			Variable to store old menu id.  If none, then <1 will be 
- *						stored.
- * @param newmenu		Variable to store new menu id.  If none, then -1 will be 
- *						stored.
- * @param menupage		Variable to store current page of the new menu, if any.
- * @return				1 if the player is viewing a menu, 0 otherwise.
- * @error				Invalid client.
+ * @param id			    Client index.
+ * @param menu			    Variable to store old menu id.  If none, then <1 will be 
+ *						    stored.
+ * @param newmenu		    Variable to store new menu id.  If none, then -1 will be 
+ *						    stored.
+ * @param menupage		    Variable to store current page of the new menu, if any.
+ * @return				    1 if the player is viewing a menu, 0 otherwise.
+ * @error				    Invalid client.
  */
 native player_menu_info(id, &menu, &newmenu, &menupage=0);
 
@@ -310,11 +323,11 @@ native player_menu_info(id, &menu, &newmenu, &menupage=0);
  * When using slot=1 this might break your menu. To achieve this functionality
  * menu_addblank2 should be used.
  * 
- * @param menu			Menu resource identifier.
- * @param slot			1 (default) if the line should shift the numbering down.
- * 						0 if the line should be a visual shift only.
+ * @param menu			    Menu resource identifier.
+ * @param slot			    1 (default) if the line should shift the numbering down.
+ * 						    0 if the line should be a visual shift only.
  * @noreturn
- * @error				Invalid menu resource.
+ * @error				    Invalid menu resource.
  */
 native menu_addblank(menu, slot=1);
 
@@ -324,12 +337,12 @@ native menu_addblank(menu, slot=1);
  * When using slot=1 this might break your menu. To achieve this functionality
  * menu_addtext2 should be used.
  * 
- * @param menu			Menu resource identifier.
- * @param text			Text to add.
- * @param slot			1 (default) if the line should shift the numbering down.
- * 						0 if the line should be a visual shift only.
+ * @param menu			    Menu resource identifier.
+ * @param text			    Text to add.
+ * @param slot			    1 (default) if the line should shift the numbering down.
+ * 						    0 if the line should be a visual shift only.
  * @noreturn
- * @error				Invalid menu resource.
+ * @error				    Invalid menu resource.
  */
 native menu_addtext(menu, const text[], slot=1);
 
@@ -342,11 +355,11 @@ native menu_addtext(menu, const text[], slot=1);
  * 
  * Only available in 1.8.3 and above.
  * 
- * @param menu          Menu resource identifier.
+ * @param menu              Menu resource identifier.
  * 
- * @return              1 on success, 0 on failure.
- * @error               Invalid menu resource.
- *                      Too many items on non-paginated menu (max is 10)
+ * @return                  1 on success, 0 on failure.
+ * @error                   Invalid menu resource.
+ *                          Too many items on non-paginated menu (max is 10)
  */
 native menu_addblank2( menu );
 
@@ -359,23 +372,23 @@ native menu_addblank2( menu );
  * 
  * Only available in 1.8.3 and above.
  *
- * @param menu          Menu resource identifier.
- * @param text          Text to add.
+ * @param menu              Menu resource identifier.
+ * @param text              Text to add.
  * 
- * @return              1 on success, 0 on failure.
- * @error               Invalid menu resource.
- *                      Too many items on non-paginated menu (max is 10)
+ * @return                  1 on success, 0 on failure.
+ * @error                   Invalid menu resource.
+ *                          Too many items on non-paginated menu (max is 10)
  */
 native menu_addtext2( menu, const text[] );
 
 /**
  * Sets a menu property.
  *
- * @param menu			Menu resource identifier.
- * @param prop			MPROP_ constant.
- * @param ...			Property parameters.
- * @return				1 on success, 0 on failure.
- * @error				Invalid menu resource or property.
+ * @param menu			    Menu resource identifier.
+ * @param prop			    MPROP_ constant.
+ * @param ...			    Property parameters.
+ * @return				    1 on success, 0 on failure.
+ * @error				    Invalid menu resource or property.
  */
 native menu_setprop(menu, prop, ...);
 
@@ -384,8 +397,8 @@ native menu_setprop(menu, prop, ...);
  * The menu will still exist on their screen but any results are invalidated,
  * and the callback is invoked.
  *
- * @param player		Client index.
+ * @param player		    Client index.
  * @noreturn
- * @error				Invalid client index.
+ * @error				    Invalid client index.
  */
 native menu_cancel(player);

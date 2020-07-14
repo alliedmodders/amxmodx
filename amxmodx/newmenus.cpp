@@ -91,7 +91,7 @@ bool CloseNewMenus(CPlayer *pPlayer)
 	return true;
 }
 
-Menu::Menu(const char *title, AMX *amx, int fid, bool use_ml) : m_Title(title), m_ItemColor("\\r"), 
+Menu::Menu(const char *title, AMX *amx, int fid, bool use_ml) : m_Title(title), m_ItemNumColor("\\r"), 
 m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
 isDestroying(false), pageCallback(-1), showPageNumber(true), useMultilingual(use_ml), amx(amx), items_per_page(7)
 {
@@ -131,7 +131,7 @@ Menu::~Menu()
 	m_Items.clear();
 }
 
-menuitem *Menu::AddItem(const char *name, const char *cmd, int access)
+menuitem *Menu::AddItem(const char *name, const char *cmd, int access, const char *enabled_color)
 {
 	menuitem *pItem = new menuitem;
 
@@ -142,6 +142,7 @@ menuitem *Menu::AddItem(const char *name, const char *cmd, int access)
 	pItem->handler = -1;
 	pItem->isBlank = false;
 	pItem->pfn = NULL;
+	pItem->enabled_color = enabled_color;
 
 	m_Items.append(pItem);
 
@@ -441,7 +442,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		
 		if (pItem->handler != -1)
 		{
-			ret = executeForwards(pItem->handler, static_cast<cell>(player), static_cast<cell>(thisId), static_cast<cell>(i));
+			ret = executeForwards(pItem->handler, static_cast<cell>(player), static_cast<cell>(thisId), static_cast<cell>(i), static_cast<cell>(enabled));
 			if (ret == ITEM_ENABLED)
 			{
 				enabled = true;
@@ -498,7 +499,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		{
 			if (m_AutoColors)
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.\\w %s\n", m_ItemColor.chars(),option_display, itemName);
+				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.%s %s\n", m_ItemNumColor.chars(), option_display, pItem->enabled_color.chars(), itemName);
 			} else {
 				ke::SafeSprintf(buffer, sizeof(buffer), "%d. %s\n", option_display, itemName);
 			}
@@ -552,7 +553,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 					ke::SafeSprintf(buffer,
 						sizeof(buffer), 
 						"%s%d. \\w%s\n", 
-						m_ItemColor.chars(), 
+						m_ItemNumColor.chars(), 
 						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_BACK)].chars());
 				} else {
@@ -585,7 +586,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 					ke::SafeSprintf(buffer,
 						sizeof(buffer), 
 						"%s%d. \\w%s\n", 
-						m_ItemColor.chars(), 
+						m_ItemNumColor.chars(), 
 						option == 10 ? 0 : option, 
 						m_OptNames[abs(MENU_MORE)].chars());
 				} else {
@@ -627,7 +628,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			ke::SafeSprintf(buffer,
 				sizeof(buffer), 
 				"%s%d. \\w%s\n", 
-				m_ItemColor.chars(), 
+				m_ItemNumColor.chars(), 
 				option == 10 ? 0 : option, 
 				m_OptNames[abs(MENU_EXIT)].chars());
 		} else {
@@ -763,7 +764,7 @@ static cell AMX_NATIVE_CALL menu_addblank2(AMX *amx, cell *params)
 		return 0;
 	}
 	
-	menuitem *pItem = pMenu->AddItem("", "", 0);
+	menuitem *pItem = pMenu->AddItem("", "", 0, "");
 	pItem->isBlank = true;
 	
 	return 1;
@@ -784,16 +785,18 @@ static cell AMX_NATIVE_CALL menu_addtext2(AMX *amx, cell *params)
 	name = get_amxstring(amx, params[2], 0, len);
 	validate_menu_text(name);
 	
-	menuitem *pItem = pMenu->AddItem(name, "", 0);
+	menuitem *pItem = pMenu->AddItem(name, "", 0, "");
 	pItem->isBlank = true;
 	
 	return 1;
 }
 
 //Adds an item to the menu (returns current item count - 1)
-//native menu_additem(menu, const name[], const command[]="", access=0);
+//native menu_additem(menu, const name[], const info[]="", paccess=0, callback=-1, const enabled_color[]="");
 static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 {
+	enum { arg_count, arg_menu, arg_name, arg_info, arg_access, arg_callback, arg_enabled_color };
+
 	int len;
 	char *name, *cmd;
 	int access;
@@ -806,14 +809,20 @@ static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 		return 0;
 	}
 
-	name = get_amxstring(amx, params[2], 0, len);
+	name = get_amxstring(amx, params[arg_name], 0, len);
 	validate_menu_text(name);
-	cmd = get_amxstring(amx, params[3], 1, len);
-	access = params[4];
+	cmd = get_amxstring(amx, params[arg_info], 1, len);
+	access = params[arg_access];
 
 	menuitem *pItem = pMenu->AddItem(name, cmd, access);
 
-	pItem->handler = params[5];
+	pItem->handler = params[arg_callback];
+
+	if (params[arg_count] / sizeof(cell) >= arg_enabled_color)
+	{
+		char *enabled_color;
+		pItem->enabled_color = get_amxstring(amx, params[arg_enabled_color], 2, len);
+	}
 
 	return 1;
 }
@@ -1006,6 +1015,27 @@ static cell AMX_NATIVE_CALL menu_item_setcall(AMX *amx, cell *params)
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL menu_item_setenabled_color(AMX *amx, cell *params)
+{
+	enum { arg_count, arg_menu, arg_item, arg_enabled_color };
+
+	GETMENU(params[arg_count]);
+
+	menuitem *pItem = pMenu->GetMenuItem(static_cast<item_t>(params[arg_item]));
+
+	if (!pItem)
+		return 0;
+
+	int len;
+	char *enabled_color;
+
+	enabled_color = get_amxstring(amx, params[arg_enabled_color], 0, len);
+
+	pItem->enabled_color = enabled_color;
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL menu_item_setaccess(AMX *amx, cell *params)
 {
 	GETMENU(params[1]);
@@ -1064,7 +1094,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 		{
 			char *str = get_amxstring(amx, params[3], 0, len);
 			validate_menu_text(str);
-			pMenu->m_ItemColor = str;
+			pMenu->m_ItemNumColor = str;
 			break;
 		}
 	case MPROP_PERPAGE:
@@ -1240,25 +1270,26 @@ static cell AMX_NATIVE_CALL player_menu_info(AMX *amx, cell *params)
 
 AMX_NATIVE_INFO g_NewMenuNatives[] = 
 {
-	{"menu_create",				menu_create},
-	{"menu_additem",			menu_additem},
-	{"menu_addblank",			menu_addblank},
-	{"menu_addtext",			menu_addtext},
-	{"menu_pages",				menu_pages},
-	{"menu_items",				menu_items},
-	{"menu_display",			menu_display},
-	{"menu_find_id",			menu_find_id},
-	{"menu_item_getinfo",		menu_item_getinfo},
-	{"menu_makecallback",		menu_makecallback},
-	{"menu_item_setcall",		menu_item_setcall},
-	{"menu_item_setaccess",		menu_item_setaccess},
-	{"menu_item_setcmd",		menu_item_setcmd},
-	{"menu_item_setname",		menu_item_setname},
-	{"menu_destroy",			menu_destroy},
-	{"menu_setprop",			menu_setprop},
-	{"menu_cancel",				menu_cancel},
-	{"player_menu_info",		player_menu_info},
-	{"menu_addblank2",			menu_addblank2},
-	{"menu_addtext2",			menu_addtext2},
-	{NULL,						NULL},
+	{"menu_create",						menu_create},
+	{"menu_additem",					menu_additem},
+	{"menu_addblank",					menu_addblank},
+	{"menu_addtext",					menu_addtext},
+	{"menu_pages",						menu_pages},
+	{"menu_items",						menu_items},
+	{"menu_display",					menu_display},
+	{"menu_find_id",					menu_find_id},
+	{"menu_item_getinfo",				menu_item_getinfo},
+	{"menu_makecallback",				menu_makecallback},
+	{"menu_item_setcall",				menu_item_setcall},
+	{"menu_item_setaccess",				menu_item_setaccess},
+	{"menu_item_setcmd",				menu_item_setcmd},
+	{"menu_item_setname",				menu_item_setname},
+	{"menu_item_setenabled_color",		menu_item_setenabled_color},
+	{"menu_destroy",					menu_destroy},
+	{"menu_setprop",					menu_setprop},
+	{"menu_cancel",						menu_cancel},
+	{"player_menu_info",				player_menu_info},
+	{"menu_addblank2",					menu_addblank2},
+	{"menu_addtext2",					menu_addtext2},
+	{NULL,								NULL},
 };

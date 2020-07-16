@@ -92,7 +92,7 @@ bool CloseNewMenus(CPlayer *pPlayer)
 }
 
 Menu::Menu(const char *title, AMX *amx, int fid, bool use_ml) : m_Title(title), m_ItemColor("\\r"), 
-m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
+m_NeverExit(false), m_ForceExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
 isDestroying(false), pageCallback(-1), showPageNumber(true), useMultilingual(use_ml), amx(amx), items_per_page(7)
 {
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);

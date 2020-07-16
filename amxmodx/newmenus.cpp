@@ -820,7 +820,6 @@ static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 
 	if (params[arg_count] / sizeof(cell) >= arg_enabled_color)
 	{
-		char *enabled_color;
 		pItem->enabled_color = get_amxstring(amx, params[arg_enabled_color], 2, len);
 	}
 

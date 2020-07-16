@@ -131,7 +131,7 @@ Menu::~Menu()
 	m_Items.clear();
 }
 
-menuitem *Menu::AddItem(const char *name, const char *cmd, int access, const char *enabled_color)
+menuitem *Menu::AddItem(const char *name, const char *cmd, int access, const char *default_active_color)
 {
 	menuitem *pItem = new menuitem;
 
@@ -142,7 +142,7 @@ menuitem *Menu::AddItem(const char *name, const char *cmd, int access, const cha
 	pItem->handler = -1;
 	pItem->isBlank = false;
 	pItem->pfn = NULL;
-	pItem->enabled_color = enabled_color;
+	pItem->default_active_color = default_active_color;
 
 	m_Items.append(pItem);
 
@@ -499,7 +499,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		{
 			if (m_AutoColors)
 			{
-				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.%s %s\n", m_ItemNumColor.chars(), option_display, pItem->enabled_color.chars(), itemName);
+				ke::SafeSprintf(buffer, sizeof(buffer), "%s%d.%s %s\n", m_ItemNumColor.chars(), option_display, pItem->default_active_color.chars(), itemName);
 			} else {
 				ke::SafeSprintf(buffer, sizeof(buffer), "%d. %s\n", option_display, itemName);
 			}
@@ -792,7 +792,7 @@ static cell AMX_NATIVE_CALL menu_addtext2(AMX *amx, cell *params)
 }
 
 //Adds an item to the menu (returns current item count - 1)
-//native menu_additem(menu, const name[], const info[]="", paccess=0, callback=-1, const enabled_color[]="");
+//native menu_additem(menu, const name[], const info[]="", paccess=0, callback=-1, const default_active_color[]="");
 static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 {
 	enum { arg_count, arg_menu, arg_name, arg_info, arg_access, arg_callback, arg_enabled_color };
@@ -820,7 +820,7 @@ static cell AMX_NATIVE_CALL menu_additem(AMX *amx, cell *params)
 
 	if (params[arg_count] / sizeof(cell) >= arg_enabled_color)
 	{
-		pItem->enabled_color = get_amxstring(amx, params[arg_enabled_color], 2, len);
+		pItem->default_active_color = get_amxstring(amx, params[arg_enabled_color], 2, len);
 	}
 
 	return 1;
@@ -1026,11 +1026,11 @@ static cell AMX_NATIVE_CALL menu_item_setenabled_color(AMX *amx, cell *params)
 		return 0;
 
 	int len;
-	char *enabled_color;
+	char *default_active_color;
 
-	enabled_color = get_amxstring(amx, params[arg_enabled_color], 0, len);
+	default_active_color = get_amxstring(amx, params[arg_enabled_color], 0, len);
 
-	pItem->enabled_color = enabled_color;
+	pItem->default_active_color = default_active_color;
 
 	return 1;
 }

@@ -87,7 +87,7 @@ struct menuitem
 
 	ke::Vector<BlankItem> blanks;
 
-	ke::AString enabled_color;
+	ke::AString default_active_color;
 };
 
 typedef unsigned int menu_t;
@@ -103,7 +103,7 @@ public:
 	menuitem *GetMenuItem(item_t item);
 	size_t GetPageCount();
 	size_t GetItemCount();
-	menuitem *AddItem(const char *name, const char *cmd, int access, const char *enabled_color = "\\w");
+	menuitem *AddItem(const char *name, const char *cmd, int access, const char *default_active_color = "\\w");
 	
 	const char *GetTextString(int player, page_t page, int &keys);
 	bool Display(int player, page_t page);

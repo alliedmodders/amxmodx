@@ -1083,7 +1083,7 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 				break;
 			}
 
-			int callback = registerSPForwardByName(amx, str, FP_CELL, FP_CELL, FP_DONE);
+			int callback = registerSPForwardByName(amx, str, FP_CELL, FP_CELL, FP_CELL, FP_DONE);
 			if (callback < 0)
 			{
 				LogError(amx, AMX_ERR_NATIVE, "Function %s not present", str);

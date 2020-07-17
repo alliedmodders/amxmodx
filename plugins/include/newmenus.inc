@@ -76,7 +76,7 @@
 
 /**
  * Function to be called on Back and Next (param1 = string)
- * public function(id, status); where status is either MENU_BACK or MENU_MORE
+ * public function(id, status, menu); where status is either MENU_BACK or MENU_MORE
  * Pass NULL_STRING to disable the callback 
  */
 #define MPROP_PAGE_CALLBACK	11	

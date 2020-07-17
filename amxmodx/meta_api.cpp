@@ -1145,12 +1145,12 @@ void C_ClientCommand(edict_t *pEntity)
 					if (item == MENU_BACK)
 					{
 						if (pMenu->pageCallback >= 0)
-							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_BACK));
+							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_BACK), static_cast<cell>(menu));
 
 						pMenu->Display(pPlayer->index, pPlayer->page - 1);
 					} else if (item == MENU_MORE) {
 						if (pMenu->pageCallback >= 0)
-							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_MORE));
+							executeForwards(pMenu->pageCallback, static_cast<cell>(pPlayer->index), static_cast<cell>(MENU_MORE), static_cast<cell>(menu));
 
 						pMenu->Display(pPlayer->index, pPlayer->page + 1);
 					} else {

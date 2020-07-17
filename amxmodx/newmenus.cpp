@@ -92,7 +92,7 @@ bool CloseNewMenus(CPlayer *pPlayer)
 }
 
 Menu::Menu(const char *title, AMX *amx, int fid, bool use_ml) : m_Title(title), m_ItemNumColor("\\r"), 
-m_NeverExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
+m_NeverExit(false), m_ForceExit(false), m_AutoColors(g_coloredmenus), thisId(0), func(fid), 
 isDestroying(false), pageCallback(-1), showPageNumber(true), useMultilingual(use_ml), amx(amx), items_per_page(7)
 {
 	CPluginMngr::CPlugin *pPlugin = g_plugins.findPluginFast(amx);
@@ -419,27 +419,27 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 	{
 		flags &= ~Display_Back;
 	}
-	
+
 	menuitem *pItem = NULL;
-	
+
 	int option = 0;
 	keys = 0;
 	bool enabled = true;
 	int ret = 0;
 	int slots = 0;
 	int option_display = 0;
-	
+
 	for (item_t i = start; i < end; i++)
 	{
 		// reset enabled
 		enabled = true;
 		pItem = m_Items[i];
-		
+
 		if (pItem->access && !(pItem->access & g_players[player].flags[0]))
 		{
 			enabled = false;
 		}
-		
+
 		if (pItem->handler != -1)
 		{
 			ret = executeForwards(pItem->handler, static_cast<cell>(player), static_cast<cell>(thisId), static_cast<cell>(i), static_cast<cell>(enabled));
@@ -471,7 +471,7 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		{
 			keys |= (1<<option);
 		}
-		
+
 		option_display = ++option;
 		if (option_display == 10)
 		{
@@ -545,6 +545,20 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 		/* Don't bother if there is only one page */
 		if (pages > 1)
 		{
+
+			auto tempItemName = m_OptNames[abs(MENU_BACK)].chars();
+
+			if (this->useMultilingual)
+			{
+				const auto language = playerlang(player);
+				const auto definition = translate(this->amx, language, tempItemName);
+
+				if (definition)
+				{
+					tempItemName = definition;
+				}
+			}
+
 			if (flags & Display_Back)
 			{
 				keys |= (1<<option++);
@@ -555,13 +569,13 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 						"%s%d. \\w%s\n", 
 						m_ItemNumColor.chars(), 
 						option == 10 ? 0 : option, 
-						m_OptNames[abs(MENU_BACK)].chars());
+						tempItemName);
 				} else {
 					ke::SafeSprintf(buffer,
 						sizeof(buffer), 
 						"%d. %s\n", 
 						option == 10 ? 0 : option, 
-						m_OptNames[abs(MENU_BACK)].chars());
+						tempItemName);
 				}
 			} else {
 				option++;
@@ -571,13 +585,26 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 						sizeof(buffer),
 						"\\d%d. %s\n\\w",
 						option == 10 ? 0 : option,
-						m_OptNames[abs(MENU_BACK)].chars());
+						tempItemName);
 				} else {
-					ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", m_OptNames[abs(MENU_BACK)].chars());
+					ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", tempItemName);
 				}
 			}
 			m_Text = m_Text + buffer;
-	
+
+			tempItemName = m_OptNames[abs(MENU_MORE)].chars();
+
+			if (this->useMultilingual)
+			{
+				const auto language = playerlang(player);
+				const auto definition = translate(this->amx, language, tempItemName);
+
+				if (definition)
+				{
+					tempItemName = definition;
+				}
+			}
+
 			if (flags & Display_Next)
 			{
 				keys |= (1<<option++);
@@ -588,13 +615,13 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 						"%s%d. \\w%s\n", 
 						m_ItemNumColor.chars(), 
 						option == 10 ? 0 : option, 
-						m_OptNames[abs(MENU_MORE)].chars());
+						tempItemName);
 				} else {
 					ke::SafeSprintf(buffer,
 						sizeof(buffer), 
 						"%d. %s\n", 
 						option == 10 ? 0 : option, 
-						m_OptNames[abs(MENU_MORE)].chars());
+						tempItemName);
 				}
 			} else {
 				option++;
@@ -604,9 +631,9 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 						sizeof(buffer),
 						"\\d%d. %s\n\\w",
 						option == 10 ? 0 : option,
-						m_OptNames[abs(MENU_MORE)].chars());
+						tempItemName);
 				} else {
-					ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", m_OptNames[abs(MENU_MORE)].chars());
+					ke::SafeSprintf(buffer, sizeof(buffer), "#. %s\n", tempItemName);
 				}
 			}
 			m_Text = m_Text + buffer;
@@ -615,13 +642,26 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 			option += 2;
 		}
 	}
-	
+
 	if ((items_per_page && !m_NeverExit) || (m_ForceExit && numItems < 10))
 	{
+		auto exitName = m_OptNames[abs(MENU_EXIT)].chars();
+
+		if (this->useMultilingual)
+		{
+			const auto language = playerlang(player);
+			const auto definition = translate(this->amx, language, exitName);
+
+			if (definition)
+			{
+				exitName = definition;
+			}
+		}
+
 		/* Visual pad has not been added yet */
 		if (!items_per_page)
 			m_Text = m_Text + "\n";
-		
+
 		keys |= (1<<option++);
 		if (m_AutoColors)
 		{
@@ -630,17 +670,17 @@ const char *Menu::GetTextString(int player, page_t page, int &keys)
 				"%s%d. \\w%s\n", 
 				m_ItemNumColor.chars(), 
 				option == 10 ? 0 : option, 
-				m_OptNames[abs(MENU_EXIT)].chars());
+				exitName);
 		} else {
 			ke::SafeSprintf(buffer,
 				sizeof(buffer), 
 				"%d. %s\n", 
 				option == 10 ? 0 : option, 
-				m_OptNames[abs(MENU_EXIT)].chars());
+				exitName);
 		}
 		m_Text = m_Text + buffer;
 	}
-	
+
 	return m_Text.ptr();
 }
 

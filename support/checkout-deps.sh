@@ -89,21 +89,55 @@ repo="https://github.com/alliedmodders/hlsdk"
 origin=
 checkout
 
-`python -c "import ambuild2"`
+python_cmd=`command -v python`
+if [ -z "$python_cmd" ]; then
+  python_cmd=`command -v python3`
+
+  if [ -z "$python_cmd" ]; then
+    echo "No suitable installation of Python detected"
+    exit 1
+  fi
+fi
+
+`$python_cmd -c "import ambuild2"` 2>&1 1>/dev/null
 if [ $? -eq 1 ]; then
+  echo "AMBuild is required to build SourceMod"
+
+  `$python_cmd -m pip --version` 2>&1 1>/dev/null
+  if [ $? -eq 1 ]; then
+    echo "The detected Python installation does not have PIP"
+    echo "Installing the latest version of PIP available (VIA \"get-pip.py\")"
+
+    get_pip="./get-pip.py"
+    get_pip_url="https://bootstrap.pypa.io/get-pip.py"
+
+    if [ `command -v wget` ]; then
+      wget $get_pip_url -O $get_pip
+    elif [ `command -v curl` ]; then
+      curl -o $get_pip $get_pip_url
+    else
+      echo "Failed to locate wget or curl. Install one of these programs to download 'get-pip.py'."
+      exit 1
+    fi
+
+    $python_cmd $get_pip
+    if [ $? -eq 1 ]; then
+      echo "Installation of PIP has failed"
+      exit 1
+    fi
+  fi
+
   repo="https://github.com/alliedmodders/ambuild"
   origin=
   branch=master
   name=ambuild
   checkout
 
-  cd ambuild
-  if [ $iswin -eq 1 ]; then
-    python setup.py install
+  if [ $iswin -eq 1 ] || [ $ismac -eq 1 ]; then
+    $python_cmd -m pip install ./ambuild
   else
-    python setup.py build
     echo "Installing AMBuild at the user level. Location can be: ~/.local/bin"
-    python setup.py install --user
+    $python_cmd -m pip install --user ./ambuild
   fi
 fi
 

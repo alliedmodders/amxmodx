@@ -29,4 +29,4 @@ build_script:
 - mkdir build
 - cd build
 - c:\python27\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"
-- c:\python27\scripts\ambuild
+- ambuild

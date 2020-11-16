@@ -87,6 +87,7 @@ SC_VDEFINE int sc_allowproccall=0; /* allow/detect tagnames in lex() */
 SC_VDEFINE char *pc_deprecate = NULL;/* if non-null, mark next declaration as deprecated */
 SC_VDEFINE int sc_showincludes=0;  /* show include files */
 SC_VDEFINE int sc_warnings_are_errors=0;
+SC_VDEFINE int sc_stkusageinfo = FALSE;     /* show stack usage info? */
 
 SC_VDEFINE constvalue sc_automaton_tab = { NULL, "", 0, 0}; /* automaton table */
 SC_VDEFINE constvalue sc_state_tab = { NULL, "", 0, 0};   /* state table */

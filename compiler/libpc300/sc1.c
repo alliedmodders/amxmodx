@@ -757,9 +757,10 @@ cleanup:
   #if !defined SC_LIGHT
     if (errnum==0 && strlen(errfname)==0) {
       int recursion = 0, flag_exceed = 0;
-      long stacksize = max_stacksize(&glbtab, &recursion);
-      unsigned long maxStackUsage = stacksize * sizeof(cell);
+      long stacksize = 0L;
+      unsigned long maxStackUsage = 0L;
       unsigned long dynamicStackSizeLimit = (long)sc_stksize * sizeof(cell);
+
       if (sc_amxlimit > 0) {
         long totalsize = hdrsize + code_idx + glb_declared * sizeof(cell) + dynamicStackSizeLimit;
         if (totalsize >= sc_amxlimit)
@@ -768,6 +769,9 @@ cleanup:
 
       /* if */
       if(sc_stkusageinfo) {
+        stacksize = max_stacksize(&glbtab, &recursion);
+        maxStackUsage = stacksize * sizeof(cell);
+        
         if (recursion) {
           pc_printf("Note: estimated max. usage: unknown, due to recursion\n");
         } /* if */

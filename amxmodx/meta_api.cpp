@@ -774,6 +774,7 @@ void C_ServerDeactivate_Post()
 	g_vault.clear();
 	g_xvars.clear();
 	g_plugins.clear();
+	g_langMngr.Clear();
 
 	g_CvarManager.OnPluginUnloaded();
 

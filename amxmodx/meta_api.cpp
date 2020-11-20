@@ -775,6 +775,14 @@ void C_ServerDeactivate_Post()
 	g_xvars.clear();
 	g_plugins.clear();
 
+	ArrayHandles.clear();
+	TrieHandles.clear();
+	TrieIterHandles.clear();
+	TrieSnapshotHandles.clear();
+	DataPackHandles.clear();
+	TextParsersHandles.clear();
+	GameConfigHandle.clear();
+
 	g_CvarManager.OnPluginUnloaded();
 
 	ClearPluginLibraries();
@@ -1729,6 +1737,14 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 	g_xvars.clear();
 	g_plugins.clear();
 	g_langMngr.Clear();
+
+	ArrayHandles.clear();
+	TrieHandles.clear();
+	TrieIterHandles.clear();
+	TrieSnapshotHandles.clear();
+	DataPackHandles.clear();
+	TextParsersHandles.clear();
+	GameConfigHandle.clear();
 
 	ClearMessages();
 

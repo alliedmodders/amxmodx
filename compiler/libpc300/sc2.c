@@ -1190,6 +1190,8 @@ static int command(void)
             if (comma)
               lptr++;
           } while (comma);
+        } else if (strcmp(str, "showstackusageinfo")==0) {
+            sc_stkusageinfo=TRUE;
         } else {
           error(207);           /* unknown #pragma */
         } /* if */

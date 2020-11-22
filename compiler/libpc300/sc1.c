@@ -756,14 +756,55 @@ cleanup:
 
   #if !defined SC_LIGHT
     if (errnum==0 && strlen(errfname)==0) {
-      int flag_exceed=0;
-      if (sc_amxlimit > 0 && (long)(hdrsize+code_idx+glb_declared*sizeof(cell)+sc_stksize*sizeof(cell)) >= sc_amxlimit)
-        flag_exceed=1;
-      if ((sc_debug & sSYMBOLIC)!=0 || verbosity>=2 || flag_exceed) {
+      int recursion = 0, flag_exceed = 0;
+      long stacksize = 0L;
+      unsigned long maxStackUsage = 0L;
+      unsigned long dynamicStackSizeLimit = (long)sc_stksize * sizeof(cell);
+
+      if (sc_amxlimit > 0) {
+        long totalsize = hdrsize + code_idx + glb_declared * sizeof(cell) + dynamicStackSizeLimit;
+        if (totalsize >= sc_amxlimit)
+        flag_exceed = 1;
+      } /* if */
+
+      /* if */
+      if(sc_stkusageinfo) {
+        stacksize = max_stacksize(&glbtab, &recursion);
+        maxStackUsage = stacksize * sizeof(cell);
+        
+        if (recursion) {
+          pc_printf("Note: estimated max. usage: unknown, due to recursion\n");
+        } /* if */
+        else if (maxStackUsage >= dynamicStackSizeLimit) {
+          pc_printf("Note: estimated max. stack usage is %ld cells %ld bytes, limit %ld bytes\n", stacksize, maxStackUsage, dynamicStackSizeLimit);
+        }
+      } /* if */
+
+      /* if */
+      /* Note: Seems like `stacksize + 32 >= (long)sc_stksize` condition in original compiler invented to show stack usage warning if it's exceeded, that's why it's defined */
+      if ((sc_debug & sSYMBOLIC)!=0 || verbosity>=2 || /* stacksize + 32 >= (long)sc_stksize || */ flag_exceed) {
         pc_printf("Header size:       %8ld bytes\n", (long)hdrsize);
         pc_printf("Code size:         %8ld bytes\n", (long)code_idx);
         pc_printf("Data size:         %8ld bytes\n", (long)glb_declared*sizeof(cell));
-        pc_printf("Stack/heap size:   %8ld bytes\n", (long)sc_stksize*sizeof(cell));
+        pc_printf("Stack/heap size:   %8ld bytes", dynamicStackSizeLimit);
+
+        if(sc_stkusageinfo) {
+          pc_printf(" | estimated max. usage");
+
+          /* if */
+          if (recursion) {
+            pc_printf(": unknown, due to recursion\n");
+          }
+          /* else if ((pc_memflags & suSLEEP_INSTR) != 0)
+              pc_printf(": unknown, due to the \"sleep\" instruction\n");*/
+          else {
+            pc_printf("=%ld cells (%ld bytes)\n", stacksize, maxStackUsage);
+          } /* if */
+        }
+        else {
+          pc_printf("\n");
+        } /* if */
+
         pc_printf("Total requirements:%8ld bytes\n", (long)hdrsize+(long)code_idx+(long)glb_declared*sizeof(cell)+(long)sc_stksize*sizeof(cell));
       } /* if */
       if (flag_exceed)
@@ -962,6 +1003,8 @@ static void initglobals(void)
   sc_documentation=NULL;
   sc_makereport=FALSE;  /* do not generate a cross-reference report */
 #endif
+
+  sc_stkusageinfo=FALSE;/* stack usage info disabled by default */
 }
 
 /* set_extension
@@ -1023,6 +1066,8 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
   char str[_MAX_PATH],*name;
   const char *ptr;
   int arg,i,isoption;
+
+  static const char stackusageinfo[4] = { 's', 'u', 'i', '\0' };
 
   for (arg=1; arg<argc; arg++) {
     #if DIRSEP_CHAR=='/'
@@ -1152,9 +1197,18 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
         else
           about();
         break;
-      case 's':
+      case 's': {
+        if(strlen(ptr) >= (sizeof(stackusageinfo) - 1)) {
+          if(*(ptr+1) == stackusageinfo[1] && *(ptr+2) == stackusageinfo[2]) {
+            ptr += 2;
+            sc_stkusageinfo = toggle_option(ptr, sc_stkusageinfo);
+            break;
+          }
+        }
+
         skipinput=atoi(option_value(ptr));
         break;
+      }
       case 't':
         i=atoi(option_value(ptr));
         if (i>0)
@@ -1408,43 +1462,44 @@ static void about(void)
     setcaption();
     pc_printf("Usage:   pawncc <filename> [filename...] [options]\n\n");
     pc_printf("Options:\n");
-    pc_printf("         -A<num>  alignment in bytes of the data segment and the stack\n");
-    pc_printf("         -a       output assembler code\n");
+    pc_printf("         -A<num>   alignment in bytes of the data segment and the stack\n");
+    pc_printf("         -a        output assembler code\n");
 #if AMX_COMPACTMARGIN > 2
-    pc_printf("         -C[+/-]  compact encoding for output file (default=%c)\n", sc_compress ? '+' : '-');
+    pc_printf("         -C[+/-]   compact encoding for output file (default=%c)\n", sc_compress ? '+' : '-');
 #endif
-    pc_printf("         -c<name> codepage name or number; e.g. 1252 for Windows Latin-1\n");
+    pc_printf("         -c<name>  codepage name or number; e.g. 1252 for Windows Latin-1\n");
 #if defined dos_setdrive
-    pc_printf("         -Dpath   active directory path\n");
+    pc_printf("         -Dpath    active directory path\n");
 #endif
-    pc_printf("         -d0      no symbolic information, no run-time checks\n");
-    pc_printf("         -d1      [default] run-time checks, no symbolic information\n");
-    pc_printf("         -d2      full debug information and dynamic checking\n");
-    pc_printf("         -d3      full debug information, dynamic checking, no optimization\n");
-    pc_printf("         -e<name> set name of error file (quiet compile)\n");
+    pc_printf("         -d0       no symbolic information, no run-time checks\n");
+    pc_printf("         -d1       [default] run-time checks, no symbolic information\n");
+    pc_printf("         -d2       full debug information and dynamic checking\n");
+    pc_printf("         -d3       full debug information, dynamic checking, no optimization\n");
+    pc_printf("         -e<name>  set name of error file (quiet compile)\n");
 #if defined __WIN32__ || defined _WIN32 || defined _Windows
-    pc_printf("         -H<hwnd> window handle to send a notification message on finish\n");
+    pc_printf("         -H<hwnd>  window handle to send a notification message on finish\n");
 #endif
-    pc_printf("         -i<name> path for include files\n");
-    pc_printf("         -l       create list file (preprocess only)\n");
-    pc_printf("         -o<name> set base name of (P-code) output file\n");
-    pc_printf("         -p<name> set name of \"prefix\" file\n");
+    pc_printf("         -i<name>  path for include files\n");
+    pc_printf("         -l        create list file (preprocess only)\n");
+    pc_printf("         -o<name>  set base name of (P-code) output file\n");
+    pc_printf("         -p<name>  set name of \"prefix\" file\n");
 #if !defined SC_LIGHT
-    pc_printf("         -r[name] write cross reference report to console or to specified file\n");
+    pc_printf("         -r[name]  write cross reference report to console or to specified file\n");
 #endif
-    pc_printf("         -S<num>  stack/heap size in cells (default=%d)\n",(int)sc_stksize);
-    pc_printf("         -s<num>  skip lines from the input file\n");
-    pc_printf("         -t<num>  TAB indent size (in character positions, default=%d)\n",sc_tabsize);
-    pc_printf("         -v<num>  verbosity level; 0=quiet, 1=normal, 2=verbose (default=%d)\n",verbosity);
-    pc_printf("         -w<num>  disable a specific warning by its number\n");
-    pc_printf("         -E       treat warnings as errors\n");
-    pc_printf("         -X<num>  abstract machine size limit in bytes\n");
-    pc_printf("         -\\       use '\\' for escape characters\n");
-    pc_printf("         -^       use '^' for escape characters\n");
-    pc_printf("         -;[+/-]  require a semicolon to end each statement (default=%c)\n", sc_needsemicolon ? '+' : '-');
-    pc_printf("         -([+/-]  require parantheses for function invocation (default=%c)\n", optproccall ? '-' : '+');
-    pc_printf("         sym=val  define constant \"sym\" with value \"val\"\n");
-    pc_printf("         sym=     define constant \"sym\" with value 0\n");
+    pc_printf("         -S<num>   stack/heap size in cells (default=%d)\n",(int)sc_stksize);
+    pc_printf("         -s<num>   skip lines from the input file\n");
+    pc_printf("         -sui[+/-] show stack usage info\n");
+    pc_printf("         -t<num>   TAB indent size (in character positions, default=%d)\n",sc_tabsize);
+    pc_printf("         -v<num>   verbosity level; 0=quiet, 1=normal, 2=verbose (default=%d)\n",verbosity);
+    pc_printf("         -w<num>   disable a specific warning by its number\n");
+    pc_printf("         -E        treat warnings as errors\n");
+    pc_printf("         -X<num>   abstract machine size limit in bytes\n");
+    pc_printf("         -\\        use '\\' for escape characters\n");
+    pc_printf("         -^        use '^' for escape characters\n");
+    pc_printf("         -;[+/-]   require a semicolon to end each statement (default=%c)\n", sc_needsemicolon ? '+' : '-');
+    pc_printf("         -([+/-]   require parantheses for function invocation (default=%c)\n", optproccall ? '-' : '+');
+    pc_printf("         sym=val   define constant \"sym\" with value \"val\"\n");
+    pc_printf("         sym=      define constant \"sym\" with value 0\n");
 #if defined __WIN32__ || defined _WIN32 || defined _Windows || defined __MSDOS__
     pc_printf("\nOptions may start with a dash or a slash; the options \"-d0\" and \"/d0\" are\n");
     pc_printf("equivalent.\n");
@@ -5734,3 +5789,137 @@ static int *readwhile(void)
     return (wqptr-wqSIZE);
   } /* if */
 }
+
+#if !defined SC_LIGHT
+static long max_stacksize_recurse(symbol** sourcesym, symbol* sym, symbol** rsourcesym, long basesize, int* pubfuncparams, int* recursion)
+{
+    long size, maxsize;
+    int i, stkpos;
+
+    assert(sourcesym != NULL);
+    assert(sym != NULL);
+    assert(sym->ident == iFUNCTN);
+    assert((sym->usage & uNATIVE) == 0);
+    assert(recursion != NULL);
+
+    maxsize = sym->x.stacksize;
+    for (i = 0; i < sym->numrefers; i++) {
+        if (sym->refer[i] != NULL) {
+            assert(sym->refer[i]->ident == iFUNCTN);
+            assert((sym->refer[i]->usage & uNATIVE) == 0); /* a native function cannot refer to a user-function */
+            *(rsourcesym) = sym;
+            *(rsourcesym + 1) = NULL;
+            for (stkpos = 0; sourcesym[stkpos] != NULL; stkpos++) {
+                if (sym->refer[i] == sourcesym[stkpos]) {   /* recursion detection */
+                    *recursion = 1;
+                    goto break_recursion;         /* recursion was detected, quit loop */
+                } /* if */
+            } /* for */
+            /* add this symbol to the stack */
+            sourcesym[stkpos] = sym;
+            sourcesym[stkpos + 1] = NULL;
+            /* check size of callee */
+            size = max_stacksize_recurse(sourcesym, sym->refer[i], rsourcesym + 1, sym->x.stacksize, pubfuncparams, recursion);
+            if (maxsize < size)
+                maxsize = size;
+            /* remove this symbol from the stack */
+            sourcesym[stkpos] = NULL;
+        } /* if */
+    } /* for */
+break_recursion:
+
+    if ((sym->usage & uPUBLIC) != 0) {
+        /* Find out how many parameters a public function has, then see if this
+         * is bigger than some maximum
+         */
+        arginfo* arg = sym->dim.arglist;
+        int count = 0;
+        assert(arg != 0);
+        while (arg->ident != 0) {
+            count++;
+            arg++;
+        } /* while */
+        assert(pubfuncparams != 0);
+        if (count > * pubfuncparams)
+            *pubfuncparams = count;
+    } /* if */
+
+    return maxsize + basesize;
+}
+
+static long max_stacksize(symbol* root, int* recursion)
+{
+    /* Loop over all non-native functions. For each function, loop
+     * over all of its referrers, accumulating the stack requirements.
+     * Detect (indirect) recursion with a "mark-and-sweep" algorithm.
+     * I (mis-)use the "compound" field of the symbol structure for
+     * the marker, as this field is unused for functions.
+     *
+     * Note that the stack is shared with the heap. A host application
+     * may "eat" cells from the heap as well, through amx_Allot(). The
+     * stack requirements are thus only an estimate.
+     */
+    long size, maxsize;
+    int maxparams, numfunctions;
+    symbol* sym;
+    symbol** symstack, ** rsymstack;
+
+    assert(root != NULL);
+    assert(recursion != NULL);
+    /* count number of functions (for allocating the stack for recursion detection) */
+    numfunctions = 0;
+    for (sym = root->next; sym != NULL; sym = sym->next) {
+        if (sym->ident == iFUNCTN) {
+            assert(sym->compound == 0);
+            if ((sym->usage & uNATIVE) == 0)
+                numfunctions++;
+        } /* if */
+    } /* if */
+    /* allocate function symbol stack */
+    symstack = (symbol**)malloc((numfunctions + 1) * sizeof(symbol*));
+    rsymstack = (symbol**)malloc((numfunctions + 1) * sizeof(symbol*));
+    if (symstack == NULL || rsymstack == NULL)
+        error(103);         /* insufficient memory (fatal error) */
+    memset(symstack, 0, (numfunctions + 1) * sizeof(symbol*));
+    memset(rsymstack, 0, (numfunctions + 1) * sizeof(symbol*));
+
+    maxsize = 0;
+    maxparams = 0;
+    *recursion = 0;         /* assume no recursion */
+    for (sym = root->next; sym != NULL; sym = sym->next) {
+        int recursion_detected;
+        /* drop out if this is not a user-implemented function */
+        if (sym->ident != iFUNCTN || (sym->usage & uNATIVE) != 0)
+            continue;
+        /* accumulate stack size for this symbol */
+        symstack[0] = sym;
+        assert(symstack[1] == NULL);
+        recursion_detected = 0;
+        size = max_stacksize_recurse(symstack, sym, rsymstack, 0L, &maxparams, &recursion_detected);
+        if (recursion_detected) {
+            if (rsymstack[1] == NULL) {
+                pc_printf("recursion detected: function %s directly calls itself\n", sym->name);
+            }
+            else {
+                int i;
+                pc_printf("recursion detected: function %s indirectly calls itself:\n", sym->name);
+                pc_printf("%s ", sym->name);
+                for (i = 1; rsymstack[i] != NULL; i++) {
+                    pc_printf("<- %s ", rsymstack[i]->name);
+                }
+                pc_printf("<- %s\n", sym->name);
+            }
+            *recursion = recursion_detected;
+        }
+        assert(size >= 0);
+        if (maxsize < size)
+            maxsize = size;
+    } /* for */
+
+    free((void*)symstack);
+    free((void*)rsymstack);
+    maxsize++;                  /* +1 because a zero cell is always pushed on top
+                                 * of the stack to catch stack overwrites */
+    return maxsize + (maxparams + 1);/* +1 because # of parameters is always pushed on entry */
+}
+#endif

@@ -343,22 +343,23 @@ char *FindFileName(int argc, char **argv)
 void show_help()
 {
 	printf("Options:\n");
-	printf("\t-A<num>  alignment in bytes of the data segment and the stack\n");
-	printf("\t-a       output assembler code\n");
-	printf("\t-C[+/-]  compact encoding for output file (default=-)\n");
-	printf("\t-c<name> codepage name or number; e.g. 1252 for Windows Latin-1\n");
-	printf("\t-Dpath   active directory path\n");
-	printf("\t-d0      no symbolic information, no run-time checks\n");
-	printf("\t-d1      [default] run-time checks, no symbolic information\n");
-	printf("\t-d2      full debug information and dynamic checking\n");
-	printf("\t-d3      full debug information, dynamic checking, no optimization\n");
-	printf("\t-e<name> set name of error file (quiet compile)\n");
-	printf("\t-H<hwnd> window handle to send a notification message on finish\n");
-	printf("\t-i<name> path for include files\n");
-	printf("\t-l       create list file (preprocess only)\n");
-	printf("\t-o<name> set base name of output file\n");
-	printf("\t-p<name> set name of \"prefix\" file\n");
-	printf("\t-r[name] write cross reference report to console or to specified file\n");
+	printf("\t-A<num>   alignment in bytes of the data segment and the stack\n");
+	printf("\t-a        output assembler code\n");
+	printf("\t-C[+/-]   compact encoding for output file (default=-)\n");
+	printf("\t-c<name>  codepage name or number; e.g. 1252 for Windows Latin-1\n");
+	printf("\t-Dpath    active directory path\n");
+	printf("\t-d0       no symbolic information, no run-time checks\n");
+	printf("\t-d1       [default] run-time checks, no symbolic information\n");
+	printf("\t-d2       full debug information and dynamic checking\n");
+	printf("\t-d3       full debug information, dynamic checking, no optimization\n");
+	printf("\t-e<name>  set name of error file (quiet compile)\n");
+	printf("\t-H<hwnd>  window handle to send a notification message on finish\n");
+	printf("\t-i<name>  path for include files\n");
+	printf("\t-l        create list file (preprocess only)\n");
+	printf("\t-o<name>  set base name of output file\n");
+	printf("\t-p<name>  set name of \"prefix\" file\n");
+	printf("\t-r[name]  write cross reference report to console or to specified file\n");
+	printf("\t-sui[+/-] show stack usage info\n");
 }
 
 #if defined(__linux__) || defined(__APPLE__)

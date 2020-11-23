@@ -21,6 +21,9 @@ download_archive ()
   fi
 }
 
+ismac=0
+iswin=0
+
 if [ "$1" != "--no-mysql" ]; then
   ismac=0
   iswin=0

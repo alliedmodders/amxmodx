@@ -1013,7 +1013,7 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 	if (pPlayer->ingame)
 	{
 		pPlayer->name =name;			//	Make sure player have name up to date
-	} else if (pPlayer->IsBot()) {
+	} else if (pEntity && pEntity->pvPrivateData && pPlayer->IsBot()) {
 		pPlayer->Connect(name, "127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
 
 		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));

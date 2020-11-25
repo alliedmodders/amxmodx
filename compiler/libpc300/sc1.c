@@ -656,9 +656,11 @@ int pc_compile(int argc, char *argv[])
           error(100,incfname);          /* cannot read from ... (fatal error) */
       } /* if */
     } /* if */
+    warnstack_init();
     preprocess();                       /* fetch first line */
     parse();                            /* process all input */
     sc_parsenum++;
+    warnstack_cleanup();
   } while (sc_reparse);
 
   /* second (or third) pass */
@@ -723,8 +725,10 @@ int pc_compile(int argc, char *argv[])
     else
       plungequalifiedfile(incfname);    /* parse implicit include file (again) */
   } /* if */
+  warnstack_init();
   preprocess();                         /* fetch first line */
   parse();                              /* process all input */
+  warnstack_cleanup();
   /* inpf is already closed when readline() attempts to pop of a file */
   writetrailer();                       /* write remaining stuff */
 
@@ -1129,8 +1133,10 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
         } /* switch */
         break;
       case 'e':
-        strncpy(ename,option_value(ptr),_MAX_PATH); /* set name of error file */
-        ename[_MAX_PATH-1]='\0';
+        if (ename) {
+          strncpy(ename,option_value(ptr),_MAX_PATH); /* set name of error file */
+          ename[_MAX_PATH-1]='\0';
+        }
         break;
       case 'E':
         sc_warnings_are_errors = 1;
@@ -1163,15 +1169,21 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
         sc_listing=TRUE;        /* skip second pass & code generation */
         break;
       case 'o':
-        strncpy(oname,option_value(ptr),_MAX_PATH); /* set name of (binary) output file */
-        oname[_MAX_PATH-1]='\0';
+        if(oname) {
+          strncpy(oname,option_value(ptr),_MAX_PATH); /* set name of (binary) output file */
+          oname[_MAX_PATH-1]='\0';
+        }
         break;
       case 'p':
-        strncpy(pname,option_value(ptr),_MAX_PATH); /* set name of implicit include file */
-        pname[_MAX_PATH-1]='\0';
+        if(pname) {
+          strncpy(pname,option_value(ptr),_MAX_PATH); /* set name of implicit include file */
+          pname[_MAX_PATH-1]='\0';
+        }
         break;
 #if !defined SC_LIGHT
       case 'r':
+        if (!rname)
+          break;
         strncpy(rname,option_value(ptr),_MAX_PATH); /* set name of report file */
         rname[_MAX_PATH-1]='\0';
         sc_makereport=TRUE;
@@ -1222,11 +1234,11 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
       case 'w':
         i=(int)strtol(option_value(ptr),(char **)&ptr,10);
         if (*ptr=='-')
-          pc_enablewarning(i,0);
+          pc_enablewarning(i,warnDISABLE);
         else if (*ptr=='+')
-          pc_enablewarning(i,1);
-        else if (*ptr=='\0')
-          pc_enablewarning(i,2);
+          pc_enablewarning(i,warnENABLE);
+        else if (*ptr=='\0') /* Note: returned by strtol especially */
+          pc_enablewarning(i,warnTOGGLE);
         break;
       case 'X':
         i=atoi(option_value(ptr));
@@ -1264,10 +1276,10 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
       str[i]='\0';              /* str holds symbol name */
       i=atoi(ptr+1);
       add_constant(str,i,sGLOBAL,0);
-    } else {
+    } else if (oname) {
       strncpy(str,argv[arg],sizeof(str)-5); /* -5 because default extension is 4 characters */
       str[sizeof(str)-5]='\0';
-      set_extension(str,".p",FALSE);
+      set_extension(str,".sma",FALSE); /* add default extension if it doesn't exist */
       insert_sourcefile(str);
       /* The output name is the first input name with a different extension,
        * but it is stored in a different directory
@@ -1294,6 +1306,18 @@ static void parseoptions(int argc,char **argv,char *oname,char *ename,char *pnam
 #endif
     } /* if */
   } /* for */
+}
+
+void parsesingleoption(char *argv)
+{
+    /* argv[0] is the program, which we don't need here */
+    char *args[2] = { 0, argv };
+    char codepage[MAXCODEPAGE + 1] = { 0 };
+    codepage[0] = '\0';
+    parseoptions(2, args, NULL, NULL, NULL, NULL, codepage);
+    /* need explicit support for codepages */
+    if (codepage[0] && !cp_set(codepage))
+        error(108);         /* codepage mapping file not found */
 }
 
 #if !defined SC_LIGHT
@@ -1462,44 +1486,44 @@ static void about(void)
     setcaption();
     pc_printf("Usage:   pawncc <filename> [filename...] [options]\n\n");
     pc_printf("Options:\n");
-    pc_printf("         -A<num>   alignment in bytes of the data segment and the stack\n");
-    pc_printf("         -a        output assembler code\n");
+    pc_printf("         -A<num>        alignment in bytes of the data segment and the stack\n");
+    pc_printf("         -a             output assembler code\n");
 #if AMX_COMPACTMARGIN > 2
-    pc_printf("         -C[+/-]   compact encoding for output file (default=%c)\n", sc_compress ? '+' : '-');
+    pc_printf("         -C[+/-]        compact encoding for output file (default=%c)\n", sc_compress ? '+' : '-');
 #endif
-    pc_printf("         -c<name>  codepage name or number; e.g. 1252 for Windows Latin-1\n");
+    pc_printf("         -c<name>       codepage name or number; e.g. 1252 for Windows Latin-1\n");
 #if defined dos_setdrive
-    pc_printf("         -Dpath    active directory path\n");
+    pc_printf("         -Dpath         active directory path\n");
 #endif
-    pc_printf("         -d0       no symbolic information, no run-time checks\n");
-    pc_printf("         -d1       [default] run-time checks, no symbolic information\n");
-    pc_printf("         -d2       full debug information and dynamic checking\n");
-    pc_printf("         -d3       full debug information, dynamic checking, no optimization\n");
-    pc_printf("         -e<name>  set name of error file (quiet compile)\n");
+    pc_printf("         -d0            no symbolic information, no run-time checks\n");
+    pc_printf("         -d1            [default] run-time checks, no symbolic information\n");
+    pc_printf("         -d2            full debug information and dynamic checking\n");
+    pc_printf("         -d3            full debug information, dynamic checking, no optimization\n");
+    pc_printf("         -e<name>       set name of error file (quiet compile)\n");
 #if defined __WIN32__ || defined _WIN32 || defined _Windows
-    pc_printf("         -H<hwnd>  window handle to send a notification message on finish\n");
+    pc_printf("         -H<hwnd>       window handle to send a notification message on finish\n");
 #endif
-    pc_printf("         -i<name>  path for include files\n");
-    pc_printf("         -l        create list file (preprocess only)\n");
-    pc_printf("         -o<name>  set base name of (P-code) output file\n");
-    pc_printf("         -p<name>  set name of \"prefix\" file\n");
+    pc_printf("         -i<name>       path for include files\n");
+    pc_printf("         -l             create list file (preprocess only)\n");
+    pc_printf("         -o<name>       set base name of (P-code) output file\n");
+    pc_printf("         -p<name>       set name of \"prefix\" file\n");
 #if !defined SC_LIGHT
-    pc_printf("         -r[name]  write cross reference report to console or to specified file\n");
+    pc_printf("         -r[name]       write cross reference report to console or to specified file\n");
 #endif
-    pc_printf("         -S<num>   stack/heap size in cells (default=%d)\n",(int)sc_stksize);
-    pc_printf("         -s<num>   skip lines from the input file\n");
-    pc_printf("         -sui[+/-] show stack usage info\n");
-    pc_printf("         -t<num>   TAB indent size (in character positions, default=%d)\n",sc_tabsize);
-    pc_printf("         -v<num>   verbosity level; 0=quiet, 1=normal, 2=verbose (default=%d)\n",verbosity);
-    pc_printf("         -w<num>   disable a specific warning by its number\n");
-    pc_printf("         -E        treat warnings as errors\n");
-    pc_printf("         -X<num>   abstract machine size limit in bytes\n");
-    pc_printf("         -\\        use '\\' for escape characters\n");
-    pc_printf("         -^        use '^' for escape characters\n");
-    pc_printf("         -;[+/-]   require a semicolon to end each statement (default=%c)\n", sc_needsemicolon ? '+' : '-');
-    pc_printf("         -([+/-]   require parantheses for function invocation (default=%c)\n", optproccall ? '-' : '+');
-    pc_printf("         sym=val   define constant \"sym\" with value \"val\"\n");
-    pc_printf("         sym=      define constant \"sym\" with value 0\n");
+    pc_printf("         -S<num>        stack/heap size in cells (default=%d)\n",(int)sc_stksize);
+    pc_printf("         -s<num>        skip lines from the input file\n");
+    pc_printf("         -sui[+/-]      show stack usage info\n");
+    pc_printf("         -t<num>        TAB indent size (in character positions, default=%d)\n",sc_tabsize);
+    pc_printf("         -v<num>        verbosity level; 0=quiet, 1=normal, 2=verbose (default=%d)\n",verbosity);
+    pc_printf("         -w<num>[+/-]   disable a specific warning by its number\n");
+    pc_printf("         -E             treat warnings as errors\n");
+    pc_printf("         -X<num>        abstract machine size limit in bytes\n");
+    pc_printf("         -\\             use '\\' for escape characters\n");
+    pc_printf("         -^             use '^' for escape characters\n");
+    pc_printf("         -;[+/-]        require a semicolon to end each statement (default=%c)\n", sc_needsemicolon ? '+' : '-');
+    pc_printf("         -([+/-]        require parantheses for function invocation (default=%c)\n", optproccall ? '-' : '+');
+    pc_printf("         sym=val        define constant \"sym\" with value \"val\"\n");
+    pc_printf("         sym=           define constant \"sym\" with value 0\n");
 #if defined __WIN32__ || defined _WIN32 || defined _Windows || defined __MSDOS__
     pc_printf("\nOptions may start with a dash or a slash; the options \"-d0\" and \"/d0\" are\n");
     pc_printf("equivalent.\n");
@@ -1549,7 +1573,7 @@ static void setconstants(void)
   #endif
   add_constant("charbits",sCHARBITS,sGLOBAL,0);
   add_constant("charmin",0,sGLOBAL,0);
-  add_constant("charmax",~(-1UL << sCHARBITS) - 1,sGLOBAL,0);
+  add_constant("charmax",~((~(ucell)0) << sCHARBITS) - 1,sGLOBAL,0);
   add_constant("ucharmax",(1 << (sizeof(cell)-1)*8)-1,sGLOBAL,0);
 
   add_constant("__Pawn",VERSION_INT,sGLOBAL,0);
@@ -1944,7 +1968,7 @@ static void declglb(char *firstname,int firsttag,int fpublic,int fstatic,int fst
   int numdim;
   short filenum;
   symbol *sym;
-  constvalue *enumroot;
+  constvalue *enumroot=NULL;
   #if !defined NDEBUG
     cell glbdecl=0;
   #endif
@@ -2066,7 +2090,7 @@ static int declloc(int fstatic)
   int idxtag[sDIMEN_MAX];
   char name[sNAMEMAX+1];
   symbol *sym;
-  constvalue *enumroot;
+  constvalue *enumroot=NULL;
   cell val,size;
   char *str;
   value lval = {0};
@@ -2736,7 +2760,7 @@ static void decl_enum(int vclass)
   /* go through all constants */
   value=0;                              /* default starting value */
   do {
-    int idxtag,fieldtag;
+    int idxtag,fieldtag=0;
     symbol *sym;
     if (matchtoken('}')) {              /* quick exit if '}' follows ',' */
       lexpush();
@@ -2812,7 +2836,7 @@ static int getstates(const char *funcname)
   fsa=-1;
 
   do {
-    if (!(islabel=matchtoken(tLABEL)) && !needtoken(tSYMBOL))
+    if ((islabel=matchtoken(tLABEL))==0 && !needtoken(tSYMBOL))
       break;
     tokeninfo(&val,&str);
     assert(strlen(str)<sizeof fsaname);
@@ -4458,7 +4482,7 @@ static int testsymbols(symbol *root,int level,int testlabs,int testconst)
         errorset(sSETFILE,sym->fnumber);
         errorset(sSETLINE,sym->lnumber);
         error(204,sym->name);       /* value assigned to symbol is never used */
-#if 0 // ??? not sure whether it is a good idea to force people use "const"
+#if 0 // ??? not sure whether it is a good idea to force people use "const" | I guess we should start using this due pawn specification about arrays
       } else if ((sym->usage & (uWRITTEN | uPUBLIC | uCONST))==0 && sym->ident==iREFARRAY) {
         errorset(sSETFILE,sym->fnumber);
         errorset(sSETLINE,sym->lnumber);
@@ -4664,6 +4688,8 @@ SC_FUNC symbol *add_constant(char *name,cell val,int vclass,int tag)
   /* constant doesn't exist yet, an entry must be created */
   sym=addsym(name,val,iCONSTEXPR,vclass,tag,uDEFINE);
   assert(sym!=NULL);            /* fatal error 103 must be given on error */
+  if (vclass == sLOCAL)
+    sym->compound = nestlevel;
   if (sc_status == statIDLE)
     sym->usage |= uPREDEF;
   return sym;
@@ -5124,13 +5150,13 @@ static void dofor(void)
   assert(stgidx==0);
   index=stgidx;
   stgmark(sSTARTREORDER);
-  stgmark((char)(sEXPRSTART+0));    /* mark start of 2nd expression in stage */
+  stgmark((unsigned char)(sEXPRSTART+0));    /* mark start of 2nd expression in stage */
   setlabel(skiplab);                /* jump to this point after 1st expression */
   if (matchtoken(';')==0) {
     test(wq[wqEXIT],FALSE,FALSE);   /* expression 2 (jump to wq[wqEXIT] if false) */
     needtoken(';');
   } /* if */
-  stgmark((char)(sEXPRSTART+1));    /* mark start of 3th expression in stage */
+  stgmark((unsigned char)(sEXPRSTART+1));    /* mark start of 3th expression in stage */
   if (matchtoken(')')==0) {
     doexpr(TRUE,TRUE,TRUE,TRUE,NULL,NULL,FALSE);    /* expression 3 */
     needtoken(')');
@@ -5649,7 +5675,7 @@ static void dostate(void)
 
   fsa=0;
 
-  if (!(islabel=matchtoken(tLABEL)) && !needtoken(tSYMBOL)) {
+  if ((islabel=matchtoken(tLABEL))==0 && !needtoken(tSYMBOL)) {
     delete_autolisttable();
     return;
   } /* if */

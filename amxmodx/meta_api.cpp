@@ -1012,8 +1012,20 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 	// Emulate bot connection and putinserver
 	if (pPlayer->ingame)
 	{
-		pPlayer->name =name;			//	Make sure player have name up to date
-	} else if (pEntity && pEntity->pvPrivateData && pPlayer->IsBot()) {
+		pPlayer->name=name;			//	Make sure player have name up to date
+	}
+	else
+	if(infobuffer /* just for safety */
+		&& pEntity
+		&& pEntity->pvPrivateData /* have a private data (same as player) */
+		&& pPlayer->initialized /* needless check due strstr, but we should confirm that there's no putinserver before client_connect */
+		&& pPlayer->IsBot() && strstr(infobuffer, "\\*bot\\1")) {
+
+		pPlayer->PutInServer();
+		++g_players_num;
+		executeForwards(FF_ClientPutInServer, static_cast<cell>(pPlayer->index));
+	}
+	else if (pEntity && pPlayer->IsBot()) {
 		pPlayer->Connect(name, "127.0.0.1"/*CVAR_GET_STRING("net_address")*/);
 
 		executeForwards(FF_ClientConnect, static_cast<cell>(pPlayer->index));
@@ -1031,11 +1043,6 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 			}
 		}
 		executeForwards(FF_ClientAuthorized, static_cast<cell>(pPlayer->index), authid);
-
-		pPlayer->PutInServer();
-		++g_players_num;
-
-		executeForwards(FF_ClientPutInServer, static_cast<cell>(pPlayer->index));
 	}
 
 	RETURN_META(MRES_IGNORED);

@@ -1278,7 +1278,7 @@ native get_user_authid(index, authid[], len);
  *
  * @param index     Client index
  *
- * @return          Client userid, 0 if the userid is not available or the
+ * @return          Client userid, -1 if the userid is not available or the
  *                  client index is invalid
  */
 native get_user_userid(index);

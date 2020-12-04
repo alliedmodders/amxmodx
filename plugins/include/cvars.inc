@@ -70,7 +70,7 @@ native create_cvar(const name[], const string[], flags = FCVAR_NONE, const descr
  * Registers a new cvar for the engine.
  *
  * @note Deprecated. Consider to use create_cvar for more options.
- * @note For a list of possible cvar flags see FCVAR_* constants in amxconst.inc
+ * @note For a list of possible cvar flags see FCVAR_* constants in cvars.inc
  * @note If an already existing cvar is registered it will not be duplicated.
  *       The default value is only set when the cvar is registered for the very
  *       first time since the server was started.

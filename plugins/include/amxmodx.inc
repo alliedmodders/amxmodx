@@ -946,7 +946,7 @@ native is_user_authorized(index);
  * @note Due back-compatibility return's true after bot proceed client_connect
  *       stage (when bot's pdata isn't created yet).
  *
- * @note Use is_user_connectedex to check player against real connection state
+ * @note Use is_user_connected_ex to check player against real connection state
  * 
  * @param index     Client index
  *
@@ -967,7 +967,7 @@ native is_user_connected(index);
  *
  * @return          1 if bot is connected, 0 otherwise
  */
-native is_user_connectedex(const index);
+native is_user_connected_ex(const index);
 
 /**
  * Returns if the client is connecting.

@@ -810,7 +810,7 @@ static cell AMX_NATIVE_CALL is_user_connected(AMX *amx, cell *params) /* 1 param
 	return (pPlayer->ingame ? 1 : 0);
 }
 
-static cell AMX_NATIVE_CALL is_user_connectedex(AMX *amx, cell *params) /* 1 param */
+static cell AMX_NATIVE_CALL is_user_connected_ex(AMX *amx, cell *params) /* 1 param */
 {
 	int index = params[1];
 
@@ -4796,7 +4796,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"is_user_authorized",		is_user_authorized},
 	{"is_user_bot",				is_user_bot},
 	{"is_user_connected",		is_user_connected},
-	{"is_user_connectedex",		is_user_connectedex},
+	{"is_user_connected_ex",		is_user_connected_ex},
 	{"is_user_connecting",		is_user_connecting},
 	{"is_user_hltv",			is_user_hltv},
 	{"lang_exists",				lang_exists},

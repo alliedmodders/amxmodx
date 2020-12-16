@@ -4796,7 +4796,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"is_user_authorized",		is_user_authorized},
 	{"is_user_bot",				is_user_bot},
 	{"is_user_connected",		is_user_connected},
-	{"is_user_connected_ex",		is_user_connected_ex},
+	{"is_user_connected_ex",	is_user_connected_ex},
 	{"is_user_connecting",		is_user_connecting},
 	{"is_user_hltv",			is_user_hltv},
 	{"lang_exists",				lang_exists},

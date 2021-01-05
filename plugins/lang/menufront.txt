@@ -17,10 +17,10 @@ RES_WEAP = Restrict Weapons
 TELE_PLAYER = Teleport Player
 
 [de]
-KICK_PLAYER = Kick Spieler
-BAN_PLAYER = Ban Spieler
-SLAP_SLAY = Schlage/Kille Spieler
-TEAM_PLAYER = Team Spieler ^n
+KICK_PLAYER = Spieler kicken
+BAN_PLAYER = Spieler bannen
+SLAP_SLAY = Spieler schlagen/killen
+TEAM_PLAYER = Team der Spieler ändern ^n
 CHANGEL = Mapwechsel
 VOTE_MAPS = Map Abstimmung ^n
 SPECH_STUFF = Soundausgabe
@@ -32,7 +32,7 @@ LANG_SET = Spracheinstellung
 STATS_SET = Statistik-Einstellungen ^n
 PAUSE_PLUG = Plugins pausieren
 RES_WEAP = Waffen verbieten
-TELE_PLAYER = Teleport Spieler
+TELE_PLAYER = Spieler teleportieren
 
 [sr]
 KICK_PLAYER = Kick Igraca

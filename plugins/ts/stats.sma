@@ -92,8 +92,8 @@ new g_HeadShots[7][] = {
 }
 
 public plugin_precache(){
-  precache_sound( "misc/headshot.wav")
-  precache_sound( "misc/doublekill.wav")
+  precache_generic( "sound/misc/headshot.wav")
+  precache_generic( "sound/misc/doublekill.wav")
   return PLUGIN_CONTINUE
 }
 

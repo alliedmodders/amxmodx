@@ -799,6 +799,26 @@ static cell AMX_NATIVE_CALL is_user_connected(AMX *amx, cell *params) /* 1 param
 
 	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
 
+	if(pPlayer->IsBot())
+	{
+		// For legacy bot's
+		// which are using is_user_connected
+		// to check out is bot connected to server
+		return (pPlayer->initialized ? 1 : 0);
+	}
+
+	return (pPlayer->ingame ? 1 : 0);
+}
+
+static cell AMX_NATIVE_CALL is_user_connected_ex(AMX *amx, cell *params) /* 1 param */
+{
+	int index = params[1];
+
+	if (index < 1 || index > gpGlobals->maxClients)
+		return 0;
+
+	CPlayer* pPlayer = GET_PLAYER_POINTER_I(index);
+
 	return (pPlayer->ingame ? 1 : 0);
 }
 
@@ -4776,6 +4796,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"is_user_authorized",		is_user_authorized},
 	{"is_user_bot",				is_user_bot},
 	{"is_user_connected",		is_user_connected},
+	{"is_user_connected_ex",	is_user_connected_ex},
 	{"is_user_connecting",		is_user_connecting},
 	{"is_user_hltv",			is_user_hltv},
 	{"lang_exists",				lang_exists},
@@ -4796,7 +4817,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"plugin_flags",			plugin_flags},
 	{"precache_model",			precache_model},
 	{"precache_sound",			precache_sound},
-	{"precache_generic",			precache_generic},
+	{"precache_generic",		precache_generic},
 	{"precache_event",			precache_event},
 	{"random_float",			random_float},
 	{"random_num",				random_num},

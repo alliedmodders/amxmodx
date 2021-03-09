@@ -943,11 +943,31 @@ native is_user_authorized(index);
  *       1 to MaxClients range. That means you can safely use this native
  *       without manually verifying that the index is a valid client index.
  *
+ * @note Due back-compatibility return's true after bot proceed client_connect
+ *       stage (when bot's pdata isn't created yet).
+ *
+ * @note Use is_user_connected_ex to check player against real connection state
+ * 
  * @param index     Client index
  *
  * @return          1 if client is connected, 0 otherwise
+ *                  always returns 1 if bot passed client_connect stage
  */
 native is_user_connected(index);
+
+/**
+ *
+ * Returns if the client is fully connected (proceed client_putinserver state).
+ *
+ * @note This does not throw an error if the provided index is out of the
+ *       1 to MaxClients range. That means you can safely use this native
+ *       without manually verifying that the index is a valid client index.
+ *
+ * @param index     Client index
+ *
+ * @return          1 if bot is connected, 0 otherwise
+ */
+native is_user_connected_ex(const index);
 
 /**
  * Returns if the client is connecting.

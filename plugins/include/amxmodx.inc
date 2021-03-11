@@ -1979,7 +1979,7 @@ native register_srvcmd(const server_cmd[], const function[], flags = -1, const i
  *
  * @return          1 on success, 0 if command was not found
  */
-native get_clcmd(index, command[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
+native get_clcmd(index, command[] = "", len1 = 0, &flags = ADMIN_ALL, info[] = "", len2 = "", flag = ADMIN_ALL, &bool:info_ml = false);
 
 /**
  * Returns number of registered client commands.
@@ -2012,7 +2012,7 @@ native get_clcmdsnum(flag);
  *
  * @return          1 on success, 0 if command was not found
  */
-native get_srvcmd(index, server_cmd[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
+native get_srvcmd(index, server_cmd[] = "", len1 = 0, &flags = ADMIN_ALL, info[] = "", len2 = 0, flag = ADMIN_ALL, &bool:info_ml = false);
 
 /**
  * Returns number of registered server commands.
@@ -2048,7 +2048,7 @@ native get_srvcmdsnum(flag);
  *
  * @return          1 on success, 0 if command was not found
  */
-native get_concmd(index, cmd[], len1, &flags, info[], len2, flag, id = -1, &bool:info_ml = false);
+native get_concmd(index, cmd[] = "", len1 = 0, &flags = ADMIN_ALL, info[] = "", len2 = 0, flag = ADMIN_ALL, id = -1, &bool:info_ml = false);
 
 /**
  * Returns the parent plugin id of a console command.

@@ -2096,6 +2096,13 @@ native register_menuid(const menu[], outside = 0);
 /**
  * Registers a callback function to a menu id and keys.
  *
+ * @note The function is called in the following manner:
+ *   id              - Client index
+ *   key             - Menu key pressed
+ *
+ * @note For a list of possible menu key, see the MENU_KEY_* constants in
+ *       amxconst.inc
+ *
  * @param menuid        Menu id
  * @param keys          Key flags
  * @param function      Callback function

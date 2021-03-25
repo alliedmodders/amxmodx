@@ -519,7 +519,7 @@ native unlink(const filename[], bool:use_valve_fs = false, const valve_path_id[]
  *
  * @return              Handle to the directory, 0 otherwise
  */
-native open_dir(dir[], firstfile[], length, &FileType:type = FileType_Unknown, bool:use_valve_fs = false, const valve_path_id[] = "GAME");
+native open_dir(const dir[], firstfile[], length, &FileType:type = FileType_Unknown, bool:use_valve_fs = false, const valve_path_id[] = "GAME");
 
 /**
  * Reads the next directory entry as a local filename.

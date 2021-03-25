@@ -893,3 +893,15 @@ stock get_playersnum_ex(GetPlayersFlags:flags = GetPlayers_None, const team[] = 
 	get_players_ex(_, PlayersNum, flags, team);
 	return PlayersNum;
 }
+
+/**
+ * Plays a sound to a client.
+ *
+ * @param id        Client index or 0 to play to all clients
+ *
+ * @return          Length of formatted message
+ */
+stock client_speak(id, const message[])
+{
+	return client_cmd(id, "spk ^"%s^"", message)
+}

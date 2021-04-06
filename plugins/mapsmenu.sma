@@ -549,10 +549,8 @@ load_settings(filename[])
 	new text[256];
 	new tempMap[32];
 	
-	while (!feof(fp))
+	while (fgets(fp, text, charsmax(text)))
 	{
-		fgets(fp, text, charsmax(text));
-		
 		if (text[0] == ';')
 		{
 			continue;

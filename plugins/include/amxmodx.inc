@@ -3327,7 +3327,7 @@ native arraycopy(const any:src[], any:dest[], const size);
  * @param with    Second array
  * @param size    Size of array
  *
- * @noreturn
+ * @return Returns true if arrays are equaly, false otherwise.
  */
 native bool:arraycompare(const any:what[], const any:with[], const size);
 

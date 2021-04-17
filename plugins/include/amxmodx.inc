@@ -3321,6 +3321,17 @@ native arrayset(any:array[], any:value, size);
 native arraycopy(const any:src[], any:dest[], const size);
 
 /**
+ * Compares two arrays.
+ *
+ * @param what    First array 
+ * @param with    Second array
+ * @param size    Size of array
+ *
+ * @noreturn
+ */
+native bool:arraycompare(const any:what[], const any:with[], const size);
+
+/**
  * Returns the weapon id associated with a weapon name.
  *
  * @note The weapon name is case sensitive and has the weapon_* form.

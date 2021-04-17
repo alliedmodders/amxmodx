@@ -3310,6 +3310,17 @@ native DestroyForward(forward_handle);
 native arrayset(any:array[], any:value, size);
 
 /**
+ * Copies all elements of array to s destination array.
+ *
+ * @param src     Array to copy 
+ * @param dest    Destination array
+ * @param size    Size of array
+ *
+ * @noreturn
+ */
+native arraycopy(const any:src[], any:dest[], const size);
+
+/**
  * Returns the weapon id associated with a weapon name.
  *
  * @note The weapon name is case sensitive and has the weapon_* form.

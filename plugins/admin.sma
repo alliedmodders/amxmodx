@@ -207,10 +207,10 @@ public addadminfn(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	new flags[64]
+	new flags[32]
 	read_argv(2, flags, charsmax(flags))
 
-	new password[64]
+	new password[32]
 	if (read_argc() >= 4) {
 		read_argv(3, password, charsmax(password))
 	}
@@ -444,7 +444,7 @@ public adminSql()
 
 		query = SQL_PrepareQuery(sql, "SELECT auth, password, access, flags FROM %s", table)
 	} else {
-		SQL_QueryAndIgnore(sql, "CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 32 ) NOT NULL, `password` VARCHAR( 32 ) NOT NULL, `access` VARCHAR( 32 ) NOT NULL, `flags` VARCHAR( 32 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'", table)
+		SQL_QueryAndIgnore(sql, "CREATE TABLE IF NOT EXISTS `%s` ( `auth` VARCHAR( 43 ) NOT NULL, `password` VARCHAR( 31 ) NOT NULL, `access` VARCHAR( 31 ) NOT NULL, `flags` VARCHAR( 31 ) NOT NULL ) COMMENT = 'AMX Mod X Admins'", table)
 		query = SQL_PrepareQuery(sql,"SELECT `auth`,`password`,`access`,`flags` FROM `%s`", table)
 	}
 
@@ -465,7 +465,7 @@ public adminSql()
 		new qcolFlags = SQL_FieldNameToNum(query, "flags")
 		
 		new AuthData[44];
-		new Password[44];
+		new Password[32];
 		new Access[32];
 		new Flags[32];
 		

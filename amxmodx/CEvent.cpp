@@ -196,6 +196,10 @@ void EventsMngr::ClEvent::setForwardState(ForwardState state)
 	m_State = state;
 }
 
+ForwardState EventsMngr::ClEvent::getForwardState()
+{
+	return m_State;
+}
 
 int EventsMngr::registerEvent(CPluginMngr::CPlugin* plugin, int func, int flags, int msgid)
 {

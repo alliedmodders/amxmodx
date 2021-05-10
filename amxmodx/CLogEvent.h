@@ -106,6 +106,7 @@ public:
 		inline CPluginMngr::CPlugin *getPlugin() { return plugin; }
 		void registerFilter(char* filter);
 		void setForwardState(ForwardState value);
+		ForwardState getForwardState();
 		inline int getFunction() { return func; }
 	};
 

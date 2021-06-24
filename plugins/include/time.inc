@@ -41,7 +41,7 @@ enum
  *
  * @param id    		The player whose language the length should be translated to
  * @param unitCnt		The number of time units you want translated into verbose text
- * @param type			The type of unit (i.e. seconds, minutes, hours, days, weeks) that you are passing in
+ * @param type			The type of unit (i.e. seconds, minutes, hours, days, weeks, months) that you are passing in
  * @param output		The variable you want the verbose text to be placed in
  * @param outputLen		The length of the output variable
  *

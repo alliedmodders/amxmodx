@@ -24,6 +24,7 @@ enum
     timeunit_hours,
     timeunit_days,
     timeunit_weeks,
+    timeunit_months,
 };
 
 /* Seconds in each time unit */
@@ -31,6 +32,7 @@ enum
 #define SECONDS_IN_HOUR   3600
 #define SECONDS_IN_DAY    86400
 #define SECONDS_IN_WEEK   604800
+#define SECONDS_IN_MONTH  2592000
 
 /**
  * Stock by Brad.
@@ -50,7 +52,7 @@ stock get_time_length(id, unitCnt, type, output[], outputLen)
     if (unitCnt > 0)
     {
         // determine the number of each time unit there are
-        new weekCnt = 0, dayCnt = 0, hourCnt = 0, minuteCnt = 0, secondCnt = 0;
+        new monthCnt = 0, weekCnt = 0, dayCnt = 0, hourCnt = 0, minuteCnt = 0, secondCnt = 0;
 
         switch (type)
         {
@@ -59,7 +61,11 @@ stock get_time_length(id, unitCnt, type, output[], outputLen)
             case timeunit_hours:   secondCnt = unitCnt * SECONDS_IN_HOUR;
             case timeunit_days:    secondCnt = unitCnt * SECONDS_IN_DAY;
             case timeunit_weeks:   secondCnt = unitCnt * SECONDS_IN_WEEK;
+            case timeunit_months:  secondCnt = unitCnt * SECONDS_IN_MONTH;
         }
+
+        monthCnt = secondCnt / SECONDS_IN_MONTH;
+        secondCnt -= (monthCnt * SECONDS_IN_MONTH);
 
         weekCnt = secondCnt / SECONDS_IN_WEEK;
         secondCnt -= (weekCnt * SECONDS_IN_WEEK);
@@ -75,8 +81,10 @@ stock get_time_length(id, unitCnt, type, output[], outputLen)
 
         // translate the unit counts into verbose text
         new maxElementIdx = -1;
-        new timeElement[5][33];
+        new timeElement[6][33];
 
+        if (monthCnt > 0)
+            format(timeElement[++maxElementIdx], charsmax(timeElement[]), "%i %L", monthCnt, id, (monthCnt == 1) ? "TIME_ELEMENT_MONTH" : "TIME_ELEMENT_MONTHS");
         if (weekCnt > 0)
             format(timeElement[++maxElementIdx], charsmax(timeElement[]), "%i %L", weekCnt, id, (weekCnt == 1) ? "TIME_ELEMENT_WEEK" : "TIME_ELEMENT_WEEKS");
         if (dayCnt > 0)
@@ -95,6 +103,7 @@ stock get_time_length(id, unitCnt, type, output[], outputLen)
             case 2: formatex(output, outputLen, "%s, %s %L %s", timeElement[0], timeElement[1], id, "TIME_ELEMENT_AND", timeElement[2]);
             case 3: formatex(output, outputLen, "%s, %s, %s %L %s", timeElement[0], timeElement[1], timeElement[2], id, "TIME_ELEMENT_AND", timeElement[3]);
             case 4: formatex(output, outputLen, "%s, %s, %s, %s %L %s", timeElement[0], timeElement[1], timeElement[2], timeElement[3], id, "TIME_ELEMENT_AND", timeElement[4]);
+            case 5: formatex(output, outputLen, "%s, %s, %s, %s, %s %L %s", timeElement[0], timeElement[1], timeElement[2], timeElement[3], timeElement[4], id, "TIME_ELEMENT_AND", timeElement[5]);
         }
     }
 }

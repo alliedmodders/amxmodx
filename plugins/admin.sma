@@ -364,10 +364,8 @@ loadSettings(szFilename[])
 		new AuthData[44];
 		new Password[32];
 		
-		while (!feof(File))
+		while (fgets(File, Text, charsmax(Text)))
 		{
-			fgets(File, Text, charsmax(Text));
-			
 			trim(Text);
 			
 			// comment

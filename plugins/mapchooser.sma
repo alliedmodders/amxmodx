@@ -249,12 +249,9 @@ loadSettings(filename[])
 
 	new fp=fopen(filename,"r");
 	
-	while (!feof(fp))
+	while (fgets(fp, buff, charsmax(buff)))
 	{
-		buff[0]='^0';
 		szText[0]='^0';
-		
-		fgets(fp, buff, charsmax(buff));
 		
 		parse(buff, szText, charsmax(szText));
 		

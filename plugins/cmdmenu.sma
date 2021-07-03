@@ -124,10 +124,8 @@ public plugin_precache( )
 	new fieldNums = 0;
 	new const voxIdent[] = "vox", fvoxIdent[] = "fvox", barneyIdent[] = "barney", hgruntIdent[] = "hgrunt";
 
-	while ( line < MAX_CMDS && ! feof( fp ) )	// Loop till MAX_CMDS or EOF
+	while ( line < MAX_CMDS && fgets( fp, szText, charsmax(szText) ) )	// Loop till MAX_CMDS or no more file data
 	{
-		fgets( fp, szText, charsmax(szText) );               // Store line content
-
 		/* Strips newline */
 		new len = strlen( szText );
 		if ( len != 0 && szText[len-1] == '^n' )		// len != 0 because if the last line of the file is empty, there's no newline

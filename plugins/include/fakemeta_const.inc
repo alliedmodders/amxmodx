@@ -190,7 +190,8 @@ enum
 	// You can pass in 0 for global usercmd handle or another usercmd handle here
 	DLLFunc_CmdStart,					// void )			(const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed);
 	DLLFunc_CmdEnd,						// void )			(const edict_t *player);
-	DLLFunc_CreateBaseline				// void )			(int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
+	DLLFunc_CreateBaseline,				// void )			(int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs);
+	DLLFunc_GetWeaponData				// int )			(struct edict_s *player, struct weapon_data_s *info);
 };
 
 enum {
@@ -550,7 +551,8 @@ enum {
 	FM_ClientPrintf,
 	
 	// LATE ADDITIONS (v1.80)
-	FM_ServerPrint
+	FM_ServerPrint,
+	FM_GetWeaponData
 };
 
 enum TraceResult
@@ -742,6 +744,35 @@ enum UserCmd
 	// Experimental player impact stuff
 	UC_ImpactIndex,		// int
 	UC_ImpactPosition	// float array[3]
+};
+
+/**
+ * Info about weapons player might have in his/her possession
+ */
+enum WeaponData
+{
+	WD_iId,
+	WD_iClip,
+	WD_flNextPrimaryAttack,
+	WD_flNextSecondaryAttack,
+	WD_flTimeWeaponIdle,
+	WD_fInReload,
+	WD_fInSpecialReload,
+	WD_flNextReload,
+	WD_flPumpTime,
+	WD_fReloadTime,
+	WD_fAimedDamage,
+	WD_fNextAimBonus,
+	WD_fInZoom,
+	WD_iWeaponState,
+	WD_iUser1,
+	WD_iUser2,
+	WD_iUser3,
+	WD_iUser4,
+	WD_flUser1,
+	WD_flUser2,
+	WD_flUser3,
+	WD_flUser4,
 };
 
 enum AlertType

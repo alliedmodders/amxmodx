@@ -180,6 +180,7 @@ enum {
 	FM_GetInfoKeyBuffer,
 	FM_ClientPrintf,
 	FM_ServerPrint,
+	FM_GetWeaponData,
 	FM_LAST_DONT_USE_ME
 };
 

@@ -69,9 +69,9 @@ public plugin_cfg()
 	}
 }
 
-public cmdSayChat(id, level)
+public cmdSayChat(id)
 {
-	if (!access(id, level))
+	if (!access(id, g_AdminChatFlag))
 	{
 		return PLUGIN_CONTINUE
 	}

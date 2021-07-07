@@ -263,7 +263,15 @@ void CoreConfig::ExecuteMapConfig()
 	strncopy(mapName, STRING(gpGlobals->mapname), sizeof(mapName));
 
 	char *mapPrefix;
+	
+	ke::SafeSprintf(cfgPath, sizeof(cfgPath), "%s/%s%s/default.cfg", g_mod_name.chars(), configsDir, MapConfigDir);
 
+	if (g_LibSys.IsPathFile(cfgPath))
+	{
+		ke::SafeSprintf(command, sizeof(command), CommandFormat, cfgPath);
+		SERVER_COMMAND(command);
+	}
+	
 	if ((mapPrefix = strtok(mapName, "_")))
 	{
 		ke::SafeSprintf(cfgPath, sizeof(cfgPath), "%s/%s%s/prefix_%s.cfg", g_mod_name.chars(), configsDir, MapConfigDir, mapPrefix);

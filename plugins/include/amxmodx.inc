@@ -1874,6 +1874,11 @@ native remove_user_flags(index, flags = -1, id = 0);
  * Registers a callback to be called when the client executes a command from the
  * console.
  *
+ * @note The function is called in the following manner:
+ *   id              - Client index
+ *   flags           - Admin privilege flags set in the "flags" argument
+ *   cmd_id          - Command index (same as the function's return value)
+ *
  * @note For a list of possible access flags, see the ADMIN_* constants in
  *       amxconst.inc
  * @note Opting in to FlagManager enables the admin privileges to be overwritten
@@ -1900,6 +1905,11 @@ native register_clcmd(const client_cmd[], const function[], flags = -1, const in
  * Registers a callback to be called when the client or server executes a
  * command from the console.
  *
+ * @note The function is called in the following manner:
+ *   id              - Client index
+ *   flags           - Admin privilege flags set in the "flags" argument
+ *   cmd_id          - Command index (same as the function's return value)
+ *
  * @note For a list of possible access flags, see the ADMIN_* constants in
  *       amxconst.inc
  * @note Opting in to FlagManager enables the admin privileges to be overwritten
@@ -1925,6 +1935,11 @@ native register_concmd(const cmd[], const function[], flags = -1, const info[] =
 /**
  * Registers a callback to be called when the server executes a command from the
  * console.
+ *
+ * @note The function is called in the following manner:
+ *   id              - Client index
+ *   flags           - Admin privilege flags set in the "flags" argument
+ *   cmd_id          - Command index (same as the function's return value)
  *
  * @note For a list of possible access flags, see the ADMIN_* constants in
  *       amxconst.inc

@@ -29,7 +29,7 @@ new g_CountDown
 new g_Switch
 
 // pcvars
-new g_amx_time_voice, g_amx_timeleft
+new g_amx_time_voice, g_amx_timeleft, g_amx_time_print_to_all, g_amx_time_show_cmd_in_chat
 new g_mp_timelimit
 
 public plugin_init()
@@ -39,6 +39,8 @@ public plugin_init()
 	g_amx_time_voice = register_cvar("amx_time_voice", "1")
 	register_srvcmd("amx_time_display", "setDisplaying")
 	g_amx_timeleft = register_cvar("amx_timeleft", "00:00", FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_UNLOGGED|FCVAR_SPONLY)
+	g_amx_time_print_to_all = register_cvar("amx_time_print_to_all", "1")
+	g_amx_time_show_cmd_in_chat = register_cvar("amx_time_show_cmd_in_chat", "1")
 	register_clcmd("say timeleft", "sayTimeLeft", 0, "- displays timeleft")
 	register_clcmd("say thetime", "sayTheTime", 0, "- displays current time")
 	
@@ -83,9 +85,8 @@ public sayTheTime(id)
 	new ctime[64]
 	
 	get_time("%m/%d/%Y - %H:%M:%S", ctime, charsmax(ctime))
-	client_print(0, print_chat, "%L:   %s", LANG_PLAYER, "THE_TIME", ctime)
-	
-	return PLUGIN_CONTINUE
+	client_print(get_pcvar_bool(g_amx_time_print_to_all) ? 0 : id, print_chat, "%L:   %s", LANG_PLAYER, "THE_TIME", ctime)
+	return get_pcvar_bool(g_amx_time_show_cmd_in_chat) ? PLUGIN_CONTINUE : PLUGIN_HANDLED
 }
 
 public sayTimeLeft(id)
@@ -100,12 +101,12 @@ public sayTimeLeft(id)
 			setTimeVoice(svoice, charsmax(svoice), 0, a)
 			client_cmd(id, "%s", svoice)
 		}
-		client_print(0, print_chat, "%L:  %d:%02d", LANG_PLAYER, "TIME_LEFT", (a / 60), (a % 60))
+		client_print(get_pcvar_bool(g_amx_time_print_to_all) ? 0 : id, print_chat, "%L:  %d:%02d", LANG_PLAYER, "TIME_LEFT", (a / 60), (a % 60))
 	}
 	else
-		client_print(0, print_chat, "%L", LANG_PLAYER, "NO_T_LIMIT")
+		client_print(get_pcvar_bool(g_amx_time_print_to_all) ? 0 : id, print_chat, "%L", LANG_PLAYER, "NO_T_LIMIT")
 	
-	return PLUGIN_CONTINUE
+	return get_pcvar_bool(g_amx_time_show_cmd_in_chat) ? PLUGIN_CONTINUE : PLUGIN_HANDLED
 }
 
 setTimeText(text[], len, tmlf, id)

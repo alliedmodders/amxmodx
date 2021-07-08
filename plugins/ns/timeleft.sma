@@ -19,6 +19,7 @@ new g_CountDown
 new g_Switch
 new Float:g_roundStartTime = 999999.9
 new bool:is_combat
+new g_amx_time_print_to_all, g_amx_time_show_cmd_in_chat
 
 public plugin_init() {
   register_plugin("TimeLeft",AMXX_VERSION_STR,"AMXX Dev Team")
@@ -28,6 +29,9 @@ public plugin_init() {
   register_clcmd("say timeleft","sayTimeLeft",0,"- displays timeleft")
   register_clcmd("say thetime","sayTheTime",0,"- displays current time")
   set_task(0.8,"timeRemain",8648458,"",0,"b")
+
+  g_amx_time_print_to_all = register_cvar("amx_time_print_to_all", "1")
+  g_amx_time_show_cmd_in_chat = register_cvar("amx_time_show_cmd_in_chat", "1")
   
   new szMapName[4]
   get_mapname(szMapName, charsmax(szMapName))
@@ -62,8 +66,8 @@ public sayTheTime(id){
   }
   new ctime[64]  
   get_time("%m/%d/%Y - %H:%M:%S",ctime,charsmax(ctime))  
-  client_print(0,print_chat, "The time:   %s",ctime )
-  return PLUGIN_CONTINUE
+  client_print(get_pcvar_bool(g_amx_time_print_to_all) ? 0 : id,print_chat, "The time:   %s",ctime )
+  return get_pcvar_bool(g_amx_time_show_cmd_in_chat) ? PLUGIN_CONTINUE : PLUGIN_HANDLED
 }
 
 public sayTimeLeft(id){
@@ -74,11 +78,11 @@ public sayTimeLeft(id){
       setTimeVoice( svoice , charsmax(svoice) , 0 , a )
       client_cmd( id , "%s", svoice  )
     }    
-    client_print(0,print_chat, "Time Left:  %d:%02d", (a / 60) , (a % 60) )
+    client_print(get_pcvar_bool(g_amx_time_print_to_all) ? 0 : id,print_chat, "Time Left:  %d:%02d", (a / 60) , (a % 60) )
   }
   else
-    client_print(0,print_chat, "No Time Limit" )
-  return PLUGIN_CONTINUE
+    client_print(get_pcvar_bool(g_amx_time_print_to_all) ? 0 : id,print_chat, "No Time Limit" )
+  return get_pcvar_bool(g_amx_time_show_cmd_in_chat) ? PLUGIN_CONTINUE : PLUGIN_HANDLED
 }
 
 setTimeText(text[],len,tmlf){

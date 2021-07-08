@@ -145,8 +145,8 @@ CLangMngr::CLang::CLang(const char *lang)
 {
 	m_LookUpTable.clear();
 	m_entries = 0;
-	strncpy(m_LanguageName, lang, 2);
-	m_LanguageName[2] = 0;
+	strncpy(m_LanguageName, lang, LANGNAME_LEN - 1);
+	m_LanguageName[LANGNAME_LEN - 1] = 0;
 }
 
 void CLangMngr::CLang::AddEntry(int key, const char *definition)

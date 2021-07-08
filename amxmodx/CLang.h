@@ -20,6 +20,8 @@
 #define ERR_BADKEY	1	// Lang key not found
 #define ERR_BADLANG 2	// Invalid lang
 
+#define LANGNAME_LEN 4
+
 struct sKeyDef
 {
 	ke::AutoString* definition;
@@ -92,7 +94,7 @@ class CLangMngr : public ITextListener_INI
 		typedef THash<int, defentry> LookUpVec;
 		typedef LookUpVec::iterator	 LookUpVecIter;
 
-		char m_LanguageName[3];
+		char m_LanguageName[LANGNAME_LEN];
 
 		// our lookup table
 		LookUpVec m_LookUpTable;

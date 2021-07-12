@@ -228,7 +228,10 @@ class AMXXConfig(object):
     if have_clang:
       cxx.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
       if cxx.version >= 'apple-clang-10.0':
-        cxx.cxxflags += ['-Wno-inconsistent-missing-override']
+        cxx.cxxflags += [
+          '-Wno-inconsistent-missing-override',
+          '-Wno-varargs',
+        ]
       if cxx.version >= 'apple-clang-5.1' or cxx.version >= 'clang-3.4':
         cxx.cxxflags += ['-Wno-deprecated-register']
       else:

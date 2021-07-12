@@ -322,10 +322,10 @@ class AMXXConfig(object):
       '-mmacosx-version-min=10.5',
       '-arch', 'i386',
       '-lstdc++',
-      '-stdlib=libstdc++',
+      '-stdlib=libc++',
       '-framework', 'CoreServices',
     ]
-    cxx.cxxflags += ['-stdlib=libstdc++']
+    cxx.cxxflags += ['-stdlib=libc++']
 
   def configure_windows(self, cxx):
     cxx.defines += ['WIN32', '_WINDOWS']

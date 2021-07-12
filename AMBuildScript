@@ -317,7 +317,10 @@ class AMXXConfig(object):
 
   def configure_mac(self, cxx):
     cxx.defines += ['OSX', '_OSX', 'POSIX']
-    cxx.cflags += ['-mmacosx-version-min=10.7']
+    cxx.cflags += [
+      '-mmacosx-version-min=10.7',
+      '-Wno-address-of-packed-member',
+    ]
     cxx.linkflags += [
       '-mmacosx-version-min=10.7',
       '-arch', 'i386',

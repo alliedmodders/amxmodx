@@ -222,16 +222,16 @@ class AMXXConfig(object):
       if have_clang or (have_gcc and cxx.version >= '4.6'):
         cxx.cflags += ['-Wno-narrowing']
       if (have_gcc and cxx.version >= '4.7') or (have_clang and cxx.version >= '3'):
-        cxx.cxxflags += [
-          '-Wno-delete-non-virtual-dtor',
-          '-Wno-varargs',
-        ]
+        cxx.cxxflags += ['-Wno-delete-non-virtual-dtor']
       if have_gcc and cxx.version >= '4.8':
         cxx.cflags += ['-Wno-unused-result', '-Wno-error=sign-compare']
     if have_clang:
       cxx.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
       if cxx.version >= 'apple-clang-10.0':
-        cxx.cxxflags += ['-Wno-inconsistent-missing-override']
+        cxx.cxxflags += [
+          '-Wno-inconsistent-missing-override',
+          '-Wno-varargs',
+        ]
       if cxx.version >= 'apple-clang-5.1' or cxx.version >= 'clang-3.4':
         cxx.cxxflags += ['-Wno-deprecated-register']
       else:

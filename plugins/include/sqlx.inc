@@ -519,7 +519,7 @@ stock SQL_SimpleQueryFmt(Handle:db, error[]="", maxlength=0, &rows=0, const fmt[
  * @param queryfmt      The query string that can be formated with format specifiers.
  * @pram ...            Additional arguments for formating the query.
  * 
- * @return              1 on error.
+ * @return              -1 on error.
  *                      >= 0 on success (with the number of affected rows).
  */
 stock SQL_QueryAndIgnore(Handle:db, const queryfmt[], any:...)

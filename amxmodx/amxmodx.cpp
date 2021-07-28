@@ -4460,6 +4460,11 @@ static cell AMX_NATIVE_CALL arraycompare(AMX *amx, cell *params)
 	cell *with = get_amxaddr(amx, params[2]);
 	int size = params[3];
 
+	if(size < 1){
+		LogError(amx, AMX_ERR_NATIVE, "Invalid size (%d).", size);
+		return 0;
+	}
+
 	while (size--)
 		if (*with++ != *what++)
 			return 0;

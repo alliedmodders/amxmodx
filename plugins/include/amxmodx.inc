@@ -3316,7 +3316,8 @@ native arrayset(any:array[], any:value, size);
  * @param with    Second array
  * @param size    Size of array
  *
- * @return Returns true if arrays are equaly, false otherwise.
+ * @return	Returns true if arrays are equaly, false otherwise.
+ * @error	If size < 1.
  */
 native bool:arraycompare(const any:what[], const any:with[], const size);
 

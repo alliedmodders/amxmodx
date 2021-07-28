@@ -3312,6 +3312,8 @@ native arrayset(any:array[], any:value, size);
 /**
  * Compares two arrays.
  *
+ * @note The value of the "size" parameter should not exceed the size of each array.
+ *
  * @param what    First array 
  * @param with    Second array
  * @param size    Size of array

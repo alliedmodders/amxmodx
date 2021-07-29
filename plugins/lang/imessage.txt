@@ -41,7 +41,7 @@ INF_REACH = Information Message -raja ylitetty!
 INF_REACH = Dostignat e limitut za ingormacionni suobshteniq!
 
 [ro]
-INF_REACH = Limita mesajelor informative a fost atinsa!
+INF_REACH = A fost atinsă limita maximă a mesajelor informative!
 
 [hu]
 INF_REACH = Információs üzenetek limitje elérve!

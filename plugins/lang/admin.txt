@@ -181,17 +181,17 @@ PRIV_SET = Priviligiite sa nastroeni
 NO_ENTRY = Nqmate dostup do servera...
 
 [ro]
-LOADED_ADMIN = 1 administrator a fost incarcat din fisier
-LOADED_ADMINS = %d administratori au fost incarcati din fisier
-SQL_CANT_CON = Eroare SQL: conectare esuata: '%s'
-SQL_CANT_LOAD_ADMINS = Eroare SQL: esuare incarcare administratori: '%s'
-NO_ADMINS = Nu a fost gasit nici un administrator.
-SQL_LOADED_ADMIN = 1 administrator a fost incarcat din baza de date
-SQL_LOADED_ADMINS = %d administratori au fost incarcati din baza de date
-INV_PAS = Parola invalida!
-PAS_ACC = Parola acceptata
-PRIV_SET = Privilegii acordate
-NO_ENTRY = Acest nume este rezervat pe server.
+LOADED_ADMIN = 1 admin a fost încărcat din fișier
+LOADED_ADMINS = %d admini au fost încărcați din fișier
+SQL_CANT_CON = Eroare SQL: conectare nereușită: '%s'
+SQL_CANT_LOAD_ADMINS = Eroare SQL: eșuare încărcare admini: '%s'
+NO_ADMINS = Nu a fost găsit niciun admin.
+SQL_LOADED_ADMIN = 1 admin a fost încărcat din baza de date
+SQL_LOADED_ADMINS = %d admini au fost încărcați din baza de date
+INV_PAS = Parolă invalidă!
+PAS_ACC = Parolă acceptată
+PRIV_SET = Drepturi de acces acordate
+NO_ENTRY = Nu aveți permisiunea de a intra pe server...
 
 [hu]
 LOADED_ADMIN = 1 admin betöltve a fájlból.

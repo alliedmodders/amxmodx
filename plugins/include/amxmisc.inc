@@ -809,6 +809,13 @@ stock reset_menu(index)
 /**
  * Calls a function after a specified time has elapsed.
  *
+ * @note The function is called in the following manner if data is passed:
+ *   data[]          - Data passed
+ *   id              - Task index
+ *
+ * @note The function is called in the following manner if no data is passed:
+ *   id              - Task index
+ *
  * @param time          Time interval to assign
  * @param function      Function to execute
  * @param id            Task id to assign

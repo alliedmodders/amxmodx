@@ -1762,6 +1762,13 @@ native parse_time(const input[], const format[], time = -1);
  * @note Please consider using set_task_ex() instead which allows you to
  *       use named constants for flags instead of letters.
  *
+ * @note The function is called in the following manner if data is passed:
+ *   data[]          - Data passed
+ *   id              - Task index
+ *
+ * @note The function is called in the following manner if no data is passed:
+ *   id              - Task index
+ *
  * @param time          Time interval to assign
  * @param function      Function to execute
  * @param id            Task id to assign

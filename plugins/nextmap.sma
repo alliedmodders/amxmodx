@@ -103,7 +103,7 @@ public delayedChange(param[])
 public changeMap()
 {
 	new string[32]
-	new Float:chattime = g_mp_chattime ? get_pcvar_float(g_mp_chattime) : 10.0;	// mp_chattime defaults to 10 in other mods
+	new Float:chattime = g_mp_chattime ? get_pcvar_float(g_mp_chattime) : 0.0;
 	
 	if (g_mp_chattime) {
 		set_pcvar_float(g_mp_chattime, chattime + 2.0)		// make sure mp_chattime is long

@@ -251,22 +251,22 @@ RES_WEAP = Zabrani orujiq
 TELE_PLAYER = Teleportirai igrachi
 
 [ro]
-KICK_PLAYER = Kick Jucator
-BAN_PLAYER = Ban Jucator
-SLAP_SLAY = Plesneste/Ucide Jucator
-TEAM_PLAYER = Jucator Echipa ^n
-CHANGEL = Schimba harta
-VOTE_MAPS = Voteaza pentru hartile ^n
-SPECH_STUFF = Speech
-CLIENT_COM = Comenzi Jucatori
-SERVER_COM = Comenzi Server
-CVARS_SET = Setari Cvar
-CONFIG = Configuratie
-LANG_SET = Setari Limbaj
-STATS_SET = Setari Statistici ^n
-PAUSE_PLUG = Opreste Plugin-uri
-RES_WEAP = Restrictioneaza Arme
-TELE_PLAYER = Teleporteaza Jucator
+KICK_PLAYER = Kick jucător
+BAN_PLAYER = Ban jucător
+SLAP_SLAY = Slap/Slay jucător
+TEAM_PLAYER = Schimbare echipă jucător ^n
+CHANGEL = Schimbă harta
+VOTE_MAPS = Vot pentru hărțile ^n
+SPECH_STUFF = Meniu Speech
+CLIENT_COM = Comenzi jucător
+SERVER_COM = Comenzi server
+CVARS_SET = Setări cvar
+CONFIG = Configurații
+LANG_SET = Setări limbă
+STATS_SET = Setări statistici ^n
+PAUSE_PLUG = Întrerupe pluginuri
+RES_WEAP = Restricționează arme
+TELE_PLAYER = Teleportează jucător
 
 [hu]
 KICK_PLAYER = Játékos kirúgása

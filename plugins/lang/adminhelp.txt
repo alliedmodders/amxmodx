@@ -134,12 +134,12 @@ TIME_INFO_2 = Nqma limit na vremeto. Sledvashta karta: %s
 
 [ro]
 HELP_COMS = Ajutor AMX Mod X: Comenzi
-HELP_ENTRIES = Intrari %d - %d din %d
-HELP_USE_MORE = Scrie '%s %d' pentru mai mult
-HELP_USE_BEGIN = Scrie '%s 1' pentru inceput
-TYPE_HELP = Scrie '%s' '%s' in consola pentru afisare lista comenzi
-TIME_INFO_1 = Timp Ramas: %d:%02d. Urmatoarea Harta: %s
-TIME_INFO_2 = Nici o Limita a Timpului. Urmatoarea Harta: %s
+HELP_ENTRIES = Se afișează %d - %d din %d
+HELP_USE_MORE = Scrie '%s %d' pentru mai multe comenzi
+HELP_USE_BEGIN = Scrie '%s 1' pentru a începe
+TYPE_HELP = Scrie '%s' '%s' în consolă pentru a afișa lista de comenzi disponibile
+TIME_INFO_1 = Timp rămas: %d:%02d. Următoarea hartă: %s
+TIME_INFO_2 = Fără limită de timp. Următoarea hartă: %s
 
 [hu]
 HELP_COMS = AMX Mod X segítség: Parancsok

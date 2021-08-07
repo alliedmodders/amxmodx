@@ -182,16 +182,16 @@ PRINT_ALL = (VSICHKI) %s :   %s
 
 [ro]
 COL_WHITE = alb
-COL_RED = rosu
+COL_RED = roșu
 COL_GREEN = verde
 COL_BLUE = albastru
 COL_YELLOW = galben
-COL_MAGENTA = purpuriu
-COL_CYAN = cian
-COL_ORANGE = oranj
-COL_OCEAN = ocean
+COL_MAGENTA = violet
+COL_CYAN = bleu
+COL_ORANGE = portocaliu
+COL_OCEAN = bleumarin
 COL_MAROON = maro
-PRINT_ALL = (TOTI) %s :   %s
+PRINT_ALL = (TOȚI) %s :   %s
 
 [hu]
 COL_WHITE = fehér

@@ -153,15 +153,15 @@ TYPE_LANGMENU = Napishi 'amx_langmenu' v konzolata za da vidish menuto kudeto mo
 LANG_MENU_DISABLED = Ezikovoto menu e izkliucheno.
 
 [ro]
-LANG_NOT_EXISTS = Acest limbaj nu exista
-PERSO_LANG = Limbaj Personal
-LANG_MENU = Menu Limbaj
-SERVER_LANG = Limbaj Server
-SAVE_LANG = Salveaza Limbaj
-SET_LANG_SERVER = Limbajul server-ului a fost setat pe "%s"
-SET_LANG_USER = Limbajul tau a fost setat pe "%s"
-TYPE_LANGMENU = Scrie 'amx_langmenu' in consola pentru afisarea unui menu cu limbaje
-LANG_MENU_DISABLED = Menu limbaj dezactivat.
+LANG_NOT_EXISTS = Această limbă nu există
+PERSO_LANG = Limbă personală
+LANG_MENU = Meniu limbi
+SERVER_LANG = Limbă server
+SAVE_LANG = Salvează limba
+SET_LANG_SERVER = Limba serverului a fost setată pe "%s"
+SET_LANG_USER = Limba ta a fost setată pe "%s"
+TYPE_LANGMENU = Scrie 'amx_langmenu' în consolă pentru a-ți selecta limba preferată
+LANG_MENU_DISABLED = Meniu limbă dezactivat.
 
 [hu]
 LANG_NOT_EXISTS = A nyelv nem létezik

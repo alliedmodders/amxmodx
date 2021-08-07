@@ -125,13 +125,13 @@ EXTED_MAP = Udalji kartata %s
 TIME_CHOOSE = Vreme e da se izbere sledvashtata karta...
 
 [ro]
-CHO_FIN_EXT = Votarea s-a incheiat. Harta actuala va fi prelungita %.0f minute
-CHO_FIN_NEXT = Votarea s-a incheiat. Urmatoarea harta va fi %s
-CHOSE_EXT = %s a votat pentru prelungirea hartii actuale
+CHO_FIN_EXT = Votarea s-a terminat. Harta actuală va fi prelungită cu %.0f minute
+CHO_FIN_NEXT = Votarea s-a terminat. Următoarea hartă va fi %s
+CHOSE_EXT = %s a votat pentru prelungirea hărții actuale
 X_CHOSE_X = %s a votat pentru %s
-CHOOSE_NEXTM = AMX Alege harta urmatoare
-EXTED_MAP = Prelungirea hartii actuale %s
-TIME_CHOOSE = E timpul sa alegeti harta urmatoare...
+CHOOSE_NEXTM = AMX Alege harta următoare
+EXTED_MAP = Prelungirea hărții %s
+TIME_CHOOSE = Este timpul să alegeți harta următoare...
 
 [hu]
 CHO_FIN_EXT = A választás véget ért. A mostani pálya még %.0f percig lesz.

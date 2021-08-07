@@ -69,9 +69,9 @@ MSG_FREQ = Skrolvashtoto suobshtenie se pokazva vseki: %d:%02d minuti
 MSG_DISABLED = Skrolvashtoto suobshtenie e izkliucheno
 
 [ro]
-MIN_FREQ = Frecventa minima pentru acest mesaj este %d secunde
-MSG_FREQ = Frecventa afisarii messajului Rulant: %d:%02d minute
-MSG_DISABLED = Mesajul Rulant dezactivat
+MIN_FREQ = Frecvența minimă pentru acest mesaj este de %d secunde
+MSG_FREQ = Frecvența afișării mesajului rulant: %d:%02d minute
+MSG_DISABLED = Mesaj rulant dezactivat
 
 [hu]
 MIN_FREQ = A minimum idő erre az üzenetre %d másodperc

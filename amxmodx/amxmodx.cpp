@@ -547,6 +547,28 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 11 param *
 	return 1;
 }
 
+static cell AMX_NATIVE_CALL set_hudmessage_ex(AMX *amx, cell *params) /* 16 param */
+{
+	g_hudset.r1 = static_cast<byte>(params[1]);
+	g_hudset.g1 = static_cast<byte>(params[2]);
+	g_hudset.b1 = static_cast<byte>(params[3]);
+	g_hudset.a1 = static_cast<byte>(params[4]);
+	g_hudset.r2 = static_cast<byte>(params[5]);
+	g_hudset.g2 = static_cast<byte>(params[6]);
+	g_hudset.b2 = static_cast<byte>(params[7]);
+	g_hudset.a2 = static_cast<byte>(params[8]);
+	g_hudset.x = amx_ctof(params[9]);
+	g_hudset.y = amx_ctof(params[10]);
+	g_hudset.effect = params[11];
+	g_hudset.fxTime = amx_ctof(params[12]);
+	g_hudset.holdTime = amx_ctof(params[13]);
+	g_hudset.fadeinTime = amx_ctof(params[14]]);
+	g_hudset.fadeoutTime = amx_ctof(params[15]);
+	g_hudset.channel = params[16];
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL show_hudmessage(AMX *amx, cell *params) /* 2 param */
 {
 	int len = 0;
@@ -4813,6 +4835,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"set_fail_state",			set_fail_state},
 	{"set_dhudmessage",			set_dhudmessage},
 	{"set_hudmessage",			set_hudmessage},
+	{"set_hudmessage_ex",		set_hudmessage_ex},
 	{"set_localinfo",			set_localinfo},
 	{"set_task",				set_task},
 	{"set_user_flags",			set_user_flags},

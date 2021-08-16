@@ -679,10 +679,53 @@ native disable_logevent(handle);
  * @param fadeintime    Time it takes the message to fully appear (fade-in)
  * @param fadeouttime   Time it takes the message to fully disappear (fade-out)
  * @param channel       Channel to use on the client
+ * @param red           Red 2 component of hudmessage color
+ * @param green         Green 2 component of hudmessage color
+ * @param blue          Blue 2 component of hudmessage color
+ * @param alpha2        Alpha 2 component of hudmessage color		
+ * @param alpha1        Alpha 1 component of hudmessage color
  *
  * @noreturn
  */
-native set_hudmessage(red = 200, green = 100, blue = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1);
+native set_hudmessage(red = 200, green = 100, blue = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1, red2 = 255, green2 = 255, blue2 = 255, a2 = 0, a1 = 0);
+
+/**
+ * Sets display parameters for hudmessages.
+ *
+ * @note As of AMXX 1.61, setting the channel to -1 will automatically choose
+ *       the next available HUD channel for the client.
+ * @note There are four different HUD channels available on the client (1-4).
+ *       Sending a hudmessage to a channel will overwrite any existing messages
+ *       already displaying on that channel.
+ * @note If you plan to create a permanent message, don't forget to specify a
+ *       specific channel to avoid possible flickering due to auto-channeling.
+ * @note For the hudmessage coordinates x and y, -1.0 will center the message
+ *       on the respective axis.
+ * @note These parameters stay until the next call to set_hudmessage overwrites
+ *       them. Multiple calls to show_hudmessage will therefore re-use the same
+ *       parameters. The parameters are not stored per-plugin, so other plugins
+ *       can overwrite them.
+ *
+ * @param red           Red component of hudmessage color
+ * @param green         Green component of hudmessage color
+ * @param blue          Blue component of hudmessage color
+ * @param alpha1        Alpha component of hudmessage color
+ * @param red           Red 2 component of hudmessage color
+ * @param green         Green 2 component of hudmessage color
+ * @param blue          Blue 2 component of hudmessage color
+ * @param alpha2        Alpha 2 component of hudmessage color		
+ * @param x             Location of the message on the x axis in percent
+ * @param y             Location of the message on the y axis in percent
+ * @param effects       Display effect
+ * @param fxtime        Duration of the effect
+ * @param holdtime      Time the message stays on screen
+ * @param fadeintime    Time it takes the message to fully appear (fade-in)
+ * @param fadeouttime   Time it takes the message to fully disappear (fade-out)
+ * @param channel       Channel to use on the client
+ *
+ * @noreturn
+ */
+native set_hudmessage_ex(red = 200, green = 100, blue = 0, alpha = 0, red2 = 255, green2 = 255, blue2 = 250, alpha2 = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1);
 
 /**
  * Displays a message on the client HUD.

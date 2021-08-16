@@ -682,7 +682,7 @@ native disable_logevent(handle);
  *
  * @noreturn
  */
-native set_hudmessage(red = 200, green = 100, blue = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1, red2 = 255, green2 = 255, blue2 = 255, a2 = 0, a1 = 0);
+native set_hudmessage(red = 200, green = 100, blue = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1);
 
 /**
  * Sets display parameters for hudmessages.

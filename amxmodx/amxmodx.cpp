@@ -525,13 +525,27 @@ static cell AMX_NATIVE_CALL next_hudchannel(AMX *amx, cell *params)
 	return pPlayer->NextHUDChannel();
 }
 
-static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 11 param */
+static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 13 param */
 {
-	g_hudset.a1 = 0;
-	g_hudset.a2 = 0;
-	g_hudset.r2 = 255;
-	g_hudset.g2 = 255;
-	g_hudset.b2 = 250;
+	cell num_params = params[0] / sizeof(cell);
+	
+	if(num_params >= 13) {
+		cell *color2 = get_amxaddr(amx, params[13]);
+
+		g_hudset.a1 = params[12];
+		g_hudset.a2 = color2[0];
+		g_hudset.r2 = color2[1];
+		g_hudset.g2 = color2[2];
+		g_hudset.b2 = color2[3];
+	}
+	else {
+		g_hudset.a1 = 0;
+		g_hudset.a2 = 0;
+		g_hudset.r2 = 255;
+		g_hudset.g2 = 255;
+		g_hudset.b2 = 250;
+	}
+
 	g_hudset.r1 = static_cast<byte>(params[1]);
 	g_hudset.g1 = static_cast<byte>(params[2]);
 	g_hudset.b1 = static_cast<byte>(params[3]);

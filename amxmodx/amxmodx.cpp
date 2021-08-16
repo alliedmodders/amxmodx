@@ -533,10 +533,10 @@ static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 13 param *
 		cell *color2 = get_amxaddr(amx, params[13]);
 
 		g_hudset.a1 = params[12];
-		g_hudset.a2 = color2[0];
-		g_hudset.r2 = color2[1];
-		g_hudset.g2 = color2[2];
-		g_hudset.b2 = color2[3];
+		g_hudset.a2 = color2[3];
+		g_hudset.r2 = color2[0];
+		g_hudset.g2 = color2[1];
+		g_hudset.b2 = color2[2];
 	}
 	else {
 		g_hudset.a1 = 0;

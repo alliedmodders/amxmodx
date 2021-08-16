@@ -679,11 +679,6 @@ native disable_logevent(handle);
  * @param fadeintime    Time it takes the message to fully appear (fade-in)
  * @param fadeouttime   Time it takes the message to fully disappear (fade-out)
  * @param channel       Channel to use on the client
- * @param red           Red 2 component of hudmessage color
- * @param green         Green 2 component of hudmessage color
- * @param blue          Blue 2 component of hudmessage color
- * @param alpha2        Alpha 2 component of hudmessage color		
- * @param alpha1        Alpha 1 component of hudmessage color
  *
  * @noreturn
  */

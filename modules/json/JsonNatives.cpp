@@ -697,6 +697,12 @@ static cell AMX_NATIVE_CALL amxx_json_object_set_value(AMX *amx, cell *params)
 		return 0;
 	}
 
+	if (!JsonMngr->IsValidHandle(params[3], Handle_Object))
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON value! %d", params[3]);
+		return 0;
+	}
+
 	int len;
 	auto name = MF_GetAmxString(amx, params[2], 0, &len);
 

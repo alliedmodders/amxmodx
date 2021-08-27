@@ -23,7 +23,7 @@
 	#define PLAYER_LINUXOFFSET  0
 	#define CLIP_LINUXOFFSET    0
 #else
-	#define LINUXOFFSET         4
+	#define LINUXOFFSET         3
 	#define PLAYER_LINUXOFFSET  5
 	#define CLIP_LINUXOFFSET    4
 #endif

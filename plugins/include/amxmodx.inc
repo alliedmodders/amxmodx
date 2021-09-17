@@ -681,10 +681,12 @@ native disable_logevent(handle);
  * @param fadeintime    Time it takes the message to fully appear (fade-in)
  * @param fadeouttime   Time it takes the message to fully disappear (fade-out)
  * @param channel       Channel to use on the client
- *
+ * @param alpha1        Alpha component of hudmessage color
+ * @param color2[4]     Color 2 array {r,g,b,a}
+ * 
  * @noreturn
  */
-native set_hudmessage(red = 200, green = 100, blue = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1);
+native set_hudmessage(red = 200, green = 100, blue = 0, Float:x = -1.0, Float:y = 0.35, effects = 0, Float:fxtime = 6.0, Float:holdtime = 12.0, Float:fadeintime = 0.1, Float:fadeouttime = 0.2, channel = -1, alpha1 = 0, color2[4] = {255, 255, 250, 0});
 
 /**
  * Displays a message on the client HUD.

@@ -78,3 +78,5 @@ DROPPED_RES = U largua për shkak të rezervimit të vendit që është plugini 
 
 [pt]
 DROPPED_RES = Foste desconectado por causa da reservação de slots
+CVAR_RESERVATION = Quantidade de slots para reservar
+CVAR_HIDESLOTS = Se tu definires isto para 1, tu podes esconder slots no teu servidor.^nSe os slots públicos e escondidos do servidor estiverem cheios, tu deverás manualmente conectar com o comando de consola "connect".

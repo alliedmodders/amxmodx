@@ -1991,10 +1991,10 @@ ST_HE_SUICIDE_SOUND = Zëri Vetëvrasjes Granatë
 
 [pt]
 NO_OPTION = Não foi possível encontrar a(s) opção(ões) com essa variável (nome "%s")
-STATS_CONF_SAVED = A configuração das Estatísticas foi guardada com sucesso
-STATS_CONF_FAILED = Falha ao guardar a configuração das Estatísticas!!!
-STATS_CONF_LOADED = A configuração das Estatísticas foi carregada com sucesso
-STATS_CONF_FAIL_LOAD = Falha ao carregar a configuração das Estatísticas!!!
+STATS_CONF_SAVED = A configuração das estatísticas foi guardada com sucesso
+STATS_CONF_FAILED = Falha ao guardar a configuração das estatísticas!!!
+STATS_CONF_LOADED = A configuração das estatísticas foi carregada com sucesso
+STATS_CONF_FAIL_LOAD = Falha ao carregar a configuração das estatísticas!!!
 STATS_CONF = Configuração das Estatísticas
 STATS_ENTRIES_OF = Entradas %i - %i de %i
 STATS_USE_MORE = Usa 'amx_statscfg list %i' para mostrar mais
@@ -2010,7 +2010,7 @@ COM_STATS_SAVE = ^tsave - guardar configuração das estatísticas
 COM_STATS_LOAD = ^tload - carregar configuração das estatísticas
 COM_STATS_LIST = ^tlist [id] - listar status das estatísticas
 COM_STATS_ADD = ^tadd <nome> <variável> - adicionar uma estatística á lista
-NO_STATS = Os plugins de Estatísticas não estão^ninstalados neste servidor^n
+NO_STATS = Os plugins de estatísticas não estão^ninstalados neste servidor^n
 SAVE_CONF = Guardar configuração
 ST_MULTI_KILL = MultiKill
 ST_MULTI_KILL_SOUND = Som do MultiKill

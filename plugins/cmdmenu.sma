@@ -173,15 +173,7 @@ public plugin_precache( )
 			}
 			if ( file_exists( szSound ) )
 			{
-				if ( sndExt[1] == 'm')
-				{
-					precache_generic( szSound );		// mp3
-				}
-				else
-				{
-					replace( szSound, charsmax(szSound), "sound/", "" );	// wav, strip the leading sound/ we added for our file_exists check
-					precache_sound( szSound );
-				}
+				precache_generic( szSound );
 			}
 		}
 		line++;

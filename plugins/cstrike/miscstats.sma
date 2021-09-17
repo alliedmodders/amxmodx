@@ -377,7 +377,7 @@ precache_sound_custom( const sound[] )
 	formatex(fullpathsound, charsmax(fullpathsound), "sound/%s.wav", sound)
 	if( file_exists(fullpathsound) )
 	{
-		precache_sound(fullpathsound[6])
+		precache_generic(fullpathsound)
 	}
 	else
 	{

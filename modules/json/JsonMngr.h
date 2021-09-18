@@ -69,6 +69,10 @@ class JSONMngr : public IJSONMngr
 
 	// Convert functions
 	const char *ValueToString(JS_Handle value) override;
+	inline size_t ValueToStringLen(JS_Handle value) override
+	{
+		return json_value_get_string_len(m_Handles[value]->m_pValue);
+	}
 	inline double ValueToNum(JS_Handle value) override
 	{
 		return json_value_get_number(m_Handles[value]->m_pValue);
@@ -81,6 +85,10 @@ class JSONMngr : public IJSONMngr
 	// Wrappers for Array API
 	bool ArrayGetValue(JS_Handle array, size_t index, JS_Handle *handle) override;
 	const char *ArrayGetString(JS_Handle array, size_t index) override;
+	inline size_t ArrayGetStringLen(JS_Handle array, size_t index) override
+	{
+		return json_array_get_string_len(m_Handles[array]->m_pArray, index);
+	}
 	inline bool ArrayGetBool(JS_Handle array, size_t index) override
 	{
 		return json_array_get_boolean(m_Handles[array]->m_pArray, index) == 1;
@@ -142,6 +150,15 @@ class JSONMngr : public IJSONMngr
 	// Get functions
 	bool ObjectGetValue(JS_Handle object, const char *name, JS_Handle *handle, bool dotfunc) override;
 	const char *ObjectGetString(JS_Handle object, const char *name, bool dotfunc) override;
+	inline size_t ObjectGetStringLen(JS_Handle object, const char *name, bool dotfunc) override
+	{
+		if (!dotfunc)
+		{
+			return json_object_get_string_len(m_Handles[object]->m_pObject, name);
+		}
+
+		return json_object_dotget_string_len(m_Handles[object]->m_pObject, name);
+	}
 	double ObjectGetNum(JS_Handle object, const char *name, bool dotfunc) override;
 	bool ObjectGetBool(JS_Handle object, const char *name, bool dotfunc) override;
 	inline size_t ObjectGetCount(JS_Handle object) override
@@ -171,6 +188,7 @@ class JSONMngr : public IJSONMngr
 	bool SerialToBuffer(JS_Handle value, char *buffer, size_t size, bool pretty) override;
 	bool SerialToFile(JS_Handle value, const char *filepath, bool pretty) override;
 	char *SerialToString(JS_Handle value, bool pretty) override;
+	void EscapeSlashes(int escape_slashes) override;
 	inline void FreeString(char *string) override
 	{
 		json_free_serialized_string(string);

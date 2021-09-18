@@ -229,6 +229,16 @@ native bool:json_free(&JSON:handle);
 native json_get_string(const JSON:value, buffer[], maxlen);
 
 /**
+ * Gets string data length.
+ *
+ * @param value             JSON handle
+ *
+ * @return                  Length of string data
+ * @error                   If passed value is not a valid handle
+ */
+native json_get_string_len(const JSON:value);
+
+/**
  * Gets a number.
  *
  * @param value             JSON handle
@@ -283,6 +293,17 @@ native JSON:json_array_get_value(const JSON:array, index);
  * @error                   If passed handle is not a valid array
  */
 native json_array_get_string(const JSON:array, index, buffer[], maxlen);
+
+/**
+ * Gets string data length from the array.
+ *
+ * @param array             Array handle
+ * @param index             Position in the array (starting from 0)
+ *
+ * @return                  Length of string data from the array
+ * @error                   If passed handle is not a valid array
+ */
+native json_array_get_string_len(const JSON:array, index);
 
 /**
  * Gets a number from the array.
@@ -518,6 +539,21 @@ native JSON:json_object_get_value(const JSON:object, const name[], bool:dot_not 
  * @error                   If passed handle is not a valid object
  */
 native json_object_get_string(const JSON:object, const name[], buffer[], maxlen, bool:dot_not = false);
+
+/**
+ * Gets string data length from the object.
+ *
+ * @note                    If dot notation is used some values may be inaccessible
+ *                          because valid names in JSON can contain dots.
+ *
+ * @param object            Object handle
+ * @param name              Key name
+ * @param dot_not           True to use dot notation, false to not
+ *
+ * @return                  Length of string data from the object
+ * @error                   If passed handle is not a valid object
+ */
+native json_object_get_string_len(const JSON:object, const name[], bool:dot_not = false);
 
 /**
  * Gets a number from the object.
@@ -775,3 +811,12 @@ native json_serial_to_string(const JSON:value, buffer[], maxlen, bool:pretty = f
  * @error                   If passed handle is not a valid value
  */
 native bool:json_serial_to_file(const JSON:value, const file[], bool:pretty = false);
+
+/**
+ * Sets if slashes should be escaped or not when serializing JSON. By default slashes are escaped.
+ *
+ * @note                    This function sets a global setting and is not thread safe.
+ *
+ * @param escape_slashes    True to escape slashes, false to not
+ */
+ native json_set_escape_slashes(bool:escape_slashes = true);

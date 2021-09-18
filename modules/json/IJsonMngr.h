@@ -233,6 +233,15 @@ namespace AMXX
 			virtual const char *ValueToString(JS_Handle value) = 0;
 
 			/**
+			 * @brief                 Gets a string data length.
+			 *
+			 * @param value           JSON handle
+			 *
+			 * @return                Length of string data
+			 */
+			virtual size_t ValueToStringLen(JS_Handle value) = 0;
+
+			/**
 			 * @brief                 Gets a number.
 			 *
 			 * @param value           JSON handle
@@ -276,6 +285,16 @@ namespace AMXX
 			 * @return                String data
 			 */
 			virtual const char *ArrayGetString(JS_Handle array, size_t index) = 0;
+
+			/**
+			 * @brief                 Gets string data length from the array.
+			 *
+			 * @param array           JSON handle
+			 * @param index           Position in the array (starting from 0)
+			 *
+			 * @return                Length of string data
+			 */
+			virtual size_t ArrayGetStringLen(JS_Handle array, size_t index) = 0;
 
 			/**
 			 * @brief                 Gets a number from the array.
@@ -467,6 +486,20 @@ namespace AMXX
 			 * @return                String data
 			 */
 			virtual const char *ObjectGetString(JS_Handle object, const char *name, bool dotfunc = false) = 0;
+
+			/**
+			 * @brief                 Gets string data length from the object.
+			 *
+			 * @note                  If dot notation is used some values may be inaccessible
+			 *                        because valid names in JSON can contain dots.
+			 *
+			 * @param object          JSON handle
+			 * @param name            Key name
+			 * @param dotfunc         True to use dot notation, false to not
+			 *
+			 * @return                Length of string data
+			 */
+			virtual size_t ObjectGetStringLen(JS_Handle object, const char *name, bool dotfunc = false) = 0;
 
 			/**
 			 * @brief                 Gets a number from the object.
@@ -695,6 +728,15 @@ namespace AMXX
 			 * @return                Serialized string, nullptr if failed
 			 */
 			virtual char *SerialToString(JS_Handle value, bool pretty) = 0;
+
+			/**
+			 * @brief                 Slashes should be escaped or not when serializing JSON.
+			 *
+			 * @note                  This function sets a global setting and is not thread safe.
+			 *
+			 * @param escape_slashes  True to escape slashes, false to not
+			 */
+			virtual void EscapeSlashes(int escape_slashes) = 0;
 
 			/**
 			 * @brief                 Frees serialized string.

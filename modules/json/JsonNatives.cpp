@@ -218,6 +218,19 @@ static cell AMX_NATIVE_CALL amxx_json_get_string(AMX *amx, cell *params)
 	return MF_SetAmxStringUTF8Char(amx, params[2], string, strlen(string), params[3]);
 }
 
+//native json_get_string_len(const JSON:value);
+static cell AMX_NATIVE_CALL amxx_json_get_string_len(AMX *amx, cell *params)
+{
+	auto value = params[1];
+	if (!JsonMngr->IsValidHandle(value))
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON value! %d", value);
+		return 0;
+	}
+
+	return JsonMngr->ValueToStringLen(value);
+}
+
 //native json_get_number(const JSON:value);
 static cell AMX_NATIVE_CALL amxx_json_get_number(AMX *amx, cell *params)
 {
@@ -288,6 +301,19 @@ static cell AMX_NATIVE_CALL amxx_json_array_get_string(AMX *amx, cell *params)
 	auto string = JsonMngr->ArrayGetString(array, params[2]);
 
 	return MF_SetAmxStringUTF8Char(amx, params[3], string, strlen(string), params[4]);
+}
+
+//native json_array_get_string_len(const JSON:array, index);
+static cell AMX_NATIVE_CALL amxx_json_array_get_string_len(AMX *amx, cell *params)
+{
+	auto array = params[1];
+	if (!JsonMngr->IsValidHandle(array, Handle_Array))
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON array! %d", array);
+		return 0;
+	}
+
+	return JsonMngr->ArrayGetStringLen(array, params[2]);
 }
 
 //native json_array_get_number(const JSON:array, index);
@@ -576,6 +602,22 @@ static cell AMX_NATIVE_CALL amxx_json_object_get_string(AMX *amx, cell *params)
 	auto string = JsonMngr->ObjectGetString(object, name, params[5] != 0);
 
 	return MF_SetAmxStringUTF8Char(amx, params[3], string, strlen(string), params[4]);
+}
+
+//native json_object_get_string_len(const JSON:object, const name[], bool:dotfunc = false);
+static cell AMX_NATIVE_CALL amxx_json_object_get_string_len(AMX *amx, cell *params)
+{
+	auto object = params[1];
+	if (!JsonMngr->IsValidHandle(object, Handle_Object))
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "Invalid JSON object! %d", object);
+		return 0;
+	}
+
+	int len;
+	auto name = MF_GetAmxString(amx, params[2], 0, &len);
+
+	return JsonMngr->ObjectGetStringLen(object, name, params[3] != 0);
 }
 
 //native json_object_get_number(const JSON:object, const name[], bool:dotfunc = false);
@@ -871,6 +913,13 @@ static cell AMX_NATIVE_CALL amxx_json_serial_to_file(AMX *amx, cell *params)
 	return JsonMngr->SerialToFile(value, path, params[3] != 0);
 }
 
+//native json_set_escape_slashes(bool:escape_slashes = true);
+static cell AMX_NATIVE_CALL amxx_json_set_escape_slashes(AMX *amx, cell *params)
+{
+	JsonMngr->EscapeSlashes(params[1] != 0);
+	return 1;
+}
+
 AMX_NATIVE_INFO JsonNatives[] =
 {
 	{ "json_parse",                     amxx_json_parse },
@@ -888,11 +937,13 @@ AMX_NATIVE_INFO JsonNatives[] =
 	{ "json_deep_copy",                 amxx_json_deep_copy },
 	{ "json_free",                      amxx_json_free },
 	{ "json_get_string",                amxx_json_get_string },
+	{ "json_get_string_len",            amxx_json_get_string_len },
 	{ "json_get_number",                amxx_json_get_number },
 	{ "json_get_real",                  amxx_json_get_real },
 	{ "json_get_bool",                  amxx_json_get_bool },
 	{ "json_array_get_value",           amxx_json_array_get_value },
 	{ "json_array_get_string",          amxx_json_array_get_string },
+	{ "json_array_get_string_len",      amxx_json_array_get_string_len },
 	{ "json_array_get_count",           amxx_json_array_get_count },
 	{ "json_array_get_number",          amxx_json_array_get_number },
 	{ "json_array_get_real",            amxx_json_array_get_real },
@@ -913,6 +964,7 @@ AMX_NATIVE_INFO JsonNatives[] =
 	{ "json_array_clear",               amxx_json_array_clear },
 	{ "json_object_get_value",          amxx_json_object_get_value },
 	{ "json_object_get_string",         amxx_json_object_get_string },
+	{ "json_object_get_string_len",     amxx_json_object_get_string_len },
 	{ "json_object_get_number",         amxx_json_object_get_number },
 	{ "json_object_get_real",           amxx_json_object_get_real },
 	{ "json_object_get_bool",           amxx_json_object_get_bool },
@@ -931,6 +983,7 @@ AMX_NATIVE_INFO JsonNatives[] =
 	{ "json_serial_size",               amxx_json_serial_size },
 	{ "json_serial_to_string",          amxx_json_serial_to_string },
 	{ "json_serial_to_file",            amxx_json_serial_to_file },
+	{ "json_set_escape_slashes",        amxx_json_set_escape_slashes },
 	{ nullptr,                          nullptr }
 };
 

@@ -465,3 +465,8 @@ char *JSONMngr::SerialToString(JS_Handle value, bool pretty)
 
 	return (result) ? result : nullptr;
 }
+
+void JSONMngr::EscapeSlashes(int escape_slashes)
+{
+	json_set_escape_slashes(escape_slashes);
+}

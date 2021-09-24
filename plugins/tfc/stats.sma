@@ -469,7 +469,7 @@ public client_putinserver(id)
 
 public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){ 
   if ( BulletDamage ) { 
-    if ( attacker==victim || xmod_is_melee_wpn(wpnindex) ) return PLUGIN_CONTINUE
+    if ( attacker==victim || !wpnindex || xmod_is_melee_wpn(wpnindex) ) return PLUGIN_CONTINUE
     set_hudmessage(0, 100, 200, 0.45, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
     ShowSyncHudMsg(attacker,g_damage_sync,"%i",damage)
     set_hudmessage(200, 0, 0, 0.55, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 

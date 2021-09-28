@@ -92,14 +92,10 @@ repo="https://github.com/alliedmodders/hlsdk"
 origin=
 checkout
 
-python_cmd=`command -v python`
+python_cmd=`command -v python3`
 if [ -z "$python_cmd" ]; then
-  python_cmd=`command -v python3`
-
-  if [ -z "$python_cmd" ]; then
-    echo "No suitable installation of Python detected"
-    exit 1
-  fi
+  echo "No suitable installation of Python detected"
+  exit 1
 fi
 
 `$python_cmd -c "import ambuild2"` 2>&1 1>/dev/null

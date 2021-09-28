@@ -94,13 +94,13 @@ checkout
 
 python_cmd=`command -v python3`
 if [ -z "$python_cmd" ]; then
-  echo "No suitable installation of Python detected"
+  echo "No suitable installation of Python detected. Min required is 3.6"
   exit 1
 fi
 
 `$python_cmd -c "import ambuild2"` 2>&1 1>/dev/null
 if [ $? -eq 1 ]; then
-  echo "AMBuild is required to build SourceMod"
+  echo "AMBuild is required to build AMXModX"
 
   `$python_cmd -m pip --version` 2>&1 1>/dev/null
   if [ $? -eq 1 ]; then

@@ -1851,7 +1851,7 @@ native set_user_flags(index, flags = -1, id = 0);
  *       0 is actively used. You should not change the value of the second
  *       parameter from the default.
  *
- * @param index     Client index, 0 to set flags of server
+ * @param index     Client index, 0 to get flags of server
  * @param id        Flag set id, ranging from 0 to 31
  *
  * @return          Bitflag sum of client's admin flags

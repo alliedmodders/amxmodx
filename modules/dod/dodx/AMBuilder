@@ -3,6 +3,10 @@ import os.path
 
 binary = AMXX.MetaModule(builder, 'dodx')
 
+binary.compiler.defines += [
+  'HAVE_STDINT_H',
+]
+
 binary.sources = [
   '../../../public/sdk/amxxmodule.cpp',
   'CRank.cpp',

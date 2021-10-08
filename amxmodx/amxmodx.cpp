@@ -1434,7 +1434,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				pPlayer->vgui = false;
 
 				if (time == -1)
-					pPlayer->menuexpire = INFINITE;
+					pPlayer->menuexpire = static_cast<float>(INFINITE);
 				else
 					pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
@@ -1452,7 +1452,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			pPlayer->vgui = false;
 
 			if (time == -1)
-				pPlayer->menuexpire = INFINITE;
+				pPlayer->menuexpire = static_cast<float>(INFINITE);
 			else
 				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 

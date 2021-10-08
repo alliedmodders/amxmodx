@@ -231,6 +231,8 @@ class AMXXConfig(object):
         cxx.cflags += ['-Wno-address-of-packed-member']		
     if have_clang:
       cxx.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
+      if cxx.version >= '10.0':
+        cxx.cxxflags += ['-Wno-tautological-compare']
       if cxx.version >= 'apple-clang-10.0':
         cxx.cxxflags += [
           '-Wno-inconsistent-missing-override',

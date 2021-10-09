@@ -55,13 +55,13 @@ for:
         - job_name: MacOS
 
     install:
-    - bash: >-
+    - >-
         echo "CC=clang" >> $GITHUB_ENV
         echo "CXX=clang++" >> $GITHUB_ENV
         clang --version
         clang++ --version
     build_script:
-    - bash: >-
+    - >-
         mkdir build
         cd build
         python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.5

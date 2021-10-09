@@ -84,6 +84,8 @@ for:
 
     install:
     - >-
+        git submodule update --init --recursive
+        
         mkdir -p $APPVEYOR_BUILD_FOLDER/deps
 
         ls -alh

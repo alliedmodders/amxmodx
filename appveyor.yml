@@ -64,7 +64,7 @@ for:
 #   - c:\projects\mysql-5.5 -> appveyor.yml
     build_script:
     - cmd: >-
-        '"%VS140COMNTOOLS%\vsvars32.bat"'
+        "%VS140COMNTOOLS%\vsvars32.bat"
         
         mkdir build
         

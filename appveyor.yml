@@ -21,7 +21,7 @@ for:
     - cmd: >-
         git submodule update --init --recursive
 
-        'c:'
+        c:
         
         mkdir c:\nasm
         

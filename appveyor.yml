@@ -81,6 +81,14 @@ for:
 
     install:
     - >-
+        mkdir -p $APPVEYOR_BUILD_FOLDER/deps
+        
+        cd $APPVEYOR_BUILD_FOLDER/deps
+        
+        mkdir -p amxmodx
+
+        ../amxmodx/support/checkout-deps.sh
+
         export CC=clang
         
         export CXX=clang++
@@ -95,7 +103,7 @@ for:
         
         cd build
         
-        python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.5
+        python3 ../configure.py --enable-optimize --metamod=$APPVEYOR_BUILD_FOLDER/metamod-am --hlsdk=$APPVEYOR_BUILD_FOLDER/hlsdk --mysql=$APPVEYOR_BUILD_FOLDER/mysql-5.5
         
         ambuild
         

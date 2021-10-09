@@ -118,6 +118,9 @@ for:
 
         clang --version
 
+        sudo xcodes select 9.4.1
+
+        clang --version
 
         
     build_script:

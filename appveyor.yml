@@ -110,6 +110,11 @@ for:
 
         cd $APPVEYOR_BUILD_FOLDER
         
+        brew install robotsandpencils/made/xcodes
+
+        xcodes installed
+
+        
     build_script:
     - >-
         echo $PATH

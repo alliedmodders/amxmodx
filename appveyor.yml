@@ -84,8 +84,6 @@ for:
 
     install:
     - >-
-        ls -alh
-
         mkdir -p $APPVEYOR_BUILD_FOLDER/deps
 
         ls -alh
@@ -103,6 +101,8 @@ for:
         clang --version
         
         clang++ --version
+
+        cd $APPVEYOR_BUILD_FOLDER
         
     build_script:
     - >-
@@ -110,7 +110,7 @@ for:
         
         cd build
         
-        python3 ../configure.py --enable-optimize --metamod=$APPVEYOR_BUILD_FOLDER/metamod-am --hlsdk=$APPVEYOR_BUILD_FOLDER/hlsdk --mysql=$APPVEYOR_BUILD_FOLDER/mysql-5.5
+        python3 ../configure.py --enable-optimize --metamod=$APPVEYOR_BUILD_FOLDER/deps/metamod-am --hlsdk=$APPVEYOR_BUILD_FOLDER/deps/hlsdk --mysql=$APPVEYOR_BUILD_FOLDER/deps/mysql-5.5
         
         ambuild
         

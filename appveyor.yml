@@ -114,6 +114,11 @@ for:
 
         xcodes installed
 
+        xcodes select 10.3
+
+        clang --version
+
+
         
     build_script:
     - >-

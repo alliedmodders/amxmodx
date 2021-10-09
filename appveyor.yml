@@ -118,7 +118,9 @@ for:
 
         clang --version
 
-        sudo xcodes select 9.4.1
+        echo sudo xcodes select 9.4.1
+
+        sudo xcode-select -s /Applications/Xcode-9.4.1.app
 
         clang --version
 

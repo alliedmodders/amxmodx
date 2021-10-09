@@ -5,13 +5,13 @@ environment:
   fast_finish: false
   allow_failures: true
   matrix:
-    - job_name: Windows
-      appveyor_build_worker_image: Visual Studio 2015
-      job_group: Build
-    
     - job_name: MacOS
       appveyor_build_worker_image: macos
       job_group: Build
+
+    - job_name: Windows
+      appveyor_build_worker_image: Visual Studio 2015
+      job_group: Build    
 
 for:
   -
@@ -87,7 +87,7 @@ for:
         ls -alh
 
         mkdir -p $APPVEYOR_BUILD_FOLDER/deps
-        
+
         ls -alh
         
         cd $APPVEYOR_BUILD_FOLDER/deps

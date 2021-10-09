@@ -114,7 +114,7 @@ for:
 
         xcodes installed
 
-        xcode-select /Applications/Xcode-10.3.app
+        xcode-select -s /Applications/Xcode-10.3.app
 
         clang --version
 

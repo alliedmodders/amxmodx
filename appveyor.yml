@@ -94,7 +94,7 @@ for:
         
         mkdir -p amxmodx
 
-        ../amxmodx/support/checkout-deps.sh
+        ../support/checkout-deps.sh
 
         export CC=clang
         

@@ -81,9 +81,9 @@ for:
 
     install:
     - >-
-        echo "CC=clang" >> $GITHUB_ENV
+        export CC=clang
         
-        echo "CXX=clang++" >> $GITHUB_ENV
+        export CXX=clang++
         
         clang --version
         

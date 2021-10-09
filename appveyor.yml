@@ -84,7 +84,11 @@ for:
 
     install:
     - >-
+        ls -alh
+
         mkdir -p $APPVEYOR_BUILD_FOLDER/deps
+        
+        ls -alh
         
         cd $APPVEYOR_BUILD_FOLDER/deps
         

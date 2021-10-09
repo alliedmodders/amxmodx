@@ -122,6 +122,8 @@ for:
 
         sudo xcode-select -s /Applications/Xcode-9.4.1.app
 
+        sudo xcode-select --install
+
         clang --version
 
         

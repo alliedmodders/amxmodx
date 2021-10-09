@@ -7,8 +7,11 @@ environment:
   matrix:
     - job_name: Windows
       appveyor_build_worker_image: Visual Studio 2015
+      job_group: Build
+    
     - job_name: MacOS
       appveyor_build_worker_image: macos
+      job_group: Build
 
 for:
   -

@@ -94,6 +94,10 @@ for:
 
         ../support/checkout-deps.sh
 
+        brew install nasm
+
+        nasm -v
+
         export CC=clang
         
         export CXX=clang++

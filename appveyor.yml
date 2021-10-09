@@ -85,7 +85,7 @@ for:
     install:
     - >-
         git submodule update --init --recursive
-        
+
         mkdir -p $APPVEYOR_BUILD_FOLDER/deps
 
         ls -alh
@@ -112,6 +112,8 @@ for:
         
     build_script:
     - >-
+        echo $PATH
+        
         mkdir build
         
         cd build

@@ -20,7 +20,7 @@ for:
     install:
     - cmd: >-
         git submodule update --init --recursive
-        c:
+        'c:'
         mkdir c:\nasm
         set PATH=c:\nasm\nasm-2.13.03;%PATH%
         curl -L -o "c:\nasm\nasm.zip" https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip

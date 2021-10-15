@@ -114,17 +114,17 @@ for:
 
         xcodes installed
 
-        sudo xcode-select -s /Applications/Xcode-10.3.app
+        echo sudo xcode-select -s /Applications/Xcode-10.3.app
 
-        clang --version
+        echo clang --version
 
         echo sudo xcodes select 9.4.1
 
-        sudo xcode-select -s /Applications/Xcode-9.4.1.app
+        echo sudo xcode-select -s /Applications/Xcode-9.4.1.app
 
-        sudo xcode-select --install
+        echo sudo xcode-select --install
 
-        clang --version
+        echo clang --version
 
         
     build_script:

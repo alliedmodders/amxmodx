@@ -1,0 +1,83 @@
+ambuild:
+- '**/*AMBuildScript*'
+
+compiler:
+- compiler/**/*
+
+core:
+- amxmodx/**/*
+
+documentation:
+- *.md
+
+gamedata:
+- gamedata/**/*
+
+module: cstrike:
+- modules/cstrike/cstrike/**/*
+
+module: csx:
+- modules/cstrike/csx/**/*
+
+module: dodfun:
+- modules/dod/dodfun/**/*
+
+module: dodx:
+- modules/dod/dodx/**/*
+
+module: engine:
+- modules/engine/**/*
+
+module: fakemeta:
+- modules/fakemeta/**/*
+
+module: fun:
+- modules/fun/**/*
+
+module: geoip:
+- modules/geoip/**/*
+
+module: hamsandwich:
+- modules/hamsandwich/**/*
+
+module: json:
+- modules/json/**/*
+
+module: mysql:
+- modules/mysqlx/**/*
+
+module: ns:
+- modules/ns/**/*
+
+module: nvault:
+- modules/nvault/**/*
+
+module: regex:
+- modules/regex/**/*
+
+module: socket:
+- modules/sockets/**/*
+
+module: sqlite:
+- modules/sqlite/**/*
+
+module: tfcx:
+- modules/tfcx/**/*
+
+module: tse:
+- modules/ts/**/*
+
+modules :
+- modules/**/*
+
+plugin :
+- plugins/**/*
+
+ReSDK :
+- public/resdk/**/*
+
+third-party :
+- third_party/**/*
+
+translation :
+- plugins/lang/**/*

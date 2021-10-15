@@ -13,7 +13,7 @@ documentation:
 gamedata:
 - gamedata/**/*
 
-module: cstrike:
+'module: cstrike':
 - modules/cstrike/cstrike/**/*
 
 module: csx:

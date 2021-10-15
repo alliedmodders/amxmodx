@@ -74,6 +74,8 @@ for:
         
         c:\python38\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"
         
+        echo $PATH
+        
         ambuild
 
   -

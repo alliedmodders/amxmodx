@@ -118,9 +118,11 @@ for:
 
         echo clang --version
 
-        echo sudo xcodes select 9.4.1
+        sudo xcodes select 9.4.1
 
-        sudo xcode-select -s /Applications/Xcode-9.4.1.app
+        sudo xcodes select /Applications/Xcode-9.4.1.app
+
+        echo sudo xcode-select -s /Applications/Xcode-9.4.1.app
 
         sudo xcode-select --install
 

@@ -16,55 +16,55 @@ gamedata:
 'module: cstrike':
 - modules/cstrike/cstrike/**/*
 
-module: csx:
+'module: csx':
 - modules/cstrike/csx/**/*
 
-module: dodfun:
+'module: dodfun':
 - modules/dod/dodfun/**/*
 
-module: dodx:
+'module: dodx':
 - modules/dod/dodx/**/*
 
-module: engine:
+'module: engine':
 - modules/engine/**/*
 
-module: fakemeta:
+'module: fakemeta':
 - modules/fakemeta/**/*
 
-module: fun:
+'module: fun':
 - modules/fun/**/*
 
-module: geoip:
+'module: geoip':
 - modules/geoip/**/*
 
-module: hamsandwich:
+'module: hamsandwich':
 - modules/hamsandwich/**/*
 
-module: json:
+'module: json':
 - modules/json/**/*
 
-module: mysql:
+'module: mysql':
 - modules/mysqlx/**/*
 
-module: ns:
+'module: ns':
 - modules/ns/**/*
 
-module: nvault:
-- modules/nvault/**/*
+'module: nvault':
+- modules/nvault/**/*'
 
-module: regex:
+'module: regex':
 - modules/regex/**/*
 
-module: socket:
+'module: socket':
 - modules/sockets/**/*
 
-module: sqlite:
+'module: sqlite':
 - modules/sqlite/**/*
 
-module: tfcx:
+'module: tfcx':
 - modules/tfcx/**/*
 
-module: tse:
+'module: tse':
 - modules/ts/**/*
 
 modules :

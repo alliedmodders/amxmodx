@@ -1,5 +1,6 @@
 ambuild:
 - '**/*AMBuildScript*'
+- '**/*AMBuilder*'
 
 compiler:
 - compiler/**/*

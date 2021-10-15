@@ -59,6 +59,8 @@ for:
         
         c:\python38\python setup.py install
         
+        set PATH=C:\Python38;C:\Python38\Scripts;%PATH%
+        
         cd ..\amxmodx
         
 # cache:

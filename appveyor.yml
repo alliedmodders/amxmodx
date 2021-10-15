@@ -120,11 +120,11 @@ for:
 
         echo sudo xcodes select 9.4.1
 
-        echo sudo xcode-select -s /Applications/Xcode-9.4.1.app
+        sudo xcode-select -s /Applications/Xcode-9.4.1.app
 
-        echo sudo xcode-select --install
+        sudo xcode-select --install
 
-        echo clang --version
+        clang --version
 
         
     build_script:

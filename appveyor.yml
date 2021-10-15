@@ -6,7 +6,7 @@ environment:
   allow_failures: true
   matrix:
     - job_name: MacOS
-      appveyor_build_worker_image: macos
+      appveyor_build_worker_image: macos-mojave
       job_group: Build
 
     - job_name: Windows
@@ -114,21 +114,21 @@ for:
 
         xcodes installed
 
-        echo sudo xcode-select -s /Applications/Xcode-10.3.app
+        echo -- sudo xcode-select -s /Applications/Xcode-10.3.app
 
-        echo clang --version
+        echo -- clang --version
 
         echo -- sudo xcodes select 9.4.1
 
         echo -- sudo xcodes select /Applications/Xcode-9.4.1.app
 
-        sudo xcode-select --install
+        echo -- sudo xcode-select --install
 
-        sudo xcode-select -switch /Library/Developer/CommandLineTools/
+        echo -- sudo xcode-select -switch /Library/Developer/CommandLineTools/
 
-        echo sudo xcode-select -s /Applications/Xcode-9.4.1.app
+        echo -- sudo xcode-select -s /Applications/Xcode-9.4.1.app
         
-        clang --version
+        echo -- clang --version
 
         
     build_script:

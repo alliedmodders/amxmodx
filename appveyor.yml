@@ -110,27 +110,6 @@ for:
 
         cd $APPVEYOR_BUILD_FOLDER
         
-        brew install robotsandpencils/made/xcodes
-
-        xcodes installed
-
-        echo -- sudo xcode-select -s /Applications/Xcode-10.3.app
-
-        echo -- clang --version
-
-        echo -- sudo xcodes select 9.4.1
-
-        echo -- sudo xcodes select /Applications/Xcode-9.4.1.app
-
-        echo -- sudo xcode-select --install
-
-        echo -- sudo xcode-select -switch /Library/Developer/CommandLineTools/
-
-        echo -- sudo xcode-select -s /Applications/Xcode-9.4.1.app
-        
-        echo -- clang --version
-
-        
     build_script:
     - >-
         echo $PATH

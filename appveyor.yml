@@ -1,6 +1,5 @@
 version: 1.0.{build}
 
-
 environment:
   fast_finish: false
   allow_failures: true
@@ -11,7 +10,7 @@ environment:
 
     - job_name: Windows
       appveyor_build_worker_image: Visual Studio 2015
-      job_group: Build    
+      job_group: Build
 
 for:
   -
@@ -29,7 +28,7 @@ for:
         mkdir c:\nasm
         
         set PATH=c:\nasm\nasm-2.13.03;%PATH%
-        
+
         curl -L -o "c:\nasm\nasm.zip" https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip
         
         chdir c:\nasm
@@ -58,7 +57,7 @@ for:
         
         cd ..\ambuild
         
-        c:\python27\python setup.py install
+        c:\python38\python setup.py install
         
         cd ..\amxmodx
         
@@ -73,10 +72,10 @@ for:
         
         cd build
         
-        c:\python27\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"
+        c:\python38\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"
         
         ambuild
-        
+
   -
     matrix:
       only:
@@ -121,4 +120,3 @@ for:
         python3 ../configure.py --enable-optimize --metamod=$APPVEYOR_BUILD_FOLDER/deps/metamod-am --hlsdk=$APPVEYOR_BUILD_FOLDER/deps/hlsdk --mysql=$APPVEYOR_BUILD_FOLDER/deps/mysql-5.5
         
         ambuild
-        

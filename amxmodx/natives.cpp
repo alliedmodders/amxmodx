@@ -24,8 +24,6 @@
 #include "sclinux.h"
 #endif
 
-#include <chrono>
-
 //Written by David "BAILOPAN" Anderson
 //With the exception for param_convert, which was written by
 // Julien "dJeyL" Laurent
@@ -114,6 +112,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		pDebugger->BeginExec();
 	}
 
+	#include <chrono>
 	char perf_funcname[512];
 	CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(pNative->amx);
 	amx_GetNative(perf_Plug->getAMX(), pNative->func, perf_funcname);

@@ -10,7 +10,6 @@
 #include "amxmodx.h"
 #include "debugger.h"
 #include "binlog.h"
-#include <chrono>
 CForward::CForward(const char *name, ForwardExecType et, int numParams, const ForwardParam *paramTypes)
 {
 	m_FuncName = name;
@@ -123,6 +122,8 @@ cell CForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 			g_BinLog.WriteOp(BinLog_CallPubFunc, iter->pPlugin->getId(), iter->func);
 #endif
 
+			
+			#include <chrono>
 			char perf_funcname[512];
 			CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
 			amx_GetNative(perf_Plug->getAMX(), iter->func, perf_funcname);
@@ -351,7 +352,7 @@ cell CSPForward::execute(cell *params, ForwardPreparedArray *preparedArrays)
 	CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(m_Amx);
 	amx_GetNative(perf_Plug->getAMX(), m_Func, perf_funcname);
 	const char* perf_plugname = perf_Plug->getName();
-
+	#include <chrono>
 	using std::chrono::high_resolution_clock;
 	using std::chrono::duration_cast;
 	using std::chrono::duration;

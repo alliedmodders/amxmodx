@@ -20,7 +20,6 @@
 #include "nongpl_matches.h"
 #include "format.h"
 
-#include <chrono>
 
 extern CFlagManager FlagMan;
 ke::Vector<CAdminData *> DynamicAdmins;
@@ -3711,6 +3710,8 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 		amx_Push(pAmx, gparams[i]);
 	}
 
+
+	#include <chrono>
 	char perf_funcname[512];
 	CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
 	amx_GetNative(perf_Plug->getAMX(), func, perf_funcname);

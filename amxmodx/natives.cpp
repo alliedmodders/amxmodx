@@ -112,8 +112,7 @@ int amxx_DynaCallback(int idx, AMX *amx, cell *params)
 		pDebugger->BeginExec();
 	}
 
-	err=amx_Exec(pNative->amx, &ret, pNative->func);
-
+	err = amx_ExecPerf(pNative->amx, &ret, pNative->func);
 	if (err != AMX_ERR_NONE)
 	{
 		if (pDebugger && pDebugger->ErrorExists())

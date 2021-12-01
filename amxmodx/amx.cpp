@@ -539,7 +539,7 @@ static int amx_BrowseRelocate(AMX *amx)
 
   amx->sysreq_d=0;      /* preset */
   #if (defined __GNUC__ || defined ASM32 || defined JIT) 
-    amx_Exec(amx, (cell*)(void*)&opcode_list, 0);
+    amx_ExecPerf(amx, (cell*)(void*)&opcode_list, 0);
     /* to use direct system requests, a function pointer must fit in a cell;
      * because the native function's address will be stored as the parameter
      * of SYSREQ.D
@@ -4172,4 +4172,44 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
   } /* if */
   dest[len]='\0';     /* store terminator */
   return AMX_ERR_NONE;
+}
+
+
+#include <chrono>
+#include <amxmodx.h>
+#include <CPlugin.h>
+
+int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
+{
+    CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
+    if (perf_Plug && perf_Plug->isDebug())
+    {
+        char perf_funcname[sNAMEMAX + 1];
+        perf_funcname[0] = '\0';
+        amx_GetPublic(perf_Plug->getAMX(), index, perf_funcname);
+        if (perf_funcname[0] == '\0')
+            sprintf(perf_funcname, "Unknown_ID%d", index);
+
+        const char* perf_plugname = perf_Plug->getName();
+        if (!perf_plugname || perf_plugname[0] == '\0')
+            perf_plugname = "Unknown_plugin";
+
+        using std::chrono::high_resolution_clock;
+        using std::chrono::duration_cast;
+        using std::chrono::duration;
+        using std::chrono::milliseconds;
+
+        auto t1 = high_resolution_clock::now();
+        int err = amx_Exec(amx, retval, index);
+        auto t2 = high_resolution_clock::now();
+
+        auto ms_int = duration_cast<milliseconds>(t2 - t1);
+        auto ms_integer = (int)ms_int.count();
+        if (ms_integer > 1)
+        {
+            AMXXLOG_Log("[%s] performance issue. Function %s executed more than %d ms.", perf_plugname, perf_funcname, ms_integer);
+        }
+        return err;
+    }
+    return amx_Exec(amx, retval, index);
 }

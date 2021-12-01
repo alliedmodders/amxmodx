@@ -544,7 +544,7 @@ int set_amxnatives(AMX* amx, char error[128])
 
 	if (amx_FindPublic(amx, "plugin_natives", &idx) == AMX_ERR_NONE)
 	{
-		if ((err = amx_Exec(amx, &retval, idx)) != AMX_ERR_NONE)
+		if ((err = amx_ExecPerf(amx, &retval, idx)) != AMX_ERR_NONE)
 		{
 			Debugger::GenericMessage(amx, err);
 			AMXXLOG_Log("An error occurred in plugin_natives. This is dangerous!");

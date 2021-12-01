@@ -21,6 +21,11 @@
 #include "format.h"
 
 
+
+#undef min
+#undef max
+#include <chrono>
+
 extern CFlagManager FlagMan;
 ke::Vector<CAdminData *> DynamicAdmins;
 
@@ -3711,10 +3716,9 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 	}
 
 
-	#include <chrono>
 	char perf_funcname[512];
 	CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
-	amx_GetNative(perf_Plug->getAMX(), func, perf_funcname);
+	amx_GetPublic(perf_Plug->getAMX(), func, perf_funcname);
 	const char* perf_plugname = perf_Plug->getName();
 
 	using std::chrono::high_resolution_clock;

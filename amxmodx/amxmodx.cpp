@@ -20,6 +20,8 @@
 #include "nongpl_matches.h"
 #include "format.h"
 
+#include <chrono>
+
 extern CFlagManager FlagMan;
 ke::Vector<CAdminData *> DynamicAdmins;
 
@@ -3709,7 +3711,27 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 		amx_Push(pAmx, gparams[i]);
 	}
 
+	char perf_funcname[512];
+	CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
+	amx_GetNative(perf_Plug->getAMX(), func, perf_funcname);
+	const char* perf_plugname = perf_Plug->getName();
+
+	using std::chrono::high_resolution_clock;
+	using std::chrono::duration_cast;
+	using std::chrono::duration;
+	using std::chrono::milliseconds;
+
+	auto t1 = high_resolution_clock::now();
 	err = amx_Exec(pAmx, &retVal, func);
+	auto t2 = high_resolution_clock::now();
+
+	auto ms_int = duration_cast<milliseconds>(t2 - t1);
+	auto ms_integer = (int)ms_int.count();
+	if (ms_integer > 1)
+	{
+		AMXXLOG_Log("[%s] performance issue. Function %s executed more than %d ms.", perf_plugname, perf_funcname, ms_integer);
+	}
+
 
 	if (err != AMX_ERR_NONE)
 	{

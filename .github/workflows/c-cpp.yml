@@ -1,0 +1,137 @@
+name: Continuous Integration
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+     - 1.9-dev
+  pull_request:
+    branches:
+     - master
+     - 1.9-dev
+jobs:
+  test:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            os_short: linux
+            compiler_cc: gcc
+            compiler_cxx: g++
+          - os: ubuntu-latest
+            os_short: linux
+            compiler_cc: clang
+            compiler_cxx: clang++        
+          - os: ubuntu-18.04
+            os_short: linux
+            compiler_cc: clang-3.9
+            compiler_cxx: clang++-3.9
+          - os: ubuntu-18.04
+            os_short: linux
+            compiler_cc: gcc-6
+            compiler_cxx: g++-6
+            compiler_install: 'g++6 g++-6-multilib'
+          - os: windows-latest
+            os_short: windows
+            compiler_cc: msvc
+          - os: windows-2016
+            os_short: windows
+            compiler_cc: msvc++14.16-vs2017-cl
+# MacOS 32 Bins seem not supported
+#           - os: macos-latest
+#             os_short: mac
+#             compiler_cc: clang
+#             compiler_cxx: clang++            
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
+    env:
+      DEPENDENCIES_FOLDER: dependencies      
+      DEPENDENCIES_ROOT: ${{ github.workspace }}/dependencies      
+      DEPENDENCIES_ROOT_WIN: ${{ github.workspace }}\dependencies              
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          path: amxmodx
+      # Setup Python for AMBuild
+      - uses: actions/setup-python@v2
+        name: Setup Python 3.8
+        with:
+          python-version: 3.8
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 --version
+      - name: Install AMXModX dependencies (Linux)
+        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
+        shell: bash
+        run: |
+          mkdir -p ${{ env.DEPENDENCIES_FOLDER }}
+          cd ${{ env.DEPENDENCIES_FOLDER }}
+          
+          # Satisfy checkout-deps requirement for a "amxmodx" folder.
+          mkdir -p amxmodx
+          ../amxmodx/support/checkout-deps.sh          
+      - name: Install AMXModX dependencies (Windows)
+        if: startsWith(runner.os, 'Windows')
+        shell: cmd
+        run: |
+          mkdir %DEPENDENCIES_ROOT_WIN%\nasm
+          curl -L -o "%DEPENDENCIES_ROOT_WIN%\nasm\nasm.zip" https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip
+          chdir %DEPENDENCIES_ROOT_WIN%\nasm
+          7z x nasm.zip
+          
+          chdir %DEPENDENCIES_ROOT_WIN%
+          git clone https://github.com/alliedmodders/ambuild
+          git clone https://github.com/alliedmodders/metamod-hl1 metamod-am
+          git clone https://github.com/alliedmodders/hlsdk
+          
+          curl -L -o "mysql-connector-c-6.1.1-win32.zip" https://downloads.mysql.com/archives/get/p/19/file/mysql-connector-c-6.1.1-win32.zip
+          7z x mysql-connector-c-6.1.1-win32.zip -o"mysql"
+          cd mysql
+          dir
+          ren mysql-connector-c-6.1.1-win32 mysql-5.5
+          move /Y mysql-5.5 ..\
+          
+          cd ..\ambuild
+          python3 setup.py install          
+      - name: Install Linux dependencies
+        if: startsWith(runner.os, 'Linux')
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gcc-multilib g++-multilib libstdc++6 lib32stdc++6 \
+            libc6-dev libc6-dev-i386 linux-libc-dev \
+            linux-libc-dev:i386 lib32z1-dev nasm ${{ matrix.compiler_cc }} ${{ matrix.compiler_install }}
+      - name: Select compiler
+        if: startsWith(runner.os, 'Linux')
+        run: |
+          echo "CC=${{ matrix.compiler_cc }}" >> $GITHUB_ENV
+          echo "CXX=${{ matrix.compiler_cxx }}" >> $GITHUB_ENV
+          ${{ matrix.compiler_cc }} --version
+          ${{ matrix.compiler_cxx }} --version
+      - uses: ilammy/setup-nasm@v1
+      - name: Build Linux/macOS
+        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
+        working-directory: amxmodx
+        run: |
+          mkdir build
+          cd build
+          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.5
+          ambuild
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+      - name: Build Windows
+        if: startsWith(runner.os, 'Windows')
+        working-directory: amxmodx
+        shell: cmd
+        run: |
+          cl.exe
+          mkdir build
+          cd build
+          python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.5
+          ambuild
+          

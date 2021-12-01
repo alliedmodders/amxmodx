@@ -134,18 +134,4 @@ jobs:
           cd build
           python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.5
           ambuild
-      - name: Tar files
-        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
-        run: shopt -s globstar; tar -czvf deploy.tar.gz **/*.so **/*.dll
-      - name: Upload Artifact LINUX
-        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact1-${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
-          path: deploy.tar.gz
-      - name: Upload Artifact WINDOWS
-        if: startsWith(runner.os, 'Windows')
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact1-${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
-          path: ./**/*.dll
+          

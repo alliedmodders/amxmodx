@@ -307,10 +307,10 @@ static cell AMX_NATIVE_CALL custom_wpn_dmg(AMX *amx, cell *params){ // wid,att,v
 	CPlayer* pAtt = GET_PLAYER_POINTER_I(att);
 	CPlayer* pVic = GET_PLAYER_POINTER_I(vic);
 
+	if ( !pAtt ) pAtt = pVic;
 	pVic->pEdict->v.dmg_inflictor = NULL;
 	pAtt->saveHit( pVic , weapon , dmg, aim );
 
-	if ( !pAtt ) pAtt = pVic;
 	int TA = 0;
 	if ( (pVic->teamId == pAtt->teamId) && ( pVic != pAtt) )
 		TA = 1;

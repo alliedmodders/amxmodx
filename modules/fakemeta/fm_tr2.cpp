@@ -1110,9 +1110,9 @@ static cell AMX_NATIVE_CALL set_es(AMX *amx, cell *params)
 		es->vuser3.z = amx_ctof(ptr[2]);
 		return 1;
 	case ES_vUser4:
-		es->vuser3.x = amx_ctof(ptr[0]);
-		es->vuser3.y = amx_ctof(ptr[1]);
-		es->vuser3.z = amx_ctof(ptr[2]);
+		es->vuser4.x = amx_ctof(ptr[0]);
+		es->vuser4.y = amx_ctof(ptr[1]);
+		es->vuser4.z = amx_ctof(ptr[2]);
 		return 1;
 	}
 

@@ -96,12 +96,14 @@ static cell AMX_NATIVE_CALL read_file(AMX *amx, cell *params)
 	{
 		length = strlen(buffer);
 
-		if (buffer[length - 1] == '\n')
+		if (length > 0)
+		{
+			if (buffer[length - 1] == '\n')
 			buffer[--length] = '\0';
 
-		if (buffer[length - 1] == '\r')
+			if (buffer[length - 1] == '\r')
 			buffer[--length] = '\0';
-
+		}
 		cell* textLen = get_amxaddr(amx, params[5]);
 		*textLen = set_amxstring_utf8(amx, params[3], buffer, length, params[4]);
 

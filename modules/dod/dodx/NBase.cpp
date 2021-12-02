@@ -387,11 +387,11 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params)
 
 	pVic->pEdict->v.dmg_inflictor = NULL;
 
-	if(pAtt->index != pVic->index)
-		pAtt->saveHit(pVic , weapon , dmg, aim);
-
 	if(!pAtt) 
 		pAtt = pVic;
+
+	if(pAtt->index != pVic->index)
+		pAtt->saveHit(pVic , weapon , dmg, aim);
 
 	int TA = 0;
 

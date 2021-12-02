@@ -47,7 +47,7 @@ bool isModuleActive(){
 
 bool util_strncmp( const char *sz1, const char *sz2, int size){
 	int i = 0;
-	while( sz1[i] && i<=size){
+	while( i<=size && sz1[i] ){
 		if ( sz1[i] != sz2[i] )
 			return false;
 		i++;

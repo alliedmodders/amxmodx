@@ -187,7 +187,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 	bool will_be_debugged = false;
 	tagAMX_DBG *pDbg = NULL;
 
-	if ((int)CVAR_GET_FLOAT("amx_debug") >= 2 || debug)
+	if (amxmodx_debug->value >= 2.0f || debug)
 	{
 		if ((hdr->file_version < CUR_FILE_VERSION))
 		{

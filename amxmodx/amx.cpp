@@ -4182,7 +4182,7 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
 int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
 {
     CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
-    if (perf_Plug && perf_Plug->isDebug())
+    if (amxmodx_perflog->value > 0.0f && perf_Plug && (perf_Plug->isDebug() || amxmodx_debug->value == 2.0f))
     {
         char perf_funcname[sNAMEMAX + 1];
         perf_funcname[0] = '\0';
@@ -4197,17 +4197,17 @@ int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
         using std::chrono::high_resolution_clock;
         using std::chrono::duration_cast;
         using std::chrono::duration;
-        using std::chrono::milliseconds;
+        using std::chrono::microseconds;
 
         auto t1 = high_resolution_clock::now();
         int err = amx_Exec(amx, retval, index);
         auto t2 = high_resolution_clock::now();
 
-        auto ms_int = duration_cast<milliseconds>(t2 - t1);
-        auto ms_integer = (int)ms_int.count();
-        if (ms_integer > 1)
+        auto ms_int = duration_cast<microseconds>(t2 - t1);
+        auto ms_float = (float)(ms_int.count() / 1000.0f);
+        if (ms_float >= amxmodx_perflog->value)
         {
-            AMXXLOG_Log("[%s] performance issue. Function %s executed more than %d ms.", perf_plugname, perf_funcname, ms_integer);
+            AMXXLOG_Log("[%s] performance issue. Function %s executed more than %.*fms.", perf_plugname, perf_funcname, 1, ms_float);
         }
         return err;
     }

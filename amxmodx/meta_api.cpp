@@ -135,7 +135,7 @@ cvar_t init_amxmodx_debug = {"amx_debug", "1", FCVAR_SPONLY};
 cvar_t init_amxmodx_mldebug = {"amx_mldebug", "", FCVAR_SPONLY};
 cvar_t init_amxmodx_language = {"amx_language", "en", FCVAR_SERVER};
 cvar_t init_amxmodx_cl_langs = {"amx_client_languages", "1", FCVAR_SERVER};
-cvar_t init_amxmodx_perflog = { "amx_perflog", "1.0", FCVAR_SPONLY };
+cvar_t init_amxmodx_perflog = { "amx_perflog_ms", "1.0", FCVAR_SPONLY };
 
 cvar_t* amxmodx_version = NULL;
 cvar_t* amxmodx_modules = NULL;

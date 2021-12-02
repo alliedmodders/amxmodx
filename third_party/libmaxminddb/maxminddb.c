@@ -831,7 +831,7 @@ MMDB_lookup_result_s MMDB_lookup_string(MMDB_s *const mmdb,
     struct addrinfo *addresses = NULL;
     *gai_error = resolve_any_address(ipstr, &addresses);
 
-    if (!*gai_error) {
+    if (!*gai_error && NULL != addresses) {
         result = MMDB_lookup_sockaddr(mmdb, addresses->ai_addr, mmdb_error);
     }
 

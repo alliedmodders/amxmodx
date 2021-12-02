@@ -4194,16 +4194,15 @@ int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
         if (!perf_plugname || perf_plugname[0] == '\0')
             perf_plugname = "Unknown_plugin";
 
-        using std::chrono::high_resolution_clock;
+        using std::chrono::steady_clock;
         using std::chrono::duration_cast;
         using std::chrono::duration;
         using std::chrono::microseconds;
 
-        auto t1 = high_resolution_clock::now();
+        auto t1 = steady_clock::now();
         int err = amx_Exec(amx, retval, index);
-        auto t2 = high_resolution_clock::now();
 
-        auto ms_int = duration_cast<microseconds>(t2 - t1);
+        auto ms_int = duration_cast<microseconds>(steady_clock::now() - t1);
         auto ms_float = (float)(ms_int.count() / 1000.0f);
         if (ms_float >= amxmodx_perflog->value)
         {

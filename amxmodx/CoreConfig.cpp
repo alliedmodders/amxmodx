@@ -316,14 +316,10 @@ void CoreConfig::CheckLegacyBufferedCommand(char *command)
 		return;
 	}
 
-	if (!m_LegacyMainConfigExecuted && strstr(command, MainConfigFile))
+	if (!m_LegacyMainConfigExecuted && (strstr(command, MainConfigFile) ||  strstr(command, MapConfigDir)))
 	{
 		m_LegacyMainConfigExecuted = true;
-	}
-
-	if (!m_LegacyMapConfigsExecuted && strstr(command, MapConfigDir))
-	{
-		m_LegacyMapConfigsExecuted = true;
+		m_PendingForwardPush = true;
 	}
 }
 

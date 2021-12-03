@@ -115,20 +115,17 @@ static cell nvault_get(AMX *amx, cell *params)
 	case 2:
 		{
 			return atoi(val);
-			break;
 		}
 	case 3:
 		{
 			cell *fAddr = MF_GetAmxAddr(amx, params[3]);
 			*fAddr = amx_ftoc((REAL)atof(val));
 			return 1;
-			break;
 		}
 	case 4:
 		{
 			len = *(MF_GetAmxAddr(amx, params[4]));
 			return MF_SetAmxString(amx, params[3], val, len);
-			break;
 		}
 	}
 

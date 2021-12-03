@@ -654,7 +654,7 @@ int RegEx::Replace(char *text, size_t textMaxLen, const char *replace, size_t re
 							 * $nn or ${nn}
 							 *   ^       ^
 							 */
-							if (*walk && *walk >= '0' && *walk <= '9')
+							if (*walk >= '0' && *walk <= '9')
 							{
 								backref = backref * 10 + *walk - '0';
 								++walk;

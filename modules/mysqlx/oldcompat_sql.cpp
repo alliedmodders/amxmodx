@@ -247,7 +247,6 @@ static cell AMX_NATIVE_CALL dbi_field(AMX *amx, cell *params)
 	case 2:
 		{
 			return atoi(data);
-			break;
 		}
 	case 3:
 		{
@@ -255,12 +254,10 @@ static cell AMX_NATIVE_CALL dbi_field(AMX *amx, cell *params)
 			REAL fdata = atof(data);
 			*destaddr = amx_ftoc(fdata);
 			return 1;
-			break;
 		}
 	case 4:
 		{
 			return MF_SetAmxString(amx, params[3], data, params[4]);
-			break;
 		}
 	}
 
@@ -315,7 +312,6 @@ static cell AMX_NATIVE_CALL dbi_result(AMX *amx, cell *params)
 	case 2:
 		{
 			return atoi(data);
-			break;
 		}
 	case 3:
 		{
@@ -323,12 +319,10 @@ static cell AMX_NATIVE_CALL dbi_result(AMX *amx, cell *params)
 			REAL fdata = atof(data);
 			*destaddr = amx_ftoc(fdata);
 			return 1;
-			break;
 		}
 	case 4:
 		{
 			return MF_SetAmxString(amx, params[3], data, params[4]);
-			break;
 		}
 	}
 

@@ -273,7 +273,6 @@ static cell AMX_NATIVE_CALL SQL_ReadResult(AMX *amx, cell *params)
 		{
 			int num = row->GetInt(col);
 			return num;
-			break;
 		}
 	default:
 		{

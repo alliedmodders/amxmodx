@@ -34,31 +34,26 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 		{
 			gfm_tr->fAllSolid = *ptr;
 			return 1;
-			break;
 		}
 	case TR_StartSolid:
 		{
 			gfm_tr->fStartSolid = *ptr;
 			return 1;
-			break;
 		}
 	case TR_InOpen:
 		{
 			gfm_tr->fInOpen = *ptr;
 			return 1;
-			break;
 		}
 	case TR_InWater:
 		{
 			gfm_tr->fInWater = *ptr;
 			return 1;
-			break;
 		}
 	case TR_flFraction:
 		{
 			gfm_tr->flFraction = amx_ctof(*ptr);
 			return 1;
-			break;
 		}
 	case TR_vecEndPos:
 		{
@@ -66,13 +61,11 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 			gfm_tr->vecEndPos.y = amx_ctof(ptr[1]);
 			gfm_tr->vecEndPos.z = amx_ctof(ptr[2]);
 			return 1;
-			break;
 		}
 	case TR_flPlaneDist:
 		{
 			gfm_tr->flPlaneDist = amx_ctof(*ptr);
 			return 1;
-			break;
 		}
 	case TR_vecPlaneNormal:
 		{
@@ -80,7 +73,6 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 			gfm_tr->vecPlaneNormal.y = amx_ctof(ptr[1]);
 			gfm_tr->vecPlaneNormal.z = amx_ctof(ptr[2]);
 			return 1;
-			break;
 		}
 	case TR_pHit:
 		{
@@ -96,14 +88,12 @@ static cell AMX_NATIVE_CALL set_tr(AMX *amx, cell *params)
 		{
 			gfm_tr->iHitgroup = *ptr;
 			return 1;
-			break;
-		}
-	default:
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
-			return 0;
 		}
 	}
+	
+	MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
+	
+	return 0;
 }
 
 static cell AMX_NATIVE_CALL get_tr(AMX *amx, cell *params)
@@ -116,29 +106,24 @@ static cell AMX_NATIVE_CALL get_tr(AMX *amx, cell *params)
 	case TR_AllSolid:
 		{
 			return gfm_tr->fAllSolid;
-			break;
 		}
 	case TR_StartSolid:
 		{
 			return gfm_tr->fStartSolid;
-			break;
 		}
 	case TR_InOpen:
 		{
 			return gfm_tr->fInOpen;
-			break;
 		}
 	case TR_InWater:
 		{
 			return gfm_tr->fInWater;
-			break;
 		}
 	case TR_flFraction:
 		{
 			ptr = MF_GetAmxAddr(amx, params[2]);
 			*ptr = amx_ftoc(gfm_tr->flFraction);
 			return 1;
-			break;
 		}
 	case TR_vecEndPos:
 		{
@@ -147,14 +132,12 @@ static cell AMX_NATIVE_CALL get_tr(AMX *amx, cell *params)
 			ptr[1] = amx_ftoc(gfm_tr->vecEndPos.y);
 			ptr[2] = amx_ftoc(gfm_tr->vecEndPos.z);
 			return 1;
-			break;
 		}
 	case TR_flPlaneDist:
 		{
 			ptr = MF_GetAmxAddr(amx, params[2]);
 			*ptr = amx_ftoc(gfm_tr->flPlaneDist);
 			return 1;
-			break;
 		}
 	case TR_vecPlaneNormal:
 		{
@@ -163,26 +146,21 @@ static cell AMX_NATIVE_CALL get_tr(AMX *amx, cell *params)
 			ptr[1] = amx_ftoc(gfm_tr->vecPlaneNormal.y);
 			ptr[2] = amx_ftoc(gfm_tr->vecPlaneNormal.z);
 			return 1;
-			break;
 		}
 	case TR_pHit:
 		{
 			if (FNullEnt(gfm_tr->pHit))
 				return -1;
 			return ENTINDEX(gfm_tr->pHit);
-			break;
 		}
 	case TR_iHitgroup:
 		{
 			return gfm_tr->iHitgroup;
-			break;
-		}
-	default:
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
-			return 0;
 		}
 	}
+	MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
+	
+	return 0;
 }
 
 AMX_NATIVE_INFO tr_Natives[] = 

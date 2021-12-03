@@ -434,7 +434,7 @@ void CPlayer::WeaponsCheck(int weapons)
 	int old;
 	int cur;
 
-	for(int i = 1; i < MAX_WEAPONS; ++i)
+	for(int i = 1; i < DODMAX_WEAPONS; ++i)
 	{
 		// Check to see we are not talking about a grenade and we have changed
 		if(i != 13 && i != 14 && i != 15 && i != 16 && i != 36)

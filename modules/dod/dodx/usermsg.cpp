@@ -222,7 +222,7 @@ void Client_AmmoX(void* mValue)
   case 1:
 	if (!mPlayer ) 
 		break;
-    for(int i = 1; i < MAX_WEAPONS ; ++i)
+    for(int i = 1; i < DODMAX_WEAPONS ; ++i)
 	{
       if (iAmmo == weaponData[i].ammoSlot)
         mPlayer->weapons[i].ammo = *(int*)mValue;
@@ -244,7 +244,7 @@ void Client_AmmoShort(void* mValue)
 	if(!mPlayer ) 
 		break;
 
-    for(int i = 1; i < MAX_WEAPONS ; ++i) 
+    for(int i = 1; i < DODMAX_WEAPONS ; ++i) 
 	{
       if (iAmmo == weaponData[i].ammoSlot)
 		  mPlayer->weapons[i].ammo = *(int*)mValue;

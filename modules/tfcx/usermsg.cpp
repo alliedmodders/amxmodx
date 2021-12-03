@@ -46,7 +46,7 @@ void Client_WeaponList(void* mValue){
     break;
   case 7:
     int iId = *(int*)mValue;
-    if ( (iId < 0 || iId >= MAX_WEAPONS ) || ( wpnList & (1<<iId) ) )
+    if ( (iId < 0 || iId >= TFCMAX_WEAPONS ) || ( wpnList & (1<<iId) ) )
       break;
 
     wpnList |= (1<<iId);
@@ -340,7 +340,7 @@ void Client_AmmoX(void* mValue){
 	}
 	//
 
-    for(int i = 1; i < MAX_WEAPONS ; ++i) 
+    for(int i = 1; i < TFCMAX_WEAPONS ; ++i) 
       if (iAmmo == weaponData[i].ammoSlot)
         mPlayer->weapons[i].ammo = *(int*)mValue;
   }
@@ -355,7 +355,7 @@ void Client_AmmoPickup(void* mValue){
     break;
   case 1:
 	if (!mPlayer ) break;
-    for(int i = 1; i < MAX_WEAPONS ; ++i)
+    for(int i = 1; i < TFCMAX_WEAPONS ; ++i)
       if (weaponData[i].ammoSlot == iSlot)
         mPlayer->weapons[i].ammo += *(int*)mValue;
   }

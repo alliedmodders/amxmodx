@@ -80,8 +80,7 @@ static cell AMX_NATIVE_CALL fm_return(AMX *amx, cell *params)
 		}
 	default:
 		{
-		return 0;
-		break;
+			return 0;
 		}
 	}
 

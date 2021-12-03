@@ -161,10 +161,10 @@ struct CPlayer {
 		int	clip;
 	};
 
-	PlayerWeapon	weapons[MAX_WEAPONS];
+	PlayerWeapon	weapons[TFCMAX_WEAPONS];
 	PlayerWeapon	attackers[33];
 	PlayerWeapon	victims[33];
-	Stats			weaponsRnd[MAX_WEAPONS]; // DEC-Weapon (Round) stats
+	Stats			weaponsRnd[TFCMAX_WEAPONS]; // DEC-Weapon (Round) stats
 	Stats			life;
 
 	int teamId;

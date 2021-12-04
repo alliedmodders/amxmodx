@@ -319,6 +319,7 @@ void CoreConfig::CheckLegacyBufferedCommand(char *command)
 		return;
 	}
 
+
 	if (!m_LegacyMainConfigExecuted && strstr(command, MainConfigFile))
 	{
 		m_LegacyMainConfigExecuted = true;

@@ -296,16 +296,19 @@ void CoreConfig::OnMapConfigTimer()
 		return;
 	}
 
-	if (m_PendingForwardPush)
+	if (m_legacyMapConfigNextTime <= gpGlobals->time)
 	{
-		m_PendingForwardPush = false;
-		m_ConfigsExecuted = true;
+		if (m_PendingForwardPush)
+		{
+			m_PendingForwardPush = false;
+			m_ConfigsExecuted = true;
 
-		executeForwards(m_ConfigsExecutedForward);
-	}
-	else if (!m_LegacyMapConfigsExecuted && m_legacyMapConfigNextTime <= gpGlobals->time)
-	{
-		ExecuteMapConfig();
+			executeForwards(m_ConfigsExecutedForward);
+		}
+		else if (!m_LegacyMapConfigsExecuted)
+		{
+			ExecuteMapConfig();
+		}
 	}
 }
 
@@ -316,9 +319,17 @@ void CoreConfig::CheckLegacyBufferedCommand(char *command)
 		return;
 	}
 
-	if (!m_LegacyMainConfigExecuted && (strstr(command, MainConfigFile) ||  strstr(command, MapConfigDir)))
+
+	if (!m_LegacyMainConfigExecuted && strstr(command, MainConfigFile))
 	{
 		m_LegacyMainConfigExecuted = true;
+	}
+
+	if (!m_LegacyMapConfigsExecuted && strstr(command, MapConfigDir))
+	{
+		m_LegacyMapConfigsExecuted = true;
+		
+		// Consider all configs be executed to m_legacyMapConfigNextTime time.
 		m_PendingForwardPush = true;
 	}
 }

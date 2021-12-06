@@ -27,6 +27,10 @@ elif builder.target_platform == 'windows':
     '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
     '/SECTION:.data,RW',
   ]
+elif builder.target_platform == 'linux':
+  binary.compiler.postlink += [
+    binary.Dep(AMXX.stdcxx_path),
+  ]
 
 binary.compiler.linkflags += [AMXX.zlib.binary, AMXX.hashing.binary, AMXX.utf8rewind.binary]
 

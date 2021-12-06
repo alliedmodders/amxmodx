@@ -4183,7 +4183,7 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
 int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
 {
     CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
-    if (amxmodx_perflog->value > 0.0f && perf_Plug && (perf_Plug->isDebug() || amxmodx_debug->value == 2.0f))
+    if (amxmodx_perflog->value > 0.0f && perf_Plug && (perf_Plug->isDebug() || (int)amxmodx_debug->value == 2))
     {
         char perf_funcname[sNAMEMAX + 1];
         perf_funcname[0] = '\0';

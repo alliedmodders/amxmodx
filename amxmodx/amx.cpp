@@ -539,7 +539,7 @@ static int amx_BrowseRelocate(AMX *amx)
 
   amx->sysreq_d=0;      /* preset */
   #if (defined __GNUC__ || defined ASM32 || defined JIT) 
-    amx_ExecPerf(amx, (cell*)(void*)&opcode_list, 0);
+    amx_Exec(amx, (cell*)(void*)&opcode_list, 0);
     /* to use direct system requests, a function pointer must fit in a cell;
      * because the native function's address will be stored as the parameter
      * of SYSREQ.D

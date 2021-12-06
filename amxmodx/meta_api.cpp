@@ -135,9 +135,14 @@ cvar_t init_amxmodx_debug = {"amx_debug", "1", FCVAR_SPONLY};
 cvar_t init_amxmodx_mldebug = {"amx_mldebug", "", FCVAR_SPONLY};
 cvar_t init_amxmodx_language = {"amx_language", "en", FCVAR_SERVER};
 cvar_t init_amxmodx_cl_langs = {"amx_client_languages", "1", FCVAR_SERVER};
+cvar_t init_amxmodx_perflog = { "amx_perflog_ms", "1.0", FCVAR_SPONLY };
+
 cvar_t* amxmodx_version = NULL;
 cvar_t* amxmodx_modules = NULL;
+cvar_t* amxmodx_debug = NULL;
 cvar_t* amxmodx_language = NULL;
+cvar_t* amxmodx_perflog = NULL;
+
 cvar_t* hostname = NULL;
 cvar_t* mp_timelimit = NULL;
 
@@ -1627,9 +1632,12 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 	CVAR_REGISTER(&init_amxmodx_mldebug);
 	CVAR_REGISTER(&init_amxmodx_language);
 	CVAR_REGISTER(&init_amxmodx_cl_langs);
+	CVAR_REGISTER(&init_amxmodx_perflog);
 
 	amxmodx_version = CVAR_GET_POINTER(init_amxmodx_version.name);
+	amxmodx_debug = CVAR_GET_POINTER(init_amxmodx_debug.name);
 	amxmodx_language = CVAR_GET_POINTER(init_amxmodx_language.name);
+	amxmodx_perflog = CVAR_GET_POINTER(init_amxmodx_perflog.name);
 
 	REG_SVR_COMMAND("amxx", amx_command);
 

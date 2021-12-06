@@ -728,7 +728,7 @@ int Handler::HandleModule(const char *module, bool isClass)
 	m_pAmx->flags |= AMX_FLAG_PRENIT;
 	amx_Push(m_pAmx, isClass ? 1 : 0);
 	amx_PushString(m_pAmx, &hea_addr, &phys_addr, module, 0, 0);
-	int err = amx_Exec(m_pAmx, &retval, m_iModFunc);
+	int err = amx_ExecPerf(m_pAmx, &retval, m_iModFunc);
 	amx_Release(m_pAmx, hea_addr);
 	m_pAmx->flags &= ~AMX_FLAG_PRENIT;
 
@@ -768,7 +768,7 @@ int Handler::HandleNative(const char *native, int index, int trap)
 	amx_Push(m_pAmx, trap);
 	amx_Push(m_pAmx, index);
 	amx_PushString(m_pAmx, &hea_addr, &phys_addr, native, 0, 0);
-	int err = amx_Exec(m_pAmx, &retval, m_iNatFunc);
+	int err = amx_ExecPerf(m_pAmx, &retval, m_iNatFunc);
 	if (err != AMX_ERR_NONE)
 	{
 		//LogError() took care of something for us.
@@ -841,7 +841,7 @@ int Handler::HandleError(const char *msg)
 	amx_PushString(m_pAmx, &hea_addr, &phys_addr, msg, 0, 0);
 	amx_Push(m_pAmx, pDebugger ? 1 : 0);
 	amx_Push(m_pAmx, error);
-	int err = amx_Exec(m_pAmx, &result, m_iErrFunc);
+	int err = amx_ExecPerf(m_pAmx, &result, m_iErrFunc);
 	if (err != AMX_ERR_NONE)
 	{
 		//handle this manually.

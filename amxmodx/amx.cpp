@@ -66,6 +66,12 @@
   #include <windows.h>
 #endif
 
+//Remove conflict chrono with AMXMODX definitions of min/max.
+#undef min
+#undef max
+#include <chrono>
+#include <amxmodx.h>
+#include <CPlugin.h>
 
 /* When one or more of the AMX_funcname macris are defined, we want
  * to compile only those functions. However, when none of these macros
@@ -4173,11 +4179,6 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
   dest[len]='\0';     /* store terminator */
   return AMX_ERR_NONE;
 }
-
-
-#include <chrono>
-#include <amxmodx.h>
-#include <CPlugin.h>
 
 int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
 {

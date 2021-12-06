@@ -66,9 +66,6 @@
   #include <windows.h>
 #endif
 
-//Remove conflict chrono with AMXMODX definitions of min/max.
-#undef min
-#undef max
 #include <chrono>
 #include <amxmodx.h>
 #include <CPlugin.h>

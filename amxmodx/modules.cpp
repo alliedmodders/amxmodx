@@ -214,6 +214,20 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 			}
 
 			amx->flags |= AMX_FLAG_DEBUG;
+		} 
+		else if ( (int)amxmodx_debug->value == 2 ) 
+		{
+			const char * pluginname = filename;
+			// Easy extract pluginname from file path.
+			while(strstr(pluginname,"/")) 
+				pluginname = strstr(pluginname,"/") + 1;
+			while(strstr(pluginname,"\\")) 
+				pluginname = strstr(pluginname,"\\") + 1;
+			// Just skip debug info if not found.
+			AMXXLOG_Log("[AMXX] Plugin not compiled with debug option. Not debugging plugin \"%s\"", pluginname);
+			#ifdef JIT
+				amx->flags |= AMX_FLAG_JITC;
+			#endif
 		} else {
 			ke::SafeStrcpy(error, maxLength, "Plugin not compiled with debug option");
 			return (amx->error = AMX_ERR_INIT);

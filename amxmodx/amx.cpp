@@ -4180,7 +4180,7 @@ int AMXAPI amx_GetStringOld(char *dest,const cell *source,int use_wchar)
 int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
 {
     CPluginMngr::CPlugin* perf_Plug = g_plugins.findPluginFast(amx);
-    if (amxmodx_perflog->value > 0.0f && perf_Plug && (perf_Plug->isDebug() || (int)amxmodx_debug->value == 2))
+    if (amxmodx_perfmon->value > 0.0f && amxmodx_perfmon_ms->value > 0.0f && perf_Plug && (perf_Plug->isDebug() || (int)amxmodx_perfmon->value == 3))
     {
         char perf_funcname[sNAMEMAX + 1];
         perf_funcname[0] = '\0';
@@ -4202,7 +4202,7 @@ int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
 
         auto ms_int = duration_cast<microseconds>(steady_clock::now() - t1);
         auto ms_float = (float)(ms_int.count() / 1000.0f);
-        if (ms_float >= amxmodx_perflog->value)
+        if (ms_float >= amxmodx_perfmon_ms->value)
         {
             AMXXLOG_Log("[%s] performance issue. Function %s executed more than %.*fms.", perf_plugname, perf_funcname, 1, ms_float);
         }

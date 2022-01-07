@@ -263,7 +263,7 @@ static cell AMX_NATIVE_CALL dod_weapon_type(AMX *amx, cell *params) /* 2 params 
 	{
 		int weaponsbit = pPlayer->pEdict->v.weapons & ~(1<<31); // don't count last element
 
-		for(int x = 1; x < MAX_WEAPONS; ++x)
+		for(int x = 1; x < DODMAX_WEAPONS; ++x)
 		{
 			if((weaponsbit&(1<<x)) > 0)
 			{
@@ -387,11 +387,11 @@ static cell AMX_NATIVE_CALL cwpn_dmg(AMX *amx, cell *params)
 
 	pVic->pEdict->v.dmg_inflictor = NULL;
 
-	if(pAtt->index != pVic->index)
-		pAtt->saveHit(pVic , weapon , dmg, aim);
-
 	if(!pAtt) 
 		pAtt = pVic;
+
+	if(pAtt->index != pVic->index)
+		pAtt->saveHit(pVic , weapon , dmg, aim);
 
 	int TA = 0;
 

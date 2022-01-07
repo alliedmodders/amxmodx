@@ -495,8 +495,10 @@ findAdminsWithMenu(playersList[MAX_PLAYERS], &playersCount, const commandLevel =
 
 	get_players(playersList, playersCount, "ch");
 
-	for (new i = 0; i < playersCount, (player = playersList[i]); ++i)
+	for (new i = 0; i < playersCount; ++i)
 	{
+		player = playersList[i]
+		
 		if (player_menu_info(player, menu, newmenu) && newmenu != -1 && newmenu == MenuHandle[player])
 		{
 			if (commandLevel == -1 || access(player, commandLevel)) // extra safety
@@ -519,8 +521,10 @@ refreshMenus(const commandLevel = 0, const bool:displaySaveMessage = false)
 		return;
 	}
 
-	for (new i = 0, player; i < playersCount, (player = playersList[i]); ++i)
+	for (new i = 0, player; i < playersCount; ++i)
 	{
+		player = playersList[i]
+		
 		MenuHandle[player] = displayMenu(player, MenuPosition[player]);
 
 		if (displaySaveMessage)
@@ -590,9 +594,11 @@ bool:loadSettings(const filename[])
 	arrayset(RestrictedBotEquipAmmos, '0', charsmax(RestrictedBotEquipAmmos));
 	arrayset(RestrictedBotWeapons, '0', charsmax(RestrictedBotWeapons));
 
-	while (!feof(fp))
+	while (fgets(fp, lineRead, charsmax(lineRead)))
 	{
-		if (fgets(fp, lineRead, charsmax(lineRead)) - trim(lineRead) <= 0)
+		trim(lineRead)
+
+		if (!lineRead[0])
 		{
 			continue;
 		}

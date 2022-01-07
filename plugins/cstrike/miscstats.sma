@@ -236,9 +236,8 @@ public plugin_precache()
 	if( fp )
 	{
 		new xvarname[32], xvarid
-		while( !feof(fp) )
+		while( fgets(fp, buffer, charsmax(buffer)) )
 		{
-			fgets(fp, buffer, charsmax(buffer))
 			trim(buffer)
 			if( buffer[0] != ';' )
 			{
@@ -257,9 +256,8 @@ public plugin_precache()
 	if( fp )
 	{
 		new szSoundKey[32], szSoundFile[SOUNDFILE_PATH_MAXLEN]
-		while( !feof(fp) )
+		while( fgets(fp, buffer, charsmax(buffer)) )
 		{
-			fgets(fp, buffer, charsmax(buffer))
 			trim(buffer)
 			if( buffer[0] != ';' && parse(buffer, szSoundKey, charsmax(szSoundKey), szSoundFile, charsmax(szSoundFile)) == 2 )
 			{
@@ -379,7 +377,7 @@ precache_sound_custom( const sound[] )
 	formatex(fullpathsound, charsmax(fullpathsound), "sound/%s.wav", sound)
 	if( file_exists(fullpathsound) )
 	{
-		precache_sound(fullpathsound[6])
+		precache_generic(fullpathsound)
 	}
 	else
 	{

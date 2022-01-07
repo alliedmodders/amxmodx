@@ -70,7 +70,7 @@ static ucell hex2long(char *s,char **n)
     s++;
   } /* if */
 
-  assert((*s>='0' && *s<='9') || (*s>='a' && *s<='f') || (*s>='a' && *s<='f'));
+  assert((*s>='0' && *s<='9') || (*s>='a' && *s<='f') || (*s>='A' && *s<='F'));
   for ( ;; ) {
     if (*s>='0' && *s<='9')
       digit=*s-'0';

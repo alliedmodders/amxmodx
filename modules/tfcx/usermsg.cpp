@@ -46,7 +46,7 @@ void Client_WeaponList(void* mValue){
     break;
   case 7:
     int iId = *(int*)mValue;
-    if ( (iId < 0 || iId >= MAX_WEAPONS ) || ( wpnList & (1<<iId) ) )
+    if ( (iId < 0 || iId >= TFCMAX_WEAPONS ) || ( wpnList & (1<<iId) ) )
       break;
 
     wpnList |= (1<<iId);
@@ -121,10 +121,23 @@ void Client_Damage(void* mValue){
 	if ( FNullEnt( enemy ) )
 		break;
 
+#ifdef _DEBUG_TFCX	
+	ALERT(at_logged, "Clinet_damage Called with state-%d dmg-%d Netname'%s'(Class'%s') slno-'%d'\n",
+		mState, damage, STRING(mPlayer->pEdict->v.netname),
+		STRING(mPlayer->pEdict->v.classname), mPlayer->pEdict->serialnumber);
+
+	ALERT(at_logged, "   Called with enemy-slno-%d Netname:'%s'(Class'%s')\n", mPlayer->pEdict->serialnumber, 
+		STRING(enemy->v.netname), STRING(enemy->v.classname));
+#endif // _DEBUG_TFCX
+
 	if (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) ) { // attacker is player and his active weapon
 
 		pAttacker = GET_PLAYER_POINTER(enemy);
-		
+
+#ifdef _DEBUG_TFCX
+		ALERT(at_logged, "   attacker is player and his active weapon id-%d, has flags - (FL_CLIENT | FL_FAKECLIENT)\n\n", pAttacker->current);
+#endif // _DEBUG_TFCX	
+
 		aim = pAttacker->aiming;
 		weapon = pAttacker->current;
 
@@ -149,6 +162,15 @@ void Client_Damage(void* mValue){
 		if ( enemy->v.owner->v.flags & (FL_CLIENT | FL_FAKECLIENT)  ){ // caltrop, empgrenade, gasgrenade, napalmgrenade
 
 			pAttacker = GET_PLAYER_POINTER(enemy->v.owner);
+
+#ifdef _DEBUG_TFCX
+			ALERT(at_logged, "   attacker is Class'%s'(with its enmy as Netname'%s'[Class'%s']) and his owner is '%s(%s)' enemy->owner has flags - FL_CLIENT | FL_FAKECLIENT\n\n", 
+				(enemy ? STRING(enemy->v.classname) : "Null"), 
+				(enemy->v.enemy ? STRING(enemy->v.enemy->v.netname) : "Null"),
+				(enemy->v.enemy ? STRING(enemy->v.enemy->v.classname) : "Null"),
+				(enemy->v.owner ? STRING(enemy->v.owner->v.netname) : "Null"),
+				(enemy->v.owner ? STRING(enemy->v.owner->v.classname) : "Null"));
+#endif // _DEBUG_TFCX	
 
 			const char *szClass = STRING(enemy->v.classname);
 			
@@ -185,16 +207,8 @@ void Client_Damage(void* mValue){
 			if ( !weapon ) {
 				switch(szClass[3]){
 				case 'e':
-					weapon = TFC_WPN_TIMER; // TFC_WPN_MEDKIT ??
-
-					tempInt = get_pdata_ehandle(mPlayer->pEdict, pdTimerOwner * 4); // function is char-based.
-
-					if (tempInt < 1 || tempInt > gpGlobals->maxClients)
-					{
-						break;
-					}
-
-					pAttacker = GET_PLAYER_POINTER_I(tempInt);
+					weapon = TFC_WPN_TIMER; // TFC_WPN_MEDKIT ?? //ShootingKing: Class - "timer"					
+					pAttacker = GET_PLAYER_POINTER(enemy->v.enemy);
 
 					if (pAttacker->teamId == mPlayer->teamId) // ???
 					{
@@ -326,7 +340,7 @@ void Client_AmmoX(void* mValue){
 	}
 	//
 
-    for(int i = 1; i < MAX_WEAPONS ; ++i) 
+    for(int i = 1; i < TFCMAX_WEAPONS ; ++i) 
       if (iAmmo == weaponData[i].ammoSlot)
         mPlayer->weapons[i].ammo = *(int*)mValue;
   }
@@ -341,7 +355,7 @@ void Client_AmmoPickup(void* mValue){
     break;
   case 1:
 	if (!mPlayer ) break;
-    for(int i = 1; i < MAX_WEAPONS ; ++i)
+    for(int i = 1; i < TFCMAX_WEAPONS ; ++i)
       if (weaponData[i].ammoSlot == iSlot)
         mPlayer->weapons[i].ammo += *(int*)mValue;
   }

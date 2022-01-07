@@ -56,7 +56,7 @@ LANG_NAME_NATIVE = Bulgarski
 
 [ro]
 LANG_NAME = Romanian
-LANG_NAME_NATIVE = Romana
+LANG_NAME_NATIVE = Română
 
 [hu]
 LANG_NAME = Hungarian

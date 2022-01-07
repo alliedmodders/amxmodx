@@ -506,7 +506,7 @@ static cell AMX_NATIVE_CALL objective_set_data(AMX *amx, cell *params){ // index
 			GET_CP_PD(pent).model_body_neutral = ivalue;
 			return 1;
 		case CP_model_body_allies :
-			GET_CP_PD(pent).model_body_axis = ivalue;
+			GET_CP_PD(pent).model_body_allies = ivalue;
 			return 1;
 		case CP_model_body_axis :
 			GET_CP_PD(pent).model_body_axis = ivalue;

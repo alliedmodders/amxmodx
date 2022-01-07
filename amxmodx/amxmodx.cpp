@@ -542,11 +542,27 @@ static cell AMX_NATIVE_CALL next_hudchannel(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL set_hudmessage(AMX *amx, cell *params) /* 11 param */
 {
-	g_hudset.a1 = 0;
-	g_hudset.a2 = 0;
-	g_hudset.r2 = 255;
-	g_hudset.g2 = 255;
-	g_hudset.b2 = 250;
+	cell num_params = params[0] / sizeof(cell);
+
+	if (num_params >= 13)
+	{
+		cell *color2 = get_amxaddr(amx, params[13]);
+
+		g_hudset.a1 = static_cast<byte>(params[12]);
+		g_hudset.a2 = static_cast<byte>(color2[3]);
+		g_hudset.r2 = static_cast<byte>(color2[0]);
+		g_hudset.g2 = static_cast<byte>(color2[1]);
+		g_hudset.b2 = static_cast<byte>(color2[2]);
+	}
+	else
+	{
+		g_hudset.a1 = 0;
+		g_hudset.a2 = 0;
+		g_hudset.r2 = 255;
+		g_hudset.g2 = 255;
+		g_hudset.b2 = 250;
+	}
+
 	g_hudset.r1 = static_cast<byte>(params[1]);
 	g_hudset.g1 = static_cast<byte>(params[2]);
 	g_hudset.b1 = static_cast<byte>(params[3]);
@@ -1418,7 +1434,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 				pPlayer->vgui = false;
 
 				if (time == -1)
-					pPlayer->menuexpire = INFINITE;
+					pPlayer->menuexpire = static_cast<float>(INFINITE);
 				else
 					pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
@@ -1436,7 +1452,7 @@ static cell AMX_NATIVE_CALL show_menu(AMX *amx, cell *params) /* 3 param */
 			pPlayer->vgui = false;
 
 			if (time == -1)
-				pPlayer->menuexpire = INFINITE;
+				pPlayer->menuexpire = static_cast<float>(INFINITE);
 			else
 				pPlayer->menuexpire = gpGlobals->time + static_cast<float>(time);
 
@@ -3693,7 +3709,7 @@ static cell AMX_NATIVE_CALL callfunc_end(AMX *amx, cell *params)
 		amx_Push(pAmx, gparams[i]);
 	}
 
-	err = amx_Exec(pAmx, &retVal, func);
+	err = amx_ExecPerf(pAmx, &retVal, func);
 
 	if (err != AMX_ERR_NONE)
 	{

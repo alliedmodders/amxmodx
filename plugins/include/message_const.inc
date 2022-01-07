@@ -737,7 +737,7 @@ enum
  * write_byte(TE_FIZZ)
  * write_short(entity)
  * write_short(sprite index)
- * write_byte density)
+ * write_byte(density)
  */
 #define TE_FIZZ                     105
 

@@ -122,7 +122,8 @@ void Client_TSHealth_End(void* mValue){
 			
 			weapon = 37; // throwing knife
 			aim = pAttacker ? pAttacker->aiming : 0;
-			pAttacker->saveHit( mPlayer , weapon , damage, aim );
+			if (pAttacker)
+				pAttacker->saveHit( mPlayer , weapon , damage, aim );
 		}
 	}
 	if ( !pAttacker ) pAttacker = mPlayer;

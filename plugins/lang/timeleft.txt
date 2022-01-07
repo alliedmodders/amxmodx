@@ -125,12 +125,12 @@ SECOND = sekunda
 SECONDS = sekundi
 
 [ro]
-THE_TIME = Ora
-TIME_LEFT = Timp Ramas
-NO_T_LIMIT = Nici o Limita a Timpului
-MINUTE = minut ramas
-MINUTES = minute ramase
-SECOND = secunda
+THE_TIME = Ora și data
+TIME_LEFT = Timp rămas
+NO_T_LIMIT = Fără limită de timp
+MINUTE = minut
+MINUTES = minute
+SECOND = secundă
 SECONDS = secunde
 
 [hu]

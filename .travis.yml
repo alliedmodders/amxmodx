@@ -16,6 +16,9 @@ language: cpp
 sudo: false
 compiler:
   - clang
+install:
+  - pyenv install 3.6.3
+  - pyenv global 3.6.3
 before_script:
   - CHECKOUT_DIR=$PWD && cd .. 
   - chmod a+x $CHECKOUT_DIR/support/checkout-deps.sh 
@@ -23,5 +26,5 @@ before_script:
 script:
   - mkdir build && cd build
   - PATH="~/.local/bin:$PATH"
-  - CC=clang-3.7 CXX=clang-3.7 python ../configure.py --enable-optimize
+  - CC=clang-3.7 CXX=clang-3.7 python3 ../configure.py --enable-optimize
   - ambuild

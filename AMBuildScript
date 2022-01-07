@@ -225,8 +225,19 @@ class AMXXConfig(object):
         cxx.cxxflags += ['-Wno-delete-non-virtual-dtor']
       if have_gcc and cxx.version >= '4.8':
         cxx.cflags += ['-Wno-unused-result', '-Wno-error=sign-compare']
+      if have_gcc and cxx.version >= '8.0':
+        cxx.cflags += ['-Wno-stringop-truncation']
+      if have_gcc and cxx.version >= '9.0':
+        cxx.cflags += ['-Wno-address-of-packed-member']		
     if have_clang:
       cxx.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
+      if cxx.version >= '10.0':
+        cxx.cxxflags += ['-Wno-tautological-compare']
+      if cxx.version >= 'apple-clang-10.0':
+        cxx.cxxflags += [
+          '-Wno-inconsistent-missing-override',
+          '-Wno-varargs',
+        ]
       if cxx.version >= 'apple-clang-5.1' or cxx.version >= 'clang-3.4':
         cxx.cxxflags += ['-Wno-deprecated-register']
       else:
@@ -317,15 +328,18 @@ class AMXXConfig(object):
 
   def configure_mac(self, cxx):
     cxx.defines += ['OSX', '_OSX', 'POSIX']
-    cxx.cflags += ['-mmacosx-version-min=10.5']
+    cxx.cflags += [
+      '-mmacosx-version-min=10.7',
+      '-Wno-address-of-packed-member',
+    ]
     cxx.linkflags += [
-      '-mmacosx-version-min=10.5',
+      '-mmacosx-version-min=10.7',
       '-arch', 'i386',
       '-lstdc++',
-      '-stdlib=libstdc++',
+      '-stdlib=libc++',
       '-framework', 'CoreServices',
     ]
-    cxx.cxxflags += ['-stdlib=libstdc++']
+    cxx.cxxflags += ['-stdlib=libc++']
 
   def configure_windows(self, cxx):
     cxx.defines += ['WIN32', '_WINDOWS']

@@ -17,10 +17,10 @@ RES_WEAP = Restrict Weapons
 TELE_PLAYER = Teleport Player
 
 [de]
-KICK_PLAYER = Kick Spieler
-BAN_PLAYER = Ban Spieler
-SLAP_SLAY = Schlage/Kille Spieler
-TEAM_PLAYER = Team Spieler ^n
+KICK_PLAYER = Spieler kicken
+BAN_PLAYER = Spieler bannen
+SLAP_SLAY = Spieler schlagen/killen
+TEAM_PLAYER = Team der Spieler ändern ^n
 CHANGEL = Mapwechsel
 VOTE_MAPS = Map Abstimmung ^n
 SPECH_STUFF = Soundausgabe
@@ -32,7 +32,7 @@ LANG_SET = Spracheinstellung
 STATS_SET = Statistik-Einstellungen ^n
 PAUSE_PLUG = Plugins pausieren
 RES_WEAP = Waffen verbieten
-TELE_PLAYER = Teleport Spieler
+TELE_PLAYER = Spieler teleportieren
 
 [sr]
 KICK_PLAYER = Kick Igraca
@@ -251,22 +251,22 @@ RES_WEAP = Zabrani orujiq
 TELE_PLAYER = Teleportirai igrachi
 
 [ro]
-KICK_PLAYER = Kick Jucator
-BAN_PLAYER = Ban Jucator
-SLAP_SLAY = Plesneste/Ucide Jucator
-TEAM_PLAYER = Jucator Echipa ^n
-CHANGEL = Schimba harta
-VOTE_MAPS = Voteaza pentru hartile ^n
-SPECH_STUFF = Speech
-CLIENT_COM = Comenzi Jucatori
-SERVER_COM = Comenzi Server
-CVARS_SET = Setari Cvar
-CONFIG = Configuratie
-LANG_SET = Setari Limbaj
-STATS_SET = Setari Statistici ^n
-PAUSE_PLUG = Opreste Plugin-uri
-RES_WEAP = Restrictioneaza Arme
-TELE_PLAYER = Teleporteaza Jucator
+KICK_PLAYER = Kick jucător
+BAN_PLAYER = Ban jucător
+SLAP_SLAY = Slap/Slay jucător
+TEAM_PLAYER = Schimbare echipă jucător ^n
+CHANGEL = Schimbă harta
+VOTE_MAPS = Vot pentru hărțile ^n
+SPECH_STUFF = Meniu Speech
+CLIENT_COM = Comenzi jucător
+SERVER_COM = Comenzi server
+CVARS_SET = Setări cvar
+CONFIG = Configurații
+LANG_SET = Setări limbă
+STATS_SET = Setări statistici ^n
+PAUSE_PLUG = Întrerupe pluginuri
+RES_WEAP = Restricționează arme
+TELE_PLAYER = Teleportează jucător
 
 [hu]
 KICK_PLAYER = Játékos kirúgása
@@ -438,7 +438,7 @@ TEAM_PLAYER = Equipa do Jogador ^n
 CHANGEL = Mudar de Mapa
 VOTE_MAPS = Votação de Mapas ^n
 SPECH_STUFF = Menu de Voz
-CLIENT_COM = Comandos do Client
+CLIENT_COM = Comandos do Cliente
 SERVER_COM = Comandos do Servidor
 CVARS_SET = Definições de Cvars
 CONFIG = Configuração

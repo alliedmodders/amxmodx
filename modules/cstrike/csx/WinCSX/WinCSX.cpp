@@ -229,8 +229,8 @@ void ListboxItemSelected(HWND hDlg) {
 	// Retrieve complete stats record of this position. Position in listbox should be same as rank in our records!
 	RankSystem::RankStats* stats = g_rank.findEntryInRankByPos((int)nItem + 1);
 	if (stats == NULL) {
-		char msg[] = "Error: Couldn't find the record by position! (nItem = %d)";
-		sprintf(msg, msg, nItem);
+		char msg[512];
+		sprintf(msg, "Error: Couldn't find the record by position! (nItem = %d)", nItem);
 		MessageBox(hDlg, msg, "Oh fiddlesticks!", MB_OK);
 		ClearStatsfields(hDlg);
 		return;

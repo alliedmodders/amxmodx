@@ -69,9 +69,9 @@ CONF_MENU = Konfiguracionno menu
 SPE_MENU = Menu za govorene
 
 [ro]
-CMD_MENU = Menu Comenzi
-CONF_MENU = Menu Configuratie
-SPE_MENU = Menu Speech
+CMD_MENU = Meniu comenzi
+CONF_MENU = Meniu configuri
+SPE_MENU = Meniu Speech
 
 [hu]
 CMD_MENU = Parancs Menü

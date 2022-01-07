@@ -469,7 +469,7 @@ public client_putinserver(id)
 
 public client_damage(attacker,victim,damage,wpnindex,hitplace,TA){ 
   if ( BulletDamage ) { 
-    if ( attacker==victim || xmod_is_melee_wpn(wpnindex) ) return PLUGIN_CONTINUE
+    if ( attacker==victim || !wpnindex || xmod_is_melee_wpn(wpnindex) ) return PLUGIN_CONTINUE
     set_hudmessage(0, 100, 200, 0.45, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
     ShowSyncHudMsg(attacker,g_damage_sync,"%i",damage)
     set_hudmessage(200, 0, 0, 0.55, 0.85, 2, 0.1, 4.0, 0.02, 0.02, -1) 
@@ -575,7 +575,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
       set_task( 4.0 + float( param[1] ) ,"checkKills",0,param,sizeof(param))
   }
 
-  if ( xmod_is_melee_wpn(wpnindex) && ( KnifeKill || KnifeKillSound )  ){
+  if ( ( KnifeKill || KnifeKillSound ) && wpnindex && xmod_is_melee_wpn(wpnindex) ){
     if ( KnifeKill ){
       set_hudmessage(255, 100, 100, -1.0, 0.15, 1, 6.0, 6.0, 0.5, 0.15, -1)
       for (new i=1;i<=MaxClients;i++){
@@ -598,7 +598,7 @@ public client_death(killer,victim,wpnindex,hitplace,TK){
     }
   }
 
-  if ( headshot && (HeadShotKill || HeadShotKillSound) && !xmod_is_melee_wpn(wpnindex) ){
+  if ( headshot && (HeadShotKill || HeadShotKillSound) && wpnindex && !xmod_is_melee_wpn(wpnindex) ){
     if ( HeadShotKill ){
       new weapon[32], message[256]
       xmod_get_wpnname(wpnindex,weapon,charsmax(weapon)) 

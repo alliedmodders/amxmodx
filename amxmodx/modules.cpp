@@ -187,7 +187,7 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 	bool will_be_debugged = false;
 	tagAMX_DBG *pDbg = NULL;
 
-	if ((int)CVAR_GET_FLOAT("amx_debug") >= 2 || debug)
+	if ((int)amxmodx_debug->value == 2 || debug)
 	{
 		if ((hdr->file_version < CUR_FILE_VERSION))
 		{
@@ -544,7 +544,7 @@ int set_amxnatives(AMX* amx, char error[128])
 
 	if (amx_FindPublic(amx, "plugin_natives", &idx) == AMX_ERR_NONE)
 	{
-		if ((err = amx_Exec(amx, &retval, idx)) != AMX_ERR_NONE)
+		if ((err = amx_ExecPerf(amx, &retval, idx)) != AMX_ERR_NONE)
 		{
 			Debugger::GenericMessage(amx, err);
 			AMXXLOG_Log("An error occurred in plugin_natives. This is dangerous!");

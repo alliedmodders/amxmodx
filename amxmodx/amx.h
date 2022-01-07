@@ -382,6 +382,7 @@ int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params);
 int AMXAPI amx_CheckNatives(AMX *amx, AMX_NATIVE_FILTER nf);
 int AMXAPI amx_Cleanup(AMX *amx);
 int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data);
+int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index);
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index);
 int AMXAPI amx_FindNative(AMX *amx, const char *name, int *index);
 int AMXAPI amx_FindPublic(AMX *amx, const char *funcname, int *index);

@@ -48,31 +48,26 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 		{
 			tr->fAllSolid = *ptr;
 			return 1;
-			break;
 		}
 	case TR_InOpen:
 		{
 			tr->fInOpen = *ptr;
 			return 1;
-			break;
 		}
 	case TR_StartSolid:
 		{
 			tr->fStartSolid = *ptr;
 			return 1;
-			break;
 		}
 	case TR_InWater:
 		{
 			tr->fInWater = *ptr;
 			return 1;
-			break;
 		}
 	case TR_flFraction:
 		{
 			tr->flFraction = amx_ctof(*ptr);
 			return 1;
-			break;
 		}
 	case TR_vecEndPos:
 		{
@@ -80,13 +75,11 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 			tr->vecEndPos.y = amx_ctof(ptr[1]);
 			tr->vecEndPos.z = amx_ctof(ptr[2]);
 			return 1;
-			break;
 		}
 	case TR_flPlaneDist:
 		{
 			tr->flPlaneDist = amx_ctof(*ptr);
 			return 1;
-			break;
 		}
 	case TR_vecPlaneNormal:
 		{
@@ -94,7 +87,6 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 			tr->vecPlaneNormal.y = amx_ctof(ptr[1]);
 			tr->vecPlaneNormal.z = amx_ctof(ptr[2]);
 			return 1;
-			break;
 		}
 	case TR_pHit:
 		{
@@ -110,15 +102,11 @@ static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 		{
 			tr->iHitgroup = *ptr;
 			return 1;
-			break;
-		}
-	default:
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
-			return 0;
 		}
 	}
 
+	MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
+	
 	return 0;
 }
 
@@ -137,29 +125,24 @@ static cell AMX_NATIVE_CALL get_tr2(AMX *amx, cell *params)
 	case TR_AllSolid:
 		{
 			return tr->fAllSolid;
-			break;
 		}
 	case TR_InOpen:
 		{
 			return tr->fInOpen;
-			break;
 		}
 	case TR_StartSolid:
 		{
 			return tr->fStartSolid;
-			break;
 		}
 	case TR_InWater:
 		{
 			return tr->fInWater;
-			break;
 		}
 	case TR_flFraction:
 		{
 			ptr = MF_GetAmxAddr(amx, params[3]);
 			*ptr = amx_ftoc(tr->flFraction);
 			return 1;
-			break;
 		}
 	case TR_vecEndPos:
 		{
@@ -168,14 +151,12 @@ static cell AMX_NATIVE_CALL get_tr2(AMX *amx, cell *params)
 			ptr[1] = amx_ftoc(tr->vecEndPos.y);
 			ptr[2] = amx_ftoc(tr->vecEndPos.z);
 			return 1;
-			break;
 		}
 	case TR_flPlaneDist:
 		{
 			ptr = MF_GetAmxAddr(amx, params[3]);
 			*ptr = amx_ftoc(tr->flPlaneDist);
 			return 1;
-			break;
 		}
 	case TR_vecPlaneNormal:
 		{
@@ -184,27 +165,21 @@ static cell AMX_NATIVE_CALL get_tr2(AMX *amx, cell *params)
 			ptr[1] = amx_ftoc(tr->vecPlaneNormal.y);
 			ptr[2] = amx_ftoc(tr->vecPlaneNormal.z);
 			return 1;
-			break;
 		}
 	case TR_pHit:
 		{
 			if (FNullEnt(tr->pHit))
 				return -1;
 			return ENTINDEX(tr->pHit);
-			break;
 		}
 	case TR_iHitgroup:
 		{
 			return tr->iHitgroup;
-			break;
-		}
-	default:
-		{
-			MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
-			return 0;
 		}
 	}
 
+	MF_LogError(amx, AMX_ERR_NATIVE, "Unknown TraceResult member %d", params[2]);
+	
 	return 0;
 }
 
@@ -221,7 +196,6 @@ static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 	case KV_fHandled:
 		{
 			return kvd->fHandled;
-			break;
 		}
 	case KV_ClassName:
 		{
@@ -232,7 +206,6 @@ static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 			}
 			cell *ptr = MF_GetAmxAddr(amx, params[4]);
 			return MF_SetAmxString(amx, params[3], kvd->szClassName, (int)*ptr);
-			break;
 		}
 	case KV_KeyName:
 		{
@@ -243,7 +216,6 @@ static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 			}
 			cell *ptr = MF_GetAmxAddr(amx, params[4]);
 			return MF_SetAmxString(amx, params[3], kvd->szKeyName, (int)*ptr);
-			break;
 		}
 	case KV_Value:
 		{
@@ -254,12 +226,11 @@ static cell AMX_NATIVE_CALL get_kvd(AMX *amx, cell *params)
 			}
 			cell *ptr = MF_GetAmxAddr(amx, params[4]);
 			return MF_SetAmxString(amx, params[3], kvd->szValue, (int)*ptr);
-			break;
 		}
 	}
 
 	MF_LogError(amx, AMX_ERR_NATIVE, "Invalid KeyValueData member: %d", params[2]);
-
+	
 	return 0;
 }
 
@@ -301,28 +272,24 @@ static cell AMX_NATIVE_CALL set_kvd(AMX *amx, cell *params)
 		{
 			kvd->fHandled = (int)*ptr;
 			return 1;
-			break;
 		}
 	case KV_ClassName:
 		{
 			kvdw->cls = MF_GetAmxString(amx, params[3], 0, &len);
 			kvd->szClassName = const_cast<char *>(kvdw->cls.chars());
 			return 1;
-			break;
 		}
 	case KV_KeyName:
 		{
 			kvdw->key = MF_GetAmxString(amx, params[3], 0, &len);
 			kvd->szKeyName = const_cast<char *>(kvdw->key.chars());
 			return 1;
-			break;
 		}
 	case KV_Value:
 		{
 			kvdw->val = MF_GetAmxString(amx, params[3], 0, &len);
 			kvd->szValue = const_cast<char *>(kvdw->val.chars());
 			return 1;
-			break;
 		}
 	}
 
@@ -1110,9 +1077,9 @@ static cell AMX_NATIVE_CALL set_es(AMX *amx, cell *params)
 		es->vuser3.z = amx_ctof(ptr[2]);
 		return 1;
 	case ES_vUser4:
-		es->vuser3.x = amx_ctof(ptr[0]);
-		es->vuser3.y = amx_ctof(ptr[1]);
-		es->vuser3.z = amx_ctof(ptr[2]);
+		es->vuser4.x = amx_ctof(ptr[0]);
+		es->vuser4.y = amx_ctof(ptr[1]);
+		es->vuser4.z = amx_ctof(ptr[2]);
 		return 1;
 	}
 

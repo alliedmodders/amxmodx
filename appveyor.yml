@@ -1,32 +1,126 @@
 version: 1.0.{build}
-clone_folder: c:\projects\amxmodx
-install:
-- git submodule update --init --recursive
-- 'c:'
-- mkdir c:\nasm
-- set PATH=c:\nasm\nasm-2.13.03;%PATH%
-- curl -L -o "c:\nasm\nasm.zip" https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip
-- chdir c:\nasm
-- 7z x nasm.zip
-- chdir c:\projects
-- git clone https://github.com/alliedmodders/ambuild
-- git clone https://github.com/alliedmodders/metamod-hl1
-- git clone https://github.com/alliedmodders/hlsdk
-- ps: Start-FileDownload 'https://downloads.mysql.com/archives/get/p/19/file/mysql-connector-c-6.1.1-win32.zip'
-- 7z x mysql-connector-c-6.1.1-win32.zip -o"mysql"
-- cd mysql
-- dir
-- ren mysql-connector-c-6.1.1-win32 mysql-5.5
-- move /Y mysql-5.5 ..\
-- cd ..\ambuild
-- c:\python27\python setup.py install
-- cd ..\amxmodx
-cache:
-  - c:\projects\*.zip -> appveyor.yml
-  - c:\projects\mysql-5.5 -> appveyor.yml
-build_script:
-- '"%VS140COMNTOOLS%\vsvars32.bat"'
-- mkdir build
-- cd build
-- c:\python27\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"
-- ambuild
+
+environment:
+  fast_finish: false
+  allow_failures: true
+  matrix:
+    - job_name: MacOS
+      appveyor_build_worker_image: macos-mojave
+      job_group: Build
+
+    - job_name: Windows
+      appveyor_build_worker_image: Visual Studio 2015
+      job_group: Build
+
+for:
+  -
+    matrix:
+      only:
+        - job_name: Windows
+
+    clone_folder: c:\projects\amxmodx
+    install:
+    - cmd: >-
+        git submodule update --init --recursive
+
+        c:
+        
+        mkdir c:\nasm
+        
+        set PATH=c:\nasm\nasm-2.13.03;%PATH%
+
+        curl -L -o "c:\nasm\nasm.zip" https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win32/nasm-2.13.03-win32.zip
+        
+        chdir c:\nasm
+        
+        7z x nasm.zip
+        
+        chdir c:\projects
+        
+        git clone https://github.com/alliedmodders/ambuild
+        
+        git clone https://github.com/alliedmodders/metamod-hl1
+        
+        git clone https://github.com/alliedmodders/hlsdk
+        
+        curl -L -o "mysql-connector-c-6.1.1-win32.zip" https://downloads.mysql.com/archives/get/p/19/file/mysql-connector-c-6.1.1-win32.zip
+        
+        7z x mysql-connector-c-6.1.1-win32.zip -o"mysql"
+        
+        cd mysql
+        
+        dir
+        
+        ren mysql-connector-c-6.1.1-win32 mysql-5.5
+        
+        move /Y mysql-5.5 ..\
+        
+        cd ..\ambuild
+        
+        c:\python38\python setup.py install
+        
+        set PATH=C:\Python38;C:\Python38\Scripts;%PATH%
+        
+        cd ..\amxmodx
+        
+# cache:
+#   - c:\projects\*.zip -> appveyor.yml
+#   - c:\projects\mysql-5.5 -> appveyor.yml
+    build_script:
+    - cmd: >-
+        "%VS140COMNTOOLS%\vsvars32.bat"
+        
+        mkdir build
+        
+        cd build
+        
+        c:\python38\python ../configure.py --enable-optimize --nasm="C:\nasm\nasm-2.13.03\nasm.exe"
+        
+        echo %PATH%
+
+        ambuild
+
+  -
+    matrix:
+      only:
+        - job_name: MacOS
+
+    install:
+    - >-
+        git submodule update --init --recursive
+
+        mkdir -p $APPVEYOR_BUILD_FOLDER/deps
+
+        ls -alh
+        
+        cd $APPVEYOR_BUILD_FOLDER/deps
+        
+        mkdir -p amxmodx
+
+        ../support/checkout-deps.sh
+
+        brew install nasm
+
+        nasm -v
+
+        export CC=clang
+        
+        export CXX=clang++
+        
+        clang --version
+        
+        clang++ --version
+
+        cd $APPVEYOR_BUILD_FOLDER
+        
+    build_script:
+    - >-
+        echo $PATH
+        
+        mkdir build
+        
+        cd build
+        
+        python3 ../configure.py --enable-optimize --metamod=$APPVEYOR_BUILD_FOLDER/deps/metamod-am --hlsdk=$APPVEYOR_BUILD_FOLDER/deps/hlsdk --mysql=$APPVEYOR_BUILD_FOLDER/deps/mysql-5.5
+        
+        ambuild

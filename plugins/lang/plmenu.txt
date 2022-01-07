@@ -267,21 +267,21 @@ CANT_PERF_PLAYER = Tazi comanda ne moje da se izpolzva vurhu igracha "%s"
 [ro]
 ADMIN_BAN_1 = ADMIN: ban %s
 ADMIN_BAN_2 = ADMIN %s: ban %s
-BAN_MENU = Menu Ban
+BAN_MENU = Meniu ban
 BAN_FOR_MIN = Ban %d minute
 BAN_PERM = Ban permanent
 SLAP_SLAY_MENU = Slap/Slay
-SLAP_WITH_DMG = Slap cu %d dmg
+SLAP_WITH_DMG = Slap cu %d damage
 SLAY = Slay
-KICK_MENU = Menu Kick
-ADMIN_TRANSF_1 = ADMIN: transfera %s la %s
-ADMIN_TRANSF_2 = ADMIN %s: transfera %s la %s
-TEAM_MENU = Menu Echipe
-TRANSF_TO = Transfera la %s
-TRANSF_SILENT = tăcut transfer
-CL_CMD_MENU = Menu Comenzi Jucator
-NO_CMDS = Nici o comanda valabila
-CANT_PERF_PLAYER = Aceasta comanda nu poate fi executata pe jucatorul "%s"
+KICK_MENU = Meniu kick
+ADMIN_TRANSF_1 = ADMIN: transferă pe %s la %s
+ADMIN_TRANSF_2 = ADMIN %s: transferă pe %s la %s
+TEAM_MENU = Meniu schimbare echipe
+TRANSF_TO = Transferă la %s
+TRANSF_SILENT = transfer silențios
+CL_CMD_MENU = Meniu comenzi jucător
+NO_CMDS = Nicio comandă disponibilă
+CANT_PERF_PLAYER = Această comandă nu poate fi executată pe jucătorul "%s"
 
 [hu]
 ADMIN_BAN_1 = ADMIN: %s bannolva

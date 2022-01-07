@@ -45,7 +45,9 @@ DROPPED_RES = Pudotettiin palvelimelta slotvarauksen takia (adminslot)
 DROPPED_RES = Premahnat poradi rezervaciq na slot
 
 [ro]
-DROPPED_RES = Ai primit kick pentru rezervare slot
+DROPPED_RES = Ai primit kick deoarece locul pe server este rezervat.
+CVAR_RESERVATION = Numărul de locuri rezervate
+CVAR_HIDESLOTS = Dacă setezi asta pe 1, poți ascunde locuri de pe server.^nDacă locurile publice și ascunse ale serverului sunt pline, trebuie să te conectezi manual în consolă cu comanda "connect".
 
 [hu]
 DROPPED_RES = Helyfenntartás miatt kidobva.
@@ -76,3 +78,5 @@ DROPPED_RES = U largua për shkak të rezervimit të vendit që është plugini 
 
 [pt]
 DROPPED_RES = Foste desconectado por causa da reservação de slots
+CVAR_RESERVATION = Quantidade de slots para reservar
+CVAR_HIDESLOTS = Se tu definires isto para 1, tu podes esconder slots no teu servidor.^nSe os slots públicos e escondidos do servidor estiverem cheios, tu deverás manualmente conectar com o comando de consola "connect".

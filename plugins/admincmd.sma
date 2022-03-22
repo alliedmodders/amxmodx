@@ -741,7 +741,7 @@ public cmdCvar(id, level, cid)
 	if (!cmd_access(id, level, cid, 2))
 		return PLUGIN_HANDLED
 	
-	new arg[32], arg2[64]
+	new arg[64], arg2[128]
 	
 	read_argv(1, arg, charsmax(arg))
 	read_argv(2, arg2, charsmax(arg2))

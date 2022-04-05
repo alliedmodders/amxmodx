@@ -144,7 +144,7 @@ native menu_create(const title[], const handler[], bool:ml = false);
 native menu_makecallback(const function[]);
 
 /**
- * Adds an menu to a menu.
+ * Adds an item to a menu.
  *
  * @param menu			Menu resource identifier.
  * @param name			Item text to display.

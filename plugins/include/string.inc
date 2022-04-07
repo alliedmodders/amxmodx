@@ -130,7 +130,7 @@ native replace_stringex(text[], maxlength, const search[], const replace[], sear
  *
  * @return				Number of of all merged characters.
  */
-native add(dest[],len,const src[],max=0);
+native add(dest[], len, const src[], max=0);
 
 /**
  * Formats a string according to the AMX Mod X format rules (see documentation).
@@ -251,7 +251,7 @@ native format_args(output[], len, pos = 0);
  *
  * @return				Number of cells written to buffer.
  */
-native num_to_str(num,string[],len);
+native num_to_str(num, string[], len);
 
 /**
  * Converts a string to an integer.
@@ -355,7 +355,7 @@ native Float:str_to_float(const string[]);
  *
  * @return				True if equal, false otherwise.
  */
-native equal(const a[],const b[],c=0);
+native equal(const a[], const b[], c=0);
 
 /**
  * Returns whether two strings are equal with case ignoring.
@@ -382,7 +382,7 @@ native equali(const a[], const b[], c = 0);
  *
  * @return				Number of cells written.
  */
-native copy(dest[],len,const src[]);
+native copy(dest[], len, const src[]);
 
 /**
  * Copies one string to another string until ch is found.
@@ -394,7 +394,7 @@ native copy(dest[],len,const src[]);
  *
  * @return				Number of cells written.
  */
-native copyc(dest[],len,const src[],ch);
+native copyc(dest[], len, const src[], ch);
 
 /**
  * Sets string with given character.
@@ -405,7 +405,7 @@ native copyc(dest[],len,const src[],ch);
  *
  * @noreturn
  */
-native setc(src[],len,ch);
+native setc(src[], len, ch);
 
 /**
  * Gets parameters from text.

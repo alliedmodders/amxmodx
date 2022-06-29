@@ -3319,6 +3319,20 @@ native DestroyForward(forward_handle);
 native arrayset(any:array[], any:value, size);
 
 /**
+ * Compares two arrays.
+ *
+ * @note The value of the "size" parameter should not exceed the size of each array.
+ *
+ * @param what    First array 
+ * @param with    Second array
+ * @param size    Size of array
+ *
+ * @return	Returns true if arrays are equaly, false otherwise.
+ * @error	If size < 1.
+ */
+native bool:arraycompare(const any:what[], const any:with[], const size);
+
+/**
  * Returns the weapon id associated with a weapon name.
  *
  * @note The weapon name is case sensitive and has the weapon_* form.

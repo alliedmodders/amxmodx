@@ -4469,6 +4469,25 @@ static cell AMX_NATIVE_CALL arrayset(AMX *amx, cell *params)
 	return 1;
 }
 
+// native bool:arraycompare(const any:what[], const any:with[], const size);
+static cell AMX_NATIVE_CALL arraycompare(AMX *amx, cell *params)
+{
+	cell *what = get_amxaddr(amx, params[1]);
+	cell *with = get_amxaddr(amx, params[2]);
+	int size = params[3];
+
+	if(size < 1){
+		LogError(amx, AMX_ERR_NATIVE, "Invalid size (%d).", size);
+		return 0;
+	}
+
+	while (size--)
+		if (*with++ != *what++)
+			return 0;
+
+	return 1;
+}
+
 static cell AMX_NATIVE_CALL CreateLangKey(AMX *amx, cell *params)
 {
 	int len;
@@ -4698,6 +4717,7 @@ AMX_NATIVE_INFO amxmodx_Natives[] =
 	{"admins_push",				admins_push},
 	{"amxclient_cmd",			amxclient_cmd},
 	{"arrayset",				arrayset},
+	{"arraycompare",			arraycompare},
 	{"get_addr_val",			get_addr_val},
 	{"get_var_addr",			get_var_addr},
 	{"set_addr_val",			set_addr_val},

@@ -22,6 +22,7 @@ new g_nextMap[32]
 new g_mapCycle[32]
 new g_pos
 new g_currentMap[32]
+new g_changeMapCalled;
 
 // pcvars
 new g_mp_friendlyfire, g_mp_chattime
@@ -94,10 +95,14 @@ public sayFFStatus()
 
 public delayedChange(param[])
 {
-	if (g_mp_chattime) {
+	engine_changelevel(param)
+}
+
+public plugin_end()
+{
+	if (g_mp_chattime && g_changeMapCalled) {
 		set_pcvar_float(g_mp_chattime, get_pcvar_float(g_mp_chattime) - 2.0)
 	}
-	engine_changelevel(param)
 }
 
 public changeMap()
@@ -107,6 +112,7 @@ public changeMap()
 	
 	if (g_mp_chattime) {
 		set_pcvar_float(g_mp_chattime, chattime + 2.0)		// make sure mp_chattime is long
+		g_changeMapCalled = true;
 	}
 	new len = getNextMapName(string, charsmax(string)) + 1
 	set_task(chattime, "delayedChange", 0, string, len)	// change with 1.5 sec. delay

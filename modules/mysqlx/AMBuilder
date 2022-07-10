@@ -17,18 +17,18 @@ if AMXX.mysql_path:
 
   binary.sources = []
 
-  if builder.target_platform is 'linux' or builder.target_platform is 'mac':
+  if builder.target_platform == 'linux' or builder.target_platform == 'mac':
     binary.compiler.defines += ['stricmp=strcasecmp']
     binary.compiler.linkflags += [
       os.path.join(AMXX.mysql_path, 'lib', 'libmysqlclient_r.a'),
       '-lpthread',
       '-lm',
     ]
-    if builder.target_platform is 'linux':
+    if builder.target_platform == 'linux':
       binary.compiler.linkflags += [
         '-lrt'
       ]
-  elif builder.target_platform is 'windows':
+  elif builder.target_platform == 'windows':
     binary.compiler.linkflags += [
       os.path.join(AMXX.mysql_path, 'lib', 'mysqlclient.lib'),
       'ws2_32.lib',

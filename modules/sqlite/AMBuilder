@@ -12,7 +12,7 @@ binary.compiler.defines += [
   'HAVE_STDINT_H',
 ]
 
-if builder.target_platform is 'linux' or builder.target_platform is 'mac':
+if builder.target_platform == 'linux' or builder.target_platform == 'mac':
   binary.compiler.defines += ['stricmp=strcasecmp']
   binary.compiler.postlink += ['-lpthread']
 

@@ -3,7 +3,7 @@ import os, platform
 
 lib = builder.compiler.StaticLibrary('zlib')
 
-if builder.target_platform is 'linux' or builder.target_platform is 'mac':
+if builder.target_platform == 'linux' or builder.target_platform == 'mac':
   lib.compiler.defines += [
     'HAVE_UNISTD_H'
   ]

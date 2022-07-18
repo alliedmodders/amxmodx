@@ -173,7 +173,7 @@ void PlayerPreThink_Post(edict_t *pEntity)
 	{
 		pPlayer->clearRound = 0.0f;
 		memset(static_cast<void *>(&pPlayer->round),0,sizeof(pPlayer->round));
-		memset(pPlayer->weaponsRnd,0,sizeof(pPlayer->weaponsRnd));
+		memset(&pPlayer->weaponsRnd,0,sizeof(pPlayer->weaponsRnd));
 	}
 
 	if (pPlayer->sendScore && pPlayer->sendScore < gpGlobals->time)

@@ -26,11 +26,13 @@ new AdminCount;
 
 new PLUGINNAME[] = "AMX Mod X"
 
+new g_users_ini[] = "users.ini"
+
 #define ADMIN_LOOKUP	(1<<0)
 #define ADMIN_NORMAL	(1<<1)
-#define ADMIN_STEAM		(1<<2)
+#define ADMIN_STEAM	(1<<2)
 #define ADMIN_IPADDR	(1<<3)
-#define ADMIN_NAME		(1<<4)
+#define ADMIN_NAME	(1<<4)
 
 new bool:g_CaseSensitiveName[MAX_PLAYERS + 1];
 
@@ -92,7 +94,7 @@ public plugin_init()
 #if defined USING_SQL
 	server_cmd("amx_sqladmins")
 #else
-	format(configsDir, 63, "%s/users.ini", configsDir)
+	formatex(configsDir, charsmax(configsDir), "%s/%s", configsDir, g_users_ini)
 	loadSettings(configsDir)					// Load admins accounts
 #endif
 }
@@ -127,7 +129,7 @@ public addadminfn(id, level, cid)
 			if (equali(t_arg, "name"))
 				idtype |= ADMIN_LOOKUP
 		} else {
-			console_print(id, "[%s] Unknown id type ^"%s^", use one of: steamid, ip, name", PLUGINNAME, t_arg)
+			engclient_print(id, engprint_console, "[%s] Unknown id type ^"%s^", use one of: steamid, ip, name", PLUGINNAME, t_arg)
 			return PLUGIN_HANDLED
 		}
 	}
@@ -203,7 +205,8 @@ public addadminfn(id, level, cid)
 	
 	if (idtype & ADMIN_LOOKUP && !player)
 	{
-		console_print(id, "%L", id, "CL_NOT_FOUND")
+		engclient_print(id, engprint_console, "%L", id, "CL_NOT_FOUND")
+		
 		return PLUGIN_HANDLED
 	}
 	
@@ -277,11 +280,11 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 		// Make sure that the users.ini file exists.
 		new configsDir[64]
 		get_configsdir(configsDir, charsmax(configsDir))
-		format(configsDir, charsmax(configsDir), "%s/users.ini", configsDir)
+		formatex(configsDir, charsmax(configsDir), "%s/%s", configsDir, g_users_ini)
 
 		if (!file_exists(configsDir))
 		{
-			console_print(id, "[%s] File ^"%s^" doesn't exist.", PLUGINNAME, configsDir)
+			engclient_print(id, engprint_console, "[%s] File ^"%s^" doesn't exist.", PLUGINNAME, configsDir)
 			return
 		}
 
@@ -303,7 +306,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 			
 			if (containi(line_flags, flags) != -1 && equal(line_steamid, auth))
 			{
-				console_print(id, "[%s] %s already exists!", PLUGINNAME, auth)
+				engclient_print(id, engprint_console, "[%s] %s already exists!", PLUGINNAME, auth)
 				return
 			}
 		}
@@ -319,10 +322,10 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 		{
 			formatex(linetoadd, charsmax(linetoadd), "^r^n^"%s^" ^"%s^" ^"%s^" ^"%s^" ; %s", auth, password, accessflags, flags, comment)
 		}
-		console_print(id, "Adding:^n%s", linetoadd)
+		engclient_print(id, engprint_console, "Adding:^n%s", linetoadd)
 
 		if (!write_file(configsDir, linetoadd))
-			console_print(id, "[%s] Failed writing to %s!", PLUGINNAME, configsDir)
+			engclient_print(id, engprint_console, "[%s] Failed writing to %s!", PLUGINNAME, configsDir)
 #if defined USING_SQL
 	}
 	
@@ -336,11 +339,11 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 	{
 		SQL_QueryError(query, error, charsmax(error))
 		server_print("[AMXX] %L", LANG_SERVER, "SQL_CANT_LOAD_ADMINS", error)
-		console_print(id, "[AMXX] %L", LANG_SERVER, "SQL_CANT_LOAD_ADMINS", error)
+		engclient_print(id, engprint_console, "[AMXX] %L", LANG_SERVER, "SQL_CANT_LOAD_ADMINS", error)
 	} else if (SQL_NumResults(query)) {
-		console_print(id, "[%s] %s already exists!", PLUGINNAME, auth)
+		engclient_print(id, engprint_console, "[%s] %s already exists!", PLUGINNAME, auth)
 	} else {
-		console_print(id, "Adding to database:^n^"%s^" ^"%s^" ^"%s^" ^"%s^"", auth, password, accessflags, flags)
+		engclient_print(id, engprint_console, "Adding to database:^n^"%s^" ^"%s^" ^"%s^" ^"%s^"", auth, password, accessflags, flags)
 	
 		SQL_QueryAndIgnore(sql, "REPLACE INTO `%s` (`auth`, `password`, `access`, `flags`) VALUES ('%s', '%s', '%s', '%s')", table, auth, password, accessflags, flags)
 	}
@@ -425,7 +428,7 @@ public adminSql()
 		new configsDir[64]
 		
 		get_configsdir(configsDir, charsmax(configsDir))
-		format(configsDir, charsmax(configsDir), "%s/users.ini", configsDir)
+		formatex(configsDir, charsmax(configsDir), "%s/%s", configsDir, g_users_ini)
 		loadSettings(configsDir) // Load admins accounts
 
 		return PLUGIN_HANDLED
@@ -512,7 +515,7 @@ public cmdReload(id, level, cid)
 	new filename[128]
 	
 	get_configsdir(filename, charsmax(filename))
-	format(filename, charsmax(filename), "%s/users.ini", filename)
+	formatex(filename, charsmax(filename), "%s/%s", filename, g_users_ini)
 
 	AdminCount = 0;
 	loadSettings(filename);		// Re-Load admins accounts
@@ -521,11 +524,11 @@ public cmdReload(id, level, cid)
 	{
 		if (AdminCount == 1)
 		{
-			console_print(id, "[AMXX] %L", LANG_SERVER, "LOADED_ADMIN");
+			engclient_print(id, engprint_console, "[AMXX] %L", LANG_SERVER, "LOADED_ADMIN");
 		}
 		else
 		{
-			console_print(id, "[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", AdminCount);
+			engclient_print(id, engprint_console, "[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", AdminCount);
 		}
 	}
 #else
@@ -535,9 +538,9 @@ public cmdReload(id, level, cid)
 	if (id != 0)
 	{
 		if (AdminCount == 1)
-			console_print(id, "[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN")
+			engclient_print(id, engprint_console, "[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN")
 		else
-			console_print(id, "[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", AdminCount)
+			engclient_print(id, engprint_console, "[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", AdminCount)
 	}
 #endif
 

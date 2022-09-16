@@ -26,7 +26,7 @@ new AdminCount;
 
 new PLUGINNAME[] = "AMX Mod X"
 
-new g_users_ini[] = "users.ini"
+static const g_users_ini[] = "users.ini"
 
 #define ADMIN_LOOKUP	(1<<0)
 #define ADMIN_NORMAL	(1<<1)
@@ -145,7 +145,7 @@ public addadminfn(id, level, cid)
 			idtype |= ADMIN_LOOKUP
 			player = cmd_target(id, arg, CMDTARGET_ALLOW_SELF | CMDTARGET_NO_BOTS)
 		} else {
-			new _steamid[44]
+			static _steamid[44]
 			static _players[MAX_PLAYERS], _num, _pv
 			get_players(_players, _num)
 			for (new _i=0; _i<_num; _i++)
@@ -206,7 +206,6 @@ public addadminfn(id, level, cid)
 	if (idtype & ADMIN_LOOKUP && !player)
 	{
 		engclient_print(id, engprint_console, "%L", id, "CL_NOT_FOUND")
-		
 		return PLUGIN_HANDLED
 	}
 	
@@ -218,8 +217,8 @@ public addadminfn(id, level, cid)
 		read_argv(3, password, charsmax(password))
 	}
 
-	new auth[33]
-	new Comment[MAX_NAME_LENGTH]; // name of player to pass to comment field
+	static auth[33]
+	static Comment[MAX_NAME_LENGTH]; // name of player to pass to comment field
 	if (idtype & ADMIN_LOOKUP)
 	{
 		get_user_name(player, Comment, charsmax(Comment))
@@ -242,21 +241,21 @@ public addadminfn(id, level, cid)
 	new type[16], len
 	
 	if (idtype & ADMIN_STEAM)
-		len += format(type[len], charsmax(type) - len, "c")
+		len += formatex(type[len], charsmax(type) - len, "c")
 	else if (idtype & ADMIN_IPADDR)
-		len += format(type[len], charsmax(type) - len, "d")
+		len += formatex(type[len], charsmax(type) - len, "d")
 	
 	if (strlen(password) > 0)
-		len += format(type[len], charsmax(type) - len, "a")
+		len += formatex(type[len], charsmax(type) - len, "a")
 	else
-		len += format(type[len], charsmax(type) - len, "e")
+		len += formatex(type[len], charsmax(type) - len, "e")
 	
 	AddAdmin(id, auth, flags, password, type, Comment)
 	cmdReload(id, ADMIN_CFG, 0)
 
 	if (player > 0)
 	{
-		new name[MAX_NAME_LENGTH]
+		static name[MAX_NAME_LENGTH]
 		get_user_info(player, "name", name, charsmax(name))
 		accessUser(player, name)
 	}
@@ -544,8 +543,8 @@ public cmdReload(id, level, cid)
 	}
 #endif
 
-	new players[MAX_PLAYERS], num, pv
-	new name[MAX_NAME_LENGTH]
+	static players[MAX_PLAYERS], num, pv
+	static name[MAX_NAME_LENGTH]
 	get_players(players, num)
 	for (new i=0; i<num; i++)
 	{
@@ -648,7 +647,7 @@ getAccess(id, name[], authid[], ip[], password[])
 		if (Flags & FLAG_NOPASS)
 		{
 			result |= 8
-			new sflags[32]
+			static sflags[32]
 			
 			get_flags(Access, sflags, charsmax(sflags))
 			set_user_flags(id, Access)
@@ -665,7 +664,7 @@ getAccess(id, name[], authid[], ip[], password[])
 				result |= 12
 				set_user_flags(id, Access)
 				
-				new sflags[32]
+				static sflags[32]
 				get_flags(Access, sflags, charsmax(sflags))
 				
 				log_amx("Login: ^"%s<%d><%s><>^" became an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")", name, get_user_userid(id), authid, AuthData, sflags, ip)
@@ -713,7 +712,7 @@ accessUser(id, name[] = "")
 {
 	remove_user_flags(id)
 	
-	new userip[32], userauthid[32], password[32], passfield[32], username[MAX_NAME_LENGTH]
+	static userip[32], userauthid[32], password[32], passfield[32], username[MAX_NAME_LENGTH]
 	
 	get_user_ip(id, userip, charsmax(userip), 1)
 	get_user_authid(id, userauthid, charsmax(userauthid))
@@ -763,7 +762,7 @@ public client_infochanged(id)
 		return PLUGIN_CONTINUE
 	}
 
-	new newname[MAX_NAME_LENGTH], oldname[MAX_NAME_LENGTH]
+	static newname[MAX_NAME_LENGTH], oldname[MAX_NAME_LENGTH]
 	
 	get_user_name(id, oldname, charsmax(oldname))
 	get_user_info(id, "name", newname, charsmax(newname))

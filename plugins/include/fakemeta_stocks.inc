@@ -89,7 +89,7 @@ stock EF_CreateEntity() {
 stock EF_RemoveEntity(const ENTITY) {
 	return engfunc(EngFunc_RemoveEntity, ENTITY);
 }
-stock EF_CreateNamedEntity(const CLASSNAME) {
+stock EF_CreateNamedEntity(const CLASSNAME[]) {
 	return engfunc(EngFunc_CreateNamedEntity, CLASSNAME);
 }
 stock EF_MakeStatic(const ENTITY) {

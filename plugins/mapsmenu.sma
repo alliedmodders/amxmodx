@@ -42,39 +42,62 @@ public plugin_init()
 	register_menucmd(register_menuid("The winner: "), 3, "actionResult")
 
 	g_mapName=ArrayCreate(32);
-	
+
 	new maps_ini_file[64];
 	get_configsdir(maps_ini_file, charsmax(maps_ini_file));
 	format(maps_ini_file, charsmax(maps_ini_file), "%s/maps.ini", maps_ini_file);
 
 	if (!file_exists(maps_ini_file))
 		get_cvar_string("mapcyclefile", maps_ini_file, charsmax(maps_ini_file));
-		
+
 	if (!file_exists(maps_ini_file))
 		format(maps_ini_file, charsmax(maps_ini_file), "mapcycle.txt")
-	
+
 	load_settings(maps_ini_file)
 
 	g_coloredMenus = colored_menus()
 }
 
-public autoRefuse()
+public autoRefuse(id)
 {
 	log_amx("Vote: %L", "en", "RESULT_REF")
-	client_print(0, print_chat, "%L", LANG_PLAYER, "RESULT_REF")
+	if(is_user_connected(id))
+	{
+		@clr_menu(id)
+		client_print(0, print_chat, "%L", LANG_PLAYER, "RESULT_REF")
+	}
+}
+
+public client_disconnected(id)
+if(!is_user_connecting(id))
+	@clr_menu(id)
+
+public client_putinserver(id)
+if(is_user_connected(id))
+	@clr_menu(id)
+
+@clr_menu(id)
+if(id > 0 && id < 33)
+{
+	g_voteSelectedNum[id]= 0
+
+	g_voteSelected[id][0]= 0
+	g_voteSelected[id][1]= 0
+	g_voteSelected[id][2]= 0
+	g_voteSelected[id][3]= 0
 }
 
 public actionResult(id, key)
 {
-	remove_task(4545454)
-	
+	remove_task(id)
+
 	switch (key)
 	{
 		case 0:
 		{
 			new _modName[10]
 			get_modname(_modName, charsmax(_modName))
-			
+
 			if (!equal(_modName, "zp"))
 			{
 				message_begin(MSG_ALL, SVC_INTERMISSION)
@@ -83,14 +106,14 @@ public actionResult(id, key)
 
 			new tempMap[32];
 			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
-			
+
 			set_task(2.0, "delayedChange", 0, tempMap, strlen(tempMap) + 1)
 			log_amx("Vote: %L", "en", "RESULT_ACC")
 			client_print(0, print_chat, "%L", LANG_PLAYER, "RESULT_ACC")
 		}
-		case 1: autoRefuse()
+		case 1: autoRefuse(id)
 	}
-	
+
 	return PLUGIN_HANDLED
 }
 
@@ -98,11 +121,11 @@ public checkVotes(id)
 {
 	id -= 34567
 	new num, ppl[MAX_PLAYERS], a = 0
-	
+
 	get_players(ppl, num, "c")
 	if (num == 0) num = 1
 	g_choosed = -1
-	
+
 	for (new i = 0; i < g_voteSelectedNum[id]; ++i)
 		if (g_voteCount[a] < g_voteCount[i])
 			a = i
@@ -119,7 +142,7 @@ public checkVotes(id)
 		client_print(0, print_chat, "%L %s", LANG_PLAYER, "VOTE_SUCCESS", tempMap);
 		log_amx("Vote: %L %s", "en", "VOTE_SUCCESS", tempMap);
 	}
-	
+
 	if (g_choosed != -1)
 	{
 		if (is_user_connected(id))
@@ -128,16 +151,16 @@ public checkVotes(id)
 			new tempMap[32];
 			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
 			new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L: \w%s^n^n" : "%L: %s^n^n", id, "THE_WINNER", tempMap)
-			
+
 			len += format(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", id, "WANT_CONT")
 			format(menuBody[len], charsmax(menuBody) - len, "^n1. %L^n2. %L", id, "YES", id, "NO")
 
 			show_menu(id, 0x03, menuBody, 10, "The winner: ")
-			set_task(10.0, "autoRefuse", 4545454)
+			set_task(10.0, "autoRefuse", id)
 		} else {
 			new _modName[10]
 			get_modname(_modName, charsmax(_modName))
-			
+
 			if (!equal(_modName, "zp"))
 			{
 				message_begin(MSG_ALL, SVC_INTERMISSION)
@@ -149,9 +172,10 @@ public checkVotes(id)
 		}
 	} else {
 		client_print(0, print_chat, "%L", LANG_PLAYER, "VOTE_FAILED")
+		@clr_menu(id)
 		log_amx("Vote: %L", "en", "VOTE_FAILED")
 	}
-	
+
 	remove_task(34567 + id)
 }
 
@@ -163,20 +187,20 @@ public voteCount(id, key)
 		remove_task(34567 + id)
 		set_cvar_float("amx_last_voting", get_gametime())
 		log_amx("Vote: Cancel vote session")
-		
+		@clr_menu(id)
 		return PLUGIN_HANDLED
 	}
-	
+
 	if (get_cvar_float("amx_vote_answers"))
 	{
 		new name[MAX_NAME_LENGTH]
-		
+
 		get_user_name(id, name, charsmax(name))
 		client_print(0, print_chat, "%L", LANG_PLAYER, "X_VOTED_FOR", name, key + 1)
 	}
-	
+
 	++g_voteCount[key]
-	
+
 	return PLUGIN_HANDLED
 }
 
@@ -190,10 +214,13 @@ isMapSelected(id, pos)
 
 displayVoteMapsMenu(id, pos)
 {
-	if (pos < 0)
-		return
-
 	new menuBody[512], b = 0, start = pos * 7
+	if (pos < 0)
+	{
+		@clr_menu(id)//menu would go away if exiting and could not vote again
+		start = pos = g_menuPosition[id] = 0//without resetting pos would have to go forward in menu once to stop the menu from disappearing
+		return
+	}
 
 	if (start >= g_mapNums)
 		start = pos = g_menuPosition[id] = 0
@@ -316,40 +343,42 @@ public actionVoteMapMenu(id, key)
 			if (voting > get_gametime())
 			{
 				client_print(id, print_chat, "%L", id, "ALREADY_VOT")
+				@clr_menu(id)
 				return PLUGIN_HANDLED
 			}
-
+		
 			if (voting && voting + get_cvar_float("amx_vote_delay") > get_gametime())
 			{
 				client_print(id, print_chat, "%L", id, "VOT_NOW_ALLOW")
+
 				return PLUGIN_HANDLED
 			}
-
+		
 			g_voteCount = {0, 0, 0, 0, 0}
-			
+		
 			new Float:vote_time = get_cvar_float("amx_vote_time") + 2.0
 			set_cvar_float("amx_last_voting", get_gametime() + vote_time)
 			new iVoteTime = floatround(vote_time)
-
+		
 			set_task(vote_time, "checkVotes", 34567 + id)
-
+		
 			new menuBody[512]
 			new players[MAX_PLAYERS]
 			new pnum, keys, len
-
+		
 			get_players(players, pnum)
-
+		
 			if (g_voteSelectedNum[id] > 1)
 			{
 				len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L^n\w^n" : "%L^n^n", id, "WHICH_MAP")
-				
+		
 				for (new c = 0; c < g_voteSelectedNum[id]; ++c)
 				{
 					ArrayGetString(g_mapName, g_voteSelected[id][c], tempMap, charsmax(tempMap));
 					len += format(menuBody[len], charsmax(menuBody) - len, "%d. %s^n", c + 1, tempMap)
 					keys |= (1<<c)
 				}
-				
+		
 				keys |= (1<<8)
 				len += format(menuBody[len], charsmax(menuBody) - len, "^n9. %L^n", id, "NONE")
 			} else {
@@ -357,25 +386,25 @@ public actionVoteMapMenu(id, key)
 				len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L^n%s?^n\w^n1. %L^n2. %L^n" : "%L^n%s?^n^n1. %L^n2. %L^n", id, "CHANGE_MAP_TO", tempMap, id, "YES", id, "NO")
 				keys = MENU_KEY_1|MENU_KEY_2
 			}
-
+		
 			new menuName[64]
 			format(menuName, charsmax(menuName), "%L", "en", "WHICH_MAP")
-
+		
 			for (new b = 0; b < pnum; ++b)
 				if (players[b] != id)
 					show_menu(players[b], keys, menuBody, iVoteTime, menuName)
-
+		
 			format(menuBody[len], charsmax(menuBody), "^n0. %L", id, "CANC_VOTE")
 			keys |= MENU_KEY_0
 			show_menu(id, keys, menuBody, iVoteTime, menuName)
-
+		
 			new authid[32], name[MAX_NAME_LENGTH]
-			
+		
 			get_user_authid(id, authid, charsmax(authid))
 			get_user_name(id, name, charsmax(name))
-
+		
 			show_activity_key("ADMIN_V_MAP_1", "ADMIN_V_MAP_2", name);
-
+		
 			new tempMapA[32];
 			new tempMapB[32];
 			new tempMapC[32];
@@ -412,9 +441,9 @@ public actionVoteMapMenu(id, key)
 			{
 				copy(tempMapD, charsmax(tempMapD), "");
 			}
-			
-			log_amx("Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")", 
-					name, get_user_userid(id), authid, 
+		
+			log_amx("Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^")",
+					name, get_user_userid(id), authid,
 					tempMapA, tempMapB, tempMapC, tempMapD)
 		}
 		case 8: displayVoteMapsMenu(id, ++g_menuPosition[id])
@@ -425,7 +454,6 @@ public actionVoteMapMenu(id, key)
 			displayVoteMapsMenu(id, g_menuPosition[id])
 		}
 	}
-
 	return PLUGIN_HANDLED
 }
 
@@ -446,23 +474,23 @@ public actionMapsMenu(id, key)
 				message_begin(MSG_ALL, SVC_INTERMISSION)
 				message_end()
 			}
-			
+
 			new authid[32], name[MAX_NAME_LENGTH]
-			
+
 			get_user_authid(id, authid, charsmax(authid))
 			get_user_name(id, name, charsmax(name))
 
 			new tempMap[32];
 			ArrayGetString(g_mapName, a, tempMap, charsmax(tempMap));
-			
+
 			show_activity_key("ADMIN_CHANGEL_1", "ADMIN_CHANGEL_2", name, tempMap);
 
 			log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"", name, get_user_userid(id), authid, tempMap)
 			set_task(2.0, "delayedChange", 0, tempMap, strlen(tempMap) + 1)
 			/* displayMapsMenu(id, g_menuPosition[id]) */
 		}
+
 	}
-	
 	return PLUGIN_HANDLED
 }
 
@@ -505,6 +533,7 @@ displayMapsMenu(id, pos)
 	format(menuName, 63, "%L", "en", "CHANGLE_MENU")
 
 	show_menu(id, keys, menuBody, -1, menuName)
+
 }
 stock bool:ValidMap(mapname[])
 {
@@ -514,7 +543,7 @@ stock bool:ValidMap(mapname[])
 	}
 	// If the is_map_valid check failed, check the end of the string
 	new len = strlen(mapname) - 4;
-	
+
 	// The mapname was too short to possibly house the .bsp extension
 	if (len < 0)
 	{
@@ -525,30 +554,30 @@ stock bool:ValidMap(mapname[])
 		// If the ending was .bsp, then cut it off.
 		// the string is byref'ed, so this copies back to the loaded text.
 		mapname[len] = '^0';
-		
+
 		// recheck
 		if ( is_map_valid(mapname) )
 		{
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
 load_settings(filename[])
 {
 	new fp = fopen(filename, "r");
-	
+
 	if (!fp)
 	{
 		return 0;
 	}
-		
+
 
 	new text[256];
 	new tempMap[32];
-	
+
 	while (fgets(fp, text, charsmax(text)))
 	{
 		if (text[0] == ';')
@@ -563,7 +592,7 @@ load_settings(filename[])
 		{
 			continue;
 		}
-		
+
 		ArrayPushString(g_mapName, tempMap);
 		g_mapNums++;
 	}

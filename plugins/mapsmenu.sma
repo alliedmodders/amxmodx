@@ -36,8 +36,8 @@ public plugin_init()
 	register_clcmd("amx_votemapmenu", "cmdVoteMapMenu", ADMIN_VOTE, "- displays votemap menu")
 
 	register_menucmd(register_menuid("Changelevel Menu"), 1023, "actionMapsMenu")
-	register_menucmd(register_menuid("Which map do you want?"), 527, "voteCount")
-	register_menucmd(register_menuid("Change map to"), 527, "voteCount")
+	register_menucmd(register_menuid("Which map do you want?"), 1023, "voteCount")
+	register_menucmd(register_menuid("Change map to"), 1023, "voteCount")
 	register_menucmd(register_menuid("Votemap Menu"), 1023, "actionVoteMapMenu")
 	register_menucmd(register_menuid("The winner: "), 3, "actionResult")
 
@@ -99,15 +99,16 @@ public actionResult(id, key)
 	{
 		case 0:
 		{
+/*
+			//rough
 			new _modName[10]
 			get_modname(_modName, charsmax(_modName))
-
 			if (!equal(_modName, "zp"))
 			{
 				message_begin(MSG_ALL, SVC_INTERMISSION)
 				message_end()
 			}
-
+*/
 			new tempMap[32];
 			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
 
@@ -134,7 +135,7 @@ public checkVotes(id)
 		if (g_voteCount[a] < g_voteCount[i])
 			a = i
 
-	new votesNum = g_voteCount[0] + g_voteCount[1] + g_voteCount[2] + g_voteCount[3] + g_voteCount[4]
+	new votesNum = g_voteCount[0] + g_voteCount[1] + g_voteCount[2] + g_voteCount[3] + g_voteCount[4] +  g_voteCount[5]+ g_voteCount[6] + g_voteCount[7]
 	new iRatio = votesNum ? floatround(get_cvar_float("amx_votemap_ratio") * float(votesNum), floatround_ceil) : 1
 	new iResult = g_voteCount[a]
 
@@ -162,6 +163,8 @@ public checkVotes(id)
 			show_menu(id, 0x03, menuBody, 10, "The winner: ")
 			set_task(10.0, "autoRefuse", id)
 		} else {
+			/*
+			//rough
 			new _modName[10]
 			get_modname(_modName, charsmax(_modName))
 
@@ -170,6 +173,7 @@ public checkVotes(id)
 				message_begin(MSG_ALL, SVC_INTERMISSION)
 				message_end()
 			}
+			* */
 			new tempMap[32];
 			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
 			set_task(2.0, "delayedChange", 0, tempMap, strlen(tempMap) + 1)
@@ -185,7 +189,7 @@ public checkVotes(id)
 
 public voteCount(id, key)
 {
-	if (key > 3)
+	if (key > 7)
 	{
 		client_print(0, print_chat, "%L", LANG_PLAYER, "VOT_CANC")
 		remove_task(34567 + id)
@@ -273,7 +277,7 @@ displayVoteMapsMenu(id, pos)
 	else
 		len += format(menuBody[len], charsmax(menuBody) - len, "^n^n")
 
-	for (new c = 0; c < 9; c++)
+	for (new c = 0; c < 8; c++)
 	{
 		if (c < g_voteSelectedNum[id])
 		{
@@ -333,6 +337,7 @@ public cmdMapsMenu(id, level, cid)
 public delayedChange(mapname[])
 {
 	engine_changelevel(mapname)
+	//server_cmd("changelevel %s", mapname) //per safemode plugin project
 }
 
 public actionVoteMapMenu(id, key)
@@ -366,7 +371,7 @@ public actionVoteMapMenu(id, key)
 
 			set_task(vote_time, "checkVotes", 34567 + id)
 
-			new menuBody[512]
+			new menuBody[1024]
 			new players[MAX_PLAYERS]
 			new pnum, keys, len
 
@@ -376,14 +381,14 @@ public actionVoteMapMenu(id, key)
 			{
 				len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L^n\w^n" : "%L^n^n", id, "WHICH_MAP")
 
-				for (new c = 0; c < g_voteSelectedNum[id]; ++c)
+				for (new g = 0; g < g_voteSelectedNum[id]; ++g)
 				{
-					ArrayGetString(g_mapName, g_voteSelected[id][c], tempMap, charsmax(tempMap));
-					len += format(menuBody[len], charsmax(menuBody) - len, "%d. %s^n", c + 1, tempMap)
-					keys |= (1<<c)
+					ArrayGetString(g_mapName, g_voteSelected[id][g], tempMap, charsmax(tempMap));
+					len += format(menuBody[len], charsmax(menuBody) - len, "%d. %s^n", g + 1, tempMap)
+					keys |= (1<<g)
 				}
 
-				keys |= (1<<8)
+				keys |= (1<<9)
 				len += format(menuBody[len], charsmax(menuBody) - len, "^n9. %L^n", id, "NONE")
 			} else {
 				ArrayGetString(g_mapName, g_voteSelected[id][0], tempMap, charsmax(tempMap));
@@ -391,7 +396,7 @@ public actionVoteMapMenu(id, key)
 				keys = MENU_KEY_1|MENU_KEY_2
 			}
 
-			new menuName[64]
+			new menuName[512]
 			format(menuName, charsmax(menuName), "%L", "en", "WHICH_MAP")
 
 			for (new b = 0; b < pnum; ++b)
@@ -450,8 +455,6 @@ public actionVoteMapMenu(id, key)
 			{
 				copy(tempMapD, charsmax(tempMapD), "");
 			}
-
-
 			if (g_voteSelectedNum[id] > 4)
 			{
 				ArrayGetString(g_mapName, g_voteSelected[id][4], tempMapE, charsmax(tempMapE));
@@ -488,14 +491,13 @@ public actionVoteMapMenu(id, key)
 				copy(tempMapH, charsmax(tempMapH), "");
 			}
 			log_amx("Vote: ^"%s<%d><%s><>^" vote maps (map#1 ^"%s^") (map#2 ^"%s^") (map#3 ^"%s^") (map#4 ^"%s^") (map#5 ^"%s^") (map#6 ^"%s^") (map#7 ^"%s^") (map#8 ^"%s^")",
-					name, get_user_userid(id), authid,
-					tempMapA, tempMapB, tempMapC, tempMapD, tempMapE, tempMapF, tempMapG, tempMapH)
+					name, get_user_userid(id), authid, tempMapA, tempMapB, tempMapC, tempMapD, tempMapE, tempMapF, tempMapG, tempMapH)
 		}
 		case 8: displayVoteMapsMenu(id, ++g_menuPosition[id])
 		case 9: displayVoteMapsMenu(id, --g_menuPosition[id])
 		default:
 		{
-			g_voteSelected[id][g_voteSelectedNum[id]++] = g_menuPosition[id] * 11 + key
+			g_voteSelected[id][g_voteSelectedNum[id]++] = g_menuPosition[id] * 7 + key
 			displayVoteMapsMenu(id, g_menuPosition[id])
 		}
 	}
@@ -511,6 +513,7 @@ public actionMapsMenu(id, key)
 		default:
 		{
 			new a = g_menuPosition[id] * 8 + key
+			/*
 			new _modName[10]
 
 			get_modname(_modName, charsmax(_modName))
@@ -519,7 +522,7 @@ public actionMapsMenu(id, key)
 				message_begin(MSG_ALL, SVC_INTERMISSION)
 				message_end()
 			}
-
+			*/
 			new authid[32], name[MAX_NAME_LENGTH]
 
 			get_user_authid(id, authid, charsmax(authid))
@@ -574,8 +577,8 @@ displayMapsMenu(id, pos)
 	else
 		format(menuBody[len], charsmax(menuBody) - len, "^n0. %L", id, pos ? "BACK" : "EXIT")
 
-	new menuName[64]
-	format(menuName, 63, "%L", "en", "CHANGLE_MENU")
+	new menuName[128]
+	format(menuName, charsmax(menuName), "%L", "en", "CHANGLE_MENU")
 
 	show_menu(id, keys, menuBody, -1, menuName)
 

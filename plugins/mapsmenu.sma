@@ -13,6 +13,7 @@
 
 #include <amxmodx>
 #include <amxmisc>
+#define charsmin                  -1
 
 new Array:g_mapName;
 new g_mapNums
@@ -41,9 +42,9 @@ public plugin_init()
 	register_menucmd(register_menuid("Votemap Menu"), 1023, "actionVoteMapMenu")
 	register_menucmd(register_menuid("The winner: "), 3, "actionResult")
 
-	g_mapName=ArrayCreate(32);
+	g_mapName=ArrayCreate(MAX_RESOURCE_PATH_LENGTH);
 
-	new maps_ini_file[64];
+	new maps_ini_file[MAX_RESOURCE_PATH_LENGTH];
 	get_configsdir(maps_ini_file, charsmax(maps_ini_file));
 	format(maps_ini_file, charsmax(maps_ini_file), "%s/maps.ini", maps_ini_file);
 
@@ -109,7 +110,7 @@ public actionResult(id, key)
 				message_end()
 			}
 */
-			new tempMap[32];
+			new tempMap[MAX_RESOURCE_PATH_LENGTH];
 			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
 
 			set_task(2.0, "delayedChange", 0, tempMap, strlen(tempMap) + 1)
@@ -336,6 +337,13 @@ public cmdMapsMenu(id, level, cid)
 
 public delayedChange(mapname[])
 {
+	if(is_plugin_loaded("safe_mode.amxx",true)!=charsmin)
+	{
+		log_amx "Pushing map %s through safemode plugin", mapname
+		callfunc_begin("@cmd_call","safe_mode.amxx")
+		callfunc_push_str(mapname, false)
+		callfunc_end()
+	}
 	engine_changelevel(mapname)
 	//server_cmd("changelevel %s", mapname) //per safemode plugin project
 }
@@ -396,7 +404,7 @@ public actionVoteMapMenu(id, key)
 				keys = MENU_KEY_1|MENU_KEY_2
 			}
 
-			new menuName[512]
+			new menuName[MAX_MENU_LENGTH]
 			format(menuName, charsmax(menuName), "%L", "en", "WHICH_MAP")
 
 			for (new b = 0; b < pnum; ++b)
@@ -407,21 +415,21 @@ public actionVoteMapMenu(id, key)
 			keys |= MENU_KEY_0
 			show_menu(id, keys, menuBody, iVoteTime, menuName)
 
-			new authid[32], name[MAX_NAME_LENGTH]
+			new authid[MAX_AUTHID_LENGTH], name[MAX_NAME_LENGTH]
 
 			get_user_authid(id, authid, charsmax(authid))
 			get_user_name(id, name, charsmax(name))
 
 			show_activity_key("ADMIN_V_MAP_1", "ADMIN_V_MAP_2", name);
 
-			new tempMapA[32];
-			new tempMapB[32];
-			new tempMapC[32];
-			new tempMapD[32];
-			new tempMapE[32];
-			new tempMapF[32];
-			new tempMapG[32];
-			new tempMapH[32];
+			new tempMapA[MAX_RESOURCE_PATH_LENGTH];
+			new tempMapB[MAX_RESOURCE_PATH_LENGTH];
+			new tempMapC[MAX_RESOURCE_PATH_LENGTH];
+			new tempMapD[MAX_RESOURCE_PATH_LENGTH];
+			new tempMapE[MAX_RESOURCE_PATH_LENGTH];
+			new tempMapF[MAX_RESOURCE_PATH_LENGTH];
+			new tempMapG[MAX_RESOURCE_PATH_LENGTH];
+			new tempMapH[MAX_RESOURCE_PATH_LENGTH];
 
 			if (g_voteSelectedNum[id] > 0)
 			{
@@ -523,12 +531,12 @@ public actionMapsMenu(id, key)
 				message_end()
 			}
 			*/
-			new authid[32], name[MAX_NAME_LENGTH]
+			new authid[MAX_AUTHID_LENGTH], name[MAX_NAME_LENGTH]
 
 			get_user_authid(id, authid, charsmax(authid))
 			get_user_name(id, name, charsmax(name))
 
-			new tempMap[32];
+			new tempMap[MAX_RESOURCE_PATH_LENGTH];
 			ArrayGetString(g_mapName, a, tempMap, charsmax(tempMap));
 
 			show_activity_key("ADMIN_CHANGEL_1", "ADMIN_CHANGEL_2", name, tempMap);
@@ -547,8 +555,8 @@ displayMapsMenu(id, pos)
 	if (pos < 0)
 		return
 
-	new menuBody[512]
-	new tempMap[32]
+	new menuBody[MAX_MENU_LENGTH]
+	new tempMap[MAX_RESOURCE_PATH_LENGTH]
 	new start = pos * 8
 	new b = 0
 
@@ -623,8 +631,8 @@ load_settings(filename[])
 	}
 
 
-	new text[256];
-	new tempMap[32];
+	new text[MAX_USER_INFO_LENGTH];
+	new tempMap[MAX_RESOURCE_PATH_LENGTH];
 
 	while (fgets(fp, text, charsmax(text)))
 	{

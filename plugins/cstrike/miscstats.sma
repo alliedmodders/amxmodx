@@ -533,132 +533,135 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 		}
 	}
 
-	new const CsTeams:team = cs_get_user_team(victim);
-
-	if (EnemyRemaining && CS_TEAM_T <= team <= CS_TEAM_CT && is_user_connected(victim))
+	if(is_user_connected(victim))
 	{
-		new const victimTeammatesCount = get_playersnum_ex(GetPlayers_ExcludeDead | GetPlayers_MatchTeam, g_teamsNames[team]);
+		new const CsTeams:team = cs_get_user_team(victim);
 
-		if (victimTeammatesCount)
+		if (EnemyRemaining && CS_TEAM_T <= team <= CS_TEAM_CT)
 		{
-			new killerTeammatesList[MAX_PLAYERS], killerTeammatesCount;
-			get_players_ex(killerTeammatesList, killerTeammatesCount, GetPlayers_ExcludeDead | GetPlayers_MatchTeam, g_teamsNames[CsTeams:(any:team % 2 + 1)]);
+			new const victimTeammatesCount = get_playersnum_ex(GetPlayers_ExcludeDead | GetPlayers_MatchTeam, g_teamsNames[team]);
 
-			if (killerTeammatesCount)
+			if (victimTeammatesCount)
 			{
-				set_hudmessage(255, 255, 255, 0.02, 0.85, 2, 0.05, 0.1, 0.02, 3.0, -1);
+				new killerTeammatesList[MAX_PLAYERS], killerTeammatesCount;
+				get_players_ex(killerTeammatesList, killerTeammatesCount, GetPlayers_ExcludeDead | GetPlayers_MatchTeam, g_teamsNames[CsTeams:(any:team % 2 + 1)]);
 
-				for (new teammate; teammate < killerTeammatesCount; ++teammate)
+				if (killerTeammatesCount)
 				{
-					victimTeammatesCount > 1 ?
-						ShowSyncHudMsg(killerTeammatesList[teammate], g_bottom_sync, "%l", "REMAINING_ENEMIES", victimTeammatesCount) :
-						ShowSyncHudMsg(killerTeammatesList[teammate], g_bottom_sync, "%l","REMAINING_ENEMY");
-				}
-			}
-		}
-	}
+					set_hudmessage(255, 255, 255, 0.02, 0.85, 2, 0.05, 0.1, 0.02, 3.0, -1);
 
-	if (LastMan || LastManSound)
-	{
-		new cts[MAX_PLAYERS], ts[MAX_PLAYERS], ctsnum, tsnum, b
-		get_players(cts, ctsnum, "ae", "CT")
-		get_players(ts, tsnum, "ae", "TERRORIST")
-		
-		if( victim_alive )
-		{
-			switch( team )
-			{
-				case CS_TEAM_T:
-				{
-					for(b=0; b<tsnum; b++)
+					for (new teammate; teammate < killerTeammatesCount; ++teammate)
 					{
-						if( ts[b] == victim )
-						{
-							ts[b] = ts[--tsnum]
-							break
-						}
-					}
-				}
-				case CS_TEAM_CT:
-				{
-					for(b=0; b<ctsnum; b++)
-					{
-						if( cts[b] == victim )
-						{
-							cts[b] = cts[--ctsnum]
-							break
-						}
+						victimTeammatesCount > 1 ?
+							ShowSyncHudMsg(killerTeammatesList[teammate], g_bottom_sync, "%l", "REMAINING_ENEMIES", victimTeammatesCount) :
+							ShowSyncHudMsg(killerTeammatesList[teammate], g_bottom_sync, "%l","REMAINING_ENEMY");
 					}
 				}
 			}
 		}
 
-		if (ctsnum == 1 && tsnum == 1)
+		if (LastMan || LastManSound)
 		{
-			if( LastMan )
-			{
-				new ctname[MAX_NAME_LENGTH], tname[MAX_NAME_LENGTH]
-				
-				get_user_name(cts[0], ctname, charsmax(ctname))
-				get_user_name(ts[0], tname, charsmax(tname))
-				
-				set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
-				
-				if( LastManHealth )
-				{
-					ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %s (%d HP)", ctname, get_user_health(cts[0]), tname, get_user_health(ts[0]))
-				}
-				else
-				{
-					ShowSyncHudMsg(0, g_center1_sync, "%s vs. %s", ctname, tname)
-				}
-			}
+			new cts[MAX_PLAYERS], ts[MAX_PLAYERS], ctsnum, tsnum, b
+			get_players(cts, ctsnum, "ae", "CT")
+			get_players(ts, tsnum, "ae", "TERRORIST")
 			
-			if( LastManSound )
+			if( victim_alive )
 			{
-				play_sound(0, g_lastmansound_duel)
-			}
-		}
-		else if (!g_LastAnnounce)
-		{
-			new oposite = 0, CsTeams:_team
-			
-			if (ctsnum == 1 && tsnum > 1)
-			{
-				g_LastAnnounce = cts[0]
-				oposite = tsnum
-				_team = CS_TEAM_T
-			}
-			else if (tsnum == 1 && ctsnum > 1)
-			{
-				g_LastAnnounce = ts[0]
-				oposite = ctsnum
-				_team = CS_TEAM_CT
+				switch( team )
+				{
+					case CS_TEAM_T:
+					{
+						for(b=0; b<tsnum; b++)
+						{
+							if( ts[b] == victim )
+							{
+								ts[b] = ts[--tsnum]
+								break
+							}
+						}
+					}
+					case CS_TEAM_CT:
+					{
+						for(b=0; b<ctsnum; b++)
+						{
+							if( cts[b] == victim )
+							{
+								cts[b] = cts[--ctsnum]
+								break
+							}
+						}
+					}
+				}
 			}
 
-			if (g_LastAnnounce)
+			if (ctsnum == 1 && tsnum == 1)
 			{
 				if( LastMan )
 				{
-					new name[MAX_NAME_LENGTH]
-				
-					get_user_name(g_LastAnnounce, name, charsmax(name))
-				
-					set_hudmessage(0, 255, 255, -1.0, 0.38, 0, 6.0, 6.0, 0.5, 0.15, -1)
+					new ctname[MAX_NAME_LENGTH], tname[MAX_NAME_LENGTH]
+					
+					get_user_name(cts[0], ctname, charsmax(ctname))
+					get_user_name(ts[0], tname, charsmax(tname))
+					
+					set_hudmessage(0, 255, 255, -1.0, 0.35, 0, 6.0, 6.0, 0.5, 0.15, -1)
 					
 					if( LastManHealth )
 					{
-						ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+						ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %s (%d HP)", ctname, get_user_health(cts[0]), tname, get_user_health(ts[0]))
 					}
 					else
 					{
-						ShowSyncHudMsg(0, g_center1_sync, "%s vs. %d %s%s: %L", name, oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+						ShowSyncHudMsg(0, g_center1_sync, "%s vs. %s", ctname, tname)
 					}
 				}
 				
-				if ( LastManSound && g_connected[g_LastAnnounce] )
+				if( LastManSound )
 				{
-					play_sound(g_LastAnnounce, g_lastmansound_1vsothers)
+					play_sound(0, g_lastmansound_duel)
+				}
+			}
+			else if (!g_LastAnnounce)
+			{
+				new oposite = 0, CsTeams:_team
+				
+				if (ctsnum == 1 && tsnum > 1)
+				{
+					g_LastAnnounce = cts[0]
+					oposite = tsnum
+					_team = CS_TEAM_T
+				}
+				else if (tsnum == 1 && ctsnum > 1)
+				{
+					g_LastAnnounce = ts[0]
+					oposite = ctsnum
+					_team = CS_TEAM_CT
+				}
+
+				if (g_LastAnnounce)
+				{
+					if( LastMan )
+					{
+						new name[MAX_NAME_LENGTH]
+					
+						get_user_name(g_LastAnnounce, name, charsmax(name))
+					
+						set_hudmessage(0, 255, 255, -1.0, 0.38, 0, 6.0, 6.0, 0.5, 0.15, -1)
+						
+						if( LastManHealth )
+						{
+							ShowSyncHudMsg(0, g_center1_sync, "%s (%d HP) vs. %d %s%s: %L", name, get_user_health(g_LastAnnounce), oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+						}
+						else
+						{
+							ShowSyncHudMsg(0, g_center1_sync, "%s vs. %d %s%s: %L", name, oposite, g_teamsNames[_team], (oposite == 1) ? "" : "S", LANG_PLAYER, g_LastMessages[random_num(0, 3)])
+						}
+					}
+					
+					if ( LastManSound && g_connected[g_LastAnnounce] )
+					{
+						play_sound(g_LastAnnounce, g_lastmansound_1vsothers)
+					}
 				}
 			}
 		}

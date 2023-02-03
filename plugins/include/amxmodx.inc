@@ -1407,7 +1407,9 @@ native get_playersnum(flag = 0);
  *                    "g" - match case insensitive
  *                    "h" - do not include HLTV proxies
  *                    "i" - include connecting clients
- * @param team      String to match against if the "e" or "f" flag is specified
+ *                    "j" - match with all of the specified admin flags
+ *                    "k" - match with any of the specified admin flags
+ * @param team      String to match against if the "e", "f", "j" or "k" flag is specified
  *
  * @noreturn
  */

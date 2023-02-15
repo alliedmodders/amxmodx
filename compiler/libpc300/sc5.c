@@ -48,7 +48,10 @@
 #endif
 
 #define NUM_WARNINGS    (sizeof warnmsg / sizeof warnmsg[0])
-static unsigned char warndisable[(NUM_WARNINGS + 7) / 8]; /* 8 flags in a char */
+static struct s_warnstack {
+  unsigned char disable[(NUM_WARNINGS + 7) / 8]; /* 8 flags in a char */
+  struct s_warnstack *next;
+} warnstack;
 
 static int errflag;
 static int errfile;
@@ -90,7 +93,7 @@ static short lastfile;
   if (number>=200) {
     int index=(number-200)/8;
     int mask=1 << ((number-200)%8);
-    if ((warndisable[index] & mask)!=0)
+    if ((warnstack.disable[index] & mask)!=0)
       return 0;
   } /* if */
 
@@ -214,32 +217,77 @@ SC_FUNC void errorset(int code,int line)
  *  o  1 for enable
  *  o  2 for toggle
  */
-int pc_enablewarning(int number,int enable)
+int pc_enablewarning(int number,warnmode enable)
 {
   int index;
   unsigned char mask;
 
   if (number<200)
     return FALSE;       /* errors and fatal errors cannot be disabled */
-  number -= 200;
+  number-=200;
   if (number>=NUM_WARNINGS)
     return FALSE;
 
   index=number/8;
   mask=(unsigned char)(1 << (number%8));
   switch (enable) {
-  case 0:
-    warndisable[index] |= mask;
+  case warnDISABLE:
+    warnstack.disable[index] |= mask;
     break;
-  case 1:
-    warndisable[index] &= (unsigned char)~mask;
+  case warnENABLE:
+    warnstack.disable[index] &= (unsigned char)~mask;
     break;
-  case 2:
-    warndisable[index] ^= mask;
+  case warnTOGGLE:
+    warnstack.disable[index] ^= mask;
     break;
   } /* switch */
 
   return TRUE;
 }
 
+/* pc_pushwarnings()
+ * Saves currently disabled warnings, used to implement #pragma warning push
+ */
+void pc_pushwarnings(void)
+{
+  void *p;
+  p=calloc(sizeof(struct s_warnstack),1);
+  if (p==NULL)
+    error(103); /* insufficient memory */
+  memmove(p,&warnstack,sizeof(struct s_warnstack));
+  warnstack.next=p;
+}
+
+/* pc_popwarnings()
+ * This function is the reverse of pc_pushwarnings()
+ */
+void pc_popwarnings(void)
+{
+  void *p=warnstack.next;
+  if (p==NULL) { /* nothing to do */
+    error(235,"#pragma warning pop","#pragma warning push");
+    return;
+  } /* if */
+
+  memmove(&warnstack,p,sizeof(struct s_warnstack));
+  free(p);
+}
+
+SC_FUNC void warnstack_init(void)
+{
+  memset(&warnstack,0,sizeof(warnstack));
+}
+
+SC_FUNC void warnstack_cleanup(void)
+{
+  struct s_warnstack *cur=warnstack.next,*next;
+  if (cur!=NULL)
+    error(1,"#pragma warning pop","-end of file-");
+
+  for (;cur!=NULL;cur=next) {
+    next=cur->next;
+    free(cur);
+  } /* for */
+  warnstack.next=NULL;
+}
 #undef SCPACK_TABLE

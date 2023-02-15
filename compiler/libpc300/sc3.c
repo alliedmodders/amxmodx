@@ -603,6 +603,10 @@ static void plnge2(void (*oper)(void),
     } /* if */
     /* ??? ^^^ should do same kind of error checking with functions */
 
+    /* If we're handling a division operation, make sure the divisor is not zero. */
+    if ((oper == os_div || oper == os_mod) && lval2->ident == iCONSTEXPR && lval2->constval == 0)
+        error(89); /* division by zero */
+
     /* check whether an "operator" function is defined for the tag names
      * (a constant expression cannot be optimized in that case)
      */
@@ -627,6 +631,28 @@ static void plnge2(void (*oper)(void),
 static cell truemodulus(cell a,cell b)
 {
   return (a % b + b) % b;
+}
+
+static cell flooreddiv(cell a,cell b,int return_remainder)
+{
+  cell q,r;
+
+  if (b==0) {
+    // error(89); /* division by zero */ /* never called on const values, so, moved to plnge2 */
+    return 0;
+  } /* if */
+  /* first implement truncated division in a portable way */
+  #define IABS(a)       ((a)>=0 ? (a) : (-a))
+  q=IABS(a)/IABS(b);
+  if ((cell)(a ^ b)<0)
+    q=-q;               /* swap sign if either "a" or "b" is negative (but not both) */
+  r=a-q*b;              /* calculate the matching remainder */
+  /* now "fiddle" with the values to get floored division */
+  if (r!=0 && (cell)(r ^ b)<0) {
+    q--;
+    r+=b;
+  } /* if */
+  return return_remainder ? r : q;
 }
 
 static cell calc(cell left,void (*oper)(),cell right,char *boolresult)
@@ -662,9 +688,9 @@ static cell calc(cell left,void (*oper)(),cell right,char *boolresult)
   else if (oper==os_mult)
     return (left * right);
   else if (oper==os_div)
-    return (left - truemodulus(left,right)) / right;
+    return flooreddiv(left,right,FALSE);
   else if (oper==os_mod)
-    return truemodulus(left,right);
+    return flooreddiv(left,right,TRUE);
   else
     error(29);  /* invalid expression, assumed 0 (this should never occur) */
   return 0;
@@ -749,7 +775,7 @@ static int hier14(value *lval1)
    * negative value would do).
    */
   for (i=0; i<sDIMEN_MAX; i++)
-    arrayidx1[i]=arrayidx2[i]=(cell)(-1UL << (sizeof(cell)*8-1));
+    arrayidx1[i]=arrayidx2[i]=(cell)((~(ucell)0) << (sizeof(cell)*8-1));
   org_arrayidx=lval1->arrayidx; /* save current pointer, to reset later */
   if (lval1->arrayidx==NULL)
     lval1->arrayidx=arrayidx1;
@@ -850,22 +876,23 @@ static int hier14(value *lval1)
     {
       int same=TRUE;
       assert(lval2.arrayidx==arrayidx2);
-      for (i=0; i<sDIMEN_MAX; i++)
+      for (i=0; i<sDIMEN_MAX; i++) {
         same=same && (lval3.arrayidx[i]==lval2.arrayidx[i]);
+      }
       if (same)
         error(226,lval3.sym->name);   /* self-assignment */
     } /* if */
   } else {
-    if (oper){
+    if (oper) {
       rvalue(lval1);
       plnge2(oper,hier14,lval1,&lval2);
     } else {
       /* if direct fetch and simple assignment: no "push"
        * and "pop" needed -> call hier14() directly, */
       if (hier14(&lval2))
-        rvalue(&lval2);         /* instead of plnge2(). */
+        rvalue(&lval2);                 /* instead of plnge2(). */
       else if (lval2.ident==iVARIABLE)
-        lval2.ident=iEXPRESSION;/* mark as "rvalue" if it is not an "lvalue" */
+        lval2.ident=iEXPRESSION;        /* mark as "rvalue" if it is not an "lvalue" */
       checkfunction(&lval2);
       /* check whether lval2 and lval3 (old lval1) refer to the same variable */
       if (lval2.ident==iVARIABLE && lval3.ident==lval2.ident && lval3.sym==lval2.sym) {
@@ -1011,8 +1038,8 @@ static int hier13(value *lval)
   int lvalue=plnge1(hier12,lval);
   if (matchtoken('?')) {
     int locheap=decl_heap;      /* save current heap delta */
-    long heap1,heap2; /* max. heap delta either branch */
-    valuepair *heaplist_node;
+    long heap1=0,heap2=0; /* max. heap delta either branch */
+    valuepair *heaplist_node=NULL;
     int flab1=getlabel();
     int flab2=getlabel();
     value lval2 = {0};
@@ -1209,6 +1236,8 @@ static int hier2(value *lval)
       rvalue(lval);
     invert();                   /* bitwise NOT */
     lval->constval=~lval->constval;
+    if (lval->ident==iVARIABLE || lval->ident==iARRAYCELL)
+      lval->ident=iEXPRESSION;
     return FALSE;
   case '!':                     /* ! (logical negate) */
     if (hier2(lval))
@@ -1220,6 +1249,8 @@ static int hier2(value *lval)
       lneg();                   /* 0 -> 1,  !0 -> 0 */
       lval->constval=!lval->constval;
       lval->tag=pc_addtag("bool");
+      if (lval->ident==iVARIABLE || lval->ident==iARRAYCELL)
+        lval->ident=iEXPRESSION;
     } /* if */
     return FALSE;
   case '-':                     /* unary - (two's complement) */
@@ -1248,6 +1279,8 @@ static int hier2(value *lval)
     } else {
       neg();                    /* arithmic negation */
       lval->constval=-lval->constval;
+      if (lval->ident==iVARIABLE || lval->ident==iARRAYCELL)
+        lval->ident=iEXPRESSION;
     } /* if */
     return FALSE;
   case tLABEL:                  /* tagname override */

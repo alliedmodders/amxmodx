@@ -34,6 +34,7 @@
 #include "CoreConfig.h"
 #include <resdk/mod_rehlds_api.h>
 #include <amtl/am-utility.h>
+#include <studio.h>
 
 plugin_info_t Plugin_info =
 {
@@ -166,6 +167,9 @@ int FF_ClientConnectEx = -1;
 
 IFileSystem* g_FileSystem;
 HLTypeConversion TypeConversion;
+
+bool HasReHLDS;
+server_t *Server;
 
 bool ColoredMenus(const char *ModName)
 {
@@ -688,6 +692,119 @@ void C_ServerActivate_Post(edict_t *pEdictList, int edictCount, int clientMax)
 	g_memreport_count = 0;
 	g_memreport_enabled = true;
 #endif
+
+	if (!HasReHLDS && Server)
+	{
+		const auto precacheTextures = [](const char *model, studiohdr_t *pStudioHeader)
+		{
+			if (pStudioHeader->textureindex)
+			{
+				return; // Skip if textures are internal
+			}
+
+			const auto modelLength = strlen(model);
+
+			if (modelLength > MAX_MODEL_NAME - 2)
+			{
+				return; // Skip if model length goes above the max minus 'T' + EOS
+			}
+
+			char textureModel[MAX_MODEL_NAME];
+			ke::SafeStrcpy(textureModel, sizeof textureModel, model);
+
+			const auto modelExtensionLength = sizeof ".mdl" - 1;
+			const auto modelExtension = &textureModel[modelLength - modelExtensionLength];
+			ke::SafeStrcpy(modelExtension, sizeof textureModel - modelLength - modelExtensionLength, "T.mdl");
+
+		#if defined PLATFORM_WINDOWS
+			if (!g_FileSystem->FileExists(textureModel))
+			{
+				modelExtension[0] = 't';
+			}
+		#endif
+
+			PRECACHE_GENERIC(textureModel);
+		};
+
+		const auto precacheGroups = [](studiohdr_t *pStudioHeader)
+		{
+			if (pStudioHeader->numseqgroups <= 1)
+			{
+				return; // Skip if no available group
+			}
+
+			const auto pSeqGroup = reinterpret_cast<mstudioseqgroup_t *>(reinterpret_cast<uintptr_t>(pStudioHeader) + pStudioHeader->seqgroupindex);
+
+			for (auto group = 1; group < pStudioHeader->numseqgroups; group++)
+			{
+				if (pSeqGroup[group].name[0] == '\0')
+				{
+					continue;
+				}
+
+				char seqGroupName[MAX_QPATH];
+				const auto length = ke::SafeStrcpy(seqGroupName, sizeof seqGroupName, pSeqGroup[group].name);
+
+				for (auto index = 0u; index < length; index++)
+				{
+					if (seqGroupName[index] == '\\')
+					{
+						seqGroupName[index] = '/';
+					}
+				}
+
+				PRECACHE_GENERIC(seqGroupName);
+			}
+		};
+
+		const auto precacheSounds = [](studiohdr_t *pStudioHeader)
+		{
+			const auto pSeqDesc = reinterpret_cast<mstudioseqdesc_t *>(reinterpret_cast<uintptr_t>(pStudioHeader) + pStudioHeader->seqindex);
+
+			for (auto sequence = 0; sequence < pStudioHeader->numseq; sequence++)
+			{
+				const auto pEvent = reinterpret_cast<mstudioevent_t *>(reinterpret_cast<uintptr_t>(pStudioHeader) + pSeqDesc[sequence].eventindex);
+
+				for (auto index = 0; index < pSeqDesc[sequence].numevents; index++)
+				{
+					if (pEvent[index].event != 5004 || pEvent[index].options[0] == '\0')
+					{
+						continue;
+					}
+
+					char sound[MAX_QPATH];
+					ke::SafeSprintf(sound, sizeof sound, "sound/%s", pEvent[index].options);
+
+					PRECACHE_GENERIC(sound);
+				}
+			}
+		};
+
+		edict_t entity;
+
+		for (auto index = 1u; index < ARRAYSIZE(Server->model_precache); index++)
+		{
+			const auto model = Server->model_precache[index];
+
+			if (!model)
+			{
+				break;
+			}
+
+			if (Server->models[index]->type != mod_studio)
+			{
+				continue;
+			}
+
+			entity.v.modelindex = index;
+
+			const auto pStudioHeader = static_cast<studiohdr_t *>(GET_MODEL_PTR(&entity));
+
+			precacheTextures(model, pStudioHeader);
+			precacheGroups(pStudioHeader);
+			precacheSounds(pStudioHeader);
+		}
+	}
 
 	g_activated = true;
 
@@ -1692,13 +1809,29 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	if (RehldsApi_Init())
 	{
+		HasReHLDS = true;
+
 		RehldsHookchains->SV_DropClient()->registerHook(SV_DropClient_RH);
 		g_isDropClientHookAvailable = true;
 		g_isDropClientHookEnabled = true;
+
+		
 	}
 	else
 	{
+		HasReHLDS = false;
+
 		void *address = nullptr;
+
+		if (CommonConfig->GetAddress("sv", &address) && address)
+		{
+			Server = *reinterpret_cast<decltype(Server)*>(address);
+		}
+		else
+		{
+			AMXXLOG_Log("Automatic precaching of model textures and groups has been disabled - check your gamedata files.");
+		}
+
 
 		if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
 		{

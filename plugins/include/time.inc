@@ -115,4 +115,8 @@ stock get_time_length(id, unitCnt, type, output[], outputLen)
             case 6: formatex(output, outputLen, "%s, %s, %s, %s, %s, %s %L %s", timeElement[0], timeElement[1], timeElement[2], timeElement[3], timeElement[4], timeElement[5], id, "TIME_ELEMENT_AND", timeElement[6]);
         }
     }
+    else if (unitCnt == 0)
+    {
+        formatex(output, outputLen, "%L", id, "TIME_ELEMENT_PERMANENTLY");
+    }
 }

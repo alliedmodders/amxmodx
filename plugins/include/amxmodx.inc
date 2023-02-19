@@ -607,6 +607,16 @@ native enable_event(handle);
 native disable_event(handle);
 
 /**
+ * Get the state of a game event which has been previously registered with register_event_ex().
+ *
+ * @param handle    Value returned from register_event() or register_event_ex()
+ *
+ * @return          1 if event is enabled, 0 otherwise
+ * @error           If an invalid handle is provided, an error will be thrown.
+ */
+native get_event_state(handle);
+
+/**
  * Registers a function to be called on a given log event.
  *
  * @note Examples for log conditions:
@@ -652,6 +662,16 @@ native enable_logevent(handle);
  * @error           If an invalid handle is provided, an error will be thrown.
  */
 native disable_logevent(handle);
+
+/**
+ * Get the state of a game log event which has been previously registered with register_logevent().
+ *
+ * @param handle    Value returned from register_logevent()
+ *
+ * @return          1 if log event is enabled, 0 otherwise
+ * @error           If an invalid handle is provided, an error will be thrown.
+ */
+native get_logevent_state(handle);
 
 /**
  * Sets display parameters for hudmessages.

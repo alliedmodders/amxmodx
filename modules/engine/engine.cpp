@@ -463,9 +463,11 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 				return 0;
 			}
 
-			pNewCamera->v.classname = MAKE_STRING("VexdCam");
+			//pNewCamera->v.classname = MAKE_STRING("VexdCam");
+			pNewCamera->v.classname = MAKE_STRING("AmxxCam");
 
-			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
+			//SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
+			SET_MODEL(pNewCamera, "sprites/dot.spr");
 			SET_SIZE(pNewCamera, Vector(0, 0, 0), Vector(0, 0, 0));
 
 			pNewCamera->v.movetype = MOVETYPE_NOCLIP;
@@ -500,9 +502,10 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 				return 0;
 			}
 
-			pNewCamera->v.classname = MAKE_STRING("VexdCam");
+			pNewCamera->v.classname = MAKE_STRING("AmxxCam");
 
-			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
+			//SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
+			SET_MODEL(pNewCamera, "sprites/dot.spr");
 			SET_SIZE(pNewCamera, Vector(0, 0, 0), Vector(0, 0, 0));
 
 			pNewCamera->v.movetype = MOVETYPE_NOCLIP;
@@ -537,9 +540,10 @@ static cell AMX_NATIVE_CALL set_view(AMX *amx, cell *params) {
 				return 0;
 			}
 
-			pNewCamera->v.classname = MAKE_STRING("VexdCam");
+			pNewCamera->v.classname = MAKE_STRING("AmxxCam");
 
-			SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
+			//SET_MODEL(pNewCamera, "models/rpgrocket.mdl");
+			SET_MODEL(pNewCamera, "sprites/dot.spr");
 			SET_SIZE(pNewCamera, Vector(0, 0, 0), Vector(0, 0, 0));
 
 			pNewCamera->v.movetype = MOVETYPE_NOCLIP;

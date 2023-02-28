@@ -54,7 +54,8 @@ int Spawn(edict_t *pEntity)
 {
 	if (!g_precachedStuff) {
 		// Used for SetView, added by JGHG
-		PRECACHE_MODEL("models/rpgrocket.mdl");
+		//PRECACHE_MODEL("models/rpgrocket.mdl");
+		PRECACHE_MODEL("sprites/dot.spr"); //rocket adversely effects several plugins -SPiNX February 2023
 		g_precachedStuff = true;
 	}
 	if (SpawnForward != -1)

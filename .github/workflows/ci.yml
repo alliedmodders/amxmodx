@@ -52,14 +52,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          node-version: 16
           submodules: recursive
           path: amxmodx
       # Setup Python for AMBuild
       - uses: actions/setup-python@v3
         name: Setup Python 3.8
         with:
-          node-version: 16
           python-version: 3.8
       - name: Install Python dependencies
         run: |

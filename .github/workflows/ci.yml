@@ -34,17 +34,17 @@ jobs:
           - os: windows-latest
             os_short: windows
             compiler_cc: msvc
-          - os: windows-2016
+          - os: windows-2022
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
-# MacOS 32 Bins seem not supported
-#           - os: macos-latest
-#             os_short: mac
-#             compiler_cc: clang
-#             compiler_cxx: clang++            
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
+          # MacOS 32 Bins seem not supported
+          - os: macos-latest
+            os_short: mac
+            compiler_cc: clang
+            compiler_cxx: clang++            
+      #fail-fast: false
+      #runs-on: ${{ matrix.os }}
+      #name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
     env:
       DEPENDENCIES_FOLDER: dependencies      
       DEPENDENCIES_ROOT: ${{ github.workspace }}/dependencies      

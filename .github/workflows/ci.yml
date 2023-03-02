@@ -37,7 +37,7 @@ jobs:
           - os: windows-2022
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
-          - os: macos-latest
+          - os: macos-10.15
             os_short: mac
             compiler_cc: clang-14          
       fail-fast: false

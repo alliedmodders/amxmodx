@@ -384,7 +384,7 @@ static cell AMX_NATIVE_CALL give_weapon(AMX *amx, cell *params)
 	KeyValueData pkvd;
 	char szTemp[16];
 
-	sprintf(szTemp,"%d",(int)params[2]);
+	snprintf(szTemp,"%d",(int)params[2]);
 
 	pkvd.szClassName = (char *)STRING(pent->v.classname);
 	pkvd.szKeyName = "tsweaponid"; // weapon
@@ -398,7 +398,7 @@ static cell AMX_NATIVE_CALL give_weapon(AMX *amx, cell *params)
 	pkvd.fHandled = false;
 	MDLL_KeyValue(pent, &pkvd);
 
-	sprintf(szTemp,"%d",(int)params[3]); 
+	snprintf(szTemp,"%d",(int)params[3]); 
 
 	pkvd.szClassName = (char *)STRING(pent->v.classname);
 	pkvd.szKeyName = "wextraclip"; // clips
@@ -406,7 +406,7 @@ static cell AMX_NATIVE_CALL give_weapon(AMX *amx, cell *params)
 	pkvd.fHandled = false;
 	MDLL_KeyValue(pent, &pkvd);
 
-	sprintf(szTemp,"%d",(int)params[4]);
+	snprintf(szTemp,"%d",(int)params[4]);
 
 	pkvd.szClassName = (char *)STRING(pent->v.classname);
 	pkvd.szKeyName = "spawnflags"; // attachements :flashlight,lasersight,scope..
@@ -444,7 +444,7 @@ static cell AMX_NATIVE_CALL create_pwup(AMX *amx, cell *params){ // pwup ,origin
 	KeyValueData pkvd;
 	char szTemp[16];
 
-	sprintf(szTemp,"%d",(int)params[1]);
+	snprintf(szTemp,"%d",(int)params[1]);
 
 	pkvd.szClassName = (char *)STRING(pent->v.classname);
 	pkvd.szKeyName = "pwuptype"; // type

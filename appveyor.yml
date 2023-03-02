@@ -98,12 +98,8 @@ for:
         mkdir -p amxmodx
 
         ../support/checkout-deps.sh
-
-        sudo rm -rf /Library/Developer/CommandLineTools
         
-        xcode-select --install
-        
-        brew update
+        brew upgrade
 
         brew install ca-certificates
         

@@ -39,7 +39,7 @@ jobs:
             compiler_cc: msvc++14.16-vs2017-cl
           - os: macos-latest
             os_short: mac
-            compiler_cc: clang-14          
+            compiler_cc: clang-10          
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}

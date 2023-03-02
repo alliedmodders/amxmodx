@@ -24,8 +24,8 @@ jobs:
             compiler_cxx: clang++        
           - os: ubuntu-22.04
             os_short: linux
-            compiler_cc: clang-3.9
-            compiler_cxx: clang++-3.9
+            compiler_cc: clang-14
+            compiler_cxx: clang++-14
           - os: ubuntu-22.04
             os_short: linux
             compiler_cc: gcc-10

@@ -22,11 +22,11 @@ jobs:
             os_short: linux
             compiler_cc: clang
             compiler_cxx: clang++        
-          - os: ubuntu-18.04
+          - os: ubuntu-22.04
             os_short: linux
             compiler_cc: clang-3.9
             compiler_cxx: clang++-3.9
-          - os: ubuntu-18.04
+          - os: ubuntu-22.04
             os_short: linux
             compiler_cc: gcc-6
             compiler_cxx: g++-6
@@ -50,14 +50,16 @@ jobs:
       DEPENDENCIES_ROOT: ${{ github.workspace }}/dependencies      
       DEPENDENCIES_ROOT_WIN: ${{ github.workspace }}\dependencies              
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
+          node-version: 16
           submodules: recursive
           path: amxmodx
       # Setup Python for AMBuild
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v3
         name: Setup Python 3.8
         with:
+          node-version: 16
           python-version: 3.8
       - name: Install Python dependencies
         run: |
@@ -123,6 +125,7 @@ jobs:
           ambuild
       - uses: ilammy/msvc-dev-cmd@v1
         with:
+          node-version: 16
           arch: x86
       - name: Build Windows
         if: startsWith(runner.os, 'Windows')

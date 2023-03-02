@@ -37,7 +37,7 @@ jobs:
           - os: windows-2022
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
-          - os: macos-latest-x1
+          - os: macos-latest
             os_short: mac
             compiler_cc: clang-14          
       fail-fast: false
@@ -93,7 +93,15 @@ jobs:
           move /Y mysql-5.5 ..\
           
           cd ..\ambuild
-          python3 setup.py install          
+          python3 setup.py install
+      - name: Install macOS dependencies
+        if: startsWith(runner.os, 'macOS')
+        run: |
+          brew update
+          brew install nasm
+          sudo rm -rf /Library/Developer/CommandLineTools
+          xcode-select --install
+          #need i386 sys files for xcode-select
       - name: Install Linux dependencies
         if: startsWith(runner.os, 'Linux')
         run: |

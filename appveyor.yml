@@ -99,6 +99,12 @@ for:
 
         ../support/checkout-deps.sh
 
+        sudo rm -rf /Library/Developer/CommandLineTools
+        
+        xcode-select --install
+        
+        brew update
+
         brew install ca-certificates
         
         brew install nasm

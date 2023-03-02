@@ -38,10 +38,10 @@ jobs:
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
 # MacOS 32 Bins seem not supported
-#           - os: macos-latest
-#             os_short: mac
-#             compiler_cc: gcc
-#             compiler_cxx: gcc            
+           - os: macos-12
+             os_short: mac
+             compiler_cc: clang
+             compiler_cxx: clang++           
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
@@ -50,12 +50,12 @@ jobs:
       DEPENDENCIES_ROOT: ${{ github.workspace }}/dependencies      
       DEPENDENCIES_ROOT_WIN: ${{ github.workspace }}\dependencies              
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           path: amxmodx
       # Setup Python for AMBuild
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v3
         name: Setup Python 3.8
         with:
           python-version: 3.8

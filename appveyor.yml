@@ -98,10 +98,10 @@ for:
         mkdir -p amxmodx
 
         ../support/checkout-deps.sh
+      
+        brew install ca-certificates
         
         brew upgrade
-
-        brew install ca-certificates
         
         brew install nasm
 

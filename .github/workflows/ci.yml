@@ -40,8 +40,8 @@ jobs:
 # MacOS 32 Bins seem not supported
            - os: macos-latest
              os_short: mac
-             compiler_cc: clang
-             compiler_cxx: clang++            
+             compiler_cc: clang-14
+             compiler_cxx: clang++-14            
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}

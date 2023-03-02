@@ -239,7 +239,7 @@ class AMXXConfig(object):
           '-Wno-varargs',
         ]
       if cxx.version >= 'apple-clang-5.1' or cxx.version >= 'clang-3.4':
-        cxx.cxxflags += ['-Wno-nonportable-include-path']
+        cxx.cxxflags += ['-Wno-deprecated-register']
       else:
         cxx.cxxflags += ['-Wno-deprecated']
       cxx.cflags += ['-Wno-sometimes-uninitialized']

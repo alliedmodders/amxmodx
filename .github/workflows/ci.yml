@@ -34,12 +34,12 @@ jobs:
           - os: windows-latest
             os_short: windows
             compiler_cc: msvc
-          - os: windows-2019
+          - os: windows-2022
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
           - os: macos-latest
             os_short: mac
-            compiler_cc: clang          
+            compiler_cc: clang-14          
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}

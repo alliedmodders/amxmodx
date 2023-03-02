@@ -38,10 +38,10 @@ jobs:
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
 # MacOS 32 Bins seem not supported
-           - os: macos-latest
-             os_short: mac
-             compiler_cc: clang-14
-             compiler_cxx: clang++-14            
+#           - os: macos-latest
+#             os_short: mac
+#             compiler_cc: gcc
+#             compiler_cxx: gcc            
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}

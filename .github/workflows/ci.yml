@@ -38,10 +38,10 @@ jobs:
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
 # MacOS 32 Bins seem not supported
-#           - os: macos-latest
-#             os_short: mac
-#             compiler_cc: clang
-#             compiler_cxx: clang++            
+           - os: macos-latest
+             os_short: mac
+             compiler_cc: clang
+             compiler_cxx: clang++            
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
@@ -50,12 +50,12 @@ jobs:
       DEPENDENCIES_ROOT: ${{ github.workspace }}/dependencies      
       DEPENDENCIES_ROOT_WIN: ${{ github.workspace }}\dependencies              
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           path: amxmodx
       # Setup Python for AMBuild
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         name: Setup Python 3.8
         with:
           python-version: 3.8
@@ -108,8 +108,8 @@ jobs:
       - name: Select compiler
         if: startsWith(runner.os, 'Linux')
         run: |
-          echo "CC=${{ matrix.compiler_cc }}" >> $GITHUB_ENV
-          echo "CXX=${{ matrix.compiler_cxx }}" >> $GITHUB_ENV
+          #echo "CC=${{ matrix.compiler_cc }}" >> $GITHUB_ENV
+          #echo "CXX=${{ matrix.compiler_cxx }}" >> $GITHUB_ENV
           ${{ matrix.compiler_cc }} --version
           ${{ matrix.compiler_cxx }} --version
       - uses: ilammy/setup-nasm@v1

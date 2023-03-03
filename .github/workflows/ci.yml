@@ -38,9 +38,9 @@ jobs:
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
           #OSX Xcode_14.2.app is failing over deprecated sprint and wanting snprintf.
-          #- os: macos-latest
-          #  os_short: mac
-          #  compiler_cc: clang
+          - os: macos-latest
+            os_short: mac
+            compiler_cc: clang
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
@@ -100,8 +100,8 @@ jobs:
         run: |
           brew update
           brew install nasm
-          sudo rm -rf /Library/Developer/CommandLineTools
-          xcode-select --install
+          //sudo rm -rf /Library/Developer/CommandLineTools
+          //xcode-select --install
           #need i386 sys files for xcode-select
       - name: Install Linux dependencies
         if: startsWith(runner.os, 'Linux')
@@ -115,8 +115,8 @@ jobs:
       - name: Select compiler
         if: startsWith(runner.os, 'Linux')
         run: |
-          #echo "CC=${{ matrix.compiler_cc }}" >> $GITHUB_ENV
-          #echo "CXX=${{ matrix.compiler_cxx }}" >> $GITHUB_ENV
+          echo "CC=${{ matrix.compiler_cc }}" >> $GITHUB_ENV
+          echo "CXX=${{ matrix.compiler_cxx }}" >> $GITHUB_ENV
           ${{ matrix.compiler_cc }} --version
           ${{ matrix.compiler_cxx }} --version
       - uses: ilammy/setup-nasm@v1

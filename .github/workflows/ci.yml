@@ -98,11 +98,11 @@ jobs:
       - name: Install macOS dependencies
         if: startsWith(runner.os, 'macOS')
         run: |
-          //brew update
+          #brew update
           brew install ca-certificates
           brew install nasm
-          //sudo rm -rf /Library/Developer/CommandLineTools
-          //xcode-select --install
+          #sudo rm -rf /Library/Developer/CommandLineTools
+          #xcode-select --install
           #need i386 sys files for xcode-select
       - name: Install Linux dependencies
         if: startsWith(runner.os, 'Linux')

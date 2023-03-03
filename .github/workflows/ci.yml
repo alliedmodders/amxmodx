@@ -38,8 +38,7 @@ jobs:
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
           #OSX Xcode_14.2.app is failing over deprecated sprint and wanting snprintf.
-          #- os: macos-latest
-           - os: macos-11
+          - os: macos-latest
             os_short: mac
             compiler_cc: clang
       fail-fast: false

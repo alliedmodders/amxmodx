@@ -55,9 +55,9 @@ jobs:
           path: amxmodx
       # Setup Python for AMBuild
       - uses: actions/setup-python@v3
-        name: Setup Python 3.8
+        name: Setup Python 3.11
         with:
-          python-version: 3.8
+          python-version: 3.11
       - name: Install Python dependencies
         run: |
           python3 -m pip install --upgrade pip setuptools wheel

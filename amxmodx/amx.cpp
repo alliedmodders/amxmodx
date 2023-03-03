@@ -4187,7 +4187,7 @@ int AMXAPI amx_ExecPerf(AMX* amx, cell* retval, int index)
         amx_GetPublic(perf_Plug->getAMX(), index, perf_funcname);
         if (perf_funcname[0] == '\0')
             //sprintf(perf_funcname, "Unknown_ID%d", index);
-            snprintf(perf_funcname,sizeof(perf_funcname-1), "Unknown_ID%d", index);
+            snprintf(perf_funcname,sizeof(perf_funcname), "Unknown_ID%d", index);
 
         const char* perf_plugname = perf_Plug->getName();
         if (!perf_plugname || perf_plugname[0] == '\0')

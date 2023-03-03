@@ -100,8 +100,7 @@ jobs:
         run: |
           #brew update
           brew install nasm
-          brew install gcc@10
-          gcc
+          brew install gcc@7
           #sudo rm -rf /Library/Developer/CommandLineTools
           #xcode-select --install
       - name: Install Linux dependencies

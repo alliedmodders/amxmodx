@@ -100,7 +100,8 @@ jobs:
         if: startsWith(runner.os, 'macOS')
         run: |
 
-          #brew install gcc@10
+          sudo xcode-select -s /Applications/Xcode_11.7.app
+          sudo xcode-select -p
 
       - name: Install Linux dependencies
         if: startsWith(runner.os, 'Linux')

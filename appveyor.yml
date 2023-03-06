@@ -101,7 +101,7 @@ for:
 
         brew install ca-certificates
 
-        nasm install nasm
+        brew install nasm
 
         nasm -v
 

@@ -297,6 +297,7 @@ void FMH_ServerDeactivate_Post()
 	RESETN(OnFreeEntPrivateData);
 	RESETN(GameShutdown);
 	RESETN(ShouldCollide);
+	RESETD(GetWeaponData);
 
 	g_pFunctionTable->pfnServerActivate = ServerActivate;
 

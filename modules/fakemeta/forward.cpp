@@ -28,6 +28,7 @@ KVD_Wrapper g_kvd_hook;
 clientdata_t *g_cd_hook;
 entity_state_t *g_es_hook;
 usercmd_t *g_uc_hook;
+weapon_data_t *g_wd_hook;
 
 cell origCellRet;
 float origFloatRet;
@@ -819,6 +820,21 @@ SIMPLE_VOID_HOOK_VOID(GameShutdown);
 SIMPLE_INT_HOOK_EDICT_EDICT(ShouldCollide);
 
 
+int GetWeaponData(struct edict_s *player, struct weapon_data_s *info)
+{
+	g_wd_hook = info;
+	FM_ENG_HANDLE(FM_GetWeaponData, (Engine[FM_GetWeaponData].at(i), (cell)ENTINDEX(player), (cell)info));
+	RETURN_META_VALUE(mswi(lastFmRes), (int)mlCellResult);
+}
+
+int GetWeaponData_post(struct edict_s *player, struct weapon_data_s *info)
+{
+	g_wd_hook = info;
+	origCellRet = META_RESULT_ORIG_RET(int);
+	FM_ENG_HANDLE_POST(FM_GetWeaponData, (EnginePost[FM_GetWeaponData].at(i), (cell)ENTINDEX(player), (cell)info));
+	RETURN_META_VALUE(MRES_IGNORED, (int)mlCellResult);
+}
+
 static cell AMX_NATIVE_CALL unregister_forward(AMX *amx, cell *params)
 {
 	int func = params[1];
@@ -1490,6 +1506,10 @@ static cell AMX_NATIVE_CALL register_forward(AMX *amx, cell *params)
 	case FM_ServerPrint:
 		fId = MF_RegisterSPForwardByName(amx, funcname, FP_STRING, FP_DONE);
 		ENGHOOK(ServerPrint);
+		break;
+	case FM_GetWeaponData:
+		fId = MF_RegisterSPForwardByName(amx, funcname, FP_CELL, FP_CELL, FP_DONE);
+		DLLHOOK(GetWeaponData);
 		break;
 #if 0
 

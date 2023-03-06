@@ -311,6 +311,22 @@ static cell AMX_NATIVE_CALL dllfunc(AMX *amx,cell *params)
 		pset = reinterpret_cast<unsigned char *>(*cRet);
 
 		return gpGamedllFuncs->dllapi_table->pfnAddToFullPack(es, iparam1, TypeConversion.id_to_edict(index), TypeConversion.id_to_edict(indexb), iparam2, iparam3, pset);
+	case	DLLFunc_GetWeaponData:		// int )  (struct edict_s *player, struct weapon_data_s *info);
+		cRet = MF_GetAmxAddr(amx, params[2]);
+		index = cRet[0];
+		CHECK_ENTITY(index);
+		weapon_data_t *wd;
+
+		if ((params[0] / sizeof(cell)) == 3){
+			cell *ptr = MF_GetAmxAddr(amx, params[3]);
+			if (*ptr == 0)
+				wd = &g_wd_glb;
+			else
+				wd = reinterpret_cast<weapon_data_t *>(*ptr);
+		}
+		else
+			wd = &g_wd_glb;
+		return gpGamedllFuncs->dllapi_table->pfnGetWeaponData(TypeConversion.id_to_edict(index), wd);
 	case DLLFunc_CmdStart:			// void ) (const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed)
 		cRet = MF_GetAmxAddr(amx, params[2]);
 		index = cRet[0];

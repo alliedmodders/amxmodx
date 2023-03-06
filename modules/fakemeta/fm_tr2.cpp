@@ -25,6 +25,7 @@ ke::Vector<KVD_Wrapper *>g_FreeKVDWs;
 clientdata_t g_cd_glb;
 entity_state_t g_es_glb;
 usercmd_t g_uc_glb;
+weapon_data_t g_wd_glb;
 
 static cell AMX_NATIVE_CALL set_tr2(AMX *amx, cell *params)
 {
@@ -1210,6 +1211,198 @@ static cell AMX_NATIVE_CALL set_uc(AMX *amx, cell *params)
 	return 0;
 }
 
+
+static cell AMX_NATIVE_CALL get_wd(AMX *amx, cell *params)
+{
+	weapon_data_t *wd1;
+	if (params[1] == 0)
+		wd1 = &g_wd_glb;
+	else
+		wd1 = reinterpret_cast<weapon_data_t *>(params[1]);
+	
+	auto wd = &wd1[params[2]];
+	cell	*ptr;
+
+	switch(params[3])
+	{
+	case WD_iId:
+		return wd->m_iId;
+	case WD_iClip:
+		return wd->m_iClip;
+
+	case WD_flNextPrimaryAttack:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->m_flNextPrimaryAttack);
+		return 1;
+	case WD_flNextSecondaryAttack:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->m_flNextSecondaryAttack);
+		return 1;
+	case WD_flTimeWeaponIdle:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->m_flTimeWeaponIdle);
+		return 1;
+
+	case WD_fInReload:
+		return wd->m_fInReload;
+	case WD_fInSpecialReload:
+		return wd->m_fInSpecialReload;
+	case WD_flNextReload:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->m_flNextReload);
+		return 1;
+	case WD_flPumpTime:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->m_flPumpTime);
+		return 1;
+	case WD_fReloadTime:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->m_fReloadTime);
+		return 1;
+		
+	case WD_fAimedDamage:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->m_fAimedDamage);
+		return 1;
+	case WD_fNextAimBonus:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->m_fNextAimBonus);
+		return 1;
+	case WD_fInZoom:
+		return wd->m_fInZoom;
+	case WD_iWeaponState:
+		return wd->m_iWeaponState;
+
+	case WD_iUser1:
+		return wd->iuser1;
+	case WD_iUser2:
+		return wd->iuser2;
+	case WD_iUser3:
+		return wd->iuser3;
+	case WD_iUser4:
+		return wd->iuser4;
+	case WD_flUser1:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->fuser1);
+		return 1;
+	case WD_flUser2:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->fuser2);
+		return 1;
+	case WD_flUser3:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->fuser3);
+		return 1;
+	case WD_flUser4:
+		ptr = MF_GetAmxAddr(amx, params[4]);
+		*ptr = amx_ftoc(wd->fuser4);
+		return 1;
+
+	}
+	MF_LogError(amx, AMX_ERR_NATIVE, "Invalid WeaponData member: %d", params[3]);
+
+	return 0;
+}
+
+static cell AMX_NATIVE_CALL set_wd(AMX *amx, cell *params)
+{
+	if (*params / sizeof(cell) < 4)
+	{
+		MF_LogError(amx, AMX_ERR_NATIVE, "No data passed");
+		return 0;
+	}
+
+	weapon_data_t *pWd;
+	if (params[1] == 0)
+		pWd = &g_wd_glb;
+	else
+		pWd = reinterpret_cast<weapon_data_t *>(params[1]);
+	
+	auto wd = &pWd[params[2]];
+	cell *ptr = MF_GetAmxAddr(amx, params[4]);
+	
+	switch(params[3])
+	{
+	case WD_iId:
+		wd->m_iId = *ptr;
+		return 1;
+	case WD_iClip:
+		wd->m_iClip = *ptr;
+		return 1;
+		
+	case WD_flNextPrimaryAttack:
+		wd->m_flNextPrimaryAttack = amx_ctof(*ptr);
+		return 1;
+	case WD_flNextSecondaryAttack:
+		wd->m_flNextSecondaryAttack = amx_ctof(*ptr);
+		return 1;
+	case WD_flTimeWeaponIdle:
+		wd->m_flTimeWeaponIdle = amx_ctof(*ptr);
+		return 1;
+		
+	case WD_fInReload:
+		wd->m_fInReload = *ptr;
+		return 1;
+	case WD_fInSpecialReload:
+		wd->m_fInSpecialReload = *ptr;
+		return 1;
+	case WD_flNextReload:
+		wd->m_flNextReload = amx_ctof(*ptr);
+		return 1;
+	case WD_flPumpTime:
+		wd->m_flPumpTime = amx_ctof(*ptr);
+		return 1;
+	case WD_fReloadTime:
+		wd->m_fReloadTime = amx_ctof(*ptr);
+		return 1;
+
+	case WD_fAimedDamage:
+		wd->m_fAimedDamage = amx_ctof(*ptr);
+		return 1;
+	case WD_fNextAimBonus:
+		wd->m_fNextAimBonus = amx_ctof(*ptr);
+		return 1;
+	case WD_fInZoom:
+		wd->m_fInZoom = *ptr;
+		return 1;
+	case WD_iWeaponState:
+		wd->m_iWeaponState = *ptr;
+		return 1;
+		
+	case WD_iUser1:
+		wd->iuser1 = *ptr;
+		return 1;
+	case WD_iUser2:
+		wd->iuser2 = *ptr;
+		return 1;
+	case WD_iUser3:
+		wd->iuser3 = *ptr;
+		return 1;
+	case WD_iUser4:
+		wd->iuser4 = *ptr;
+		return 1;
+		
+	case WD_flUser1:
+		wd->fuser1 = amx_ctof(*ptr);
+		return 1;
+	case WD_flUser2:
+		wd->fuser2 = amx_ctof(*ptr);
+		return 1;
+	case WD_flUser3:
+		wd->fuser3 = amx_ctof(*ptr);
+		return 1;
+	case WD_flUser4:
+		wd->fuser4 = amx_ctof(*ptr);
+		return 1;
+	
+	}
+
+	MF_LogError(amx, AMX_ERR_NATIVE, "Invalid ClientData member: %d", params[3]);
+
+	return 0;
+}
+
+
 CStack<TraceResult *> g_FreeTRs;
 
 static cell AMX_NATIVE_CALL create_tr2(AMX *amx, cell *params)
@@ -1296,6 +1489,8 @@ AMX_NATIVE_INFO ext2_natives[] =
 	{"set_es",			set_es},
 	{"get_uc",			get_uc},
 	{"set_uc",			set_uc},
+	{"set_wd",			set_wd},
+	{"get_wd",			get_wd},
 	{NULL,				NULL},
 };
 

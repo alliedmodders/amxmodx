@@ -99,7 +99,9 @@ for:
 
         ../support/checkout-deps.sh
 
-        brew install ca-certificates nasm
+        brew install ca-certificates
+
+        nasm install nasm
 
         nasm -v
 

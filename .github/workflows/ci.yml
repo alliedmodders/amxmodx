@@ -40,8 +40,8 @@ jobs:
           #OSX Xcode_14.2.app is failing over deprecated sprint and wanting snprintf.
           - os: macos-latest
             os_short: mac
-            compiler_cc: gcc-12
-            compiler_cxx: gcc-12
+            compiler_cc: clang
+            compiler_cxx: clang
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}
@@ -101,8 +101,6 @@ jobs:
         run: |
 
           #brew install gcc@10
-          brew update
-          brew reinstall nasm
 
       - name: Install Linux dependencies
         if: startsWith(runner.os, 'Linux')

@@ -40,8 +40,8 @@ jobs:
           #OSX Xcode_14.2.app is failing over deprecated sprint and wanting snprintf.
           - os: macos-11
             os_short: mac
-            compiler_cc: gcc-9
-            compiler_cxx: gcc-9
+            compiler_cc: clang
+            compiler_cxx: clang
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.os }}-${{ matrix.compiler_cc }}

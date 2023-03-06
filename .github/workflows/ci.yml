@@ -101,6 +101,8 @@ jobs:
         run: |
 
           #brew install gcc@10
+          brew update
+          brew reinstall nasm
 
       - name: Install Linux dependencies
         if: startsWith(runner.os, 'Linux')

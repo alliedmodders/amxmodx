@@ -892,11 +892,8 @@ BOOL C_ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *psz
 			const char* authid = GETPLAYERAUTHID(pEntity);
 			if (g_auth_funcs.size())
 			{
-				List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
-				AUTHORIZEFUNC fn;
-				for (iter=g_auth_funcs.begin(); iter!=end; iter++)
+				for (auto &fn : g_auth_funcs)
 				{
-					fn = (*iter);
 					fn(pPlayer->index, authid);
 				}
 			}
@@ -1035,11 +1032,8 @@ void C_ClientUserInfoChanged_Post(edict_t *pEntity, char *infobuffer)
 		const char* authid = GETPLAYERAUTHID(pEntity);
 		if (g_auth_funcs.size())
 		{
-			List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
-			AUTHORIZEFUNC fn;
-			for (iter=g_auth_funcs.begin(); iter!=end; iter++)
+			for (auto &fn : g_auth_funcs)
 			{
-				fn = (*iter);
 				fn(pPlayer->index, authid);
 			}
 		}
@@ -1239,11 +1233,8 @@ void C_StartFrame_Post(void)
 				(*player)->Authorize();
 				if (g_auth_funcs.size())
 				{
-					List<AUTHORIZEFUNC>::iterator iter, end=g_auth_funcs.end();
-					AUTHORIZEFUNC fn;
-					for (iter=g_auth_funcs.begin(); iter!=end; iter++)
+					for (auto &fn : g_auth_funcs)
 					{
-						fn = (*iter);
 						fn((*player)->index, auth);
 					}
 				}
@@ -1542,7 +1533,7 @@ void C_CvarValue2(const edict_t *pEdict, int requestId, const char *cvar, const 
 
 	List<ClientCvarQuery_Info *>::iterator iter, end=pPlayer->queries.end();
 	ClientCvarQuery_Info *info;
-	for (iter=pPlayer->queries.begin(); iter!=end; iter++)
+	for (iter=pPlayer->queries.begin(); iter!=end; ++iter)
 	{
 		info = (*iter);
 		if ( info->requestId == requestId )

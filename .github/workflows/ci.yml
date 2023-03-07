@@ -99,7 +99,7 @@ jobs:
       - name: Install macOS dependencies
         if: startsWith(runner.os, 'macOS')
         run: |
-
+          brew install x86_64-elf-binutils
           sudo xcode-select -s /Applications/Xcode_11.7.app
           sudo xcode-select -p
 

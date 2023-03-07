@@ -22,15 +22,13 @@
 
 //new Vector:AdminList;
 
-new AdminCount;
-
 new PLUGINNAME[] = "AMX Mod X"
 
 #define ADMIN_LOOKUP	(1<<0)
 #define ADMIN_NORMAL	(1<<1)
-#define ADMIN_STEAM		(1<<2)
+#define ADMIN_STEAM	(1<<2)
 #define ADMIN_IPADDR	(1<<3)
-#define ADMIN_NAME		(1<<4)
+#define ADMIN_NAME	(1<<4)
 
 new bool:g_CaseSensitiveName[MAX_PLAYERS + 1];
 
@@ -93,13 +91,15 @@ public plugin_init()
 	server_cmd("amx_sqladmins")
 #else
 	format(configsDir, 63, "%s/users.ini", configsDir)
-	loadSettings(configsDir)					// Load admins accounts
+	loadSettings(0, configsDir)					// Load admins accounts
 #endif
 }
+
 public client_connect(id)
 {
 	g_CaseSensitiveName[id] = false;
 }
+
 public addadminfn(id, level, cid)
 {
 	if (!cmd_access(id, level, cid, 3))
@@ -230,7 +230,7 @@ public addadminfn(id, level, cid)
 		}
 		else if (idtype & ADMIN_NAME)
 		{
-			get_user_name(player, auth, charsmax(auth))
+			copy(auth, charsmax(auth), Comment);
 		}
 	} else {
 		copy(auth, charsmax(auth), arg)
@@ -239,14 +239,11 @@ public addadminfn(id, level, cid)
 	new type[16], len
 	
 	if (idtype & ADMIN_STEAM)
-		len += format(type[len], charsmax(type) - len, "c")
+		len += formatex(type[len], charsmax(type) - len, "c")
 	else if (idtype & ADMIN_IPADDR)
-		len += format(type[len], charsmax(type) - len, "d")
+		len += formatex(type[len], charsmax(type) - len, "d")
 	
-	if (strlen(password) > 0)
-		len += format(type[len], charsmax(type) - len, "a")
-	else
-		len += format(type[len], charsmax(type) - len, "e")
+	formatex(type[len], charsmax(type) - len, strlen(password) ? "a" : "e")
 	
 	AddAdmin(id, auth, flags, password, type, Comment)
 	cmdReload(id, ADMIN_CFG, 0)
@@ -352,8 +349,9 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 
 }
 
-loadSettings(szFilename[])
+loadSettings(client, szFilename[])
 {
+	new AdminCount = 0;
 	new File=fopen(szFilename,"r");
 	
 	if (File)
@@ -393,21 +391,15 @@ loadSettings(szFilename[])
 		fclose(File);
 	}
 
-	if (AdminCount == 1)
-	{
-		server_print("[AMXX] %L", LANG_SERVER, "LOADED_ADMIN");
-	}
-	else
-	{
-		server_print("[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", AdminCount);
-	}
+	ShowLoadAdminsMessage(client, AdminCount, false);
 	
 	return 1;
 }
 
 #if defined USING_SQL
-public adminSql()
+public adminSql(client)
 {
+	new AdminCount = 0;
 	new table[32], error[128], type[12], errno
 	
 	new Handle:info = SQL_MakeStdTuple()
@@ -426,7 +418,7 @@ public adminSql()
 		
 		get_configsdir(configsDir, charsmax(configsDir))
 		format(configsDir, charsmax(configsDir), "%s/users.ini", configsDir)
-		loadSettings(configsDir) // Load admins accounts
+		loadSettings(0, configsDir) // Load admins accounts
 
 		return PLUGIN_HANDLED
 	}
@@ -450,12 +442,7 @@ public adminSql()
 	{
 		SQL_QueryError(query, error, charsmax(error))
 		server_print("[AMXX] %L", LANG_SERVER, "SQL_CANT_LOAD_ADMINS", error)
-	} else if (!SQL_NumResults(query)) {
-		server_print("[AMXX] %L", LANG_SERVER, "NO_ADMINS")
-	} else {
-		
-		AdminCount = 0
-		
+	} else if (SQL_NumResults(query)) {
 		/** do this incase people change the query order and forget to modify below */
 		new qcolAuth = SQL_FieldNameToNum(query, "auth")
 		new qcolPass = SQL_FieldNameToNum(query, "password")
@@ -480,19 +467,12 @@ public adminSql()
 			SQL_NextRow(query)
 		}
 	
-		if (AdminCount == 1)
-		{
-			server_print("[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN")
-		}
-		else
-		{
-			server_print("[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", AdminCount)
-		}
-		
-		SQL_FreeHandle(query)
-		SQL_FreeHandle(sql)
-		SQL_FreeHandle(info)
+		SQL_FreeHandle(query);
+		SQL_FreeHandle(sql);
+		SQL_FreeHandle(info);
 	}
+	
+	ShowLoadAdminsMessage(client, AdminCount, true);
 	
 	return PLUGIN_HANDLED
 }
@@ -509,36 +489,14 @@ public cmdReload(id, level, cid)
 	admins_flush();
 
 #if !defined USING_SQL
-	new filename[128]
+	new filename[128];
 	
-	get_configsdir(filename, charsmax(filename))
-	format(filename, charsmax(filename), "%s/users.ini", filename)
+	get_configsdir(filename, charsmax(filename));
+	format(filename, charsmax(filename), "%s/users.ini", filename);
 
-	AdminCount = 0;
-	loadSettings(filename);		// Re-Load admins accounts
-
-	if (id != 0)
-	{
-		if (AdminCount == 1)
-		{
-			console_print(id, "[AMXX] %L", LANG_SERVER, "LOADED_ADMIN");
-		}
-		else
-		{
-			console_print(id, "[AMXX] %L", LANG_SERVER, "LOADED_ADMINS", AdminCount);
-		}
-	}
+	loadSettings(id, filename);		// Re-Load admins accounts
 #else
-	AdminCount = 0
-	adminSql()
-
-	if (id != 0)
-	{
-		if (AdminCount == 1)
-			console_print(id, "[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMIN")
-		else
-			console_print(id, "[AMXX] %L", LANG_SERVER, "SQL_LOADED_ADMINS", AdminCount)
-	}
+	adminSql(id);
 #endif
 
 	new players[MAX_PLAYERS], num, pv
@@ -607,16 +565,16 @@ getAccess(id, name[], authid[], ip[], password[])
 				{
 					if (contain(name, AuthData) != -1)
 					{
-						index = i
-						g_CaseSensitiveName[id] = true
-						break
+						index = i;
+						g_CaseSensitiveName[id] = true;
+						break;
 					}
 				}
 				else if (equal(name, AuthData))
 				{
-					index = i
-					g_CaseSensitiveName[id] = true
-					break
+					index = i;
+					g_CaseSensitiveName[id] = true;
+					break;
 				}
 			}
 			else
@@ -786,9 +744,24 @@ public client_authorized(id)
 	return get_pcvar_num(amx_mode) ? accessUser(id) : PLUGIN_CONTINUE
 
 public client_putinserver(id)
+	return (id == 1 && !is_dedicated_server() && get_pcvar_num(amx_mode)) ? accessUser(id) : PLUGIN_CONTINUE;
+
+stock ShowLoadAdminsMessage(const client, const count, bool:mysql = false)
 {
-	if (!is_dedicated_server() && id == 1)
-		return get_pcvar_num(amx_mode) ? accessUser(id) : PLUGIN_CONTINUE
-	
-	return PLUGIN_CONTINUE
+	if(count)
+	{
+		if (count == 1)
+		{
+			console_print(client, "%L", client ? LANG_PLAYER : LANG_SERVER, mysql ? "SQL_LOADED_ADMIN" : "LOADED_ADMIN");
+		}
+		else
+		{
+			console_print(client, "%L", client ? LANG_PLAYER : LANG_SERVER, mysql ? "SQL_LOADED_ADMINS" : "LOADED_ADMINS", count);
+		}
+	}
+	else
+	{
+		console_print(client, "%L", client ? LANG_PLAYER : LANG_SERVER, "NO_ADMINS");
+	}
+	return 1;
 }

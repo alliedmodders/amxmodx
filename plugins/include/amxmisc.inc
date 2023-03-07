@@ -45,7 +45,7 @@ stock is_user_admin(id)
  *
  * @return              1 if access granted and parameters provided, 0 otherwise
  */
-stock cmd_access(id, level, cid, num, bool:accesssilent = false)
+stock cmd_access(id, level, cid, num = 0, bool:accesssilent = false)
 {
 	new has_access = 0;
 	if (id == (is_dedicated_server() ? 0 : 1))

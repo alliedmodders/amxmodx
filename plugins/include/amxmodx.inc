@@ -812,7 +812,7 @@ native show_menu(index, keys, const menu[], time = -1, const title[] = "");
  *                         (truncated) to an integer
  *                     2 - Returns the number of cells written to the buffer
  */
-native read_data(value, any:...);
+native read_data(any:value, any:...);
 
 /**
  * Returns the number of values in the client message.

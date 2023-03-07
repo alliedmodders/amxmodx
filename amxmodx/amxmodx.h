@@ -73,6 +73,7 @@ extern AMX_NATIVE_INFO g_StackNatives[];
 extern AMX_NATIVE_INFO g_TextParserNatives[];
 extern AMX_NATIVE_INFO g_CvarNatives[];
 extern AMX_NATIVE_INFO g_GameConfigNatives[];
+extern AMX_NATIVE_INFO g_CommandLineNatives[];
 
 #if defined PLATFORM_WINDOWS
 #define DLLOAD(path) (DLHANDLE)LoadLibrary(path)

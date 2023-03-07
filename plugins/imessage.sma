@@ -59,8 +59,8 @@ public infoMessage()
 	ArrayGetArray(g_Values, g_Current, values);
 	
 	new hostname[64];
-	
 	get_cvar_string("hostname", hostname, charsmax(hostname));
+	replace(Message, charsmax(Message), "%version%", AMXX_VERSION_MAJOR + "." + AMXX_VERSION_MINOR);
 	replace(Message, charsmax(Message), "%hostname%", hostname);
 	
 	set_hudmessage(values[0], values[1], values[2], X_POS, Y_POS, 0, 0.5, HOLD_TIME, 2.0, 2.0, -1);

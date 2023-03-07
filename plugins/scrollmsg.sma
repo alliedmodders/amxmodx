@@ -64,8 +64,8 @@ public msgInit()
 	g_xPos = 0.65
 	
 	new hostname[64]
-	
 	get_cvar_string("hostname", hostname, charsmax(hostname))
+	replace(g_scrollMsg, charsmax(g_scrollMsg), "%version%", AMXX_VERSION_MAJOR + "." + AMXX_VERSION_MINOR)
 	replace(g_scrollMsg, charsmax(g_scrollMsg), "%hostname%", hostname)
 	
 	g_Length = strlen(g_scrollMsg)

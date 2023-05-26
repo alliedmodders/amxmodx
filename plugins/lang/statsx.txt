@@ -1174,17 +1174,17 @@ DISABLED_MSG = 服务器关闭了这个选项
 [al]
 WHOLEBODY = gjithë trupin
 HEAD = kokë
-CHEST = gjoksë
+CHEST = gjoks
 STOMACH = bark
-LEFTARM = krahun majtë
-RIGHTARM = krahun djathtë
-LEFTLEG = këmba majtë
-RIGHTLEG = këmba djathtë
-MODE_SET_TO = "amx_statsx_mode" vendose në "%s"
+LEFTARM = krahun i majtë
+RIGHTARM = krahu i djathtë
+LEFTLEG = këmba e majtë
+RIGHTLEG = këmba e djathtë
+MODE_SET_TO = "amx_statsx_mode" vendosur në "%s"
 ATTACKERS = Sulmuesit
 ACC = acc.
-HIT_S = goditje(s)
-DMG = dëmtime
+HIT_S = goditje(t)
+DMG = dëm
 VICTIMS = Viktimat
 MOST_DMG = Më së shumti dëmtime u bënë nga
 KILLED_YOU_DIST = %s të vrau ty me %s^nprej distancës %0.2f metra.
@@ -1219,7 +1219,7 @@ STATS_ANNOUNCE = Ju keni %s shpallje të statistikave
 ENABLED = lësho
 DISABLED = ndalo
 SERVER_STATS = Statistikat Serverit
-X_RANK_IS = %s's është në rank %d prej %d
+X_RANK_IS = Rank i %s është %d prej %d
 DISABLED_MSG = Serveri e ka të ndaluar këtë zgjedhje
 
 [pt]

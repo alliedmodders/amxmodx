@@ -68,7 +68,7 @@ STOP_FLOOD = Прекратите флуд на сервере!
 STOP_FLOOD = 请停止愚弄服务器!
 
 [al]
-STOP_FLOOD = Ndalo përmbytjen(flood) në këtë server, sepse do të ndëshkoheni( Kontrollo Internetin)!
+STOP_FLOOD = Ndalo së përmbyturi serverin!
 
 [pt]
 STOP_FLOOD = Para com o flood no servidor!

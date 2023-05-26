@@ -299,16 +299,17 @@ NO_ENTRY = 您没有进入到服务器...
 
 [al]
 LOADED_ADMIN = Ngarkuar 1 admin nga skedari
-LOADED_ADMINS = Ngarkuar %d admina nga skedari
+LOADED_ADMINS = Ngarkuar %d admin(a) nga skedari
 SQL_CANT_CON = Gabim në SQL: nuk mund të lidhet: '%s'
 SQL_CANT_LOAD_ADMINS = Gabim në SQL: nuk mund të ngarkojë adminat: '%s'
 NO_ADMINS = Nuk është gjendur asnjë admin
-SQL_LOADED_ADMIN = Ngarkuar 1 admin nga database
-SQL_LOADED_ADMINS = Ngarkuar %d admina nga database
+SQL_LOADED_ADMIN = Ngarkuar 1 admin nga databaza
+SQL_LOADED_ADMINS = Ngarkuar %d admin(a) nga databaza
 INV_PAS = Fjalëkalim i gabuar!
-PAS_ACC = Fjalëkalimi i sakte
+PAS_ACC = Fjalëkalimi i saktë
 PRIV_SET = Privilegjet u vendosën
 NO_ENTRY = Ju nuk mund të futeni në server...
+
 
 [pt]
 LOADED_ADMIN = 1 admin foi carregado do ficheiro

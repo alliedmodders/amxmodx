@@ -553,26 +553,26 @@ CHANGLE_MENU = 更改地图菜单
 [al]
 RESULT_REF = Rezultati u refuzua
 RESULT_ACC = Rezultati u pranua
-VOTE_SUCCESS = Votimi përfundëoj me sukses. Harta do të ndryshohet në
+VOTE_SUCCESS = Votimi përfundoj me sukses. Harta do të ndryshohet në
 VOTE_FAILED = Votimi dështoi
 THE_WINNER = Fituesi
 WANT_CONT = A dëshironi të vazhdoni?
 VOT_CANC = Votimi është anuluar
-X_VOTED_FOR = %s votoj për opcionin #%d
-VOTEMAP_MENU = Lista Hartave Votimit
-START_VOT = Filloni Votimin
-SEL_MAPS = Zgjedh Hartat
+X_VOTED_FOR = %s votoi për opsionin #%d
+VOTEMAP_MENU = Lista Hartave të Votimit
+START_VOT = Fillo Votimin
+SEL_MAPS = Hartat e Zgjedhura
 ALREADY_VOT = Ekziston tashmë një votim...
 NO_MAPS_MENU = Nuk ka harta në listë
 VOT_NOW_ALLOW = Votimi nuk lejohet në këtë kohë
 WHICH_MAP = Cilën hartë dëshironi?
-CHANGE_MAP_TO = Ndrysho hartën tek
+CHANGE_MAP_TO = Ndrysho hartën në
 CANC_VOTE = Ndalo votimin
-ADMIN_V_MAP_1 = ADMIN: votoj hartën(s)
-ADMIN_V_MAP_2 = ADMIN %s: votoj hartën(s)
-ADMIN_CHANGEL_1 = ADMIN: ndryshoj hartën në %s
-ADMIN_CHANGEL_2 = ADMIN %s: ndryshoj hartën në %s
-CHANGLE_MENU = Lista Ndryshimeve Hartës
+ADMIN_V_MAP_1 = ADMIN: votoi hartë(n)
+ADMIN_V_MAP_2 = ADMIN %s: votoi hartë(n)
+ADMIN_CHANGEL_1 = ADMIN: ndryshoi hartën në %s
+ADMIN_CHANGEL_2 = ADMIN %s: ndryshoi hartën në %s
+CHANGLE_MENU = Lista Ndryshimeve të Hartës
 
 [pt]
 RESULT_REF = Resultado recusado

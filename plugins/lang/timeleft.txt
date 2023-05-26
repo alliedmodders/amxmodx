@@ -207,11 +207,11 @@ SECONDS = 秒
 
 [al]
 THE_TIME = Ora
-TIME_LEFT = Koha Mbetur
-NO_T_LIMIT = Koha Pakufizuar
-MINUTE = minut
+TIME_LEFT = Koha e Mbetur
+NO_T_LIMIT = Koha e Pakufizuar
+MINUTE = minutë
 MINUTES = minuta
-SECOND = sekond
+SECOND = sekondë
 SECONDS = sekonda
 
 [pt]

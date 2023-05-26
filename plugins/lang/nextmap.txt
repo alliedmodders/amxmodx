@@ -114,9 +114,9 @@ PLAYED_MAP = 已经玩过地图
 FRIEND_FIRE = 友军开火伤害
 
 [al]
-NEXT_MAP = Harta Ardhëshme:
+NEXT_MAP = Harta e Ardhëshme:
 PLAYED_MAP = Harta që luajtëm
-FRIEND_FIRE = Sulmo shokët
+FRIEND_FIRE = Sulmimi i shokëve
 
 [pt]
 NEXT_MAP = Próximo Mapa:

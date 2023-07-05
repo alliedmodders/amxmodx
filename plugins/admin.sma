@@ -82,7 +82,7 @@ public plugin_init()
 
 	remove_user_flags(0, read_flags("z"))		// Remove 'user' flag from server rights
 
-	new configsDir[64]
+	new configsDir[MAX_RESOURCE_PATH_LENGTH]
 	get_configsdir(configsDir, charsmax(configsDir))
 
 	server_cmd("exec %s/sql.cfg", configsDir)
@@ -111,7 +111,7 @@ public addadminfn(id, level, cid)
 
 	if (read_argc() >= 5)
 	{
-		static t_arg[16]
+		static t_arg[MAX_PLAYERS]
 		read_argv(4, t_arg, charsmax(t_arg))
 		
 		if (equali(t_arg, "steam") || equali(t_arg, "steamid") || equali(t_arg, "auth"))
@@ -134,7 +134,7 @@ public addadminfn(id, level, cid)
 		}
 	}
 
-	static arg[33]
+	static arg[MAX_PLAYERS]
 	read_argv(1, arg, charsmax(arg))
 	new player = -1
 	
@@ -145,7 +145,7 @@ public addadminfn(id, level, cid)
 			idtype |= ADMIN_LOOKUP
 			player = cmd_target(id, arg, CMDTARGET_ALLOW_SELF | CMDTARGET_NO_BOTS)
 		} else {
-			static _steamid[44]
+			static _steamid[MAX_AUTHID_LENGTH]
 			static _players[MAX_PLAYERS], _num, _pv
 			get_players(_players, _num)
 			for (new _i=0; _i<_num; _i++)
@@ -209,15 +209,15 @@ public addadminfn(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	static flags[64]
+	static flags[MAX_PLAYERS]
 	read_argv(2, flags, charsmax(flags))
 
-	static password[64]
+	static password[MAX_PLAYERS]
 	if (read_argc() >= 4) {
 		read_argv(3, password, charsmax(password))
 	}
 
-	static auth[33]
+	static auth[MAX_AUTHID_LENGTH]
 	static Comment[MAX_NAME_LENGTH]; // name of player to pass to comment field
 	if (idtype & ADMIN_LOOKUP)
 	{
@@ -238,7 +238,7 @@ public addadminfn(id, level, cid)
 		copy(auth, charsmax(auth), arg)
 	}
 	
-	static type[16], len
+	static type[MAX_PLAYERS / 2], len
 	
 	if (idtype & ADMIN_STEAM)
 		len += formatex(type[len], charsmax(type) - len, "c")
@@ -266,7 +266,7 @@ public addadminfn(id, level, cid)
 AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 {
 #if defined USING_SQL
-	static error[128], errno
+	static error[MAX_RESOURCE_PATH_LENGTH * 2], errno
 
 	new Handle:info = SQL_MakeStdTuple()
 	new Handle:sql = SQL_Connect(info, errno, error, charsmax(error))
@@ -277,7 +277,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 		//backup to users.ini
 #endif
 		// Make sure that the users.ini file exists.
-		static configsDir[64]
+		static configsDir[MAX_RESOURCE_PATH_LENGTH]
 		get_configsdir(configsDir, charsmax(configsDir))
 		formatex(configsDir, charsmax(configsDir), "%s/%s", configsDir, g_users_ini)
 
@@ -288,9 +288,9 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 		}
 
 		// Make sure steamid isn't already in file.
-		static line = 0, textline[256], len
-		const SIZE = 63
-		static line_steamid[SIZE + 1], line_password[SIZE + 1], line_accessflags[SIZE + 1], line_flags[SIZE + 1], parsedParams
+		static line = 0, textline[MAX_USER_INFO_LENGTH], len
+		
+		static line_steamid[MAX_RESOURCE_PATH_LENGTH], line_password[MAX_RESOURCE_PATH_LENGTH], line_accessflags[MAX_RESOURCE_PATH_LENGTH], line_flags[MAX_RESOURCE_PATH_LENGTH], parsedParams
 		
 		// <name|ip|steamid> <password> <access flags> <account flags>
 		while ((line = read_file(configsDir, line, textline, charsmax(textline), len)))
@@ -298,7 +298,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 			if (len == 0 || equal(textline, ";", 1))
 				continue // comment line
 
-			parsedParams = parse(textline, line_steamid, SIZE, line_password, SIZE, line_accessflags, SIZE, line_flags, SIZE)
+			parsedParams = parse(textline, line_steamid, charsmax(line_steamid), line_password, charsmax(line_password), line_accessflags, charsmax(line_accessflags), line_flags, charsmax(line_flags))
 			
 			if (parsedParams != 4)
 				continue	// Send warning/error?
@@ -311,7 +311,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 		}
 
 		// If we came here, steamid doesn't exist in users.ini. Add it.
-		static linetoadd[512]
+		static linetoadd[MAX_MENU_LENGTH]
 		
 		if (comment[0]==0)
 		{
@@ -328,7 +328,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 #if defined USING_SQL
 	}
 	
-	static table[32]
+	static table[MAX_PLAYERS]
 	
 	get_cvar_string("amx_sql_table", table, charsmax(table))
 	
@@ -360,11 +360,11 @@ loadSettings(szFilename[])
 	
 	if (File)
 	{
-		static Text[512];
-		static Flags[32];
-		static Access[32]
-		static AuthData[44];
-		static Password[32];
+		static Text[MAX_MENU_LENGTH];
+		static Flags[MAX_PLAYERS];
+		static Access[MAX_PLAYERS]
+		static AuthData[MAX_AUTHID_LENGTH];
+		static Password[MAX_PLAYERS];
 		
 		while (fgets(File, Text, charsmax(Text)))
 		{
@@ -410,7 +410,7 @@ loadSettings(szFilename[])
 #if defined USING_SQL
 public adminSql()
 {
-	static table[32], error[128], type[12], errno
+	static table[MAX_PLAYERS], error[MAX_RESOURCE_PATH_LENGTH * 2], type[12], errno
 	
 	new Handle:info = SQL_MakeStdTuple()
 	new Handle:sql = SQL_Connect(info, errno, error, charsmax(error))
@@ -424,7 +424,7 @@ public adminSql()
 		server_print("[AMXX] %L", LANG_SERVER, "SQL_CANT_CON", error)
 		
 		//backup to users.ini
-		static configsDir[64]
+		static configsDir[MAX_RESOURCE_PATH_LENGTH]
 		
 		get_configsdir(configsDir, charsmax(configsDir))
 		formatex(configsDir, charsmax(configsDir), "%s/%s", configsDir, g_users_ini)
@@ -464,10 +464,10 @@ public adminSql()
 		new qcolAccess = SQL_FieldNameToNum(query, "access")
 		new qcolFlags = SQL_FieldNameToNum(query, "flags")
 		
-		static AuthData[44];
-		static Password[44];
-		static Access[32];
-		static Flags[32];
+		static AuthData[MAX_AUTHID_LENGTH];
+		static Password[MAX_PLAYERS];
+		static Access[MAX_PLAYERS];
+		static Flags[MAX_PLAYERS];
 		
 		while (SQL_MoreResults(query))
 		{
@@ -511,7 +511,7 @@ public cmdReload(id, level, cid)
 	admins_flush();
 
 #if !defined USING_SQL
-	static filename[128]
+	static filename[MAX_RESOURCE_PATH_LENGTH * 2]
 	
 	get_configsdir(filename, charsmax(filename))
 	formatex(filename, charsmax(filename), "%s/%s", filename, g_users_ini)
@@ -564,8 +564,8 @@ getAccess(id, name[], authid[], ip[], password[])
 	static Count;
 	static Flags;
 	static Access;
-	static AuthData[44];
-	static Password[32];
+	static AuthData[MAX_AUTHID_LENGTH];
+	static Password[MAX_PLAYERS];
 	
 	g_CaseSensitiveName[id] = false;
 
@@ -647,7 +647,7 @@ getAccess(id, name[], authid[], ip[], password[])
 		if (Flags & FLAG_NOPASS)
 		{
 			result |= 8
-			static sflags[32]
+			static sflags[MAX_PLAYERS]
 			
 			get_flags(Access, sflags, charsmax(sflags))
 			set_user_flags(id, Access)
@@ -664,7 +664,7 @@ getAccess(id, name[], authid[], ip[], password[])
 				result |= 12
 				set_user_flags(id, Access)
 				
-				static sflags[32]
+				static sflags[MAX_PLAYERS]
 				get_flags(Access, sflags, charsmax(sflags))
 				
 				log_amx("Login: ^"%s<%d><%s><>^" became an admin (account ^"%s^") (access ^"%s^") (address ^"%s^")", name, get_user_userid(id), authid, AuthData, sflags, ip)
@@ -687,7 +687,7 @@ getAccess(id, name[], authid[], ip[], password[])
 	} 
 	else 
 	{
-		static defaccess[32]
+		static defaccess[MAX_PLAYERS]
 		
 		get_pcvar_string(amx_default_access, defaccess, charsmax(defaccess))
 		
@@ -712,7 +712,7 @@ accessUser(id, name[] = "")
 {
 	remove_user_flags(id)
 	
-	static userip[32], userauthid[32], password[32], passfield[32], username[MAX_NAME_LENGTH]
+	static userip[MAX_IP_LENGTH], userauthid[MAX_AUTHID_LENGTH], password[MAX_PLAYERS], passfield[MAX_PLAYERS], username[MAX_NAME_LENGTH]
 	
 	get_user_ip(id, userip, charsmax(userip), 1)
 	get_user_authid(id, userauthid, charsmax(userauthid))

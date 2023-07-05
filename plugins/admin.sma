@@ -26,7 +26,7 @@ new AdminCount;
 
 new PLUGINNAME[] = "AMX Mod X"
 
-static const g_users_ini[] = "users.ini"
+new const g_users_ini[] = "users.ini"
 
 #define ADMIN_LOOKUP	(1<<0)
 #define ADMIN_NORMAL	(1<<1)
@@ -111,7 +111,7 @@ public addadminfn(id, level, cid)
 
 	if (read_argc() >= 5)
 	{
-		new t_arg[16]
+		static t_arg[16]
 		read_argv(4, t_arg, charsmax(t_arg))
 		
 		if (equali(t_arg, "steam") || equali(t_arg, "steamid") || equali(t_arg, "auth"))
@@ -134,7 +134,7 @@ public addadminfn(id, level, cid)
 		}
 	}
 
-	new arg[33]
+	static arg[33]
 	read_argv(1, arg, charsmax(arg))
 	new player = -1
 	
@@ -178,7 +178,7 @@ public addadminfn(id, level, cid)
 	else if (idtype & ADMIN_IPADDR)
 	{
 		new len = strlen(arg)
-		new dots, chars
+		static dots, chars
 		
 		for (new i = 0; i < len; i++)
 		{
@@ -209,10 +209,10 @@ public addadminfn(id, level, cid)
 		return PLUGIN_HANDLED
 	}
 	
-	new flags[64]
+	static flags[64]
 	read_argv(2, flags, charsmax(flags))
 
-	new password[64]
+	static password[64]
 	if (read_argc() >= 4) {
 		read_argv(3, password, charsmax(password))
 	}
@@ -238,7 +238,7 @@ public addadminfn(id, level, cid)
 		copy(auth, charsmax(auth), arg)
 	}
 	
-	new type[16], len
+	static type[16], len
 	
 	if (idtype & ADMIN_STEAM)
 		len += formatex(type[len], charsmax(type) - len, "c")
@@ -266,7 +266,7 @@ public addadminfn(id, level, cid)
 AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 {
 #if defined USING_SQL
-	new error[128], errno
+	static error[128], errno
 
 	new Handle:info = SQL_MakeStdTuple()
 	new Handle:sql = SQL_Connect(info, errno, error, charsmax(error))
@@ -277,7 +277,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 		//backup to users.ini
 #endif
 		// Make sure that the users.ini file exists.
-		new configsDir[64]
+		static configsDir[64]
 		get_configsdir(configsDir, charsmax(configsDir))
 		formatex(configsDir, charsmax(configsDir), "%s/%s", configsDir, g_users_ini)
 
@@ -288,9 +288,9 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 		}
 
 		// Make sure steamid isn't already in file.
-		new line = 0, textline[256], len
+		static line = 0, textline[256], len
 		const SIZE = 63
-		new line_steamid[SIZE + 1], line_password[SIZE + 1], line_accessflags[SIZE + 1], line_flags[SIZE + 1], parsedParams
+		static line_steamid[SIZE + 1], line_password[SIZE + 1], line_accessflags[SIZE + 1], line_flags[SIZE + 1], parsedParams
 		
 		// <name|ip|steamid> <password> <access flags> <account flags>
 		while ((line = read_file(configsDir, line, textline, charsmax(textline), len)))
@@ -311,7 +311,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 		}
 
 		// If we came here, steamid doesn't exist in users.ini. Add it.
-		new linetoadd[512]
+		static linetoadd[512]
 		
 		if (comment[0]==0)
 		{
@@ -328,7 +328,7 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 #if defined USING_SQL
 	}
 	
-	new table[32]
+	static table[32]
 	
 	get_cvar_string("amx_sql_table", table, charsmax(table))
 	
@@ -356,15 +356,15 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 
 loadSettings(szFilename[])
 {
-	new File=fopen(szFilename,"r");
+	static File; File=fopen(szFilename,"r");
 	
 	if (File)
 	{
-		new Text[512];
-		new Flags[32];
-		new Access[32]
-		new AuthData[44];
-		new Password[32];
+		static Text[512];
+		static Flags[32];
+		static Access[32]
+		static AuthData[44];
+		static Password[32];
 		
 		while (fgets(File, Text, charsmax(Text)))
 		{
@@ -410,7 +410,7 @@ loadSettings(szFilename[])
 #if defined USING_SQL
 public adminSql()
 {
-	new table[32], error[128], type[12], errno
+	static table[32], error[128], type[12], errno
 	
 	new Handle:info = SQL_MakeStdTuple()
 	new Handle:sql = SQL_Connect(info, errno, error, charsmax(error))
@@ -424,7 +424,7 @@ public adminSql()
 		server_print("[AMXX] %L", LANG_SERVER, "SQL_CANT_CON", error)
 		
 		//backup to users.ini
-		new configsDir[64]
+		static configsDir[64]
 		
 		get_configsdir(configsDir, charsmax(configsDir))
 		formatex(configsDir, charsmax(configsDir), "%s/%s", configsDir, g_users_ini)
@@ -464,10 +464,10 @@ public adminSql()
 		new qcolAccess = SQL_FieldNameToNum(query, "access")
 		new qcolFlags = SQL_FieldNameToNum(query, "flags")
 		
-		new AuthData[44];
-		new Password[44];
-		new Access[32];
-		new Flags[32];
+		static AuthData[44];
+		static Password[44];
+		static Access[32];
+		static Flags[32];
 		
 		while (SQL_MoreResults(query))
 		{
@@ -511,7 +511,7 @@ public cmdReload(id, level, cid)
 	admins_flush();
 
 #if !defined USING_SQL
-	new filename[128]
+	static filename[128]
 	
 	get_configsdir(filename, charsmax(filename))
 	formatex(filename, charsmax(filename), "%s/%s", filename, g_users_ini)
@@ -687,7 +687,7 @@ getAccess(id, name[], authid[], ip[], password[])
 	} 
 	else 
 	{
-		new defaccess[32]
+		static defaccess[32]
 		
 		get_pcvar_string(amx_default_access, defaccess, charsmax(defaccess))
 		

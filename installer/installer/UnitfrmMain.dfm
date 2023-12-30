@@ -5733,7 +5733,7 @@ object frmMain: TfrmMain
         BorderColor = clBtnShadow
         Flat = True
         ShowBorder = True
-        Version = '1.24'
+        Version = '1.29'
       end
       object frbAgree: TFlatRadioButton
         Left = 10
@@ -6360,7 +6360,7 @@ object frmMain: TfrmMain
         Height = 21
         Style = csDropDownList
         Color = clWindow
-        ItemHeight = 13
+        ItemHeight = 0
         Items.Strings = (
           'None'
           'Counter-Strike'
@@ -6553,7 +6553,7 @@ object frmMain: TfrmMain
         BorderColor = clBtnShadow
         Flat = True
         ShowBorder = True
-        Version = '1.24'
+        Version = '1.29'
       end
     end
   end
@@ -6615,7 +6615,7 @@ object frmMain: TfrmMain
     Left = 492
     Top = 8
     Bitmap = {
-      494C010102000400040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000400080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       00000000000000000000000000000000000000000000078DBE00078DBE00078D
       BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D

@@ -47,7 +47,7 @@ enum MapObjective
  * @param damage    Damage dealt to victim
  * @param wpnindex  Weapon id
  * @param hitplace  Body hitplace
- * @param ta        If nonzero the attack was a team attack
+ * @param TA        If nonzero the attack was a team attack
  *
  * @noreturn
  */
@@ -61,11 +61,11 @@ forward client_damage(attacker, victim, damage, wpnindex, hitplace, TA);
  * @note For a list of possible body hitplaces see the HIT_* constants in
  *       amxconst.inc
  *
- * @param attacker  Attacker client index
+ * @param killer    Killer client index
  * @param victim    Victim client index
  * @param wpnindex  Weapon id
  * @param hitplace  Body hitplace
- * @param tk        If nonzero the death was a teamkill
+ * @param TK        If nonzero the death was a teamkill
  *
  * @noreturn
  */

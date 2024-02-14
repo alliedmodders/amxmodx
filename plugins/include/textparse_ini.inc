@@ -181,9 +181,9 @@ native INI_SetParseEnd(INIParser:handle, const func[]);
  * 
  *              public bool:OnKeyValue(INIParser:handle, const key[], const value[], bool:invalid_tokens, bool:equal_token, bool:quotes, curtok, any:data)
  *        -  
- * @param handle        Handle to an INI Parse structure.
- * @param kv            A KeyValue callback. 
- * @param ns            An optional NewSection callback. 
+ * @param smc           Handle to an INI Parse structure.
+ * @param kvFunc        A KeyValue callback. 
+ * @param nsFunc        An optional NewSection callback. 
  *
  * @noreturn
  */
@@ -196,7 +196,7 @@ native INI_SetReaders(INIParser:smc, const kvFunc[], const nsFunc[] = "" );
  *        -
  *          Called whenever a raw line is read.
  *
- *          @param handle       The INI Parse handle.
+ *          @param smc          The INI Parse handle.
  *          @param line         Contents of line.
  *          @param lineno       The line number it occurs on.
  *          @param curtok       Pointer to optionally store failed position in string.

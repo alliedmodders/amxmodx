@@ -162,7 +162,7 @@ native Float:floattan(Float:value, anglemode:mode=radian);
  *
  * @note For available units of measurements(modes) look at the anglemode enum
  *
- * @param value         The angle to calculate the hyperbolic sine from
+ * @param angle         The angle to calculate the hyperbolic sine from
  * @param mode          What unit of measurement is the angle specified in
  *                      Defaults to radians
  *
@@ -175,7 +175,7 @@ native Float:floatsinh(Float:angle, anglemode:mode=radian);
  *
  * @note For available units of measurements(modes) look at the anglemode enum
  *
- * @param value         The angle to calculate the hyperbolic cosine from
+ * @param angle         The angle to calculate the hyperbolic cosine from
  * @param mode          What unit of measurement is the angle specified in
  *                      Defaults to radians
  *
@@ -188,7 +188,7 @@ native Float:floatcosh(Float:angle, anglemode:mode=radian);
  *
  * @note For available units of measurements(modes) look at the anglemode enum
  *
- * @param value         The angle to calculate the hyperbolic tangent from
+ * @param angle         The angle to calculate the hyperbolic tangent from
  * @param mode          What unit of measurement is the angle specified in
  *                      Defaults to radians
  *
@@ -213,8 +213,8 @@ native Float:floatabs(Float:value);
  *
  * @note For available units of measurements(modes) look at the anglemode enum
  *
- * @param value         The tangent to calculate the angle from
- * @param mode          What unit of measurement should the output angle be in
+ * @param angle         The tangent to calculate the angle from
+ * @param radix         What unit of measurement should the output angle be in
  *
  * @return              The angle of a tangent
  */
@@ -225,8 +225,8 @@ native Float:floatatan(Float:angle, {anglemode,_}:radix);
  *
  * @note For available units of measurements(modes) look at the anglemode enum
  *
- * @param value         The cosine to calculate the angle from
- * @param mode          What unit of measurement should the output angle be in
+ * @param angle         The cosine to calculate the angle from
+ * @param radix         What unit of measurement should the output angle be in
  *
  * @return              The angle of a cosine
  */
@@ -237,8 +237,8 @@ native Float:floatacos(Float:angle, {anglemode,_}:radix);
  *
  * @note For available units of measurements(modes) look at the anglemode enum
  *
- * @param value         The sine to calculate the angle from
- * @param mode          What unit of measurement should the output angle be in
+ * @param angle         The sine to calculate the angle from
+ * @param radix         What unit of measurement should the output angle be in
  *
  * @return              The angle of a sine
  */
@@ -252,7 +252,7 @@ native Float:floatasin(Float:angle, {anglemode,_}:radix);
  *
  * @param x             Value representing the proportion of the x-coordinate.
  * @param y             Value representing the proportion of the x-coordinate.
- * @param mode          What unit of measurement should the output angle be in
+ * @param radix         What unit of measurement should the output angle be in
  *
  * @return              Arctangent of y/x
  */

@@ -212,7 +212,7 @@ native remove_cvar_flags(const cvar[], flags=-1);
  *       why the otherwise equivalent get_pcvar_string() function should be used
  *       instead.
  *
- * @param cvar      Cvar name to retrieve value from
+ * @param cvarname  Cvar name to retrieve value from
  * @param output    Buffer to copy cvar value to
  * @param iLen      Maximum size of the buffer
  *
@@ -281,7 +281,7 @@ native get_cvar_num(const cvarname[]);
  *       why the otherwise equivalent set_pcvar_num() function should be used
  *       instead.
  *
- * @param cvar      Cvar name to set value of
+ * @param cvarname  Cvar name to set value of
  * @param value     Value to set cvar to
  *
  * @noreturn

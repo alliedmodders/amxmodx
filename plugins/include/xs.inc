@@ -792,6 +792,89 @@ stock xs_vec_make2d(const Float:vec[3], Float:out[2])
 	out[1] = vec[1];
 }
 
+/**
+ * Linearly interpolates between two vectors.
+ *
+ * @param a         Start value, returned when t = 0.
+ * @param b         End value, returned when t = 1.
+ * @param out       The output vector. Can be one of the input vectors.
+ * @param t         Value used to interpolate between a and b.
+ *
+ * @noreturn
+ */
+stock xs_vec_lerp(Float: a[], Float: b[], Float: out[], const Float: t, const size = sizeof(out)) {
+    for (new i; i < size; i++) {
+        out[i] = a[i] + (b[i] - a[i]) * t;
+    }
+}
+
+/**
+ * Linearly interpolates between two angles.
+ * This method returns the shortest path between the specified angles.
+ * This method wraps around values that are outside the range [-180, 180].
+ * For example, xs_vec_lerp_angle(1.0, 190.0, 1.0) returns -170.0.
+ * To find the longest path use xs_lerp().
+ *
+ * @param a         The a angle. A float expressed in degrees.
+ * @param b         The b angle. A float expressed in degrees.
+ * @param t         Value used to interpolate between a and b.
+ *
+ * @return          Returns the interpolated float result between angle `a` and angle `b`,
+ *                  based on the interpolation value `t`.
+ */
+stock Float: xs_vec_lerp_angle(Float: a, Float: b, const Float: t) {
+    while (a < -180.0)
+        a += 360.0;
+    while (a > 180.0)
+        a -= 360.0;
+
+    while (b < -180.0)
+        b += 360.0;
+    while (b > 180.0)
+        b -= 360.0;
+
+    new Float: angleDiff = b - a;
+
+    if (angleDiff > 180.0)
+        angleDiff -= 360.0;
+    else if (angleDiff < -180.0)
+        angleDiff += 360.0;
+
+    new Float: result = a + t * angleDiff;
+
+    while (result < -180.0)
+        result += 360.0;
+    while (result > 180.0)
+        result -= 360.0;
+
+    return result;
+}
+
+/**
+ * Converts a vector represented as an array of floats to a formatted string.
+ *
+ * @param vec       The vector represented as an array of floats.
+ * @param output    The output string where the formatted vector will be stored.
+ * @param len       The maximum length of the output string.
+ * @param precision The number of decimal places for each vector component.
+ * @param size      The size of the vector array.
+ *
+ * @return          Returns the number of characters written to the output string.
+ *                  It is the length of the formatted vector string.
+ */
+stock xs_vec_to_string(const Float: vec[], output[], const len, const precision = 1, const size = sizeof(vec)) {
+    new _len = copy(output, len, "(");
+
+    for (new i = 0; i < size && _len < len; ++i) {
+        _len += format(output[_len], (len - _len),
+            fmt("%%.%if%s", precision, (i < size - 1) ? ", " : ")"),
+            vec[i]
+        );
+    }
+
+    return _len;
+}
+
 // *** planes
 
 // normal

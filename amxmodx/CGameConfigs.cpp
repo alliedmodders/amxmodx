@@ -584,8 +584,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 					}
 #endif
 				}
-
-				if (!finalAddress)
+				else
 				{
 					finalAddress = g_MemUtils.DecodeAndFindPattern(addressInBase, TempSig.signature);
 				}

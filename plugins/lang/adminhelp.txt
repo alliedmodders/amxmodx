@@ -213,7 +213,7 @@ HELP_ENTRIES = 目前第 %d 条 - %d 条,共 %d 条
 HELP_USE_MORE = 使用 '%s %d' 获取更多
 HELP_USE_BEGIN = 使用 '%s 1' 返回首页
 TYPE_HELP = 在控制台输入 '%s' '%s' 查看有效的命令
-TIME_INFO_1 = 剩余时间: %d:%02d 分钏. 下一张地图为: %s
+TIME_INFO_1 = 剩余时间: %d:%02d 分钟. 下一张地图为: %s
 TIME_INFO_2 = 无时间限制. 下一张地图为: %s
 
 [al]

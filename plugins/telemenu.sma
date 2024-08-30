@@ -196,7 +196,7 @@ displayTelMenu(id, pos)
 	if (g_menuOption[id] > 0)	// 1
 	{
 		keys |= MENU_KEY_7
-		len += formatex(menuBody[len], charsmax(menuBody)-len, "^n7. To location: %.0f %.0f %.0f^n", g_menuOrigin[id][0], g_menuOrigin[id][1], g_menuOrigin[id][2])
+		len += formatex(menuBody[len], charsmax(menuBody)-len, "^n7. %L: %.0f %.0f %.0f^n", id, "TO_LOC", g_menuOrigin[id][0], g_menuOrigin[id][1], g_menuOrigin[id][2])
 	}
 	else if (g_menuOption[id])	// -1
 	{

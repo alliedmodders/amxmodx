@@ -172,5 +172,6 @@ SAVE_LOC = Ruaj Vendin
 ADMIN_TELEPORT_1 = ADMIN: teleportou %s
 ADMIN_TELEPORT_2 = ADMIN %s: teleportou %s
 TELE_MENU = Menu de Teleporte
+TO_LOC = Para Localização
 CUR_LOC = Localização Atual
 SAVE_LOC = Guardar Localização

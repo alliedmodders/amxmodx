@@ -15,15 +15,12 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y build-essential g++ gcc make
       - name: 编译 CStrike Debug 版本
         run: |
-          cd modules/cstrike/cstrike
+          cd modules/cstrike
           make CFLAGS="-g -O0"
-      - name: 拷贝产物到根目录
-        run: |
-          cp modules/cstrike/cstrike/*.so .
-      - name: 查看根目录文件
-        run: ls -al
+      - name: 查看产物
+        run: ls -al modules/cstrike
       - name: 保存构建产物
         uses: actions/upload-artifact@v4
         with:
           name: cstrike-debug-build
-          path: ./*.so
+          path: modules/cstrike/*.so

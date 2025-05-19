@@ -1,0 +1,24 @@
+name: Build Debug
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 安装依赖
+        run: sudo apt-get update && sudo apt-get install -y build-essential g++ gcc make
+      - name: 编译 Debug 版本
+        run: |
+          ./configure --enable-debug
+          make CFLAGS="-g -O0"
+      - name: 保存构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: amxmodx-debug-build
+          path: build/

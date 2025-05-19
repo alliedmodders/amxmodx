@@ -18,6 +18,11 @@ jobs:
         with:
           submodules: recursive
 
+      # 下载依赖项（如果需要）
+      - name: Download dependencies
+        run: |
+          git clone https://github.com/some-repo/halflife-sdk.git third_party/halflife-sdk
+
       # 设置 MSBuild 环境
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v1
@@ -35,5 +40,5 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: amxmodx-debug-build
-          path: Debug/
+          name: cstrike-debug-build
+          path: modules/cstrike/cstrike/msvc12/Debug/

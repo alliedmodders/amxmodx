@@ -20,6 +20,13 @@ jobs:
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v1
 
+      # 自动重新定向工具集
+      - name: Retarget solution to v143
+        run: |
+          "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe > msbuild_path.txt
+          set /p MSBUILD_PATH=<msbuild_path.txt
+          "%MSBUILD_PATH%" amxmodx/msvc12/amxmodx_mm.sln /p:PlatformToolset=v143 /p:Configuration=Debug
+
       # 编译 Debug 版本
       - name: Build Debug version
         run: |
@@ -27,7 +34,7 @@ jobs:
 
       # 查看生成的产物
       - name: List build artifacts
-        run: dir Debug /s /b
+        run: dir /s /b
 
       # 保存构建产物
       - name: Upload build artifacts

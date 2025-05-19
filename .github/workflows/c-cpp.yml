@@ -18,10 +18,10 @@ jobs:
         with:
           submodules: recursive
 
-      # 下载依赖项（如果需要）
-      - name: Download dependencies
+      # 克隆 Half-Life SDK 仓库
+      - name: Clone Half-Life SDK
         run: |
-          git clone https://github.com/some-repo/halflife-sdk.git third_party/halflife-sdk
+          git clone https://github.com/alliedmodders/hlsdk.git third_party/halflife-sdk
 
       # 设置 MSBuild 环境
       - name: Set up MSBuild

@@ -22,8 +22,9 @@ jobs:
 
       # 编译 Debug 版本
       - name: Build Debug version
+        shell: cmd
         run: |
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" amxmodx/msvc12/amxmodx_mm.sln /p:PlatformToolset=v143 /p:Configuration=Debug
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" amxmodx\msvc12\amxmodx_mm.sln /p:PlatformToolset=v143 /p:Configuration=Debug
 
       # 查看生成的产物
       - name: List build artifacts

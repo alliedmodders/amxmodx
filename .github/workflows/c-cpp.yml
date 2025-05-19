@@ -18,17 +18,6 @@ jobs:
         with:
           submodules: recursive
 
-      # 克隆 Half-Life SDK 仓库
-      - name: Clone Half-Life SDK
-        run: |
-          git clone https://github.com/alliedmodders/hlsdk.git third_party/halflife-sdk
-
-      # 列出 Half-Life SDK 文件
-      - name: List Half-Life SDK files
-        shell: pwsh
-        run: |
-          Get-ChildItem -Path third_party/halflife-sdk -Recurse
-
       # 设置 MSBuild 环境
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v1
@@ -40,9 +29,7 @@ jobs:
 
       # 查看生成的产物
       - name: List build artifacts
-        shell: pwsh
-        run: |
-          Get-ChildItem -Path modules/cstrike/cstrike/msvc12/Debug -Recurse
+        run: dir /s /b
 
       # 保存构建产物
       - name: Upload build artifacts

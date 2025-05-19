@@ -25,7 +25,9 @@ jobs:
 
       # 列出 Half-Life SDK 文件
       - name: List Half-Life SDK files
-        run: dir third_party/halflife-sdk /s /b
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path third_party/halflife-sdk -Recurse
 
       # 设置 MSBuild 环境
       - name: Set up MSBuild
@@ -38,7 +40,9 @@ jobs:
 
       # 查看生成的产物
       - name: List build artifacts
-        run: dir /s /b
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path modules/cstrike/cstrike/msvc12/Debug -Recurse
 
       # 保存构建产物
       - name: Upload build artifacts

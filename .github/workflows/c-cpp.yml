@@ -15,6 +15,8 @@ jobs:
       # 检出代码
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       # 设置 MSBuild 环境
       - name: Set up MSBuild
@@ -23,7 +25,7 @@ jobs:
       # 编译 Debug 版本
       - name: Build Debug version
         run: |
-          msbuild your_project.sln /p:Configuration=Debug
+          msbuild amxmodx/amxmodx/msvc12/amxmodx_mm.sln /p:Configuration=Debug
 
       # 查看生成的产物
       - name: List build artifacts
@@ -34,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: amxmodx-debug-build
-          path: path\to\your\output\directory
+          path: Debug/

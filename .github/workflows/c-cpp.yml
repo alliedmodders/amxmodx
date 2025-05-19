@@ -8,17 +8,30 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build Debug Version
+    runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: 安装依赖
-        run: sudo apt-get update && sudo apt-get install -y build-essential g++ gcc make
-      - name: 编译 Debug 版本
-        run: make CFLAGS="-g -O0"
-      - name: 查看所有模块产物
-        run: ls -al modules/*/*.so || true
-      - name: 保存构建产物
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 设置 MSBuild 环境
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      # 编译 Debug 版本
+      - name: Build Debug version
+        run: |
+          msbuild your_project.sln /p:Configuration=Debug
+
+      # 查看生成的产物
+      - name: List build artifacts
+        run: dir /s /b
+
+      # 保存构建产物
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: amxmodx-debug-build
-          path: modules/*/*.so
+          path: path\to\your\output\directory

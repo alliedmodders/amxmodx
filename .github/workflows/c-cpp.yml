@@ -1,4 +1,4 @@
-name: Build Debug
+name: Build CStrike Debug
 
 on:
   push:
@@ -13,12 +13,17 @@ jobs:
       - uses: actions/checkout@v4
       - name: 安装依赖
         run: sudo apt-get update && sudo apt-get install -y build-essential g++ gcc make
-      - name: 编译 Debug 版本
+      - name: 编译 CStrike Debug 版本
         run: |
-          ./configure --enable-debug
+          cd modules/cstrike/cstrike
           make CFLAGS="-g -O0"
+      - name: 拷贝产物到根目录
+        run: |
+          cp modules/cstrike/cstrike/*.so .
+      - name: 查看根目录文件
+        run: ls -al
       - name: 保存构建产物
         uses: actions/upload-artifact@v4
         with:
-          name: amxmodx-debug-build
-          path: build/
+          name: cstrike-debug-build
+          path: ./*.so

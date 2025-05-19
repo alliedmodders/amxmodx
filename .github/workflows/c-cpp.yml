@@ -23,6 +23,10 @@ jobs:
         run: |
           git clone https://github.com/alliedmodders/hlsdk.git third_party/halflife-sdk
 
+      # 列出 Half-Life SDK 文件
+      - name: List Half-Life SDK files
+        run: dir third_party/halflife-sdk /s /b
+
       # 设置 MSBuild 环境
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v1

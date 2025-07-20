@@ -84,6 +84,45 @@ struct CSharpEventParam
     char stringValue[256];
 };
 
+// Player information structure for C# interop
+struct CSharpPlayerInfo
+{
+    char name[64];
+    char ip[32];
+    char authId[64];
+    char team[32];
+    int index;
+    int teamId;
+    int userId;
+    int flags;
+    float connectTime;
+    float playTime;
+    bool isInGame;
+    bool isBot;
+    bool isAlive;
+    bool isAuthorized;
+    bool isConnecting;
+    bool isHLTV;
+    bool hasVGUI;
+};
+
+// Player statistics structure for C# interop
+struct CSharpPlayerStats
+{
+    int deaths;
+    int kills;
+    float frags;
+    int currentWeapon;
+    int menu;
+    int keys;
+    float health;
+    float armor;
+    int aiming;
+    float menuExpire;
+    int weapons[32];  // Weapon ammo array
+    int clips[32];    // Weapon clip array
+};
+
 // Bridge initialization and cleanup
 CSHARP_EXPORT void CSHARP_CALL InitializeCSharpBridge();
 CSHARP_EXPORT void CSHARP_CALL CleanupCSharpBridge();
@@ -176,6 +215,51 @@ CSHARP_EXPORT int CSHARP_CALL CreateSingleForward(const char* functionName, CSha
 CSHARP_EXPORT bool CSHARP_CALL ExecuteForward(int forwardId, const CSharpEventParam* params, int numParams, int* outResult);
 CSHARP_EXPORT bool CSHARP_CALL UnregisterForward(int forwardId);
 CSHARP_EXPORT bool CSHARP_CALL GetForwardInfo(int forwardId, CSharpForwardInfo* outInfo);
+
+// Player information functions
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerValid(int clientId);
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerInfo(int clientId, CSharpPlayerInfo* outInfo);
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerStats(int clientId, CSharpPlayerStats* outStats);
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerName(int clientId, char* buffer, int bufferSize);
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerIP(int clientId, char* buffer, int bufferSize);
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerAuthId(int clientId, char* buffer, int bufferSize);
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerTeam(int clientId, char* buffer, int bufferSize);
+
+// Player state functions
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerInGame(int clientId);
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerBot(int clientId);
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerAlive(int clientId);
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerAuthorized(int clientId);
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerConnecting(int clientId);
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerHLTV(int clientId);
+
+// Player property getters
+CSHARP_EXPORT int CSHARP_CALL GetPlayerUserId(int clientId);
+CSHARP_EXPORT int CSHARP_CALL GetPlayerTeamId(int clientId);
+CSHARP_EXPORT int CSHARP_CALL GetPlayerFlags(int clientId);
+CSHARP_EXPORT float CSHARP_CALL GetPlayerConnectTime(int clientId);
+CSHARP_EXPORT float CSHARP_CALL GetPlayerPlayTime(int clientId);
+CSHARP_EXPORT float CSHARP_CALL GetPlayerHealth(int clientId);
+CSHARP_EXPORT float CSHARP_CALL GetPlayerArmor(int clientId);
+CSHARP_EXPORT float CSHARP_CALL GetPlayerFrags(int clientId);
+CSHARP_EXPORT int CSHARP_CALL GetPlayerDeaths(int clientId);
+CSHARP_EXPORT int CSHARP_CALL GetPlayerCurrentWeapon(int clientId);
+CSHARP_EXPORT int CSHARP_CALL GetPlayerMenu(int clientId);
+CSHARP_EXPORT int CSHARP_CALL GetPlayerKeys(int clientId);
+
+// Player property setters
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerHealth(int clientId, float health);
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerArmor(int clientId, float armor);
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerFrags(int clientId, float frags);
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerTeamInfo(int clientId, int teamId, const char* teamName);
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerFlags(int clientId, int flags);
+
+// Player utility functions
+CSHARP_EXPORT int CSHARP_CALL GetMaxClients();
+CSHARP_EXPORT int CSHARP_CALL GetConnectedPlayersCount();
+CSHARP_EXPORT bool CSHARP_CALL GetConnectedPlayers(int* playerIds, int maxPlayers, int* outCount);
+CSHARP_EXPORT bool CSHARP_CALL KickPlayer(int clientId, const char* reason);
+CSHARP_EXPORT bool CSHARP_CALL SlayPlayer(int clientId);
 
 // Internal bridge management
 namespace CSharpBridge

@@ -184,7 +184,26 @@ namespace AmxModX.TestApp
                 throw;
             }
 
-            // 测试5: 多线程安全性 / Test 5: Thread safety
+            // 测试5: 玩家管理系统 / Test 5: Player management system
+            PrintTest("Test 5: Player Management System");
+            try
+            {
+                PlayerManagementExample.Initialize();
+                PrintSuccess("✓ Player management example initialized");
+
+                PlayerManagementExample.RunFullDemo();
+                PrintSuccess("✓ Player management demo completed");
+
+                PlayerManagementExample.Cleanup();
+                PrintSuccess("✓ Test 5 completed successfully");
+            }
+            catch (Exception ex)
+            {
+                PrintError($"✗ Player management test failed: {ex.Message}");
+                throw;
+            }
+
+            // 测试6: 多线程安全性 / Test 6: Thread safety
             if (options.TestThreadSafety)
             {
                 await RunThreadSafetyTests();

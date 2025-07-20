@@ -161,6 +161,120 @@ namespace AmxModX.Interop
     }
 
     /// <summary>
+    /// 玩家信息结构 / Player information structure
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct PlayerInfo
+    {
+        /// <summary>玩家名称 / Player name</summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+        public string Name;
+
+        /// <summary>IP地址 / IP address</summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+        public string IP;
+
+        /// <summary>认证ID / Auth ID</summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+        public string AuthId;
+
+        /// <summary>队伍名称 / Team name</summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+        public string Team;
+
+        /// <summary>玩家索引 / Player index</summary>
+        public int Index;
+
+        /// <summary>队伍ID / Team ID</summary>
+        public int TeamId;
+
+        /// <summary>用户ID / User ID</summary>
+        public int UserId;
+
+        /// <summary>权限标志 / Permission flags</summary>
+        public int Flags;
+
+        /// <summary>连接时间 / Connect time</summary>
+        public float ConnectTime;
+
+        /// <summary>游戏时间 / Play time</summary>
+        public float PlayTime;
+
+        /// <summary>是否在游戏中 / Whether in game</summary>
+        [MarshalAs(UnmanagedType.I1)]
+        public bool IsInGame;
+
+        /// <summary>是否为机器人 / Whether is bot</summary>
+        [MarshalAs(UnmanagedType.I1)]
+        public bool IsBot;
+
+        /// <summary>是否存活 / Whether alive</summary>
+        [MarshalAs(UnmanagedType.I1)]
+        public bool IsAlive;
+
+        /// <summary>是否已认证 / Whether authorized</summary>
+        [MarshalAs(UnmanagedType.I1)]
+        public bool IsAuthorized;
+
+        /// <summary>是否正在连接 / Whether connecting</summary>
+        [MarshalAs(UnmanagedType.I1)]
+        public bool IsConnecting;
+
+        /// <summary>是否为HLTV / Whether is HLTV</summary>
+        [MarshalAs(UnmanagedType.I1)]
+        public bool IsHLTV;
+
+        /// <summary>是否支持VGUI / Whether has VGUI</summary>
+        [MarshalAs(UnmanagedType.I1)]
+        public bool HasVGUI;
+    }
+
+    /// <summary>
+    /// 玩家统计信息结构 / Player statistics structure
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct PlayerStats
+    {
+        /// <summary>死亡数 / Deaths count</summary>
+        public int Deaths;
+
+        /// <summary>击杀数 / Kills count</summary>
+        public int Kills;
+
+        /// <summary>击杀分数 / Frags score</summary>
+        public float Frags;
+
+        /// <summary>当前武器 / Current weapon</summary>
+        public int CurrentWeapon;
+
+        /// <summary>菜单状态 / Menu state</summary>
+        public int Menu;
+
+        /// <summary>按键状态 / Keys state</summary>
+        public int Keys;
+
+        /// <summary>生命值 / Health value</summary>
+        public float Health;
+
+        /// <summary>护甲值 / Armor value</summary>
+        public float Armor;
+
+        /// <summary>瞄准目标 / Aiming target</summary>
+        public int Aiming;
+
+        /// <summary>菜单过期时间 / Menu expire time</summary>
+        public float MenuExpire;
+
+        /// <summary>武器弹药数组 / Weapon ammo array</summary>
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public int[] Weapons;
+
+        /// <summary>武器弹夹数组 / Weapon clip array</summary>
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public int[] Clips;
+    }
+
+    /// <summary>
     /// AMX Mod X 原生函数导入 / AMX Mod X native function imports
     /// 统一管理所有DLL导入声明 / Centralized management of all DLL import declarations
     /// </summary>
@@ -455,6 +569,334 @@ namespace AmxModX.Interop
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetForwardInfo")]
         [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool GetForwardInfo(int forwardId, out ForwardInfo outInfo);
+
+        // ========== 玩家信息接口 / Player Information Interfaces ==========
+
+        /// <summary>
+        /// 检查玩家ID是否有效 / Check if player ID is valid
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否有效 / Whether valid</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "IsPlayerValid")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool IsPlayerValid(int clientId);
+
+        /// <summary>
+        /// 获取玩家完整信息 / Get complete player information
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="outInfo">输出玩家信息 / Output player info</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerInfo")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetPlayerInfo(int clientId, out PlayerInfo outInfo);
+
+        /// <summary>
+        /// 获取玩家统计信息 / Get player statistics
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="outStats">输出统计信息 / Output statistics</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerStats")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetPlayerStats(int clientId, out PlayerStats outStats);
+
+        /// <summary>
+        /// 获取玩家名称 / Get player name
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="buffer">输出缓冲区 / Output buffer</param>
+        /// <param name="bufferSize">缓冲区大小 / Buffer size</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerName")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetPlayerName(int clientId, [MarshalAs(UnmanagedType.LPStr)] System.Text.StringBuilder buffer, int bufferSize);
+
+        /// <summary>
+        /// 获取玩家IP地址 / Get player IP address
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="buffer">输出缓冲区 / Output buffer</param>
+        /// <param name="bufferSize">缓冲区大小 / Buffer size</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerIP")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetPlayerIP(int clientId, [MarshalAs(UnmanagedType.LPStr)] System.Text.StringBuilder buffer, int bufferSize);
+
+        /// <summary>
+        /// 获取玩家认证ID / Get player auth ID
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="buffer">输出缓冲区 / Output buffer</param>
+        /// <param name="bufferSize">缓冲区大小 / Buffer size</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerAuthId")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetPlayerAuthId(int clientId, [MarshalAs(UnmanagedType.LPStr)] System.Text.StringBuilder buffer, int bufferSize);
+
+        /// <summary>
+        /// 获取玩家队伍名称 / Get player team name
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="buffer">输出缓冲区 / Output buffer</param>
+        /// <param name="bufferSize">缓冲区大小 / Buffer size</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerTeam")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetPlayerTeam(int clientId, [MarshalAs(UnmanagedType.LPStr)] System.Text.StringBuilder buffer, int bufferSize);
+
+        // ========== 玩家状态接口 / Player State Interfaces ==========
+
+        /// <summary>
+        /// 检查玩家是否在游戏中 / Check if player is in game
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否在游戏中 / Whether in game</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "IsPlayerInGame")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool IsPlayerInGame(int clientId);
+
+        /// <summary>
+        /// 检查玩家是否为机器人 / Check if player is bot
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否为机器人 / Whether is bot</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "IsPlayerBot")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool IsPlayerBot(int clientId);
+
+        /// <summary>
+        /// 检查玩家是否存活 / Check if player is alive
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否存活 / Whether alive</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "IsPlayerAlive")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool IsPlayerAlive(int clientId);
+
+        /// <summary>
+        /// 检查玩家是否已认证 / Check if player is authorized
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否已认证 / Whether authorized</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "IsPlayerAuthorized")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool IsPlayerAuthorized(int clientId);
+
+        /// <summary>
+        /// 检查玩家是否正在连接 / Check if player is connecting
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否正在连接 / Whether connecting</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "IsPlayerConnecting")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool IsPlayerConnecting(int clientId);
+
+        /// <summary>
+        /// 检查玩家是否为HLTV / Check if player is HLTV
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否为HLTV / Whether is HLTV</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "IsPlayerHLTV")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool IsPlayerHLTV(int clientId);
+
+        // ========== 玩家属性获取接口 / Player Property Getter Interfaces ==========
+
+        /// <summary>
+        /// 获取玩家用户ID / Get player user ID
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>用户ID / User ID</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerUserId")]
+        internal static extern int GetPlayerUserId(int clientId);
+
+        /// <summary>
+        /// 获取玩家队伍ID / Get player team ID
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>队伍ID / Team ID</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerTeamId")]
+        internal static extern int GetPlayerTeamId(int clientId);
+
+        /// <summary>
+        /// 获取玩家标志 / Get player flags
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>标志值 / Flags value</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerFlags")]
+        internal static extern int GetPlayerFlags(int clientId);
+
+        /// <summary>
+        /// 获取玩家连接时间 / Get player connect time
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>连接时间 / Connect time</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerConnectTime")]
+        internal static extern float GetPlayerConnectTime(int clientId);
+
+        /// <summary>
+        /// 获取玩家游戏时间 / Get player play time
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>游戏时间 / Play time</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerPlayTime")]
+        internal static extern float GetPlayerPlayTime(int clientId);
+
+        /// <summary>
+        /// 获取玩家生命值 / Get player health
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>生命值 / Health value</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerHealth")]
+        internal static extern float GetPlayerHealth(int clientId);
+
+        /// <summary>
+        /// 获取玩家护甲值 / Get player armor
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>护甲值 / Armor value</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerArmor")]
+        internal static extern float GetPlayerArmor(int clientId);
+
+        /// <summary>
+        /// 获取玩家击杀数 / Get player frags
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>击杀数 / Frags count</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerFrags")]
+        internal static extern float GetPlayerFrags(int clientId);
+
+        /// <summary>
+        /// 获取玩家死亡数 / Get player deaths
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>死亡数 / Deaths count</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerDeaths")]
+        internal static extern int GetPlayerDeaths(int clientId);
+
+        /// <summary>
+        /// 获取玩家当前武器 / Get player current weapon
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>武器ID / Weapon ID</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerCurrentWeapon")]
+        internal static extern int GetPlayerCurrentWeapon(int clientId);
+
+        /// <summary>
+        /// 获取玩家菜单状态 / Get player menu state
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>菜单状态 / Menu state</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerMenu")]
+        internal static extern int GetPlayerMenu(int clientId);
+
+        /// <summary>
+        /// 获取玩家按键状态 / Get player keys state
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>按键状态 / Keys state</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetPlayerKeys")]
+        internal static extern int GetPlayerKeys(int clientId);
+
+        // ========== 玩家属性设置接口 / Player Property Setter Interfaces ==========
+
+        /// <summary>
+        /// 设置玩家生命值 / Set player health
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="health">生命值 / Health value</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "SetPlayerHealth")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool SetPlayerHealth(int clientId, float health);
+
+        /// <summary>
+        /// 设置玩家护甲值 / Set player armor
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="armor">护甲值 / Armor value</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "SetPlayerArmor")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool SetPlayerArmor(int clientId, float armor);
+
+        /// <summary>
+        /// 设置玩家击杀数 / Set player frags
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="frags">击杀数 / Frags count</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "SetPlayerFrags")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool SetPlayerFrags(int clientId, float frags);
+
+        /// <summary>
+        /// 设置玩家队伍信息 / Set player team info
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="teamId">队伍ID / Team ID</param>
+        /// <param name="teamName">队伍名称 / Team name</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi, EntryPoint = "SetPlayerTeamInfo")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool SetPlayerTeamInfo(int clientId, int teamId, [MarshalAs(UnmanagedType.LPStr)] string teamName);
+
+        /// <summary>
+        /// 设置玩家标志 / Set player flags
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="flags">标志值 / Flags value</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "SetPlayerFlags")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool SetPlayerFlags(int clientId, int flags);
+
+        // ========== 玩家工具函数接口 / Player Utility Function Interfaces ==========
+
+        /// <summary>
+        /// 获取最大客户端数量 / Get maximum clients count
+        /// </summary>
+        /// <returns>最大客户端数量 / Maximum clients count</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetMaxClients")]
+        internal static extern int GetMaxClients();
+
+        /// <summary>
+        /// 获取已连接玩家数量 / Get connected players count
+        /// </summary>
+        /// <returns>已连接玩家数量 / Connected players count</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetConnectedPlayersCount")]
+        internal static extern int GetConnectedPlayersCount();
+
+        /// <summary>
+        /// 获取已连接玩家列表 / Get connected players list
+        /// </summary>
+        /// <param name="playerIds">玩家ID数组 / Player IDs array</param>
+        /// <param name="maxPlayers">最大玩家数 / Maximum players</param>
+        /// <param name="outCount">输出玩家数量 / Output players count</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetConnectedPlayers")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetConnectedPlayers([MarshalAs(UnmanagedType.LPArray)] int[] playerIds, int maxPlayers, out int outCount);
+
+        /// <summary>
+        /// 踢出玩家 / Kick player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="reason">踢出原因 / Kick reason</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi, EntryPoint = "KickPlayer")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool KickPlayer(int clientId, [MarshalAs(UnmanagedType.LPStr)] string reason);
+
+        /// <summary>
+        /// 杀死玩家 / Slay player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "SlayPlayer")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool SlayPlayer(int clientId);
 
         /// <summary>
         /// 注册控制台命令 / Register console command
@@ -1332,6 +1774,365 @@ namespace AmxModX.Interop
                 FloatValue = 0,
                 StringValue = value ?? string.Empty
             };
+        }
+
+        // ========== 玩家信息管理接口 / Player Information Management Interfaces ==========
+
+        /// <summary>
+        /// 检查玩家ID是否有效 / Check if player ID is valid
+        /// 验证客户端ID是否在有效范围内 / Validate if client ID is within valid range
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否有效 / Whether valid</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static bool IsPlayerValid(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.IsPlayerValid(clientId);
+        }
+
+        /// <summary>
+        /// 获取玩家完整信息 / Get complete player information
+        /// 获取玩家的所有基本信息 / Get all basic information of the player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>玩家信息，失败返回null / Player info, returns null on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static PlayerInfo? GetPlayerInfo(int clientId)
+        {
+            EnsureInitialized();
+
+            if (NativeMethods.GetPlayerInfo(clientId, out PlayerInfo info))
+                return info;
+
+            return null;
+        }
+
+        /// <summary>
+        /// 获取玩家统计信息 / Get player statistics
+        /// 获取玩家的游戏统计数据 / Get player's game statistics
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>统计信息，失败返回null / Statistics info, returns null on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static PlayerStats? GetPlayerStats(int clientId)
+        {
+            EnsureInitialized();
+
+            if (NativeMethods.GetPlayerStats(clientId, out PlayerStats stats))
+                return stats;
+
+            return null;
+        }
+
+        /// <summary>
+        /// 获取玩家名称 / Get player name
+        /// 获取指定玩家的显示名称 / Get display name of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>玩家名称，失败返回空字符串 / Player name, returns empty string on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static string GetPlayerName(int clientId)
+        {
+            EnsureInitialized();
+
+            var buffer = new System.Text.StringBuilder(64);
+            if (NativeMethods.GetPlayerName(clientId, buffer, buffer.Capacity))
+                return buffer.ToString();
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取玩家IP地址 / Get player IP address
+        /// 获取指定玩家的IP地址 / Get IP address of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>IP地址，失败返回空字符串 / IP address, returns empty string on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static string GetPlayerIP(int clientId)
+        {
+            EnsureInitialized();
+
+            var buffer = new System.Text.StringBuilder(32);
+            if (NativeMethods.GetPlayerIP(clientId, buffer, buffer.Capacity))
+                return buffer.ToString();
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取玩家认证ID / Get player auth ID
+        /// 获取指定玩家的Steam认证ID / Get Steam auth ID of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>认证ID，失败返回空字符串 / Auth ID, returns empty string on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static string GetPlayerAuthId(int clientId)
+        {
+            EnsureInitialized();
+
+            var buffer = new System.Text.StringBuilder(64);
+            if (NativeMethods.GetPlayerAuthId(clientId, buffer, buffer.Capacity))
+                return buffer.ToString();
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取玩家队伍名称 / Get player team name
+        /// 获取指定玩家所在队伍的名称 / Get team name of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>队伍名称，失败返回空字符串 / Team name, returns empty string on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static string GetPlayerTeam(int clientId)
+        {
+            EnsureInitialized();
+
+            var buffer = new System.Text.StringBuilder(32);
+            if (NativeMethods.GetPlayerTeam(clientId, buffer, buffer.Capacity))
+                return buffer.ToString();
+
+            return string.Empty;
+        }
+
+        // ========== 玩家状态查询接口 / Player State Query Interfaces ==========
+
+        /// <summary>
+        /// 检查玩家是否在游戏中 / Check if player is in game
+        /// 检查指定玩家是否已完全进入游戏 / Check if specified player has fully entered the game
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否在游戏中 / Whether in game</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static bool IsPlayerInGame(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.IsPlayerInGame(clientId);
+        }
+
+        /// <summary>
+        /// 检查玩家是否为机器人 / Check if player is bot
+        /// 检查指定玩家是否为AI机器人 / Check if specified player is AI bot
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否为机器人 / Whether is bot</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static bool IsPlayerBot(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.IsPlayerBot(clientId);
+        }
+
+        /// <summary>
+        /// 检查玩家是否存活 / Check if player is alive
+        /// 检查指定玩家是否处于存活状态 / Check if specified player is in alive state
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否存活 / Whether alive</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static bool IsPlayerAlive(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.IsPlayerAlive(clientId);
+        }
+
+        /// <summary>
+        /// 检查玩家是否已认证 / Check if player is authorized
+        /// 检查指定玩家是否已通过Steam认证 / Check if specified player has passed Steam authorization
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否已认证 / Whether authorized</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static bool IsPlayerAuthorized(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.IsPlayerAuthorized(clientId);
+        }
+
+        /// <summary>
+        /// 检查玩家是否正在连接 / Check if player is connecting
+        /// 检查指定玩家是否正在连接过程中 / Check if specified player is in connecting process
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否正在连接 / Whether connecting</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static bool IsPlayerConnecting(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.IsPlayerConnecting(clientId);
+        }
+
+        /// <summary>
+        /// 检查玩家是否为HLTV / Check if player is HLTV
+        /// 检查指定玩家是否为HLTV观察者 / Check if specified player is HLTV observer
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>是否为HLTV / Whether is HLTV</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static bool IsPlayerHLTV(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.IsPlayerHLTV(clientId);
+        }
+
+        // ========== 玩家属性获取接口 / Player Property Getter Interfaces ==========
+
+        /// <summary>
+        /// 获取玩家用户ID / Get player user ID
+        /// 获取指定玩家的唯一用户ID / Get unique user ID of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>用户ID，失败返回0 / User ID, returns 0 on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static int GetPlayerUserId(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetPlayerUserId(clientId);
+        }
+
+        /// <summary>
+        /// 获取玩家队伍ID / Get player team ID
+        /// 获取指定玩家所在队伍的ID / Get team ID of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>队伍ID，失败返回0 / Team ID, returns 0 on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static int GetPlayerTeamId(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetPlayerTeamId(clientId);
+        }
+
+        /// <summary>
+        /// 获取玩家权限标志 / Get player permission flags
+        /// 获取指定玩家的权限标志位 / Get permission flags of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>权限标志，失败返回0 / Permission flags, returns 0 on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static int GetPlayerFlags(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetPlayerFlags(clientId);
+        }
+
+        /// <summary>
+        /// 获取玩家生命值 / Get player health
+        /// 获取指定玩家的当前生命值 / Get current health of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>生命值，失败返回0.0 / Health value, returns 0.0 on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static float GetPlayerHealth(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetPlayerHealth(clientId);
+        }
+
+        /// <summary>
+        /// 获取玩家护甲值 / Get player armor
+        /// 获取指定玩家的当前护甲值 / Get current armor of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>护甲值，失败返回0.0 / Armor value, returns 0.0 on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static float GetPlayerArmor(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetPlayerArmor(clientId);
+        }
+
+        /// <summary>
+        /// 获取玩家击杀数 / Get player frags
+        /// 获取指定玩家的击杀分数 / Get frag score of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <returns>击杀数，失败返回0.0 / Frags count, returns 0.0 on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static float GetPlayerFrags(int clientId)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetPlayerFrags(clientId);
+        }
+
+        /// <summary>
+        /// 设置玩家生命值 / Set player health
+        /// 设置指定玩家的生命值 / Set health of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="health">生命值，应大于等于0 / Health value, should be >= 0</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        /// <exception cref="ArgumentOutOfRangeException">当生命值小于0时抛出 / Thrown when health is less than 0</exception>
+        public static bool SetPlayerHealth(int clientId, float health)
+        {
+            EnsureInitialized();
+
+            if (health < 0)
+                throw new ArgumentOutOfRangeException(nameof(health), "Health cannot be negative.");
+
+            return NativeMethods.SetPlayerHealth(clientId, health);
+        }
+
+        /// <summary>
+        /// 设置玩家护甲值 / Set player armor
+        /// 设置指定玩家的护甲值 / Set armor of specified player
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="armor">护甲值，应大于等于0 / Armor value, should be >= 0</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        /// <exception cref="ArgumentOutOfRangeException">当护甲值小于0时抛出 / Thrown when armor is less than 0</exception>
+        public static bool SetPlayerArmor(int clientId, float armor)
+        {
+            EnsureInitialized();
+
+            if (armor < 0)
+                throw new ArgumentOutOfRangeException(nameof(armor), "Armor cannot be negative.");
+
+            return NativeMethods.SetPlayerArmor(clientId, armor);
+        }
+
+        /// <summary>
+        /// 踢出玩家 / Kick player
+        /// 将指定玩家踢出服务器 / Kick specified player from server
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="reason">踢出原因，可选 / Kick reason, optional</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static bool KickPlayer(int clientId, string reason = null)
+        {
+            EnsureInitialized();
+            return NativeMethods.KickPlayer(clientId, reason ?? string.Empty);
+        }
+
+        /// <summary>
+        /// 获取已连接玩家列表 / Get connected players list
+        /// 获取当前所有已连接玩家的ID列表 / Get ID list of all currently connected players
+        /// </summary>
+        /// <returns>玩家ID列表 / List of player IDs</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static List<int> GetConnectedPlayers()
+        {
+            EnsureInitialized();
+
+            int maxClients = NativeMethods.GetMaxClients();
+            int[] playerIds = new int[maxClients];
+
+            if (NativeMethods.GetConnectedPlayers(playerIds, maxClients, out int count))
+            {
+                var result = new List<int>(count);
+                for (int i = 0; i < count; i++)
+                {
+                    result.Add(playerIds[i]);
+                }
+                return result;
+            }
+
+            return new List<int>();
         }
     }
 

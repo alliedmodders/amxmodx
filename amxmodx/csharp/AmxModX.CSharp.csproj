@@ -59,6 +59,7 @@
     <Compile Include="AmxModXExample.cs" />
     <Compile Include="CommandExecutionExample.cs" />
     <Compile Include="EventSystemExample.cs" />
+    <Compile Include="PlayerManagementExample.cs" />
   </ItemGroup>
 
   <!-- Documentation files -->

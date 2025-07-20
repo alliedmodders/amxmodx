@@ -1249,3 +1249,586 @@ CSHARP_EXPORT bool CSHARP_CALL GetForwardInfo(int forwardId, CSharpForwardInfo* 
 
     return false;
 }
+
+// Player information functions implementation
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerValid(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    return (clientId >= 1 && clientId <= gpGlobals->maxClients);
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerInfo(int clientId, CSharpPlayerInfo* outInfo)
+{
+    if (!outInfo || !CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    // Fill player information
+    strncpy(outInfo->name, pPlayer->name.chars(), sizeof(outInfo->name) - 1);
+    outInfo->name[sizeof(outInfo->name) - 1] = '\0';
+
+    strncpy(outInfo->ip, pPlayer->ip.chars(), sizeof(outInfo->ip) - 1);
+    outInfo->ip[sizeof(outInfo->ip) - 1] = '\0';
+
+    const char* authId = GETPLAYERAUTHID(pPlayer->pEdict);
+    if (authId)
+    {
+        strncpy(outInfo->authId, authId, sizeof(outInfo->authId) - 1);
+        outInfo->authId[sizeof(outInfo->authId) - 1] = '\0';
+    }
+    else
+    {
+        outInfo->authId[0] = '\0';
+    }
+
+    strncpy(outInfo->team, pPlayer->team.chars(), sizeof(outInfo->team) - 1);
+    outInfo->team[sizeof(outInfo->team) - 1] = '\0';
+
+    outInfo->index = clientId;
+    outInfo->teamId = pPlayer->teamId;
+    outInfo->userId = GETPLAYERUSERID(pPlayer->pEdict);
+    outInfo->flags = pPlayer->flags[0]; // First flag set
+    outInfo->connectTime = pPlayer->time;
+    outInfo->playTime = pPlayer->playtime;
+    outInfo->isInGame = pPlayer->ingame;
+    outInfo->isBot = pPlayer->IsBot();
+    outInfo->isAlive = pPlayer->IsAlive();
+    outInfo->isAuthorized = pPlayer->authorized;
+    outInfo->isConnecting = (!pPlayer->ingame && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0));
+    outInfo->isHLTV = (pPlayer->pEdict->v.flags & FL_PROXY) ? true : false;
+    outInfo->hasVGUI = pPlayer->vgui;
+
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerStats(int clientId, CSharpPlayerStats* outStats)
+{
+    if (!outStats || !CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    // Fill player statistics
+    outStats->deaths = pPlayer->deaths;
+    outStats->kills = 0; // Would need to be calculated from game state
+    outStats->frags = pPlayer->pEdict->v.frags;
+    outStats->currentWeapon = pPlayer->current;
+    outStats->menu = pPlayer->menu;
+    outStats->keys = pPlayer->keys;
+    outStats->health = pPlayer->pEdict->v.health;
+    outStats->armor = pPlayer->pEdict->v.armorvalue;
+    outStats->aiming = pPlayer->aiming;
+    outStats->menuExpire = pPlayer->menuexpire;
+
+    // Copy weapon data
+    for (int i = 0; i < 32 && i < MAX_WEAPONS; i++)
+    {
+        outStats->weapons[i] = pPlayer->weapons[i].ammo;
+        outStats->clips[i] = pPlayer->weapons[i].clip;
+    }
+
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerName(int clientId, char* buffer, int bufferSize)
+{
+    if (!buffer || bufferSize <= 0 || !CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    strncpy(buffer, pPlayer->name.chars(), bufferSize - 1);
+    buffer[bufferSize - 1] = '\0';
+
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerIP(int clientId, char* buffer, int bufferSize)
+{
+    if (!buffer || bufferSize <= 0 || !CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    strncpy(buffer, pPlayer->ip.chars(), bufferSize - 1);
+    buffer[bufferSize - 1] = '\0';
+
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerAuthId(int clientId, char* buffer, int bufferSize)
+{
+    if (!buffer || bufferSize <= 0 || !CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    const char* authId = GETPLAYERAUTHID(pPlayer->pEdict);
+    if (authId)
+    {
+        strncpy(buffer, authId, bufferSize - 1);
+        buffer[bufferSize - 1] = '\0';
+        return true;
+    }
+
+    buffer[0] = '\0';
+    return false;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetPlayerTeam(int clientId, char* buffer, int bufferSize)
+{
+    if (!buffer || bufferSize <= 0 || !CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    strncpy(buffer, pPlayer->team.chars(), bufferSize - 1);
+    buffer[bufferSize - 1] = '\0';
+
+    return true;
+}
+
+// Player state functions implementation
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerInGame(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer && pPlayer->ingame);
+}
+
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerBot(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer && pPlayer->IsBot());
+}
+
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerAlive(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer && pPlayer->IsAlive());
+}
+
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerAuthorized(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer && pPlayer->authorized);
+}
+
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerConnecting(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer && !pPlayer->ingame && pPlayer->initialized && (GETPLAYERUSERID(pPlayer->pEdict) > 0));
+}
+
+CSHARP_EXPORT bool CSHARP_CALL IsPlayerHLTV(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer && pPlayer->pEdict && (pPlayer->pEdict->v.flags & FL_PROXY));
+}
+
+// Player property getters implementation
+CSHARP_EXPORT int CSHARP_CALL GetPlayerUserId(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return 0;
+
+    return GETPLAYERUSERID(pPlayer->pEdict);
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetPlayerTeamId(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer) ? pPlayer->teamId : 0;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetPlayerFlags(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer) ? pPlayer->flags[0] : 0;
+}
+
+CSHARP_EXPORT float CSHARP_CALL GetPlayerConnectTime(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0.0f;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0.0f;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer) ? pPlayer->time : 0.0f;
+}
+
+CSHARP_EXPORT float CSHARP_CALL GetPlayerPlayTime(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0.0f;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0.0f;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer) ? pPlayer->playtime : 0.0f;
+}
+
+CSHARP_EXPORT float CSHARP_CALL GetPlayerHealth(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0.0f;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0.0f;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return 0.0f;
+
+    return pPlayer->pEdict->v.health;
+}
+
+CSHARP_EXPORT float CSHARP_CALL GetPlayerArmor(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0.0f;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0.0f;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return 0.0f;
+
+    return pPlayer->pEdict->v.armorvalue;
+}
+
+CSHARP_EXPORT float CSHARP_CALL GetPlayerFrags(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0.0f;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0.0f;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return 0.0f;
+
+    return pPlayer->pEdict->v.frags;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetPlayerDeaths(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer) ? pPlayer->deaths : 0;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetPlayerCurrentWeapon(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer) ? pPlayer->current : 0;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetPlayerMenu(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer) ? pPlayer->menu : 0;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetPlayerKeys(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return 0;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    return (pPlayer) ? pPlayer->keys : 0;
+}
+
+// Player property setters implementation
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerHealth(int clientId, float health)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    pPlayer->pEdict->v.health = health;
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerArmor(int clientId, float armor)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    pPlayer->pEdict->v.armorvalue = armor;
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerFrags(int clientId, float frags)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    pPlayer->pEdict->v.frags = frags;
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerTeamInfo(int clientId, int teamId, const char* teamName)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->ingame)
+        return false;
+
+    pPlayer->teamId = teamId;
+    if (teamName != nullptr)
+    {
+        pPlayer->team = teamName;
+        // Register team if not already registered
+        g_teamsIds.registerTeam(teamName, teamId);
+    }
+
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL SetPlayerFlags(int clientId, int flags)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer)
+        return false;
+
+    pPlayer->flags[0] = flags;
+    return true;
+}
+
+// Player utility functions implementation
+CSHARP_EXPORT int CSHARP_CALL GetMaxClients()
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    return gpGlobals->maxClients;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetConnectedPlayersCount()
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    int count = 0;
+    for (int i = 1; i <= gpGlobals->maxClients; i++)
+    {
+        CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
+        if (pPlayer && pPlayer->ingame)
+            count++;
+    }
+
+    return count;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetConnectedPlayers(int* playerIds, int maxPlayers, int* outCount)
+{
+    if (!playerIds || !outCount || !CSharpBridge::g_initialized)
+        return false;
+
+    int count = 0;
+    for (int i = 1; i <= gpGlobals->maxClients && count < maxPlayers; i++)
+    {
+        CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
+        if (pPlayer && pPlayer->ingame)
+        {
+            playerIds[count] = i;
+            count++;
+        }
+    }
+
+    *outCount = count;
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL KickPlayer(int clientId, const char* reason)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict)
+        return false;
+
+    // Create kick command
+    char kickCmd[256];
+    if (reason && strlen(reason) > 0)
+    {
+        snprintf(kickCmd, sizeof(kickCmd), "kick #%d \"%s\"", GETPLAYERUSERID(pPlayer->pEdict), reason);
+    }
+    else
+    {
+        snprintf(kickCmd, sizeof(kickCmd), "kick #%d", GETPLAYERUSERID(pPlayer->pEdict));
+    }
+
+    SERVER_COMMAND(kickCmd);
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL SlayPlayer(int clientId)
+{
+    if (!CSharpBridge::g_initialized)
+        return false;
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+        return false;
+
+    CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+    if (!pPlayer || !pPlayer->pEdict || !pPlayer->IsAlive())
+        return false;
+
+    // Kill the player
+    pPlayer->pEdict->v.health = 0.0f;
+    pPlayer->pEdict->v.deadflag = DEAD_DEAD;
+
+    // Call the killed function to properly handle death
+    MDLL_Killed(pPlayer->pEdict, nullptr, 0);
+
+    return true;
+}

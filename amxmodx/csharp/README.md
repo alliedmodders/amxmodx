@@ -255,6 +255,49 @@ public static class MenuKeys
 | `GetForwardInfo()` | 获取Forward信息 / Get forward information |
 | `CreateEventParam()` | 创建事件参数 / Create event parameter |
 
+#### 玩家信息管理 / Player Information Management
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `IsPlayerValid()` | 检查玩家ID是否有效 / Check if player ID is valid |
+| `GetPlayerInfo()` | 获取玩家完整信息 / Get complete player information |
+| `GetPlayerStats()` | 获取玩家统计信息 / Get player statistics |
+| `GetPlayerName()` | 获取玩家名称 / Get player name |
+| `GetPlayerIP()` | 获取玩家IP地址 / Get player IP address |
+| `GetPlayerAuthId()` | 获取玩家认证ID / Get player auth ID |
+| `GetPlayerTeam()` | 获取玩家队伍 / Get player team |
+
+#### 玩家状态查询 / Player State Query
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `IsPlayerInGame()` | 检查玩家是否在游戏中 / Check if player is in game |
+| `IsPlayerBot()` | 检查玩家是否为机器人 / Check if player is bot |
+| `IsPlayerAlive()` | 检查玩家是否存活 / Check if player is alive |
+| `IsPlayerAuthorized()` | 检查玩家是否已认证 / Check if player is authorized |
+| `IsPlayerConnecting()` | 检查玩家是否正在连接 / Check if player is connecting |
+| `IsPlayerHLTV()` | 检查玩家是否为HLTV / Check if player is HLTV |
+
+#### 玩家属性操作 / Player Property Operations
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `GetPlayerHealth()` | 获取玩家生命值 / Get player health |
+| `GetPlayerArmor()` | 获取玩家护甲值 / Get player armor |
+| `GetPlayerFrags()` | 获取玩家击杀数 / Get player frags |
+| `SetPlayerHealth()` | 设置玩家生命值 / Set player health |
+| `SetPlayerArmor()` | 设置玩家护甲值 / Set player armor |
+| `SetPlayerFrags()` | 设置玩家击杀数 / Set player frags |
+| `SetPlayerTeamInfo()` | 设置玩家队伍信息 / Set player team info |
+| `SetPlayerFlags()` | 设置玩家权限标志 / Set player flags |
+
+#### 玩家管理工具 / Player Management Tools
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `GetMaxClients()` | 获取最大客户端数量 / Get maximum clients count |
+| `GetConnectedPlayersCount()` | 获取已连接玩家数量 / Get connected players count |
+| `GetConnectedPlayers()` | 获取已连接玩家列表 / Get connected players list |
+| `KickPlayer()` | 踢出玩家 / Kick player |
+| `SlayPlayer()` | 杀死玩家 / Slay player |
+| `FindPlayersByName()` | 根据名称查找玩家 / Find players by name |
+
 ## 高级示例 / Advanced Examples
 
 ### 命令执行 / Command Execution
@@ -404,6 +447,200 @@ var result = AmxModXCommands.ExecuteForward(
 );
 
 Console.WriteLine($"Forward result: Success={result.Success}, Return={result.Result}");
+```
+
+### 玩家信息管理 / Player Information Management
+
+```csharp
+// 获取玩家完整信息 / Get complete player information
+var playerInfo = AmxModXCommands.GetPlayerInfo(clientId);
+if (playerInfo.HasValue)
+{
+    var info = playerInfo.Value;
+    Console.WriteLine($"Player: {info.Name} ({info.AuthId})");
+    Console.WriteLine($"IP: {info.IP}, Team: {info.Team}");
+    Console.WriteLine($"In Game: {info.IsInGame}, Bot: {info.IsBot}, Alive: {info.IsAlive}");
+}
+
+// 获取玩家统计信息 / Get player statistics
+var playerStats = AmxModXCommands.GetPlayerStats(clientId);
+if (playerStats.HasValue)
+{
+    var stats = playerStats.Value;
+    Console.WriteLine($"Health: {stats.Health}, Armor: {stats.Armor}");
+    Console.WriteLine($"Frags: {stats.Frags}, Deaths: {stats.Deaths}");
+    Console.WriteLine($"Current Weapon: {stats.CurrentWeapon}");
+}
+
+// 玩家状态检查 / Player state checking
+bool isValid = AmxModXCommands.IsPlayerValid(clientId);
+bool isInGame = AmxModXCommands.IsPlayerInGame(clientId);
+bool isAlive = AmxModXCommands.IsPlayerAlive(clientId);
+bool isBot = AmxModXCommands.IsPlayerBot(clientId);
+
+Console.WriteLine($"Player {clientId}: Valid={isValid}, InGame={isInGame}, Alive={isAlive}, Bot={isBot}");
+```
+
+### 玩家属性操作 / Player Property Operations
+
+```csharp
+// 设置玩家属性 / Set player properties
+if (AmxModXCommands.IsPlayerAlive(clientId))
+{
+    // 设置生命值和护甲 / Set health and armor
+    bool healthSet = AmxModXCommands.SetPlayerHealth(clientId, 100.0f);
+    bool armorSet = AmxModXCommands.SetPlayerArmor(clientId, 100.0f);
+
+    Console.WriteLine($"Health set: {healthSet}, Armor set: {armorSet}");
+
+    // 设置击杀数 / Set frags
+    AmxModXCommands.SetPlayerFrags(clientId, 10.0f);
+
+    // 设置队伍信息 / Set team info
+    AmxModXCommands.SetPlayerTeamInfo(clientId, 2, "Terrorists");
+}
+
+// 获取玩家属性 / Get player properties
+float health = AmxModXCommands.GetPlayerHealth(clientId);
+float armor = AmxModXCommands.GetPlayerArmor(clientId);
+float frags = AmxModXCommands.GetPlayerFrags(clientId);
+int teamId = AmxModXCommands.GetPlayerTeamId(clientId);
+
+Console.WriteLine($"Health: {health}, Armor: {armor}, Frags: {frags}, Team: {teamId}");
+```
+
+### 玩家管理工具 / Player Management Tools
+
+```csharp
+// 获取服务器信息 / Get server information
+int maxClients = AmxModXCommands.GetMaxClients();
+int connectedCount = AmxModXCommands.GetConnectedPlayersCount();
+Console.WriteLine($"Players: {connectedCount}/{maxClients}");
+
+// 获取所有连接的玩家 / Get all connected players
+var connectedPlayers = AmxModXCommands.GetConnectedPlayers();
+foreach (int playerId in connectedPlayers)
+{
+    string playerName = AmxModXCommands.GetPlayerName(playerId);
+    string playerIP = AmxModXCommands.GetPlayerIP(playerId);
+    Console.WriteLine($"Player {playerId}: {playerName} ({playerIP})");
+}
+
+// 根据名称查找玩家 / Find players by name
+var foundPlayers = AmxModXCommands.FindPlayersByName("John", exactMatch: false);
+foreach (int playerId in foundPlayers)
+{
+    string playerName = AmxModXCommands.GetPlayerName(playerId);
+    Console.WriteLine($"Found player: {playerId} - {playerName}");
+}
+
+// 玩家管理操作 / Player management operations
+// 踢出玩家 / Kick player
+bool kicked = AmxModXCommands.KickPlayer(clientId, "Kicked by admin");
+
+// 杀死玩家 / Slay player
+if (AmxModXCommands.IsPlayerAlive(clientId))
+{
+    bool slayed = AmxModXCommands.SlayPlayer(clientId);
+    Console.WriteLine($"Player slayed: {slayed}");
+}
+```
+
+### 综合示例：玩家监控系统 / Comprehensive Example: Player Monitoring System
+
+```csharp
+// 注册玩家连接事件 / Register player connect event
+int connectEvent = AmxModXCommands.RegisterEvent(
+    eventName: "client_connect",
+    callback: OnPlayerConnect,
+    flags: EventFlags.Client | EventFlags.Player
+);
+
+static void OnPlayerConnect(int eventId, int clientId, int numParams)
+{
+    // 等待玩家完全连接 / Wait for player to fully connect
+    System.Threading.Tasks.Task.Delay(1000).ContinueWith(_ =>
+    {
+        if (AmxModXCommands.IsPlayerInGame(clientId))
+        {
+            var playerInfo = AmxModXCommands.GetPlayerInfo(clientId);
+            if (playerInfo.HasValue)
+            {
+                var info = playerInfo.Value;
+                Console.WriteLine($"Player connected: {info.Name} ({info.AuthId}) from {info.IP}");
+
+                // 检查玩家状态 / Check player status
+                if (info.IsBot)
+                {
+                    Console.WriteLine($"  Bot player detected");
+                }
+                else if (!info.IsAuthorized)
+                {
+                    Console.WriteLine($"  Warning: Player not authorized");
+                }
+
+                // 欢迎消息 / Welcome message
+                AmxModXCommands.ExecuteClientCommand(clientId, $"say Welcome {info.Name}!");
+
+                // 设置初始属性 / Set initial properties
+                if (AmxModXCommands.IsPlayerAlive(clientId))
+                {
+                    AmxModXCommands.SetPlayerHealth(clientId, 100.0f);
+                    AmxModXCommands.SetPlayerArmor(clientId, 0.0f);
+                }
+            }
+        }
+    });
+}
+
+// 注册管理员命令 / Register admin command
+int playerInfoCmd = AmxModXCommands.RegisterConsoleCommand(
+    command: "amx_playerinfo",
+    callback: OnPlayerInfoCommand,
+    flags: CommandFlags.Admin,
+    info: "Display detailed player information"
+);
+
+static void OnPlayerInfoCommand(int clientId, int commandId, int flags)
+{
+    int argc = AmxModXCommands.GetCommandArgCount();
+    if (argc < 2)
+    {
+        Console.WriteLine("Usage: amx_playerinfo <player>");
+        return;
+    }
+
+    string target = AmxModXCommands.GetCommandArg(1);
+    var foundPlayers = AmxModXCommands.FindPlayersByName(target);
+
+    if (foundPlayers.Count == 0)
+    {
+        Console.WriteLine($"No players found matching '{target}'");
+        return;
+    }
+
+    foreach (int playerId in foundPlayers)
+    {
+        var playerInfo = AmxModXCommands.GetPlayerInfo(playerId);
+        var playerStats = AmxModXCommands.GetPlayerStats(playerId);
+
+        if (playerInfo.HasValue)
+        {
+            var info = playerInfo.Value;
+            Console.WriteLine($"Player {playerId}: {info.Name}");
+            Console.WriteLine($"  Auth ID: {info.AuthId}");
+            Console.WriteLine($"  IP: {info.IP}");
+            Console.WriteLine($"  Team: {info.Team} (ID: {info.TeamId})");
+            Console.WriteLine($"  Status: InGame={info.IsInGame}, Alive={info.IsAlive}, Bot={info.IsBot}");
+
+            if (playerStats.HasValue)
+            {
+                var stats = playerStats.Value;
+                Console.WriteLine($"  Stats: Health={stats.Health}, Armor={stats.Armor}, Frags={stats.Frags}");
+            }
+        }
+    }
+}
 ```
 
 ### 菜单系统 / Menu System

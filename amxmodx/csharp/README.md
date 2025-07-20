@@ -228,6 +228,33 @@ public static class MenuKeys
 | `GetAllCommands()` | 获取所有命令 / Get all commands |
 | `CommandExists()` | 检查命令是否存在 / Check if command exists |
 
+#### 事件系统 / Event System
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `RegisterEvent()` | 注册事件监听器 / Register event listener |
+| `UnregisterEvent()` | 注销事件监听器 / Unregister event listener |
+| `GetEventId()` | 获取事件ID / Get event ID |
+| `GetEventInfo()` | 获取事件信息 / Get event information |
+
+#### 事件参数读取 / Event Parameter Reading
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `GetEventArgCount()` | 获取事件参数数量 / Get event argument count |
+| `GetEventArg()` | 获取事件参数 / Get event argument |
+| `GetEventArgInt()` | 获取整数事件参数 / Get integer event argument |
+| `GetEventArgFloat()` | 获取浮点事件参数 / Get float event argument |
+| `GetEventArgString()` | 获取字符串事件参数 / Get string event argument |
+
+#### Forward系统 / Forward System
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `CreateForward()` | 创建全局Forward / Create global forward |
+| `CreateSingleForward()` | 创建单插件Forward / Create single plugin forward |
+| `ExecuteForward()` | 执行Forward / Execute forward |
+| `UnregisterForward()` | 注销Forward / Unregister forward |
+| `GetForwardInfo()` | 获取Forward信息 / Get forward information |
+| `CreateEventParam()` | 创建事件参数 / Create event parameter |
+
 ## 高级示例 / Advanced Examples
 
 ### 命令执行 / Command Execution
@@ -295,6 +322,88 @@ foreach (var cmd in allCommands)
 // 检查命令是否存在 / Check if command exists
 bool exists = AmxModXCommands.CommandExists("amx_kick", CommandType.Console);
 Console.WriteLine($"amx_kick exists: {exists}");
+```
+
+### 事件系统 / Event System
+
+```csharp
+// 注册事件监听器 / Register event listeners
+int connectEvent = AmxModXCommands.RegisterEvent(
+    eventName: "client_connect",
+    callback: OnPlayerConnect,
+    flags: EventFlags.Client | EventFlags.Player
+);
+
+int deathEvent = AmxModXCommands.RegisterEvent(
+    eventName: "DeathMsg",
+    callback: OnPlayerDeath,
+    flags: EventFlags.Client,
+    conditions: "1>0" // 确保有杀手ID / Ensure killer ID exists
+);
+
+// 事件回调函数 / Event callback functions
+static void OnPlayerConnect(int eventId, int clientId, int numParams)
+{
+    Console.WriteLine($"Player {clientId} connected");
+
+    // 读取事件参数 / Read event parameters
+    int argc = AmxModXCommands.GetEventArgCount();
+    for (int i = 0; i < argc; i++)
+    {
+        string arg = AmxModXCommands.GetEventArgString(i);
+        Console.WriteLine($"Param[{i}]: {arg}");
+    }
+}
+
+static void OnPlayerDeath(int eventId, int clientId, int numParams)
+{
+    // 读取死亡信息 / Read death information
+    int killerId = AmxModXCommands.GetEventArgInt(1);
+    int victimId = AmxModXCommands.GetEventArgInt(2);
+    int weaponId = AmxModXCommands.GetEventArgInt(3);
+
+    Console.WriteLine($"Player {victimId} killed by {killerId} with weapon {weaponId}");
+}
+```
+
+### Forward系统 / Forward System
+
+```csharp
+// 创建全局Forward / Create global forward
+int damageForward = AmxModXCommands.CreateForward(
+    forwardName: "player_damage",
+    execType: ForwardExecType.Continue,
+    ForwardParamType.Cell,    // 受害者ID / Victim ID
+    ForwardParamType.Cell,    // 攻击者ID / Attacker ID
+    ForwardParamType.Float,   // 伤害值 / Damage amount
+    ForwardParamType.Cell     // 武器ID / Weapon ID
+);
+
+// 创建单插件Forward / Create single plugin forward
+int customForward = AmxModXCommands.CreateSingleForward(
+    functionName: "on_custom_event",
+    callback: OnCustomForwardCallback,
+    ForwardParamType.Cell,    // 事件类型 / Event type
+    ForwardParamType.String   // 事件数据 / Event data
+);
+
+// Forward回调函数 / Forward callback function
+static int OnCustomForwardCallback(int forwardId, int numParams)
+{
+    Console.WriteLine($"Custom forward {forwardId} called with {numParams} parameters");
+    return 1; // 继续执行 / Continue execution
+}
+
+// 执行Forward / Execute forward
+var result = AmxModXCommands.ExecuteForward(
+    damageForward,
+    AmxModXCommands.CreateEventParam(1),      // 受害者ID / Victim ID
+    AmxModXCommands.CreateEventParam(2),      // 攻击者ID / Attacker ID
+    AmxModXCommands.CreateEventParam(50.0f),  // 伤害值 / Damage amount
+    AmxModXCommands.CreateEventParam(3)       // 武器ID / Weapon ID
+);
+
+Console.WriteLine($"Forward result: Success={result.Success}, Return={result.Result}");
 ```
 
 ### 菜单系统 / Menu System

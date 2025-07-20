@@ -165,7 +165,26 @@ namespace AmxModX.TestApp
                 throw;
             }
 
-            // 测试4: 多线程安全性 / Test 4: Thread safety
+            // 测试4: 事件系统接口 / Test 4: Event system interface
+            PrintTest("Test 4: Event System Interface");
+            try
+            {
+                EventSystemExample.Initialize();
+                PrintSuccess("✓ Event system example initialized");
+
+                EventSystemExample.RunFullDemo();
+                PrintSuccess("✓ Event system demo completed");
+
+                EventSystemExample.Cleanup();
+                PrintSuccess("✓ Test 4 completed successfully");
+            }
+            catch (Exception ex)
+            {
+                PrintError($"✗ Event system test failed: {ex.Message}");
+                throw;
+            }
+
+            // 测试5: 多线程安全性 / Test 5: Thread safety
             if (options.TestThreadSafety)
             {
                 await RunThreadSafetyTests();

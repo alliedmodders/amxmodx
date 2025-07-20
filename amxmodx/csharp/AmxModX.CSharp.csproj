@@ -58,6 +58,7 @@
     <Compile Include="AmxModXInterop.cs" />
     <Compile Include="AmxModXExample.cs" />
     <Compile Include="CommandExecutionExample.cs" />
+    <Compile Include="EventSystemExample.cs" />
   </ItemGroup>
 
   <!-- Documentation files -->

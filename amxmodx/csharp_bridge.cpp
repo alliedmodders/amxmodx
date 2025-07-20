@@ -36,9 +36,18 @@ namespace CSharpBridge
     // Global storage
     ke::Vector<CallbackInfo*> g_commandCallbacks;
     ke::Vector<ke::AString> g_menuIds;
+    ke::Vector<EventCallbackInfo*> g_eventCallbacks;
+    ke::Vector<ForwardCallbackInfo*> g_forwardCallbacks;
     int g_nextCommandId = 1;
     int g_nextMenuId = 1;
+    int g_nextEventHandle = 1;
+    int g_nextForwardId = 1;
     bool g_initialized = false;
+
+    // Current event context for parameter reading
+    static int g_currentEventId = -1;
+    static int g_currentEventParams = 0;
+    static CSharpEventParam g_eventParamBuffer[32]; // Max 32 parameters
 
     // Thread-safe helper class
     class AutoLock
@@ -87,9 +96,53 @@ namespace CSharpBridge
         int clientId = params[1];
         int menuId = params[2];
         int key = params[3];
-        
+
         HandleMenuCallback(clientId, menuId, key);
         return 1;
+    }
+
+    // AMX forward callback for events
+    static cell AMX_NATIVE_CALL CSharpEventHandler(AMX *amx, cell *params)
+    {
+        int eventId = params[1];
+        int clientId = params[2];
+        int numParams = params[3];
+
+        // Store event parameters for reading
+        g_currentEventId = eventId;
+        g_currentEventParams = numParams;
+
+        // Copy event parameters from AMX
+        for (int i = 0; i < numParams && i < 32; i++)
+        {
+            cell* paramPtr = get_amxaddr(amx, params[4 + i]);
+            if (paramPtr)
+            {
+                // Determine parameter type and store
+                if (*paramPtr >= -2147483648 && *paramPtr <= 2147483647)
+                {
+                    g_eventParamBuffer[i].type = 0; // int
+                    g_eventParamBuffer[i].intValue = *paramPtr;
+                }
+                else
+                {
+                    g_eventParamBuffer[i].type = 1; // float
+                    g_eventParamBuffer[i].floatValue = amx_ctof(*paramPtr);
+                }
+            }
+        }
+
+        HandleEventCallback(eventId, clientId, numParams);
+        return 1;
+    }
+
+    // AMX forward callback for custom forwards
+    static cell AMX_NATIVE_CALL CSharpForwardHandler(AMX *amx, cell *params)
+    {
+        int forwardId = params[1];
+        int numParams = params[2];
+
+        return HandleForwardCallback(forwardId, numParams);
     }
 
     void Initialize()
@@ -119,6 +172,20 @@ namespace CSharpBridge
         }
         g_commandCallbacks.clear();
         g_menuIds.clear();
+
+        // Clean up event callbacks
+        for (size_t i = 0; i < g_eventCallbacks.length(); i++)
+        {
+            delete g_eventCallbacks[i];
+        }
+        g_eventCallbacks.clear();
+
+        // Clean up forward callbacks
+        for (size_t i = 0; i < g_forwardCallbacks.length(); i++)
+        {
+            delete g_forwardCallbacks[i];
+        }
+        g_forwardCallbacks.clear();
         
         g_initialized = false;
         LOCK_DESTROY();
@@ -237,7 +304,7 @@ namespace CSharpBridge
     void HandleMenuCallback(int clientId, int menuId, int key)
     {
         AutoLock lock;
-        
+
         // Find the callback by menu ID
         for (size_t i = 0; i < g_commandCallbacks.length(); i++)
         {
@@ -248,6 +315,89 @@ namespace CSharpBridge
                 break;
             }
         }
+    }
+
+    void HandleEventCallback(int eventId, int clientId, int numParams)
+    {
+        AutoLock lock;
+
+        // Find the callback by event ID
+        for (size_t i = 0; i < g_eventCallbacks.length(); i++)
+        {
+            EventCallbackInfo* info = g_eventCallbacks[i];
+            if (info && info->eventCallback && info->eventId == eventId)
+            {
+                info->eventCallback(eventId, clientId, numParams);
+                break;
+            }
+        }
+    }
+
+    int HandleForwardCallback(int forwardId, int numParams)
+    {
+        AutoLock lock;
+
+        // Find the callback by forward ID
+        for (size_t i = 0; i < g_forwardCallbacks.length(); i++)
+        {
+            ForwardCallbackInfo* info = g_forwardCallbacks[i];
+            if (info && info->forwardCallback && info->forwardId == forwardId)
+            {
+                return info->forwardCallback(forwardId, numParams);
+            }
+        }
+
+        return 0; // Default return value
+    }
+
+    int RegisterEventInternal(const char* eventName, CSharpEventCallback callback,
+                             int flags, const char* conditions)
+    {
+        if (!g_initialized || !eventName || !callback)
+            return -1;
+
+        AutoLock lock;
+
+        int eventHandle = g_nextEventHandle++;
+
+        EventCallbackInfo* callbackInfo = new EventCallbackInfo();
+        callbackInfo->eventCallback = callback;
+        callbackInfo->eventName = eventName;
+        callbackInfo->eventId = -1; // Will be set when event is found
+        callbackInfo->flags = flags;
+        callbackInfo->conditions = conditions ? conditions : "";
+        callbackInfo->eventHandle = eventHandle;
+        callbackInfo->amxForwardId = -1;
+
+        // Register with AMX event system
+        // This would integrate with the existing event infrastructure
+        CPluginMngr::CPlugin* plugin = nullptr;
+        for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
+        {
+            if ((*iter).isValid())
+            {
+                plugin = &(*iter);
+                break;
+            }
+        }
+
+        if (plugin)
+        {
+            // Create a forward for this event
+            int forwardId = registerSPForwardByName(plugin->getAMX(), "CSharpEventHandler",
+                                                   FP_CELL, FP_CELL, FP_CELL, FP_DONE);
+            if (forwardId != -1)
+            {
+                callbackInfo->amxForwardId = forwardId;
+
+                // Register with event manager (simplified - actual implementation would vary)
+                // This would typically involve registering with the game event system
+                callbackInfo->eventId = g_nextEventHandle; // Simplified ID assignment
+            }
+        }
+
+        g_eventCallbacks.append(callbackInfo);
+        return eventHandle;
     }
 }
 
@@ -740,4 +890,362 @@ CSHARP_EXPORT bool CSHARP_CALL GetCommandByIndex(int index, CSharpCommandType co
     outInfo->listable = true;
 
     return true;
+}
+
+// Event system functions implementation
+CSHARP_EXPORT int CSHARP_CALL RegisterEvent(const char* eventName, CSharpEventCallback callback, int flags, const char* conditions)
+{
+    return CSharpBridge::RegisterEventInternal(eventName, callback, flags, conditions);
+}
+
+CSHARP_EXPORT bool CSHARP_CALL UnregisterEvent(int eventHandle)
+{
+    if (!CSharpBridge::g_initialized || eventHandle <= 0)
+        return false;
+
+    CSharpBridge::AutoLock lock;
+
+    // Find and remove the event callback
+    for (size_t i = 0; i < CSharpBridge::g_eventCallbacks.length(); i++)
+    {
+        CSharpBridge::EventCallbackInfo* info = CSharpBridge::g_eventCallbacks[i];
+        if (info && info->eventHandle == eventHandle)
+        {
+            // Unregister from AMX forward system
+            if (info->amxForwardId != -1)
+            {
+                unregisterSPForward(info->amxForwardId);
+            }
+
+            delete info;
+            CSharpBridge::g_eventCallbacks[i] = nullptr;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetEventId(const char* eventName)
+{
+    if (!eventName || !CSharpBridge::g_initialized)
+        return -1;
+
+    // Search for event by name in registered events
+    CSharpBridge::AutoLock lock;
+
+    for (size_t i = 0; i < CSharpBridge::g_eventCallbacks.length(); i++)
+    {
+        CSharpBridge::EventCallbackInfo* info = CSharpBridge::g_eventCallbacks[i];
+        if (info && strcmp(info->eventName.chars(), eventName) == 0)
+        {
+            return info->eventId;
+        }
+    }
+
+    return -1;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetEventInfo(int eventId, CSharpEventInfo* outInfo)
+{
+    if (!outInfo || !CSharpBridge::g_initialized || eventId < 0)
+        return false;
+
+    CSharpBridge::AutoLock lock;
+
+    // Find event by ID
+    for (size_t i = 0; i < CSharpBridge::g_eventCallbacks.length(); i++)
+    {
+        CSharpBridge::EventCallbackInfo* info = CSharpBridge::g_eventCallbacks[i];
+        if (info && info->eventId == eventId)
+        {
+            strncpy(outInfo->eventName, info->eventName.chars(), sizeof(outInfo->eventName) - 1);
+            outInfo->eventName[sizeof(outInfo->eventName) - 1] = '\0';
+
+            outInfo->eventId = info->eventId;
+            outInfo->flags = info->flags;
+            outInfo->numParams = 0; // Would be determined by event type
+            outInfo->isActive = (info->amxForwardId != -1);
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Event parameter reading functions implementation
+CSHARP_EXPORT int CSHARP_CALL GetEventArgCount()
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    return CSharpBridge::g_currentEventParams;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetEventArg(int index, CSharpEventParam* outParam)
+{
+    if (!outParam || !CSharpBridge::g_initialized || index < 0 || index >= CSharpBridge::g_currentEventParams)
+        return false;
+
+    if (index >= 32) // Buffer limit
+        return false;
+
+    *outParam = CSharpBridge::g_eventParamBuffer[index];
+    return true;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetEventArgInt(int index)
+{
+    if (!CSharpBridge::g_initialized || index < 0 || index >= CSharpBridge::g_currentEventParams || index >= 32)
+        return 0;
+
+    return CSharpBridge::g_eventParamBuffer[index].intValue;
+}
+
+CSHARP_EXPORT float CSHARP_CALL GetEventArgFloat(int index)
+{
+    if (!CSharpBridge::g_initialized || index < 0 || index >= CSharpBridge::g_currentEventParams || index >= 32)
+        return 0.0f;
+
+    if (CSharpBridge::g_eventParamBuffer[index].type == 1)
+        return CSharpBridge::g_eventParamBuffer[index].floatValue;
+    else
+        return (float)CSharpBridge::g_eventParamBuffer[index].intValue;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetEventArgString(int index, char* buffer, int bufferSize)
+{
+    if (!buffer || bufferSize <= 0 || !CSharpBridge::g_initialized ||
+        index < 0 || index >= CSharpBridge::g_currentEventParams || index >= 32)
+        return false;
+
+    if (CSharpBridge::g_eventParamBuffer[index].type == 2)
+    {
+        strncpy(buffer, CSharpBridge::g_eventParamBuffer[index].stringValue, bufferSize - 1);
+        buffer[bufferSize - 1] = '\0';
+        return true;
+    }
+    else
+    {
+        // Convert number to string
+        if (CSharpBridge::g_eventParamBuffer[index].type == 0)
+        {
+            snprintf(buffer, bufferSize, "%d", CSharpBridge::g_eventParamBuffer[index].intValue);
+        }
+        else
+        {
+            snprintf(buffer, bufferSize, "%.2f", CSharpBridge::g_eventParamBuffer[index].floatValue);
+        }
+        return true;
+    }
+}
+
+// Forward system functions implementation
+CSHARP_EXPORT int CSHARP_CALL CreateForward(const char* forwardName, int execType, const int* paramTypes, int numParams)
+{
+    if (!forwardName || !CSharpBridge::g_initialized || numParams < 0 || numParams > 16)
+        return -1;
+
+    CSharpBridge::AutoLock lock;
+
+    int forwardId = CSharpBridge::g_nextForwardId++;
+
+    CSharpBridge::ForwardCallbackInfo* callbackInfo = new CSharpBridge::ForwardCallbackInfo();
+    callbackInfo->forwardCallback = nullptr; // Global forward, no specific callback
+    callbackInfo->forwardName = forwardName;
+    callbackInfo->forwardId = forwardId;
+    callbackInfo->execType = execType;
+    callbackInfo->amxForwardId = -1;
+
+    // Copy parameter types
+    for (int i = 0; i < numParams; i++)
+    {
+        callbackInfo->paramTypes.append(paramTypes[i]);
+    }
+
+    // Create AMX forward
+    ForwardParam amxParams[16];
+    for (int i = 0; i < numParams; i++)
+    {
+        amxParams[i] = static_cast<ForwardParam>(paramTypes[i]);
+    }
+
+    int amxForwardId = registerForwardC(forwardName, static_cast<ForwardExecType>(execType),
+                                       reinterpret_cast<cell*>(amxParams), numParams);
+
+    if (amxForwardId != -1)
+    {
+        callbackInfo->amxForwardId = amxForwardId;
+    }
+
+    CSharpBridge::g_forwardCallbacks.append(callbackInfo);
+    return forwardId;
+}
+
+CSHARP_EXPORT int CSHARP_CALL CreateSingleForward(const char* functionName, CSharpForwardCallback callback, const int* paramTypes, int numParams)
+{
+    if (!functionName || !callback || !CSharpBridge::g_initialized || numParams < 0 || numParams > 16)
+        return -1;
+
+    CSharpBridge::AutoLock lock;
+
+    int forwardId = CSharpBridge::g_nextForwardId++;
+
+    CSharpBridge::ForwardCallbackInfo* callbackInfo = new CSharpBridge::ForwardCallbackInfo();
+    callbackInfo->forwardCallback = callback;
+    callbackInfo->forwardName = functionName;
+    callbackInfo->forwardId = forwardId;
+    callbackInfo->execType = 0; // Single forward
+    callbackInfo->amxForwardId = -1;
+
+    // Copy parameter types
+    for (int i = 0; i < numParams; i++)
+    {
+        callbackInfo->paramTypes.append(paramTypes[i]);
+    }
+
+    // Create single plugin forward (simplified - would need actual plugin context)
+    CPluginMngr::CPlugin* plugin = nullptr;
+    for (CPluginMngr::iterator iter = g_plugins.begin(); iter; ++iter)
+    {
+        if ((*iter).isValid())
+        {
+            plugin = &(*iter);
+            break;
+        }
+    }
+
+    if (plugin)
+    {
+        ForwardParam amxParams[16];
+        for (int i = 0; i < numParams; i++)
+        {
+            amxParams[i] = static_cast<ForwardParam>(paramTypes[i]);
+        }
+
+        int amxForwardId = registerSPForwardByNameC(plugin->getAMX(), functionName,
+                                                   reinterpret_cast<cell*>(amxParams), numParams);
+
+        if (amxForwardId != -1)
+        {
+            callbackInfo->amxForwardId = amxForwardId;
+        }
+    }
+
+    CSharpBridge::g_forwardCallbacks.append(callbackInfo);
+    return forwardId;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL ExecuteForward(int forwardId, const CSharpEventParam* params, int numParams, int* outResult)
+{
+    if (!CSharpBridge::g_initialized || forwardId < 0 || numParams < 0)
+        return false;
+
+    CSharpBridge::AutoLock lock;
+
+    // Find forward by ID
+    CSharpBridge::ForwardCallbackInfo* info = nullptr;
+    for (size_t i = 0; i < CSharpBridge::g_forwardCallbacks.length(); i++)
+    {
+        if (CSharpBridge::g_forwardCallbacks[i] && CSharpBridge::g_forwardCallbacks[i]->forwardId == forwardId)
+        {
+            info = CSharpBridge::g_forwardCallbacks[i];
+            break;
+        }
+    }
+
+    if (!info || info->amxForwardId == -1)
+        return false;
+
+    // Prepare parameters for AMX forward execution
+    cell amxParams[16];
+    for (int i = 0; i < numParams && i < 16; i++)
+    {
+        switch (params[i].type)
+        {
+            case 0: // int
+                amxParams[i] = params[i].intValue;
+                break;
+            case 1: // float
+                amxParams[i] = amx_ftoc(params[i].floatValue);
+                break;
+            case 2: // string
+                // String handling would require more complex parameter preparation
+                amxParams[i] = 0; // Simplified
+                break;
+            default:
+                amxParams[i] = 0;
+                break;
+        }
+    }
+
+    // Execute the forward
+    cell result = executeForwards(info->amxForwardId, amxParams[0], amxParams[1], amxParams[2],
+                                 amxParams[3], amxParams[4], amxParams[5], amxParams[6], amxParams[7]);
+
+    if (outResult)
+        *outResult = result;
+
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL UnregisterForward(int forwardId)
+{
+    if (!CSharpBridge::g_initialized || forwardId < 0)
+        return false;
+
+    CSharpBridge::AutoLock lock;
+
+    // Find and remove the forward callback
+    for (size_t i = 0; i < CSharpBridge::g_forwardCallbacks.length(); i++)
+    {
+        CSharpBridge::ForwardCallbackInfo* info = CSharpBridge::g_forwardCallbacks[i];
+        if (info && info->forwardId == forwardId)
+        {
+            // Unregister from AMX forward system
+            if (info->amxForwardId != -1)
+            {
+                if (info->forwardCallback) // Single forward
+                {
+                    unregisterSPForward(info->amxForwardId);
+                }
+                // Global forwards are not unregistered individually
+            }
+
+            delete info;
+            CSharpBridge::g_forwardCallbacks[i] = nullptr;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetForwardInfo(int forwardId, CSharpForwardInfo* outInfo)
+{
+    if (!outInfo || !CSharpBridge::g_initialized || forwardId < 0)
+        return false;
+
+    CSharpBridge::AutoLock lock;
+
+    // Find forward by ID
+    for (size_t i = 0; i < CSharpBridge::g_forwardCallbacks.length(); i++)
+    {
+        CSharpBridge::ForwardCallbackInfo* info = CSharpBridge::g_forwardCallbacks[i];
+        if (info && info->forwardId == forwardId)
+        {
+            strncpy(outInfo->forwardName, info->forwardName.chars(), sizeof(outInfo->forwardName) - 1);
+            outInfo->forwardName[sizeof(outInfo->forwardName) - 1] = '\0';
+
+            outInfo->forwardId = info->forwardId;
+            outInfo->numParams = info->paramTypes.length();
+            outInfo->execType = info->execType;
+            outInfo->isValid = (info->amxForwardId != -1);
+
+            return true;
+        }
+    }
+
+    return false;
 }

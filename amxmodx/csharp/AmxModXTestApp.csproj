@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="AmxModXExample.cs" />
     <Compile Include="CommandExecutionExample.cs" />
+    <Compile Include="EventSystemExample.cs" />
     <Compile Include="TestProgram.cs" />
   </ItemGroup>
 

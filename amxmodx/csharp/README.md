@@ -189,7 +189,113 @@ public static class MenuKeys
 }
 ```
 
+### 主要方法 / Main Methods
+
+#### 命令注册 / Command Registration
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `Initialize()` | 初始化命令系统 / Initialize command system |
+| `RegisterClientCommand()` | 注册客户端命令 / Register client command |
+| `RegisterConsoleCommand()` | 注册控制台命令 / Register console command |
+| `RegisterServerCommand()` | 注册服务器命令 / Register server command |
+| `RegisterMenuCommand()` | 注册菜单命令 / Register menu command |
+| `RegisterMenuId()` | 注册菜单ID / Register menu ID |
+| `UnregisterCommand()` | 注销命令 / Unregister command |
+| `Cleanup()` | 清理资源 / Cleanup resources |
+
+#### 命令执行 / Command Execution
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `ExecuteServerCommand()` | 执行服务器命令 / Execute server command |
+| `ExecuteClientCommand()` | 执行客户端命令 / Execute client command |
+| `ExecuteConsoleCommand()` | 执行控制台命令 / Execute console command |
+
+#### 命令参数读取 / Command Argument Reading
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `GetCommandArgCount()` | 获取参数数量 / Get argument count |
+| `GetCommandArg()` | 获取字符串参数 / Get string argument |
+| `GetCommandArgs()` | 获取所有参数 / Get all arguments |
+| `GetCommandArgInt()` | 获取整数参数 / Get integer argument |
+| `GetCommandArgFloat()` | 获取浮点参数 / Get float argument |
+
+#### 命令查询 / Command Query
+| 方法 / Method | 描述 / Description |
+|---------------|-------------------|
+| `FindCommand()` | 查找指定命令 / Find specific command |
+| `GetCommandsCount()` | 获取命令数量 / Get command count |
+| `GetCommandByIndex()` | 根据索引获取命令 / Get command by index |
+| `GetAllCommands()` | 获取所有命令 / Get all commands |
+| `CommandExists()` | 检查命令是否存在 / Check if command exists |
+
 ## 高级示例 / Advanced Examples
+
+### 命令执行 / Command Execution
+
+```csharp
+// 执行服务器命令 / Execute server command
+AmxModXCommands.ExecuteServerCommand("echo Hello from C#");
+AmxModXCommands.ExecuteServerCommand("users");
+
+// 执行客户端命令 / Execute client command
+AmxModXCommands.ExecuteClientCommand(1, "say Hello from C# to client 1");
+AmxModXCommands.ExecuteClientCommand(0, "say Broadcast message to all clients");
+
+// 执行控制台命令 / Execute console command
+AmxModXCommands.ExecuteConsoleCommand(0, "version");
+```
+
+### 命令参数读取 / Command Argument Reading
+
+```csharp
+static void OnMyCommand(int clientId, int commandId, int flags)
+{
+    // 获取参数数量 / Get argument count
+    int argc = AmxModXCommands.GetCommandArgCount();
+    Console.WriteLine($"Argument count: {argc}");
+
+    // 读取各个参数 / Read individual arguments
+    for (int i = 0; i < argc; i++)
+    {
+        string arg = AmxModXCommands.GetCommandArg(i);
+        Console.WriteLine($"Arg[{i}]: {arg}");
+    }
+
+    // 读取类型化参数 / Read typed arguments
+    if (argc > 1)
+    {
+        int intArg = AmxModXCommands.GetCommandArgInt(1);
+        float floatArg = AmxModXCommands.GetCommandArgFloat(2);
+        Console.WriteLine($"Int: {intArg}, Float: {floatArg}");
+    }
+
+    // 获取所有参数字符串 / Get all arguments string
+    string allArgs = AmxModXCommands.GetCommandArgs();
+    Console.WriteLine($"All args: {allArgs}");
+}
+```
+
+### 命令查询 / Command Query
+
+```csharp
+// 查找特定命令 / Find specific command
+var cmdInfo = AmxModXCommands.FindCommand("help", CommandType.Client);
+if (cmdInfo.HasValue)
+{
+    Console.WriteLine($"Found: {cmdInfo.Value.Command} - {cmdInfo.Value.Info}");
+}
+
+// 获取所有客户端命令 / Get all client commands
+var allCommands = AmxModXCommands.GetAllCommands(CommandType.Client);
+foreach (var cmd in allCommands)
+{
+    Console.WriteLine($"{cmd.Command}: {cmd.Info} (Flags: {cmd.Flags})");
+}
+
+// 检查命令是否存在 / Check if command exists
+bool exists = AmxModXCommands.CommandExists("amx_kick", CommandType.Console);
+Console.WriteLine($"amx_kick exists: {exists}");
+```
 
 ### 菜单系统 / Menu System
 

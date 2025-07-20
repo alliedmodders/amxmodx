@@ -146,7 +146,26 @@ namespace AmxModX.TestApp
                 throw;
             }
 
-            // 测试3: 多线程安全性 / Test 3: Thread safety
+            // 测试3: 命令执行接口 / Test 3: Command execution interface
+            PrintTest("Test 3: Command Execution Interface");
+            try
+            {
+                CommandExecutionExample.Initialize();
+                PrintSuccess("✓ Command execution example initialized");
+
+                CommandExecutionExample.RunFullDemo();
+                PrintSuccess("✓ Command execution demo completed");
+
+                CommandExecutionExample.Cleanup();
+                PrintSuccess("✓ Test 3 completed successfully");
+            }
+            catch (Exception ex)
+            {
+                PrintError($"✗ Command execution test failed: {ex.Message}");
+                throw;
+            }
+
+            // 测试4: 多线程安全性 / Test 4: Thread safety
             if (options.TestThreadSafety)
             {
                 await RunThreadSafetyTests();

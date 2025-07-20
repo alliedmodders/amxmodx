@@ -105,6 +105,23 @@ CSHARP_EXPORT int CSHARP_CALL GetCommandCount(
 // Command management functions
 CSHARP_EXPORT bool CSHARP_CALL UnregisterCommand(int commandId);
 
+// Command execution functions
+CSHARP_EXPORT void CSHARP_CALL ExecuteServerCommand(const char* command);
+CSHARP_EXPORT void CSHARP_CALL ExecuteClientCommand(int clientId, const char* command);
+CSHARP_EXPORT void CSHARP_CALL ExecuteConsoleCommand(int clientId, const char* command);
+
+// Command argument reading functions
+CSHARP_EXPORT int CSHARP_CALL GetCommandArgCount();
+CSHARP_EXPORT bool CSHARP_CALL GetCommandArg(int index, char* buffer, int bufferSize);
+CSHARP_EXPORT bool CSHARP_CALL GetCommandArgs(char* buffer, int bufferSize);
+CSHARP_EXPORT int CSHARP_CALL GetCommandArgInt(int index);
+CSHARP_EXPORT float CSHARP_CALL GetCommandArgFloat(int index);
+
+// Command query functions
+CSHARP_EXPORT bool CSHARP_CALL FindCommand(const char* commandName, CSharpCommandType commandType, CSharpCommandInfo* outInfo);
+CSHARP_EXPORT int CSHARP_CALL GetCommandsCount(CSharpCommandType commandType, int accessFlags);
+CSHARP_EXPORT bool CSHARP_CALL GetCommandByIndex(int index, CSharpCommandType commandType, int accessFlags, CSharpCommandInfo* outInfo);
+
 // Internal bridge management
 namespace CSharpBridge
 {

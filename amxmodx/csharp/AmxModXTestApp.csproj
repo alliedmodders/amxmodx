@@ -35,6 +35,7 @@
   <!-- Source files -->
   <ItemGroup>
     <Compile Include="AmxModXExample.cs" />
+    <Compile Include="CommandExecutionExample.cs" />
     <Compile Include="TestProgram.cs" />
   </ItemGroup>
 

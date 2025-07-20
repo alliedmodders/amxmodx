@@ -11,6 +11,7 @@
 // Provides managed interface for command registration with AMX Mod X
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace AmxModX.Interop
@@ -99,6 +100,118 @@ namespace AmxModX.Interop
         /// </summary>
         [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "CleanupCSharpBridge")]
         internal static extern void CleanupCSharpBridge();
+
+        // ========== 命令执行接口 / Command Execution Interfaces ==========
+
+        /// <summary>
+        /// 执行服务器命令 / Execute server command
+        /// </summary>
+        /// <param name="command">命令字符串 / Command string</param>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi, EntryPoint = "ExecuteServerCommand")]
+        internal static extern void ExecuteServerCommand([MarshalAs(UnmanagedType.LPStr)] string command);
+
+        /// <summary>
+        /// 执行客户端命令 / Execute client command
+        /// </summary>
+        /// <param name="clientId">客户端ID，0表示所有客户端 / Client ID, 0 means all clients</param>
+        /// <param name="command">命令字符串 / Command string</param>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi, EntryPoint = "ExecuteClientCommand")]
+        internal static extern void ExecuteClientCommand(int clientId, [MarshalAs(UnmanagedType.LPStr)] string command);
+
+        /// <summary>
+        /// 执行控制台命令 / Execute console command
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="command">命令字符串 / Command string</param>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi, EntryPoint = "ExecuteConsoleCommand")]
+        internal static extern void ExecuteConsoleCommand(int clientId, [MarshalAs(UnmanagedType.LPStr)] string command);
+
+        // ========== 命令参数读取接口 / Command Argument Reading Interfaces ==========
+
+        /// <summary>
+        /// 获取命令参数数量 / Get command argument count
+        /// </summary>
+        /// <returns>参数数量 / Argument count</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCommandArgCount")]
+        internal static extern int GetCommandArgCount();
+
+        /// <summary>
+        /// 获取指定索引的命令参数 / Get command argument by index
+        /// </summary>
+        /// <param name="index">参数索引 / Argument index</param>
+        /// <param name="buffer">输出缓冲区 / Output buffer</param>
+        /// <param name="bufferSize">缓冲区大小 / Buffer size</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCommandArg")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetCommandArg(int index, [MarshalAs(UnmanagedType.LPStr)] System.Text.StringBuilder buffer, int bufferSize);
+
+        /// <summary>
+        /// 获取所有命令参数 / Get all command arguments
+        /// </summary>
+        /// <param name="buffer">输出缓冲区 / Output buffer</param>
+        /// <param name="bufferSize">缓冲区大小 / Buffer size</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCommandArgs")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetCommandArgs([MarshalAs(UnmanagedType.LPStr)] System.Text.StringBuilder buffer, int bufferSize);
+
+        /// <summary>
+        /// 获取指定索引的命令参数（整数） / Get command argument by index (integer)
+        /// </summary>
+        /// <param name="index">参数索引 / Argument index</param>
+        /// <returns>整数值 / Integer value</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCommandArgInt")]
+        internal static extern int GetCommandArgInt(int index);
+
+        /// <summary>
+        /// 获取指定索引的命令参数（浮点数） / Get command argument by index (float)
+        /// </summary>
+        /// <param name="index">参数索引 / Argument index</param>
+        /// <returns>浮点数值 / Float value</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCommandArgFloat")]
+        internal static extern float GetCommandArgFloat(int index);
+
+        // ========== 命令查询接口 / Command Query Interfaces ==========
+
+        /// <summary>
+        /// 查找指定名称的命令 / Find command by name
+        /// </summary>
+        /// <param name="commandName">命令名称 / Command name</param>
+        /// <param name="commandType">命令类型 / Command type</param>
+        /// <param name="outInfo">输出命令信息 / Output command info</param>
+        /// <returns>是否找到 / Whether found</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi, EntryPoint = "FindCommand")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool FindCommand(
+            [MarshalAs(UnmanagedType.LPStr)] string commandName,
+            CommandType commandType,
+            out CommandInfo outInfo);
+
+        /// <summary>
+        /// 获取指定类型的命令数量 / Get command count by type
+        /// </summary>
+        /// <param name="commandType">命令类型 / Command type</param>
+        /// <param name="accessFlags">访问标志 / Access flags</param>
+        /// <returns>命令数量 / Command count</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCommandsCount")]
+        internal static extern int GetCommandsCount(CommandType commandType, int accessFlags);
+
+        /// <summary>
+        /// 根据索引获取命令信息 / Get command info by index
+        /// </summary>
+        /// <param name="index">命令索引 / Command index</param>
+        /// <param name="commandType">命令类型 / Command type</param>
+        /// <param name="accessFlags">访问标志 / Access flags</param>
+        /// <param name="outInfo">输出命令信息 / Output command info</param>
+        /// <returns>是否成功 / Whether successful</returns>
+        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCommandByIndex")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        internal static extern bool GetCommandByIndex(
+            int index,
+            CommandType commandType,
+            int accessFlags,
+            out CommandInfo outInfo);
 
         /// <summary>
         /// 注册控制台命令 / Register console command
@@ -446,6 +559,234 @@ namespace AmxModX.Interop
         /// </summary>
         /// <returns>是否已初始化 / Whether initialized</returns>
         public static bool IsInitialized => _initialized;
+
+        // ========== 命令执行接口 / Command Execution Interfaces ==========
+
+        /// <summary>
+        /// 执行服务器命令 / Execute server command
+        /// 在服务器控制台执行命令 / Execute command in server console
+        /// </summary>
+        /// <param name="command">命令字符串，不能为空 / Command string, cannot be empty</param>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        /// <exception cref="ArgumentException">当命令字符串为空时抛出 / Thrown when command string is empty</exception>
+        public static void ExecuteServerCommand(string command)
+        {
+            EnsureInitialized();
+
+            if (string.IsNullOrEmpty(command))
+                throw new ArgumentException("Command cannot be null or empty.", nameof(command));
+
+            NativeMethods.ExecuteServerCommand(command);
+        }
+
+        /// <summary>
+        /// 执行客户端命令 / Execute client command
+        /// 让指定客户端或所有客户端执行命令 / Make specified client or all clients execute command
+        /// </summary>
+        /// <param name="clientId">客户端ID，0表示所有客户端 / Client ID, 0 means all clients</param>
+        /// <param name="command">命令字符串，不能为空 / Command string, cannot be empty</param>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        /// <exception cref="ArgumentException">当命令字符串为空时抛出 / Thrown when command string is empty</exception>
+        public static void ExecuteClientCommand(int clientId, string command)
+        {
+            EnsureInitialized();
+
+            if (string.IsNullOrEmpty(command))
+                throw new ArgumentException("Command cannot be null or empty.", nameof(command));
+
+            NativeMethods.ExecuteClientCommand(clientId, command);
+        }
+
+        /// <summary>
+        /// 执行控制台命令 / Execute console command
+        /// 在指定客户端的控制台执行命令 / Execute command in specified client's console
+        /// </summary>
+        /// <param name="clientId">客户端ID / Client ID</param>
+        /// <param name="command">命令字符串，不能为空 / Command string, cannot be empty</param>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        /// <exception cref="ArgumentException">当命令字符串为空时抛出 / Thrown when command string is empty</exception>
+        public static void ExecuteConsoleCommand(int clientId, string command)
+        {
+            EnsureInitialized();
+
+            if (string.IsNullOrEmpty(command))
+                throw new ArgumentException("Command cannot be null or empty.", nameof(command));
+
+            NativeMethods.ExecuteConsoleCommand(clientId, command);
+        }
+
+        // ========== 命令参数读取接口 / Command Argument Reading Interfaces ==========
+
+        /// <summary>
+        /// 获取当前命令的参数数量 / Get current command argument count
+        /// 在命令回调函数中使用 / Use in command callback functions
+        /// </summary>
+        /// <returns>参数数量，包括命令本身 / Argument count, including command itself</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static int GetCommandArgCount()
+        {
+            EnsureInitialized();
+            return NativeMethods.GetCommandArgCount();
+        }
+
+        /// <summary>
+        /// 获取指定索引的命令参数 / Get command argument by index
+        /// 在命令回调函数中使用 / Use in command callback functions
+        /// </summary>
+        /// <param name="index">参数索引，0为命令本身 / Argument index, 0 is command itself</param>
+        /// <returns>参数字符串，失败返回空字符串 / Argument string, returns empty string on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static string GetCommandArg(int index)
+        {
+            EnsureInitialized();
+
+            var buffer = new System.Text.StringBuilder(256);
+            if (NativeMethods.GetCommandArg(index, buffer, buffer.Capacity))
+                return buffer.ToString();
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取所有命令参数 / Get all command arguments
+        /// 在命令回调函数中使用，不包括命令本身 / Use in command callback functions, excludes command itself
+        /// </summary>
+        /// <returns>参数字符串，失败返回空字符串 / Arguments string, returns empty string on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static string GetCommandArgs()
+        {
+            EnsureInitialized();
+
+            var buffer = new System.Text.StringBuilder(512);
+            if (NativeMethods.GetCommandArgs(buffer, buffer.Capacity))
+                return buffer.ToString();
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取指定索引的命令参数（整数） / Get command argument by index (integer)
+        /// 在命令回调函数中使用 / Use in command callback functions
+        /// </summary>
+        /// <param name="index">参数索引 / Argument index</param>
+        /// <returns>整数值，解析失败返回0 / Integer value, returns 0 on parse failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static int GetCommandArgInt(int index)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetCommandArgInt(index);
+        }
+
+        /// <summary>
+        /// 获取指定索引的命令参数（浮点数） / Get command argument by index (float)
+        /// 在命令回调函数中使用 / Use in command callback functions
+        /// </summary>
+        /// <param name="index">参数索引 / Argument index</param>
+        /// <returns>浮点数值，解析失败返回0.0 / Float value, returns 0.0 on parse failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static float GetCommandArgFloat(int index)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetCommandArgFloat(index);
+        }
+
+        // ========== 命令查询接口 / Command Query Interfaces ==========
+
+        /// <summary>
+        /// 查找指定名称的命令 / Find command by name
+        /// 在AMX Mod X命令系统中查找命令 / Search for command in AMX Mod X command system
+        /// </summary>
+        /// <param name="commandName">命令名称，不能为空 / Command name, cannot be empty</param>
+        /// <param name="commandType">命令类型 / Command type</param>
+        /// <returns>命令信息，未找到返回null / Command info, returns null if not found</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        /// <exception cref="ArgumentException">当命令名称为空时抛出 / Thrown when command name is empty</exception>
+        public static CommandInfo? FindCommand(string commandName, CommandType commandType)
+        {
+            EnsureInitialized();
+
+            if (string.IsNullOrEmpty(commandName))
+                throw new ArgumentException("Command name cannot be null or empty.", nameof(commandName));
+
+            if (NativeMethods.FindCommand(commandName, commandType, out CommandInfo info))
+                return info;
+
+            return null;
+        }
+
+        /// <summary>
+        /// 获取指定类型的命令总数 / Get total command count by type
+        /// 统计AMX Mod X系统中的命令数量 / Count commands in AMX Mod X system
+        /// </summary>
+        /// <param name="commandType">命令类型 / Command type</param>
+        /// <param name="accessFlags">访问标志过滤，默认为-1（所有） / Access flags filter, default -1 (all)</param>
+        /// <returns>命令数量 / Command count</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static int GetCommandsCount(CommandType commandType, int accessFlags = -1)
+        {
+            EnsureInitialized();
+            return NativeMethods.GetCommandsCount(commandType, accessFlags);
+        }
+
+        /// <summary>
+        /// 根据索引获取命令信息 / Get command info by index
+        /// 遍历AMX Mod X系统中的命令 / Iterate through commands in AMX Mod X system
+        /// </summary>
+        /// <param name="index">命令索引 / Command index</param>
+        /// <param name="commandType">命令类型 / Command type</param>
+        /// <param name="accessFlags">访问标志过滤，默认为-1（所有） / Access flags filter, default -1 (all)</param>
+        /// <returns>命令信息，失败返回null / Command info, returns null on failure</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static CommandInfo? GetCommandByIndex(int index, CommandType commandType, int accessFlags = -1)
+        {
+            EnsureInitialized();
+
+            if (NativeMethods.GetCommandByIndex(index, commandType, accessFlags, out CommandInfo info))
+                return info;
+
+            return null;
+        }
+
+        /// <summary>
+        /// 获取所有指定类型的命令 / Get all commands of specified type
+        /// 返回AMX Mod X系统中所有匹配的命令 / Returns all matching commands in AMX Mod X system
+        /// </summary>
+        /// <param name="commandType">命令类型 / Command type</param>
+        /// <param name="accessFlags">访问标志过滤，默认为-1（所有） / Access flags filter, default -1 (all)</param>
+        /// <returns>命令信息列表 / List of command info</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        public static List<CommandInfo> GetAllCommands(CommandType commandType, int accessFlags = -1)
+        {
+            EnsureInitialized();
+
+            var commands = new List<CommandInfo>();
+            int count = GetCommandsCount(commandType, accessFlags);
+
+            for (int i = 0; i < count; i++)
+            {
+                var cmdInfo = GetCommandByIndex(i, commandType, accessFlags);
+                if (cmdInfo.HasValue)
+                {
+                    commands.Add(cmdInfo.Value);
+                }
+            }
+
+            return commands;
+        }
+
+        /// <summary>
+        /// 检查命令是否存在 / Check if command exists
+        /// 在AMX Mod X命令系统中检查命令是否已注册 / Check if command is registered in AMX Mod X command system
+        /// </summary>
+        /// <param name="commandName">命令名称，不能为空 / Command name, cannot be empty</param>
+        /// <param name="commandType">命令类型 / Command type</param>
+        /// <returns>是否存在 / Whether exists</returns>
+        /// <exception cref="InvalidOperationException">当系统未初始化时抛出 / Thrown when system is not initialized</exception>
+        /// <exception cref="ArgumentException">当命令名称为空时抛出 / Thrown when command name is empty</exception>
+        public static bool CommandExists(string commandName, CommandType commandType)
+        {
+            return FindCommand(commandName, commandType).HasValue;
+        }
     }
 
     /// <summary>

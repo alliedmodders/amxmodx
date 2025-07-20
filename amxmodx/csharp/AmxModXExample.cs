@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AmxModX.Interop;
 
 namespace AmxModX.Examples
@@ -165,7 +166,10 @@ namespace AmxModX.Examples
         private static void OnHelpCommand(int clientId, int commandId, int flags)
         {
             Console.WriteLine($"[HELP] Client {clientId} requested help (Command ID: {commandId}, Flags: {flags})");
-            
+
+            // 演示命令参数读取 / Demonstrate command argument reading
+            DemonstrateCommandArguments();
+
             // 这里可以向客户端发送帮助信息 / Here you can send help information to the client
             // 示例：显示可用命令列表 / Example: show available command list
             ShowAvailableCommands(clientId);
@@ -237,6 +241,131 @@ namespace AmxModX.Examples
             
             // 根据按键处理不同的菜单选项 / Handle different menu options based on key
             HandleMenuSelection(clientId, menuId, key);
+        }
+
+        // ========== 命令执行演示 / Command Execution Demonstration ==========
+
+        /// <summary>
+        /// 演示命令执行功能 / Demonstrate command execution functionality
+        /// </summary>
+        public static void DemonstrateCommandExecution()
+        {
+            Console.WriteLine("\n========== Command Execution Demo ==========");
+
+            try
+            {
+                // 演示服务器命令执行 / Demonstrate server command execution
+                Console.WriteLine("Executing server commands...");
+                AmxModXCommands.ExecuteServerCommand("echo Server command executed from C#");
+                AmxModXCommands.ExecuteServerCommand("status");
+
+                // 演示客户端命令执行 / Demonstrate client command execution
+                Console.WriteLine("Executing client commands...");
+                AmxModXCommands.ExecuteClientCommand(1, "say Hello from C# to client 1");
+                AmxModXCommands.ExecuteClientCommand(0, "say Hello from C# to all clients");
+
+                // 演示控制台命令执行 / Demonstrate console command execution
+                Console.WriteLine("Executing console commands...");
+                AmxModXCommands.ExecuteConsoleCommand(0, "version");
+
+                Console.WriteLine("Command execution demonstration completed.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Command execution error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 演示命令参数读取 / Demonstrate command argument reading
+        /// </summary>
+        private static void DemonstrateCommandArguments()
+        {
+            Console.WriteLine("  [ARG DEMO] Reading command arguments:");
+
+            try
+            {
+                // 获取参数数量 / Get argument count
+                int argc = AmxModXCommands.GetCommandArgCount();
+                Console.WriteLine($"  [ARG DEMO] Argument count: {argc}");
+
+                // 读取所有参数 / Read all arguments
+                for (int i = 0; i < argc; i++)
+                {
+                    string arg = AmxModXCommands.GetCommandArg(i);
+                    Console.WriteLine($"  [ARG DEMO] Arg[{i}]: '{arg}'");
+
+                    // 尝试解析为数字 / Try parsing as numbers
+                    if (i > 0) // 跳过命令本身 / Skip command itself
+                    {
+                        int intVal = AmxModXCommands.GetCommandArgInt(i);
+                        float floatVal = AmxModXCommands.GetCommandArgFloat(i);
+                        Console.WriteLine($"  [ARG DEMO]   As int: {intVal}, As float: {floatVal}");
+                    }
+                }
+
+                // 获取所有参数字符串 / Get all arguments string
+                string allArgs = AmxModXCommands.GetCommandArgs();
+                Console.WriteLine($"  [ARG DEMO] All args: '{allArgs}'");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"  [ARG DEMO] Error reading arguments: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 演示命令查询功能 / Demonstrate command query functionality
+        /// </summary>
+        public static void DemonstrateCommandQuery()
+        {
+            Console.WriteLine("\n========== Command Query Demo ==========");
+
+            try
+            {
+                // 查找特定命令 / Find specific command
+                var helpCmd = AmxModXCommands.FindCommand("help", CommandType.Client);
+                if (helpCmd.HasValue)
+                {
+                    var cmd = helpCmd.Value;
+                    Console.WriteLine($"Found command: {cmd.Command}");
+                    Console.WriteLine($"  Info: {cmd.Info}");
+                    Console.WriteLine($"  Flags: {cmd.Flags}");
+                    Console.WriteLine($"  Listable: {cmd.Listable}");
+                }
+
+                // 获取命令统计 / Get command statistics
+                int clientCmds = AmxModXCommands.GetCommandsCount(CommandType.Client);
+                int consoleCmds = AmxModXCommands.GetCommandsCount(CommandType.Console);
+                int serverCmds = AmxModXCommands.GetCommandsCount(CommandType.Server);
+
+                Console.WriteLine($"Command counts - Client: {clientCmds}, Console: {consoleCmds}, Server: {serverCmds}");
+
+                // 列出所有客户端命令 / List all client commands
+                Console.WriteLine("All client commands:");
+                var allClientCmds = AmxModXCommands.GetAllCommands(CommandType.Client);
+                foreach (var cmd in allClientCmds.Take(5)) // 只显示前5个 / Show only first 5
+                {
+                    Console.WriteLine($"  {cmd.Command} - {cmd.Info}");
+                }
+
+                if (allClientCmds.Count > 5)
+                {
+                    Console.WriteLine($"  ... and {allClientCmds.Count - 5} more commands");
+                }
+
+                // 检查命令是否存在 / Check if command exists
+                bool helpExists = AmxModXCommands.CommandExists("help", CommandType.Client);
+                bool fakeExists = AmxModXCommands.CommandExists("nonexistent_command", CommandType.Client);
+                Console.WriteLine($"Command 'help' exists: {helpExists}");
+                Console.WriteLine($"Command 'nonexistent_command' exists: {fakeExists}");
+
+                Console.WriteLine("Command query demonstration completed.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Command query error: {ex.Message}");
+            }
         }
 
         // ========== 辅助方法 / Helper Methods ==========
@@ -427,6 +556,12 @@ namespace AmxModX.Examples
             OnMainMenuCommand(1, _mainMenuId, 1);
             OnMainMenuCommand(1, _mainMenuId, 2);
             OnMainMenuCommand(1, _mainMenuId, 0);
+
+            // 测试命令执行功能 / Test command execution functionality
+            DemonstrateCommandExecution();
+
+            // 测试命令查询功能 / Test command query functionality
+            DemonstrateCommandQuery();
         }
 
         /// <summary>

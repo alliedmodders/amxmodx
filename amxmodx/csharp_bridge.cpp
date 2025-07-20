@@ -445,3 +445,299 @@ CSHARP_EXPORT bool CSHARP_CALL UnregisterCommand(int commandId)
 
     return true;
 }
+
+// Command execution functions implementation
+CSHARP_EXPORT void CSHARP_CALL ExecuteServerCommand(const char* command)
+{
+    if (!command || !CSharpBridge::g_initialized)
+        return;
+
+    // Create a copy of the command and add newline
+    size_t len = strlen(command);
+    char* cmd = new char[len + 2];
+    strcpy(cmd, command);
+    cmd[len] = '\n';
+    cmd[len + 1] = '\0';
+
+    // Execute server command
+    SERVER_COMMAND(cmd);
+
+    delete[] cmd;
+}
+
+CSHARP_EXPORT void CSHARP_CALL ExecuteClientCommand(int clientId, const char* command)
+{
+    if (!command || !CSharpBridge::g_initialized)
+        return;
+
+    if (clientId < 0 || clientId > gpGlobals->maxClients)
+        return;
+
+    // Create a copy of the command and add newline
+    size_t len = strlen(command);
+    char* cmd = new char[len + 2];
+    strcpy(cmd, command);
+    cmd[len] = '\n';
+    cmd[len + 1] = '\0';
+
+    if (clientId == 0)
+    {
+        // Send to all clients
+        for (int i = 1; i <= gpGlobals->maxClients; ++i)
+        {
+            CPlayer* pPlayer = GET_PLAYER_POINTER_I(i);
+            if (!pPlayer->IsBot() && pPlayer->initialized)
+                CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
+        }
+    }
+    else
+    {
+        // Send to specific client
+        CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+        if (!pPlayer->IsBot() && pPlayer->initialized)
+            CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
+    }
+
+    delete[] cmd;
+}
+
+CSHARP_EXPORT void CSHARP_CALL ExecuteConsoleCommand(int clientId, const char* command)
+{
+    if (!command || !CSharpBridge::g_initialized)
+        return;
+
+    // Create a copy of the command and add newline
+    size_t len = strlen(command);
+    char* cmd = new char[len + 2];
+    strcpy(cmd, command);
+    cmd[len] = '\n';
+    cmd[len + 1] = '\0';
+
+    if (clientId < 1 || clientId > gpGlobals->maxClients)
+    {
+        // Execute as server command
+        SERVER_COMMAND(cmd);
+    }
+    else
+    {
+        // Execute as client console command
+        CPlayer* pPlayer = GET_PLAYER_POINTER_I(clientId);
+        if (!pPlayer->IsBot() && pPlayer->initialized)
+            CLIENT_COMMAND(pPlayer->pEdict, "%s", cmd);
+    }
+
+    delete[] cmd;
+}
+
+// Command argument reading functions implementation
+CSHARP_EXPORT int CSHARP_CALL GetCommandArgCount()
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    return CMD_ARGC();
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetCommandArg(int index, char* buffer, int bufferSize)
+{
+    if (!buffer || bufferSize <= 0 || !CSharpBridge::g_initialized)
+        return false;
+
+    if (index < 0)
+        return false;
+
+    const char* arg = CMD_ARGV(index);
+    if (!arg)
+    {
+        buffer[0] = '\0';
+        return false;
+    }
+
+    // Copy argument to buffer with bounds checking
+    size_t argLen = strlen(arg);
+    size_t copyLen = (argLen < (size_t)(bufferSize - 1)) ? argLen : (bufferSize - 1);
+
+    strncpy(buffer, arg, copyLen);
+    buffer[copyLen] = '\0';
+
+    return true;
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetCommandArgs(char* buffer, int bufferSize)
+{
+    if (!buffer || bufferSize <= 0 || !CSharpBridge::g_initialized)
+        return false;
+
+    const char* args = CMD_ARGS();
+    if (!args)
+    {
+        buffer[0] = '\0';
+        return false;
+    }
+
+    // Copy arguments to buffer with bounds checking
+    size_t argsLen = strlen(args);
+    size_t copyLen = (argsLen < (size_t)(bufferSize - 1)) ? argsLen : (bufferSize - 1);
+
+    strncpy(buffer, args, copyLen);
+    buffer[copyLen] = '\0';
+
+    return true;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetCommandArgInt(int index)
+{
+    if (!CSharpBridge::g_initialized || index < 0)
+        return 0;
+
+    const char* arg = CMD_ARGV(index);
+    if (!arg)
+        return 0;
+
+    return atoi(arg);
+}
+
+CSHARP_EXPORT float CSHARP_CALL GetCommandArgFloat(int index)
+{
+    if (!CSharpBridge::g_initialized || index < 0)
+        return 0.0f;
+
+    const char* arg = CMD_ARGV(index);
+    if (!arg)
+        return 0.0f;
+
+    return (float)atof(arg);
+}
+
+// Command query functions implementation
+CSHARP_EXPORT bool CSHARP_CALL FindCommand(const char* commandName, CSharpCommandType commandType, CSharpCommandInfo* outInfo)
+{
+    if (!commandName || !outInfo || !CSharpBridge::g_initialized)
+        return false;
+
+    // Convert C# command type to AMX command type
+    int amxCmdType;
+    switch (commandType)
+    {
+        case CSHARP_COMMAND_TYPE_CONSOLE:
+            amxCmdType = CMD_ConsoleCommand;
+            break;
+        case CSHARP_COMMAND_TYPE_CLIENT:
+            amxCmdType = CMD_ClientCommand;
+            break;
+        case CSHARP_COMMAND_TYPE_SERVER:
+            amxCmdType = CMD_ServerCommand;
+            break;
+        default:
+            return false;
+    }
+
+    // Search for command in AMX command manager
+    CmdMngr::iterator iter;
+    switch (commandType)
+    {
+        case CSHARP_COMMAND_TYPE_CONSOLE:
+            iter = g_commands.concmdbegin();
+            break;
+        case CSHARP_COMMAND_TYPE_CLIENT:
+            iter = g_commands.clcmdbegin();
+            break;
+        case CSHARP_COMMAND_TYPE_SERVER:
+            iter = g_commands.srvcmdbegin();
+            break;
+        default:
+            return false;
+    }
+
+    while (iter)
+    {
+        if ((*iter).matchCommand(commandName))
+        {
+            // Found the command, fill output structure
+            const CmdMngr::Command& cmd = *iter;
+
+            strncpy(outInfo->command, cmd.getCmdLine(), sizeof(outInfo->command) - 1);
+            outInfo->command[sizeof(outInfo->command) - 1] = '\0';
+
+            strncpy(outInfo->info, cmd.getCmdInfo(), sizeof(outInfo->info) - 1);
+            outInfo->info[sizeof(outInfo->info) - 1] = '\0';
+
+            outInfo->flags = cmd.getFlags();
+            outInfo->commandId = cmd.getId();
+            outInfo->infoMultiLang = cmd.isInfoML();
+            outInfo->listable = true; // Commands found in manager are listable
+
+            return true;
+        }
+        ++iter;
+    }
+
+    return false;
+}
+
+CSHARP_EXPORT int CSHARP_CALL GetCommandsCount(CSharpCommandType commandType, int accessFlags)
+{
+    if (!CSharpBridge::g_initialized)
+        return 0;
+
+    // Convert C# command type to AMX command type
+    int amxCmdType;
+    switch (commandType)
+    {
+        case CSHARP_COMMAND_TYPE_CONSOLE:
+            amxCmdType = CMD_ConsoleCommand;
+            break;
+        case CSHARP_COMMAND_TYPE_CLIENT:
+            amxCmdType = CMD_ClientCommand;
+            break;
+        case CSHARP_COMMAND_TYPE_SERVER:
+            amxCmdType = CMD_ServerCommand;
+            break;
+        default:
+            return 0;
+    }
+
+    return g_commands.getCmdNum(amxCmdType, accessFlags);
+}
+
+CSHARP_EXPORT bool CSHARP_CALL GetCommandByIndex(int index, CSharpCommandType commandType, int accessFlags, CSharpCommandInfo* outInfo)
+{
+    if (!outInfo || !CSharpBridge::g_initialized || index < 0)
+        return false;
+
+    // Convert C# command type to AMX command type
+    int amxCmdType;
+    switch (commandType)
+    {
+        case CSHARP_COMMAND_TYPE_CONSOLE:
+            amxCmdType = CMD_ConsoleCommand;
+            break;
+        case CSHARP_COMMAND_TYPE_CLIENT:
+            amxCmdType = CMD_ClientCommand;
+            break;
+        case CSHARP_COMMAND_TYPE_SERVER:
+            amxCmdType = CMD_ServerCommand;
+            break;
+        default:
+            return false;
+    }
+
+    // Get command by index
+    CmdMngr::Command* cmd = g_commands.getCmd(index, amxCmdType, accessFlags);
+    if (!cmd)
+        return false;
+
+    // Fill output structure
+    strncpy(outInfo->command, cmd->getCmdLine(), sizeof(outInfo->command) - 1);
+    outInfo->command[sizeof(outInfo->command) - 1] = '\0';
+
+    strncpy(outInfo->info, cmd->getCmdInfo(), sizeof(outInfo->info) - 1);
+    outInfo->info[sizeof(outInfo->info) - 1] = '\0';
+
+    outInfo->flags = cmd->getFlags();
+    outInfo->commandId = cmd->getId();
+    outInfo->infoMultiLang = cmd->isInfoML();
+    outInfo->listable = true;
+
+    return true;
+}

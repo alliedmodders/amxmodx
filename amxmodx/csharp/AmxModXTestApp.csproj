@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>AmxModXTestApp</AssemblyName>
+    <RootNamespace>AmxModX.TestApp</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AssemblyTitle>AMX Mod X C# Test Application</AssemblyTitle>
+    <AssemblyDescription>Test application for AMX Mod X C# command registration interface</AssemblyDescription>
+    <AssemblyConfiguration>$(Configuration)</AssemblyConfiguration>
+    <AssemblyCompany>AlliedModders LLC</AssemblyCompany>
+    <AssemblyProduct>AMX Mod X</AssemblyProduct>
+    <AssemblyCopyright>Copyright © AMX Mod X Development Team 2024</AssemblyCopyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- Source files -->
+  <ItemGroup>
+    <Compile Include="AmxModXExample.cs" />
+    <Compile Include="TestProgram.cs" />
+  </ItemGroup>
+
+  <!-- Project references -->
+  <ItemGroup>
+    <ProjectReference Include="AmxModX.CSharp.csproj" />
+  </ItemGroup>
+
+  <!-- Copy native libraries to output -->
+  <ItemGroup>
+    <Content Include="../bin/Release/amxmodx_mm.dll" Condition="Exists('../bin/Release/amxmodx_mm.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="../bin/Release/amxmodx_mm.so" Condition="Exists('../bin/Release/amxmodx_mm.so')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="../bin/Release/amxmodx_mm.dylib" Condition="Exists('../bin/Release/amxmodx_mm.dylib')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

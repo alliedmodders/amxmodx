@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <AssemblyName>AmxModX.CSharp</AssemblyName>
+    <RootNamespace>AmxModX.Interop</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>AmxModX.CSharp</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>AMX Mod X Development Team</Authors>
+    <Company>AlliedModders LLC</Company>
+    <Product>AMX Mod X C# Bridge</Product>
+    <Description>C# interop library for AMX Mod X command registration and management. Provides managed interface for Half-Life server modding.</Description>
+    <Copyright>Copyright © AMX Mod X Development Team 2024</Copyright>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/alliedmodders/amxmodx</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/alliedmodders/amxmodx</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>amxmodx;halflife;counterstrike;gaming;server;modding;csharp;interop</PackageTags>
+    <PackageReleaseNotes>Initial release of AMX Mod X C# command registration interface with full cross-platform support</PackageReleaseNotes>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <WarningsNotAsErrors>CS1591</WarningsNotAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <AssemblyTitle>AMX Mod X C# Interop Library</AssemblyTitle>
+    <AssemblyDescription>C# interop library for AMX Mod X command registration and management</AssemblyDescription>
+    <AssemblyConfiguration>$(Configuration)</AssemblyConfiguration>
+    <AssemblyCompany>AlliedModders LLC</AssemblyCompany>
+    <AssemblyProduct>AMX Mod X</AssemblyProduct>
+    <AssemblyCopyright>Copyright © AMX Mod X Development Team 2024</AssemblyCopyright>
+    <AssemblyTrademark></AssemblyTrademark>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
+    <AssemblyInformationalVersion>1.0.0</AssemblyInformationalVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- Source files -->
+  <ItemGroup>
+    <Compile Include="AmxModXInterop.cs" />
+    <Compile Include="AmxModXExample.cs" />
+  </ItemGroup>
+
+  <!-- Documentation files -->
+  <ItemGroup>
+    <None Include="../csharp_bridge.h">
+      <Pack>true</Pack>
+      <PackagePath>native\include\csharp_bridge.h</PackagePath>
+    </None>
+    <None Include="README.md" Condition="Exists('README.md')">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <!-- Native library files for different platforms -->
+  <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+    <!-- For .NET Core/.NET 5+ use runtime-specific folders -->
+    <Content Include="../bin/Release/amxmodx_mm.dll" Condition="Exists('../bin/Release/amxmodx_mm.dll')">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x64\native\amxmodx_mm.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="../bin/Release/amxmodx_mm.so" Condition="Exists('../bin/Release/amxmodx_mm.so')">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\linux-x64\native\amxmodx_mm.so</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="../bin/Release/amxmodx_mm.dylib" Condition="Exists('../bin/Release/amxmodx_mm.dylib')">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\osx-x64\native\amxmodx_mm.dylib</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <!-- For .NET Framework use build folder -->
+    <Content Include="../bin/Release/amxmodx_mm.dll" Condition="Exists('../bin/Release/amxmodx_mm.dll')">
+      <Pack>true</Pack>
+      <PackagePath>build\net48\amxmodx_mm.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Build targets for .NET Framework -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <None Include="build\AmxModX.CSharp.targets">
+      <Pack>true</Pack>
+      <PackagePath>build\net48\AmxModX.CSharp.targets</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <!-- Package references -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <!-- Analyzer packages for code quality -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Additional metadata -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>AmxModX.CSharp.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <!-- Post-build events -->
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'=='Release'">
+    <Message Text="AMX Mod X C# Bridge built successfully for $(TargetFramework)" Importance="high" />
+  </Target>
+
+  <!-- Custom build properties -->
+  <PropertyGroup>
+    <BuildOutputTargetFolder>lib</BuildOutputTargetFolder>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+</Project>

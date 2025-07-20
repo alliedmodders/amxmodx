@@ -28,6 +28,7 @@
 #include "CLibrarySys.h"
 #include "CFileSystem.h"
 #include "gameconfigs.h"
+#include "csharp_bridge.h"
 #include "CGameConfigs.h"
 #include <engine_strucs.h>
 #include <CDetour/detours.h>
@@ -1717,6 +1718,9 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 	GET_IFACE<IFileSystem>("filesystem_stdio", g_FileSystem, FILESYSTEM_INTERFACE_VERSION);
 
+	// Initialize C# bridge layer
+	CSharpBridge::Initialize();
+
 	return (TRUE);
 }
 
@@ -1784,6 +1788,9 @@ C_DLLEXPORT	int	Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON	reason)
 		g_isDropClientHookAvailable = false;
 		g_isDropClientHookEnabled = false;
 	}
+
+	// Cleanup C# bridge layer
+	CSharpBridge::Cleanup();
 
 	return (TRUE);
 }

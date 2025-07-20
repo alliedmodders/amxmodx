@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <AssemblyName>AmxModX.Interop</AssemblyName>
+    <RootNamespace>AmxModX.Interop</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>AmxModX.Interop</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>AMX Mod X Community</Authors>
+    <Company>AMX Mod X</Company>
+    <Product>AMX Mod X C# Bridge</Product>
+    <Description>C# interop library for AMX Mod X command registration and management</Description>
+    <Copyright>Copyright © AMX Mod X Community 2024</Copyright>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/alliedmodders/amxmodx</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/alliedmodders/amxmodx</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>amxmodx;halflife;counterstrike;gaming;server;modding</PackageTags>
+    <PackageReleaseNotes>Initial release of AMX Mod X C# command registration interface</PackageReleaseNotes>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <WarningsNotAsErrors>CS1591</WarningsNotAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="AmxModXInterop.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="AmxModX_CSharp_Bridge_README.md">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <!-- Native library files -->
+  <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
+    <!-- For .NET Core/.NET 5+ -->
+    <Content Include="runtimes\win-x64\native\AmxModXBridge.dll" Condition="Exists('runtimes\win-x64\native\AmxModXBridge.dll')">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x64\native\AmxModXBridge.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="runtimes\win-x86\native\AmxModXBridge.dll" Condition="Exists('runtimes\win-x86\native\AmxModXBridge.dll')">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x86\native\AmxModXBridge.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="runtimes\linux-x64\native\libAmxModXBridge.so" Condition="Exists('runtimes\linux-x64\native\libAmxModXBridge.so')">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\linux-x64\native\libAmxModXBridge.so</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="runtimes\osx-x64\native\libAmxModXBridge.dylib" Condition="Exists('runtimes\osx-x64\native\libAmxModXBridge.dylib')">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\osx-x64\native\libAmxModXBridge.dylib</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <!-- For .NET Framework -->
+    <Content Include="x64\AmxModXBridge.dll" Condition="Exists('x64\AmxModXBridge.dll')">
+      <Pack>true</Pack>
+      <PackagePath>build\net48\x64\AmxModXBridge.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\AmxModXBridge.dll" Condition="Exists('x86\AmxModXBridge.dll')">
+      <Pack>true</Pack>
+      <PackagePath>build\net48\x86\AmxModXBridge.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Build targets for .NET Framework -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <None Include="build\AmxModX.Interop.targets">
+      <Pack>true</Pack>
+      <PackagePath>build\net48\AmxModX.Interop.targets</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <!-- Package references -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <!-- Analyzer packages -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

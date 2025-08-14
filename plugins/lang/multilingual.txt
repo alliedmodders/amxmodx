@@ -272,3 +272,14 @@ SET_LANG_SERVER = A língua do servidor foi definida para "%s"
 SET_LANG_USER = A tua língua foi definida para "%s"
 TYPE_LANGMENU = Escreve 'amx_langmenu' na consola para apresentar um menu onde podes escolher a tua língua
 LANG_MENU_DISABLED = Menu de línguas desativado.
+
+[tc]
+LANG_NOT_EXISTS = 此語言不存在
+PERSO_LANG = 個人語言
+LANG_MENU = 語言選單
+SERVER_LANG = 伺服器語言
+SAVE_LANG = 保存語言設定
+SET_LANG_SERVER = 伺服器語言被設定為 "%s"
+SET_LANG_USER = 您的語言被設定為 "%s"
+TYPE_LANGMENU = 在控制台輸入'amx_langmenu'打開一個選單來選擇您的語言
+LANG_MENU_DISABLED = 語言選單已停用.

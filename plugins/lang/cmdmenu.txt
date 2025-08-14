@@ -122,3 +122,8 @@ SPE_MENU = Lista Fjalëve
 CMD_MENU = Menu de Comandos
 CONF_MENU = Menu de Configurações
 SPE_MENU = Menu de Voz
+
+[tc]
+CMD_MENU = 指令選單
+CONF_MENU = 設定選單
+SPE_MENU = 語音選單

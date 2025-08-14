@@ -122,3 +122,8 @@ MSG_DISABLED = Diskutimi mesazhit është i q'aktivizuar
 MIN_FREQ = A Frequência Mínima para esta mensagem é de %d segundos
 MSG_FREQ = Frequência de exibição da Mensagem Rolante: %d:%02d minutos
 MSG_DISABLED = Mensagem Rolante desativada
+
+[tc]
+MIN_FREQ = 此消息的最小頻率為 %d 秒
+MSG_FREQ = 滾動資訊的顯示頻率為每 ％d：％02d 分鐘顯示一次
+MSG_DISABLED = 滾動消息已停用

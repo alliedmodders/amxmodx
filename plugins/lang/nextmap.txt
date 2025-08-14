@@ -122,3 +122,8 @@ FRIEND_FIRE = Sulmo shokët
 NEXT_MAP = Próximo Mapa:
 PLAYED_MAP = Mapa jogado
 FRIEND_FIRE = Fogo amigo
+
+[tc]
+NEXT_MAP = 下張地圖:
+PLAYED_MAP = 已經玩過地圖
+FRIEND_FIRE = 友軍傷害

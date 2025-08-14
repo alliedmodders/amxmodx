@@ -2,6 +2,7 @@
 ADMIN_TELEPORT_1 = ADMIN: teleport %s
 ADMIN_TELEPORT_2 = ADMIN %s: teleport %s
 TELE_MENU = Teleport Menu
+TO_LOC = To Location
 CUR_LOC = Current Location
 SAVE_LOC = Save Location
 
@@ -156,6 +157,7 @@ SAVE_LOC = Сохранить положение
 ADMIN_TELEPORT_1 = 管理员: 传送 %s
 ADMIN_TELEPORT_2 = 管理员 %s: 传送 %s
 TELE_MENU = 传送菜单
+TO_LOC = 目标位置
 CUR_LOC = 当前位置
 SAVE_LOC = 存储位置
 
@@ -170,5 +172,6 @@ SAVE_LOC = Ruaj Vendin
 ADMIN_TELEPORT_1 = ADMIN: teleportou %s
 ADMIN_TELEPORT_2 = ADMIN %s: teleportou %s
 TELE_MENU = Menu de Teleporte
+TO_LOC = Para Localização
 CUR_LOC = Localização Atual
 SAVE_LOC = Guardar Localização

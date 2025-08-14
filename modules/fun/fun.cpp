@@ -484,7 +484,9 @@ int ClientConnect(edict_t *pPlayer, const char *pszName, const char *pszAddress,
 
 void TraceLine(const float *v1, const float *v2, int fNoMonsters, edict_t *shooter, TraceResult *ptr)
 {
+	const auto traceflags = gpGlobals->trace_flags;
 	TRACE_LINE(v1, v2, fNoMonsters, shooter, ptr);
+	gpGlobals->trace_flags = traceflags;
 
 	if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT | FL_FAKECLIENT))
 	    && shooter &&  (shooter->v.flags & (FL_CLIENT | FL_FAKECLIENT)) )

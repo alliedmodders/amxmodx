@@ -1124,16 +1124,18 @@ native bool:cs_get_translated_item_alias(const alias[], itemname[], maxlength);
 native any:cs_get_weapon_info(weapon_id, CsWeaponInfo:type);
 
 /**
- * Returns active weapon entity.
+ * Returns a weapon entity index.
  *
  * @param playerIndex   Player index
+ * @param weaponIndex   A CSW_* id or 0. If 0(CSW_NONE) is passed the active item entity index will be retrieved
+					 If non-zero it will retrieve the entity index of the weapon with the given CSW_* id				
  *
- * @return              Weapon entity index on success or 0 if there is no active weapon
+ * @return              Weapon entity index on success or 0 if the weapon could not be found
  * @error               If the client index is not within the range of 1 to
- *                      maxClients, or the client is not connected, an error will be
+ *                      maxClients, or the client is not connected or an invalid CSW_* value is passed an error will be
  *                      thrown.
  */
-native cs_get_user_weapon_entity(playerIndex);
+native cs_get_user_weapon_entity(playerIndex, weaponIndex = CSW_NONE);
 
 /**
  * Returns weapon index of the active weapon.

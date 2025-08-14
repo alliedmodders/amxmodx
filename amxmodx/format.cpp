@@ -774,6 +774,38 @@ reswitch:
 				arg++;
 				break;
 			}
+		case 't':
+			{
+				CHECK_ARGS(0);
+				cell *addr = get_amxaddr(amx, params[arg]);
+				const char* auth = "Console";
+
+				if (*addr)
+				{
+					CPlayer *player = NULL;
+
+					if (*addr >= 1 && *addr <= gpGlobals->maxClients)
+					{
+						player = GET_PLAYER_POINTER_I(*addr);
+					}
+
+					if (!player || !player->initialized)
+					{
+						LogError(amx, AMX_ERR_NATIVE, "Client index %d is invalid", *addr);
+						return 0;
+					}
+
+					auth = GETPLAYERAUTHID(player->pEdict);
+					if (!auth || auth[0] == '\0')
+					{
+						auth = "STEAM_ID_PENDING";
+					}
+				}
+
+				AddString(&buf_p, llen, auth, width, prec);
+				arg++;
+				break;
+			}
 		case '%':
 			*buf_p++ = static_cast<D>(ch);
 			if (!llen)

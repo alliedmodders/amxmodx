@@ -408,6 +408,7 @@ static cell AMX_NATIVE_CALL SetHamItemInfo(AMX *amx, cell *params)
 	ItemInfo *pItem = reinterpret_cast<ItemInfo *>(params[1]);
 	cell *ptr = MF_GetAmxAddr(amx, params[3]);
 	int iLen;
+	char *szString;
 
 	switch (params[2])
 	{
@@ -420,8 +421,8 @@ static cell AMX_NATIVE_CALL SetHamItemInfo(AMX *amx, cell *params)
 			break;
 
 		case ItemInfo_pszAmmo1:
-			auto str = MF_GetAmxString(amx, params[3], 0, &iLen);
-			pItem->pszAmmo1 = str ? STRING(ALLOC_STRING(str)) : nullptr;
+			szString = MF_GetAmxString(amx, params[3], 0, &iLen);
+			pItem->pszAmmo1 = szString ? STRING(ALLOC_STRING(szString)) : nullptr;
 			return iLen;
 
 		case ItemInfo_iMaxAmmo1:
@@ -429,8 +430,8 @@ static cell AMX_NATIVE_CALL SetHamItemInfo(AMX *amx, cell *params)
 			break;
 
 		case ItemInfo_pszAmmo2:
-			auto str = MF_GetAmxString(amx, params[3], 0, &iLen);
-			pItem->pszAmmo2 = str ? STRING(ALLOC_STRING(str)) : nullptr;
+			szString = MF_GetAmxString(amx, params[3], 0, &iLen);
+			pItem->pszAmmo2 = szString ? STRING(ALLOC_STRING(szString)) : nullptr;
 			return iLen;
 
 		case ItemInfo_iMaxAmmo2:
@@ -438,8 +439,8 @@ static cell AMX_NATIVE_CALL SetHamItemInfo(AMX *amx, cell *params)
 			break;
 
 		case ItemInfo_pszName:
-			auto str = MF_GetAmxString(amx, params[3], 0, &iLen);
-			pItem->pszName = str ? STRING(ALLOC_STRING(str)) : nullptr;
+			szString = MF_GetAmxString(amx, params[3], 0, &iLen);
+			pItem->pszName = szString ? STRING(ALLOC_STRING(szString)) : nullptr;
 			return iLen;
 
 		case ItemInfo_iMaxClip:

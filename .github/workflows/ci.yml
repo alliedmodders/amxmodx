@@ -34,7 +34,7 @@ jobs:
           - os: windows-latest
             os_short: windows
             compiler_cc: msvc
-          - os: windows-2016
+          - os: windows-2019
             os_short: windows
             compiler_cc: msvc++14.16-vs2017-cl
 # MacOS 32 Bins seem not supported

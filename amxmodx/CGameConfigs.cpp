@@ -10,6 +10,9 @@
 #include "CGameConfigs.h"
 #include <amxmodx.h>
 #include <MemoryUtils.h>
+#include "sm_crc32.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 CGameConfigManager ConfigManager;
 static CGameMasterReader MasterReader;
@@ -32,6 +35,8 @@ enum
 	PSTATE_GAMEDEFS_SUPPORTED,
 	PSTATE_GAMEDEFS_SIGNATURES,
 	PSTATE_GAMEDEFS_SIGNATURES_SIG,
+	PSTATE_GAMEDEFS_CRC,
+	PSTATE_GAMEDEFS_CRC_BINARY,
 	PSTATE_GAMEDEFS_CUSTOM,
 	PSTATE_GAMEDEFS_ADDRESSES,
 	PSTATE_GAMEDEFS_ADDRESSES_ADDRESS,
@@ -153,6 +158,12 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 			{
 				m_ParseState = PSTATE_GAMEDEFS_SIGNATURES;
 			}
+			else if (strcmp(name, "CRC") == 0)
+			{
+				m_ParseState = PSTATE_GAMEDEFS_CRC;
+				m_ShouldBeReadingDefault = false;
+				m_CurrentBinCRCValid = false;
+			}
 			else if (strcmp(name, "Addresses") == 0)
 			{
 				m_ParseState = PSTATE_GAMEDEFS_ADDRESSES;
@@ -194,6 +205,39 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 
 			m_ParseState = PSTATE_GAMEDEFS_SIGNATURES_SIG;
 			m_MatchedPlatform = false;
+			break;
+		}
+		case PSTATE_GAMEDEFS_CRC:
+		{
+			m_CurrentBinCRCValid = false;
+
+			char error[255];
+			error[0] = '\0';
+
+			GameBinaryInfo binaryInfo;
+
+			if (!ConfigManager.TryGetGameBinaryInfo(name, &binaryInfo))
+			{
+				ke::SafeSprintf(error, sizeof(error), "Unrecognized library \"%s\"", name);
+			}
+			else if (!binaryInfo.crcOk)
+			{
+				ke::SafeSprintf(error, sizeof(error), "Could not get CRC for binary: %s", name);
+			}
+			else
+			{
+				m_CurrentBinCRCValid = true;
+				m_CurrentBinCRC = binaryInfo.crc;
+				m_ParseState = PSTATE_GAMEDEFS_CRC_BINARY;
+			}
+
+			if (error[0] != '\0')
+			{
+				m_IgnoreLevel = 1;
+				AMXXLOG_Error("Error while parsing CRC section for \"%s\" (%s):", m_Game, m_CurrentPath);
+				AMXXLOG_Error("%s", error);
+			}
+
 			break;
 		}
 		case PSTATE_GAMEDEFS_CUSTOM:
@@ -388,6 +432,20 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 			}
 			break;
 		}
+		case PSTATE_GAMEDEFS_CRC_BINARY:
+		{
+			if (g_LibSys.DoesPlatformMatch(key) && m_CurrentBinCRCValid && !m_ShouldBeReadingDefault)
+			{
+				unsigned int crc = 0;
+				sscanf(value, "%08X", &crc);
+
+				if (m_CurrentBinCRC == crc)
+				{
+					m_ShouldBeReadingDefault = true;
+				}
+			}
+			break;
+		}
 		case PSTATE_GAMEDEFS_ADDRESSES_ADDRESS:
 		case PSTATE_GAMEDEFS_ADDRESSES_ADDRESS_READ:
 		{
@@ -504,6 +562,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 			break;
 		}
 		case PSTATE_GAMEDEFS_SUPPORTED:
+		case PSTATE_GAMEDEFS_CRC:
 		{
 			if (!m_ShouldBeReadingDefault)
 			{
@@ -514,6 +573,11 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 			{
 				m_ParseState = PSTATE_GAMEDEFS;
 			}
+			break;
+		}
+		case PSTATE_GAMEDEFS_CRC_BINARY:
+		{
+			m_ParseState = PSTATE_GAMEDEFS_CRC;
 			break;
 		}
 		case PSTATE_GAMEDEFS_SIGNATURES:
@@ -529,14 +593,23 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 			}
 
 			void *addressInBase = nullptr;
+			GameBinaryInfo binaryInfo;
 
-			if (strcmp(TempSig.library, "server") == 0)
+			if (ConfigManager.TryGetGameBinaryInfo(TempSig.library, &binaryInfo))
 			{
-				addressInBase = reinterpret_cast<void*>(MDLL_Spawn);
+				addressInBase = binaryInfo.baseAddress;
 			}
-			else if (strcmp(TempSig.library, "engine") == 0)
+
+			if (!addressInBase)
 			{
-				addressInBase = reinterpret_cast<void*>(gpGlobals);
+				if (strcmp(TempSig.library, "server") == 0)
+				{
+					addressInBase = reinterpret_cast<void*>(MDLL_Spawn);
+				}
+				else if (strcmp(TempSig.library, "engine") == 0)
+				{
+					addressInBase = reinterpret_cast<void*>(gpGlobals);
+				}
 			}
 
 			void *finalAddress = nullptr;
@@ -743,6 +816,8 @@ bool CGameConfig::EnterFile(const char *file, char *error, size_t maxlength)
 	m_IgnoreLevel = 0;
 	m_ShouldBeReadingDefault = true;
 	m_ParseState = PSTATE_NONE;
+	m_CurrentBinCRC = 0;
+	m_CurrentBinCRCValid = false;
 
 	SMCError err;
 	SMCStates state = { 0, 0 };
@@ -1047,4 +1122,156 @@ void CGameConfigManager::RemoveUserConfigHook(const char *sectionName, ITextList
 void CGameConfigManager::RemoveCachedConfig(CGameConfig *config)
 {
 	m_Lookup.remove(config->m_File);
+}
+
+bool CGameConfigManager::TryGetGameBinaryInfo(const char *library, GameBinaryInfo *info)
+{
+	if (m_BinaryInfos.retrieve(library, info))
+	{
+		return info->baseAddress != nullptr;
+	}
+
+	CacheGameBinaryInfo(library);
+
+	if (m_BinaryInfos.retrieve(library, info))
+	{
+		return info->baseAddress != nullptr;
+	}
+
+	return false;
+}
+
+void CGameConfigManager::CacheGameBinaryInfo(const char *library)
+{
+	GameBinaryInfo info;
+
+	char path[PLATFORM_MAX_PATH];
+	path[0] = '\0';
+
+	void *baseAddress = nullptr;
+
+	if (!ResolveLibraryInfo(library, &baseAddress, path, sizeof(path)))
+	{
+		m_BinaryInfos.insert(library, info);
+		return;
+	}
+
+	info.baseAddress = baseAddress;
+
+	if (path[0])
+	{
+		FILE *fp = fopen(path, "rb");
+
+		if (fp)
+		{
+			if (fseek(fp, 0, SEEK_END) == 0)
+			{
+				long sizeLong = ftell(fp);
+
+				if (sizeLong >= 0 && fseek(fp, 0, SEEK_SET) == 0)
+				{
+					size_t size = static_cast<size_t>(sizeLong);
+					void *buffer = nullptr;
+
+					if (size > 0)
+					{
+						buffer = malloc(size);
+
+						if (buffer)
+						{
+							size_t read = fread(buffer, 1, size, fp);
+
+							if (read == size)
+							{
+								info.crc = UTIL_CRC32(buffer, size);
+								info.crcOk = true;
+							}
+
+							free(buffer);
+						}
+					}
+					else
+					{
+						info.crc = UTIL_CRC32(nullptr, 0);
+						info.crcOk = true;
+					}
+				}
+			}
+
+			fclose(fp);
+		}
+	}
+
+	m_BinaryInfos.insert(library, info);
+}
+
+bool CGameConfigManager::ResolveLibraryInfo(const char *library, void **baseAddress, char *pathBuffer, size_t pathBufferSize)
+{
+	void *symbol = nullptr;
+
+	if (!strcmp(library, "server"))
+	{
+		symbol = reinterpret_cast<void*>(MDLL_Spawn);
+	}
+	else if (!strcmp(library, "engine"))
+	{
+		symbol = reinterpret_cast<void*>(gpGlobals);
+	}
+	else
+	{
+		return false;
+	}
+
+	if (!symbol)
+	{
+		return false;
+	}
+
+#if defined PLATFORM_WINDOWS
+	MEMORY_BASIC_INFORMATION memoryInfo;
+
+	if (!VirtualQuery(symbol, &memoryInfo, sizeof(memoryInfo)))
+	{
+		return false;
+	}
+
+	if (baseAddress)
+	{
+		*baseAddress = memoryInfo.AllocationBase;
+	}
+
+	if (pathBuffer && pathBufferSize)
+	{
+		if (!GetModuleFileNameA(reinterpret_cast<HMODULE>(memoryInfo.AllocationBase), pathBuffer, static_cast<DWORD>(pathBufferSize)))
+		{
+			pathBuffer[0] = '\0';
+		}
+	}
+#elif defined PLATFORM_POSIX
+	Dl_info info;
+
+	if (!dladdr(symbol, &info))
+	{
+		return false;
+	}
+
+	if (baseAddress)
+	{
+		*baseAddress = info.dli_fbase;
+	}
+
+	if (pathBuffer && pathBufferSize)
+	{
+		if (info.dli_fname && info.dli_fname[0])
+		{
+			ke::SafeSprintf(pathBuffer, pathBufferSize, "%s", info.dli_fname);
+		}
+		else
+		{
+			pathBuffer[0] = '\0';
+		}
+	}
+#endif
+
+	return true;
 }

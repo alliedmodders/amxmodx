@@ -18,6 +18,14 @@
 #include <amtl/am-refcounting.h>
 #include <sm_stringhashmap.h>
 #include <sm_namehashset.h>
+#include <stdint.h>
+
+struct GameBinaryInfo
+{
+	void *baseAddress = nullptr;
+	uint32_t crc = 0;
+	bool crcOk = false;
+};
 
 class CGameConfig 
 	:
@@ -82,6 +90,8 @@ class CGameConfig
 		char                       m_Class[64];
 		char                       m_Offset[64];
 		char                       m_Game[256];
+		unsigned int               m_CurrentBinCRC = 0;
+		bool                       m_CurrentBinCRCValid = false;
 
 		bool                       m_FoundOffset;
 		bool                       m_MatchedClasses;
@@ -152,6 +162,7 @@ class CGameConfigManager : public IGameConfigManager
 		void CloseGameConfigFile(IGameConfig *cfg);
 		void AddUserConfigHook(const char *sectionname, ITextListener_SMC *listener);
 		void RemoveUserConfigHook(const char *sectionname, ITextListener_SMC *listener);
+		bool TryGetGameBinaryInfo(const char *library, GameBinaryInfo *info);
 
 	public:
 
@@ -161,6 +172,9 @@ class CGameConfigManager : public IGameConfigManager
 	private:
 
 		NameHashSet<CGameConfig*> m_Lookup;
+		StringHashMap<GameBinaryInfo> m_BinaryInfos;
+		void CacheGameBinaryInfo(const char *library);
+		bool ResolveLibraryInfo(const char *library, void **baseAddress, char *pathBuffer, size_t pathBufferSize);
 
 	public:
 

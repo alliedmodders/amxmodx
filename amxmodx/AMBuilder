@@ -93,6 +93,7 @@ binary.sources = [
   'CGameConfigs.cpp',
   'gameconfigs.cpp',
   'CoreConfig.cpp',
+  'sm_crc32.cpp',
 ]
 
 if builder.target_platform == 'windows':

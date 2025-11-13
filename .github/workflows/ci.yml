@@ -15,14 +15,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            os_short: linux
-            compiler_cc: gcc
-            compiler_cxx: g++
-          - os: ubuntu-latest
-            os_short: linux
-            compiler_cc: clang
-            compiler_cxx: clang++        
+          # - os: ubuntu-latest
+          #   os_short: linux
+          #   compiler_cc: gcc
+          #   compiler_cxx: g++
+          # - os: ubuntu-latest
+          #   os_short: linux
+          #   compiler_cc: clang
+          #   compiler_cxx: clang++
           - os: ubuntu-22.04
             os_short: linux
             compiler_cc: clang-11

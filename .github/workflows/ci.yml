@@ -5,7 +5,6 @@ on:
     branches:
      - master
      - 1.9-dev
-     - github-actions-update
   pull_request:
     branches:
      - master
@@ -141,4 +140,3 @@ jobs:
           name: amxmodx-${{ matrix.os_short }}-${{ matrix.compiler_cc }}-${{ github.sha }}
           path: amxmodx/build/packages/
           retention-days: 7
-

@@ -5,6 +5,7 @@ on:
     branches:
      - master
      - 1.9-dev
+     - github-actions-update
   pull_request:
     branches:
      - master

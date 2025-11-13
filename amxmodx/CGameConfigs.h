@@ -90,7 +90,12 @@ class CGameConfig
 		char                       m_Class[64];
 		char                       m_Offset[64];
 		char                       m_Game[256];
+		char                       m_CurrentCRCLibrary[64];
+		char                       m_CurrentCRCSection[256];
+		char                       m_LastCRCPlatform[32];
+		bool                       m_CurrentCRCMatched;
 		unsigned int               m_CurrentBinCRC = 0;
+		unsigned int               m_LastCRCExpected = 0;
 		bool                       m_CurrentBinCRCValid = false;
 
 		bool                       m_FoundOffset;

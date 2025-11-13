@@ -22,11 +22,11 @@ jobs:
             os_short: linux
             compiler_cc: clang
             compiler_cxx: clang++        
-          - os: ubuntu-18.04
+          - os: ubuntu-22.04
             os_short: linux
             compiler_cc: clang-3.9
             compiler_cxx: clang++-3.9
-          - os: ubuntu-18.04
+          - os: ubuntu-22.04
             os_short: linux
             compiler_cc: gcc-6
             compiler_cxx: g++-6

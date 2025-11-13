@@ -56,7 +56,7 @@ jobs:
           python3 -m pip install --upgrade pip setuptools wheel
           python3 --version
       - name: Install AMXModX dependencies (Linux)
-        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
+        if: startsWith(runner.os, 'Linux')
         shell: bash
         run: |
           mkdir -p ${{ env.DEPENDENCIES_FOLDER }}
@@ -105,8 +105,8 @@ jobs:
           ${{ matrix.compiler_cc }} --version
           ${{ matrix.compiler_cxx }} --version
       - uses: ilammy/setup-nasm@v1
-      - name: Build Linux/macOS
-        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
+      - name: Build Linux
+        if: startsWith(runner.os, 'Linux')
         working-directory: amxmodx
         run: |
           mkdir build

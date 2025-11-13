@@ -20,3 +20,7 @@ Development
 - [Building AMXX](https://wiki.alliedmods.net/Building_AMX_Mod_X): Instructions on how to build AMXX itself using [AMBuild](https://github.com/alliedmodders/ambuild)
 - [AMX Mod X API](https://amxmodx.org/api/): AMX Mod X API reference generated from include files
 - [AMXX scripting](https://wiki.alliedmods.net/Category:Scripting_(AMX_Mod_X)): Pawn examples and introduction to the language
+
+Tools
+-----
+- `tools/crc32`: Standalone helper that prints the CRC32 used by AMXX/Sourcemod-style gamedata. Build it with `tools/crc32/build.sh` and run `./tools/crc32/crc32 <path-to-binary>` to generate the 8-digit hex CRC for your gamedata `CRC` sections.

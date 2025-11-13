@@ -114,6 +114,13 @@ jobs:
           cd build
           python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT }}/metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT }}/hlsdk --mysql=${{ env.DEPENDENCIES_ROOT }}/mysql-5.5
           ambuild
+      - name: Upload Linux artifacts
+        if: startsWith(runner.os, 'Linux') && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amxmodx-${{ matrix.os_short }}-${{ matrix.compiler_cc }}-${{ github.sha }}
+          path: amxmodx/build/packages/
+          retention-days: 7
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x86
@@ -127,4 +134,11 @@ jobs:
           cd build
           python3 ../configure.py --enable-optimize --metamod=${{ env.DEPENDENCIES_ROOT_WIN }}\metamod-am --hlsdk=${{ env.DEPENDENCIES_ROOT_WIN }}\hlsdk --mysql=${{ env.DEPENDENCIES_ROOT_WIN }}\mysql-5.5
           ambuild
-          
+      - name: Upload Windows artifacts
+        if: startsWith(runner.os, 'Windows') && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amxmodx-${{ matrix.os_short }}-${{ matrix.compiler_cc }}-${{ github.sha }}
+          path: amxmodx/build/packages/
+          retention-days: 7
+

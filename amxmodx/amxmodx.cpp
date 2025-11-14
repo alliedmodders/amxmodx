@@ -4625,7 +4625,7 @@ static cell AMX_NATIVE_CALL LookupLangKey(AMX *amx, cell *params)
 // SetGlobalTransTarget(client)
 static cell AMX_NATIVE_CALL SetGlobalTransTarget(AMX *amx, cell *params)
 {
-	g_langMngr.SetDefLang(params[1]);
+	g_langMngr.SetFmtLang(params[1]);
 
 	return 1;
 };

@@ -626,3 +626,8 @@ void CLangMngr::SetDefLang(int id)
 {
 	m_CurGlobId = id;
 }
+
+void CLangMngr::SetFmtLang(int id)
+{
+	m_CurFmtId = id;
+}

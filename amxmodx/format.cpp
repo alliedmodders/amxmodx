@@ -693,7 +693,7 @@ reswitch:
 				else
 				{
 					CHECK_ARGS(0);
-					lang = playerlang(g_langMngr.GetDefLang());
+					lang = playerlang(g_langMngr.GetFmtLang());
 				}
 				const char *key = get_amxstring(amx, params[arg++], 3, len);
 				const char *def = translate(amx, lang, key);

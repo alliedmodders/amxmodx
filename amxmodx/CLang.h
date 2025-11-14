@@ -130,6 +130,7 @@ private:
 
 	// Current global client-id for functions like client_print with first parameter 0
 	int m_CurGlobId;
+	int m_CurFmtId;
 public:
 	// Merge a definitions file
 	int MergeDefinitionFile(const char *file);
@@ -156,8 +157,10 @@ public:
 
 	// When a language id in a format string in FormatAmxString is LANG_PLAYER, the glob id decides which language to take.
 	void SetDefLang(int id);
+	void SetFmtLang(int id);
 
 	inline int GetDefLang() const { return m_CurGlobId; }
+	inline int GetFmtLang() const { return m_CurFmtId; }
 
 	// Reset
 	void Clear();

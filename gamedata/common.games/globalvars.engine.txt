@@ -11,33 +11,33 @@
 
 "Games"
 {
-	"#default"
+	"#default" // Build 10210
 	{
 		"Offsets"
 		{
 			"svs"    // Used with pfnGetCurrentPlayer base address
 			{
-				"windows"   "8"
+				"windows"   "13"
 			}
 		}
 
 		"Addresses"
 		{
-			"realtime"
-			{
-				"windows"
-				{
-					"signature"  "realtime"
-					"read"       "2"
-				}
-			}
-
 			"sv"
 			{
 				"windows"
 				{
 					"signature"  "sv"
-					"read"       "2"
+					"read"       "8"
+				}
+			}
+
+			"realtime"
+			{
+				"windows"
+				{
+					"signature"  "realtime"
+					"read"       "4"
 				}
 			}
 
@@ -47,7 +47,7 @@
 				
 				"windows"
 				{
-					"read"       "2"
+					"read"       "12"
 				}
 				
 				"read"  "0"
@@ -66,7 +66,7 @@
 			"sv"    // server_t sv
 			{
 				"library"   "engine"
-				"windows"   "\x8B\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x53\x33\x2A\x89"  // SVC_PlayerInfo()
+				"windows"   "\x55\x8B\xEC\x83\xEC\x2A\x83\x3D\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x0F\x84\x2A\x2A\x2A\x2A\xE8" // Host_ShutdownServer() uses "Server shutting down"
 				"linux"     "@sv"
 				"mac"       "@sv"
 			}
@@ -74,7 +74,7 @@
 			"realtime"    // double realtime
 			{
 				"library"   "engine"
-				"windows"   "\xDC\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x56" // SV_CheckTimeouts()
+				"windows"   "\xF2\x0F\x10\x0D\x2A\x2A\x2A\x2A\xA1" // SV_Frame() before "%s timed out\n"
 				"linux"     "@realtime"
 				"mac"       "@realtime"
 			}
@@ -82,9 +82,85 @@
 			"g_pGameRules" // CGameRules *g_pGameRules
 			{
 				"library"   "server"
-				"windows"   "\x8B\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xFF\x2A\x2A\xA1" // StartFrame()
+				"windows"   "\x68\x2A\x2A\x2A\x2A\xFF\x15\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\xC4\x2A\x85\xC0" // CWorld::Precache() on "room_type"
 				"linux"     "@g_pGameRules"
 				"mac"       "@g_pGameRules"
+			}
+		}
+	}
+
+	"*" // Build 8684 - Windows
+	{
+		"CRC"
+		{
+			"engine"
+			{
+				"windows" "F7DCFFD9" // hw.dll
+				"windows" "2C9EDE6B" // swds.dll
+			}
+		}
+
+		"Offsets"
+		{
+			"svs"    // Used with pfnGetCurrentPlayer base address
+			{
+				"windows"   "8"
+			}
+		}
+
+		"Addresses"
+		{
+			"sv"
+			{
+				"windows"
+				{
+					"signature"  "sv"
+					"read"       "2"
+				}
+			}
+
+			"realtime"
+			{
+				"windows"
+				{
+					"signature"  "realtime"
+					"read"       "2"
+				}
+			}
+
+			"g_pGameRules"
+			{
+				"windows"
+				{
+					"signature"  "g_pGameRules"
+					"read"       "2"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			"svs"    // server_static_t svs
+			{
+				"library"   "engine"
+			}
+
+			"sv"    // server_t sv
+			{
+				"library"   "engine"
+				"windows"   "\x8B\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x53\x33\x2A\x89"  // SVC_PlayerInfo()
+			}
+
+			"realtime"    // double realtime
+			{
+				"library"   "engine"
+				"windows"   "\xDC\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x56" // SV_CheckTimeouts()
+			}
+
+			"g_pGameRules" // CGameRules *g_pGameRules
+			{
+				"library"   "server"
+				"windows"   "\x8B\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xFF\x2A\x2A\xA1" // StartFrame()
 			}
 		}
 	}

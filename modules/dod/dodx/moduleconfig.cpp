@@ -72,11 +72,15 @@ cvar_t init_dodstats_reset ={"dodstats_reset","0"};
 cvar_t init_dodstats_rank ={"dodstats_rank","0"};
 cvar_t init_dodstats_rankbots ={"dodstats_rankbots","1"};
 cvar_t init_dodstats_pause = {"dodstats_pause","0"};
+cvar_t init_dodstats_linuxofsadd = {"dodstats_linuxofsadd","20"};
+cvar_t init_dodstats_ofslasthitgroup = {"dodstats_ofslasthitgroup","612"};
 cvar_t *dodstats_maxsize;
 cvar_t *dodstats_reset;
 cvar_t *dodstats_rank;
 cvar_t *dodstats_rankbots;
 cvar_t *dodstats_pause;
+cvar_t *dodstats_linuxofsadd;
+cvar_t *dodstats_ofslasthitgroup;
 
 // User Messages
 struct sUserMsg 
@@ -447,11 +451,15 @@ void OnMetaAttach()
 	CVAR_REGISTER (&init_dodstats_rank);
 	CVAR_REGISTER (&init_dodstats_rankbots);
 	CVAR_REGISTER (&init_dodstats_pause);
+	CVAR_REGISTER (&init_dodstats_linuxofsadd);
+	CVAR_REGISTER (&init_dodstats_ofslasthitgroup);
 	dodstats_maxsize=CVAR_GET_POINTER(init_dodstats_maxsize.name);
 	dodstats_reset=CVAR_GET_POINTER(init_dodstats_reset.name);
 	dodstats_rank=CVAR_GET_POINTER(init_dodstats_rank.name);
 	dodstats_rankbots = CVAR_GET_POINTER(init_dodstats_rankbots.name);
 	dodstats_pause = CVAR_GET_POINTER(init_dodstats_pause.name);
+	dodstats_linuxofsadd = CVAR_GET_POINTER(init_dodstats_linuxofsadd.name);
+	dodstats_ofslasthitgroup = CVAR_GET_POINTER(init_dodstats_ofslasthitgroup.name);
 }
 
 int AmxxCheckGame(const char *game)

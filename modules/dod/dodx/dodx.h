@@ -131,6 +131,8 @@ extern cvar_t* dodstats_rank;
 extern cvar_t* dodstats_reset;
 extern cvar_t* dodstats_rankbots;
 extern cvar_t* dodstats_pause;
+extern cvar_t* dodstats_linuxofsadd;
+extern cvar_t* dodstats_ofslasthitgroup;
 
 extern weapon_t weaponData[DODMAX_WEAPONS];
 extern traceVault traceData[MAX_TRACE];

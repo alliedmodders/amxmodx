@@ -131,8 +131,6 @@ extern cvar_t* dodstats_rank;
 extern cvar_t* dodstats_reset;
 extern cvar_t* dodstats_rankbots;
 extern cvar_t* dodstats_pause;
-extern cvar_t* dodstats_linuxofsadd;
-extern cvar_t* dodstats_ofslasthitgroup;
 
 extern weapon_t weaponData[DODMAX_WEAPONS];
 extern traceVault traceData[MAX_TRACE];
@@ -142,6 +140,7 @@ extern RankSystem g_rank;
 extern CPlayer players[33];
 extern CPlayer* mPlayer;
 extern CMapInfo g_map;
+extern size_t m_LastHitGroup;
 
 int get_weaponid(CPlayer* player);
 bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL );

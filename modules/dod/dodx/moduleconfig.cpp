@@ -14,6 +14,7 @@
 
 #include "amxxmodule.h"
 #include "dodx.h"
+#include <IGameConfigs.h>
 
 funEventCall modMsgsEnd[MAX_REG_MSGS];
 funEventCall modMsgs[MAX_REG_MSGS];
@@ -22,6 +23,10 @@ void (*endfunction)(void*);
 CPlayer* mPlayer;
 CPlayer players[33];
 CMapInfo g_map;
+
+IGameConfigManager* ConfigManager;
+IGameConfig* MainConfig;
+size_t m_LastHitGroup = 0;
 
 bool rankBots;
 int mState;
@@ -72,15 +77,11 @@ cvar_t init_dodstats_reset ={"dodstats_reset","0"};
 cvar_t init_dodstats_rank ={"dodstats_rank","0"};
 cvar_t init_dodstats_rankbots ={"dodstats_rankbots","1"};
 cvar_t init_dodstats_pause = {"dodstats_pause","0"};
-cvar_t init_dodstats_linuxofsadd = {"dodstats_linuxofsadd","20"};
-cvar_t init_dodstats_ofslasthitgroup = {"dodstats_ofslasthitgroup","612"};
 cvar_t *dodstats_maxsize;
 cvar_t *dodstats_reset;
 cvar_t *dodstats_rank;
 cvar_t *dodstats_rankbots;
 cvar_t *dodstats_pause;
-cvar_t *dodstats_linuxofsadd;
-cvar_t *dodstats_ofslasthitgroup;
 
 // User Messages
 struct sUserMsg 
@@ -451,15 +452,11 @@ void OnMetaAttach()
 	CVAR_REGISTER (&init_dodstats_rank);
 	CVAR_REGISTER (&init_dodstats_rankbots);
 	CVAR_REGISTER (&init_dodstats_pause);
-	CVAR_REGISTER (&init_dodstats_linuxofsadd);
-	CVAR_REGISTER (&init_dodstats_ofslasthitgroup);
 	dodstats_maxsize=CVAR_GET_POINTER(init_dodstats_maxsize.name);
 	dodstats_reset=CVAR_GET_POINTER(init_dodstats_reset.name);
 	dodstats_rank=CVAR_GET_POINTER(init_dodstats_rank.name);
 	dodstats_rankbots = CVAR_GET_POINTER(init_dodstats_rankbots.name);
 	dodstats_pause = CVAR_GET_POINTER(init_dodstats_pause.name);
-	dodstats_linuxofsadd = CVAR_GET_POINTER(init_dodstats_linuxofsadd.name);
-	dodstats_ofslasthitgroup = CVAR_GET_POINTER(init_dodstats_ofslasthitgroup.name);
 }
 
 int AmxxCheckGame(const char *game)
@@ -474,13 +471,22 @@ void OnAmxxAttach()
 	MF_AddNatives( stats_Natives );
 	MF_AddNatives( base_Natives );
 
+	char error[256];
+	ConfigManager = MF_GetConfigManager();
+	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)))
+		MF_Log("Could not read module.games gamedata: %s", error);
+	else
+	{
+		TypeDescription ofs;
+		if (MainConfig->GetOffsetByClass("CBaseMonster", "m_LastHitGroup", &ofs))
+			m_LastHitGroup = ofs.fieldOffset;
+		ConfigManager->CloseGameConfigFile(MainConfig);
+	}
+
 	const char* path =  get_localinfo("dodstats_score","addons/amxmodx/data/dodstats.amxx");
 
 	if ( path && *path )
-	{
-		char error[128];
 		g_rank.loadCalc( MF_BuildPathname("%s",path) , error, sizeof(error));
-	}
 
 	if ( !g_rank.begin() )
 	{

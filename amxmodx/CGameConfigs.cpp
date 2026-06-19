@@ -13,9 +13,6 @@
 #include "sm_crc32.h"
 #include <stdio.h>
 #include <stdlib.h>
-#if defined(LINUX) || defined(_LINUX)
-#include <link.h> /// struct link_map*
-#endif
 
 CGameConfigManager ConfigManager;
 static CGameMasterReader MasterReader;
@@ -124,19 +121,11 @@ static void* OrigGamedllAddrByFileName(const char* fileName)
     void* pAddr = reinterpret_cast<void*>(GetModuleHandle(fileName));
     if (pAddr)
         return pAddr;
-#elif defined(LINUX) || defined(_LINUX)
-    void* pModule = dlopen(fileName, RTLD_NOLOAD | RTLD_NOW);
-    if (pModule)
-    {
-        void* pAddr = reinterpret_cast<void*>(((struct link_map*)pModule)->l_addr);
-        dlclose(pModule);
-        return pAddr;
-    }
 #else
     void* pModule = dlopen(fileName, RTLD_NOLOAD | RTLD_NOW);
     if (pModule)
     {
-        void* pAddr = dlsym(fileName, "GiveFnptrsToDll");
+        void* pAddr = dlsym(pModule, "GiveFnptrsToDll");
         dlclose(pModule);
         return pAddr;
     }

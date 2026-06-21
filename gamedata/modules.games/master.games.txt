@@ -16,8 +16,4 @@
 		"game"  "cstrike"
 		"game"  "czero"
 	}
-	"game.dod.txt"
-	{
-		"game"  "dod"
-	}
 }

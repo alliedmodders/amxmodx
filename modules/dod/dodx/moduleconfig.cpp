@@ -25,7 +25,7 @@ CPlayer players[33];
 CMapInfo g_map;
 
 IGameConfigManager* ConfigManager;
-IGameConfig* MainConfig;
+IGameConfig* CommonConfig = NULL;
 size_t m_LastHitGroup = 0;
 
 bool rankBots;
@@ -473,14 +473,15 @@ void OnAmxxAttach()
 
 	char error[256];
 	ConfigManager = MF_GetConfigManager();
-	if (!ConfigManager->LoadGameConfigFile("modules.games", &MainConfig, error, sizeof(error)))
-		MF_Log("Could not read module.games gamedata: %s", error);
+	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)))
+		MF_Log("Could not read common.games gamedata: %s", error);
 	else
 	{
 		TypeDescription ofs;
-		if (MainConfig->GetOffsetByClass("CBaseMonster", "m_LastHitGroup", &ofs))
+		if (CommonConfig->GetOffsetByClass("CBaseMonster", "m_LastHitGroup", &ofs))
 			m_LastHitGroup = ofs.fieldOffset;
-		ConfigManager->CloseGameConfigFile(MainConfig);
+        if (m_LastHitGroup < 1)
+            MF_Log("Could not read CBaseMonster::m_LastHitGroup ofs.");
 	}
 
 	const char* path =  get_localinfo("dodstats_score","addons/amxmodx/data/dodstats.amxx");
@@ -502,6 +503,8 @@ void OnAmxxDetach()
 	g_rank.clear();
 	g_grenades.clear();
 	g_rank.unloadCalc();
+    if (CommonConfig)
+        ConfigManager->CloseGameConfigFile(CommonConfig);
 }
 
 void OnPluginsLoaded()

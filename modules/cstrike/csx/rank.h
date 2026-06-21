@@ -35,6 +35,8 @@ extern bool rankBots;
 extern cvar_t* csstats_rankbots;
 extern cvar_t* csstats_pause;
 
+extern size_t m_LastHitGroup;
+
 extern int iFGrenade;
 extern int iFDeath;
 extern int iFDamage;

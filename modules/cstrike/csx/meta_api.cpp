@@ -13,12 +13,17 @@
 
 #include "amxxmodule.h"
 #include "rank.h"
+#include <IGameConfigs.h>
 
 funEventCall modMsgsEnd[MAX_REG_MSGS];
 funEventCall modMsgs[MAX_REG_MSGS];
 
 void (*function)(void*);
 void (*endfunction)(void*);
+
+IGameConfigManager* ConfigManager;
+IGameConfig* CommonConfig = NULL;
+size_t m_LastHitGroup = 0;
 
 CPlayer players[33];
 
@@ -379,14 +384,10 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 {
 	if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT|FL_FAKECLIENT))
 		&& e 
-		&& (e->v.flags & (FL_CLIENT|FL_FAKECLIENT)) 
-		&& ptr->iHitgroup)
+		&& (e->v.flags & (FL_CLIENT|FL_FAKECLIENT)))
 	{
 		CPlayer *pPlayer = GET_PLAYER_POINTER(e);
-		if (pPlayer->current != CSW_KNIFE)
-		{
-			pPlayer->aiming = ptr->iHitgroup;
-		}
+		pPlayer->aiming = ptr->iHitgroup;
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -417,12 +418,23 @@ int AmxxCheckGame(const char *game)
 }
 void OnAmxxAttach(){
 	MF_AddNatives(stats_Natives);
+
+    char error[256];
+	ConfigManager = MF_GetConfigManager();
+	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)))
+		MF_Log("Could not read common.games gamedata: %s", error);
+	else
+	{
+		TypeDescription ofs;
+		if (CommonConfig->GetOffsetByClass("CBaseMonster", "m_LastHitGroup", &ofs))
+			m_LastHitGroup = ofs.fieldOffset;
+        if (m_LastHitGroup < 1)
+            MF_Log("Could not read CBaseMonster::m_LastHitGroup ofs.");
+	}
+
 	const char* path =  get_localinfo("csstats_score");
 	if ( path && *path ) 
-	{
-		char error[128];
 		g_rank.loadCalc( MF_BuildPathname("%s",path) , error, sizeof(error));
-	}
 	
 	if ( !g_rank.begin() )
 	{		
@@ -435,6 +447,8 @@ void OnAmxxDetach() {
 	g_grenades.clear();
 	g_rank.clear();
 	g_rank.unloadCalc();
+    if (CommonConfig)
+        ConfigManager->CloseGameConfigFile(CommonConfig);
 }
 
 void OnPluginsLoaded(){

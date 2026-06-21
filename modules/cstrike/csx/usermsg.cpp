@@ -33,37 +33,17 @@ void Client_ResetHUD(void* mValue){
 void Client_DeathMsg(void *mValue)
 {
 	static int killer_id;
-	//static int victim_id;
-	static int is_headshot;
-	const char *name;
 
 	switch (mState++)
 	{
 	case 0:
-		{
-			killer_id = *(int *)mValue;
-			break;
-		}
-	//case 1:
-	//	{
-	//		victim_id = *(int *)mValue;
-	//		break;
-	//	}
+		killer_id = *(int *)mValue;
+		break;
 	case 2:
+		if (killer_id && *(int *)mValue)
 		{
-			is_headshot = *(int *)mValue;
-			break;
-		}
-	case 3:
-		{
-			name = (const char *)mValue;
-			if (killer_id 
-				&& (strcmp(name, "knife") == 0))
-			{
-				CPlayer *pPlayer = GET_PLAYER_POINTER_I(killer_id);
-				pPlayer->aiming = is_headshot ? 1 : 0;
-			}
-			break;
+			CPlayer *pPlayer = GET_PLAYER_POINTER_I(killer_id);
+			pPlayer->aiming = 1;
 		}
 	}
 }
@@ -130,9 +110,21 @@ void Client_Damage(void* mValue){
 	if (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) ) {
 		pAttacker = GET_PLAYER_POINTER(enemy);
 		aim = pAttacker->aiming;
+		if (m_LastHitGroup > 0)
+		{
+			const unsigned char* pBase = (unsigned char*)mPlayer->pEdict->pvPrivateData;
+			if (pBase)
+				aim = *(int*)(pBase + m_LastHitGroup);
+		}
 		weapon = pAttacker->current;
 		pAttacker->saveHit( mPlayer , weapon , damage, aim);
 		break;
+	}
+	if (m_LastHitGroup > 0)
+	{
+		const unsigned char* pBase = (unsigned char*)mPlayer->pEdict->pvPrivateData;
+		if (pBase)
+			aim = *(int*)(pBase + m_LastHitGroup);
 	}
     if( g_grenades.find(enemy , &pAttacker , &weapon ) )
         pAttacker->saveHit( mPlayer , weapon , damage, aim );

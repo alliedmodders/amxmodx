@@ -436,6 +436,7 @@ CopyFiles('gamedata/common.games', 'base/addons/amxmodx/data/gamedata/common.gam
     'master.games.txt',
     'functions.engine.txt',
     'globalvars.engine.txt',
+    'globalvars.server.txt',
   ]
 )
 

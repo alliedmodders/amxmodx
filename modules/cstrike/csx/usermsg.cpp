@@ -107,7 +107,15 @@ void Client_Damage(void* mValue){
 	weapon = 0;
 	pAttacker = NULL;
 
-	if (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT) ) {
+	//if (enemy->v.flags & (FL_CLIENT | FL_FAKECLIENT)) {
+    /**
+     * When attacker/ killer gets kicked by the server while dealing damage to/ killing
+     * others, allow CSX module show the damage/ kill as a normal damage/ kill event
+     * (otherwise, by using the condition above, attacker's/ killer's victim will be
+     * recognized as they dealt damage to themselves/ commit suicide instead).
+     */
+    int enemyIdx = F_EToI(enemy);
+    if (enemyIdx > 0 && enemyIdx <= gpGlobals->maxClients) {
 		pAttacker = GET_PLAYER_POINTER(enemy);
 		aim = pAttacker->aiming;
 		if (m_LastHitGroup > 0)
@@ -116,7 +124,11 @@ void Client_Damage(void* mValue){
 			if (pBase)
 				aim = *(int*)(pBase + m_LastHitGroup);
 		}
-		weapon = pAttacker->current;
+        /// If traceattack and takedamage vfuncs. hooked, use weaponidx from these calls
+        /// rather than the one originating from UpdateClientData() (the moment when
+        /// gmsgDamage is sent in CS/ CZ); fixes when killer presses Q (lastinv) shortly
+        /// after killing their victim (won't show knife kills instead of awp kills anymore).
+		weapon = g_virtualCfg ? pAttacker->current_atk : pAttacker->current;
 		pAttacker->saveHit( mPlayer , weapon , damage, aim);
 		break;
 	}
@@ -129,7 +141,7 @@ void Client_Damage(void* mValue){
     if( g_grenades.find(enemy , &pAttacker , &weapon ) )
         pAttacker->saveHit( mPlayer , weapon , damage, aim );
 	else if ( strcmp("grenade",STRING(enemy->v.classname))==0 ) // ? more checks ?
-			weapon = CSW_C4;
+			weapon = CSW_C4; /// tested and works (victims are taken as suiciding with c4)
   }
 }
 

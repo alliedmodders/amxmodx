@@ -18,6 +18,9 @@
 #include "CMisc.h"
 #include "CRank.h"
 
+/// safe to use after ServerActive_Post() execution
+#define F_EToI(e)               ((int) (e - g_pEdictList))
+
 #define GET_PLAYER_POINTER(e)   (&players[ENTINDEX(e)])
 #define GET_PLAYER_POINTER_I(i) (&players[i])
 
@@ -30,6 +33,43 @@ struct weaponsVault {
   bool used;
   bool melee;
 };
+
+extern size_t** g_ppvtbl_CBasePlayer;
+extern size_t** g_ppvtbl_CBasePlayer_Bots;
+
+extern size_t g_ofsBaseclass; /// "base"
+extern size_t g_vfidxTraceAttack; /// "traceattack"
+extern size_t g_vfidxTakeDamage; /// "takedamage"
+
+extern bool g_virtualCfg;
+
+#if defined(WIN32) || defined(_WINDOWS) /// Windows
+typedef void (__thiscall* TraceAttack_Type) (void* pThis, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType);
+typedef int (__thiscall* TakeDamage_Type) (void* pThis, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType);
+
+void __fastcall Hook_TraceAttack(void* pThis, void* /** ignored */, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType);
+int __fastcall Hook_TakeDamage(void* pThis, void* /** ignored */, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType);
+
+void __fastcall Hook_TraceAttack_Bots(void* pThis, void* /** ignored */, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType);
+int __fastcall Hook_TakeDamage_Bots(void* pThis, void* /** ignored */, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType);
+#else /// Linux/ Mac
+typedef void (*TraceAttack_Type) (void* pThis, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType);
+typedef int (*TakeDamage_Type) (void* pThis, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType);
+
+void Hook_TraceAttack(void* pThis, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType);
+int Hook_TakeDamage(void* pThis, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType);
+
+void Hook_TraceAttack_Bots(void* pThis, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType);
+int Hook_TakeDamage_Bots(void* pThis, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType);
+#endif
+
+extern TraceAttack_Type g_origTraceAttack;
+extern TakeDamage_Type g_origTakeDamage;
+
+extern TraceAttack_Type g_origTraceAttack_Bots;
+extern TakeDamage_Type g_origTakeDamage_Bots;
+
+extern edict_t* g_pEdictList; /// from ServerActive_Post()
 
 extern bool rankBots;
 extern cvar_t* csstats_rankbots;
@@ -110,6 +150,7 @@ void Client_DeathMsg(void*);
 
 bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL );
 bool isModuleActive();
+void allowFullMemAccess(void* pAddr, size_t Size); /// cross-platform
 
 #define CHECK_ENTITY(x) \
 	if (x < 0 || x > gpGlobals->maxEntities) { \

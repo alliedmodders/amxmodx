@@ -49,8 +49,22 @@ typedef struct {
 static cell codeindex;  /* similar to "code_idx" */
 static cell *lbltab;    /* label table */
 static int writeerror;
+static int debugerror;
 static int bytes_in, bytes_out;
 static jmp_buf compact_err;
+
+static int inc_dbg_count(int16_t *count)
+{
+  if (*count == 32767) {
+    error(102,"debug information");
+    debugerror=TRUE;
+    writeerror=TRUE;
+    return FALSE;
+  } /* if */
+
+  (*count)++;
+  return TRUE;
+}
 
 /* apparently, strtol() does not work correctly on very large (unsigned)
  * hexadecimal values */
@@ -602,6 +616,7 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
   #endif
 
   writeerror=FALSE;
+  debugerror=FALSE;
   nametablesize=sizeof(int16_t);
   numpublics=0;
   numnatives=0;
@@ -924,7 +939,7 @@ SC_FUNC int assemble(FILE *fout,FILE *fin)
   if (!writeerror && (sc_debug & sSYMBOLIC)!=0)
     append_dbginfo(fout);       /* optionally append debug file */
 
-  if (writeerror)
+  if (writeerror && !debugerror)
     error(101,"disk full");
 
   /* adjust the header */
@@ -990,7 +1005,8 @@ static void append_dbginfo(FILE *fout)
       if (codeidx!=previdx) {
         if (prevstr!=NULL) {
           assert(prevname!=NULL);
-          dbghdr.files++;
+          if (!inc_dbg_count(&dbghdr.files))
+            return;
           dbghdr.size+=sizeof(cell)+strlen(prevname)+1;
         } /* if */
         previdx=codeidx;
@@ -1001,7 +1017,8 @@ static void append_dbginfo(FILE *fout)
   } /* for */
   if (prevstr!=NULL) {
     assert(prevname!=NULL);
-    dbghdr.files++;
+    if (!inc_dbg_count(&dbghdr.files))
+      return;
     dbghdr.size+=sizeof(cell)+strlen(prevname)+1;
   } /* if */
 
@@ -1010,7 +1027,8 @@ static void append_dbginfo(FILE *fout)
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
     if (str[0]=='L') {
-      dbghdr.lines++;
+      if (!inc_dbg_count(&dbghdr.lines))
+        return;
       dbghdr.size+=sizeof(AMX_DBG_LINE);
     } /* if */
   } /* for */
@@ -1020,7 +1038,8 @@ static void append_dbginfo(FILE *fout)
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
     if (str[0]=='S') {
-      dbghdr.symbols++;
+      if (!inc_dbg_count(&dbghdr.symbols))
+        return;
       name=strchr(str+2,':');
       assert(name!=NULL);
       dbghdr.size+=sizeof(AMX_DBG_SYMBOL)+strlen(skipwhitespace(name+1));
@@ -1033,21 +1052,24 @@ static void append_dbginfo(FILE *fout)
   /* tag table */
   for (constptr=tagname_tab.next; constptr!=NULL; constptr=constptr->next) {
     assert(strlen(constptr->name)>0);
-    dbghdr.tags++;
+    if (!inc_dbg_count(&dbghdr.tags))
+      return;
     dbghdr.size+=sizeof(AMX_DBG_TAG)+strlen(constptr->name);
   } /* for */
 
   /* automaton table */
   for (constptr=sc_automaton_tab.next; constptr!=NULL; constptr=constptr->next) {
     assert(constptr->index==0 && strlen(constptr->name)==0 || strlen(constptr->name)>0);
-    dbghdr.automatons++;
+    if (!inc_dbg_count(&dbghdr.automatons))
+      return;
     dbghdr.size+=sizeof(AMX_DBG_MACHINE)+strlen(constptr->name);
   } /* for */
 
   /* state table */
   for (constptr=sc_state_tab.next; constptr!=NULL; constptr=constptr->next) {
     assert(strlen(constptr->name)>0);
-    dbghdr.states++;
+    if (!inc_dbg_count(&dbghdr.states))
+      return;
     dbghdr.size+=sizeof(AMX_DBG_STATE)+strlen(constptr->name);
   } /* for */
 

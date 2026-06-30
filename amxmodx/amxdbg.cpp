@@ -61,34 +61,55 @@ void memread(void *dest, char **src, size_t size)
 	*src += size;
 }
 
-const char *ClipFileName(const char *inp)
+static int ValidateCount(int count, size_t element_size, const unsigned char *ptr, const unsigned char *end)
 {
-	static char buffer[256];
+	if (count < 0)
+		return AMX_ERR_FORMAT;
+
+	if ((size_t)count > (size_t)(end - ptr) / element_size)
+		return AMX_ERR_FORMAT;
+
+	return AMX_ERR_NONE;
+}
+
+static unsigned char *FindStringEnd(unsigned char *ptr, const unsigned char *end)
+{
+	while (ptr < end && *ptr != '\0')
+		ptr++;
+
+	return (ptr < end) ? ptr : NULL;
+}
+
+static void ClipFileNameInPlace(char *inp)
+{
 	size_t len = strlen(inp);
-	const char *ptr = inp;
+	char *ptr = inp;
 
 	for (size_t i=0; i<len; i++)
 	{
 		if ((inp[i] == '\\' || inp[i] == '/') && (i != len-1))
 			ptr = inp + i + 1;
 	}
-	strcpy(buffer, ptr);
 
-	return buffer;
+	memmove(inp, ptr, strlen(ptr) + 1);
 }
 
 //Note - I changed this function to read from memory instead.
 // -- BAILOPAN
-int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr)
+int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr, size_t dbg_size)
 {
   AMX_DBG_HDR dbghdr;
   unsigned char *ptr;
+  unsigned char *end;
   int index, dim;
   AMX_DBG_SYMDIM *symdim;
 
   assert(amxdbg != NULL);
 
   char *addr = (char *)(dbg_addr);
+
+  if (dbg_addr == NULL || dbg_size < sizeof(AMX_DBG_HDR))
+    return AMX_ERR_FORMAT;
 
   memset(&dbghdr, 0, sizeof(AMX_DBG_HDR));
   memread(&dbghdr, &addr, sizeof(AMX_DBG_HDR));
@@ -107,6 +128,11 @@ int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr)
   #endif
 
   if (dbghdr.magic != AMX_DBG_MAGIC)
+    return AMX_ERR_FORMAT;
+  if (dbghdr.size < (int32_t)sizeof(AMX_DBG_HDR) || (size_t)dbghdr.size > dbg_size)
+    return AMX_ERR_FORMAT;
+  if (dbghdr.files < 0 || dbghdr.lines < 0 || dbghdr.symbols < 0 || dbghdr.tags < 0
+      || dbghdr.automatons < 0 || dbghdr.states < 0)
     return AMX_ERR_FORMAT;
 
   /* allocate all memory */
@@ -137,27 +163,33 @@ int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr)
   memcpy(amxdbg->hdr, &dbghdr, sizeof dbghdr);
   ptr = (unsigned char *)(amxdbg->hdr + 1);
   memread(ptr, &addr, (size_t)(dbghdr.size-sizeof(dbghdr)));
+  end = (unsigned char *)amxdbg->hdr + dbghdr.size;
 
   /* file table */
   for (index = 0; index < dbghdr.files; index++) {
     assert(amxdbg->filetbl != NULL);
+    if (ptr + sizeof(AMX_DBG_FILE) > end)
+      goto invalid_debug_info;
     amxdbg->filetbl[index] = (AMX_DBG_FILE *)ptr;
     #if BYTE_ORDER==BIG_ENDIAN
       amx_AlignCell(&amxdbg->filetbl[index]->address);
     #endif
-    for (ptr = ptr + sizeof(AMX_DBG_FILE); *ptr != '\0'; ptr++)
-      /* nothing */;
+    ptr = FindStringEnd(ptr + sizeof(AMX_DBG_FILE), end);
+    if (ptr == NULL)
+      goto invalid_debug_info;
     ptr++;              /* skip '\0' too */
   } /* for */
 
   //debug("Files: %d\n", amxdbg->hdr->files);
   for (index=0;index<amxdbg->hdr->files; index++)
   {
-	  strcpy((char *)amxdbg->filetbl[index]->name, ClipFileName(amxdbg->filetbl[index]->name));
+	  ClipFileNameInPlace((char *)amxdbg->filetbl[index]->name);
 	  //debug(" [%d] %s\n", index, amxdbg->filetbl[index]->name);
   }
 
   /* line table */
+  if (ValidateCount(dbghdr.lines, sizeof(AMX_DBG_LINE), ptr, end) != AMX_ERR_NONE)
+    goto invalid_debug_info;
   amxdbg->linetbl = (AMX_DBG_LINE*)ptr;
   #if BYTE_ORDER==BIG_ENDIAN
     for (index = 0; index < dbghdr.lines; index++) {
@@ -170,6 +202,8 @@ int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr)
   /* symbol table (plus index tags) */
   for (index = 0; index < dbghdr.symbols; index++) {
     assert(amxdbg->symboltbl != NULL);
+    if (ptr + sizeof(AMX_DBG_SYMBOL) > end)
+      goto invalid_debug_info;
     amxdbg->symboltbl[index] = (AMX_DBG_SYMBOL *)ptr;
     #if BYTE_ORDER==BIG_ENDIAN
       amx_AlignCell(&amxdbg->symboltbl[index]->address);
@@ -178,9 +212,14 @@ int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr)
       amx_AlignCell(&amxdbg->symboltbl[index]->codeend);
       amx_Align16((uint16_t*)&amxdbg->symboltbl[index]->dim);
     #endif
-    for (ptr = ptr + sizeof(AMX_DBG_SYMBOL); *ptr != '\0'; ptr++)
-      /* nothing */;
+    ptr = FindStringEnd(ptr + sizeof(AMX_DBG_SYMBOL), end);
+    if (ptr == NULL)
+      goto invalid_debug_info;
     ptr++;              /* skip '\0' too */
+    if (amxdbg->symboltbl[index]->dim < 0)
+      goto invalid_debug_info;
+    if (ValidateCount(amxdbg->symboltbl[index]->dim, sizeof(AMX_DBG_SYMDIM), ptr, end) != AMX_ERR_NONE)
+      goto invalid_debug_info;
     for (dim = 0; dim < amxdbg->symboltbl[index]->dim; dim++) {
       symdim = (AMX_DBG_SYMDIM *)ptr;
       amx_Align16((uint16_t*)&symdim->tag);
@@ -192,42 +231,58 @@ int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr)
   /* tag name table */
   for (index = 0; index < dbghdr.tags; index++) {
     assert(amxdbg->tagtbl != NULL);
+    if (ptr + sizeof(AMX_DBG_TAG) > end)
+      goto invalid_debug_info;
     amxdbg->tagtbl[index] = (AMX_DBG_TAG *)ptr;
     #if BYTE_ORDER==BIG_ENDIAN
       amx_Align16(&amxdbg->tagtbl[index]->tag);
     #endif
-    for (ptr = ptr + sizeof(AMX_DBG_TAG) - 1; *ptr != '\0'; ptr++)
-      /* nothing */;
+    ptr = FindStringEnd(ptr + sizeof(AMX_DBG_TAG) - 1, end);
+    if (ptr == NULL)
+      goto invalid_debug_info;
     ptr++;              /* skip '\0' too */
   } /* for */
 
   /* automaton name table */
   for (index = 0; index < dbghdr.automatons; index++) {
     assert(amxdbg->automatontbl != NULL);
+    if (ptr + sizeof(AMX_DBG_MACHINE) > end)
+      goto invalid_debug_info;
     amxdbg->automatontbl[index] = (AMX_DBG_MACHINE *)ptr;
     #if BYTE_ORDER==BIG_ENDIAN
       amx_Align16(&amxdbg->automatontbl[index]->automaton);
       amx_AlignCell(&amxdbg->automatontbl[index]->address);
     #endif
-    for (ptr = ptr + sizeof(AMX_DBG_MACHINE) - 1; *ptr != '\0'; ptr++)
-      /* nothing */;
+    ptr = FindStringEnd(ptr + sizeof(AMX_DBG_MACHINE) - 1, end);
+    if (ptr == NULL)
+      goto invalid_debug_info;
     ptr++;              /* skip '\0' too */
   } /* for */
 
   /* state name table */
   for (index = 0; index < dbghdr.states; index++) {
     assert(amxdbg->statetbl != NULL);
+    if (ptr + sizeof(AMX_DBG_STATE) > end)
+      goto invalid_debug_info;
     amxdbg->statetbl[index] = (AMX_DBG_STATE *)ptr;
     #if BYTE_ORDER==BIG_ENDIAN
       amx_Align16(&amxdbg->statetbl[index]->state);
-      amx_Align16(&amxdbg->automatontbl[index]->automaton);
+      amx_Align16(&amxdbg->statetbl[index]->automaton);
     #endif
-    for (ptr = ptr + sizeof(AMX_DBG_STATE) - 1; *ptr != '\0'; ptr++)
-      /* nothing */;
+    ptr = FindStringEnd(ptr + sizeof(AMX_DBG_STATE) - 1, end);
+    if (ptr == NULL)
+      goto invalid_debug_info;
     ptr++;              /* skip '\0' too */
   } /* for */
 
+  if (ptr > end)
+    goto invalid_debug_info;
+
   return AMX_ERR_NONE;
+
+invalid_debug_info:
+  dbg_FreeInfo(amxdbg);
+  return AMX_ERR_FORMAT;
 }
 
 int AMXAPI dbg_LookupFile(AMX_DBG *amxdbg, ucell address, const char **filename)

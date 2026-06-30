@@ -133,19 +133,20 @@ static int delete_stringpair(stringpair *root,stringpair *item)
 /* ----- string list functions ----------------------------------- */
 static stringlist *insert_string(stringlist *root,char *string)
 {
-  stringlist *cur;
+  stringlist *cur,*tail;
 
   assert(string!=NULL);
   if ((cur=(stringlist*)malloc(sizeof(stringlist)))==NULL)
     error(103);       /* insufficient memory (fatal error) */
   if ((cur->line=duplicatestring(string))==NULL)
     error(103);       /* insufficient memory (fatal error) */
+  cur->next=NULL;
+  cur->tail=NULL;
   /* insert as "last" */
   assert(root!=NULL);
-  while (root->next!=NULL)
-    root=root->next;
-  cur->next=root->next;
-  root->next=cur;
+  tail=root->tail!=NULL ? root->tail : root;
+  tail->next=cur;
+  root->tail=cur;
   return cur;
 }
 
@@ -174,6 +175,8 @@ static int delete_string(stringlist *root,int index)
   if (cur->next!=NULL) {
     item=cur->next;
     cur->next=item->next;       /* unlink from list */
+    if (root->tail==item)
+      root->tail=cur!=root ? cur : NULL;
     assert(item->line!=NULL);
     free(item->line);
     free(item);

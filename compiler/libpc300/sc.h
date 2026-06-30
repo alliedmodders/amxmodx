@@ -268,6 +268,7 @@ enum {
 
 typedef struct s_stringlist {
   struct s_stringlist *next;
+  struct s_stringlist *tail;
   char *line;
 } stringlist;
 

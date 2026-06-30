@@ -53,18 +53,16 @@ static int debugerror;
 static int bytes_in, bytes_out;
 static jmp_buf compact_err;
 
-static int inc_dbg_count(int32_t *count)
-{
-  if (*count == 2147483647) {
-    error(102,"debug information");
-    debugerror=TRUE;
-    writeerror=TRUE;
-    return FALSE;
-  } /* if */
-
-  (*count)++;
-  return TRUE;
-}
+#define INC_DBG_COUNT(field)                                      \
+  do {                                                            \
+    if ((field) == 2147483647) {                                  \
+      error(102,"debug information");                             \
+      debugerror=TRUE;                                            \
+      writeerror=TRUE;                                            \
+      return;                                                     \
+    }                                                             \
+    (field)=(field)+1;                                            \
+  } while (0)
 
 /* apparently, strtol() does not work correctly on very large (unsigned)
  * hexadecimal values */
@@ -1005,8 +1003,7 @@ static void append_dbginfo(FILE *fout)
       if (codeidx!=previdx) {
         if (prevstr!=NULL) {
           assert(prevname!=NULL);
-          if (!inc_dbg_count(&dbghdr.files))
-            return;
+          INC_DBG_COUNT(dbghdr.files);
           dbghdr.size+=sizeof(cell)+strlen(prevname)+1;
         } /* if */
         previdx=codeidx;
@@ -1017,8 +1014,7 @@ static void append_dbginfo(FILE *fout)
   } /* for */
   if (prevstr!=NULL) {
     assert(prevname!=NULL);
-    if (!inc_dbg_count(&dbghdr.files))
-      return;
+    INC_DBG_COUNT(dbghdr.files);
     dbghdr.size+=sizeof(cell)+strlen(prevname)+1;
   } /* if */
 
@@ -1027,8 +1023,7 @@ static void append_dbginfo(FILE *fout)
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
     if (str[0]=='L') {
-      if (!inc_dbg_count(&dbghdr.lines))
-        return;
+      INC_DBG_COUNT(dbghdr.lines);
       dbghdr.size+=sizeof(AMX_DBG_LINE);
     } /* if */
   } /* for */
@@ -1038,8 +1033,7 @@ static void append_dbginfo(FILE *fout)
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
     if (str[0]=='S') {
-      if (!inc_dbg_count(&dbghdr.symbols))
-        return;
+      INC_DBG_COUNT(dbghdr.symbols);
       name=strchr(str+2,':');
       assert(name!=NULL);
       dbghdr.size+=sizeof(AMX_DBG_SYMBOL)+strlen(skipwhitespace(name+1));
@@ -1052,24 +1046,21 @@ static void append_dbginfo(FILE *fout)
   /* tag table */
   for (constptr=tagname_tab.next; constptr!=NULL; constptr=constptr->next) {
     assert(strlen(constptr->name)>0);
-    if (!inc_dbg_count(&dbghdr.tags))
-      return;
+    INC_DBG_COUNT(dbghdr.tags);
     dbghdr.size+=sizeof(AMX_DBG_TAG)+strlen(constptr->name);
   } /* for */
 
   /* automaton table */
   for (constptr=sc_automaton_tab.next; constptr!=NULL; constptr=constptr->next) {
     assert(constptr->index==0 && strlen(constptr->name)==0 || strlen(constptr->name)>0);
-    if (!inc_dbg_count(&dbghdr.automatons))
-      return;
+    INC_DBG_COUNT(dbghdr.automatons);
     dbghdr.size+=sizeof(AMX_DBG_MACHINE)+strlen(constptr->name);
   } /* for */
 
   /* state table */
   for (constptr=sc_state_tab.next; constptr!=NULL; constptr=constptr->next) {
     assert(strlen(constptr->name)>0);
-    if (!inc_dbg_count(&dbghdr.states))
-      return;
+    INC_DBG_COUNT(dbghdr.states);
     dbghdr.size+=sizeof(AMX_DBG_STATE)+strlen(constptr->name);
   } /* for */
 

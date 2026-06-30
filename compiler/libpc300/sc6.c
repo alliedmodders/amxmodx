@@ -975,7 +975,7 @@ static void append_dbginfo(FILE *fout)
   AMX_DBG_SYMBOL dbgsym;
   AMX_DBG_SYMDIM dbgidxtag[sDIMEN_MAX];
   int index,dim;
-  char *str,*prevstr,*name,*prevname;
+  char *str,*prevstr,*name,*prevname,*dimstr;
   ucell codeidx,previdx;
   constvalue *constptr;
   char symname[2*sNAMEMAX+16];
@@ -989,59 +989,47 @@ static void append_dbginfo(FILE *fout)
   dbghdr.file_version=CUR_FILE_VERSION;
   dbghdr.amx_version=MIN_AMX_VERSION;
 
-  /* first pass: collect the number of items in various tables */
-
-  /* file table */
+  /* first pass: collect the number of items in the debug string tables */
   previdx=0;
   prevstr=NULL;
   prevname=NULL;
   for (index=0; (str=get_dbgstring(index))!=NULL; index++) {
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
-    if (str[0]=='F') {
-      codeidx=hex2long(str+2,&name);
-      if (codeidx!=previdx) {
-        if (prevstr!=NULL) {
-          assert(prevname!=NULL);
-          INC_DBG_COUNT(dbghdr.files);
-          dbghdr.size+=sizeof(cell)+strlen(prevname)+1;
+    switch (str[0]) {
+    case 'F':
+        codeidx=hex2long(str+2,&name);
+        if (codeidx!=previdx) {
+          if (prevstr!=NULL) {
+            assert(prevname!=NULL);
+            INC_DBG_COUNT(dbghdr.files);
+            dbghdr.size+=sizeof(cell)+strlen(prevname)+1;
+          } /* if */
+          previdx=codeidx;
         } /* if */
-        previdx=codeidx;
-      } /* if */
-      prevstr=str;
-      prevname=skipwhitespace(name);
-    } /* if */
+        prevstr=str;
+        prevname=skipwhitespace(name);
+        break;
+    case 'L':
+        INC_DBG_COUNT(dbghdr.lines);
+        dbghdr.size+=sizeof(AMX_DBG_LINE);
+        break;
+    case 'S':
+        INC_DBG_COUNT(dbghdr.symbols);
+        name=strchr(str+2,':');
+        assert(name!=NULL);
+        dbghdr.size+=sizeof(AMX_DBG_SYMBOL)+strlen(skipwhitespace(name+1));
+        if ((dimstr=strchr(name,'['))!=NULL)
+          while ((dimstr=strchr(dimstr+1,':'))!=NULL)
+            dbghdr.size+=sizeof(AMX_DBG_SYMDIM);
+        break;
+    } /* switch */
   } /* for */
   if (prevstr!=NULL) {
     assert(prevname!=NULL);
     INC_DBG_COUNT(dbghdr.files);
     dbghdr.size+=sizeof(cell)+strlen(prevname)+1;
   } /* if */
-
-  /* line number table */
-  for (index=0; (str=get_dbgstring(index))!=NULL; index++) {
-    assert(str!=NULL);
-    assert(str[0]!='\0' && str[1]==':');
-    if (str[0]=='L') {
-      INC_DBG_COUNT(dbghdr.lines);
-      dbghdr.size+=sizeof(AMX_DBG_LINE);
-    } /* if */
-  } /* for */
-
-  /* symbol table */
-  for (index=0; (str=get_dbgstring(index))!=NULL; index++) {
-    assert(str!=NULL);
-    assert(str[0]!='\0' && str[1]==':');
-    if (str[0]=='S') {
-      INC_DBG_COUNT(dbghdr.symbols);
-      name=strchr(str+2,':');
-      assert(name!=NULL);
-      dbghdr.size+=sizeof(AMX_DBG_SYMBOL)+strlen(skipwhitespace(name+1));
-      if ((prevstr=strchr(name,'['))!=NULL)
-        while ((prevstr=strchr(prevstr+1,':'))!=NULL)
-          dbghdr.size+=sizeof(AMX_DBG_SYMDIM);
-    } /* if */
-  } /* for */
 
   /* tag table */
   for (constptr=tagname_tab.next; constptr!=NULL; constptr=constptr->next) {

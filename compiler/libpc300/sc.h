@@ -706,6 +706,7 @@ SC_FUNC void delete_docstring(int index);
 SC_FUNC void delete_docstringtable(void);
 SC_FUNC stringlist *insert_autolist(char *string);
 SC_FUNC char *get_autolist(int index);
+SC_FUNC stringlist *get_autolist_next(stringlist *prev);
 SC_FUNC void delete_autolisttable(void);
 SC_FUNC valuepair *push_heaplist(long first, long second);
 SC_FUNC int popfront_heaplist(long *first, long *second);

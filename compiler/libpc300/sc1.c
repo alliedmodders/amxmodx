@@ -5631,7 +5631,7 @@ static void dostate(void)
   int islabel;
   symbol *sym;
   #if !defined SC_LIGHT
-    int length,index,listid,listindex,stateindex;
+    int length,listid,listindex,stateindex;
     char *doc;
   #endif
 
@@ -5722,8 +5722,8 @@ static void dostate(void)
       listindex=0;
       length=strlen(name)+70; /* +70 for the fixed part "<transition ... />\n" */
       /* see if there are any condition strings to attach */
-      for (index=0; (str=get_autolist(index))!=NULL; index++)
-        length+=strlen(str);
+      for (stringlist *item=get_autolist_next(NULL); item!=NULL; item=get_autolist_next(item))
+        length+=strlen(item->line);
       if ((doc=(char*)malloc(length*sizeof(char)))!=NULL) {
         do {
           sprintf(doc,"<transition target=\"%s\"",name);
@@ -5734,12 +5734,13 @@ static void dostate(void)
             assert(state!=NULL);
             sprintf(doc+strlen(doc)," source=\"%s\"",state->name);
           } /* if */
-          if (get_autolist(0)!=NULL) {
+          if (get_autolist_next(NULL)!=NULL) {
             /* add the condition */
             strcat(doc," condition=\"");
-            for (index=0; (str=get_autolist(index))!=NULL; index++) {
+            for (stringlist *item=get_autolist_next(NULL); item!=NULL; item=get_autolist_next(item)) {
+              str=item->line;
               /* remove the ')' token that may be appended before detecting that the expression has ended */
-              if (*str!=')' || *(str+1)!='\0' || get_autolist(index+1)!=NULL)
+              if (*str!=')' || *(str+1)!='\0' || get_autolist_next(item)!=NULL)
                 strcat(doc,str);
             } /* for */
             strcat(doc,"\"");

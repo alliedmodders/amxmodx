@@ -439,6 +439,11 @@ SC_FUNC char *get_autolist(int index)
   return get_string(&autolist,index);
 }
 
+SC_FUNC stringlist *get_autolist_next(stringlist *prev)
+{
+  return prev!=NULL ? prev->next : autolist.next;
+}
+
 SC_FUNC void delete_autolisttable(void)
 {
   delete_stringtable(&autolist);

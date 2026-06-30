@@ -53,9 +53,9 @@ static int debugerror;
 static int bytes_in, bytes_out;
 static jmp_buf compact_err;
 
-static int inc_dbg_count(int16_t *count)
+static int inc_dbg_count(int32_t *count)
 {
-  if (*count == 32767) {
+  if (*count == 2147483647) {
     error(102,"debug information");
     debugerror=TRUE;
     writeerror=TRUE;

@@ -119,12 +119,12 @@ int AMXAPI dbg_LoadInfo(AMX_DBG *amxdbg, void *dbg_addr, size_t dbg_size)
     amx_Align32((uint32_t*)&dbghdr.size);
     amx_Align16(&dbghdr.magic);
     amx_Align16(&dbghdr.flags);
-    amx_Align16(&dbghdr.files);
-    amx_Align16(&dbghdr.lines);
-    amx_Align16(&dbghdr.symbols);
-    amx_Align16(&dbghdr.tags);
-    amx_Align16(&dbghdr.automatons);
-    amx_Align16(&dbghdr.states);
+    amx_Align32((uint32_t*)&dbghdr.files);
+    amx_Align32((uint32_t*)&dbghdr.lines);
+    amx_Align32((uint32_t*)&dbghdr.symbols);
+    amx_Align32((uint32_t*)&dbghdr.tags);
+    amx_Align32((uint32_t*)&dbghdr.automatons);
+    amx_Align32((uint32_t*)&dbghdr.states);
   #endif
 
   if (dbghdr.magic != AMX_DBG_MAGIC)

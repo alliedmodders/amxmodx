@@ -21,6 +21,7 @@ SC_FUNC void DestroyHashTable(HashTable *ht);
 SC_FUNC void AddToHashTable(HashTable *ht, symbol *sym);
 SC_FUNC void RemoveFromHashTable(HashTable *ht, symbol *sym);
 SC_FUNC symbol *FindInHashTable(HashTable *ht, const char *name, int fnumber);
+SC_FUNC symbol *FindGlobalInHashTable(HashTable *ht, const char *name, int fnumber);
 SC_FUNC symbol *FindTaggedInHashTable(HashTable *ht, const char *name, int fnumber,
                                       int *cmptag);
 

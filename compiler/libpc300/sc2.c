@@ -2794,7 +2794,7 @@ SC_FUNC void markusage(symbol *sym,int usage)
  */
 SC_FUNC symbol *findglb(const char *name)
 {
-  return find_symbol(&glbtab,name,fcurrent,FALSE);
+  return FindGlobalInHashTable(sp_Globals,name,fcurrent);
 }
 
 /*  findloc

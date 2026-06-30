@@ -135,8 +135,8 @@ FindTaggedInHashTable(HashTable *ht, const char *name, int fnumber,
     return firstmatch;
 }
 
-SC_FUNC symbol *
-FindInHashTable(HashTable *ht, const char *name, int fnumber)
+static symbol *
+find_in_hash_table(HashTable *ht, const char *name, int fnumber, int allowenumfields)
 {
     uint32_t hash = NameHash(name);
     uint32_t bucket = hash & ht->bucketmask;
@@ -144,7 +144,7 @@ FindInHashTable(HashTable *ht, const char *name, int fnumber)
 
     while (he != NULL) {
         symbol *sym = he->sym;
-        if ((sym->parent==NULL || sym->ident==iCONSTEXPR) &&
+        if ((sym->parent==NULL || (allowenumfields && sym->ident==iCONSTEXPR)) &&
             (sym->fnumber<0 || sym->fnumber==fnumber) &&
             (strcmp(sym->name, name) == 0))
         {
@@ -154,6 +154,20 @@ FindInHashTable(HashTable *ht, const char *name, int fnumber)
     }
 
     return NULL;
+}
+
+SC_FUNC symbol *
+FindInHashTable(HashTable *ht, const char *name, int fnumber)
+{
+    return find_in_hash_table(ht, name, fnumber, TRUE);
+}
+
+/* strict variant for findglb(): never returns parented symbols (enum
+ * fields), matching the filter of the original find_symbol() list walk */
+SC_FUNC symbol *
+FindGlobalInHashTable(HashTable *ht, const char *name, int fnumber)
+{
+    return find_in_hash_table(ht, name, fnumber, FALSE);
 }
 
 static void

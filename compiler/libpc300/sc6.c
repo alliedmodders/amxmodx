@@ -975,7 +975,7 @@ static void append_dbginfo(FILE *fout)
   AMX_DBG_SYMBOL dbgsym;
   AMX_DBG_SYMDIM dbgidxtag[sDIMEN_MAX];
   int dim;
-  char *str,*prevstr,*name,*prevname,*dimstr;
+  char *str,*prevstr,*name,*prevname,*nameend,*dimstr;
   stringlist *dbgstr;
   ucell codeidx,previdx;
   constvalue *constptr;
@@ -1020,8 +1020,11 @@ static void append_dbginfo(FILE *fout)
         INC_DBG_COUNT(dbghdr.symbols);
         name=strchr(str+2,':');
         assert(name!=NULL);
-        dbghdr.size+=sizeof(AMX_DBG_SYMBOL)+strlen(skipwhitespace(name+1));
-        if ((dimstr=strchr(name,'['))!=NULL)
+        name=skipwhitespace(name+1);
+        nameend=strchr(name,' ');
+        assert(nameend!=NULL);
+        dbghdr.size+=sizeof(AMX_DBG_SYMBOL)+(nameend-name);
+        if ((dimstr=strchr(nameend,'['))!=NULL)
           while ((dimstr=strchr(dimstr+1,':'))!=NULL)
             dbghdr.size+=sizeof(AMX_DBG_SYMDIM);
         break;

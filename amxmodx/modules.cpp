@@ -200,10 +200,10 @@ int load_amxscript_internal(AMX *amx, void **program, const char *filename, char
 
 			if (hdr->size < 0 || static_cast<size_t>(hdr->size) >= bufSize)
 			{
-				delete[] *program;
+				delete[] (char *)*program;
 				*program = nullptr;
 				AMXXLOG_Log("[AMXX] Plugin \"%s\" has invalid debug data offset", filename);
-				return (amxx_DONTLOAD);
+				return (amx->error = AMX_ERR_FORMAT);
 			}
 
 			char *addr = (char *)hdr + hdr->size;

@@ -579,6 +579,11 @@ SC_FUNC char *get_dbgstring(int index)
   return get_string(&dbgstrings,index);
 }
 
+SC_FUNC stringlist *get_dbgstring_next(stringlist *prev)
+{
+  return prev!=NULL ? prev->next : dbgstrings.next;
+}
+
 SC_FUNC void delete_dbgstringtable(void)
 {
   delete_stringtable(&dbgstrings);

@@ -974,8 +974,9 @@ static void append_dbginfo(FILE *fout)
   AMX_DBG_LINE dbgline;
   AMX_DBG_SYMBOL dbgsym;
   AMX_DBG_SYMDIM dbgidxtag[sDIMEN_MAX];
-  int index,dim;
+  int dim;
   char *str,*prevstr,*name,*prevname,*dimstr;
+  stringlist *dbgstr;
   ucell codeidx,previdx;
   constvalue *constptr;
   char symname[2*sNAMEMAX+16];
@@ -993,7 +994,8 @@ static void append_dbginfo(FILE *fout)
   previdx=0;
   prevstr=NULL;
   prevname=NULL;
-  for (index=0; (str=get_dbgstring(index))!=NULL; index++) {
+  for (dbgstr=get_dbgstring_next(NULL); dbgstr!=NULL; dbgstr=get_dbgstring_next(dbgstr)) {
+    str=dbgstr->line;
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
     switch (str[0]) {
@@ -1061,7 +1063,8 @@ static void append_dbginfo(FILE *fout)
   previdx=0;
   prevstr=NULL;
   prevname=NULL;
-  for (index=0; (str=get_dbgstring(index))!=NULL; index++) {
+  for (dbgstr=get_dbgstring_next(NULL); dbgstr!=NULL; dbgstr=get_dbgstring_next(dbgstr)) {
+    str=dbgstr->line;
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
     if (str[0]=='F') {
@@ -1085,7 +1088,8 @@ static void append_dbginfo(FILE *fout)
   } /* if */
 
   /* line number table */
-  for (index=0; (str=get_dbgstring(index))!=NULL; index++) {
+  for (dbgstr=get_dbgstring_next(NULL); dbgstr!=NULL; dbgstr=get_dbgstring_next(dbgstr)) {
+    str=dbgstr->line;
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
     if (str[0]=='L') {
@@ -1096,7 +1100,8 @@ static void append_dbginfo(FILE *fout)
   } /* for */
 
   /* symbol table */
-  for (index=0; (str=get_dbgstring(index))!=NULL; index++) {
+  for (dbgstr=get_dbgstring_next(NULL); dbgstr!=NULL; dbgstr=get_dbgstring_next(dbgstr)) {
+    str=dbgstr->line;
     assert(str!=NULL);
     assert(str[0]!='\0' && str[1]==':');
     if (str[0]=='S') {

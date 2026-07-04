@@ -34,7 +34,7 @@
 
 /* a "private" implementation of strdup(), so that porting
  * to other memory allocators becomes easier.
- * By Søren Hannibal.
+ * By Sï¿½ren Hannibal.
  */
 SC_FUNC char* duplicatestring(const char* sourcestring)
 {
@@ -57,6 +57,7 @@ static stringpair *insert_stringpair(stringpair *root,char *first,char *second,i
   cur->first=duplicatestring(first);
   cur->second=duplicatestring(second);
   cur->matchlength=matchlength;
+  cur->hnext=NULL;
   if (cur->first==NULL || cur->second==NULL) {
     if (cur->first!=NULL)
       free(cur->first);
@@ -259,6 +260,54 @@ SC_FUNC void delete_pathtable(void)
 static stringpair substpair = { NULL, NULL, NULL};  /* list of substitution pairs */
 
 static stringpair *substindex['z'-PUBLIC_CHAR+1]; /* quick index to first character */
+
+/* hash table over the macro name prefix: find_subst() runs for every
+ * identifier prefix of every source line, so the per-letter index above
+ * degenerates to a linear scan when many macros share a first letter */
+#define SUBSTHASH_BUCKETS 4096  /* power of 2 */
+static stringpair *substhash[SUBSTHASH_BUCKETS];
+
+static unsigned int substhash_bucket(const char *name,int length)
+{
+  unsigned int h=2166136261u;   /* FNV-1a */
+  int i;
+  for (i=0; i<length; i++) {
+    h^=(unsigned char)name[i];
+    h*=16777619u;
+  } /* for */
+  return h & (SUBSTHASH_BUCKETS-1);
+}
+
+static stringpair *substhash_find(const char *name,int length)
+{
+  stringpair *item=substhash[substhash_bucket(name,length)];
+  while (item!=NULL) {
+    if (item->matchlength==length && strncmp(item->first,name,length)==0)
+      return item;
+    item=item->hnext;
+  } /* while */
+  return NULL;
+}
+
+static void substhash_insert(stringpair *item)
+{
+  unsigned int bucket=substhash_bucket(item->first,item->matchlength);
+  item->hnext=substhash[bucket];
+  substhash[bucket]=item;
+}
+
+static void substhash_remove(stringpair *item)
+{
+  stringpair **link=&substhash[substhash_bucket(item->first,item->matchlength)];
+  while (*link!=NULL) {
+    if (*link==item) {
+      *link=item->hnext;
+      return;
+    } /* if */
+    link=&(*link)->hnext;
+  } /* while */
+}
+
 static void adjustindex(char c)
 {
   stringpair *cur;
@@ -278,6 +327,7 @@ SC_FUNC stringpair *insert_subst(char *pattern,char *substitution,int prefixlen)
   assert(substitution!=NULL);
   if ((cur=insert_stringpair(&substpair,pattern,substitution,prefixlen))==NULL)
     error(103);       /* insufficient memory (fatal error) */
+  substhash_insert(cur);
   adjustindex(*pattern);
 
   if (pc_deprecate != NULL) {
@@ -308,9 +358,7 @@ SC_FUNC stringpair *find_subst(char *name,int length)
   assert(name!=NULL);
   assert(length>0);
   assert(*name>='A' && *name<='Z' || *name>='a' && *name<='z' || *name=='_' || *name==PUBLIC_CHAR);
-  item=substindex[(int)*name-PUBLIC_CHAR];
-  if (item!=NULL)
-    item=find_stringpair(item,name,length);
+  item=substhash_find(name,length);
 
   if (item && (item->flags & flgDEPRECATED) != 0) {
     static char macro[128];
@@ -336,11 +384,10 @@ SC_FUNC int delete_subst(char *name,int length)
   assert(name!=NULL);
   assert(length>0);
   assert(*name>='A' && *name<='Z' || *name>='a' && *name<='z' || *name=='_' || *name==PUBLIC_CHAR);
-  item=substindex[(int)*name-PUBLIC_CHAR];
-  if (item!=NULL)
-    item=find_stringpair(item,name,length);
+  item=substhash_find(name,length);
   if (item==NULL)
     return FALSE;
+  substhash_remove(item);
   delete_stringpair(&substpair,item);
   adjustindex(*name);
   return TRUE;
@@ -352,6 +399,7 @@ SC_FUNC void delete_substtable(void)
   delete_stringpairtable(&substpair);
   for (i=0; i<sizeof substindex/sizeof substindex[0]; i++)
     substindex[i]=NULL;
+  memset(substhash,0,sizeof substhash);
 }
 
 #endif /* !defined NO_SUBST */

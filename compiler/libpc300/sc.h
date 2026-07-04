@@ -274,6 +274,7 @@ typedef struct s_stringlist {
 
 typedef struct s_stringpair {
   struct s_stringpair *next;
+  struct s_stringpair *hnext;   /* next entry in the substitution hash bucket */
   char *first;
   char *second;
   int matchlength;

@@ -537,9 +537,26 @@ static void stgopt(char *start,char *end)
       matches=0;
       start=debut;
       while (start<end) {
+        const char *first;
+        char firstc,findc;
+        /* first significant character of the current line: a pattern that
+         * opens with a different literal character cannot match, because
+         * matchsequence() would fail its very first (case-insensitive)
+         * comparison; skipping it here is a pure shortcut with an identical
+         * outcome, so the generated code stays byte-for-byte the same
+         */
+        first=start;
+        while (*first=='\t' || *first==' ')
+          first++;
+        firstc=(char)tolower(*first);
         seq=0;
         while (sequences[seq].find!=NULL) {
           assert(seq>=0);
+          findc=sequences[seq].find[0];
+          if (findc!='%' && findc!='!' && findc!=' ' && findc!='-' && (char)tolower(findc)!=firstc) {
+            seq++;
+            continue;
+          } /* if */
           if (matchsequence(start,end,sequences[seq].find,symbols,&match_length)) {
             char *replace=replacesequence(sequences[seq].replace,symbols,&repl_length);
             /* If the replacement is bigger than the original section, we may need
@@ -558,6 +575,11 @@ static void stgopt(char *start,char *end)
               code_idx-=sequences[seq].savesize;
               seq=0;                      /* restart search for matches */
               matches++;
+              /* the line changed: refresh the first-character shortcut */
+              first=start;
+              while (*first=='\t' || *first==' ')
+                first++;
+              firstc=(char)tolower(*first);
             } else {
               /* actually, we should never get here (match_length<repl_length) */
               assert(0);

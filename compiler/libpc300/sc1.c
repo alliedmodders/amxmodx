@@ -2766,6 +2766,8 @@ static void decl_enum(int vclass)
     sym->dim.array.length=size;
     sym->dim.array.level=0;
     sym->parent=enumsym;
+    if (enumsym!=NULL)
+      enumsym->has_child=TRUE;
     /* add the constant to a separate list as well */
     if (enumroot!=NULL) {
       sym->usage |= uENUMFIELD;
@@ -3334,6 +3336,7 @@ static void funcstub(int native)
     assert(sym!=NULL);
     sub=addvariable(symbolname,0,iREFARRAY,sGLOBAL,tag,dim,numdim,idxtag);
     sub->parent=sym;
+    sym->has_child=TRUE;
   } /* if */
 
   litidx=0;                     /* clear the literal pool */
@@ -5507,6 +5510,7 @@ static void doreturn(void)
           /* nothing */;
         sub=addvariable(curfunc->name,(argcount+3)*sizeof(cell),iREFARRAY,sGLOBAL,curfunc->tag,dim,numdim,idxtag);
         sub->parent=curfunc;
+        curfunc->has_child=TRUE;
         /* Function that returns array can be used before it is defined, so at
          * the call point (if it is before definition) we may not know if this
          * function returns array and what is its size (for example inside the

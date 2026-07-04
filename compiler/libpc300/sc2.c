@@ -2825,6 +2825,12 @@ SC_FUNC symbol *finddepend(const symbol *parent)
 {
   symbol *sym;
 
+  /* the overwhelming majority of symbols never has children; skip the
+   * full table scans for those (a stale TRUE flag merely costs a scan)
+   */
+  if (!parent->has_child)
+    return NULL;
+
   sym=find_symbol_child(&loctab,parent);    /* try local symbols first */
   if (sym==NULL)                            /* not found */
     sym=find_symbol_child(&glbtab,parent);
@@ -2869,6 +2875,7 @@ SC_FUNC symbol *addsym(const char *name,cell addr,int ident,int vclass,int tag,i
   entry.numrefers=1;
   entry.refer=refer;
   entry.parent=NULL;
+  entry.has_child=FALSE;
   entry.fieldtag=0;
   entry.documentation=NULL;
 
@@ -2903,6 +2910,8 @@ SC_FUNC symbol *addvariable(const char *name,cell addr,int ident,int vclass,int 
       top->dim.array.level=(short)(numdim-level-1);
       top->x.idxtag=idxtag[level];
       top->parent=parent;
+      if (parent!=NULL)
+        parent->has_child=TRUE;
       parent=top;
       if (level==0)
         sym=top;

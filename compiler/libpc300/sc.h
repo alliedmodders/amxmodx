@@ -152,6 +152,11 @@ typedef struct s_symbol {
   struct s_symbol **refer;  /* referrer list, functions that "use" this symbol */
   int numrefers;        /* number of entries in the referrer list */
   char *documentation;  /* optional documentation string */
+  int has_child;        /* set (and never cleared) when a child symbol ever
+                         * points here; lets finddepend() skip the full table
+                         * scan for the overwhelmingly common childless case.
+                         * A stale TRUE only costs a scan; FALSE is reliable
+                         * because every parent assignment sets it. */
 } symbol;
 
 

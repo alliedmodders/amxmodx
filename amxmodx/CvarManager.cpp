@@ -17,7 +17,11 @@ CvarManager g_CvarManager;
 
 void (*Cvar_DirectSet_Actual)(struct cvar_s* var, const char *value) = nullptr;
 
+#if defined(__linux__)
 void (*Cvar_DirectSet_RegParm_Actual)(struct cvar_s* var, const char *value) __attribute__((regparm(3))) = nullptr;
+#else 
+#define Cvar_DirectSet_RegParm_Actual Cvar_DirectSet_Actual
+#endif
 
 void Cvar_DirectSet_Custom(struct cvar_s *var, const char *value, IRehldsHook_Cvar_DirectSet *chain = nullptr, bool useRegParm = false)
 {
@@ -105,10 +109,12 @@ void Cvar_DirectSet_Custom(struct cvar_s *var, const char *value, IRehldsHook_Cv
 	}
 }
 
+#if defined(__linux__)
 void __attribute__((regparm(3))) Cvar_DirectSet_RegParm(struct cvar_s *var, const char *value)
 {
     Cvar_DirectSet_Custom(var, value, nullptr, true);
 }
+#endif
 
 void Cvar_DirectSet(struct cvar_s *var, const char *value)
 {
@@ -145,6 +151,7 @@ void CvarManager::CreateCvarHook(void)
 		{
 			// Disabled by default.
 
+			#if defined(__linux__)
 			const char* raw = CommonConfig->GetKeyValue("RegParm");
 			bool useRegParm = raw ? (atoi(raw) != 0) : false; 
 			if(useRegParm)
@@ -155,6 +162,9 @@ void CvarManager::CreateCvarHook(void)
 			{
 				m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress);
 			}
+			#else 
+			m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress);
+			#endif
 		}
 		else
 		{

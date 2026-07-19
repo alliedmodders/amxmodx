@@ -27,7 +27,7 @@ jobs:
       image: ${{ matrix.container_image }}
     steps:
       - name: Checkout AMX Mod X
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: amxmodx
           fetch-depth: 0
@@ -42,7 +42,7 @@ jobs:
           echo "dependencies=$GITHUB_WORKSPACE/dependencies" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         env:
           cache-name: amxx-deps
         with:

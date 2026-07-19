@@ -30,7 +30,7 @@ jobs:
       DEPENDENCIES_ROOT: ${{ github.workspace }}/dependencies
       DEPENDENCIES_ROOT_WIN: ${{ github.workspace }}\dependencies
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
           path: amxmodx

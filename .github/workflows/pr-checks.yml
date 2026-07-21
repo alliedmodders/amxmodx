@@ -35,7 +35,7 @@ jobs:
           submodules: recursive
           path: amxmodx
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         name: Setup Python 3.x
         with:
           python-version: '3.x'

@@ -507,10 +507,14 @@
 // #define FN_OnFreeEntPrivateData				OnFreeEntPrivateData				
 // #define FN_GameShutdown						GameShutdown
 // #define FN_ShouldCollide						ShouldCollide
+// #define FN_CvarValue                         CvarValue
+// #define FN_CvarValue2                        CvarValue2
 
 // #define FN_OnFreeEntPrivateData_Post			OnFreeEntPrivateData_Post
 // #define FN_GameShutdown_Post					GameShutdown_Post
 // #define FN_ShouldCollide_Post				ShouldCollide_Post
+// #define FN_CvarValue_Post                    CvarValue_Post
+// #define FN_CvarValue2_Post                   CvarValue2_Post
 
 
 #endif // USE_METAMOD

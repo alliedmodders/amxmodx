@@ -27,7 +27,17 @@
 		"engine"  "engine_ls"
 	}
 
+	//
+	// Server
+	//
 
+	"globalvars.server.txt"
+	{
+		"game" "cstrike"
+		"game" "czero"
+		"game" "dod"
+		"game" "valve"
+	}
 
 	//
 	// Counter-Strike
@@ -705,7 +715,6 @@
 		"game"  "czero"
 	}
 
-
 	"hostages.games/cstrike/offsets-chostagemanager.txt"
 	{
 		"game"  "cstrike"
@@ -723,7 +732,6 @@
 		"game"  "cstrike"
 		"game"  "czero"
 	}
-
 
 	"others.games/cstrike/offsets-csound.txt"
 	{
@@ -760,8 +768,6 @@
 		"game"  "cstrike"
 		"game"  "czero"
 	}
-
-
 
 	//
 	// Day Of Defeat
@@ -1561,7 +1567,6 @@
 	{
 		"game"  "dod"
 	}
-
 
 	//
 	// Team Fortress Classic
@@ -4104,8 +4109,6 @@
 	{
 		"game"  "valve"
 	}
-
-
 
 	//
 	// Virtual Functions

@@ -20,6 +20,8 @@
 #include <sm_namehashset.h>
 #include <stdint.h>
 
+//#define GAMECONF_SHOW_MISMATCH
+
 struct GameBinaryInfo
 {
 	void *baseAddress = nullptr;
@@ -92,8 +94,10 @@ class CGameConfig
 		char                       m_Game[256];
 		char                       m_CurrentCRCLibrary[64];
 		char                       m_CurrentCRCSection[256];
+#ifdef GAMECONF_SHOW_MISMATCH
 		char                       m_LastCRCPlatform[32];
 		bool                       m_CurrentCRCMatched;
+#endif
 		unsigned int               m_CurrentBinCRC = 0;
 		unsigned int               m_LastCRCExpected = 0;
 		bool                       m_CurrentBinCRCValid = false;

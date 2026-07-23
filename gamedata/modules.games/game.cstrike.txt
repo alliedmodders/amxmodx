@@ -11,7 +11,7 @@
 
 "Games"
 {
-	"#default" // Build 10210
+	"#default" // Build 10210 & + ('default' and 'beta' branches)
 	{
 		"Signatures"
 		{
@@ -367,7 +367,7 @@
 		}
 	}
 
-	"*" // Build 8684 - Windows
+	"*" // Build 8684 - Windows ('steam_legacy' branch)
 	{
 		"CRC"
 		{
@@ -460,4 +460,3 @@
 		}
 	}
 }
-

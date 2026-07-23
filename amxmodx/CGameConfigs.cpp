@@ -166,9 +166,11 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 				m_CurrentBinCRCValid = false;
 				m_CurrentCRCLibrary[0] = '\0';
 				strncopy(m_CurrentCRCSection, m_Game, sizeof(m_CurrentCRCSection));
+#ifdef GAMECONF_SHOW_MISMATCH
 				m_CurrentCRCMatched = false;
-				m_LastCRCExpected = 0;
 				m_LastCRCPlatform[0] = '\0';
+#endif
+				m_LastCRCExpected = 0;
 			}
 			else if (strcmp(name, "Addresses") == 0)
 			{
@@ -236,9 +238,11 @@ SMCResult CGameConfig::ReadSMC_NewSection(const SMCStates *states, const char *n
 				m_CurrentBinCRC = binaryInfo.crc;
 				m_ParseState = PSTATE_GAMEDEFS_CRC_BINARY;
 				strncopy(m_CurrentCRCLibrary, name, sizeof(m_CurrentCRCLibrary));
+#ifdef GAMECONF_SHOW_MISMATCH
 				m_CurrentCRCMatched = false;
-				m_LastCRCExpected = 0;
 				m_LastCRCPlatform[0] = '\0';
+#endif
+				m_LastCRCExpected = 0;
 			}
 
 			if (error[0] != '\0')
@@ -455,14 +459,18 @@ SMCResult CGameConfig::ReadSMC_KeyValue(const SMCStates *states, const char *key
 				if (m_CurrentBinCRC == crc)
 				{
 					m_ShouldBeReadingDefault = true;
+#ifdef GAMECONF_SHOW_MISMATCH
 					m_CurrentCRCMatched = true;
+#endif
 					AMXXLOG_Log("GameConfig CRC match for game \"%s\" section \"%s\" library \"%s\" platform \"%s\" (%s)",
 								m_Game, m_CurrentCRCSection, libraryName, key, currentHex);
 				}
 				else
 				{
 					m_LastCRCExpected = crc;
+#ifdef GAMECONF_SHOW_MISMATCH
 					strncopy(m_LastCRCPlatform, key, sizeof(m_LastCRCPlatform));
+#endif
 				}
 			}
 			break;
@@ -598,6 +606,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 		}
 		case PSTATE_GAMEDEFS_CRC_BINARY:
 		{
+#ifdef GAMECONF_SHOW_MISMATCH
 			if (!m_CurrentCRCMatched && m_CurrentBinCRCValid)
 			{
 				const char *libraryName = m_CurrentCRCLibrary[0] ? m_CurrentCRCLibrary : "<unknown>";
@@ -617,7 +626,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 				AMXXLOG_Log("GameConfig CRC mismatch for game \"%s\" section \"%s\" library \"%s\" platform \"%s\" expected %s got %s",
 							m_Game, m_CurrentCRCSection, libraryName, platform, expectedHex, actualHex);
 			}
-
+#endif
 			m_ParseState = PSTATE_GAMEDEFS_CRC;
 			break;
 		}

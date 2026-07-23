@@ -11,50 +11,143 @@
 
 "Games"
 {
-	"#default" // Build 10210
-	{
-		"Signatures"
-		{
-			"SV_DropClient" // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
-			{
-				"library"   "engine"
-				"windows"   "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x57\x8B\x7D\x2A\x8D\x45\x2A\x50\x33\xF6"
-				"linux"     "@SV_DropClient"
-				"mac"       "@SV_DropClient"
-			}
-			"Cvar_DirectSet" // void Cvar_DirectSet(struct cvar_s *var, char *value);
-			{
-				"library"   "engine"
-				"windows"   "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x8B\x75\x2A\x57\x8B\x7D\x2A\x85\xFF"
-				"linux"     "@Cvar_DirectSet"
-				"mac"       "@Cvar_DirectSet"
-			}
-		}
-	}
+    "#default"
+    { // DS/ LS, 'default' (all platforms)
+        //"CRC"
+        //{
+            //"engine"
+            //{
+                //"windows"   "E739418A" // swds.dll
+                //"linux"     "11E049FB" // engine_i486.so
+            //}
+        //}
 
-	"*" // Build 8684 - Windows
-	{
-		"CRC"
-		{
-			"engine"
-			{
-				"windows" "F7DCFFD9" // hw.dll
-				"windows" "2C9EDE6B" // swds.dll
-			}
-		}
+        "Signatures"
+        {
+            "SV_DropClient" // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x57\x8B\x7D\x2A\x8D\x45\x2A\x50\x33\xF6"
+                "linux"     "@SV_DropClient"
+                "mac"       "@SV_DropClient"
+            }
+            "Cvar_DirectSet" // void Cvar_DirectSet(struct cvar_s *var, char *value);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x8B\x75\x2A\x57\x8B\x7D\x2A\x85\xFF"
+                "linux"     "@Cvar_DirectSet"
+                "mac"       "@Cvar_DirectSet"
+            }
+        }
+    }
 
-		"Signatures"
-		{
-			"SV_DropClient"
-			{
-				"library"   "engine"
-				"windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x56\x8D"
-			}
-			"Cvar_DirectSet"
-			{
-				"library"   "engine"
-				"windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x85"
-			}
-		}
-	}
+    "*"
+    { // DS, 'beta'
+        "CRC"
+        {
+            "engine"
+            {
+                "windows"   "6E474677" // swds.dll
+                "linux"     "B9C135C1" // engine_i486.so
+            }
+        }
+
+        "Signatures"
+        {
+            "SV_DropClient" // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x57\x8B\x7D\x2A\x8D\x45\x2A\x50\x33\xF6"
+                "linux"     "@SV_DropClient"
+                "mac"       "@SV_DropClient"
+            }
+            "Cvar_DirectSet" // void Cvar_DirectSet(struct cvar_s *var, char *value);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x8B\x75\x2A\x57\x8B\x7D\x2A\x85\xFF"
+                "linux"     "@Cvar_DirectSet"
+                "mac"       "@Cvar_DirectSet"
+            }
+        }
+    }
+
+    "*"
+    { // DS, 'steam_legacy'
+        "CRC"
+        {
+            "engine"
+            {
+                "windows"   "2C9EDE6B" // swds.dll
+                "linux"     "FB59422D" // engine_i486.so
+            }
+        }
+
+        "Signatures"
+        {
+            "SV_DropClient" // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x56\x8D"
+                "linux"     "@SV_DropClient"
+                "mac"       "@SV_DropClient"
+            }
+            "Cvar_DirectSet" // void Cvar_DirectSet(struct cvar_s *var, char *value);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x85"
+                "linux"     "@Cvar_DirectSet"
+                "mac"       "@Cvar_DirectSet"
+            }
+        }
+    }
+
+    "*"
+    { // LS, 'default', 'beta', Windows (same CRC for both branches)
+        "CRC"
+        {
+            "engine"
+            {
+                "windows"   "EBB1F68C" // hw.dll
+            }
+        }
+
+        "Signatures"
+        {
+            "SV_DropClient" // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x57\x8B\x7D\x2A\x8D\x45\x2A\x50\x33\xF6"
+            }
+            "Cvar_DirectSet" // void Cvar_DirectSet(struct cvar_s *var, char *value);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x8B\x75\x2A\x57\x8B\x7D\x2A\x85\xFF"
+            }
+        }
+    }
+
+    "*"
+    { // LS, 'steam_legacy', Windows
+        "CRC"
+        {
+            "engine"
+            {
+                "windows"   "F7DCFFD9" // hw.dll
+            }
+        }
+
+        "Signatures"
+        {
+            "SV_DropClient" // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x56\x8D"
+            }
+            "Cvar_DirectSet" // void Cvar_DirectSet(struct cvar_s *var, char *value);
+            {
+                "library"   "engine"
+                "windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x85"
+            }
+        }
+    }
 }

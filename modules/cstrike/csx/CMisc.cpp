@@ -148,6 +148,29 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk)
 	if ( !isModuleActive() )
 		return;
 
+	// get_user_astats/get_user_vstats read these attacker/victim arrays, so record
+	// them even against bots to keep HUDs working. Everything below feeds the
+	// persistent rank / session stats and stays gated by csstats_rankbots.
+	if ( pVictim->index != index )
+	{
+		pVictim->attackers[index].name = weaponData[wweapon].name;
+		pVictim->attackers[index].kills++;
+		pVictim->attackers[index].hs += hhs;
+		pVictim->attackers[index].tks += ttk;
+		pVictim->attackers[0].kills++;
+		pVictim->attackers[0].hs += hhs;
+		pVictim->attackers[0].tks += ttk;
+
+		int vi = pVictim->index;
+		victims[vi].name = weaponData[wweapon].name;
+		victims[vi].deaths++;
+		victims[vi].hs += hhs;
+		victims[vi].tks += ttk;
+		victims[0].deaths++;
+		victims[0].hs += hhs;
+		victims[0].tks += ttk;
+	}
+
 	if ( ignoreBots(pEdict,pVictim->pEdict) )
 		return;
 
@@ -158,30 +181,14 @@ void CPlayer::saveKill(CPlayer* pVictim, int wweapon, int hhs, int ttk)
 		return;
 	}
 
-	pVictim->attackers[index].name = weaponData[wweapon].name;
-	pVictim->attackers[index].kills++;
-	pVictim->attackers[index].hs += hhs;
-	pVictim->attackers[index].tks += ttk;
-	pVictim->attackers[0].kills++;
-	pVictim->attackers[0].hs += hhs;
-	pVictim->attackers[0].tks += ttk;
 	pVictim->weapons[pVictim->current].deaths++;
 	pVictim->weapons[0].deaths++;
 	pVictim->life.deaths++;
-	
-	
+
+
 	pVictim->weaponsRnd[pVictim->current].deaths++; // DEC-Weapon (round) stats
 	pVictim->weaponsRnd[0].deaths++;                   // DEC-Weapon (round) stats
-	
-	int vi = pVictim->index;
-	victims[vi].name = weaponData[wweapon].name;
-	victims[vi].deaths++;
-	victims[vi].hs += hhs;
-	victims[vi].tks += ttk;
-	victims[0].deaths++;
-	victims[0].hs += hhs;
-	victims[0].tks += ttk;
-	
+
 	weaponsRnd[wweapon].kills++;                // DEC-Weapon (round) stats
 	weaponsRnd[wweapon].hs += hhs;         // DEC-Weapon (round) stats
 	weaponsRnd[wweapon].tks += ttk;     // DEC-Weapon (round) stats
@@ -205,11 +212,9 @@ void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody)
 	if ( !isModuleActive() )
 		return;
 
-	if ( ignoreBots(pEdict,pVictim->pEdict) )
-		return;
-
 	if ( index == pVictim->index ) return;
 
+	// Always record attacker/victim arrays for get_user_astats/get_user_vstats.
 	pVictim->attackers[index].hits++;
 	pVictim->attackers[index].damage += ddamage;
 	pVictim->attackers[index].bodyHits[bbody]++;
@@ -225,6 +230,9 @@ void CPlayer::saveHit(CPlayer* pVictim, int wweapon, int ddamage, int bbody)
 	victims[0].hits++;
 	victims[0].damage += ddamage;
 	victims[0].bodyHits[bbody]++;
+
+	if ( ignoreBots(pEdict,pVictim->pEdict) )
+		return;
 
 	weaponsRnd[wweapon].hits++;              // DEC-Weapon (round) stats
 	weaponsRnd[wweapon].damage += ddamage;    // DEC-Weapon (round) stats

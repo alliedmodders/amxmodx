@@ -763,7 +763,7 @@ static cell AMX_NATIVE_CALL menu_addtext(AMX *amx, cell *params)
 {
 	GETMENU(params[1]);
 
-	if (params[2] && (!pMenu->items_per_page && pMenu->GetItemCount() >= 10))
+	if (params[3] && (!pMenu->items_per_page && pMenu->GetItemCount() >= 10))
 	{
 		LogError(amx, AMX_ERR_NATIVE, "Non-paginated menus are limited to 10 items.");
 		return 0;

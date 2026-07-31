@@ -89,14 +89,21 @@ native pev_valid(entindex);
  */
 native pev_serial(entindex);
 
-/* Returns any global variable inside globalvars_t structure. Use the glb_* enum.
+/** 
+ * Returns any global variable inside globalvars_t structure. Use the glb_* enum.
  *
- * When returning data from glb_pStringBase (the global string table), you may give a pointer into that table
- * in order to get different strings.
- * Example:
- * new model[128]
- * new ptr = pev(id, pev_viewmodel)
- * global_get(glb_pStringBase, ptr, model, 127)
+ * @note	When returning data from glb_pStringBase (the global string table),
+ * @note	you may give a pointer into that table in order to get different strings.
+ * @note	Example:
+ * 			new model[128]
+ * 			new ptr = pev(id, pev_viewmodel)
+ * 			global_get(glb_pStringBase, ptr, model, 127)
+ *
+ * @param	_value	Global string table.
+ * @return          0 if unsuccess.
+ *                  1 if success.
+ *                  Otherwise, an global index is returned.
+ *                  To get the value of int, you need to use the value returned by the function.
  */
 native global_get(_value, any:...);
 

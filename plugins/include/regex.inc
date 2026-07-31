@@ -241,8 +241,8 @@ native Regex:regex_compile_ex(const pattern[], flags = 0, error[]= "", maxLen = 
  * @note  Use the regex handle passed to this function to extract
  *        matches with regex_substr().
  *
- * @param pattern       The regular expression pattern.
  * @param string        The string to check.
+ * @param pattern       The regular expression pattern.
  * @param ret           Error code, if applicable, or number of results on success.
  *                      See REGEX_ERROR_* defines.
  *

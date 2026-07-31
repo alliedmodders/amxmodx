@@ -214,10 +214,10 @@ native SMC_SetParseEnd(SMCParser:handle, const func[]);
  *
  *              public SMCResult:OnEndSection(SMCParser:handle, any:data)
  * -
- * @param handle        Handle to an SMC Parse structure.
- * @param kv            A KeyValue callback.
- * @param ns            An optional NewSection callback.
- * @param es            An optional EndSection callback.
+ * @param smc           Handle to an SMC Parse structure.
+ * @param kvFunc        A KeyValue callback.
+ * @param nsFunc        An optional NewSection callback.
+ * @param esFunc        An optional EndSection callback.
  *
  * @noreturn
  */

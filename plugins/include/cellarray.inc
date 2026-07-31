@@ -361,7 +361,8 @@ native ArrayInsertStringBefore(Array:which, item, const input[]);
  * Swaps the position of two items.
  *
  * @param which         Array handle
- * @param item1,item2   Item pair to swap
+ * @param item1         Item pair to swap
+ * @param item2         Item pair to swap
  *
  * @noreturn
  * @error               If an invalid handle or an invalid index is provided an

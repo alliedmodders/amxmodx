@@ -55,7 +55,7 @@ native bool:geoip_code3_ex(const ip[], result[4]);
  *              Use geoip_code2_ex instead.
  *
  * @param ip        The IP address to lookup.
- * @param result    The result buffer.
+ * @param ccode     The result buffer.
  *
  * @return          The result length.
  */

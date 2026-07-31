@@ -597,3 +597,27 @@ ADMIN_V_MAP_2 = ADMIN %s: começou uma votação de mapa(s)
 ADMIN_CHANGEL_1 = ADMIN: mudou de mapa para %s
 ADMIN_CHANGEL_2 = ADMIN %s: mudou de mapa para %s
 CHANGLE_MENU = Menu de Mudar de Mapa
+
+[tc]
+RESULT_REF = 結果被否決
+RESULT_ACC = 結果通過
+VOTE_SUCCESS = 投票成功. 地圖將被更改為
+VOTE_FAILED = 投票失敗
+THE_WINNER = 勝利者
+WANT_CONT = 你是否要繼續?
+VOT_CANC = 投票已經被取消
+X_VOTED_FOR = %s 選擇選項 #%d
+VOTEMAP_MENU = 地圖投票選單
+START_VOT = 開始投票
+SEL_MAPS = 選擇地圖
+ALREADY_VOT = 已經有一個投票在進行當中...
+NO_MAPS_MENU = 選單裡沒有可選的地圖
+VOT_NOW_ALLOW = 目前不允許進行投票
+WHICH_MAP = 你想要哪個地圖?
+CHANGE_MAP_TO = 更改地圖為
+CANC_VOTE = 取消投票
+ADMIN_V_MAP_1 = 管理員: 進行投票更改地圖
+ADMIN_V_MAP_2 = 管理員 %s: 進行投票更改地圖
+ADMIN_CHANGEL_1 = 管理員: 更改地圖為 %s
+ADMIN_CHANGEL_2 = 管理員 %s: 更改地圖為 %s
+CHANGLE_MENU = 更改地圖選單

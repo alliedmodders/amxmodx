@@ -72,3 +72,6 @@ INF_REACH = Limiti i mesazheve për informacion u arrit!
 
 [pt]
 INF_REACH = Alcançaste o limite de Mensagens de Informação!
+
+[tc]
+INF_REACH = 資訊訊息已達上限！

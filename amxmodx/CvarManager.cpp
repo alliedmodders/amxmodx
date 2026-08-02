@@ -151,7 +151,7 @@ void CvarManager::CreateCvarHook(void)
 		{
 			// Disabled by default.
 
-			#if defined(__linux__)
+#if defined(__linux__)
 			const char* raw = CommonConfig->GetKeyValue("RegParm");
 			bool useRegParm = raw ? (atoi(raw) != 0) : false; 
 			if(useRegParm)
@@ -162,9 +162,9 @@ void CvarManager::CreateCvarHook(void)
 			{
 				m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress);
 			}
-			#else 
+#else 
 			m_HookDetour = DETOUR_CREATE_STATIC_FIXED(Cvar_DirectSet, functionAddress);
-			#endif
+#endif
 		}
 		else
 		{

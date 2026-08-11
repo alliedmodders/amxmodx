@@ -75,6 +75,8 @@ DROPPED_RES = 由于你无法使用预留通道,以至于与服务器连接断�
 
 [al]
 DROPPED_RES = U largua për shkak të rezervimit të vendit që është plugini aktiv në server!
+CVAR_RESERVATION = Numri i rezervimit të vendit
+CVAR_HIDESLOTS = Nëse e vendos këte në 1, ju mund të fshehni rezervimet në serverin tuaj.^nNëse serveri është publik dhe është plot, ju duhet të lidheni manualisht me komandën e konsoles "connect"
 
 [pt]
 DROPPED_RES = Foste desconectado por causa da reservação de slots

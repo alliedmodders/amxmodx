@@ -431,23 +431,23 @@ NO_CMDS = 无可用命令
 CANT_PERF_PLAYER = 该操作不能对玩家 "%s" 执行
 
 [al]
-ADMIN_BAN_1 = ADMIN: ndaloi %s
-ADMIN_BAN_2 = ADMIN %s: ndaloi %s
-BAN_MENU = Lista Ndalimit
+ADMIN_BAN_1 = ADMIN: dënoi %s
+ADMIN_BAN_2 = ADMIN %s: dënoi %s
+BAN_MENU = Lista e Ndalimit
 BAN_FOR_MIN = Ndaloi për %d minuta
-BAN_PERM = Ndaloi përgjithëmon
-SLAP_SLAY_MENU = Lista Ndëshkimit/Vrasjes
+BAN_PERM = Ndaloi përgjithëmonë
+SLAP_SLAY_MENU = Lista e Ndëshkimeve/Vrasjeve
 SLAP_WITH_DMG = Ndëshkoi me %d dëmtime
-SLAY = Vras
-KICK_MENU = Lista Largimit
-ADMIN_TRANSF_1 = ADMIN: transferoj %s tek %s
-ADMIN_TRANSF_2 = ADMIN %s: transferoj %s tek %s
-TEAM_MENU = Lista Ekipit
-TRANSF_TO = Transferou tek %s
-TRANSF_SILENT = Transferim i heshtur
-CL_CMD_MENU = Lista e komandave lojtarit
+SLAY = Vrit
+KICK_MENU = Lista e Largimit
+ADMIN_TRANSF_1 = ADMIN: transferoj %s ne %s
+ADMIN_TRANSF_2 = ADMIN %s: transferoj %s ne %s
+TEAM_MENU = Lista e Ekipit
+TRANSF_TO = Transferoi ne %s
+TRANSF_SILENT = Transferim i Heshtur
+CL_CMD_MENU = Lista e komandave të Lojtarit
 NO_CMDS = Nuk ka komanda të lira
-CANT_PERF_PLAYER = Ky veprim nuk mund të kryhet tek lojtari "%s"
+CANT_PERF_PLAYER = Ky veprim nuk mund të kryhet në lojtar "%s"
 
 [pt]
 ADMIN_BAN_1 = ADMIN: baniu %s

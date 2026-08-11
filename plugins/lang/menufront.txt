@@ -413,20 +413,20 @@ RES_WEAP = 限制武器
 TELE_PLAYER = 传送玩家
 
 [al]
-KICK_PLAYER = Largo Lojtarin
-BAN_PLAYER = Ndalo Lojtarin
-SLAP_SLAY = Ndëshko/Vrite Lojtarin
-TEAM_PLAYER = Lojtari Ekipit ^n
+KICK_PLAYER = Largo Lojtar
+BAN_PLAYER = Ndalo Lojtar
+SLAP_SLAY = Ndëshko/Vrit Lojtar
+TEAM_PLAYER = Lojtar i/e Ekipit ^n
 CHANGEL = Ndrysho Hartën
 VOTE_MAPS = Voto për harta ^n
-SPECH_STUFF = Fjalë Folura
-CLIENT_COM = Komandat Lojtarit
-SERVER_COM = Komandat Serverit
-CVARS_SET = Konfigurimet Cvar
+SPECH_STUFF = Gjëra për të folurit
+CLIENT_COM = Komandat e Lojtar
+SERVER_COM = Komandat e Serverit
+CVARS_SET = Konfigurimet e Cvar
 CONFIG = Konfigurimet
-LANG_SET = Konfigurimet Gjuhës
-STATS_SET = Konfigurimet Statistikave ^n
-PAUSE_PLUG = Pusho Plugins
+LANG_SET = Konfigurimet e Gjuhës
+STATS_SET = Konfigurimet e Statistikave ^n
+PAUSE_PLUG = Pusho Plugina
 RES_WEAP = Kufizo Armët
 TELE_PLAYER = Transporto Lojtarin
 

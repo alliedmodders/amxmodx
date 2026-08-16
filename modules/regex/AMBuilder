@@ -5,6 +5,9 @@ binary = AMXX.MetaModule(builder, 'regex')
 
 if builder.target_platform == 'linux':
   binary.compiler.postlink += [binary.Dep('lib_linux/libpcre.a')]
+  # lib_linux/libpcre.a was built without -fPIC; binutils >= 2.40 errors on
+  # text relocations in shared libs by default
+  binary.compiler.linkflags += ['-Wl,-z,notext']
 elif builder.target_platform == 'mac':
   binary.compiler.postlink += [binary.Dep('lib_darwin/libpcre.a')]
 elif builder.target_platform == 'windows':

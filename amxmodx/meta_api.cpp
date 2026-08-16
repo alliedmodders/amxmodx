@@ -953,7 +953,18 @@ void C_ClientDisconnect(edict_t *pEntity)
 
 CPlayer* SV_DropClient_PreHook(edict_s *client, qboolean crash, const char *buffer, size_t buffer_size)
 {
-	auto pPlayer = client ? GET_PLAYER_POINTER(client) : nullptr;
+	CPlayer *pPlayer = nullptr;
+
+	if (client)
+	{
+		edict_t *pWorld = INDEXENT(0);
+		int ent = client - pWorld;
+
+		if (ent > 0 && ent <= gpGlobals->maxEntities && !client->free)
+		{
+			pPlayer = GET_PLAYER_POINTER(client);
+		}
+	}
 
 	if (pPlayer)
 	{

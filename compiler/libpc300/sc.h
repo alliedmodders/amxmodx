@@ -439,6 +439,11 @@ typedef enum s_optmark {
 #endif
 #define TAGMASK       (~PUBLICTAG)
 
+typedef enum s_warnmode {
+  warnDISABLE,
+  warnENABLE,
+  warnTOGGLE
+} warnmode;
 
 /* interface functions */
 #if defined __cplusplus
@@ -451,7 +456,9 @@ typedef enum s_optmark {
 int pc_compile(int argc, char **argv);
 int pc_addconstant(char *name,cell value,int tag);
 int pc_addtag(char *name);
-int pc_enablewarning(int number,int enable);
+int pc_enablewarning(int number,warnmode enable);
+void pc_pushwarnings(void);
+void pc_popwarnings(void);
 
 /*
  * Functions called from the compiler (to be implemented by you)
@@ -664,6 +671,8 @@ SC_FUNC void outval(cell val,int newline);
 /* function prototypes in SC5.C */
 SC_FUNC int error(int number,...) INVISIBLE;
 SC_FUNC void errorset(int code, int line);
+SC_FUNC void warnstack_init(void);
+SC_FUNC void warnstack_cleanup(void);
 
 /* function prototypes in SC6.C */
 SC_FUNC int assemble(FILE *fout,FILE *fin);

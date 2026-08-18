@@ -1224,6 +1224,10 @@ SC_FUNC void inc(value *lval)
   symbol *sym;
 
   sym=lval->sym;
+#if 0 // useless due forcing const usage is disable in sc1.c
+  if (sym != NULL)
+    markusage(sym,uWRITTEN);
+#endif
   if (lval->ident==iARRAYCELL) {
     /* indirect increment, address already in PRI */
     stgwrite("\tinc.i\n");
@@ -1282,6 +1286,10 @@ SC_FUNC void dec(value *lval)
   symbol *sym;
 
   sym=lval->sym;
+#if 0 // useless due forcing const usage is disable in sc1.c
+  if (sym != NULL)
+    markusage(sym,uWRITTEN);
+#endif
   if (lval->ident==iARRAYCELL) {
     /* indirect decrement, address already in PRI */
     stgwrite("\tdec.i\n");

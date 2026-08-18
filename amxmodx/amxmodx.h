@@ -79,7 +79,7 @@ extern AMX_NATIVE_INFO g_GameConfigNatives[];
 #define DLPROC(m, func) GetProcAddress(m, func)
 #define DLFREE(m) FreeLibrary(m)
 #else
-#define DLLOAD(path) (DLHANDLE)dlopen(path, RTLD_NOW)
+#define DLLOAD(path) (DLHANDLE)dlopen(path, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND)
 #define DLPROC(m, func) dlsym(m, func)
 #define DLFREE(m) dlclose(m)
 #endif

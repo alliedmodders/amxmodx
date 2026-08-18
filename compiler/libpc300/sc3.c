@@ -729,6 +729,8 @@ static cell array_levelsize(symbol *sym,int level)
  *  Global references: sc_intest        (reffered to only)
  *                     sc_allowproccall (modified)
  */
+static int g_isLValueArray = FALSE;
+static int g_isRValueArrayRetFunc = FALSE;
 static int hier14(value *lval1)
 {
   int lvalue;
@@ -740,6 +742,7 @@ static int hier14(value *lval1)
   int bwcount,leftarray;
   cell arrayidx1[sDIMEN_MAX],arrayidx2[sDIMEN_MAX];  /* last used array indices */
   cell *org_arrayidx;
+  int isRValueArrayRetFunc = FALSE;
 
   bwcount=bitwise_opercount;
   bitwise_opercount=0;
@@ -840,7 +843,11 @@ static int hier14(value *lval1)
       rvalue(lval1);
     } /* if */
     lval2.arrayidx=arrayidx2;
+    g_isLValueArray = TRUE;
     plnge2(oper,hier14,lval1,&lval2);
+    isRValueArrayRetFunc = g_isRValueArrayRetFunc;
+    g_isRValueArrayRetFunc = FALSE;
+    g_isLValueArray = FALSE;
     if (lval2.ident!=iARRAYCELL && lval2.ident!=iARRAYCHAR)
       lval2.arrayidx=NULL;
     if (oper)
@@ -967,7 +974,9 @@ static int hier14(value *lval1)
       error(6);         /* must be assigned to an array */
   } /* if */
   if (leftarray) {
-    memcopy(val*sizeof(cell));
+    if (!isRValueArrayRetFunc) {
+      memcopy(val*sizeof(cell));
+    }
   } else {
     check_userop(NULL,lval2.tag,lval3.tag,2,&lval3,&lval2.tag);
     store(&lval3);      /* now, store the expression result */
@@ -1888,7 +1897,9 @@ static int nesting=0;
   symbol *symret;
   cell lexval;
   char *lexstr;
+  int isLValueArray = g_isLValueArray;
 
+  g_isLValueArray = FALSE;
   assert(sym!=NULL);
   lval_result->ident=iEXPRESSION; /* preset, may be changed later */
   lval_result->constval=0;
@@ -1901,11 +1912,15 @@ static int nesting=0;
     /* allocate space on the heap for the array, and pass the pointer to the
      * reserved memory block as a hidden parameter
      */
-    retsize=(int)array_totalsize(symret);
-    assert(retsize>0);
-    modheap(retsize*sizeof(cell));/* address is in ALT */
-    pushreg(sALT);                /* pass ALT as the last (hidden) parameter */
-    decl_heap+=retsize;
+    if (isLValueArray) {
+      g_isRValueArrayRetFunc = TRUE;
+    } else {
+      retsize = (int)array_totalsize(symret);
+      assert(retsize > 0);
+      modheap(retsize * sizeof(cell));/* address is in ALT */
+      pushreg(sALT);                /* pass ALT as the last (hidden) parameter */
+      decl_heap += retsize;
+    }
     /* also mark the ident of the result as "array" */
     lval_result->ident=iREFARRAY;
     lval_result->sym=symret;
@@ -2286,7 +2301,7 @@ static int nesting=0;
   if ((sym->usage & uNATIVE)!=0 &&sym->x.lib!=NULL)
     sym->x.lib->value += 1;     /* increment "usage count" of the library */
   modheap(-heapalloc*sizeof(cell));
-  if (symret!=NULL)
+  if (symret!=NULL && !isLValueArray)
     popreg(sPRI);               /* pop hidden parameter as function result */
   sideeffect=TRUE;              /* assume functions carry out a side-effect */
   sc_allowproccall=FALSE;
@@ -2298,7 +2313,7 @@ static int nesting=0;
     long totalsize;
     totalsize=declared+decl_heap+1;   /* local variables & return value size,
                                        * +1 for PROC opcode */
-    if (lval_result->ident==iREFARRAY)
+    if (lval_result->ident==iREFARRAY && !isLValueArray)
       totalsize++;                    /* add hidden parameter (on the stack) */
     if ((sym->usage & uNATIVE)==0)
       totalsize++;                    /* add "call" opcode */

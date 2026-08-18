@@ -342,7 +342,7 @@ public cmdAddBan(id, level, cid)
 				
 				if (equal(IP, arg))
 				{
-					if (Access & ADMIN_IMMUNITY)
+					if (Access & ADMIN_IMMUNITY && !(get_user_flags(id) & ADMIN_SUPER))
 					{
 						console_print(id, "[AMXX] %s : %L", IP, id, "CLIENT_IMM", Name);
 						
@@ -365,7 +365,7 @@ public cmdAddBan(id, level, cid)
 				
 				if (equal(Auth, arg))
 				{
-					if (Access & ADMIN_IMMUNITY)
+					if (Access & ADMIN_IMMUNITY && !(get_user_flags(id) & ADMIN_SUPER))
 					{
 						console_print(id, "[AMXX] %s : %L", Auth, id, "CLIENT_IMM", Name);
 						

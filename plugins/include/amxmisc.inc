@@ -900,3 +900,34 @@ stock get_playersnum_ex(GetPlayersFlags:flags = GetPlayers_None, const team[] = 
 	get_players_ex(_, PlayersNum, flags, team);
 	return PlayersNum;
 }
+
+/**
+ * Registers a chat command that can be executed via both "say" and "say_team".
+ *
+ * @note For a list of possible access flags, see the ADMIN_* constants in
+ *       amxconst.inc
+ * @note Opting in to FlagManager enables the admin privileges to be overwritten
+ *       by the end user via the cmdaccess.ini config file.
+ * @note Automatic detection for FlagManager will only include a command if it
+ *       has required privileges (flags is not -1) and it is not a command
+ *       starting with "say".
+ *
+ * @param client_cmd    Command to register
+ * @param function      Callback function
+ * @param flags         Admin privilege flags required
+ * @param info          Command description
+ * @param FlagManager   0 opts out of flag manager, 1 opts in, -1 selects
+ *                      automatically
+ * @param info_ml       If true, the parameter "info" will be looked up as multilingual key
+ * @param sayid         Variable to store the "say" command index
+ * @param sayteamid     Variable to store the "say_team" command index
+ *
+ * @noreturn
+ * @error               If an invalid callback function is specified, an error
+ *                      will be thrown.
+ */
+stock register_chatcmd(const client_cmd[], const function[], flags = -1, const info[] = "", FlagManager = -1, bool:info_ml = false, &sayid = 0, &sayteamid = 0)
+{
+	sayid = register_clcmd(fmt("say %s", client_cmd), function, flags, info, FlagManager, info_ml);
+	sayteamid = register_clcmd(fmt("say_team %s", client_cmd), function, flags, info, FlagManager, info_ml);
+}

@@ -473,7 +473,7 @@ add_most_disruptive(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	// Find player.
 	for (iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (g_izUserRndStats[iPlayer][STATSX_DAMAGE] >= iMaxDamage && (g_izUserRndStats[iPlayer][STATSX_DAMAGE] > iMaxDamage || g_izUserRndStats[iPlayer][STATSX_HEADSHOTS] > iMaxHeadShots))
+		if (is_user_connected(iPlayer) && g_izUserRndStats[iPlayer][STATSX_DAMAGE] >= iMaxDamage && (g_izUserRndStats[iPlayer][STATSX_DAMAGE] > iMaxDamage || g_izUserRndStats[iPlayer][STATSX_HEADSHOTS] > iMaxHeadShots))
 		{
 			iMaxDamageId = iPlayer
 			iMaxDamage = g_izUserRndStats[iPlayer][STATSX_DAMAGE]
@@ -509,7 +509,7 @@ add_best_score(id, sBuffer[MAX_BUFFER_LENGTH + 1])
 	// Find player
 	for (iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (g_izUserRndStats[iPlayer][STATSX_KILLS] >= iMaxKills && (g_izUserRndStats[iPlayer][STATSX_KILLS] > iMaxKills || g_izUserRndStats[iPlayer][STATSX_HEADSHOTS] > iMaxHeadShots))
+		if (is_user_connected(iPlayer) && g_izUserRndStats[iPlayer][STATSX_KILLS] >= iMaxKills && (g_izUserRndStats[iPlayer][STATSX_KILLS] > iMaxKills || g_izUserRndStats[iPlayer][STATSX_HEADSHOTS] > iMaxHeadShots))
 		{
 			iMaxKillsId = iPlayer
 			iMaxKills = g_izUserRndStats[iPlayer][STATSX_KILLS]
@@ -1552,6 +1552,10 @@ endround_stats()
 	// Get and save round end stats time.
 	g_fShowStatsTime = get_gametime()
 
+	// Capture round stats for all players that have not been
+	// processed yet before any round-end award is computed, so
+	// awards like the most disruptive player are based on the
+	// complete dataset.
 	for (iPlayer = 0; iPlayer < iPlayers; iPlayer++)
 	{
 		id = iaPlayers[iPlayer]
@@ -1560,6 +1564,11 @@ endround_stats()
 		{
 			kill_stats(id)
 		}
+	}
+
+	for (iPlayer = 0; iPlayer < iPlayers; iPlayer++)
+	{
+		id = iaPlayers[iPlayer]
 
 		if (!g_izStatsSwitch[id])
 			continue

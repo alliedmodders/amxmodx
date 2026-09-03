@@ -32,6 +32,45 @@
 		}
 	}
 
+    "*" // Svengine - July 19, 2026
+    {
+        "CRC"
+        {
+            "engine"
+            {
+                "linux" "48E4E4D5" //engine_i686.so
+				"windows" "F3A7F2F1" //hw.dll
+            }
+            
+        }
+
+        // "RegParm" "N": number of leading integer/pointer arguments passed via
+        // EAX, ECX, EDX (in that order) per GCC's -mregparm=N. Absent or "0" means
+        // standard cdecl (stack-passed args) which most games use at the moment. 
+		// Currently only 0 vs non-zero is consumed by hook code; intermediate values (1, 2) 
+		// are accepted by AMXX for forward compatibility purposes but not yet distinguished.
+        "Keys"
+        {
+            "RegParm"    "3"
+        }
+
+        "Signatures"
+        {
+            "SV_DropClient" // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
+            {
+                "library"   "engine"
+                "windows"   "\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC4\x89\x84\x24\x2A\x2A\x2A\x2A\x56\x57\x8B\xBC\x24\x2A\x2A\x2A\x2A\x8D\x84\x24"
+                "linux"     "\x55\x57\x56\x53\x81\xEC\x2C\x06\x00\x00\x8D\x84\x24\x4C\x06\x00\x00\x8B\xBC\x24\x44\x06\x00\x00\xE8\xC3\xBC\xFD\xFF"
+            }
+            "Cvar_DirectSet" // void Cvar_DirectSet(struct cvar_s *var, char *value);
+            {
+                "library"   "engine"
+                "windows"   "\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC4\x89\x84\x24\x2A\x2A\x2A\x2A\x53\x8B\x9C\x24\x2A\x2A\x2A\x2A\x57\x8B\xBC\x24\x2A\x2A\x2A\x2A\x85\xDB\x0F\x84\x2A\x2A\x2A\x2A\x85\xFF\x0F\x84\x2A\x2A\x2A\x2A\xF6\x43\x08\x80\x56"
+                "linux"     "\x55\x57\x89\xC7\x56\x89\xD6\x53\x81\xEC\x2C\x04\x00\x00\x8B\x40\x08\xE8\x2A\x2A\xFF\xFF\x81\xC3\xDA\xE4\x0B\x00\xA8\x80\x0F\x85\x0C\x01\x00\x00\xF6\xC4\x02\x0F\x85\xD3\x00"
+            }
+        }
+    }
+
 	"*" // Build 8684 - Windows
 	{
 		"CRC"

@@ -34,7 +34,8 @@ struct CPlayer {
 	char ip[32];
 	int index;
 	int aiming;
-	int current;
+	int current; /// cur. weapon
+    int current_atk; /// cur. weapon during TraceAttack()/ TakeDamage() calls
 	bool bot;
 	float clearStats;
 	RankSystem::RankStats*	rank;

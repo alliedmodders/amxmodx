@@ -13,12 +13,38 @@
 
 #include "amxxmodule.h"
 #include "rank.h"
+#include <IGameConfigs.h>
+
+#if !defined(WIN32) && !defined(_WINDOWS)
+#include <sys/mman.h> /// mprotect()
+#endif
+
+size_t** g_ppvtbl_CBasePlayer = NULL;
+size_t** g_ppvtbl_CBasePlayer_Bots = NULL;
+
+TraceAttack_Type g_origTraceAttack = NULL;
+TakeDamage_Type g_origTakeDamage = NULL;
+
+TraceAttack_Type g_origTraceAttack_Bots = NULL;
+TakeDamage_Type g_origTakeDamage_Bots = NULL;
+
+size_t g_ofsBaseclass; /// "base"
+size_t g_vfidxTraceAttack; /// "traceattack"
+size_t g_vfidxTakeDamage; /// "takedamage"
+
+bool g_virtualCfg = false;
+
+edict_t* g_pEdictList; /// from ServerActivate_Post()
 
 funEventCall modMsgsEnd[MAX_REG_MSGS];
 funEventCall modMsgs[MAX_REG_MSGS];
 
 void (*function)(void*);
 void (*endfunction)(void*);
+
+IGameConfigManager* ConfigManager;
+IGameConfig* CommonConfig = NULL;
+size_t m_LastHitGroup = 0;
 
 CPlayer players[33];
 
@@ -125,6 +151,20 @@ const char* get_localinfo( const char* name , const char* def = 0 )
 	return b;
 }
 
+void allowFullMemAccess(void* pAddr, size_t Size)
+{
+#if defined(WIN32) || defined(_WINDOWS) /// Windows
+    unsigned long oldAccess;
+    VirtualProtect(pAddr, Size, PAGE_EXECUTE_READWRITE, &oldAccess);
+#else /// Linux/ Mac
+    size_t Addr = (size_t)pAddr;
+    long pageMask = sysconf(_SC_PAGESIZE) - 1;
+    size_t Begin = Addr & ~pageMask; /// Would turn '0xABC777AB' into '0xABC77000'.
+    size_t End = (Addr + Size + pageMask) & ~pageMask; /// Would turn '0xABC777AB' into '0xABC78000', '0xABC79000', ...
+    mprotect((void*)Begin, End - Begin /** 0x1000(4096), 0x2000(8192), ... */, PROT_READ | PROT_WRITE | PROT_EXEC);
+#endif
+}
+
 static bool ClientKill_wasAlive;
 
 void ClientKill(edict_t *pEntity)
@@ -150,12 +190,88 @@ void ClientKill_Post(edict_t *pEntity)
 	RETURN_META(MRES_IGNORED);
 }
 
+void SetClientKeyValue(int playerIdx, char* pInfoBuffer, const char* pcszKey, const char* pcszValue)
+{ /// For bot CBasePlayer vtbl. hooking (i.e. CZ Bots).
+    if (false == g_virtualCfg || g_ppvtbl_CBasePlayer_Bots)
+    {
+        RETURN_META(MRES_IGNORED);
+    }
+	edict_t* pPlayer = MF_GetPlayerEdict(playerIdx);
+    if (!(pPlayer->v.flags & FL_FAKECLIENT))
+    {
+        RETURN_META(MRES_IGNORED);
+    }
+    const char* pcszAuth = GETPLAYERAUTHID(pPlayer); 	 
+    if (!pcszAuth || '\0' == *pcszAuth || strcmp(pcszAuth, "BOT") ||
+        strcmp(pcszKey, "*bot") || strcmp(pcszValue, "1"))
+    {
+        RETURN_META(MRES_IGNORED);
+    }
+    const unsigned char* pBase = (unsigned char*)pPlayer->pvPrivateData;
+    if (!pBase)
+    {
+        RETURN_META(MRES_IGNORED);
+    }
+	g_ppvtbl_CBasePlayer_Bots = *((size_t***) (pBase + g_ofsBaseclass));
+    if (!g_ppvtbl_CBasePlayer_Bots)
+    {
+        RETURN_META(MRES_IGNORED);
+    }
+    /// Assign original vf. addr. only once.
+    if (!g_origTraceAttack_Bots)
+        g_origTraceAttack_Bots = (TraceAttack_Type)g_ppvtbl_CBasePlayer_Bots[g_vfidxTraceAttack];
+    if (!g_origTakeDamage_Bots)
+        g_origTakeDamage_Bots = (TakeDamage_Type)g_ppvtbl_CBasePlayer_Bots[g_vfidxTakeDamage];
+    allowFullMemAccess(&g_ppvtbl_CBasePlayer_Bots[g_vfidxTraceAttack], sizeof(size_t*));
+    allowFullMemAccess(&g_ppvtbl_CBasePlayer_Bots[g_vfidxTakeDamage], sizeof(size_t*));
+    g_ppvtbl_CBasePlayer_Bots[g_vfidxTraceAttack] = (size_t*)Hook_TraceAttack_Bots;
+    g_ppvtbl_CBasePlayer_Bots[g_vfidxTakeDamage] = (size_t*)Hook_TakeDamage_Bots;
+	RETURN_META(MRES_IGNORED);
+}
+
 void ServerActivate_Post( edict_t *pEdictList, int edictCount, int clientMax ){
 
 	rankBots = (int)csstats_rankbots->value ? true:false;
 
 	for( int i = 1; i <= gpGlobals->maxClients; ++i)
 		GET_PLAYER_POINTER_I(i)->Init( i , pEdictList + i );
+
+    g_pEdictList = pEdictList;
+
+    /// For human CBasePlayer vtbl. hooking.
+    if (false == g_virtualCfg || g_ppvtbl_CBasePlayer)
+    {
+        RETURN_META(MRES_IGNORED);
+    }
+    edict_t* pPlayer = CREATE_ENTITY();
+    if (!pPlayer)
+    {
+        RETURN_META(MRES_IGNORED);
+    }
+    CALL_GAME_ENTITY(PLID, "player", &pPlayer->v);
+    const unsigned char* pBase = (unsigned char*)pPlayer->pvPrivateData;
+    if (!pBase)
+    {
+        REMOVE_ENTITY(pPlayer);
+        RETURN_META(MRES_IGNORED);
+    }
+	g_ppvtbl_CBasePlayer = *((size_t***) (pBase + g_ofsBaseclass));
+    if (!g_ppvtbl_CBasePlayer)
+    {
+        REMOVE_ENTITY(pPlayer); /// Also frees pvPrivateData.
+        RETURN_META(MRES_IGNORED);
+    }
+    /// Assign original vf. addr. only once.
+    if (!g_origTraceAttack)
+        g_origTraceAttack = (TraceAttack_Type)g_ppvtbl_CBasePlayer[g_vfidxTraceAttack];
+    if (!g_origTakeDamage)
+        g_origTakeDamage = (TakeDamage_Type)g_ppvtbl_CBasePlayer[g_vfidxTakeDamage];
+    allowFullMemAccess(&g_ppvtbl_CBasePlayer[g_vfidxTraceAttack], sizeof(size_t*));
+    allowFullMemAccess(&g_ppvtbl_CBasePlayer[g_vfidxTakeDamage], sizeof(size_t*));
+    g_ppvtbl_CBasePlayer[g_vfidxTraceAttack] = (size_t*)Hook_TraceAttack;
+    g_ppvtbl_CBasePlayer[g_vfidxTakeDamage] = (size_t*)Hook_TakeDamage;
+    REMOVE_ENTITY(pPlayer); /// Also frees pvPrivateData.
+
 	RETURN_META(MRES_IGNORED);
 }
 
@@ -176,6 +292,92 @@ void PlayerPreThink_Post( edict_t *pEntity ) {
 		}
 	}
 	RETURN_META(MRES_IGNORED);
+}
+
+#if defined(WIN32) || defined(_WINDOWS)
+void __fastcall Hook_TraceAttack(void* pThis, void* /** ignored */, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType)
+#else
+void Hook_TraceAttack(void* pThis, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType)
+#endif
+{
+    g_origTraceAttack(pThis, pAtk, Dmg, Dir, pRes, dmgType);
+    if (!pAtk)
+        return;
+    edict_t* pAtkEntity = pAtk->pContainingEntity;
+    if (!pAtkEntity || pAtkEntity->v.deadflag || pAtkEntity->v.health <= 0.f)
+        return;
+    int atkEntity = F_EToI(pAtkEntity);
+    if (atkEntity < 1 || atkEntity > gpGlobals->maxClients)
+        return;
+    CPlayer* pAtkPlayer = GET_PLAYER_POINTER(pAtkEntity);
+    if (!pAtkPlayer)
+        return;
+    pAtkPlayer->current_atk = pAtkPlayer->current; // Attacker attacked with this weapon last time.
+}
+
+#if defined(WIN32) || defined(_WINDOWS)
+int __fastcall Hook_TakeDamage(void* pThis, void* /** ignored */, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType)
+#else
+int Hook_TakeDamage(void* pThis, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType)
+#endif
+{
+    int Res = g_origTakeDamage(pThis, pInflictor, pAtk, Dmg, dmgType);
+    if (!pAtk)
+        return Res;
+    edict_t* pAtkEntity = pAtk->pContainingEntity;
+    if (!pAtkEntity || pAtkEntity->v.deadflag || pAtkEntity->v.health <= 0.f)
+        return Res;
+    int atkEntity = F_EToI(pAtkEntity);
+    if (atkEntity < 1 || atkEntity > gpGlobals->maxClients)
+        return Res;
+    CPlayer* pAtkPlayer = GET_PLAYER_POINTER(pAtkEntity);
+    if (!pAtkPlayer)
+        return Res;
+    pAtkPlayer->current_atk = pAtkPlayer->current; // Attacker attacked with this weapon last time.
+    return Res;
+}
+
+#if defined(WIN32) || defined(_WINDOWS)
+void __fastcall Hook_TraceAttack_Bots(void* pThis, void* /** ignored */, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType)
+#else
+void Hook_TraceAttack_Bots(void* pThis, entvars_s* pAtk, float Dmg, Vector Dir, TraceResult* pRes, int dmgType)
+#endif
+{
+    g_origTraceAttack_Bots(pThis, pAtk, Dmg, Dir, pRes, dmgType);
+    if (!pAtk)
+        return;
+    edict_t* pAtkEntity = pAtk->pContainingEntity;
+    if (!pAtkEntity || pAtkEntity->v.deadflag || pAtkEntity->v.health <= 0.f)
+        return;
+    int atkEntity = F_EToI(pAtkEntity);
+    if (atkEntity < 1 || atkEntity > gpGlobals->maxClients)
+        return;
+    CPlayer* pAtkPlayer = GET_PLAYER_POINTER(pAtkEntity);
+    if (!pAtkPlayer)
+        return;
+    pAtkPlayer->current_atk = pAtkPlayer->current; // Attacker attacked with this weapon last time.
+}
+
+#if defined(WIN32) || defined(_WINDOWS)
+int __fastcall Hook_TakeDamage_Bots(void* pThis, void* /** ignored */, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType)
+#else
+int Hook_TakeDamage_Bots(void* pThis, entvars_s* pInflictor, entvars_s* pAtk, float Dmg, int dmgType)
+#endif
+{
+    int Res = g_origTakeDamage_Bots(pThis, pInflictor, pAtk, Dmg, dmgType);
+    if (!pAtk)
+        return Res;
+    edict_t* pAtkEntity = pAtk->pContainingEntity;
+    if (!pAtkEntity || pAtkEntity->v.deadflag || pAtkEntity->v.health <= 0.f)
+        return Res;
+    int atkEntity = F_EToI(pAtkEntity);
+    if (atkEntity < 1 || atkEntity > gpGlobals->maxClients)
+        return Res;
+    CPlayer* pAtkPlayer = GET_PLAYER_POINTER(pAtkEntity);
+    if (!pAtkPlayer)
+        return Res;
+    pAtkPlayer->current_atk = pAtkPlayer->current; // Attacker attacked with this weapon last time.
+    return Res;
 }
 
 void ServerDeactivate() 
@@ -370,7 +572,7 @@ void SetModel_Post(edict_t *e, const char *m){
 void EmitSound_Post(edict_t *entity, int channel, const char *sample, /*int*/float volume, float attenuation, int fFlags, int pitch) {
 	if (sample[0]=='w'&&sample[1]=='e'&&sample[8]=='k'&&sample[9]=='n'&&sample[14]!='d'){
 		CPlayer*pPlayer = GET_PLAYER_POINTER(entity);
-		pPlayer->saveShot(pPlayer->current);
+		pPlayer->saveShot(CSW_KNIFE); /// Player attacks using their knife.
 	}
 	RETURN_META(MRES_IGNORED);
 }
@@ -379,14 +581,10 @@ void TraceLine_Post(const float *v1, const float *v2, int fNoMonsters, edict_t *
 {
 	if (ptr->pHit && (ptr->pHit->v.flags & (FL_CLIENT|FL_FAKECLIENT))
 		&& e 
-		&& (e->v.flags & (FL_CLIENT|FL_FAKECLIENT)) 
-		&& ptr->iHitgroup)
+		&& (e->v.flags & (FL_CLIENT|FL_FAKECLIENT)))
 	{
 		CPlayer *pPlayer = GET_PLAYER_POINTER(e);
-		if (pPlayer->current != CSW_KNIFE)
-		{
-			pPlayer->aiming = ptr->iHitgroup;
-		}
+		pPlayer->aiming = ptr->iHitgroup;
 	}
 
 	RETURN_META(MRES_IGNORED);
@@ -417,12 +615,42 @@ int AmxxCheckGame(const char *game)
 }
 void OnAmxxAttach(){
 	MF_AddNatives(stats_Natives);
+
+    char error[256];
+	ConfigManager = MF_GetConfigManager();
+	if (!ConfigManager->LoadGameConfigFile("common.games", &CommonConfig, error, sizeof(error)))
+		MF_Log("Could not read common.games gamedata: %s", error);
+	else
+	{
+		TypeDescription ofs;
+		if (CommonConfig->GetOffsetByClass("CBaseMonster", "m_LastHitGroup", &ofs))
+			m_LastHitGroup = ofs.fieldOffset;
+        if (m_LastHitGroup < 1)
+            MF_Log("Could not read CBaseMonster::m_LastHitGroup ofs.");
+
+        if (CommonConfig->GetOffset("base", &ofs))
+        {
+            g_ofsBaseclass = ofs.fieldOffset;
+
+            if (CommonConfig->GetOffset("traceattack", &ofs))
+            {
+                g_vfidxTraceAttack = ofs.fieldOffset;
+
+                if (CommonConfig->GetOffset("takedamage", &ofs))
+                {
+                    g_vfidxTakeDamage = ofs.fieldOffset;
+                    g_virtualCfg = true; /// Virtual cfg. successfully loaded.
+                }
+            }
+        }
+
+        if (false == g_virtualCfg)
+            MF_Log("Could not read virtual data from common.games gamedata.");
+	}
+
 	const char* path =  get_localinfo("csstats_score");
 	if ( path && *path ) 
-	{
-		char error[128];
 		g_rank.loadCalc( MF_BuildPathname("%s",path) , error, sizeof(error));
-	}
 	
 	if ( !g_rank.begin() )
 	{		
@@ -435,6 +663,34 @@ void OnAmxxDetach() {
 	g_grenades.clear();
 	g_rank.clear();
 	g_rank.unloadCalc();
+
+    /**
+     * Restore orig. vfunc. addr. on module detach.
+     */
+    if (g_origTraceAttack)
+    {
+        allowFullMemAccess(&g_ppvtbl_CBasePlayer[g_vfidxTraceAttack], sizeof(size_t*));
+        g_ppvtbl_CBasePlayer[g_vfidxTraceAttack] = (size_t*)g_origTraceAttack;
+    }
+    if (g_origTakeDamage)
+    {
+        allowFullMemAccess(&g_ppvtbl_CBasePlayer[g_vfidxTakeDamage], sizeof(size_t*));
+        g_ppvtbl_CBasePlayer[g_vfidxTakeDamage] = (size_t*)g_origTakeDamage;
+    }
+
+    if (g_origTraceAttack_Bots)
+    {
+        allowFullMemAccess(&g_ppvtbl_CBasePlayer_Bots[g_vfidxTraceAttack], sizeof(size_t*));
+        g_ppvtbl_CBasePlayer_Bots[g_vfidxTraceAttack] = (size_t*)g_origTraceAttack_Bots;
+    }
+    if (g_origTakeDamage_Bots)
+    {
+        allowFullMemAccess(&g_ppvtbl_CBasePlayer_Bots[g_vfidxTakeDamage], sizeof(size_t*));
+        g_ppvtbl_CBasePlayer_Bots[g_vfidxTakeDamage] = (size_t*)g_origTakeDamage_Bots;
+    }
+
+    if (CommonConfig)
+        ConfigManager->CloseGameConfigFile(CommonConfig);
 }
 
 void OnPluginsLoaded(){

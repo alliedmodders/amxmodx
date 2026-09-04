@@ -1186,6 +1186,112 @@ static cell AMX_NATIVE_CALL menu_setprop(AMX *amx, cell *params)
 	return 1;
 }
 
+// Gets a menu property
+// native menu_getprop(menu, prop, ...);
+static cell AMX_NATIVE_CALL menu_getprop(AMX *amx, cell *params)
+{
+	enum args { arg_numargs, arg_menu, arg_prop, arg_buffer, arg_bufferlen };
+
+	GETMENU(params[arg_menu]);
+
+	int paramsNum = params[arg_numargs] / sizeof(cell);
+
+	switch (params[arg_prop])
+	{
+		case MPROP_PAGE_CALLBACK: return pMenu->pageCallback;
+		case MPROP_SHOWPAGE: return static_cast<cell>(pMenu->showPageNumber);
+		case MPROP_SET_NUMBER_COLOR:
+		{
+			if (paramsNum < arg_bufferlen)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
+				return 0;
+			}
+
+			set_amxstring(amx, params[arg_buffer], pMenu->m_ItemColor.chars(), params[arg_bufferlen]);
+			break;
+		}
+		case MPROP_PERPAGE: return pMenu->items_per_page;
+		case MPROP_BACKNAME:
+		{
+			if (paramsNum < arg_bufferlen)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
+				return 0;
+			}
+
+			set_amxstring(amx, params[arg_buffer], pMenu->m_OptNames[abs(MENU_BACK)].chars(), params[arg_bufferlen]);
+			break;
+		}
+		case MPROP_NEXTNAME:
+		{
+			if (paramsNum < arg_bufferlen)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
+				return 0;
+			}
+
+			set_amxstring(amx, params[arg_buffer], pMenu->m_OptNames[abs(MENU_MORE)].chars(), params[arg_bufferlen]);
+			break;
+		}
+		case MPROP_EXITNAME:
+		{
+			if (paramsNum < arg_bufferlen)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
+				return 0;
+			}
+
+			set_amxstring(amx, params[arg_buffer], pMenu->m_OptNames[abs(MENU_EXIT)].chars(), params[arg_bufferlen]);
+			break;
+		}
+		case MPROP_TITLE:
+		{
+			if (paramsNum < arg_bufferlen)
+			{
+				LogError(amx, AMX_ERR_NATIVE, "Expected 4 parameters");
+				return 0;
+			}
+
+			set_amxstring(amx, params[arg_buffer], pMenu->m_Title.chars(), params[arg_bufferlen]);
+			break;
+		}
+		case MPROP_EXITALL:
+		{
+			if (!pMenu->m_NeverExit && !pMenu->m_ForceExit)
+			{
+				return 1;
+			}
+			else if (!pMenu->m_NeverExit && pMenu->m_ForceExit)
+			{
+				return 2;
+			}
+			else if (pMenu->m_NeverExit && !pMenu->m_ForceExit)
+			{
+				return -1;
+			}
+			
+			return 0;
+		}
+		case MPROP_ORDER:
+		{
+			/* Ignored as of 1.8.0 */
+			break;
+		}
+		case MPROP_NOCOLORS:
+		{
+			return static_cast<cell>(!pMenu->m_AutoColors);
+		}
+		default:
+		{
+			LogError(amx, AMX_ERR_NATIVE, "Invalid menu setting: %d", params[arg_prop]);
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
 #define GETMENU_R(p) Menu *pMenu = get_menu_by_id(p); \
 	if (pMenu == NULL) { \
 	LogError(amx, AMX_ERR_NATIVE, "Invalid menu id %d(%d)", p, g_NewMenus.length()); \
@@ -1296,6 +1402,7 @@ AMX_NATIVE_INFO g_NewMenuNatives[] =
 	{"menu_item_setname",		menu_item_setname},
 	{"menu_destroy",			menu_destroy},
 	{"menu_setprop",			menu_setprop},
+	{"menu_getprop",			menu_getprop},
 	{"menu_cancel",				menu_cancel},
 	{"player_menu_info",		player_menu_info},
 	{"menu_addblank2",			menu_addblank2},

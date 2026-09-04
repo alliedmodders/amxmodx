@@ -1054,6 +1054,26 @@ static cell AMX_NATIVE_CALL cs_get_user_hasprimary(AMX *amx, cell *params)
 	return 0;
 }
 
+// native bool:cs_has_user_weapon_in_slot(index, slot);
+static cell AMX_NATIVE_CALL cs_has_user_weapon_in_slot(AMX *amx, cell *params)
+{
+	GET_OFFSET("CBasePlayer", m_rgpPlayerItems);
+
+	int index = params[1];
+	int slot  = params[2];
+
+	CHECK_PLAYER(index);
+	edict_t *pPlayer = MF_GetPlayerEdict(index);
+	edict_t *pWeapon = TypeConversion.cbase_to_edict(get_pdata<void *>(pPlayer, m_rgpPlayerItems, slot));
+
+	if (!FNullEnt(pWeapon))
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
 // native cs_get_no_knives();
 static cell AMX_NATIVE_CALL cs_get_no_knives(AMX *amx, cell *params)
 {
@@ -2059,6 +2079,7 @@ AMX_NATIVE_INFO CstrikeNatives[] =
 	{"cs_set_weapon_ammo",			cs_set_weapon_ammo},
 	{"cs_get_weapon_ammo",			cs_get_weapon_ammo},
 	{"cs_get_user_hasprim",			cs_get_user_hasprimary},
+	{"cs_has_user_weapon_in_slot",	cs_has_user_weapon_in_slot },
 	{"cs_get_no_knives",			cs_get_no_knives},
 	{"cs_set_no_knives",			cs_set_no_knives},
 	{"cs_get_weapon_id",			cs_get_weapon_id},

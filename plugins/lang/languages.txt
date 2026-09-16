@@ -92,7 +92,7 @@ LANG_NAME_NATIVE = 简体中文
 
 [al]
 LANG_NAME = Albanian
-LANG_NAME_NATIVE = Shqipë
+LANG_NAME_NATIVE = Shqip
 
 [pt]
 LANG_NAME = European Portuguese

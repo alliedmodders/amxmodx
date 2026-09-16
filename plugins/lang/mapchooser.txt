@@ -206,13 +206,13 @@ EXTED_MAP = 延长地图 %s
 TIME_CHOOSE = 是该选择下一张地图了...
 
 [al]
-CHO_FIN_EXT = Zgjedhja përfundoi. Harta tanishme do të vazhdohet edhe për %.0f minuta
+CHO_FIN_EXT = Zgjedhja përfundoi. Harta e tanishme do të vazhdohet edhe për %.0f minuta
 CHO_FIN_NEXT = Zgjedhja përfundoi. Harta e ardhëshme do të jetë %s
-CHOSE_EXT = %s zgjedhi vazhdimin e hartës
-X_CHOSE_X = %s zgjedhi %s
+CHOSE_EXT = %s zgjodhi vazhdimin e hartës
+X_CHOSE_X = %s zgjodhi %s
 CHOOSE_NEXTM = AMX Zgjedh Hartën e Ardhëshme
 EXTED_MAP = Vazhdo hartën %s
-TIME_CHOOSE = Koha është të zgjedhni hartën e ardhëshme...
+TIME_CHOOSE = Është koha të zgjedhni hartën e ardhëshme...
 
 [pt]
 CHO_FIN_EXT = A votação terminou. O mapa atual vai ser estendido por %.0f minutos

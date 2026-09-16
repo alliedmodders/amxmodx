@@ -960,7 +960,7 @@ CPlayer* SV_DropClient_PreHook(edict_s *client, qboolean crash, const char *buff
 		edict_t *pWorld = INDEXENT(0);
 		int ent = client - pWorld;
 
-		if (ent > 0 && ent <= gpGlobals->maxEntities && !client->free)
+		if (ent > 0 && ent <= gpGlobals->maxClients && !client->free)
 		{
 			pPlayer = GET_PLAYER_POINTER(client);
 		}

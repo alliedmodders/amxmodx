@@ -203,6 +203,7 @@ displayBanMenu(id, pos)
 	new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "BAN_MENU", pos + 1, (g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0)))
 	new end = start + 7
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -212,7 +213,7 @@ displayBanMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, charsmax(name))
 
-		if (is_user_bot(i) || access(i, ADMIN_IMMUNITY))
+		if (is_user_bot(i) || (access(i, ADMIN_IMMUNITY) && !super))
 		{
 			++b
 			
@@ -339,6 +340,7 @@ displaySlapMenu(id, pos)
 	new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "SLAP_SLAY_MENU", pos + 1, (g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0)))
 	new end = start + 7
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -349,7 +351,7 @@ displaySlapMenu(id, pos)
 		get_user_name(i, name, charsmax(name))
 		new iteam = get_user_team(i)
 
-		if (!is_user_alive(i) || access(i, ADMIN_IMMUNITY))
+		if (!is_user_alive(i) || (access(i, ADMIN_IMMUNITY) && !super))
 		{
 			++b
 		
@@ -449,6 +451,7 @@ displayKickMenu(id, pos)
 	new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "KICK_MENU", pos + 1, (g_menuPlayersNum[id] / 8 + ((g_menuPlayersNum[id] % 8) ? 1 : 0)))
 	new end = start + 8
 	new keys = MENU_KEY_0
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -458,7 +461,7 @@ displayKickMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, charsmax(name))
 
-		if (access(i, ADMIN_IMMUNITY))
+		if (access(i, ADMIN_IMMUNITY) && !super)
 		{
 			++b
 		
@@ -558,6 +561,7 @@ displayTeamMenu(id, pos)
 	new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TEAM_MENU", pos + 1, (g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0)))
 	new end = start + 7
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -568,7 +572,7 @@ displayTeamMenu(id, pos)
 		get_user_name(i, name, charsmax(name))
 		iteam = get_user_team(i)
 
-		if ((iteam == g_menuOption[id]) || access(i, ADMIN_IMMUNITY))
+		if ((iteam == g_menuOption[id]) || (access(i, ADMIN_IMMUNITY) && !super))
 		{
 			++b
 			
@@ -666,6 +670,7 @@ displayClcmdMenu(id, pos)
 	new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "CL_CMD_MENU", pos + 1, (g_menuPlayersNum[id] / 7 + ((g_menuPlayersNum[id] % 7) ? 1 : 0)))
 	new end = start + 7
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -675,7 +680,7 @@ displayClcmdMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, charsmax(name))
 
-		if (!g_menuSelectNum[id] || access(i, ADMIN_IMMUNITY))
+		if (!g_menuSelectNum[id] || (access(i, ADMIN_IMMUNITY) && !super))
 		{
 			++b
 			

@@ -166,6 +166,7 @@ displayTelMenu(id, pos)
 	new len = formatex(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L\R%d/%d^n\w^n" : "%L %d/%d^n^n", id, "TELE_MENU", pos + 1, (g_menuPlayersNum[id] / 6 + ((g_menuPlayersNum[id] % 6) ? 1 : 0)))
 	new end = start + 6
 	new keys = MENU_KEY_0|MENU_KEY_8
+	new bool:super = bool:(get_user_flags(id) & ADMIN_SUPER)
 
 	if (end > g_menuPlayersNum[id])
 		end = g_menuPlayersNum[id]
@@ -175,7 +176,7 @@ displayTelMenu(id, pos)
 		i = g_menuPlayers[id][a]
 		get_user_name(i, name, charsmax(name))
 
-		if (blockMenu || !is_user_alive(i) || (id != i && get_user_flags(i) & ADMIN_IMMUNITY))
+		if (blockMenu || !is_user_alive(i) || (id != i && (get_user_flags(i) & ADMIN_IMMUNITY) && !super))
 		{
 			++b
 

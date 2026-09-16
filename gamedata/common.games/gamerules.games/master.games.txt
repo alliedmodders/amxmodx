@@ -87,4 +87,15 @@
 	{
 		"game"  "valve"
 	}
+
+
+	"svencoop/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "svencoop"
+	}
+
+	"svencoop/offsets-chalflifeteamplay.txt"
+	{
+		"game"  "svencoop"
+	}
 }

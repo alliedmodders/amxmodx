@@ -13,6 +13,20 @@
 {
     "#default"
     {
+
+    }
+
+    "svencoop"
+    {
+        "CRC"
+        {
+            "server"
+            {
+                "linux" "EB816A9E" //server.so
+				"windows" "A41098C7" //server.dll
+            }
+        }
+
         "Offsets"
         {
             "pev"
@@ -27,1439 +41,1755 @@
                 "linux"    "0x0"
             }
 
-            "spawn"
-            {
-                "windows"  "0"
-                "linux"    "0"
-            }
-
-            "precache"
-            {
-                "windows"  "1"
-                "linux"    "1"
-            }
-
-            "keyvalue"
-            {
-                "windows"  "2"
-                "linux"    "2"
-            }
-
-            "objectcaps"
-            {
-                "windows"  "6"
-                "linux"    "6"
-            }
-
-            "activate"
-            {
-                "windows"  "7"
-                "linux"    "7"
-            }
-
-            "setobjectcollisionbox"
-            {
-                "windows"  "8"
-                "linux"    "8"
-            }
-
-            "irelationship"
-            {
-                "windows"  "10"
-                "linux"    "10"
-            }
-
-            "classify"
-            {
-                "windows"  "11"
-                "linux"    "11"
-            }
-
-            "deathnotice"
-            {
-                "windows"  "12"
-                "linux"    "12"
-            }
-
-            "traceattack"
-            {
-                "windows"  "13"
-                "linux"    "13"
-            }
-
-            "takedamage"
-            {
-                "windows"  "14"
-                "linux"    "14"
-            }
-
-            "killed"
-            {
-                "windows"  "17"
-                "linux"    "17"
-            }
-
-            "bloodcolor"
-            {
-                "windows"  "18"
-                "linux"    "18"
-            }
-
-            "tracebleed"
-            {
-                "windows"  "19"
-                "linux"    "19"
-            }
-
-            "istriggered"
-            {
-                "windows"  "20"
-                "linux"    "20"
-            }
-
-            "mymonsterpointer"
-            {
-                "windows"  "21"
-                "linux"    "21"
-            }
-
-            "mysquadmonsterpointer"
-            {
-                "windows"  "22"
-                "linux"    "22"
-            }
-
-            "gettogglestate"
-            {
-                "windows"  "23"
-                "linux"    "23"
-            }
-
-            "addpoints"
-            {
-                "windows"  "24"
-                "linux"    "24"
-            }
-
-            "addpointstoteam"
-            {
-                "windows"  "25"
-                "linux"    "25"
-            }
-
-            "addplayeritem"
-            {
-                "windows"  "26"
-                "linux"    "26"
-            }
-
-            "removeplayeritem"
-            {
-                "windows"  "27"
-                "linux"    "27"
-            }
-
-            "getdelay"
-            {
-                "windows"  "29"
-                "linux"    "29"
-            }
-
-            "ismoving"
-            {
-                "windows"  "30"
-                "linux"    "30"
-            }
-
-            "overridereset"
-            {
-                "windows"  "31"
-                "linux"    "31"
-            }
-
-            "damagedecal"
-            {
-                "windows"  "32"
-                "linux"    "32"
-            }
-
-            "settogglestate"
-            {
-                "windows"  "33"
-                "linux"    "33"
-            }
-
-            "startsneaking"
-            {
-                "windows"  "34"
-                "linux"    "34"
-            }
-
-            "stopsneaking"
-            {
-                "windows"  "35"
-                "linux"    "35"
-            }
-
-            "oncontrols"
-            {
-                "windows"  "36"
-                "linux"    "36"
-            }
-
-            "issneaking"
-            {
-                "windows"  "37"
-                "linux"    "37"
-            }
-
-            "isalive"
-            {
-                "windows"  "38"
-                "linux"    "38"
-            }
-
-            "isbspmodel"
-            {
-                "windows"  "39"
-                "linux"    "39"
-            }
-
-            "reflectgauss"
-            {
-                "windows"  "40"
-                "linux"    "40"
-            }
-
-            "hastarget"
-            {
-                "windows"  "41"
-                "linux"    "41"
-            }
-
-            "isinworld"
-            {
-                "windows"  "42"
-                "linux"    "42"
-            }
-
-            "isplayer"
-            {
-                "windows"  "44"
-                "linux"    "44"
-            }
-
-            "isnetclient"
-            {
-                "windows"  "46"
-                "linux"    "46"
-            }
-
-            "teamid"
-            {
-                "windows"  "49"
-                "linux"    "49"
-            }
-
-            "getnexttarget"
-            {
-                "windows"  "51"
-                "linux"    "51"
-            }
-
-            "think"
-            {
-                "windows"  "52"
-                "linux"    "52"
-            }
-
-            "touch"
-            {
-                "windows"  "53"
-                "linux"    "53"
-            }
-
-            "use"
-            {
-                "windows"  "54"
-                "linux"    "54"
-            }
-
-            "blocked"
-            {
-                "windows"  "55"
-                "linux"    "55"
-            }
-
-            "respawn"
-            {
-                "windows"  "57"
-                "linux"    "57"
-            }
-
-            "updateowner"
-            {
-                "windows"  "58"
-                "linux"    "58"
-            }
-
-            "fbecomeprone"
-            {
-                "windows"  "59"
-                "linux"    "59"
-            }
-
-            "center"
-            {
-                "windows"  "60"
-                "linux"    "60"
-            }
-
-            "eyeposition"
-            {
-                "windows"  "61"
-                "linux"    "61"
-            }
-
-            "earposition"
-            {
-                "windows"  "62"
-                "linux"    "62"
-            }
-
-            "bodytarget"
-            {
-                "windows"  "63"
-                "linux"    "63"
-            }
-
-            "illumination"
-            {
-                "windows"  "64"
-                "linux"    "64"
-            }
-
-            "fvecvisible"
-            {
-                "windows"  "65"
-                "linux"    "66"
-            }
-
-            "look"
-            {
-                "windows"  "76"
-                "linux"    "77"
-            }
-
-            "runai"
-            {
-                "windows"  "77"
-                "linux"    "78"
-            }
-
-            "changeyaw"
-            {
-                "windows"  "79"
-                "linux"    "80"
-            }
-
-            "monsterthink"
-            {
-                "windows"  "80"
-                "linux"    "81"
-            }
-
-            "monsterinit"
-            {
-                "windows"  "82"
-                "linux"    "83"
-            }
-
-            "monsterinitdead"
-            {
-                "windows"  "83"
-                "linux"    "84"
-            }
-
-            "becomedead"
-            {
-                "windows"  "84"
-                "linux"    "85"
-            }
-
-            "bestvisibleenemy"
-            {
-                "windows"  "87"
-                "linux"    "88"
-            }
-
-            "finviewcone"
-            {
-                "windows"  "88"
-                "linux"    "89"
-            }
-
-            "fvecinviewcone"
-            {
-                "windows"  "89"
-                "linux"    "90"
-            }
-
-            "checklocalmove"
-            {
-                "windows"  "90"
-                "linux"    "91"
-            }
-
-            "move"
-            {
-                "windows"  "91"
-                "linux"    "92"
-            }
-
-            "moveexecute"
-            {
-                "windows"  "92"
-                "linux"    "93"
-            }
-
-            "shouldadvanceroute"
-            {
-                "windows"  "93"
-                "linux"    "94"
-            }
-
-            "getstoppedactivity"
-            {
-                "windows"  "94"
-                "linux"    "95"
-            }
-
-            "stop"
-            {
-                "windows"  "95"
-                "linux"    "96"
-            }
-
-            "checkrangeattack1"
-            {
-                "windows"  "96"
-                "linux"    "97"
-            }
-
-            "checkrangeattack2"
-            {
-                "windows"  "98"
-                "linux"    "99"
-            }
-
-            "checkmeleeattack1"
-            {
-                "windows"  "100"
-                "linux"    "101"
-            }
-
-            "checkmeleeattack2"
-            {
-                "windows"  "102"
-                "linux"    "103"
-            }
-
-            "schedulechange"
-            {
-                "windows"  "110"
-                "linux"    "111"
-            }
-
-            "canplaysequence"
-            {
-                "windows"  "111"
-                "linux"    "112"
-            }
-
-            "canplaysentence"
-            {
-                "windows"  "112"
-                "linux"    "113"
-            }
-
-            "playsentence"
-            {
-                "windows"  "113"
-                "linux"    "114"
-            }
-
-            "playscriptedsentence"
-            {
-                "windows"  "114"
-                "linux"    "115"
-            }
-
-            "sentencestop"
-            {
-                "windows"  "115"
-                "linux"    "116"
-            }
-
-            "getidealstate"
-            {
-                "windows"  "116"
-                "linux"    "117"
-            }
-
-            "setactivity"
-            {
-                "windows"  "117"
-                "linux"    "118"
-            }
-
-            "reportaistate"
-            {
-                "windows"  "119"
-                "linux"    "120"
-            }
-
-            "checkenemy"
-            {
-                "windows"  "120"
-                "linux"    "121"
-            }
-
-            "setyawspeed"
-            {
-                "windows"  "123"
-                "linux"    "124"
-            }
-
-            "buildnearestroute"
-            {
-                "windows"  "124"
-                "linux"    "125"
-            }
-
-            "findcover"
-            {
-                "windows"  "125"
-                "linux"    "126"
-            }
-
-            "coverradius"
-            {
-                "windows"  "130"
-                "linux"    "131"
-            }
-
-            "fcancheckattacks"
-            {
-                "windows"  "131"
-                "linux"    "132"
-            }
-
-            "checkammo"
-            {
-                "windows"  "133"
-                "linux"    "134"
-            }
-
-            "ignoreconditions"
-            {
-                "windows"  "134"
-                "linux"    "135"
-            }
-
-            "fvalidatehinttype"
-            {
-                "windows"  "135"
-                "linux"    "136"
-            }
-
-            "fcanactiveidle"
-            {
-                "windows"  "136"
-                "linux"    "137"
-            }
-
-            "isoundmask"
-            {
-                "windows"  "137"
-                "linux"    "138"
-            }
-
-            "hearingsensitivity"
-            {
-                "windows"  "140"
-                "linux"    "141"
-            }
-
-            "barnaclevictimbitten"
-            {
-                "windows"  "141"
-                "linux"    "142"
-            }
-
-            "barnaclevictimreleased"
-            {
-                "windows"  "142"
-                "linux"    "143"
-            }
-
-            "preschedulethink"
-            {
-                "windows"  "149"
-                "linux"    "150"
-            }
-
-            "getdeathactivity"
-            {
-                "windows"  "150"
-                "linux"    "151"
-            }
-
-            "gibmonster"
-            {
-                "windows"  "151"
-                "linux"    "152"
-            }
-
-            "hashumangibs"
-            {
-                "windows"  "153"
-                "linux"    "154"
-            }
-
-            "hasaliengibs"
-            {
-                "windows"  "154"
-                "linux"    "155"
-            }
-
-            "fademonster"
-            {
-                "windows"  "155"
-                "linux"    "156"
-            }
-
-            "deathsound"
-            {
-                "windows"  "158"
-                "linux"    "159"
-            }
-
-            "alertsound"
-            {
-                "windows"  "159"
-                "linux"    "160"
-            }
-
-            "idlesound"
-            {
-                "windows"  "160"
-                "linux"    "161"
-            }
-
-            "painsound"
-            {
-                "windows"  "161"
-                "linux"    "162"
-            }
-
-            "stopfollowing"
-            {
-                "windows"  "162"
-                "linux"    "163"
-            }
-
-            "player_getgunposition"
-            {
-                "windows"  "156"
-                "linux"    "157"
-            }
-
-            "player_jump"
-            {
-                "windows"  "178"
-                "linux"    "179"
-            }
-
-            "player_duck"
-            {
-                "windows"  "179"
-                "linux"    "180"
-            }
-
-            "player_prethink"
-            {
-                "windows"  "180"
-                "linux"    "181"
-            }
-
-            "player_postthink"
-            {
-                "windows"  "181"
-                "linux"    "182"
-            }
-
-            "player_updateclientdata"
-            {
-                "windows"  "183"
-                "linux"    "184"
-            }
-
-            "player_impulsecommands"
-            {
-                "windows"  "184"
-                "linux"    "185"
-            }
-
-            "item_addtoplayer"
-            {
-                "windows"  "76"
-                "linux"    "77"
-            }
-
-            "item_addduplicate"
-            {
-                "windows"  "77"
-                "linux"    "78"
-            }
-
-            "item_getiteminfo"
-            {
-                "windows"  "79"
-                "linux"    "80"
-            }
-
-            "item_candeploy"
-            {
-                "windows"  "80"
-                "linux"    "81"
-            }
-
-            "item_deploy"
-            {
-                "windows"  "81"
-                "linux"    "82"
-            }
-
-            "item_canholster"
-            {
-                "windows"  "82"
-                "linux"    "83"
-            }
-
-            "item_holster"
-            {
-                "windows"  "83"
-                "linux"    "84"
-            }
-
-            "item_updateiteminfo"
-            {
-                "windows"  "84"
-                "linux"    "85"
-            }
-
-            "item_preframe"
-            {
-                "windows"  "85"
-                "linux"    "86"
-            }
-
-            "item_postframe"
-            {
-                "windows"  "86"
-                "linux"    "87"
-            }
-
-            "item_drop"
-            {
-                "windows"  "87"
-                "linux"    "88"
-            }
-
-            "item_kill"
-            {
-                "windows"  "88"
-                "linux"    "89"
-            }
-
-            "item_attachtoplayer"
-            {
-                "windows"  "89"
-                "linux"    "90"
-            }
-
-            "item_primaryammoindex"
-            {
-                "windows"  "90"
-                "linux"    "91"
-            }
-
-            "item_secondaryammoindex"
-            {
-                "windows"  "91"
-                "linux"    "92"
-            }
-
-            "item_updateclientdata"
-            {
-                "windows"  "92"
-                "linux"    "93"
-            }
-
-            "item_getweaponptr"
-            {
-                "windows"  "93"
-                "linux"    "94"
-            }
-
-            "item_itemslot"
-            {
-                "windows"  "94"
-                "linux"    "95"
-            }
-
-            "weapon_extractammo"
-            {
-                "windows"  "95"
-                "linux"    "96"
-            }
-
-            "weapon_extractclipammo"
-            {
-                "windows"  "96"
-                "linux"    "97"
-            }
-
-            "weapon_addweapon"
-            {
-                "windows"  "97"
-                "linux"    "98"
-            }
-
-            "weapon_playemptysound"
-            {
-                "windows"  "98"
-                "linux"    "99"
-            }
-
-            "weapon_resetemptysound"
-            {
-                "windows"  "99"
-                "linux"    "100"
-            }
-
-            "weapon_sendweaponanim"
-            {
-                "windows"  "100"
-                "linux"    "101"
-            }
-
-            "weapon_isusable"
-            {
-                "windows"  "102"
-                "linux"    "103"
-            }
-
-            "weapon_primaryattack"
-            {
-                "windows"  "103"
-                "linux"    "104"
-            }
-
-            "weapon_secondaryattack"
-            {
-                "windows"  "104"
-                "linux"    "105"
-            }
-
-            "weapon_reload"
-            {
-                "windows"  "106"
-                "linux"    "107"
-            }
-
-            "weapon_weaponidle"
-            {
-                "windows"  "107"
-                "linux"    "108"
-            }
-
-            "weapon_retireweapon"
-            {
-                "windows"  "108"
-                "linux"    "109"
-            }
-
-            "weapon_shouldweaponidle"
-            {
-                "windows"  "109"
-                "linux"    "110"
-            }
-
-            "weapon_usedecrement"
-            {
-                "windows"  "110"
-                "linux"    "111"
-            }
-
-            "sc_getclassification"
-            {
-                "windows"  "9"
-                "linux"    "9"
-            }
-
-            "sc_takehealth"
-            {
-                "windows"  "15"
-                "linux"    "15"
-            }
-
-            "sc_takearmor"
-            {
-                "windows"  "16"
-                "linux"    "16"
-            }
-
-            "sc_giveammo"
-            {
-                "windows"  "28"
-                "linux"    "28"
-            }
-
-            "sc_ismonster"
-            {
-                "windows"  "43"
-                "linux"    "43"
-            }
-
-            "sc_isphysx"
-            {
-                "windows"  "45"
-                "linux"    "45"
-            }
-
-            "sc_ispointentity"
-            {
-                "windows"  "47"
-                "linux"    "47"
-            }
-
-            "sc_ismachine"
-            {
-                "windows"  "48"
-                "linux"    "48"
-            }
-
-            "sc_criticalremove"
-            {
-                "windows"  "50"
-                "linux"    "50"
-            }
-
-            "sc_updateonremove"
-            {
-                "windows"  "56"
-                "linux"    "56"
-            }
-
-            "sc_fvisible"
-            {
-                "windows"  "66"
-                "linux"    "65"
-            }
-
-            "sc_fvisiblefrompos"
-            {
-                "windows"  "67"
-                "linux"    "67"
-            }
-
-            "sc_isfacing"
-            {
-                "windows"  "68"
-                "linux"    "68"
-            }
-
-            "sc_getpointsfordamage"
-            {
-                "windows"  "69"
-                "linux"    "69"
-            }
-
-            "sc_getdamagepoints"
-            {
-                "windows"  "70"
-                "linux"    "70"
-            }
-
-            "sc_oncreate"
-            {
-                "windows"  "72"
-                "linux"    "73"
-            }
-
-            "sc_ondestroy"
-            {
-                "windows"  "73"
-                "linux"    "74"
-            }
-
-            "sc_isvalidentity"
-            {
-                "windows"  "74"
-                "linux"    "75"
-            }
-
-            "sc_shouldfadeondeath"
-            {
-                "windows"  "78"
-                "linux"    "79"
-            }
-
-            "sc_setupfriendly"
-            {
-                "windows"  "79"
-                "linux"    "80"
-            }
-
-            "sc_revivethink"
-            {
-                "windows"  "84"
-                "linux"    "85"
-            }
-
-            "sc_revive"
-            {
-                "windows"  "85"
-                "linux"    "86"
-            }
-
-            "sc_startmonster"
-            {
-                "windows"  "86"
-                "linux"    "87"
-            }
-
-            "sc_checkrangeattack1_move"
-            {
-                "windows"  "97"
-                "linux"    "98"
-            }
-
-            "sc_checkrangeattack2_move"
-            {
-                "windows"  "99"
-                "linux"    "100"
-            }
-
-            "sc_checkmeleeattack1_move"
-            {
-                "windows"  "101"
-                "linux"    "102"
-            }
-
-            "sc_checkmeleeattack2_move"
-            {
-                "windows"  "103"
-                "linux"    "104"
-            }
-
-            "sc_checktankusage"
-            {
-                "windows"  "104"
-                "linux"    "105"
-            }
-
-            "sc_setgaitactivity"
-            {
-                "windows"  "118"
-                "linux"    "119"
-            }
-
-            "sc_ftriangulate"
-            {
-                "windows"  "121"
-                "linux"    "122"
-            }
-
-            "sc_ftriangulateextension"
-            {
-                "windows"  "122"
-                "linux"    "123"
-            }
-
-            "sc_findcovergrenade"
-            {
-                "windows"  "126"
-                "linux"    "127"
-            }
-
-            "sc_findcoverdistance"
-            {
-                "windows"  "127"
-                "linux"    "128"
-            }
-
-            "sc_findattackpoint"
-            {
-                "windows"  "128"
-                "linux"    "129"
-            }
-
-            "sc_fvalidatecover"
-            {
-                "windows"  "129"
-                "linux"    "130"
-            }
-
-            "sc_checkattacker"
-            {
-                "windows"  "132"
-                "linux"    "133"
-            }
-
-            "sc_nofriendlyfire1"
-            {
-                "windows"  "145"
-                "linux"    "144"
-            }
-
-            "sc_nofriendlyfire2"
-            {
-                "windows"  "144"
-                "linux"    "145"
-            }
-
-            "sc_nofriendlyfire3"
-            {
-                "windows"  "143"
-                "linux"    "146"
-            }
-
-            "sc_nofriendlyfiretopos"
-            {
-                "windows"  "146"
-                "linux"    "147"
-            }
-
-            "sc_fvisiblegunpos"
-            {
-                "windows"  "147"
-                "linux"    "148"
-            }
-
-            "sc_finbulletcone"
-            {
-                "windows"  "148"
-                "linux"    "149"
-            }
-
-            "sc_callgibmonster"
-            {
-                "windows"  "152"
-                "linux"    "153"
-            }
-
-            "sc_checktimebaseddamage"
-            {
-                "windows"  "156"
-                "linux"    "157"
-            }
-
-            "sc_ismoving"
-            {
-                "windows"  "157"
-                "linux"    "158"
-            }
-
-            "sc_isplayerfollowing"
-            {
-                "windows"  "163"
-                "linux"    "164"
-            }
-
-            "sc_startplayerfollowing"
-            {
-                "windows"  "164"
-                "linux"    "165"
-            }
-
-            "sc_stopplayerfollowing"
-            {
-                "windows"  "165"
-                "linux"    "166"
-            }
-
-            "sc_usesound"
-            {
-                "windows"  "166"
-                "linux"    "167"
-            }
-
-            "sc_unusesound"
-            {
-                "windows"  "167"
-                "linux"    "168"
-            }
-
-            "sc_ridemonster"
-            {
-                "windows"  "168"
-                "linux"    "169"
-            }
-
-            "sc_checkandapplygenericattacks"
-            {
-                "windows"  "169"
-                "linux"    "170"
-            }
-
-            "sc_checkscared"
-            {
-                "windows"  "170"
-                "linux"    "171"
-            }
-
-            "sc_checkcreaturedanger"
-            {
-                "windows"  "171"
-                "linux"    "172"
-            }
-
-            "sc_checkfalldamage"
-            {
-                "windows"  "172"
-                "linux"    "173"
-            }
-
-            "sc_checkrevival"
-            {
-                "windows"  "173"
-                "linux"    "174"
-            }
-
-            "sc_mediccallsound"
-            {
-                "windows"  "174"
-                "linux"    "175"
-            }
-
-            "sc_player_menuinputperformed"
-            {
-                "windows"  "175"
-                "linux"    "176"
-            }
-
-            "sc_player_ismenuinputdone"
-            {
-                "windows"  "176"
-                "linux"    "177"
-            }
-
-            "sc_player_specialspawn"
-            {
-                "windows"  "177"
-                "linux"    "178"
-            }
-
-            "sc_player_isconnected"
-            {
-                "windows"  "181"
-                "linux"    "182"
-            }
-
-            "sc_player_isvalidinfoentity"
-            {
-                "windows"  "185"
-                "linux"    "186"
-            }
-
-            "sc_player_levelend"
-            {
-                "windows"  "186"
-                "linux"    "187"
-            }
-
-            "sc_player_votestarted"
-            {
-                "windows"  "187"
-                "linux"    "188"
-            }
-
-            "sc_player_canstartnextvote"
-            {
-                "windows"  "188"
-                "linux"    "189"
-            }
-
-            "sc_player_vote"
-            {
-                "windows"  "189"
-                "linux"    "190"
-            }
-
-            "sc_player_hasvoted"
-            {
-                "windows"  "190"
-                "linux"    "191"
-            }
-
-            "sc_player_resetvote"
-            {
-                "windows"  "191"
-                "linux"    "192"
-            }
-
-            "sc_player_lastvoteinput"
-            {
-                "windows"  "192"
-                "linux"    "193"
-            }
-
-            "sc_player_initvote"
-            {
-                "windows"  "193"
-                "linux"    "194"
-            }
-
-            "sc_player_timetostartnextvote"
-            {
-                "windows"  "194"
-                "linux"    "195"
-            }
-
-            "sc_player_resetview"
-            {
-                "windows"  "195"
-                "linux"    "196"
-            }
-
-            "sc_player_getlogfrequency"
-            {
-                "windows"  "196"
-                "linux"    "197"
-            }
-
-            "sc_player_logplayerstats"
-            {
-                "windows"  "197"
-                "linux"    "198"
-            }
-
-            "sc_player_disablecollisionwithplayer"
-            {
-                "windows"  "198"
-                "linux"    "199"
-            }
-
-            "sc_player_enablecollisionwithplayer"
-            {
-                "windows"  "199"
-                "linux"    "200"
-            }
-
-            "sc_player_cantouchplayer"
-            {
-                "windows"  "200"
-                "linux"    "201"
-            }
-
-            "sc_item_materialize"
-            {
-                "windows"  "78"
-                "linux"    "79"
-            }
-
-            "sc_weapon_bulletaccuracy"
-            {
-                "windows"  "101"
-                "linux"    "102"
-            }
-
-            "sc_weapon_tertiaryattack"
-            {
-                "windows"  "105"
-                "linux"    "106"
-            }
-
-            "sc_weapon_burstsupplement"
-            {
-                "windows"  "111"
-                "linux"    "112"
-            }
-
-            "sc_weapon_getp_model"
-            {
-                "windows"  "112"
-                "linux"    "113"
-            }
-
-            "sc_weapon_getw_model"
-            {
-                "windows"  "113"
-                "linux"    "114"
-            }
-
-            "sc_weapon_getv_model"
-            {
-                "windows"  "114"
-                "linux"    "115"
-            }
-
-            "sc_weapon_precachecustommodels"
-            {
-                "windows"  "115"
-                "linux"    "116"
-            }
-
-            "sc_weapon_ismultiplayer"
-            {
-                "windows"  "116"
-                "linux"    "117"
-            }
-
-            "sc_weapon_frunfuncs"
-            {
-                "windows"  "117"
-                "linux"    "118"
-            }
-
-            "sc_weapon_setfov"
-            {
-                "windows"  "118"
-                "linux"    "119"
-            }
-
-            "sc_weapon_fcanrun"
-            {
-                "windows"  "119"
-                "linux"    "120"
-            }
-
-            "sc_weapon_customdecrement"
-            {
-                "windows"  "120"
-                "linux"    "121"
-            }
-
-            "sc_weapon_setv_model"
-            {
-                "windows"  "121"
-                "linux"    "122"
-            }
-
-            "sc_weapon_setp_model"
-            {
-                "windows"  "122"
-                "linux"    "123"
-            }
-
-            "sc_weapon_changeweaponskin"
-            {
-                "windows"  "123"
-                "linux"    "124"
-            }
+            "prespawn"
+			{
+				"windows" "0" 
+				"linux" "0" 
+			}
+
+			"spawn"
+			{
+				"windows" "1" 
+				"linux" "1" 
+			}
+
+			"postspawn"
+			{
+				"windows" "2" 
+				"linux" "2" 
+			}
+
+			"precache"
+			{
+				"windows" "3" 
+				"linux" "3" 
+			}
+
+			"keyvalue"
+			{
+				"windows" "4" 
+				"linux" "4" 
+			}
+
+			"getkeyvalue"
+			{
+				"windows" "5" 
+				"linux" "5" 
+			}
+
+			"onkeyvalueupdate"
+			{
+				"windows" "6" 
+				"linux" "6" 
+			}
+
+			"save"
+			{
+				"windows" "7" 
+				"linux" "7" 
+			}
+
+			"restore"
+			{
+				"windows" "8" 
+				"linux" "8" 
+			}
+
+			"objectcaps"
+			{
+				"windows" "9" 
+				"linux" "9" 
+			}
+
+			"activate"
+			{
+				"windows" "10" 
+				"linux" "10" 
+			}
+
+			"setobjectcollisionbox"
+			{
+				"windows" "11" 
+				"linux" "11" 
+			}
+
+			"sc_getclassification"
+			{
+				"windows" "12" 
+				"linux" "12" 
+			}
+
+			"getclassificationtag"
+			{
+				"windows" "13" 
+				"linux" "13" 
+			}
+
+			"getclassificationname"
+			{
+				"windows" "14" 
+				"linux" "14" 
+			}
+
+			"setclassification"
+			{
+				"windows" "15" 
+				"linux" "15" 
+			}
+
+			"setclassificationspecial"
+			{
+				"windows" "16" 
+				"linux" "16" 
+			}
+
+			"irelationship"
+			{
+				"windows" "17" 
+				"linux" "17" 
+			}
+
+			"classify"
+			{
+				"windows" "18" 
+				"linux" "18" 
+			}
+
+			"deathnotice"
+			{
+				"windows" "19" 
+				"linux" "19" 
+			}
+
+			"traceattack"
+			{
+				"windows" "20" 
+				"linux" "20" 
+			}
+
+			"takedamage"
+			{
+				"windows" "21" 
+				"linux" "21" 
+			}
+
+			"takehealth"
+			{
+				"windows" "22" 
+				"linux" "22" 
+			}
+
+			"takearmor"
+			{
+				"windows" "23" 
+				"linux" "23" 
+			}
+
+			"killed"
+			{
+				"windows" "24" 
+				"linux" "24" 
+			}
+
+			"bloodcolor"
+			{
+				"windows" "25" 
+				"linux" "25" 
+			}
+
+			"tracebleed"
+			{
+				"windows" "26" 
+				"linux" "26" 
+			}
+
+			"istriggered"
+			{
+				"windows" "27" 
+				"linux" "27" 
+			}
+
+			"mymonsterpointer"
+			{
+				"windows" "28" 
+				"linux" "28" 
+			}
+
+			"mysquadmonsterpointer"
+			{
+				"windows" "29" 
+				"linux" "29" 
+			}
+
+			"myplayerpointer"
+			{
+				"windows" "30" 
+				"linux" "30" 
+			}
+
+			"mycustompointer"
+			{
+				"windows" "31" 
+				"linux" "31" 
+			}
+
+			"myitempointer"
+			{
+				"windows" "32" 
+				"linux" "32" 
+			}
+
+			"gettogglestate"
+			{
+				"windows" "33" 
+				"linux" "33" 
+			}
+
+			"addpoints"
+			{
+				"windows" "34" 
+				"linux" "34" 
+			}
+
+			"addpointstoteam"
+			{
+				"windows" "35" 
+				"linux" "35" 
+			}
+
+			"addplayeritem"
+			{
+				"windows" "36" 
+				"linux" "36" 
+			}
+
+			"removeplayeritem"
+			{
+				"windows" "37" 
+				"linux" "37" 
+			}
+
+			"giveammo"
+			{
+				"windows" "38" 
+				"linux" "38" 
+			}
+
+			"getdelay"
+			{
+				"windows" "39" 
+				"linux" "39" 
+			}
+
+			"sc_ismoving"
+			{
+				"windows" "40" 
+				"linux" "40" 
+			}
+
+			"overridereset"
+			{
+				"windows" "41" 
+				"linux" "41" 
+			}
+
+			"damagedecal"
+			{
+				"windows" "42" 
+				"linux" "42" 
+			}
+
+			"settogglestate"
+			{
+				"windows" "43" 
+				"linux" "43" 
+			}
+
+			"startsneaking"
+			{
+				"windows" "44" 
+				"linux" "44" 
+			}
+
+			"stopsneaking"
+			{
+				"windows" "45" 
+				"linux" "45" 
+			}
+
+			"oncontrols"
+			{
+				"windows" "46" 
+				"linux" "46" 
+			}
+
+			"issneaking"
+			{
+				"windows" "47" 
+				"linux" "47" 
+			}
+
+			"isalive"
+			{
+				"windows" "48" 
+				"linux" "48" 
+			}
+
+			"isfullydead"
+			{
+				"windows" "49" 
+				"linux" "49" 
+			}
+
+			"isbspmodel"
+			{
+				"windows" "50" 
+				"linux" "50" 
+			}
+
+			"reflectgauss"
+			{
+				"windows" "51" 
+				"linux" "51" 
+			}
+
+			"hastarget"
+			{
+				"windows" "52" 
+				"linux" "52" 
+			}
+
+			"isinworld"
+			{
+				"windows" "53" 
+				"linux" "53" 
+			}
+
+			"sc_ismonster"
+			{
+				"windows" "54" 
+				"linux" "54" 
+			}
+
+			"isplayer"
+			{
+				"windows" "55" 
+				"linux" "55" 
+			}
+
+			"isnetclient"
+			{
+				"windows" "56" 
+				"linux" "56" 
+			}
+
+			"sc_ispointentity"
+			{
+				"windows" "57" 
+				"linux" "57" 
+			}
+
+			"isbreakable"
+			{
+				"windows" "58" 
+				"linux" "58" 
+			}
+
+			"sc_ismachine"
+			{
+				"windows" "59" 
+				"linux" "59" 
+			}
+
+			"teamid"
+			{
+				"windows" "60" 
+				"linux" "60" 
+			}
+
+			"sc_criticalremove"
+			{
+				"windows" "61" 
+				"linux" "61" 
+			}
+
+			"getnexttarget"
+			{
+				"windows" "62" 
+				"linux" "62" 
+			}
+
+			"think"
+			{
+				"windows" "63" 
+				"linux" "63" 
+			}
+
+			"touch"
+			{
+				"windows" "64" 
+				"linux" "64" 
+			}
+
+			"use"
+			{
+				"windows" "65" 
+				"linux" "65" 
+			}
+
+			"blocked"
+			{
+				"windows" "66" 
+				"linux" "66" 
+			}
+
+			"sc_updateonremove"
+			{
+				"windows" "67" 
+				"linux" "67" 
+			}
+
+			"respawn"
+			{
+				"windows" "68" 
+				"linux" "68" 
+			}
+
+			"sub_usetargets"
+			{
+				"windows" "69" 
+				"linux" "69" 
+			}
+
+			"islockedbymaster"
+			{
+				"windows" "70" 
+				"linux" "70" 
+			}
+
+			"updateowner"
+			{
+				"windows" "71" 
+				"linux" "71" 
+			}
+
+			"fbecomeprone"
+			{
+				"windows" "72" 
+				"linux" "72" 
+			}
+
+			"center"
+			{
+				"windows" "73" 
+				"linux" "73" 
+			}
+
+			"eyeposition"
+			{
+				"windows" "74" 
+				"linux" "74" 
+			}
+
+			"earposition"
+			{
+				"windows" "75" 
+				"linux" "75" 
+			}
+
+			"bodytarget"
+			{
+				"windows" "76" 
+				"linux" "76" 
+			}
+
+			"illumination"
+			{
+				"windows" "77" 
+				"linux" "77" 
+			}
+
+			"sc_fvisible"
+			{
+				"windows" "78" 
+				"linux" "78" 
+			}
+
+			"sc_fvisiblefrompos"
+			{
+				"windows" "80" 
+				"linux" "80" 
+			}
+
+			"sc_isfacing"
+			{
+				"windows" "81" 
+				"linux" "81" 
+			}
+
+			"sc_getpointsfordamage"
+			{
+				"windows" "82" 
+				"linux" "82" 
+			}
+
+			"sc_getdamagepoints"
+			{
+				"windows" "83" 
+				"linux" "83" 
+			}
+
+			"setplayerally"
+			{
+				"windows" "84" 
+				"linux" "84" 
+			}
+
+			"~cbaseentity"
+			{
+				"windows" "85" 
+			}
+
+			"sc_oncreate"
+			{
+				"windows" "86" 
+				"linux" "87" 
+			}
+
+			"sc_ondestroy"
+			{
+				"windows" "87" 
+				"linux" "88" 
+			}
+
+			"onsetoriginbymap"
+			{
+				"windows" "88" 
+				"linux" "89" 
+			}
+
+			"isrevivable"
+			{
+				"windows" "89" 
+				"linux" "90" 
+			}
+
+			"beginrevive"
+			{
+				"windows" "90" 
+				"linux" "91" 
+			}
+
+			"endrevive"
+			{
+				"windows" "91" 
+				"linux" "92" 
+			}
+
+			"showhudinfo"
+			{
+				"windows" "92" 
+				"linux" "93" 
+			}
+
+			"shoulddisableplayercollisions"
+			{
+				"windows" "93" 
+				"linux" "94" 
+			}
+
+			"getattackvectors"
+			{
+				"windows" "94" 
+				"linux" "95" 
+			}
+
+			"teleport"
+			{
+				"windows" "95" 
+				"linux" "96" 
+			}
+
+			"settopcolor"
+			{
+				"windows" "96" 
+				"linux" "97" 
+			}
+
+			"setbottomcolor"
+			{
+				"windows" "97" 
+				"linux" "98" 
+			}
+
+			"setcolors"
+			{
+				"windows" "98" 
+				"linux" "99" 
+			}
+
+			"gettopcolor"
+			{
+				"windows" "99" 
+				"linux" "100" 
+			}
+
+			"getbottomcolor"
+			{
+				"windows" "100" 
+				"linux" "101" 
+			}
+
+			"updatecolormap"
+			{
+				"windows" "101" 
+				"linux" "102" 
+			}
+
+			"__vecdeldtor"
+			{
+				"windows" "85" 
+			}
+
+			"look"
+			{
+				"windows" "105" 
+				"linux" "106" 
+			}
+
+			"runai"
+			{
+				"windows" "106" 
+				"linux" "107" 
+			}
+
+			"isgibbed"
+			{
+				"windows" "107" 
+				"linux" "108" 
+			}
+
+			"sc_shouldfadeondeath"
+			{
+				"windows" "108" 
+				"linux" "109" 
+			}
+
+			"changeyaw"
+			{
+				"windows" "109" 
+				"linux" "110" 
+			}
+
+			"sc_setupfriendly" 
+			{
+				"windows" "110" 
+				"linux" "111" 
+			}
+
+			"monsterthink"
+			{
+				"windows" "111" 
+				"linux" "112" 
+			}
+
+			"monsterinit"
+			{
+				"windows" "112" 
+				"linux" "113" 
+			}
+
+			"monsterinitdead"
+			{
+				"windows" "113" 
+				"linux" "114" 
+			}
+
+			"becomedead"
+			{
+				"windows" "114" 
+				"linux" "115" 
+			}
+
+			"sc_revive" 
+			{
+				"windows" "115" 
+				"linux" "116" 
+			}
+
+			"sc_startmonster" 
+			{
+				"windows" "116" 
+				"linux" "117" 
+			}
+
+			"bestvisibleenemy"
+			{
+				"windows" "117" 
+				"linux" "118" 
+			}
+
+			"finviewcone"
+			{
+				"windows" "118" 
+				"linux" "119" 
+			}
+
+			"checklocalmove"
+			{
+				"windows" "120" 
+				"linux" "121" 
+			}
+
+			"move"
+			{
+				"windows" "121" 
+				"linux" "122" 
+			}
+
+			"moveexecute"
+			{
+				"windows" "122" 
+				"linux" "123" 
+			}
+
+			"shouldadvanceroute"
+			{
+				"windows" "123" 
+				"linux" "124" 
+			}
+
+			"getstoppedactivity"
+			{
+				"windows" "124" 
+				"linux" "125" 
+			}
+
+			"stop"
+			{
+				"windows" "125" 
+				"linux" "126" 
+			}
+
+			"checkrangeattack1"
+			{
+				"windows" "126" 
+				"linux" "127" 
+			}
+
+			"sc_checkrangeattack1_move"
+			{
+				"windows" "127" 
+				"linux" "128" 
+			}
+
+			"checkrangeattack2"
+			{
+				"windows" "128" 
+				"linux" "129" 
+			}
+
+			"sc_checkrangeattack2_move"
+			{
+				"windows" "129" 
+				"linux" "130" 
+			}
+
+			"checkmeleeattack1"
+			{
+				"windows" "130" 
+				"linux" "131" 
+			}
+
+			"sc_checkmeleeattack1_move"
+			{
+				"windows" "131" 
+				"linux" "132" 
+			}
+
+			"checkmeleeattack2"
+			{
+				"windows" "132" 
+				"linux" "133" 
+			}
+
+			"sc_checkmeleeattack2_move"
+			{
+				"windows" "133" 
+				"linux" "134" 
+			}
+
+			"sc_checktankusage"
+			{
+				"windows" "134" 
+				"linux" "135" 
+			}
+
+			"schedulefromname"
+			{
+				"windows" "135" 
+				"linux" "136" 
+			}
+
+			"starttask"
+			{
+				"windows" "136" 
+				"linux" "137" 
+			}
+
+			"runtask"
+			{
+				"windows" "137" 
+				"linux" "138" 
+			}
+
+			"getscheduleoftype"
+			{
+				"windows" "138" 
+				"linux" "139" 
+			}
+
+			"getschedule"
+			{
+				"windows" "139" 
+				"linux" "140" 
+			}
+
+			"schedulechange"
+			{
+				"windows" "140" 
+				"linux" "141" 
+			}
+
+			"canplaysequence"
+			{
+				"windows" "141" 
+				"linux" "142" 
+			}
+
+			"canplaysentence"
+			{
+				"windows" "142" 
+				"linux" "143" 
+			}
+
+			"playsentence"
+			{
+				"windows" "143" 
+				"linux" "144" 
+			}
+
+			"playscriptedsentence"
+			{
+				"windows" "144" 
+				"linux" "145" 
+			}
+
+			"sentencestop"
+			{
+				"windows" "145" 
+				"linux" "146" 
+			}
+
+			"getidealstate"
+			{
+				"windows" "146" 
+				"linux" "147" 
+			}
+
+			"setactivity"
+			{
+				"windows" "147" 
+				"linux" "148" 
+			}
+
+			"sc_setgaitactivity"
+			{
+				"windows" "148" 
+				"linux" "149" 
+			}
+
+			"reportaistate"
+			{
+				"windows" "149" 
+				"linux" "150" 
+			}
+
+			"checkenemy"
+			{
+				"windows" "150" 
+				"linux" "151" 
+			}
+
+			"sc_ftriangulate"
+			{
+				"windows" "151" 
+				"linux" "152" 
+			}
+
+			"sc_ftriangulateextension"
+			{
+				"windows" "152" 
+				"linux" "153" 
+			}
+
+			"setyawspeed"
+			{
+				"windows" "153" 
+				"linux" "154" 
+			}
+
+			"buildnearestroute"
+			{
+				"windows" "154" 
+				"linux" "155" 
+			}
+
+			"findcover"
+			{
+				"windows" "155" 
+				"linux" "156" 
+			}
+
+			"sc_findcovergrenade"
+			{
+				"windows" "156" 
+				"linux" "157" 
+			}
+
+			"sc_findcoverdistance"
+			{
+				"windows" "157" 
+				"linux" "158" 
+			}
+
+			"sc_findattackpoint"
+			{
+				"windows" "158" 
+				"linux" "159" 
+			}
+
+			"sc_fvalidatecover"
+			{
+				"windows" "159" 
+				"linux" "160" 
+			}
+
+			"coverradius"
+			{
+				"windows" "160" 
+				"linux" "161" 
+			}
+
+			"fcancheckattacks"
+			{
+				"windows" "161" 
+				"linux" "162" 
+			}
+
+			"checkattacker"
+			{
+				"windows" "162" 
+				"linux" "163" 
+			}
+
+			"checkammo"
+			{
+				"windows" "163" 
+				"linux" "164" 
+			}
+
+			"ignoreconditions"
+			{
+				"windows" "164" 
+				"linux" "165" 
+			}
+
+			"fvalidatehinttype"
+			{
+				"windows" "165" 
+				"linux" "166" 
+			}
+
+			"fcanactiveidle"
+			{
+				"windows" "166" 
+				"linux" "167" 
+			}
+
+			"isoundmask"
+			{
+				"windows" "167" 
+				"linux" "168" 
+			}
+
+			"pbestsound"
+			{
+				"windows" "168" 
+				"linux" "169" 
+			}
+
+			"pbestscent"
+			{
+				"windows" "169" 
+				"linux" "170" 
+			}
+
+			"hearingsensitivity"
+			{
+				"windows" "170" 
+				"linux" "171" 
+			}
+
+			"barnaclevictimbitten"
+			{
+				"windows" "171" 
+				"linux" "172" 
+			}
+
+			"barnaclevictimreleased"
+			{
+				"windows" "172" 
+				"linux" "173" 
+			}
+			
+			"sc_nofriendlyfire1"
+			{
+				"windows" "173" 
+				"linux" "174"
+			}
+
+			"sc_nofriendlyfire2"
+			{
+				"windows" "174" 
+				"linux" "175" 
+			}
+
+			"sc_nofriendlyfire3"
+			{
+				"windows" "175" 
+				"linux" "176"
+			}
+
+			"sc_nofriendlyfiretopos"
+			{
+				"windows" "176" 
+				"linux" "177" 
+			}
+
+			"sc_fvisiblegunpos"
+			{
+				"windows" "177" 
+				"linux" "178" 
+			}
+
+			"sc_finbulletcone"
+			{
+				"windows" "178" 
+				"linux" "179" 
+			}
+
+			"preschedulethink"
+			{
+				"windows" "179" 
+				"linux" "180" 
+			}
+
+			"getdeathactivity"
+			{
+				"windows" "180" 
+				"linux" "181" 
+			}
+
+			"gibmonster"
+			{
+				"windows" "181" 
+				"linux" "182" 
+			}
+
+			"sc_callgibmonster"
+			{
+				"windows" "182" 
+				"linux" "183" 
+			}
+
+			"hashumangibs"
+			{
+				"windows" "183" 
+				"linux" "184" 
+			}
+
+			"hasaliengibs"
+			{
+				"windows" "184" 
+				"linux" "185" 
+			}
+
+			"fademonster"
+			{
+				"windows" "185" 
+				"linux" "186" 
+			}
+
+			"getgunposition"
+			{
+				"windows" "186" 
+				"linux" "187" 
+			}
+
+			"sc_checktimebaseddamage"
+			{
+				"windows" "187" 
+				"linux" "188" 
+			}
+
+			"cleartimebaseddamage"
+			{
+				"windows" "188" 
+				"linux" "189" 
+			}
+
+			"deathsound"
+			{
+				"windows" "189" 
+				"linux" "190" 
+			}
+
+			"alertsound"
+			{
+				"windows" "190" 
+				"linux" "191" 
+			}
+
+			"idlesound"
+			{
+				"windows" "191" 
+				"linux" "192" 
+			}
+
+			"painsound"
+			{
+				"windows" "192" 
+				"linux" "193" 
+			}
+
+			"followerplayeruse"
+			{
+				"windows" "193" 
+				"linux" "194" 
+			}
+
+			"sc_isplayerfollowing"
+			{
+				"windows" "194" 
+				"linux" "195" 
+			}
+
+			"canplayerfollow"
+			{
+				"windows" "195" 
+				"linux" "196" 
+			}
+
+			"shouldstopplayerfollow"
+			{
+				"windows" "196" 
+				"linux" "197" 
+			}
+
+			"limitfollowers"
+			{
+				"windows" "197" 
+				"linux" "198" 
+			}
+
+			"sc_startplayerfollowing"
+			{
+				"windows" "198" 
+				"linux" "199" 
+			}
+
+			"sc_stopplayerfollowing"
+			{
+				"windows" "199" 
+				"linux" "200" 
+			}
+
+			"declinefollowing"
+			{
+				"windows" "200" 
+				"linux" "201" 
+			}
+
+			"sc_usesound"
+			{
+				"windows" "201" 
+				"linux" "202" 
+			}
+
+			"sc_unusesound"
+			{
+				"windows" "202" 
+				"linux" "203" 
+			}
+
+			"sc_ridemonster"
+			{
+				"windows" "203" 
+				"linux" "204" 
+			}
+
+			"sc_checkandapplygenericattacks"
+			{
+				"windows" "204" 
+				"linux" "205" 
+			}
+
+			"sc_checkscared"
+			{
+				"windows" "205" 
+				"linux" "206" 
+			}
+
+			"sc_checkcreaturedanger"
+			{
+				"windows" "206" 
+				"linux" "207" 
+			}
+
+			"sc_checkfalldamage"
+			{
+				"windows" "207" 
+				"linux" "208" 
+			}
+
+			"sc_checkrevival"
+			{
+				"windows" "208" 
+				"linux" "209" 
+			}
+
+			"handlestep"
+			{
+				"windows" "209" 
+				"linux" "210" 
+			}
+
+			"playstepsound"
+			{
+				"windows" "210" 
+				"linux" "211" 
+			}
+
+			"sc_mediccallsound"
+			{
+				"windows" "211" 
+				"linux" "212" 
+			}
+
+			"sc_player_specialspawn"
+			{
+				"windows" "212" 
+				"linux" "213" 
+			}
+
+			"player_jump"
+			{
+				"windows" "213" 
+				"linux" "214" 
+			}
+
+			"player_duck"
+			{
+				"windows" "214" 
+				"linux" "215" 
+			}
+
+			"player_prethink"
+			{
+				"windows" "215" 
+				"linux" "216" 
+			}
+
+			"player_postthink"
+			{
+				"windows" "216" 
+				"linux" "217" 
+			}
+
+			"player_enteredobserver"
+			{
+				"windows" "217" 
+				"linux" "218" 
+			}
+
+			"player_leftobserver"
+			{
+				"windows" "218" 
+				"linux" "219" 
+			}
+
+			"player_isobserver"
+			{
+				"windows" "219" 
+				"linux" "220" 
+			}
+
+			"player_isconnected"
+			{
+				"windows" "220" 
+				"linux" "221" 
+			}
+
+			"player_updateclientdata"
+			{
+				"windows" "221" 
+				"linux" "222" 
+			}
+
+			"player_impulsecommands"
+			{
+				"windows" "222" 
+				"linux" "223" 
+			}
+
+			"sc_player_isvalidinfoentity"
+			{
+				"windows" "223" 
+				"linux" "224" 
+			}
+
+			"sc_player_levelend"
+			{
+				"windows" "224" 
+				"linux" "225" 
+			}
+
+			"sc_player_votestarted"
+			{
+				"windows" "225" 
+				"linux" "226" 
+			}
+
+			"sc_player_canstartnextvote"
+			{
+				"windows" "226" 
+				"linux" "227" 
+			}
+
+			"sc_player_vote"
+			{
+				"windows" "227" 
+				"linux" "228" 
+			}
+
+			"sc_player_hasvoted"
+			{
+				"windows" "228" 
+				"linux" "229" 
+			}
+
+			"sc_player_resetvote"
+			{
+				"windows" "229" 
+				"linux" "230" 
+			}
+
+			"sc_player_lastvoteinput"
+			{
+				"windows" "230" 
+				"linux" "231" 
+			}
+
+			"sc_player_initvote"
+			{
+				"windows" "231" 
+				"linux" "232" 
+			}
+
+			"sc_player_timetostartnextvote"
+			{
+				"windows" "232" 
+				"linux" "233" 
+			}
+
+			"sc_player_resetview"
+			{
+				"windows" "233" 
+				"linux" "234" 
+			}
+
+			"sc_player_getlogfrequency"
+			{
+				"windows" "234" 
+				"linux" "235" 
+			}
+
+			"sc_player_logplayerstats"
+			{
+				"windows" "235" 
+				"linux" "236" 
+			}
+
+			"item_addtoplayer"
+			{
+				"windows" "116" 
+				"linux" "117" 
+			}
+
+			"item_addduplicate"
+			{
+				"windows" "117" 
+				"linux" "118" 
+			}
+
+			"item_addammofromitem"
+			{
+				"windows" "118" 
+				"linux" "119" 
+			}
+
+			"item_getpickupsound"
+			{
+				"windows" "119" 
+				"linux" "120" 
+			}
+
+			"item_getiteminfo"
+			{
+				"windows" "120" 
+				"linux" "121" 
+			}
+
+			"item_candeploy"
+			{
+				"windows" "121" 
+				"linux" "122" 
+			}
+
+			"item_deploy"
+			{
+				"windows" "122" 
+				"linux" "123" 
+			}
+
+			"item_canholster"
+			{
+				"windows" "123" 
+				"linux" "124" 
+			}
+
+			"item_holster"
+			{
+				"windows" "124" 
+				"linux" "125" 
+			}
+
+			"item_updateiteminfo"
+			{
+				"windows" "125" 
+				"linux" "126" 
+			}
+
+			"item_itempreframe"
+			{
+				"windows" "126" 
+				"linux" "127" 
+			}
+
+			"item_itempostframe"
+			{
+				"windows" "127" 
+				"linux" "128" 
+			}
+
+			"item_inactiveitempreframe"
+			{
+				"windows" "128" 
+				"linux" "129" 
+			}
+
+			"item_inactiveitempostframe"
+			{
+				"windows" "129" 
+				"linux" "130" 
+			}
+
+			"item_attachtoplayer"
+			{
+				"windows" "130" 
+				"linux" "131" 
+			}
+
+			"item_detachfromplayer"
+			{
+				"windows" "131" 
+				"linux" "132" 
+			}
+
+			"item_primaryammoindex"
+			{
+				"windows" "132" 
+				"linux" "133" 
+			}
+
+			"item_secondaryammoindex"
+			{
+				"windows" "133" 
+				"linux" "134" 
+			}
+
+			"item_updateclientdata"
+			{
+				"windows" "134" 
+				"linux" "135" 
+			}
+
+			"item_getweaponptr"
+			{
+				"windows" "135" 
+				"linux" "136" 
+			}
+
+			"item_iitemslot"
+			{
+				"windows" "136" 
+				"linux" "137" 
+			}
+
+			"item_getrespawntime"
+			{
+				"windows" "137" 
+				"linux" "138" 
+			}
+
+			"item_dropitem"
+			{
+				"windows" "138" 
+				"linux" "139" 
+			}
+
+			"item_canhaveduplicates"
+			{
+				"windows" "139" 
+				"linux" "140" 
+			}
+
+			"weapon_extractammofromitem"
+			{
+				"windows" "140" 
+				"linux" "141" 
+			}
+
+			"weapon_extractammo"
+			{
+				"windows" "141" 
+				"linux" "142" 
+			}
+
+			"weapon_extractclipammo"
+			{
+				"windows" "142" 
+				"linux" "143" 
+			}
+
+			"weapon_addweapon"
+			{
+				"windows" "143" 
+				"linux" "144" 
+			}
+
+			"weapon_getammo1drop"
+			{
+				"windows" "144" 
+				"linux" "145" 
+			}
+
+			"weapon_getammo2drop"
+			{
+				"windows" "145" 
+				"linux" "146" 
+			}
+
+			"weapon_playemptysound"
+			{
+				"windows" "146" 
+				"linux" "147" 
+			}
+
+			"weapon_resetemptysound"
+			{
+				"windows" "147" 
+				"linux" "148" 
+			}
+
+			"weapon_sendweaponanim"
+			{
+				"windows" "148" 
+				"linux" "149" 
+			}
+
+			"sc_weapon_bulletaccuracy"
+			{
+				"windows" "149" 
+				"linux" "150" 
+			}
+
+			"weapon_isuseable"
+			{
+				"windows" "150" 
+				"linux" "151" 
+			}
+
+			"weapon_primaryattack"
+			{
+				"windows" "151" 
+				"linux" "152" 
+			}
+
+			"weapon_secondaryattack"
+			{
+				"windows" "152" 
+				"linux" "153" 
+			}
+
+			"sc_weapon_tertiaryattack"
+			{
+				"windows" "153" 
+				"linux" "154" 
+			}
+
+			"weapon_reload"
+			{
+				"windows" "154" 
+				"linux" "155" 
+			}
+
+			"weapon_finishreload"
+			{
+				"windows" "155" 
+				"linux" "156" 
+			}
+
+			"weapon_shouldreload"
+			{
+				"windows" "156" 
+				"linux" "157" 
+			}
+
+			"weapon_weaponidle"
+			{
+				"windows" "157" 
+				"linux" "158" 
+			}
+
+			"weapon_retireweapon"
+			{
+				"windows" "158" 
+				"linux" "159" 
+			}
+
+			"weapon_shouldweaponidle"
+			{
+				"windows" "159" 
+				"linux" "160" 
+			}
+
+			"weapon_usedecrement"
+			{
+				"windows" "160" 
+				"linux" "161" 
+			}
+
+			"sc_weapon_burstsupplement"
+			{
+				"windows" "161" 
+				"linux" "162" 
+			}
+
+			"sc_weapon_getp_model"
+			{
+				"windows" "162" 
+				"linux" "163" 
+			}
+
+			"sc_weapon_getw_model"
+			{
+				"windows" "163" 
+				"linux" "164" 
+			}
+
+			"sc_weapon_getv_model"
+			{
+				"windows" "164" 
+				"linux" "165" 
+			}
+
+			"sc_weapon_precachecustommodels"
+			{
+				"windows" "165" 
+				"linux" "166" 
+			}
+
+			"weapon_getweapondata"
+			{
+				"windows" "166" 
+				"linux" "167" 
+			}
+
+			"weapon_setweapondata"
+			{
+				"windows" "167" 
+				"linux" "168" 
+			}
+
+			"sc_weapon_ismultiplayer"
+			{
+				"windows" "168" 
+				"linux" "169" 
+			}
+
+			"sc_weapon_frunfuncs"
+			{
+				"windows" "169" 
+				"linux" "170" 
+			}
+
+			"sc_weapon_setfov"
+			{
+				"windows" "170" 
+				"linux" "171" 
+			}
+
+			"sc_weapon_fcanrun"
+			{
+				"windows" "171" 
+				"linux" "172" 
+			}
+
+			"sc_weapon_customdecrement"
+			{
+				"windows" "172" 
+				"linux" "173" 
+			}
+
+			"sc_weapon_setv_model"
+			{
+				"windows" "173" 
+				"linux" "174" 
+			}
+
+			"sc_weapon_setp_model"
+			{
+				"windows" "174" 
+				"linux" "175" 
+			}
+
+			"sc_weapon_changeweaponskin"
+			{
+				"windows" "175" 
+				"linux" "176" 
+			}
 
         }
     }

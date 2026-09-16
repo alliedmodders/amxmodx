@@ -3526,7 +3526,7 @@ enum Ham
 
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_Item_Materialize, this)
@@ -4211,8 +4211,7 @@ enum Ham
 	Ham_SC_Weapon_ExtractAmmoFromItem,
 
 	/**
-	 * Description:		Unsure.
-	 *					This function is not supported in Earth's Special Forces mod.
+	 * Description:		-
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_Weapon_AddWeapon, this);
@@ -4245,7 +4244,6 @@ enum Ham
 
 	/**
 	 * Description:		Whether or not the weapon is usable (has ammo, etc.)
-	 *					This function is not supported in Earth's Special Forces mod.
 	 * Forward params:	function(this)
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_Weapon_IsUsable, this)

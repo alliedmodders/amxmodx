@@ -603,6 +603,13 @@ stock get_datadir(name[], len)
 /**
  * Provides a shorthand to register a working menu.
  *
+ * @note The function is called in the following manner:
+ *   id              - Client index
+ *   key             - Menu key pressed
+ *
+ * @note For a list of possible menu key, see the MENU_KEY_* constants in
+ *       amxconst.inc
+ *
  * @note Combines the necessary calls to register_menuid() and
  *       register_menucmd() into a single function.
  *

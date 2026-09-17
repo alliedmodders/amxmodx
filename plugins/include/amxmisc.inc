@@ -816,7 +816,7 @@ stock reset_menu(index)
  * @note The function is called in the following manner if no data is passed:
  *   id              - Task index
  *
- * @param time          Time interval to assign
+ * @param time          Time interval to assign, in seconds
  * @param function      Function to execute
  * @param id            Task id to assign
  * @param parameter     Data to pass through to callback

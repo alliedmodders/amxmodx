@@ -351,7 +351,7 @@ native ns_set_points(id, points);
  * Adds to the player's points spent count in combat.
  *
  * @param id		The player to add this to.
- * @param value	The value to add to the points spent.
+ * @param points	The value to add to the points spent.
  * @return			The new value of the points spent variable.
  */
 native ns_add_points(id,points);
@@ -389,7 +389,7 @@ native Float:ns_get_weap_range(idWeapon);
  *
  * @note			Use weapon index, not player index!
  * @param idWeapon	The entity index of the weapon to set.
- * @param range	The maximum range this weapon will have.
+ * @param range	    The maximum range this weapon will have.
  * @noreturn
  */
 native ns_set_weap_range(idWeapon, Float:range);
@@ -490,7 +490,7 @@ native ns_set_fov(idPlayer,Float:_fov=0.0);
  * Give the player an item.
  *
  * @param id		The player to give the item to.
- * @param class	The map-classname of the entity to give to the player.
+ * @param class	    The map-classname of the entity to give to the player.
  * @noreturn
  */
 native ns_give_item(id, const class[]);
@@ -544,7 +544,7 @@ native ns_takedamage(IDVictim, IDInflictor, IDAttacker, Float:Damage, DamageType
  * Attempts to unstick a player.
  *
  * @param id				Player to unstick.
- * @param StartDistance	Distance to start from the player to check for a new location.
+ * @param StartDistance	    Distance to start from the player to check for a new location.
  * @param MaxAttempts		How many attempts to try to find a new spot before giving up.
  * @return					1 on success, 0 on cannot find a place to move player to,
  *							-1 on invalid state (stunned/webbed), -2 on invalid class (comm/egg)
@@ -672,8 +672,8 @@ native Float:ns_add_obs_energy(idObs,Float:value);
  * make it so the player no longer receives the upgrade on spawn.
  *
  * @note This only works in combat.
- * @params idPlayer		The player index to change upgrades for.
- * @params ugprade		The impulse number for the upgrade to strip.
+ * @param idPlayer		The player index to change upgrades for.
+ * @param ugprade		The impulse number for the upgrade to strip.
  * @return 				2 for upgrade removed from player's bought and active list.
  *						1 for upgrade removed from player's bought list only.
  *						3 for upgrade removed from player's active list only (shouldn't happen, just incase.)

@@ -298,6 +298,8 @@ native TrieSnapshotDestroy(&Snapshot:handle);
  *       reading directly from the map.
  * @note Just like in snapshots the keys are not sorted.
  *
+ * @param handle        Map handle
+ *
  * @return              New iterator handle, which must be freed via TrieIterDestroy().
  * @error               Invalid Handle
  */

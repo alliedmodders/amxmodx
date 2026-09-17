@@ -441,7 +441,7 @@ native client_print(index, type, const message[], any:...);
  *
  * @param index     Client index, use 0 to display to all clients
  * @param sender    Client index used as the message sender
- * @param fmt       Formatting rules
+ * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
  * @return          Number of printed characters
@@ -475,7 +475,7 @@ native engclient_print(player, type, const message[], any:...);
 /**
  * Sends a message to the console of a client or the server.
  *
- * @param index     Client index, or 0 to print to the server console
+ * @param id        Client index, or 0 to print to the server console
  * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
@@ -1347,7 +1347,7 @@ native log_amx(const string[], any:...);
  *
  * @note The log will include a timestamp with the message.
  *
- * @param string    Formatting rules
+ * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
  * @return          Number of printed characters
@@ -1360,7 +1360,7 @@ native log_message(const message[], any:...);
  * @note The log will include a timestamp with the message.
  * @note The message can be hooked using "register_logevent".
  *
- * @param string    Formatting rules
+ * @param message   Formatting rules
  * @param ...       Variable number of formatting parameters
  *
  * @return          Number of printed characters
@@ -1372,6 +1372,7 @@ native elog_message(const message[], any:...);
  *
  * @note The log will include a timestamp with the message.
  *
+ * @param file      Log filename
  * @param string    Formatting rules
  * @param ...       Variable number of formatting parameters
  *
@@ -1917,7 +1918,7 @@ native register_clcmd(const client_cmd[], const function[], flags = -1, const in
  *       has required privileges (flags is not -1) and it is not a command
  *       starting with "say".
  *
- * @param client_cmd    Command to register
+ * @param cmd           Command to register
  * @param function      Callback function
  * @param flags         Admin privilege flags required
  * @param info          Command description
@@ -1938,7 +1939,7 @@ native register_concmd(const cmd[], const function[], flags = -1, const info[] =
  * @note For a list of possible access flags, see the ADMIN_* constants in
  *       amxconst.inc
  *
- * @param client_cmd    Command to register
+ * @param server_cmd    Command to register
  * @param function      Callback function
  * @param flags         Admin privilege flags required
  * @param info          Command description
@@ -1989,17 +1990,17 @@ native get_clcmdsnum(flag);
  * @note For a list of possible access flags, see the ADMIN_* constants in
  *       amxconst.inc
  *
- * @param index     Command index
- * @param command   Buffer to copy command name to
- * @param len1      Maximum name buffer size
- * @param flags     Variable to store privilege flags to
- * @param info      Buffer to copy command description to
- * @param len2      Maximum description buffer size
- * @param flag      Only considers commands that can be accessed with
- *                  the specified privilege flags
- * @param info_ml   Variable to store whether the parameter "info" is a multilingual key
+ * @param index      Command index
+ * @param server_cmd Buffer to copy command name to
+ * @param len1       Maximum name buffer size
+ * @param flags      Variable to store privilege flags to
+ * @param info       Buffer to copy command description to
+ * @param len2       Maximum description buffer size
+ * @param flag       Only considers commands that can be accessed with
+ *                   the specified privilege flags
+ * @param info_ml    Variable to store whether the parameter "info" is a multilingual key
  *
- * @return          1 on success, 0 if command was not found
+ * @return           1 on success, 0 if command was not found
  */
 native get_srvcmd(index, server_cmd[], len1, &flags, info[], len2, flag, &bool:info_ml = false);
 
@@ -2023,7 +2024,7 @@ native get_srvcmdsnum(flag);
  *       amxconst.inc
  *
  * @param index     Command index
- * @param command   Buffer to copy command name to
+ * @param cmd       Buffer to copy command name to
  * @param len1      Maximum name buffer size
  * @param flags     Variable to store privilege flags to
  * @param info      Buffer to copy command description to
@@ -2720,6 +2721,8 @@ native register_native(const name[], const handler[], style = 0);
  *          #pragma loadlib <name>
  *       #endif
  *
+ * @param library     Library name
+ *
  * @noreturn
  */
 native register_library(const library[]);
@@ -2862,7 +2865,7 @@ native set_float_byref(param, Float:value);
  *
  * @param param     Argument to retrieve, starting from 1
  * @param dest      Buffer to copy array to
- * @param maxlen    Size of buffer
+ * @param size      Size of buffer
  *
  * @noreturn
  * @error           If used outside of a native callback, or the native was
@@ -2875,7 +2878,7 @@ native get_array(param, dest[], size);
  *
  * @param param     Argument to retrieve, starting from 1
  * @param dest      Buffer to copy array to
- * @param maxlen    Size of buffer
+ * @param size      Size of buffer
  *
  * @noreturn
  * @error           If used outside of a native callback, or the native was
@@ -2888,7 +2891,7 @@ native get_array_f(param, Float:dest[], size);
  *
  * @param param     Argument to set, starting from 1
  * @param source    Buffer to copy array from
- * @param maxlen    Size of buffer
+ * @param size      Size of buffer
  *
  * @noreturn
  * @error           If used outside of a native callback, or the native was
@@ -2901,7 +2904,7 @@ native set_array(param, const source[], size);
  *
  * @param param     Argument to set, starting from 1
  * @param source    Buffer to copy array from
- * @param maxlen    Size of buffer
+ * @param size      Size of buffer
  *
  * @noreturn
  * @error           If used outside of a native callback, or the native was
@@ -3033,6 +3036,8 @@ native set_native_filter(const handler[]);
  *       PLUGIN_HANDLED to imply that load can continue without the module.
  * @note Errors occuring inside the handler will not be filtered and cause the
  *       plugin to fail load as if the handler returned PLUGIN_CONTINUE.
+ *
+ * @param handler   Function name to call
  *
  * @return      0 on success, -1 if filtering is not available, -2 if handler
  *              could not be found.

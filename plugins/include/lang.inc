@@ -51,6 +51,8 @@ native register_dictionary(const filename[]);
 /**
  * Checks if the language is loaded.
  *
+ * @param name	Language name (ISO 639-1)
+ *
  * @return 			1 if it is, 0 otherwise
  */
 native lang_exists(const name[]);

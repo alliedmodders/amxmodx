@@ -4107,1340 +4107,1350 @@
 	// Sven Co-op 5
 	//
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cactanimating.txt"
+	"entities.games/svencoop/offsets-cactanimating.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cadvfuncvehicle.txt"
+	"entities.games/svencoop/offsets-cadvfuncvehicle.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cadvvehiclethinker.txt"
+	"entities.games/svencoop/offsets-cadvvehiclethinker.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cagrunt.txt"
+	"entities.games/svencoop/offsets-cagrunt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cairtank.txt"
+	"entities.games/svencoop/offsets-cairtank.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cambientgeneric.txt"
+	"entities.games/svencoop/offsets-cambientgeneric.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cambientmusic.txt"
+	"entities.games/svencoop/offsets-cambientmusic.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-capache.txt"
+	"entities.games/svencoop/offsets-capache.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-capachehvr.txt"
+	"entities.games/svencoop/offsets-capachehvr.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cautotrigger.txt"
+	"entities.games/svencoop/offsets-cautotrigger.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbabygarg.txt"
+	"entities.games/svencoop/offsets-cbabygarg.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbabyvoltigore.txt"
+	"entities.games/svencoop/offsets-cbabyvoltigore.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbarnacle.txt"
+	"entities.games/svencoop/offsets-cbarnacle.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbarnaclegrapple.txt"
+	"entities.games/svencoop/offsets-cbarnaclegrapple.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbarnaclegrappletongue.txt"
+	"entities.games/svencoop/offsets-cbarnaclegrappletongue.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbarney.txt"
+	"entities.games/svencoop/offsets-cbarney.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbaseanimating.txt"
+	"entities.games/svencoop/offsets-cbaseanimating.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasebutton.txt"
+	"entities.games/svencoop/offsets-cbasebutton.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasecharger.txt"
+	"entities.games/svencoop/offsets-cbasecharger.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasedeadplayer.txt"
+	"entities.games/svencoop/offsets-cbasedeadplayer.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasedelay.txt"
+	"entities.games/svencoop/offsets-cbasedelay.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasedmstart.txt"
+	"entities.games/svencoop/offsets-cbasedmstart.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasedoor.txt"
+	"entities.games/svencoop/offsets-cbasedoor.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbaseentity.txt"
+	"entities.games/svencoop/offsets-cbaseentity.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasemonster.txt"
+	"entities.games/svencoop/offsets-cbasemonster.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasephysicsobject.txt"
+	"entities.games/svencoop/offsets-cbasephysicsobject.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasepickupobject.txt"
+	"entities.games/svencoop/offsets-cbasepickupobject.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbaseplattrain.txt"
+	"entities.games/svencoop/offsets-cbaseplattrain.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbaseplayer.txt"
+	"entities.games/svencoop/offsets-cbaseplayer.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbaseplayeritem.txt"
+	"entities.games/svencoop/offsets-cbaseplayeritem.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbaseplayerweapon.txt"
+	"entities.games/svencoop/offsets-cbaseplayerweapon.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasetoggle.txt"
+	"entities.games/svencoop/offsets-cbasetoggle.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbasetrigger.txt"
+	"entities.games/svencoop/offsets-cbasetrigger.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbaseturret.txt"
+	"entities.games/svencoop/offsets-cbaseturret.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbeam.txt"
+	"entities.games/svencoop/offsets-cbeam.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbigmomma.txt"
+	"entities.games/svencoop/offsets-cbigmomma.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbmortar.txt"
+	"entities.games/svencoop/offsets-cbmortar.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbodyguard.txt"
+	"entities.games/svencoop/offsets-cbodyguard.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbreakable.txt"
+	"entities.games/svencoop/offsets-cbreakable.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbubbling.txt"
+	"entities.games/svencoop/offsets-cbubbling.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbullsquid.txt"
+	"entities.games/svencoop/offsets-cbullsquid.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cbuttontarget.txt"
+	"entities.games/svencoop/offsets-cbuttontarget.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cchangelevel.txt"
+	"entities.games/svencoop/offsets-cchangelevel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cchumtoad.txt"
+	"entities.games/svencoop/offsets-cchumtoad.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccinemonster.txt"
+	"entities.games/svencoop/offsets-ccinemonster.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccontroller.txt"
+	"entities.games/svencoop/offsets-ccontroller.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccontrollerheadball.txt"
+	"entities.games/svencoop/offsets-ccontrollerheadball.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccontrollerzapball.txt"
+	"entities.games/svencoop/offsets-ccontrollerzapball.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccrossbowbolt.txt"
+	"entities.games/svencoop/offsets-ccrossbowbolt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccrowbar.txt"
+	"entities.games/svencoop/offsets-ccrowbar.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccustomprecache.txt"
+	"entities.games/svencoop/offsets-ccustomprecache.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccycler.txt"
+	"entities.games/svencoop/offsets-ccycler.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ccyclersprite.txt"
+	"entities.games/svencoop/offsets-ccyclersprite.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadbarney.txt"
+	"entities.games/svencoop/offsets-cdeadbarney.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadhev.txt"
+	"entities.games/svencoop/offsets-cdeadhev.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadhgrunt.txt"
+	"entities.games/svencoop/offsets-cdeadhgrunt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadop4hgrunt.txt"
+	"entities.games/svencoop/offsets-cdeadop4hgrunt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadop4hgruntmedic.txt"
+	"entities.games/svencoop/offsets-cdeadop4hgruntmedic.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadop4hgrunttorch.txt"
+	"entities.games/svencoop/offsets-cdeadop4hgrunttorch.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadotis.txt"
+	"entities.games/svencoop/offsets-cdeadotis.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadrobotgrunt.txt"
+	"entities.games/svencoop/offsets-cdeadrobotgrunt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeadscientist.txt"
+	"entities.games/svencoop/offsets-cdeadscientist.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdeserteagle.txt"
+	"entities.games/svencoop/offsets-cdeserteagle.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdisplacer.txt"
+	"entities.games/svencoop/offsets-cdisplacer.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cdisplacerportal.txt"
+	"entities.games/svencoop/offsets-cdisplacerportal.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cegon.txt"
+	"entities.games/svencoop/offsets-cegon.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cenvexplosion.txt"
+	"entities.games/svencoop/offsets-cenvexplosion.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cenvfog.txt"
+	"entities.games/svencoop/offsets-cenvfog.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cenvfunnel.txt"
+	"entities.games/svencoop/offsets-cenvfunnel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cenvglobal.txt"
+	"entities.games/svencoop/offsets-cenvglobal.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cenvrenderindividual.txt"
+	"entities.games/svencoop/offsets-cenvrenderindividual.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cenvsentence.txt"
+	"entities.games/svencoop/offsets-cenvsentence.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cenvsound.txt"
+	"entities.games/svencoop/offsets-cenvsound.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cenvspark.txt"
+	"entities.games/svencoop/offsets-cenvspark.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cflame.txt"
+	"entities.games/svencoop/offsets-cflame.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cflockingflyer.txt"
+	"entities.games/svencoop/offsets-cflockingflyer.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cflockingflyerflock.txt"
+	"entities.games/svencoop/offsets-cflockingflyerflock.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cflyingmonster.txt"
+	"entities.games/svencoop/offsets-cflyingmonster.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfuncclip.txt"
+	"entities.games/svencoop/offsets-cfuncclip.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfuncconveyor.txt"
+	"entities.games/svencoop/offsets-cfuncconveyor.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfuncmortarfield.txt"
+	"entities.games/svencoop/offsets-cfuncmortarfield.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfuncplat.txt"
+	"entities.games/svencoop/offsets-cfuncplat.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfuncplatrot.txt"
+	"entities.games/svencoop/offsets-cfuncplatrot.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfuncrotating.txt"
+	"entities.games/svencoop/offsets-cfuncrotating.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfunctank.txt"
+	"entities.games/svencoop/offsets-cfunctank.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfunctankcontrols.txt"
+	"entities.games/svencoop/offsets-cfunctankcontrols.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfunctanklaser.txt"
+	"entities.games/svencoop/offsets-cfunctanklaser.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfunctrackchange.txt"
+	"entities.games/svencoop/offsets-cfunctrackchange.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfunctracktrain.txt"
+	"entities.games/svencoop/offsets-cfunctracktrain.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfunctrain.txt"
+	"entities.games/svencoop/offsets-cfunctrain.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cfuncvehicle.txt"
+	"entities.games/svencoop/offsets-cfuncvehicle.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgameplayerequip.txt"
+	"entities.games/svencoop/offsets-cgameplayerequip.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgameplayerrespawnzone.txt"
+	"entities.games/svencoop/offsets-cgameplayerrespawnzone.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgameplayerzone.txt"
+	"entities.games/svencoop/offsets-cgameplayerzone.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgameteammaster.txt"
+	"entities.games/svencoop/offsets-cgameteammaster.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgametext.txt"
+	"entities.games/svencoop/offsets-cgametext.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgargantua.txt"
+	"entities.games/svencoop/offsets-cgargantua.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgauss.txt"
+	"entities.games/svencoop/offsets-cgauss.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgenericmonster.txt"
+	"entities.games/svencoop/offsets-cgenericmonster.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgib.txt"
+	"entities.games/svencoop/offsets-cgib.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgibshooter.txt"
+	"entities.games/svencoop/offsets-cgibshooter.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgloballightcontrol.txt"
+	"entities.games/svencoop/offsets-cgloballightcontrol.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cglock.txt"
+	"entities.games/svencoop/offsets-cglock.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cglow.txt"
+	"entities.games/svencoop/offsets-cglow.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgman.txt"
+	"entities.games/svencoop/offsets-cgman.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgonome.txt"
+	"entities.games/svencoop/offsets-cgonome.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgonomedead.txt"
+	"entities.games/svencoop/offsets-cgonomedead.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgonomespit.txt"
+	"entities.games/svencoop/offsets-cgonomespit.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cgrenade.txt"
+	"entities.games/svencoop/offsets-cgrenade.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cguntarget.txt"
+	"entities.games/svencoop/offsets-cguntarget.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chandgrenade.txt"
+	"entities.games/svencoop/offsets-chandgrenade.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chassassin.txt"
+	"entities.games/svencoop/offsets-chassassin.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chealthkit.txt"
+	"entities.games/svencoop/offsets-chealthkit.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgrunt.txt"
+	"entities.games/svencoop/offsets-chgrunt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgruntop4.txt"
+	"entities.games/svencoop/offsets-chgruntop4.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgruntop4medic.txt"
+	"entities.games/svencoop/offsets-chgruntop4medic.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgruntop4medicrepel.txt"
+	"entities.games/svencoop/offsets-chgruntop4medicrepel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgruntop4repel.txt"
+	"entities.games/svencoop/offsets-chgruntop4repel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgruntop4torch.txt"
+	"entities.games/svencoop/offsets-chgruntop4torch.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgruntop4torchrepel.txt"
+	"entities.games/svencoop/offsets-chgruntop4torchrepel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgruntrepel.txt"
+	"entities.games/svencoop/offsets-chgruntrepel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chgun.txt"
+	"entities.games/svencoop/offsets-chgun.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chornet.txt"
+	"entities.games/svencoop/offsets-chornet.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-choundeye.txt"
+	"entities.games/svencoop/offsets-choundeye.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chwgrunt.txt"
+	"entities.games/svencoop/offsets-chwgrunt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chwgruntrepel.txt"
+	"entities.games/svencoop/offsets-chwgruntrepel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-chypercube.txt"
+	"entities.games/svencoop/offsets-chypercube.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cichthyosaur.txt"
+	"entities.games/svencoop/offsets-cichthyosaur.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cinfobm.txt"
+	"entities.games/svencoop/offsets-cinfobm.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cislave.txt"
+	"entities.games/svencoop/offsets-cislave.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-citem.txt"
+	"entities.games/svencoop/offsets-citem.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-citembattery.txt"
+	"entities.games/svencoop/offsets-citembattery.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-citeminventory.txt"
+	"entities.games/svencoop/offsets-citeminventory.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ckingpin.txt"
+	"entities.games/svencoop/offsets-ckingpin.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ckingpincrawlerbeam.txt"
+	"entities.games/svencoop/offsets-ckingpincrawlerbeam.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ckingpinplasmaball.txt"
+	"entities.games/svencoop/offsets-ckingpinplasmaball.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ckingpinteleportcheck.txt"
+	"entities.games/svencoop/offsets-ckingpinteleportcheck.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cladder.txt"
+	"entities.games/svencoop/offsets-cladder.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-claser.txt"
+	"entities.games/svencoop/offsets-claser.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cleech.txt"
+	"entities.games/svencoop/offsets-cleech.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-clight.txt"
+	"entities.games/svencoop/offsets-clight.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-clightning.txt"
+	"entities.games/svencoop/offsets-clightning.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cm16.txt"
+	"entities.games/svencoop/offsets-cm16.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cm249.txt"
+	"entities.games/svencoop/offsets-cm249.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmassn.txt"
+	"entities.games/svencoop/offsets-cmassn.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmassnrepel.txt"
+	"entities.games/svencoop/offsets-cmassnrepel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmedkit.txt"
+	"entities.games/svencoop/offsets-cmedkit.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cminigun.txt"
+	"entities.games/svencoop/offsets-cminigun.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmomentarydoor.txt"
+	"entities.games/svencoop/offsets-cmomentarydoor.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmomentaryrotbutton.txt"
+	"entities.games/svencoop/offsets-cmomentaryrotbutton.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmonstermaker.txt"
+	"entities.games/svencoop/offsets-cmonstermaker.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmortar.txt"
+	"entities.games/svencoop/offsets-cmortar.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmp5.txt"
+	"entities.games/svencoop/offsets-cmp5.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmultimanager.txt"
+	"entities.games/svencoop/offsets-cmultimanager.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cmultisource.txt"
+	"entities.games/svencoop/offsets-cmultisource.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cnihilanth.txt"
+	"entities.games/svencoop/offsets-cnihilanth.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cnihilanthhvr.txt"
+	"entities.games/svencoop/offsets-cnihilanthhvr.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cnodeent.txt"
+	"entities.games/svencoop/offsets-cnodeent.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cnodeviewer.txt"
+	"entities.games/svencoop/offsets-cnodeviewer.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cop4mortar.txt"
+	"entities.games/svencoop/offsets-cop4mortar.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cop4mortarcontroller.txt"
+	"entities.games/svencoop/offsets-cop4mortarcontroller.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cosprey.txt"
+	"entities.games/svencoop/offsets-cosprey.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cospreyblackops.txt"
+	"entities.games/svencoop/offsets-cospreyblackops.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cotis.txt"
+	"entities.games/svencoop/offsets-cotis.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpathcondition.txt"
+	"entities.games/svencoop/offsets-cpathcondition.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpathconditioncontroller.txt"
+	"entities.games/svencoop/offsets-cpathconditioncontroller.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpathcorner.txt"
+	"entities.games/svencoop/offsets-cpathcorner.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpathtrack.txt"
+	"entities.games/svencoop/offsets-cpathtrack.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpathwaypoint.txt"
+	"entities.games/svencoop/offsets-cpathwaypoint.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpendulum.txt"
+	"entities.games/svencoop/offsets-cpendulum.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpitdrone.txt"
+	"entities.games/svencoop/offsets-cpitdrone.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cplattrigger.txt"
+	"entities.games/svencoop/offsets-cplattrigger.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cplayerammo.txt"
+	"entities.games/svencoop/offsets-cplayerammo.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cportal.txt"
+	"entities.games/svencoop/offsets-cportal.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpushable.txt"
+	"entities.games/svencoop/offsets-cpushable.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cpython.txt"
+	"entities.games/svencoop/offsets-cpython.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-crevertsaved.txt"
+	"entities.games/svencoop/offsets-crevertsaved.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-croach.txt"
+	"entities.games/svencoop/offsets-croach.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-crobotgrunt.txt"
+	"entities.games/svencoop/offsets-crobotgrunt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-crobotgruntrepel.txt"
+	"entities.games/svencoop/offsets-crobotgruntrepel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-crpg.txt"
+	"entities.games/svencoop/offsets-crpg.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-crpgrocket.txt"
+	"entities.games/svencoop/offsets-crpgrocket.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cruleentity.txt"
+	"entities.games/svencoop/offsets-cruleentity.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csatchel.txt"
+	"entities.games/svencoop/offsets-csatchel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csatchelcharge.txt"
+	"entities.games/svencoop/offsets-csatchelcharge.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cscientist.txt"
+	"entities.games/svencoop/offsets-cscientist.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cscientistcleansuit.txt"
+	"entities.games/svencoop/offsets-cscientistcleansuit.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cscientistcleansuitdead.txt"
+	"entities.games/svencoop/offsets-cscientistcleansuitdead.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cscriptedsentence.txt"
+	"entities.games/svencoop/offsets-cscriptedsentence.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csentry.txt"
+	"entities.games/svencoop/offsets-csentry.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cshockeffect.txt"
+	"entities.games/svencoop/offsets-cshockeffect.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cshockrifle.txt"
+	"entities.games/svencoop/offsets-cshockrifle.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cshockroach.txt"
+	"entities.games/svencoop/offsets-cshockroach.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cshocktrooper.txt"
+	"entities.games/svencoop/offsets-cshocktrooper.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cshotgun.txt"
+	"entities.games/svencoop/offsets-cshotgun.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csittingscientist.txt"
+	"entities.games/svencoop/offsets-csittingscientist.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csniperrifle.txt"
+	"entities.games/svencoop/offsets-csniperrifle.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csoundent.txt"
+	"entities.games/svencoop/offsets-csoundent.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cspeaker.txt"
+	"entities.games/svencoop/offsets-cspeaker.txt"
 	{
 		"game"	"svencoop"
 	} 
 	
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csporegrenade.txt"
+	"entities.games/svencoop/offsets-csporegrenade.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csporelauncher.txt"
+	"entities.games/svencoop/offsets-csporelauncher.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csporelauncherammo.txt"
+	"entities.games/svencoop/offsets-csporelauncherammo.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csprite.txt"
+	"entities.games/svencoop/offsets-csprite.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cspritetrain.txt"
+	"entities.games/svencoop/offsets-cspritetrain.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csqknest.txt"
+	"entities.games/svencoop/offsets-csqknest.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csquadmaker.txt"
+	"entities.games/svencoop/offsets-csquadmaker.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csquadmakerrenderfix.txt"
+	"entities.games/svencoop/offsets-csquadmakerrenderfix.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csquadmonster.txt"
+	"entities.games/svencoop/offsets-csquadmonster.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csquadtalkmonster.txt"
+	"entities.games/svencoop/offsets-csquadtalkmonster.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csqueak.txt"
+	"entities.games/svencoop/offsets-csqueak.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csqueakgrenade.txt"
+	"entities.games/svencoop/offsets-csqueakgrenade.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-csquidspit.txt"
+	"entities.games/svencoop/offsets-csquidspit.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cstripweapons.txt"
+	"entities.games/svencoop/offsets-cstripweapons.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cstukabat.txt"
+	"entities.games/svencoop/offsets-cstukabat.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctalkmonster.txt"
+	"entities.games/svencoop/offsets-ctalkmonster.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctargetcdaudio.txt"
+	"entities.games/svencoop/offsets-ctargetcdaudio.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cteleportdestination.txt"
+	"entities.games/svencoop/offsets-cteleportdestination.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctentacle.txt"
+	"entities.games/svencoop/offsets-ctentacle.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctesteffect.txt"
+	"entities.games/svencoop/offsets-ctesteffect.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctesthull.txt"
+	"entities.games/svencoop/offsets-ctesthull.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctor.txt"
+	"entities.games/svencoop/offsets-ctor.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggercamera.txt"
+	"entities.games/svencoop/offsets-ctriggercamera.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggercameratarget.txt"
+	"entities.games/svencoop/offsets-ctriggercameratarget.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerchangeclass.txt"
+	"entities.games/svencoop/offsets-ctriggerchangeclass.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerchangemaxammo.txt"
+	"entities.games/svencoop/offsets-ctriggerchangemaxammo.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerchangemodel.txt"
+	"entities.games/svencoop/offsets-ctriggerchangemodel.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerchangesky.txt"
+	"entities.games/svencoop/offsets-ctriggerchangesky.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerchangetarget.txt"
+	"entities.games/svencoop/offsets-ctriggerchangetarget.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerchangevalue.txt"
+	"entities.games/svencoop/offsets-ctriggerchangevalue.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggercondition.txt"
+	"entities.games/svencoop/offsets-ctriggercondition.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggercopyvalue.txt"
+	"entities.games/svencoop/offsets-ctriggercopyvalue.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggercreateentity.txt"
+	"entities.games/svencoop/offsets-ctriggercreateentity.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggercustomsave.txt"
+	"entities.games/svencoop/offsets-ctriggercustomsave.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggercyclicobserver.txt"
+	"entities.games/svencoop/offsets-ctriggercyclicobserver.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggereffect.txt"
+	"entities.games/svencoop/offsets-ctriggereffect.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerentityiterator.txt"
+	"entities.games/svencoop/offsets-ctriggerentityiterator.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerhurt.txt"
+	"entities.games/svencoop/offsets-ctriggerhurt.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerhurtremote.txt"
+	"entities.games/svencoop/offsets-ctriggerhurtremote.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerlookat.txt"
+	"entities.games/svencoop/offsets-ctriggerlookat.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggernumericdisplay.txt"
+	"entities.games/svencoop/offsets-ctriggernumericdisplay.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerpush.txt"
+	"entities.games/svencoop/offsets-ctriggerpush.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerrandom.txt"
+	"entities.games/svencoop/offsets-ctriggerrandom.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerrelay.txt"
+	"entities.games/svencoop/offsets-ctriggerrelay.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerscript.txt"
+	"entities.games/svencoop/offsets-ctriggerscript.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggersetcvar.txt"
+	"entities.games/svencoop/offsets-ctriggersetcvar.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggersetorigin.txt"
+	"entities.games/svencoop/offsets-ctriggersetorigin.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggerteleport.txt"
+	"entities.games/svencoop/offsets-ctriggerteleport.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctriggertrackgoal.txt"
+	"entities.games/svencoop/offsets-ctriggertrackgoal.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-ctripminegrenade.txt"
+	"entities.games/svencoop/offsets-ctripminegrenade.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cturret.txt"
+	"entities.games/svencoop/offsets-cturret.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cuzi.txt"
+	"entities.games/svencoop/offsets-cuzi.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cvoltigore.txt"
+	"entities.games/svencoop/offsets-cvoltigore.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cvoltshock.txt"
+	"entities.games/svencoop/offsets-cvoltshock.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cweaponbox.txt"
+	"entities.games/svencoop/offsets-cweaponbox.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cweaponcycler.txt"
+	"entities.games/svencoop/offsets-cweaponcycler.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cweather.txt"
+	"entities.games/svencoop/offsets-cweather.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cworld.txt"
+	"entities.games/svencoop/offsets-cworld.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cworlditem.txt"
+	"entities.games/svencoop/offsets-cworlditem.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cwreckage.txt"
+	"entities.games/svencoop/offsets-cwreckage.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cwrench.txt"
+	"entities.games/svencoop/offsets-cwrench.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cxenmaker.txt"
+	"entities.games/svencoop/offsets-cxenmaker.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cxenplight.txt"
+	"entities.games/svencoop/offsets-cxenplight.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cxentree.txt"
+	"entities.games/svencoop/offsets-cxentree.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-cxentreetrigger.txt"
+	"entities.games/svencoop/offsets-cxentreetrigger.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-czombie.txt"
+	"entities.games/svencoop/offsets-czombie.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-czombiebarney.txt"
+	"entities.games/svencoop/offsets-czombiebarney.txt"
 	{
 		"game"	"svencoop"
 	}
 
-	"gamedata/common.games/entities.games/svencoop/offsets-czombiesoldier.txt"
+	"entities.games/svencoop/offsets-czombiesoldier.txt"
 	{
 		"game"	"svencoop"
+	}
+
+	"gamerules.games/svencoop/offsets-chalflifemultiplay.txt"
+	{
+		"game"  "svencoop"
+	}
+
+	"gamerules.games/svencoop/offsets-chalflifeteamplay.txt"
+	{
+		"game"  "svencoop"
 	}
 
 	//

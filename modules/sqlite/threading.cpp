@@ -479,7 +479,9 @@ const char *AtomicResult::GetString(unsigned int columnId)
 
 	size_t idx = (m_CurRow * m_FieldCount) + columnId;
 
-	assert(m_Table[idx] != NULL);
+	// NULL cells are stored as empty slots (see CopyFrom()).
+	if (!m_Table[idx])
+		return NULL;
 
 	return m_Table[idx]->chars();
 }
@@ -559,11 +561,16 @@ void AtomicResult::CopyFrom(IResultSet *rs)
 		row = rs->GetRow();
 		for (unsigned int i=0; i<m_FieldCount; i++,idx++)
 		{
-			if (m_Table[idx])
+			const char* string = row->GetString(i);
+			if (!string)
 			{
-				*m_Table[idx] = row->GetString(i);
+				// Keep NULL distinguishable from an empty string, ke::AString can't hold NULL.
+				delete m_Table[idx];
+				m_Table[idx] = NULL;
+			} else if (m_Table[idx]) {
+				*m_Table[idx] = string;
 			} else {
-				m_Table[idx] = new ke::AString(row->GetString(i));
+				m_Table[idx] = new ke::AString(string);
 			}
 		}
 		rs->NextRow();

@@ -139,6 +139,7 @@ void CPlayer::Init( int pi, edict_t* pe )
     pEdict = pe;
     index = pi;
 	current = 0;
+    current_atk = 0;
 	clearStats = 0.0f;
 	rank = 0;
 }

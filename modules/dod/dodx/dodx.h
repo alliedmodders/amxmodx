@@ -140,6 +140,7 @@ extern RankSystem g_rank;
 extern CPlayer players[33];
 extern CPlayer* mPlayer;
 extern CMapInfo g_map;
+extern size_t m_LastHitGroup;
 
 int get_weaponid(CPlayer* player);
 bool ignoreBots (edict_t *pEnt, edict_t *pOther = NULL );

@@ -70,6 +70,69 @@ static bool DoesEngineMatch(const char* value)
 	return strcmp(ParseEngine, value) == 0;
 }
 
+/**
+ * Retrieves orig. gamedll file name (if clearly specified).
+ * A result is always returned and must be released using free().
+ * Strips single quotes when needed.
+ * On Linux/ Mac, a short path is returned (starting with game dir. name).
+ */
+static char* OrigGamedllFileName()
+{
+    char* Res;
+#if defined(WIN32) || defined(_WINDOWS)
+    const char* fileName = get_localinfo("orig_gamedll_windows", "");
+#elif defined(LINUX) || defined(_LINUX)
+    const char* fileName = get_localinfo("orig_gamedll_linux", "");
+#else
+    const char* fileName = get_localinfo("orig_gamedll_mac", "");
+#endif
+    if (*fileName == '\0')
+    {
+        Res = (char*)malloc(1);
+        *Res = '\0';
+        return Res;
+    }
+    size_t resLen, Iter, fileNameLen = strlen(fileName);
+    Res = (char*)malloc(fileNameLen + 1);
+    for (Iter = resLen = 0; Iter < fileNameLen; Iter++)
+        if ('\'' != fileName[Iter])
+            Res[resLen++] = fileName[Iter];
+    Res[resLen] = '\0';
+#if !defined(WIN32) && !defined(_WINDOWS) /// On Linux/ Mac, a path is required for dlopen().
+    if (resLen < 1)
+        return Res; /// Do not prepend a path if module file name not specified.
+    size_t pathResLen = g_mod_name.length() + resLen + 6 /** /dlls/ */;
+	char* pathRes = (char*)malloc(pathResLen + 1);
+	sprintf(pathRes, "%s/dlls/%s", g_mod_name.chars(), Res); /// Auto null-terminates.
+	free(Res);
+	return pathRes;
+#else
+    return Res;
+#endif
+}
+
+/**
+ * Returns an orig. gamedll-related address by orig. gamedll file name.
+ * Returns NULL if gamedll file name does not point to a loaded gamedll.
+ */
+static void* OrigGamedllAddrByFileName(const char* fileName)
+{
+#if defined(WIN32) || defined(_WINDOWS)
+    void* pAddr = reinterpret_cast<void*>(GetModuleHandle(fileName));
+    if (pAddr)
+        return pAddr;
+#else
+    void* pModule = dlopen(fileName, RTLD_NOLOAD | RTLD_NOW);
+    if (pModule)
+    {
+        void* pAddr = dlsym(pModule, "GiveFnptrsToDll");
+        dlclose(pModule);
+        return pAddr;
+    }
+#endif
+    return NULL;
+}
+
 CGameConfig::CGameConfig(const char *path) : m_FoundOffset(false), m_CustomLevel(0), m_CustomHandler(nullptr)
 {
 	strncopy(m_File, path, sizeof(m_File));
@@ -645,7 +708,15 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 			{
 				if (strcmp(TempSig.library, "server") == 0)
 				{
-					addressInBase = reinterpret_cast<void*>(MDLL_Spawn);
+                    char* desiredGamedll = OrigGamedllFileName();
+                    if ('\0' == *desiredGamedll)
+                        addressInBase = reinterpret_cast<void*>(MDLL_Spawn);
+                    else
+                    {
+                        void* gamedllAddr = OrigGamedllAddrByFileName(desiredGamedll);
+                        addressInBase = gamedllAddr ? gamedllAddr : reinterpret_cast<void*>(MDLL_Spawn);
+                    }
+                    free(desiredGamedll);
 				}
 				else if (strcmp(TempSig.library, "engine") == 0)
 				{
@@ -1267,7 +1338,15 @@ bool CGameConfigManager::ResolveLibraryInfo(const char *library, void **baseAddr
 
 	if (!strcmp(library, "server"))
 	{
-		symbol = reinterpret_cast<void*>(MDLL_Spawn);
+        char* desiredGamedll = OrigGamedllFileName();
+        if ('\0' == *desiredGamedll)
+            symbol = reinterpret_cast<void*>(MDLL_Spawn);
+        else
+        {
+            void* gamedllAddr = OrigGamedllAddrByFileName(desiredGamedll);
+            symbol = gamedllAddr ? gamedllAddr : reinterpret_cast<void*>(MDLL_Spawn);
+        }
+        free(desiredGamedll);
 	}
 	else if (!strcmp(library, "engine"))
 	{

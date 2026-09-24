@@ -222,3 +222,12 @@ MINUTE = minuto
 MINUTES = minutos
 SECOND = segundo
 SECONDS = segundos
+
+[tc]
+THE_TIME = 目前時間
+TIME_LEFT = 剩餘時間
+NO_T_LIMIT = 無時間限制
+MINUTE = 分鐘
+MINUTES = 分鐘
+SECOND = 秒
+SECONDS = 秒

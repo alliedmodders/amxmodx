@@ -322,3 +322,16 @@ COL_ORANGE = laranja
 COL_OCEAN = azul marinho
 COL_MAROON = castanho
 PRINT_ALL = (TODOS) %s :   %s
+
+[tc]
+COL_WHITE = 白色
+COL_RED = 紅色
+COL_GREEN = 綠色
+COL_BLUE = 藍色
+COL_YELLOW = 黃色
+COL_MAGENTA = 紫紅色
+COL_CYAN = 藍綠色
+COL_ORANGE = 橙色
+COL_OCEAN = 深藍色
+COL_MAROON = 褐紅色
+PRINT_ALL = (全部) %s :   %s

@@ -447,3 +447,21 @@ STATS_SET = Definições de Stats ^n
 PAUSE_PLUG = Pausar Plugins
 RES_WEAP = Restringir Armas
 TELE_PLAYER = Teleportar Jogador
+
+[tc]
+KICK_PLAYER = 踢除玩家
+BAN_PLAYER = 封鎖玩家
+SLAP_SLAY = 處死/傷害 玩家
+TEAM_PLAYER = 團隊玩家 ^n
+CHANGEL = 更改地圖
+VOTE_MAPS = 投票更改地圖 ^n
+SPECH_STUFF = 語音素材
+CLIENT_COM = 用戶端指令
+SERVER_COM = 服務端指令
+CVARS_SET = 參數設定
+CONFIG = 配置
+LANG_SET = 語言設定
+STATS_SET = 統計設定 ^n
+PAUSE_PLUG = 暫停擴充程式
+RES_WEAP = 限制武器
+TELE_PLAYER = 傳送玩家

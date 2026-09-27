@@ -1717,7 +1717,6 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 		{
 			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
 			g_isDropClientHookAvailable = true;
-			g_isDropClientHookEnabled = true;
 		}
 		else
 		{

@@ -231,7 +231,7 @@ void CFlagManager::LookupOrAdd(const char *Command, int &Flags, AMX *Plugin)
 			m_FlagList.push_back(Entry);
 			return;
 		}
-		iter++;
+		++iter;
 	}
 
 	// was not found, add it

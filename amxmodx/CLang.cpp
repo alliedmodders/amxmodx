@@ -170,13 +170,12 @@ CLangMngr::CLang::~CLang()
 
 void CLangMngr::CLang::Clear()
 {
-	THash<int, defentry>::iterator iter;
-	for (iter=m_LookUpTable.begin(); iter!=m_LookUpTable.end(); iter++)
+	for (auto &element : m_LookUpTable)
 	{
-		if (iter->val.definition)
+		if (element.val.definition)
 		{
-			delete iter->val.definition;
-			iter->val.definition = NULL;
+			delete element.val.definition;
+			element.val.definition = NULL;
 		}
 	}
 	m_LookUpTable.clear();

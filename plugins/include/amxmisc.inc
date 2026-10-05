@@ -26,7 +26,7 @@
 stock is_user_admin(id)
 {
 	new __flags = get_user_flags(id);
-	return (__flags > 0 && !(__flags & ADMIN_USER));
+	return (__flags != ADMIN_ALL && !(__flags & ADMIN_USER));
 }
 
 /**

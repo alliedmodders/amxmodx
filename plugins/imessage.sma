@@ -14,110 +14,133 @@
 #include <amxmodx>
 #include <amxmisc>
 
-#define X_POS         -1.0
-#define Y_POS         0.20
-#define HOLD_TIME     12.0
+const MAX_MSG_LEN = 384;
+const TASK_MSG    = 12345;
 
-new Array:g_Values
-new Array:g_Messages
-new g_MessagesNum
-new g_Current
+enum _:MessageInfo
+{
+	Message[MAX_MSG_LEN],
+	R,
+	G,
+	B
+}
 
-new amx_freq_imessage;
+new Array:g_messages;
+new g_messagesNum;
+new g_hudObject;
+new g_current;
+
+new g_hostname[64];
+new Float:g_amx_freq_imessage;
+new Float:g_amx_imessage_x_pos;
+new Float:g_amx_imessage_y_pos;
+new Float:g_amx_imessage_holdtime;
+new g_amx_imessage_only_dead;
 
 public plugin_init()
 {
-	g_Messages=ArrayCreate(384);
-	g_Values=ArrayCreate(3);
-	register_plugin("Info. Messages", AMXX_VERSION_STR, "AMXX Dev Team")
-	register_dictionary("imessage.txt")
-	register_dictionary("common.txt")
-	register_srvcmd("amx_imessage", "setMessage")
-	amx_freq_imessage=register_cvar("amx_freq_imessage", "10")
+	register_plugin("Info. Messages", AMXX_VERSION_STR, "AMXX Dev Team");
+	register_srvcmd("amx_imessage", "setMessage", _, "<message> <color in RRRGGGBBB format>");
+
+	register_dictionary("imessage.txt");
+	register_dictionary("common.txt");
+
+	g_messages = ArrayCreate(MessageInfo);
+	g_hudObject = CreateHudSyncObj();
+
+	bind_pcvar_num(create_cvar("amx_imessage_only_dead", "0", _, "Set to 1 to show info messages only to dead clients", true, 0.0, true, 1.0), g_amx_imessage_only_dead);
+	bind_pcvar_float(create_cvar("amx_freq_imessage", "180", _, "Frequency in seconds of info messages", true, 0.0), g_amx_freq_imessage);
+	bind_pcvar_float(create_cvar("amx_imessage_x_pos", "-1.0", _, "X position for info messages", true, -1.0, true, 1.0), g_amx_imessage_x_pos);
+	bind_pcvar_float(create_cvar("amx_imessage_y_pos", "0.2", _, "Y position for info messages", true, -1.0, true, 1.0), g_amx_imessage_y_pos);
+	bind_pcvar_float(create_cvar("amx_imessage_holdtime", "12.0", _, "Hold time for info messages", true, 0.0), g_amx_imessage_holdtime);
+	bind_pcvar_string(get_cvar_pointer("hostname"), g_hostname, charsmax(g_hostname));
 	
-	new lastinfo[8]
-	get_localinfo("lastinfomsg", lastinfo, charsmax(lastinfo))
-	g_Current = str_to_num(lastinfo)
-	set_localinfo("lastinfomsg", "")
+	new lastinfo[8];
+	get_localinfo("lastinfomsg", lastinfo, charsmax(lastinfo));
+	g_current = str_to_num(lastinfo);
+	set_localinfo("lastinfomsg", "");
 }
 
 public infoMessage()
 {
-	if (g_Current >= g_MessagesNum)
-		g_Current = 0
-		
 	// No messages, just get out of here
-	if (g_MessagesNum==0)
+	if (!g_messagesNum)
 	{
 		return;
 	}
+
+	// If the last message is reached, go back to the first one
+	if (g_current >= g_messagesNum)
+	{
+		g_current = 0;
+	}
 	
-	new values[3];
-	new Message[384];
+	static message[MessageInfo];
+	ArrayGetArray(g_messages, g_current, message);
+	replace_stringex(message[Message], charsmax(message[Message]), "%hostname%", g_hostname);
 	
-	ArrayGetString(g_Messages, g_Current, Message, charsmax(Message));
-	ArrayGetArray(g_Values, g_Current, values);
+	set_hudmessage(message[R], message[G], message[B], g_amx_imessage_x_pos, g_amx_imessage_y_pos, 0, 0.5, g_amx_imessage_holdtime, 2.0, 2.0, -1);
+
+	if (g_amx_imessage_only_dead)
+	{
+		new players[MAX_PLAYERS], pnum;
+		get_players_ex(players, pnum, GetPlayers_ExcludeAlive);
+
+		for (new player, i; i < pnum; i++)
+		{
+			player = players[i];
+
+			ShowSyncHudMsg(player, g_hudObject, message[Message]);
+			console_print(player, message[Message]);
+		}
+	}
+	else
+	{
+		ShowSyncHudMsg(0, g_hudObject, message[Message]);
+		console_print(0, message[Message]);
+	}
 	
-	new hostname[64];
+	g_current++;
 	
-	get_cvar_string("hostname", hostname, charsmax(hostname));
-	replace(Message, charsmax(Message), "%hostname%", hostname);
-	
-	set_hudmessage(values[0], values[1], values[2], X_POS, Y_POS, 0, 0.5, HOLD_TIME, 2.0, 2.0, -1);
-	
-	show_hudmessage(0, "%s", Message);
-	
-	client_print(0, print_console, "%s", Message);
-	++g_Current;
-	
-	new Float:freq_im = get_pcvar_float(amx_freq_imessage);
-	
-	if (freq_im > 0.0)
-		set_task(freq_im, "infoMessage", 12345);
+	if (g_amx_freq_imessage > 0.0)
+	{
+		set_task(g_amx_freq_imessage, "infoMessage", TASK_MSG);
+	}
 }
 
 public setMessage()
 {
+	remove_task(TASK_MSG);
 
-	new Message[384];
+	static message[MessageInfo];
+	read_argv(1, message[Message], charsmax(message[Message]));
+	replace_string(message[Message], charsmax(message[Message]), "\n", "^n");
+
+	new fullcolor[10];
+	read_argv(2, fullcolor, charsmax(fullcolor));
+
+	message[B] = str_to_num(fullcolor[6]);
+	fullcolor[6] = 0;
+
+	message[G] = str_to_num(fullcolor[3]);
+	fullcolor[3] = 0;
+
+	message[R] = str_to_num(fullcolor[0]);
+	fullcolor[0] = 0;
+
+	g_messagesNum++;
+	ArrayPushArray(g_messages, message);
 	
-	remove_task(12345)
-	read_argv(1, Message, charsmax(Message))
+	if (g_amx_freq_imessage > 0.0)
+	{
+		set_task(g_amx_freq_imessage, "infoMessage", TASK_MSG);
+	}
 	
-	while (replace(Message, charsmax(Message), "\n", "^n")) {}
-	
-	new mycol[12]
-	new vals[3];
-	
-	read_argv(2, mycol, charsmax(mycol))		// RRRGGGBBB
-	vals[2] = str_to_num(mycol[6])
-	
-	mycol[6] = 0
-	vals[1] = str_to_num(mycol[3])
-	
-	mycol[3] = 0
-	vals[0] = str_to_num(mycol[0])
-	
-	g_MessagesNum++
-	
-	new Float:freq_im = get_pcvar_float(amx_freq_imessage)
-	
-	ArrayPushString(g_Messages, Message);
-	ArrayPushArray(g_Values, vals);
-	
-	if (freq_im > 0.0)
-		set_task(freq_im, "infoMessage", 12345)
-	
-	return PLUGIN_HANDLED
+	return PLUGIN_HANDLED;
 }
 
 public plugin_end()
 {
-	new lastinfo[8]
-
-	num_to_str(g_Current, lastinfo, charsmax(lastinfo))
-	set_localinfo("lastinfomsg", lastinfo)
-
-	ArrayDestroy(g_Messages)
-	ArrayDestroy(g_Values)
+	ArrayDestroy(g_messages);
+	set_localinfo("lastinfomsg", fmt("%i", g_current));
 }

@@ -1,0 +1,48 @@
+This is HL SDK 2.3 source (hl_sdk_v23_source.exe), with various fixes
+in order to address some issues I ran into:
+ - Reduce/remove g++ warnings/complaints, so I can compile my Mod code with
+   lots of error checking ("--Weffc++ -Werror", etc) in order to catch
+   problems in my own code.
+ - Enable compiling win32 binaries under linux with mingw32 (gcc 2.95).
+ - Remove complaints from vim about missing newlines.
+
+Specific changes:
+ - Converted from dos (CRLF) to unix (LF) format for *.txt, *.cpp, *.c, *.h.
+ - Added missing EOF newlines.
+ - Missing BOOL for HasWeapon declaration.
+ - GNU g++ complaints: shadowed variables, testing undefined macros,
+   empty initialization lists in constructors, unused variables, 
+   and a couple other "Effective C++" recommendations.
+ - Mingw issues: unrecognized #pragma's.
+
+Changes from Valve LLC:
+ Between the original release of the hl_sdk_v23_source.exe and now,
+ Valve LLC has made various updates to the SDK 2.3 without releasing
+ a new SDK version. These updates have been included in this version
+ of the SDK. They are specifically:
+ - Addition of pfnGetPlayerAuthId to enginefunc_t struct in eiface.h
+ - Addition of various other functions to the enginefunc_t struct in
+   eiface.h (mostly CS:CZ related).
+ - Addition of the files multiplayer/engine/Sequence.h and
+   multiplayer/engine/archtypes.h
+ - The signatures of five functions in the enginefunc_t struct and
+   the type of one member of the KeyValueData struct in eiface.h were
+   changed.
+ - Addition of pfnQueryClientCvarValue to enginefunc_t struct and
+   pfnCvarValue to NEW_DLL_FUNCTIONS struct.
+
+Other notes:
+ - Renamed toplevel dirs to remove spaces as they were causing me some
+   annoyances, ie:
+      "Multiplayer Source" to "multiplayer"
+      "Single-Player Source" to "singleplayer"
+ - Focused on making the above changes to the sourcecode I include and/or
+   view frequently; thus, the focus was on the serverside multiplayer code.
+   The singleplayer and clientside (cl_dll) files may not have all the
+   above changes applied.
+
+There's a unified diff patch in the file:
+   metamod.hlsdk-2.3.patch
+as well as the *.orig files in the tar for comparison.
+
+wd@metamod.org

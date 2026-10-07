@@ -167,6 +167,16 @@ int FF_ClientConnectEx = -1;
 IFileSystem* g_FileSystem;
 HLTypeConversion TypeConversion;
 
+enum class EngineType
+{
+    HL25,
+    Legacy,
+    Svengine,
+	Unknown //falls back to legacy
+};
+
+EngineType g_EngineType = EngineType::Unknown;
+
 bool ColoredMenus(const char *ModName)
 {
 	const char * pModNames[] = { "cstrike", "czero", "dmc", "dod", "tfc", "valve" };
@@ -988,7 +998,7 @@ void SV_DropClient_PostHook(CPlayer *pPlayer, qboolean crash, const char *buffer
 }
 
 // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
-DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, const char*, format)
+DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, void*, cl, qboolean, crash, const char*, format)
 {
 	char buffer[1024];
 
@@ -997,7 +1007,21 @@ DETOUR_DECL_STATIC3_VAR(SV_DropClient, void, client_t*, cl, qboolean, crash, con
 	ke::SafeVsprintf(buffer, sizeof(buffer) - 1, format, ap);
 	va_end(ap);
 
-	auto pPlayer = SV_DropClient_PreHook(cl->edict, crash, buffer, ARRAY_LENGTH(buffer));
+	edict_t *pClientEdict = nullptr;
+	switch(g_EngineType)
+	{
+		case EngineType::HL25:
+			pClientEdict = reinterpret_cast<client_t_hl25*>(cl)->edict;
+			break;
+		case EngineType::Svengine:
+			pClientEdict = reinterpret_cast<client_t_svengine*>(cl)->edict;
+			break;
+		default:
+			pClientEdict = reinterpret_cast<client_t*>(cl)->edict;
+			break;
+	}
+
+	auto pPlayer = SV_DropClient_PreHook(pClientEdict, crash, buffer, ARRAY_LENGTH(buffer));
 
 	DETOUR_STATIC_CALL(SV_DropClient)(cl, crash, "%s", buffer);
 
@@ -1715,6 +1739,21 @@ C_DLLEXPORT	int	Meta_Attach(PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, m
 
 		if (CommonConfig && CommonConfig->GetMemSig("SV_DropClient", &address) && address)
 		{
+			const char* raw = CommonConfig->GetKeyValue("EngineType");
+
+			if (strcmp(raw, "HL25") == 0)
+			{
+				g_EngineType = EngineType::HL25;
+			}
+			else if (strcmp(raw, "Svengine") == 0)
+			{
+				g_EngineType = EngineType::Svengine;
+			}
+			else
+			{
+				g_EngineType = EngineType::Legacy;
+			}
+
 			DropClientDetour = DETOUR_CREATE_STATIC_FIXED(SV_DropClient, address);
 			g_isDropClientHookAvailable = true;
 		}
@@ -1933,3 +1972,4 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pNewFunctionTable, int *in
 	return 1;
 }
 #endif
+ 

@@ -65,7 +65,9 @@
 #define DEFAULT_RATE           (9999.0f)
 
 // This is the packet payload without any header bytes (which are attached for actual sending)
-#define NET_MAX_PAYLOAD        3990
+#define NET_MAX_PAYLOAD        		3990
+#define NET_MAX_PAYLOAD_HL25   		5990
+#define NET_MAX_PAYLOAD_SVENGINE 	65487
 
 typedef enum sv_delta_s
 {
@@ -108,6 +110,16 @@ typedef struct netadr_s
 	unsigned short	port;
 
 } netadr_t;
+
+typedef struct netadr_s_svengine
+{
+    netadrtype_t	type;
+    unsigned char	ip[4];
+	unsigned char	ip6[16];
+	unsigned char	ipx[10];
+    unsigned short	port;
+
+} netadr_t_svengine;
 
 typedef struct sizebuf_s
 {
@@ -219,6 +231,114 @@ typedef struct netchan_s
 	flow_t            flow[MAX_FLOWS];                // Incoming and outgoing flow metrics
 
 } netchan_t;
+
+typedef struct netchan_s_hl25
+{	
+	netsrc_t          sock;                          // NS_SERVER or NS_CLIENT, depending on channel.
+	netadr_t          remote_address;                // Address this channel is talking to.
+
+	int               player_slot;
+	
+	float             last_received;                 // For timeouts.  Time last message was received.
+	float             connect_time;                  // Time when channel was connected.
+
+	double            rate;                          // Bandwidth choke, Bytes per second
+	double            cleartime;                     // If realtime > cleartime, free to send next packet
+
+	// Sequencing variables
+	int               incoming_sequence;             // Increasing count of sequence numbers 
+	int               incoming_acknowledged;         // # of last outgoing message that has been ack'd.
+	int               incoming_reliable_acknowledged;// Toggles T/F as reliable messages are received.
+	int               incoming_reliable_sequence;    // single bit, maintained local
+	int               outgoing_sequence;             // Message we are sending to remote
+	int               reliable_sequence;             // Whether the message contains reliable payload, single bit
+	int               last_reliable_sequence;        // Outgoing sequence number of last send that had reliable data
+
+	void*             connection_status;
+	int               (*pfnNetchan_Blocksize)(void *);
+
+	sizebuf_t         message;                        // Staging and holding areas
+	byte              message_buf[NET_MAX_PAYLOAD_HL25];
+
+	
+	int               reliable_length;                // Reliable message buffer. We keep adding to it until reliable is acknowledged. Then we clear it.
+	byte              reliable_buf[NET_MAX_PAYLOAD_HL25];
+	
+	fragbufwaiting_t* waitlist[MAX_STREAMS];          // Waiting list of buffered fragments to go onto queue. Multiple outgoing buffers can be queued in succession.
+	
+	int               reliable_fragment[MAX_STREAMS]; // Is reliable waiting buf a fragment?
+	unsigned int      reliable_fragid[MAX_STREAMS];   // Buffer id for each waiting fragment
+
+	fragbuf_t*        fragbufs[MAX_STREAMS];          // The current fragment being set
+	int               fragbufcount[MAX_STREAMS];      // The total number of fragments in this stream
+	
+	short int         frag_startpos[MAX_STREAMS];     // Position in outgoing buffer where frag data starts
+	short int         frag_length[MAX_STREAMS];       // Length of frag data in the buffer
+	
+	fragbuf_t*        incomingbufs[MAX_STREAMS];      // Incoming fragments are stored here
+	qboolean          incomingready[MAX_STREAMS];     // Set to true when incoming data is ready
+
+	char              incomingfilename[MAX_PATH_LENGTH];  // Only referenced by the FRAG_FILE_STREAM component
+	                                                  //  Name of file being downloaded
+	void*             tempbuffer;
+	int               tempbuffersize;
+	
+	flow_t            flow[MAX_FLOWS];                // Incoming and outgoing flow metrics
+
+} netchan_t_hl25;
+
+typedef struct netchan_s_svengine
+{
+    netsrc_t              sock;								// NS_SERVER or NS_CLIENT, depending on channel.
+    netadr_t_svengine     remote_address;					// Address this channel is talking to.
+
+    int                   player_slot;
+
+    float                 last_received;					// For timeouts.  Time last message was received.
+    float                 connect_time;						// Time when channel was connected.
+
+    double                rate;								// Bandwidth choke, Bytes per second
+    double                cleartime;						// If realtime > cleartime, free to send next packet
+	
+    int                   incoming_sequence;				// Increasing count of sequence numbers 
+    int                   incoming_acknowledged;			// # of last outgoing message that has been ack'd.
+    int                   incoming_reliable_acknowledged;	// Toggles T/F as reliable messages are received.
+    int                   incoming_reliable_sequence;		// single bit, maintained local
+    int                   outgoing_sequence;				// Message we are sending to remote
+    int                   reliable_sequence;				// Whether the message contains reliable payload, single bit
+    int                   last_reliable_sequence;			// Outgoing sequence number of last send that had reliable data
+    
+	void*                 connection_status;
+    int                   (*pfnNetchan_Blocksize)(void *);
+
+    sizebuf_t             message;							// Staging and holding areas
+    byte                  message_buf[NET_MAX_PAYLOAD_SVENGINE - 20];
+
+    int                   reliable_length;					// Reliable message buffer. We keep adding to it until reliable is acknowledged. Then we clear it.
+    byte                  reliable_buf[NET_MAX_PAYLOAD_SVENGINE - 20];
+
+    fragbufwaiting_t*     waitlist[MAX_STREAMS];			// Waiting list of buffered fragments to go onto queue. Multiple outgoing buffers can be queued in succession.
+
+    int                   reliable_fragment[MAX_STREAMS];	// Is reliable waiting buf a fragment?			// Is reliable waiting buf a fragment?
+    unsigned int          reliable_fragid[MAX_STREAMS];		// Buffer id for each waiting fragment
+    
+	fragbuf_t*            fragbufs[MAX_STREAMS];			// The current fragment being set
+    int                   fragbufcount[MAX_STREAMS];		// The total number of fragments in this stream
+
+    short int             frag_startpos[MAX_STREAMS];		// Position in outgoing buffer where frag data starts
+    short int             frag_length[MAX_STREAMS];			// Length of frag data in the buffer
+
+    fragbuf_t*            incomingbufs[MAX_STREAMS];		// Incoming fragments are stored here
+    qboolean              incomingready[MAX_STREAMS];		// Set to true when incoming data is ready
+
+    char                  incomingfilename[MAX_PATH_LENGTH]; // Only referenced by the FRAG_FILE_STREAM component
+															//  Name of file being downloaded
+    void *                tempbuffer;
+    int                   tempbuffersize;
+
+    flow_t                flow[MAX_FLOWS];					// Incoming and outgoing flow metrics
+
+} netchan_t_svengine;
 
 typedef struct packet_entities_s
 {
@@ -517,6 +637,160 @@ typedef struct client_s
 
 } client_t;
 
+typedef struct client_s_hl25
+{
+	qboolean        active;
+	qboolean        spawned;
+	qboolean        fully_connected;
+	qboolean        connected;
+	qboolean        uploading;
+	qboolean        hasusrmsgs;
+	qboolean        has_force_unmodified;
+
+	netchan_t_hl25  netchan;
+
+	int             chokecount;
+	int             delta_sequence;
+
+	qboolean        fakeclient;
+	qboolean        proxy;
+	usercmd_t       lastcmd;
+
+	double          connecttime;
+	double          cmdtime;
+	double          ignorecmdtime;
+
+	float           latency;
+	float           packet_loss;
+
+	double          localtime;
+	double          nextping;
+	double          svtimebase;
+
+	sizebuf_t       datagram;
+	byte            datagram_buf[6000];
+
+	double          connection_started;
+	double          next_messagetime;
+	double          next_messageinterval;
+	qboolean        send_message;
+	qboolean        skip_message;
+
+	client_frame_t* frames;
+	event_state_t   events;
+	edict_t*        edict;
+	const edict_t*  pViewEntity;
+	int             userid;
+	USERID_t        network_userid;
+
+	char            userinfo[MAX_INFO_STRING];
+
+	qboolean        sendinfo;
+	float           sendinfo_time;
+
+	char            hashedcdkey[64];
+	char            name[32];
+	int             topcolor;
+	int             bottomcolor;
+	int             entityId;
+
+	resource_t      resourcesonhand;
+	resource_t      resourcesneeded;
+
+	FileHandle_t    upload;
+	qboolean        uploaddoneregistering;
+	customization_t customdata;
+
+	int             crcValue;
+	int             lw;
+	int             lc;
+
+	char            physinfo[MAX_INFO_STRING];
+
+	qboolean        m_bLoopback;
+	uint32          m_VoiceStreams[2];
+	double          m_lastvoicetime;
+	int             m_sendrescount;
+	qboolean        m_bSentNewResponse;
+
+} client_t_hl25;
+
+typedef struct client_s_svengine
+{
+    qboolean        	active;
+    qboolean        	spawned;
+    qboolean        	fully_connected;
+    qboolean        	connected;
+    qboolean        	uploading;
+    qboolean        	hasusrmsgs;
+    qboolean        	has_force_unmodified;
+
+    netchan_t_svengine	netchan;
+
+    int                	chokecount;
+    int                	delta_sequence;
+
+    qboolean        	fakeclient;
+    usercmd_t        	lastcmd;
+
+    double            	connecttime;
+    double            	cmdtime;
+    double            	ignorecmdtime;
+
+    float            	latency;
+    float            	packet_loss;
+
+    double            	localtime;
+    double            	nextping;
+    double          	svtimebase;
+
+    sizebuf_t        	datagram;
+    byte            	datagram_buf[65487];
+
+    double            	connection_started;
+    double          	next_messagetime;
+    double          	next_messageinterval;
+    qboolean        	send_message;
+    qboolean        	skip_message;
+
+    client_frame_t*    	frames;
+    event_state_t    	events;
+    edict_t*            edict;
+    const edict_t*    	pViewEntity;
+    int                	userid;
+    USERID_t        	network_userid;
+
+    char            	userinfo[MAX_INFO_STRING];
+
+    qboolean        	sendinfo;
+    float            	sendinfo_time;
+
+    char            	hashedcdkey[64];
+    char            	name[32];
+    int                	topcolor;
+    int                	bottomcolor;
+    int                	entityId;
+
+    resource_t        	resourcesonhand;
+    resource_t        	resourcesneeded;
+
+    FileHandle_t    	upload;
+    qboolean        	uploaddoneregistering;
+    customization_t 	customdata;
+
+    int                	crcValue;
+    int                	lw;
+    int                	lc;
+
+    char            	physinfo[MAX_INFO_STRING];
+
+    qboolean        	m_bLoopback;
+    uint32            	m_VoiceStreams[32 / 32 + 1];
+    double            	m_lastvoicetime;
+    int                	m_sendrescount;
+
+} client_t_svengine;
+
 using cvar_callback_t = void (*)(const char *pszNewValue);
 
 struct cvar_listener_t
@@ -530,3 +804,4 @@ struct cvar_listener_t
 
 
 #endif //_ENGINE_STRUCTS_H_
+ 

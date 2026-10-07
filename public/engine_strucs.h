@@ -647,7 +647,7 @@ typedef struct client_s_hl25
 	qboolean        hasusrmsgs;
 	qboolean        has_force_unmodified;
 
-	netchan_t       netchan;
+	netchan_t_hl25  netchan;
 
 	int             chokecount;
 	int             delta_sequence;

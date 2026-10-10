@@ -846,6 +846,8 @@ enum {
  *  Global variables: iflevel, ifstack (altered)
  *                    lptr      (altered)
  */
+void parsesingleoption(char *argv);
+
 static int command(void)
 {
   int tok,ret;
@@ -1051,10 +1053,11 @@ static int command(void)
                     !strcmp(str, "explib") ||
                     !strcmp(str, "expclass") ||
                     !strcmp(str, "defclasslib") ) {
-          char name[sNAMEMAX+1],sname[sNAMEMAX+1];
-          const char *prefix = "";
+          char name[sNAMEMAX+1] = { 0 }, sname[sNAMEMAX + 1];
+          const char *prefix = ""; /* it's empty on library only */
           sname[0] = '\0';
           sname[1] = '\0';
+
           if (!strcmp(str, "reqlib"))
             prefix = "?rl_";
           else if (!strcmp(str, "reqclass"))
@@ -1097,7 +1100,7 @@ static int command(void)
             pc_addlibtable=FALSE;
           } else {
             /* add the name if it does not yet exist in the table */
-            char newname[sNAMEMAX+1];
+            char newname[sNAMEMAX+1] = { 0 };
             if (strlen(name) + strlen(prefix) + strlen(sname) <= sNAMEMAX)
             {
               strcpy(newname, prefix);
@@ -1190,8 +1193,42 @@ static int command(void)
             if (comma)
               lptr++;
           } while (comma);
-        } else if (strcmp(str, "showstackusageinfo")==0) {
-            sc_stkusageinfo=TRUE;
+        } else if (strcmp(str,"showstackusageinfo")==0) {
+          sc_stkusageinfo=TRUE;
+        } else if (strcmp(str,"warning")==0) {
+          int ok=lex(&val,&str) == tSYMBOL;
+          if (ok) {
+            if (strcmp(str,"enable")==0 || strcmp(str,"disable")==0) {
+              cell val;
+              enum s_warnmode enable=(str[0]=='e') ? warnENABLE : warnDISABLE;
+              do {
+                preproc_expr(&val,NULL);
+                pc_enablewarning(val,enable);
+              } while (*lptr != '\0');
+            }
+            else if (strcmp(str,"push")==0) {
+              pc_pushwarnings();
+            }
+            else if (strcmp(str,"pop")==0) {
+              pc_popwarnings();
+            }
+            else {
+              ok=FALSE;
+            } /* if */
+          }
+          if (!ok) {
+            error(207);         /* unknown #pragma */
+          } /* if */
+        } else if (strcmp(str,"option")==0) {
+          char name[sNAMEMAX + 1] = { 0 };
+          int i;
+          /* first gather all information, start with the tag name */
+          while (*lptr <= ' ' && *lptr != '\0')
+            lptr++;
+          for (i=0; i<sNAMEMAX && *lptr && *lptr>' '; i++,lptr++)
+            name[i]=*lptr;
+          name[i] = '\0';
+          parsesingleoption(name);
         } else {
           error(207);           /* unknown #pragma */
         } /* if */

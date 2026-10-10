@@ -107,7 +107,8 @@ static char *errmsg[] = {
 /*085*/  "no states are defined for function \"%s\"\n",
 /*086*/  "unknown automaton \"%s\"\n",
 /*087*/  "unknown state \"%s\" for automaton \"%s\"\n",
-/*088*/  "number of arguments does not match definition\n"
+/*088*/  "number of arguments does not match definition\n",
+/*089*/  "division by zero\n"
        };
 
 static char *fatalmsg[] = {
@@ -168,4 +169,5 @@ static char *warnmsg[] = {
 /*232*/  "output file is written, but with compact encoding disabled\n",
 /*233*/  "symbol \"%s\" is marked as deprecated: %s\n",
 /*234*/  "recursive function \"%s\"\n",
+/*235*/  "detected %s with no corresponding %s\n"
        };

@@ -142,7 +142,10 @@ static cell AMX_NATIVE_CALL socket_open(AMX *amx, cell *params)
 					if(nonblocking_socket && (errno == EINPROGRESS || errno == EWOULDBLOCK))
 						connect_inprogress = true;
 					else
+					{
 						close(sockfd);
+						sockfd = -1;
+					}
 				}
 				else
 				{

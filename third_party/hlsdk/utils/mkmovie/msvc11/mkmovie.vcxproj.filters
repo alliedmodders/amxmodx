@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{9a16c90b-edcb-4385-a9b2-68286150957f}</UniqueIdentifier>
+      <Extensions>*.c</Extensions>
+    </Filter>
+    <Filter Include="Include files">
+      <UniqueIdentifier>{dd4315c0-5a3f-4c9c-a53d-67c74d6ab6bb}</UniqueIdentifier>
+      <Extensions>*.h</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\mkmovie.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\common\cmdlib.h">
+      <Filter>Include files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\movie.h">
+      <Filter>Include files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

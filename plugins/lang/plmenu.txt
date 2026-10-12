@@ -467,3 +467,21 @@ TRANSF_SILENT = Transferência Silenciosa
 CL_CMD_MENU = Menu de Comandos do Cliente
 NO_CMDS = Não existem comandos disponíveis
 CANT_PERF_PLAYER = Essa ação não pode ser feita no jogador "%s"
+
+[tc]
+ADMIN_BAN_1 = 管理員: 封鎖 %s
+ADMIN_BAN_2 = 管理員 %s: 封鎖 %s
+BAN_MENU = 封鎖玩家選單
+BAN_FOR_MIN = 封鎖 %d 分鐘
+BAN_PERM = 封鎖永久
+SLAP_SLAY_MENU = 處死/傷害玩家選單
+SLAP_WITH_DMG = 造成 %d 點傷害
+SLAY = 處死
+KICK_MENU = 踢除玩家選單
+ADMIN_TRANSF_1 = 管理員: 傳送 %s 到 %s 隊伍
+ADMIN_TRANSF_2 = 管理員 %s: 傳送 %s 到 %s 隊伍
+TEAM_MENU = 團隊控制項功能表
+TRANSF_TO = 傳送到 %s 隊伍
+CL_CMD_MENU = 用戶端命令功能表
+NO_CMDS = 無可用命令
+CANT_PERF_PLAYER = 該操作不能對玩家 "%s" 執行

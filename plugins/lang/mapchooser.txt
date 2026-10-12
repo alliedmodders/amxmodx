@@ -222,3 +222,12 @@ X_CHOSE_X = %s escolheu %s
 CHOOSE_NEXTM = AMX Escolher próximo mapa
 EXTED_MAP = Estender o mapa %s
 TIME_CHOOSE = É hora de escolher o próximo mapa...
+
+[tc]
+CHO_FIN_EXT = 選擇結束. 目前地圖將被延長 %.0f 分鐘
+CHO_FIN_NEXT = 選擇結束. 下一張地圖為 %s
+CHOSE_EXT = %s 選擇延長目前地圖
+X_CHOSE_X = %s 選擇了 %s
+CHOOSE_NEXTM = AMX 選擇下一張地圖
+EXTED_MAP = 延長地圖 %s
+TIME_CHOOSE = 是該選擇下一張地圖了...

@@ -322,3 +322,16 @@ INV_PAS = Palavra-passe inválida!
 PAS_ACC = Palavra-passe aceite
 PRIV_SET = Previlégios postos
 NO_ENTRY = Tu não podes entrar no servidor...
+
+[tc]
+LOADED_ADMIN = 從檔案中讀取到 1 位管理員
+LOADED_ADMINS = 從檔案中讀取到 %d 位管理員
+SQL_CANT_CON = SQL 錯誤: 無法連接到: '%s'
+SQL_CANT_LOAD_ADMINS = SQL 錯誤: 無法讀取管理員: '%s'
+NO_ADMINS = 目前伺服器沒有管理員列表.
+SQL_LOADED_ADMIN = 從資料庫中讀取到 1 位管理員
+SQL_LOADED_ADMINS = 從資料庫中讀取到 %d 位管理員
+INV_PAS = 無效的密碼!
+PAS_ACC = 密碼已經被接受
+PRIV_SET = 權限設定
+NO_ENTRY = 您沒有進入到伺服器...

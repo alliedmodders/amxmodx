@@ -22,7 +22,7 @@ new g_nextMap[32]
 new g_mapCycle[32]
 new g_pos
 new g_currentMap[32]
-new g_changeMapCalled;
+new Float:g_chattime
 
 // pcvars
 new g_mp_friendlyfire, g_mp_chattime
@@ -34,14 +34,18 @@ public plugin_init()
 	register_dictionary("nextmap.txt")
 	register_event("30", "changeMap", "a")
 	register_clcmd("say nextmap", "sayNextMap", 0, "- displays nextmap")
+	register_clcmd("say /nextmap", "sayNextMap", 0, "- displays nextmap")
 	register_clcmd("say currentmap", "sayCurrentMap", 0, "- display current map")
+	register_clcmd("say /currentmap", "sayCurrentMap", 0, "- display current map")
 
 	g_amx_nextmap = register_cvar("amx_nextmap", "", FCVAR_SERVER|FCVAR_EXTDLL|FCVAR_SPONLY)
 	g_mp_chattime = get_cvar_pointer("mp_chattime")
 	g_mp_friendlyfire = get_cvar_pointer("mp_friendlyfire")
+	g_chattime = getModChatTime()
 	if( g_mp_friendlyfire )
 	{
 		register_clcmd("say ff", "sayFFStatus", 0, "- display friendly fire status")
+		register_clcmd("say /ff", "sayFFStatus", 0, "- display friendly fire status")
 	}
 
 	get_mapname(g_currentMap, charsmax(g_currentMap))
@@ -81,16 +85,22 @@ public sayNextMap()
 	
 	getNextMapName(name, charsmax(name))
 	client_print(0, print_chat, "%L %s", LANG_PLAYER, "NEXT_MAP", name)
+	
+	return PLUGIN_HANDLED
 }
 
 public sayCurrentMap()
 {
 	client_print(0, print_chat, "%L: %s", LANG_PLAYER, "PLAYED_MAP", g_currentMap)
+	
+	return PLUGIN_HANDLED
 }
 
 public sayFFStatus()
 {
 	client_print(0, print_chat, "%L: %L", LANG_PLAYER, "FRIEND_FIRE", LANG_PLAYER, get_pcvar_num(g_mp_friendlyfire) ? "ON" : "OFF")
+	
+	return PLUGIN_HANDLED
 }
 
 public delayedChange(param[])
@@ -98,24 +108,15 @@ public delayedChange(param[])
 	engine_changelevel(param)
 }
 
-public plugin_end()
-{
-	if (g_mp_chattime && g_changeMapCalled) {
-		set_pcvar_float(g_mp_chattime, get_pcvar_float(g_mp_chattime) - 2.0)
-	}
-}
-
 public changeMap()
 {
 	new string[32]
-	new Float:chattime = g_mp_chattime ? get_pcvar_float(g_mp_chattime) : 0.0;
-	
-	if (g_mp_chattime) {
-		set_pcvar_float(g_mp_chattime, chattime + 2.0)		// make sure mp_chattime is long
-		g_changeMapCalled = true;
-	}
+	new Float:chattime = floatmax(0.0, (g_mp_chattime ? get_pcvar_float(g_mp_chattime) : g_chattime) - 1.0)
+
 	new len = getNextMapName(string, charsmax(string)) + 1
-	set_task(chattime, "delayedChange", 0, string, len)	// change with 1.5 sec. delay
+	client_print(0, print_chat, "%L %s", LANG_PLAYER, "NEXT_MAP", string)
+
+	set_task(chattime, "delayedChange", 0, string, len)
 }
 
 new g_warning[] = "WARNING: Couldn't find a valid map or the file doesn't exist (file ^"%s^")"
@@ -235,3 +236,19 @@ readMapCycle(szFileName[], szNext[], iNext)
 	g_pos = 0
 }
 #endif
+
+// Mods that do not have a mp_chattime cvar
+stock Float:getModChatTime()
+{
+	new mod_name[32]
+	get_modname(mod_name, charsmax(mod_name))
+
+	if (equal(mod_name, "gearbox"))
+		return 6.0
+	else if (equal(mod_name, "ricochet"))
+		return 6.0
+	else if (equal(mod_name, "rewolf"))
+		return 6.0
+
+	return 0.0
+}

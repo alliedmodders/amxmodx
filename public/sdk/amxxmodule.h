@@ -2019,9 +2019,13 @@ void FN_GameShutdown(void);
 int FN_ShouldCollide(edict_t *pentTouched, edict_t *pentOther);
 #endif // FN_ShouldCollide
 
+#ifdef FN_CvarValue
+void FN_CvarValue(const edict_t *pEdict, const char *value);
+#endif
 
-
-
+#ifdef FN_CvarValue2
+void FN_CvarValue2(const edict_t *pEdict, int requestID, const char *cvarName, const char *value);
+#endif
 
 #ifdef FN_OnFreeEntPrivateData_Post
 void FN_OnFreeEntPrivateData_Post(edict_t *pEnt);
@@ -2035,6 +2039,12 @@ void FN_GameShutdown_Post(void);
 int FN_ShouldCollide_Post(edict_t *pentTouched, edict_t *pentOther);
 #endif // FN_ShouldCollide_Post
 
+#ifdef FN_CvarValue_Post
+void FN_CvarValue_Post(const edict_t *pEdict, const char *value);
+#endif
+
+#ifdef FN_CvarValue2_Post
+void FN_CvarValue2_Post(const edict_t *pEdict, int requestID, const char *cvarName, const char* value);
 #endif // USE_METAMOD
 
 

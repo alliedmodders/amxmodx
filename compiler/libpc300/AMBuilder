@@ -11,6 +11,8 @@ binary.compiler.includes += [
 if builder.target_platform in ['mac', 'linux']:
   binary.compiler.defines += ['ENABLE_BINRELOC']
   binary.compiler.postlink += ['-lm', '-lpthread']
+  # i386 sources compiled without -fPIC; binutils >= 2.40 errors on text relocations
+  binary.compiler.linkflags += ['-Wl,-z,notext']
 
 binary.compiler.defines += [
   'NO_MAIN',

@@ -19,6 +19,12 @@ if builder.target_platform == 'linux' or builder.target_platform == 'mac':
   binary.compiler.defines += ['stricmp=strcasecmp']
   binary.compiler.postlink += ['-lpthread']
 
+if builder.target_platform == 'linux':
+  # i386 .so; binutils >= 2.40 errors on text relocations
+  binary.compiler.postlink += ['-Wl,-z,notext']
+  # sqlite3.c (vendored amalgamation) triggers false-positive warnings in GCC 14+
+  binary.compiler.cflags += ['-Wno-misleading-indentation', '-Wno-return-local-addr']
+
 binary.sources += [
   'basic_sql.cpp',
   'handles.cpp',

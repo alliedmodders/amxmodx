@@ -2222,6 +2222,9 @@ typedef int				(*PFN_AMX_REREGISTER)			(AMX * /*amx*/, AMX_NATIVE_INFO * /*list*
 typedef void *			(*PFN_REGISTERFUNCTIONEX)		(void * /*pfn*/, const char * /*desc*/);
 typedef void			(*PFN_MESSAGE_BLOCK)			(int /* mode */, int /* message */, int * /* opt */);
 typedef IGameConfigManager* (*PFN_GET_CONFIG_MANAGER)   ();
+typedef bool			(*PFN_GET_AMXSCRIPTINFO)		(const AMX* /*amx*/, const char** /*pszTitle*/, const char** /*pszAuthor*/, const char** /*pszVersion*/);
+typedef char*			(*PFN_GET_AMX_VERSION)			();
+typedef void			(*PFN_SET_FAILSTATE)			(const AMX* /*amx*/, const char* /*str*/);
 
 extern PFN_ADD_NATIVES				g_fn_AddNatives;
 extern PFN_ADD_NEW_NATIVES			g_fn_AddNewNatives;
@@ -2304,6 +2307,9 @@ extern PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 extern PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 extern PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 extern PFN_GET_CONFIG_MANAGER		g_fn_GetConfigManager;
+extern PFN_GET_AMXSCRIPTINFO		g_fn_GetAmxScriptInfo;
+extern PFN_GET_AMX_VERSION			g_fn_GetAmxVersion;
+extern PFN_SET_FAILSTATE			g_fn_SetPluginFailState;
 
 #ifdef MAY_NEVER_BE_DEFINED
 // Function prototypes for intellisense and similar systems
@@ -2382,6 +2388,9 @@ int				MF_AmxReRegister			(AMX *amx, AMX_NATIVE_INFO *list, int number) { return
 void *			MF_RegisterFunctionEx		(void *pfn, const char *description) { }
 void *			MF_MessageBlock				(int mode, int msg, int *opt) { }
 IGameConfigManager* MF_GetConfigManager     (void) { }
+bool			MF_GetScriptInfo			(const AMX* amx, const char** pszTitle = nullptr, const char** pszAuthor = nullptr, const char** pszVersion = nullptr) { }
+const char*		MF_GetAmxVersion			(void) { }
+void			MF_SetFailState				(const AMX* amx, const char* str) { }
 #endif	// MAY_NEVER_BE_DEFINED
 
 #define MF_AddNatives g_fn_AddNatives
@@ -2466,6 +2475,9 @@ void MF_LogError(AMX *amx, int err, const char *fmt, ...);
 #define MF_RegisterFunctionEx g_fn_RegisterFunctionEx
 #define MF_MessageBlock g_fn_MessageBlock
 #define MF_GetConfigManager g_fn_GetConfigManager
+#define MF_GetScriptInfo g_fn_GetAmxScriptInfo
+#define MF_GetAmxVersion g_fn_GetAmxVersion
+#define MF_SetFailState g_fn_SetPluginFailState
 
 #ifdef MEMORY_TEST
 /*** Memory ***/

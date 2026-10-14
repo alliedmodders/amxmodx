@@ -1137,6 +1137,43 @@ const char *MNF_GetAmxScriptName(int id)
 	return nullptr;
 }
 
+bool MNF_GetAmxScriptInfo(const AMX* amx, const char** pszTitle = nullptr, const char** pszAuthor = nullptr, const char** pszVersion = nullptr)
+{
+	CPluginMngr::CPlugin* pl = g_plugins.findPluginFast(const_cast<AMX*>(amx));
+
+	if (pl->getId() != -1)
+	{
+		if (pszTitle != nullptr)
+		{
+			*pszTitle = pl->getTitle();
+		}
+
+		if (pszAuthor != nullptr)
+		{
+			*pszAuthor = pl->getAuthor();
+		}
+
+		if (pszVersion != nullptr)
+		{
+			*pszVersion = pl->getVersion();
+		}
+
+		return pl->isValid();
+	}
+
+	return false;
+}
+
+void MNF_SetAmxFailState(const AMX* amx, const char* str)
+{
+	g_langMngr.SetDefLang(LANG_SERVER);	// Default language = server
+
+	CPluginMngr::CPlugin* pPlugin = g_plugins.findPluginFast(const_cast<AMX*>(amx));
+
+	pPlugin->setStatus(ps_error);
+	pPlugin->setError(str);
+}
+
 int MNF_FindAmxScriptByName(const char *name)
 {
 	bool found = false;
@@ -1687,6 +1724,11 @@ void MNF_MessageBlock(int mode, int msg, int *opt)
 	}
 }
 
+const char* MNF_GetAmxVersion()
+{
+	return Plugin_info.version;
+}
+
 void *MNF_PlayerPropAddr(int id, int prop)
 {
 	if (id < 1 || id > gpGlobals->maxClients)
@@ -1847,6 +1889,9 @@ void Module_CacheFunctions()
 	REGISTER_FUNC("GetLocalInfo", MNF_GetLocalInfo);
 
 	REGISTER_FUNC("MessageBlock", MNF_MessageBlock);
+	REGISTER_FUNC("GetAmxScriptInfo", MNF_GetAmxScriptInfo);
+	REGISTER_FUNC("GetAmxVersion", MNF_GetAmxVersion);
+	REGISTER_FUNC("SetPluginFailState", MNF_SetAmxFailState);
 
 #ifdef MEMORY_TEST
 	REGISTER_FUNC("Allocator", m_allocator)

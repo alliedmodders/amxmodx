@@ -4042,7 +4042,7 @@ enum Ham
 	Ham_SC_CanPlaySequence,
 
 	/**
-	 * Description:		(!) This function is no more available in the mod.
+	 * Description:		-
 	 * Forward params:	function(this, bool:disregardState);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_CanPlaySentence2, this, bool:disregardState);

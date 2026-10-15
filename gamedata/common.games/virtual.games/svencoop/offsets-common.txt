@@ -867,7 +867,7 @@
 				"linux" "142" 
 			}
 
-			"canplaysentence"
+			"sc_canplaysentence2"
 			{
 				"windows" "142" 
 				"linux" "143" 

@@ -41,7 +41,7 @@
                 "linux"    "0x0"
             }
 
-            "prespawn"
+            "sc_prespawn"
 			{
 				"windows" "0" 
 				"linux" "0" 
@@ -53,7 +53,7 @@
 				"linux" "1" 
 			}
 
-			"postspawn"
+			"sc_postspawn"
 			{
 				"windows" "2" 
 				"linux" "2" 
@@ -77,7 +77,7 @@
 				"linux" "5" 
 			}
 
-			"onkeyvalueupdate"
+			"sc_onkeyvalueupdate"
 			{
 				"windows" "6" 
 				"linux" "6" 
@@ -131,7 +131,7 @@
 				"linux" "14" 
 			}
 
-			"setclassification"
+			"sc_setclassification"
 			{
 				"windows" "15" 
 				"linux" "15" 
@@ -173,13 +173,13 @@
 				"linux" "21" 
 			}
 
-			"takehealth"
+			"sc_takehealth"
 			{
 				"windows" "22" 
 				"linux" "22" 
 			}
 
-			"takearmor"
+			"sc_takearmor"
 			{
 				"windows" "23" 
 				"linux" "23" 
@@ -203,7 +203,7 @@
 				"linux" "26" 
 			}
 
-			"istriggered"
+			"sc_istriggered"
 			{
 				"windows" "27" 
 				"linux" "27" 
@@ -227,13 +227,13 @@
 				"linux" "30" 
 			}
 
-			"mycustompointer"
+			"sc_mycustompointer"
 			{
 				"windows" "31" 
 				"linux" "31" 
 			}
 
-			"myitempointer"
+			"sc_myitempointer"
 			{
 				"windows" "32" 
 				"linux" "32" 
@@ -245,13 +245,13 @@
 				"linux" "33" 
 			}
 
-			"addpoints"
+			"sc_addpoints"
 			{
 				"windows" "34" 
 				"linux" "34" 
 			}
 
-			"addpointstoteam"
+			"sc_addpointstoteam"
 			{
 				"windows" "35" 
 				"linux" "35" 
@@ -263,13 +263,13 @@
 				"linux" "36" 
 			}
 
-			"removeplayeritem"
+			"sc_removeplayeritem"
 			{
 				"windows" "37" 
 				"linux" "37" 
 			}
 
-			"giveammo"
+			"sc_giveammo"
 			{
 				"windows" "38" 
 				"linux" "38" 
@@ -317,19 +317,19 @@
 				"linux" "45" 
 			}
 
-			"oncontrols"
+			"sc_oncontrols"
 			{
 				"windows" "46" 
 				"linux" "46" 
 			}
 
-			"issneaking"
+			"sc_issneaking"
 			{
 				"windows" "47" 
 				"linux" "47" 
 			}
 
-			"isalive"
+			"sc_isalive"
 			{
 				"windows" "48" 
 				"linux" "48" 
@@ -341,25 +341,25 @@
 				"linux" "49" 
 			}
 
-			"isbspmodel"
+			"sc_isbspmodel"
 			{
 				"windows" "50" 
 				"linux" "50" 
 			}
 
-			"reflectgauss"
+			"sc_reflectgauss"
 			{
 				"windows" "51" 
 				"linux" "51" 
 			}
 
-			"hastarget"
+			"sc_hastarget"
 			{
 				"windows" "52" 
 				"linux" "52" 
 			}
 
-			"isinworld"
+			"sc_isinworld"
 			{
 				"windows" "53" 
 				"linux" "53" 
@@ -371,13 +371,13 @@
 				"linux" "54" 
 			}
 
-			"isplayer"
+			"sc_isplayer"
 			{
 				"windows" "55" 
 				"linux" "55" 
 			}
 
-			"isnetclient"
+			"sc_isnetclient"
 			{
 				"windows" "56" 
 				"linux" "56" 
@@ -389,7 +389,7 @@
 				"linux" "57" 
 			}
 
-			"isbreakable"
+			"sc_isbreakable"
 			{
 				"windows" "58" 
 				"linux" "58" 
@@ -455,13 +455,13 @@
 				"linux" "68" 
 			}
 
-			"sub_usetargets"
+			"sc_sub_usetargets"
 			{
 				"windows" "69" 
 				"linux" "69" 
 			}
 
-			"islockedbymaster"
+			"sc_islockedbymaster"
 			{
 				"windows" "70" 
 				"linux" "70" 
@@ -473,7 +473,7 @@
 				"linux" "71" 
 			}
 
-			"fbecomeprone"
+			"sc_fbecomeprone"
 			{
 				"windows" "72" 
 				"linux" "72" 
@@ -539,7 +539,7 @@
 				"linux" "83" 
 			}
 
-			"setplayerally"
+			"sc_setplayerally"
 			{
 				"windows" "84" 
 				"linux" "84" 
@@ -562,25 +562,25 @@
 				"linux" "88" 
 			}
 
-			"onsetoriginbymap"
+			"sc_onsetoriginbymap"
 			{
 				"windows" "88" 
 				"linux" "89" 
 			}
 
-			"isrevivable"
+			"sc_isrevivable"
 			{
 				"windows" "89" 
 				"linux" "90" 
 			}
 
-			"beginrevive"
+			"sc_beginrevive"
 			{
 				"windows" "90" 
 				"linux" "91" 
 			}
 
-			"endrevive"
+			"sc_endrevive"
 			{
 				"windows" "91" 
 				"linux" "92" 
@@ -861,13 +861,13 @@
 				"linux" "141" 
 			}
 
-			"canplaysequence"
+			"sc_canplaysequence"
 			{
 				"windows" "141" 
 				"linux" "142" 
 			}
 
-			"canplaysentence"
+			"sc_canplaysentence2"
 			{
 				"windows" "142" 
 				"linux" "143" 
@@ -879,7 +879,7 @@
 				"linux" "144" 
 			}
 
-			"playscriptedsentence"
+			"sc_playscriptedsentence"
 			{
 				"windows" "144" 
 				"linux" "145" 
@@ -987,7 +987,7 @@
 				"linux" "162" 
 			}
 
-			"checkattacker"
+			"sc_checkattacker"
 			{
 				"windows" "162" 
 				"linux" "163" 
@@ -1317,25 +1317,25 @@
 				"linux" "217" 
 			}
 
-			"player_enteredobserver"
+			"sc_player_enteredobserver"
 			{
 				"windows" "217" 
 				"linux" "218" 
 			}
 
-			"player_leftobserver"
+			"sc_player_leftobserver"
 			{
 				"windows" "218" 
 				"linux" "219" 
 			}
 
-			"player_isobserver"
+			"sc_player_isobserver"
 			{
 				"windows" "219" 
 				"linux" "220" 
 			}
 
-			"player_isconnected"
+			"sc_player_isconnected"
 			{
 				"windows" "220" 
 				"linux" "221" 
@@ -1431,49 +1431,49 @@
 				"linux" "236" 
 			}
 
-			"item_addtoplayer"
+			"sc_item_addtoplayer"
 			{
 				"windows" "116" 
 				"linux" "117" 
 			}
 
-			"item_addduplicate"
+			"sc_item_addduplicate"
 			{
 				"windows" "117" 
 				"linux" "118" 
 			}
 
-			"item_addammofromitem"
+			"sc_item_addammofromitem"
 			{
 				"windows" "118" 
 				"linux" "119" 
 			}
 
-			"item_getpickupsound"
+			"sc_item_getpickupsound"
 			{
 				"windows" "119" 
 				"linux" "120" 
 			}
 
-			"item_getiteminfo"
+			"sc_item_getiteminfo"
 			{
 				"windows" "120" 
 				"linux" "121" 
 			}
 
-			"item_candeploy"
+			"sc_item_candeploy"
 			{
 				"windows" "121" 
 				"linux" "122" 
 			}
 
-			"item_deploy"
+			"sc_item_deploy"
 			{
 				"windows" "122" 
 				"linux" "123" 
 			}
 
-			"item_canholster"
+			"sc_item_canholster"
 			{
 				"windows" "123" 
 				"linux" "124" 
@@ -1503,13 +1503,13 @@
 				"linux" "128" 
 			}
 
-			"item_inactiveitempreframe"
+			"sc_item_inactiveitempreframe"
 			{
 				"windows" "128" 
 				"linux" "129" 
 			}
 
-			"item_inactiveitempostframe"
+			"sc_item_inactiveitempostframe"
 			{
 				"windows" "129" 
 				"linux" "130" 
@@ -1521,7 +1521,7 @@
 				"linux" "131" 
 			}
 
-			"item_detachfromplayer"
+			"sc_item_detachfromplayer"
 			{
 				"windows" "131" 
 				"linux" "132" 
@@ -1539,7 +1539,7 @@
 				"linux" "134" 
 			}
 
-			"item_updateclientdata"
+			"sc_item_updateclientdata"
 			{
 				"windows" "134" 
 				"linux" "135" 
@@ -1557,7 +1557,7 @@
 				"linux" "137" 
 			}
 
-			"item_getrespawntime"
+			"sc_item_getrespawntime"
 			{
 				"windows" "137" 
 				"linux" "138" 
@@ -1569,13 +1569,13 @@
 				"linux" "139" 
 			}
 
-			"item_canhaveduplicates"
+			"sc_item_canhaveduplicates"
 			{
 				"windows" "139" 
 				"linux" "140" 
 			}
 
-			"weapon_extractammofromitem"
+			"sc_weapon_extractammofromitem"
 			{
 				"windows" "140" 
 				"linux" "141" 
@@ -1593,25 +1593,25 @@
 				"linux" "143" 
 			}
 
-			"weapon_addweapon"
+			"sc_weapon_addweapon"
 			{
 				"windows" "143" 
 				"linux" "144" 
 			}
 
-			"weapon_getammo1drop"
+			"sc_weapon_getammo1drop"
 			{
 				"windows" "144" 
 				"linux" "145" 
 			}
 
-			"weapon_getammo2drop"
+			"sc_weapon_getammo2drop"
 			{
 				"windows" "145" 
 				"linux" "146" 
 			}
 
-			"weapon_playemptysound"
+			"sc_weapon_playemptysound"
 			{
 				"windows" "146" 
 				"linux" "147" 
@@ -1635,7 +1635,7 @@
 				"linux" "150" 
 			}
 
-			"weapon_isuseable"
+			"sc_weapon_isuseable"
 			{
 				"windows" "150" 
 				"linux" "151" 
@@ -1665,13 +1665,13 @@
 				"linux" "155" 
 			}
 
-			"weapon_finishreload"
+			"sc_weapon_finishreload"
 			{
 				"windows" "155" 
 				"linux" "156" 
 			}
 
-			"weapon_shouldreload"
+			"sc_weapon_shouldreload"
 			{
 				"windows" "156" 
 				"linux" "157" 
@@ -1689,13 +1689,13 @@
 				"linux" "159" 
 			}
 
-			"weapon_shouldweaponidle"
+			"sc_weapon_shouldweaponidle"
 			{
 				"windows" "159" 
 				"linux" "160" 
 			}
 
-			"weapon_usedecrement"
+			"sc_weapon_usedecrement"
 			{
 				"windows" "160" 
 				"linux" "161" 

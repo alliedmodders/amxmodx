@@ -3316,7 +3316,8 @@ enum Ham
 	Ham_SC_UnUseSound,
 
 	/**
-	 * Description:		-
+	 * Description:		Called when a player is on top of a monster, used to be a part of the riding monster feature
+	 * 					but doesn't do anything anymore.
 	 * Forward params:	function(this, idOther)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_RideMonster, this, idOther)
@@ -3364,7 +3365,7 @@ enum Ham
 	Ham_SC_CheckRevival,
 
 	/**
-	 * Description:		(!) This function is no more available in the mod.
+	 * Description:		-
 	 * Forward params:	function(this)
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_MedicCallSound, this)
@@ -3981,7 +3982,7 @@ enum Ham
 	Ham_SC_FBecomeProne,
 
 	/**
-	 * Description:		Returns true if a line can be traced from the caller's eyes to given vector.
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, const Float:origin[3]);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_FVecVisible, this, const Float:origin[3]);
@@ -4041,7 +4042,7 @@ enum Ham
 	Ham_SC_CanPlaySequence,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, bool:disregardState);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_CanPlaySentence2, this, bool:disregardState);
@@ -4094,23 +4095,16 @@ enum Ham
 	Ham_SC_Item_GetPickupSound,
 
 	/**
-	 * Description:		-
-	 *					Collect Types:
-	 *						COLLECT_TOUCH			0
-	 *						COLLECT_USE_DIRECT		1
-	 *						COLLECT_USE_INDIRECT	2
+	 * Description:		(!) This function is no more available in the mod.
+	 * Forward params:	function(this, idOther, collectType);
 	 * Return type:		Integer (boolean).
 	 * Execute params:	ExecuteHam(Ham_SC_Item_CanCollect, this, idOther, collectType);
 	 */
 	Ham_SC_Item_CanCollect,
 
 	/**
-	 * Description:		-
+	 * Description:		(!) This function is no more available in the mod.
 	 * Forward params:	function(this, idOther, collectType);
-	 *					Collect Types:
-	 *						COLLECT_TOUCH			0
-	 *						COLLECT_USE_DIRECT		1
-	 *						COLLECT_USE_INDIRECT	2
 	 * Return type:		None.
 	 * Execute params:	ExecuteHam(Ham_SC_Item_Collect, this, idOther, collectType);
 	 */

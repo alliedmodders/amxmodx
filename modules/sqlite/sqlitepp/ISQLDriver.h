@@ -161,7 +161,7 @@ namespace SourceMod
 
 	struct DatabaseInfo
 	{
-		DatabaseInfo() : max_timeout(0) { };
+		DatabaseInfo() : max_timeout(0), charset(nullptr) { };
 		const char *host;
 		const char *database;
 		const char *user;

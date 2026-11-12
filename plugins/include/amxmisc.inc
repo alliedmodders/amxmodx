@@ -862,15 +862,17 @@ stock set_task_ex(Float:time, const function[], id = 0, const any:parameter[] = 
  *                    GetPlayers_CaseInsensitive - match case insensitive
  *                    GetPlayers_ExcludeHLTV - do not include HLTV proxies
  *                    GetPlayers_IncludeConnecting - include connecting clients
- * @param team      String to match against if the "e" or "f" flag is specified
+ *                    GetPlayers_MatchAllFlags - match with all of the specified admin flags
+ *                    GetPlayers_MatchAnyFlags - match with any of the specified admin flags
+ * @param string    String to match against if a flag that demands additional information is specified
  *
  * @noreturn
  */
-stock get_players_ex(players[MAX_PLAYERS] = {}, &num, GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
+stock get_players_ex(players[MAX_PLAYERS] = {}, &num, GetPlayersFlags:flags = GetPlayers_None, const string[] = "")
 {
-	new strFlags[10];
+	new strFlags[12];
 	get_flags(_:flags, strFlags, charsmax(strFlags));
-	get_players(players, num, strFlags, team);
+	get_players(players, num, strFlags, string);
 }
 
 /**
@@ -890,13 +892,15 @@ stock get_players_ex(players[MAX_PLAYERS] = {}, &num, GetPlayersFlags:flags = Ge
  *                    GetPlayers_CaseInsensitive - match case insensitive
  *                    GetPlayers_ExcludeHLTV - do not include HLTV proxies
  *                    GetPlayers_IncludeConnecting - include connecting clients
- * @param team      String to match against if the GetPlayers_MatchTeam or GetPlayers_MatchNameSubstring flag is specified
+ *                    GetPlayers_MatchAllFlags - match with all of the specified admin flags
+ *                    GetPlayers_MatchAnyFlags - match with any of the specified admin flags
+ * @param string    String to match against if a flag that demands additional information is specified
  *
  * @return          Number of clients on the server that match the specified flags
  */
-stock get_playersnum_ex(GetPlayersFlags:flags = GetPlayers_None, const team[] = "")
+stock get_playersnum_ex(GetPlayersFlags:flags = GetPlayers_None, const string[] = "")
 {
 	new PlayersNum;
-	get_players_ex(_, PlayersNum, flags, team);
+	get_players_ex(_, PlayersNum, flags, string);
 	return PlayersNum;
 }

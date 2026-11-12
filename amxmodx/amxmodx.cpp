@@ -2954,7 +2954,7 @@ static cell AMX_NATIVE_CALL get_user_flags(AMX *amx, cell *params) /* 2 param */
 	return GET_PLAYER_POINTER_I(index)->flags[id];
 }
 
-static cell AMX_NATIVE_CALL set_user_flags(AMX *amx, cell *params) /* 3 param */
+static cell AMX_NATIVE_CALL set_user_flags(AMX *amx, cell *params) /* 4 param */
 {
 	int index = params[1];
 
@@ -2973,8 +2973,16 @@ static cell AMX_NATIVE_CALL set_user_flags(AMX *amx, cell *params) /* 3 param */
 
 	if (id > 31)
 		id = 31;
-
-	pPlayer->flags[id] |= flag;
+		
+	int oldflags = pPlayer->flags[id];
+		
+	if((*params / sizeof(cell) >= 4) && params[4])
+		pPlayer->flags[id] = flag;
+	else
+		pPlayer->flags[id] |= flag;
+		
+	if(oldflags != pPlayer->flags[id])
+		executeForwards(FF_ClientFlagsUpdated, static_cast<cell>(pPlayer->index), oldflags, pPlayer->flags[id], id);
 
 	return 1;
 }
@@ -2998,9 +3006,14 @@ static cell AMX_NATIVE_CALL remove_user_flags(AMX *amx, cell *params) /* 3 param
 
 	if (id > 31)
 		id = 31;
+		
+	int oldflags = pPlayer->flags[id];
 
 	pPlayer->flags[id] &= ~flag;
-
+	
+	if(oldflags != pPlayer->flags[id])
+		executeForwards(FF_ClientFlagsUpdated, static_cast<cell>(pPlayer->index), oldflags, pPlayer->flags[id], id);
+	
 	return 1;
 }
 

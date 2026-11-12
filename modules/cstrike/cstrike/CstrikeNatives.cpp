@@ -1944,17 +1944,66 @@ static cell AMX_NATIVE_CALL cs_get_weapon_info(AMX* amx, cell* params)
 	return 0;
 }
 
-// native cs_get_user_weapon_entity(playerIndex);
+// native cs_get_user_weapon_entity(playerIndex, weaponIndex = CSW_NONE);
 static cell AMX_NATIVE_CALL cs_get_user_weapon_entity(AMX *amx, cell *params)
 {
-	GET_OFFSET("CBasePlayer", m_pActiveItem);
+	GET_OFFSET("CBasePlayer"    , m_pActiveItem);
+	GET_OFFSET("CBasePlayer"    , m_rgpPlayerItems);
+	GET_OFFSET("CBasePlayerItem", m_iId);
+	GET_OFFSET("CBasePlayerItem", m_pNext);
 
 	int playerIndex = params[1];
 
 	CHECK_PLAYER(playerIndex);
 	edict_t *pPlayer = MF_GetPlayerEdict(playerIndex);
 
-	int weaponEntIndex = TypeConversion.cbase_to_id(get_pdata<void *>(pPlayer, m_pActiveItem));
+	int paramsCount = *params / sizeof(cell), weaponIndex;
+	if (paramsCount == 1)
+	{
+		weaponIndex = CSW_NONE;
+	}
+	else
+	{
+		weaponIndex = params[2];
+	}
+
+	int weaponEntIndex = -1;
+	if (weaponIndex == CSW_NONE)
+	{
+		weaponEntIndex = TypeConversion.cbase_to_id(get_pdata<void *>(pPlayer, m_pActiveItem));
+	}
+	else
+	{
+		if (weaponIndex >= MAX_WEAPONS)
+		{
+			MF_LogError(amx, AMX_ERR_NATIVE, "Invalid weapon id %d", weaponIndex);
+			return 0;
+		}
+
+		edict_t *pWeapon;
+		bool foundWeapon = false;
+
+		for (int i = 1; i < MAX_ITEM_TYPES; i++)
+		{
+			pWeapon = TypeConversion.cbase_to_edict(get_pdata<void *>(pPlayer, m_rgpPlayerItems, i));
+			while(!FNullEnt(pWeapon))
+			{
+				if (get_pdata<int>(pWeapon, m_iId) == weaponIndex)
+				{
+					weaponEntIndex = TypeConversion.edict_to_id(pWeapon);
+					foundWeapon = true;
+					break;
+				}
+		
+				pWeapon = TypeConversion.cbase_to_edict(get_pdata<void *>(pWeapon, m_pNext));
+			}
+
+			if (foundWeapon)
+			{
+				break;
+			}
+		}
+	}
 
 	return (weaponEntIndex != -1) ? weaponEntIndex : 0;
 }

@@ -1128,3 +1128,881 @@ enum
 
 #define MAX_DIRECTOR_CMD_PARAMETERS		4
 #define MAX_DIRECTOR_CMD_STRING			128
+
+/**
+ * @section Constants for various event arguments
+ */
+
+/**
+ * Constants for the "AllowSpec" event's arguments
+ */
+enum AllowSpecArgs
+{
+	AllowSpec_IsAllowed = 1
+};
+
+/**
+ * Constants for the "AmmoPickup" event's arguments
+ */
+enum AmmoPickupArgs
+{
+	AmmoPickup_AmmoId = 1,
+	AmmoPickup_Amount
+};
+
+/**
+ * Constants for the "AmmoX" event's arguments
+ */
+enum AmmoXArgs
+{
+	AmmoX_AmmoId = 1,
+	AmmoX_Amount
+};
+
+/**
+ * Constants for the "ArmorType" event's arguments
+ */
+enum ArmorTypeArgs
+{
+	ArmorType_Flag = 1
+};
+
+/**
+ * Constants for the "BarTime" event's arguments
+ */
+enum BarTimeArgs
+{
+	BarTime_Duration = 1
+};
+
+/**
+ * Constants for the "BarTime2" event's arguments
+ */
+enum BarTime2Args
+{
+	BarTime2_Duration = 1,
+	BarTime2_StartPercent
+};
+
+/**
+ * Constants for the "Battery" event's arguments
+ */
+enum BatteryArgs
+{
+	Battery_Armor = 1
+};
+
+/**
+ * Constants for the "BlinkAcct" event's arguments
+ */
+enum BlinkAcctArgs
+{
+	BlinkAcct_BlinkAmount = 1
+};
+
+/**
+ * Constants for the "BloodPuff" event's arguments
+ */
+enum BloodPuffArgs
+{
+	BloodPuff_CoordX = 1,
+	BloodPuff_CoordY,
+	BloodPuff_CoordZ
+};
+
+/**
+ * Constants for the "BombDrop" event's arguments
+ */
+enum BombDropArgs
+{
+	BombDrop_CoordX = 1,
+	BombDrop_CoordY,
+	BombDrop_CoordZ,
+	BombDrop_Flag
+};
+
+/**
+ * Constants for the "BotProgress" event's arguments
+ */
+enum BotProgressArgs
+{
+	BotProgress_Flag = 1,
+	BotProgress_Progress,
+	BotProgress_Header
+};
+
+/**
+ * Constants for the "BotVoice" event's arguments
+ */
+enum BotVoiceArgs
+{
+	BotVoice_Status = 1,
+	BotVoice_PlayerId
+};
+
+/**
+ * Constants for the "Brass" event's arguments
+ */
+enum BrassArgs
+{
+	Brass_MessageId = 1,
+	Brass_StartX,
+	Brass_StartY,
+	Brass_StartZ,
+	Brass_VelocityX,
+	Brass_VelocityY,
+	Brass_VelocityZ,
+	Brass_UnknownX,
+	Brass_UnknownY,
+	Brass_UnknownZ,
+	Brass_Rotation,
+	Brass_ModelId,
+	Brass_BounceSoundType,
+	Brass_Life,
+	Brass_PlayerId
+};
+
+/**
+ * Constants for the "CapMsg" event's arguments
+ */
+enum CapMsgArgs
+{
+	CapMsg_PlayerId = 1,
+	CapMsg_PointName,
+	CapMsg_TeamId,
+};
+
+/**
+ * Constants for the "ClCorpse" event's arguments
+ */
+enum ClCorpseArgs
+{
+	ClCorpse_ModelName = 1,
+	ClCorpse_CoordX,
+	ClCorpse_CoordY,
+	ClCorpse_CoordZ,
+	ClCorpse_Angle0,
+	ClCorpse_Angle1,
+	ClCorpse_Angle2,
+	ClCorpse_Delay,
+	ClCorpse_Sequence,
+	ClCorpse_ClassId,
+	ClCorpse_TeamId,
+	ClCorpse_PlayerId
+};
+
+/**
+ * Constants for the "Concuss" event's arguments
+ */
+enum ConcussArgs
+{
+	Concuss_Amount = 1
+};
+
+/**
+ * Constants for the "Crosshair" event's arguments
+ */
+enum CrosshairArgs
+{
+	Crosshair_Flag = 1
+};
+
+/**
+ * Constants for the "CurWeapon" event's arguments
+ */
+enum CurWeaponArgs
+{
+	CurWeapon_IsActive = 1,
+	CurWeapon_WeaponId,
+	CurWeapon_ClipAmmo
+};
+
+/**
+ * Constants for the "CZCareer" event's arguments
+ */
+enum CZCareerArgs
+{
+	CZCareer_Type = 1
+};
+
+/**
+ * Constants for the "CZCareerHUD" event's arguments
+ */
+enum CZCareerHUDArgs
+{
+	CZCareerHUD_Type = 1
+};
+
+/**
+ * Constants for the "Damage" event's arguments
+ */
+enum DamageArgs
+{
+	Damage_Save = 1,
+	Damage_Take,
+	Damage_Type,
+	Damage_CoordX,
+	Damage_CoordY,
+	Damage_CoordZ
+};
+
+/**
+ * Constants for the "DeathMsg" event's arguments (all games)
+ */
+enum DeathMsgArgs
+{
+	DeathMsg_KillerId = 1,
+	DeathMsg_VictimId,
+	DeathMsg_WeaponName
+};
+
+/**
+ * Constants for the "DeathMsg" event's arguments (Counter-Strike)
+ */
+enum DeathMsgArgs_CS
+{
+	DeathMsg_CS_KillerId = 1,
+	DeathMsg_CS_VictimId,
+	DeathMsg_CS_IsHeadshot,
+	DeathMsg_CS_WeaponName
+};
+
+/**
+ * Constants for the "DeathMsg" event's arguments (Day of Defeat)
+ */
+enum DeathMsgArgs_DoD
+{
+	DeathMsg_DoD_KillerId = 1,
+	DeathMsg_DoD_VictimId,
+	DeathMsg_DoD_WeaponId
+};
+
+/**
+ * Constants for the "FlashBat" event's arguments
+ */
+enum FlashBatArgs
+{
+	FlashBat_ChargePercent = 1
+};
+
+/**
+ * Constants for the "Flashlight" event's arguments
+ */
+enum FlashlightArgs
+{
+	Flashlight_Flag = 1,
+	Flashlight_ChargePercent
+};
+
+/**
+ * Constants for the "Fog" event's arguments
+ */
+enum FogArgs
+{
+	Fog_Value1 = 1,
+	Fog_Value2,
+	Fog_Unknown
+};
+
+/**
+ * Constants for the "ForceCam" event's arguments
+ */
+enum ForceCamArgs
+{
+	ForceCam_Value = 1,
+	ForceCam_ChaseCamValue,
+	ForceCam_Unknown
+};
+
+/**
+ * Constants for the "Frags" event's arguments
+ */
+enum FragsArgs
+{
+	Frags_PlayerId = 1,
+	Frags_Amount
+};
+
+/**
+ * Constants for the "GameMode" event's arguments
+ */
+enum GameModeArgs
+{
+	GameMode_Type = 1
+};
+
+/**
+ * Constants for the "GameTitle" event's arguments
+ */
+enum GameTitleArgs
+{
+	GameTitle_Unknown = 1
+};
+
+/**
+ * Constants for the "Geiger" event's arguments
+ */
+enum GeigerArgs
+{
+	Geiger_Distance = 1
+};
+
+/**
+ * Constants for the "Health" event's arguments
+ */
+enum HealthArgs
+{
+	Health_Amount = 1
+};
+
+/**
+ * Constants for the "HideWeapon" event's arguments
+ */
+enum HideWeaponArgs
+{
+	HideWeapon_Flags = 1
+};
+
+/**
+ * Constants for the "HLTV" event's arguments
+ */
+enum HLTVArgs
+{
+	HLTV_ClientId = 1,
+	HLTV_Flags
+};
+
+/**
+ * Constants for the "HostageK" event's arguments
+ */
+enum HostageKArgs
+{
+	HostageK_HostageId = 1
+};
+
+/**
+ * Constants for the "HostagePos" event's arguments
+ */
+enum HostagePosArgs
+{
+	HostagePos_Flag = 1,
+	HostagePos_HostageId,
+	HostagePos_CoordX,
+	HostagePos_CoordY,
+	HostagePos_CoordZ
+};
+
+/**
+ * Constants for the "HudText" event's arguments
+ */
+enum HudTextArgs
+{
+	HudText_TextCode = 1,
+	HudText_InitHUDStyle
+};
+
+/**
+ * Constants for the "HudTextArgs" event's arguments
+ */
+enum HudTextArgsArgs
+{
+	HudTextArgs_TextCode = 1,
+	HudTextArgs_InitHUDStyle,
+	HudTextArgs_NumberOfSubMessages,
+	HudTextArgs_SubMsg1,
+	HudTextArgs_SubMsg2
+};
+
+/**
+ * Constants for the "HudTextPro" event's arguments
+ */
+enum HudTextProArgs
+{
+	HudTextPro_TextCode = 1,
+	HudTextPro_InitHUDStyle
+};
+
+/**
+ * Constants for the "InitObj" event's arguments
+ */
+enum InitObjArgs
+{
+	InitObj_TotalObjectives = 1
+};
+
+/**
+ * Constants for the "TotalObjectives" argument in the InitObj" event
+ */
+enum InitObj_TotalObjectivesArgs
+{
+	InitObj_TotalObjectives_EntityId = 1,
+	InitObj_TotalObjectives_ObjectiveId,
+	InitObj_TotalObjectives_TeamId,
+	InitObj_TotalObjectives_Unknown1,
+	InitObj_TotalObjectives_Unknown2,
+	InitObj_TotalObjectives_Unknown3,
+	InitObj_TotalObjectives_Unknown4,
+	InitObj_TotalObjectives_CoordX,
+	InitObj_TotalObjectives_CoordY
+};
+
+/**
+ * Constants for the "ItemPickup" event's arguments
+ */
+enum ItemPickupArgs
+{
+	ItemPickup_ItemName = 1
+};
+
+/**
+ * Constants for the "ItemStatus" event's arguments
+ */
+enum ItemStatusArgs
+{
+	ItemStatus_ItemsBitSum = 1
+};
+
+/**
+ * Constants for the "Location" event's arguments
+ */
+enum LocationArgs
+{
+	Location_PlayerId = 1,
+	Location_Name
+};
+
+/**
+ * Constants for the "Money" event's arguments
+ */
+enum MoneyArgs
+{
+	Money_Amount = 1,
+	Money_Flag
+};
+
+/**
+ * Constants for the "MOTD" event's arguments
+ */
+enum MOTDArgs
+{
+	MOTD_Flag = 1,
+	MOTD_Text
+};
+
+/**
+ * Constants for the "NVGToggle" event's arguments
+ */
+enum NVGToggleArgs
+{
+	NVGToggle_Flag = 1
+};
+
+/**
+ * Constants for the "Object" event's arguments
+ */
+enum ObjectArgs
+{
+	Object_Sprite = 1
+};
+
+/**
+ * Constants for the "ObjScore" event's arguments
+ */
+enum ObjScoreArgs
+{
+	ObjScore_PlayerId = 1,
+	ObjScore_Score
+};
+
+/**
+ * Constants for the "PClass" event's arguments
+ */
+enum PClassArgs
+{
+	PClass_PlayerId = 1,
+	PClass_Unknown
+};
+
+/**
+ * Constants for the "PStatus" event's arguments
+ */
+enum PStatusArgs
+{
+	PStatus_PlayerId = 1,
+	PStatus_Unknown
+};
+
+/**
+ * Constants for the "Radar" event's arguments
+ */
+enum RadarArgs
+{
+	Radar_PlayerId = 1,
+	Radar_CoordX,
+	Radar_CoordY,
+	Radar_CoordZ
+};
+
+/**
+ * Constants for the "ReceiveW" event's arguments
+ */
+enum ReceiveWArgs
+{
+	ReceiveW_Mode = 1
+};
+
+/**
+ * Constants for the "ReloadSound" event's arguments
+ */
+enum ReloadSoundArgs
+{
+	ReloadSound_Volume = 1,
+	ReloadSound_IsNotShotgun
+};
+
+/**
+ * Constants for the "RoundTime" event's arguments
+ */
+enum RoundTimeArgs
+{
+	RoundTime_Time = 1
+};
+
+/**
+ * Constants for the "SayText" event's arguments
+ */
+enum SayTextArgs
+{
+	SayText_SenderId = 1,
+	SayText_String1,
+	SayText_String2,
+	SayText_String3
+};
+
+/**
+ * Constants for the "Scenario" event's arguments
+ */
+enum ScenarioArgs
+{
+	Scenario_IsActive = 1,
+	Scenario_Sprite,
+	Scenario_Alpha,
+	Scenario_FlashRate,
+	Scenario_FlashDelay
+};
+
+/**
+ * Constants for the "Scope" event's arguments
+ */
+enum ScopeArgs
+{
+	Scope_Unknown = 1
+};
+
+/**
+ * Constants for the "ScoreAttrib" event's arguments
+ */
+enum ScoreAttribArgs
+{
+	ScoreAttrib_PlayerId = 1,
+	ScoreAttrib_Flags
+};
+
+/**
+ * Constants for the "ScoreInfo" event's arguments
+ */
+enum ScoreInfoArgs
+{
+	ScoreInfo_PlayerId = 1,
+	ScoreInfo_Score,
+	ScoreInfo_Deaths,
+	ScoreInfo_ClassId,
+	ScoreInfo_TeamId,
+};
+
+/**
+ * Constants for the "ScoreShort" event's arguments
+ */
+enum ScoreShortArgs
+{
+	ScoreShort_PlayerId = 1,
+	ScoreShort_Score,
+	ScoreShort_Kills,
+	ScoreShort_Deaths,
+	ScoreShort_Refresh
+};
+
+/**
+ * Constants for the "ScreenFade" event's arguments
+ */
+enum ScreenFadeArgs
+{
+	ScreenFade_Duration = 1,
+	ScreenFade_HoldTime,
+	ScreenFade_Flags,
+	ScreenFade_ColorR,
+	ScreenFade_ColorG,
+	ScreenFade_ColorB,
+	ScreenFade_Alpha
+};
+
+/**
+ * Constants for the "ScreenShake" event's arguments
+ */
+enum ScreenShakeArgs
+{
+	ScreenShake_Amplitude = 1,
+	ScreenShake_Duration,
+	ScreenShake_Frequency
+};
+
+/**
+ * Constants for the "SecAmmoIcon" event's arguments
+ */
+enum SecAmmoIconArgs
+{
+	SecAmmoIcon_Icon = 1
+};
+
+/**
+ * Constants for the "SecAmmoVal" event's arguments
+ */
+enum SecAmmoValArgs
+{
+	SecAmmoVal_Slot = 1,
+	SecAmmoVal_Amount
+};
+
+/**
+ * Constants for the "SendAudio" event's arguments
+ */
+enum SendAudioArgs
+{
+	SendAudio_SenderId = 1,
+	SendAudio_AudioCode,
+	SendAudio_Pitch
+};
+
+/**
+ * Constants for the "ServerName" event's arguments
+ */
+enum ServerNameArgs
+{
+	ServerName_Name = 1
+};
+
+/**
+ * Constants for the "SetFOV" event's arguments
+ */
+enum SetFOVArgs
+{
+	SetFOV_Degrees = 1
+};
+
+/**
+ * Constants for the "SetObj" event's arguments
+ */
+enum SetObjArgs
+{
+	SetObj_Unknown1 = 1,
+	SetObj_Unknown2,
+	SetObj_Unknown3
+};
+
+/**
+ * Constants for the "ShadowIdx" event's arguments
+ */
+enum ShadowIdxArgs
+{
+	ShadowIdx_SpriteId = 1
+};
+
+/**
+ * Constants for the "ShowMenu" event's arguments
+ */
+enum ShowMenuArgs
+{
+	ShowMenu_KeysBitSum = 1,
+	ShowMenu_Time,
+	ShowMenu_Multipart,
+	ShowMenu_Text
+};
+
+/**
+ * Constants for the "SpecHealth" event's arguments
+ */
+enum SpecHealthArgs
+{
+	SpecHealth_Health = 1
+};
+
+/**
+ * Constants for the "SpecHealth2" event's arguments
+ */
+enum SpecHealth2Args
+{
+	SpecHealth2_Health = 1,
+	SpecHealth2_PlayerId
+};
+
+/**
+ * Constants for the "Spectator" event's arguments
+ */
+enum SpectatorArgs
+{
+	Spectator_ClientId = 1,
+	Spectator_Unknown
+};
+
+/**
+ * Constants for the "StatusIcon" event's arguments
+ */
+enum StatusIconArgs
+{
+	StatusIcon_Status = 1,
+	StatusIcon_SpriteName,
+	StatusIcon_ColorR,
+	StatusIcon_ColorG,
+	StatusIcon_ColorB
+};
+
+/**
+ * Constants for the "StatusText" event's arguments
+ */
+enum StatusTextArgs
+{
+	StatusText_Unknown = 1,
+	StatusText_Text
+};
+
+/**
+ * Constants for the "StatusValue" event's arguments
+ */
+enum StatusValueArgs
+{
+	StatusValue_Flag = 1,
+	StatusValue_Value
+};
+
+/**
+ * Constants for the "TaskTime" event's arguments
+ */
+enum TaskTimeArgs
+{
+	TaskTime_Time = 1,
+	TaskTime_Active,
+	TaskTime_Fade
+};
+
+/**
+ * Constants for the "TeamInfo" event's arguments
+ */
+enum TeamInfoArgs
+{
+	TeamInfo_PlayerId = 1,
+	TeamInfo_TeamName
+};
+
+/**
+ * Constants for the "TeamScore" event's arguments (all games)
+ */
+enum TeamScoreArgs
+{
+	TeamScore_TeamName = 1,
+	TeamScore_Score
+};
+
+/**
+ * Constants for the "TeamScore" event's arguments (Day of Defeat)
+ */
+enum TeamScoreArgs_DoD
+{
+	TeamScore_DoD_TeamId = 1,
+	TeamScore_DoD_Score
+};
+
+/**
+ * Constants for the "TextMsg" event's arguments
+ */
+enum TextMsgArgs
+{
+	TextMsg_DestinationType = 1,
+	TextMsg_Message,
+	TextMsg_SubMsg1,
+	TextMsg_SubMsg2,
+	TextMsg_SubMsg3,
+	TextMsg_SubMsg4
+};
+
+/**
+ * Constants for the "Train" event's arguments
+ */
+enum TrainArgs
+{
+	Train_Speed = 1
+};
+
+/**
+ * Constants for the "TutorState" event's arguments
+ */
+enum TutorStateArgs
+{
+	TutorState_Unknown = 1
+};
+
+/**
+ * Constants for the "VGUIMenu" event's arguments
+ */
+enum VGUIMenuArgs
+{
+	VGUIMenu_MenuId = 1,
+	VGUIMenu_KeysBitSum,
+	VGUIMenu_Time,
+	VGUIMenu_Multipart,
+	VGUIMenu_Name
+};
+
+/**
+ * Constants for the "VoiceMask" event's arguments
+ */
+enum VoiceMaskArgs
+{
+	VoiceMask_AudiblePlayersBitSum = 1,
+	VoiceMask_BannedPlayersBitSum
+};
+
+/**
+ * Constants for the "WeaponList" event's arguments
+ */
+enum WeaponListArgs
+{
+	WeaponList_WeaponName = 1,
+	WeaponList_PrimaryAmmoId,
+	WeaponList_PrimaryAmmoMaxAmount,
+	WeaponList_SecondaryAmmoId,
+	WeaponList_SecondaryAmmoMaxAmount,
+	WeaponList_SlotId,
+	WeaponList_NumberInSlot,
+	WeaponList_WeaponId,
+	WeaponList_Flags
+};
+
+/**
+ * Constants for the "WeapPickup" event's arguments
+ */
+enum WeapPickupArgs
+{
+	WeapPickup_WeaponId = 1
+};
+
+/**
+ * Constants for the "YouDied" event's arguments
+ */
+enum YouDiedArgs
+{
+	YouDied_Unknown = 1
+};
+
+/**
+ * @endsection
+ */

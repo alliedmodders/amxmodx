@@ -900,3 +900,33 @@ stock get_playersnum_ex(GetPlayersFlags:flags = GetPlayers_None, const team[] = 
 	get_players_ex(_, PlayersNum, flags, team);
 	return PlayersNum;
 }
+
+/**
+ * Precaches a player model file.
+ *
+ * @note Can only be used inside of the plugin_precache() forward.
+ * @note Also searches for a "T.mdl" file and precaches that one as well if found.
+ * @note Player models MUST be placed in the following directory:
+ *       "models/player/%name%/%name%.mdl" where "name" is the name of the model.
+ *
+ * @param name  Name of the model file without the .mdl extension (e.g. "admin")
+ * @param id    Variable to store the "T.mdl" cache id if found
+ *
+ * @return      Unique cache id of the model
+ * @error       If called outside of the plugin_precache() forward, an error is
+ *              thrown from the precache_model() native.
+ */
+stock precache_player_model(const name[], &id = 0)
+{
+	new model[128];
+	formatex(model, charsmax(model), "models/player/%s/%sT.mdl", name, name);
+
+	if(file_exists(model))
+		id = precache_generic(model);
+
+	static const extension[] = "T.mdl";
+	#pragma unused extension
+
+	copy(model[strlen(model) - charsmax(extension)], charsmax(model), ".mdl");
+	return precache_model(model);
+}

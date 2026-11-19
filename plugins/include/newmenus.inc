@@ -346,7 +346,7 @@ native menu_addtext(menu, const text[], slot=1);
  * @error               Invalid menu resource.
  *                      Too many items on non-paginated menu (max is 10)
  */
-native menu_addblank2( menu );
+native menu_addblank2(menu);
 
 /**
  * Adds a text line to a menu, always shifting the numbering down.
@@ -362,7 +362,7 @@ native menu_addblank2( menu );
  * @error               Invalid menu resource.
  *                      Too many items on non-paginated menu (max is 10)
  */
-native menu_addtext2( menu, const text[] );
+native menu_addtext2(menu, const text[]);
 
 /**
  * Sets a menu property.

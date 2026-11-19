@@ -386,7 +386,7 @@ native fputs(file, const text[], bool:null_term = false);
  * Writes a line of formatted text to a text file.
  *
  * @param file          Handle to the file
- * @param format        Formatting rules
+ * @param fmt           Formatting rules
  * @param ...           Variable number of format parameters
  *
  * @return              Total number of characters written on success, 0 otherwise
@@ -475,7 +475,7 @@ native rmdir(const path[]);
 /**
  * Creates a directory.
  *
- * @param path          Path to create
+ * @param dirname       Path to create
  * @param mode          Permissions (default is o=rx,g=rx,u=rwx).  Note that folders must have
  *                      the execute bit set on Linux.  On Windows, the mode is ignored.
  * @param use_valve_fs  If true, the Valve file system will be used instead

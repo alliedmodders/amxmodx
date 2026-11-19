@@ -55,6 +55,7 @@ native getarg(arg, index = 0);
  *
  * @param arg       Argument index
  * @param index     Index to set in the argument (for arrays and strings)
+ * @param value     Argument value
  */
 native setarg(arg, index = 0, value);
 

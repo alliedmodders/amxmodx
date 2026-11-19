@@ -36,8 +36,8 @@ native get_distance(const origin1[3], const origin2[3]);
 /**
  * Calculates the distance between two input float vectors.
  * 
- * @param origin1       The first vector
- * @param origin2       The second vector
+ * @param Origin1       The first vector
+ * @param Origin2       The second vector
  * 	
  * @return              The distance between two input vectors
  */

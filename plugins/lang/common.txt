@@ -519,10 +519,10 @@ KICK = largim
 NO_ACC_COM = Nuk keni qasje në këtë komandë
 USAGE = Përdori
 MORE_CL_MATCHT = Ka më shumë se një lojtarë që përputhet me argumentin tuaj
-CL_NOT_FOUND = Lojtari me atë emër nuk është gjetur
-CLIENT_IMM = Lojtari "%s" ka imunitet
+CL_NOT_FOUND = Lojtar me atë emër ose userid nuk është gjetur
+CLIENT_IMM = Lojtar "%s" ka imunitet
 CANT_PERF_DEAD = Ky veprim nuk mund të kryhet në një lojtar të vdekur "%s"
-CANT_PERF_BOT = Ky veprim nuk mund të kryhet në bot(jo lojtar) "%s"
+CANT_PERF_BOT = Ky veprim nuk mund të kryhet në bot "%s"
 ON = Aktiv
 OFF = Joaktiv
 

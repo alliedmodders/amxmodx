@@ -1,0 +1,2320 @@
+diff -u ./multiplayer/cl_dll/hl/hl_baseentity.cpp.orig ./multiplayer/cl_dll/hl/hl_baseentity.cpp
+--- ./multiplayer/cl_dll/hl/hl_baseentity.cpp.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/cl_dll/hl/hl_baseentity.cpp	Wed Nov 27 05:24:32 2002
+@@ -264,4 +264,4 @@
+ int CBasePlayerWeapon::ExtractClipAmmo( CBasePlayerWeapon *pWeapon ) { return 0; }	
+ void CBasePlayerWeapon::RetireWeapon( void ) { }
+ void CSoundEnt::InsertSound ( int iType, const Vector &vecOrigin, int iVolume, float flDuration ) {}
+-void RadiusDamage( Vector vecSrc, entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType ){}
+\ No newline at end of file
++void RadiusDamage( Vector vecSrc, entvars_t *pevInflictor, entvars_t *pevAttacker, float flDamage, float flRadius, int iClassIgnore, int bitsDamageType ){}
+diff -u ./multiplayer/common/r_studioint.h.orig ./multiplayer/common/r_studioint.h
+--- ./multiplayer/common/r_studioint.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/r_studioint.h	Wed Nov 27 05:25:25 2002
+@@ -8,7 +8,9 @@
+ #if !defined( R_STUDIOINT_H )
+ #define R_STUDIOINT_H
+ #if defined( _WIN32 )
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #define STUDIO_INTERFACE_VERSION 1
+@@ -144,4 +146,4 @@
+ 					const edict_t *pEdict );
+ } sv_blending_interface_t;
+ 
+-#endif // R_STUDIOINT_H
+\ No newline at end of file
++#endif // R_STUDIOINT_H
+diff -u ./multiplayer/common/beamdef.h.orig ./multiplayer/common/beamdef.h
+--- ./multiplayer/common/beamdef.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/beamdef.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined ( BEAMDEFH )
+ #define BEAMDEFH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #define FBEAM_STARTENTITY		0x00000001
+diff -u ./multiplayer/common/cl_entity.h.orig ./multiplayer/common/cl_entity.h
+--- ./multiplayer/common/cl_entity.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/cl_entity.h	Wed Nov 27 05:25:25 2002
+@@ -16,7 +16,9 @@
+ #if !defined( CL_ENTITYH )
+ #define CL_ENTITYH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct efrag_s
+diff -u ./multiplayer/common/com_model.h.orig ./multiplayer/common/com_model.h
+--- ./multiplayer/common/com_model.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/com_model.h	Wed Nov 27 05:25:25 2002
+@@ -9,7 +9,9 @@
+ #if !defined( COM_MODEL_H )
+ #define COM_MODEL_H
+ #if defined( _WIN32 )
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #define STUDIO_RENDER 1
+diff -u ./multiplayer/common/con_nprint.h.orig ./multiplayer/common/con_nprint.h
+--- ./multiplayer/common/con_nprint.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/con_nprint.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined( CON_NPRINTH )
+ #define CON_NPRINTH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct con_nprint_s
+diff -u ./multiplayer/common/crc.h.orig ./multiplayer/common/crc.h
+--- ./multiplayer/common/crc.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/crc.h	Wed Nov 27 05:26:17 2002
+@@ -16,7 +16,9 @@
+ #ifndef CRC_H
+ #define CRC_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ // MD5 Hash
+diff -u ./multiplayer/common/demo_api.h.orig ./multiplayer/common/demo_api.h
+--- ./multiplayer/common/demo_api.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/demo_api.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined ( DEMO_APIH )
+ #define DEMO_APIH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct demo_api_s
+diff -u ./multiplayer/common/dlight.h.orig ./multiplayer/common/dlight.h
+--- ./multiplayer/common/dlight.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/dlight.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined ( DLIGHTH )
+ #define DLIGHTH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct dlight_s
+diff -u ./multiplayer/common/engine_launcher_api.h.orig ./multiplayer/common/engine_launcher_api.h
+--- ./multiplayer/common/engine_launcher_api.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/engine_launcher_api.h	Wed Nov 27 05:25:25 2002
+@@ -9,7 +9,9 @@
+ #if !defined( ENGINE_LAUNCHER_APIH )
+ #define ENGINE_LAUNCHER_APIH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ //typedef void ( *xcommand_t ) ( void );
+diff -u ./multiplayer/common/entity_state.h.orig ./multiplayer/common/entity_state.h
+--- ./multiplayer/common/entity_state.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/entity_state.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined( ENTITY_STATEH )
+ #define ENTITY_STATEH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ // For entityType below
+diff -u ./multiplayer/common/event_api.h.orig ./multiplayer/common/event_api.h
+--- ./multiplayer/common/event_api.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/event_api.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined ( EVENT_APIH )
+ #define EVENT_APIH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #define EVENT_API_VERSION 1
+diff -u ./multiplayer/common/event_args.h.orig ./multiplayer/common/event_args.h
+--- ./multiplayer/common/event_args.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/event_args.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined( EVENT_ARGSH )
+ #define EVENT_ARGSH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ // Event was invoked with stated origin
+diff -u ./multiplayer/common/event_flags.h.orig ./multiplayer/common/event_flags.h
+--- ./multiplayer/common/event_flags.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/event_flags.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined( EVENT_FLAGSH )
+ #define EVENT_FLAGSH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ // Skip local host for event send.
+diff -u ./multiplayer/common/in_buttons.h.orig ./multiplayer/common/in_buttons.h
+--- ./multiplayer/common/in_buttons.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/in_buttons.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #ifndef IN_BUTTONS_H
+ #define IN_BUTTONS_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #define IN_ATTACK	(1 << 0)
+diff -u ./multiplayer/common/ivoicetweak.h.orig ./multiplayer/common/ivoicetweak.h
+--- ./multiplayer/common/ivoicetweak.h.orig	Thu Oct  3 17:57:24 2002
++++ ./multiplayer/common/ivoicetweak.h	Wed Nov 27 05:25:25 2002
+@@ -8,7 +8,9 @@
+ #ifndef IVOICETWEAK_H
+ #define IVOICETWEAK_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ // These provide access to the voice controls.
+diff -u ./multiplayer/common/net_api.h.orig ./multiplayer/common/net_api.h
+--- ./multiplayer/common/net_api.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/net_api.h	Wed Nov 27 05:25:25 2002
+@@ -8,7 +8,9 @@
+ #if !defined( NET_APIH )
+ #define NET_APIH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #if !defined ( NETADRH )
+@@ -96,4 +98,4 @@
+ 
+ extern net_api_t netapi;
+ 
+-#endif // NET_APIH
+\ No newline at end of file
++#endif // NET_APIH
+diff -u ./multiplayer/common/netadr.h.orig ./multiplayer/common/netadr.h
+--- ./multiplayer/common/netadr.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/netadr.h	Wed Nov 27 05:25:25 2002
+@@ -16,7 +16,9 @@
+ #ifndef NETADR_H
+ #define NETADR_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef enum
+diff -u ./multiplayer/common/nowin.h.orig ./multiplayer/common/nowin.h
+--- ./multiplayer/common/nowin.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/nowin.h	Wed Nov 27 05:25:25 2002
+@@ -12,4 +12,4 @@
+ #include <unistd.h>
+ 
+ #endif //!_WIN32
+-#endif //INC_NOWIN_H
+\ No newline at end of file
++#endif //INC_NOWIN_H
+diff -u ./multiplayer/common/particledef.h.orig ./multiplayer/common/particledef.h
+--- ./multiplayer/common/particledef.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/particledef.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined( PARTICLEDEFH )
+ #define PARTICLEDEFH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef enum {
+diff -u ./multiplayer/common/pmtrace.h.orig ./multiplayer/common/pmtrace.h
+--- ./multiplayer/common/pmtrace.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/pmtrace.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined( PMTRACEH )
+ #define PMTRACEH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct
+diff -u ./multiplayer/common/qfont.h.orig ./multiplayer/common/qfont.h
+--- ./multiplayer/common/qfont.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/qfont.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined( QFONTH )
+ #define QFONTH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ // Font stuff
+diff -u ./multiplayer/common/r_efx.h.orig ./multiplayer/common/r_efx.h
+--- ./multiplayer/common/r_efx.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/r_efx.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined ( R_EFXH )
+ #define R_EFXH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ // particle_t
+diff -u ./multiplayer/common/screenfade.h.orig ./multiplayer/common/screenfade.h
+--- ./multiplayer/common/screenfade.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/screenfade.h	Wed Nov 27 05:25:25 2002
+@@ -8,7 +8,9 @@
+ #if !defined( SCREENFADEH )
+ #define SCREENFADEH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct screenfade_s
+diff -u ./multiplayer/common/studio_event.h.orig ./multiplayer/common/studio_event.h
+--- ./multiplayer/common/studio_event.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/studio_event.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined( STUDIO_EVENTH )
+ #define STUDIO_EVENTH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct mstudioevent_s
+diff -u ./multiplayer/common/triangleapi.h.orig ./multiplayer/common/triangleapi.h
+--- ./multiplayer/common/triangleapi.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/triangleapi.h	Wed Nov 27 05:28:41 2002
+@@ -15,7 +15,9 @@
+ #if !defined( TRIANGLEAPIH )
+ #define TRIANGLEAPIH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef enum 
+diff -u ./multiplayer/common/usercmd.h.orig ./multiplayer/common/usercmd.h
+--- ./multiplayer/common/usercmd.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/usercmd.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #ifndef USERCMD_H
+ #define USERCMD_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct usercmd_s
+diff -u ./multiplayer/common/weaponinfo.h.orig ./multiplayer/common/weaponinfo.h
+--- ./multiplayer/common/weaponinfo.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/common/weaponinfo.h	Wed Nov 27 05:25:25 2002
+@@ -15,7 +15,9 @@
+ #if !defined ( WEAPONINFOH )
+ #define WEAPONINFOH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ // Info about weapons player might have in his/her possession
+diff -u ./multiplayer/dedicated/conproc.h.orig ./multiplayer/dedicated/conproc.h
+--- ./multiplayer/dedicated/conproc.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/dedicated/conproc.h	Wed Nov 27 05:25:25 2002
+@@ -27,4 +27,4 @@
+ 
+ void WriteStatusText( char *psz );
+ 
+-#endif // !INC_CONPROCH
+\ No newline at end of file
++#endif // !INC_CONPROCH
+diff -u ./multiplayer/dedicated/dedicated.h.orig ./multiplayer/dedicated/dedicated.h
+--- ./multiplayer/dedicated/dedicated.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/dedicated/dedicated.h	Wed Nov 27 05:25:25 2002
+@@ -20,4 +20,4 @@
+ extern int gDLLState;
+ extern int gDLLStateInfo;
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dedicated/exports.h.orig ./multiplayer/dedicated/exports.h
+--- ./multiplayer/dedicated/exports.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/dedicated/exports.h	Wed Nov 27 05:25:25 2002
+@@ -11,4 +11,4 @@
+ 
+ extern void ErrorMessage(int nLevel, const char *pszErrorMessage);
+ 
+-#endif // !INC_EXPORTSH
+\ No newline at end of file
++#endif // !INC_EXPORTSH
+diff -u ./multiplayer/dedicated/sys_ded.h.orig ./multiplayer/dedicated/sys_ded.h
+--- ./multiplayer/dedicated/sys_ded.h.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/dedicated/sys_ded.h	Wed Nov 27 05:26:17 2002
+@@ -8,7 +8,9 @@
+ #if !defined( SYS_DEDH )
+ #define SYS_DEDH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef void (*SleepType)(int);
+@@ -18,4 +20,4 @@
+ void Sys_Printf(char *fmt, ...);
+ void Sys_ErrorMessage( int level, const char *msg );
+ 
+-#endif // SYS_DEDH
+\ No newline at end of file
++#endif // SYS_DEDH
+diff -u ./multiplayer/dlls/animation.cpp.orig ./multiplayer/dlls/animation.cpp
+--- ./multiplayer/dlls/animation.cpp.orig	Thu Oct  3 17:57:26 2002
++++ ./multiplayer/dlls/animation.cpp	Wed Nov 27 05:26:17 2002
+@@ -524,4 +524,4 @@
+ 	int iCurrent = (pev->body / pbodypart->base) % pbodypart->nummodels;
+ 
+ 	return iCurrent;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dlls/cbase.h.orig ./multiplayer/dlls/cbase.h
+--- ./multiplayer/dlls/cbase.h.orig	Thu Oct  3 17:57:28 2002
++++ ./multiplayer/dlls/cbase.h	Wed Nov 27 05:26:43 2002
+@@ -186,7 +186,7 @@
+ 	virtual void	SetToggleState( int state ) {}
+ 	virtual void    StartSneaking( void ) {}
+ 	virtual void    StopSneaking( void ) {}
+-	virtual BOOL	OnControls( entvars_t *pev ) { return FALSE; }
++	virtual BOOL	OnControls( entvars_t *onpev ) { return FALSE; }
+ 	virtual BOOL    IsSneaking( void ) { return FALSE; }
+ 	virtual BOOL	IsAlive( void ) { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
+ 	virtual BOOL	IsBSPModel( void ) { return pev->solid == SOLID_BSP || pev->movetype == MOVETYPE_PUSHSTEP; }
+@@ -217,13 +217,13 @@
+ 	virtual void Blocked( CBaseEntity *pOther ) { if (m_pfnBlocked) (this->*m_pfnBlocked)( pOther ); };
+ 
+ 	// allow engine to allocate instance data
+-    void *operator new( size_t stAllocateBlock, entvars_t *pev )
++    void *operator new( size_t stAllocateBlock, entvars_t *newpev )
+ 	{
+-		return (void *)ALLOC_PRIVATE(ENT(pev), stAllocateBlock);
++		return (void *)ALLOC_PRIVATE(ENT(newpev), stAllocateBlock);
+ 	};
+ 
+ 	// don't use this.
+-#if _MSC_VER >= 1200 // only build this code if MSVC++ 6.0 or higher
++#if defined(_MSC_VER) && _MSC_VER >= 1200 // only build this code if MSVC++ 6.0 or higher
+ 	void operator delete(void *pMem, entvars_t *pev)
+ 	{
+ 		pev->flags |= FL_KILLME;
+@@ -259,8 +259,8 @@
+ 		return pEnt; 
+ 	}
+ 
+-	static CBaseEntity *Instance( entvars_t *pev ) { return Instance( ENT( pev ) ); }
+-	static CBaseEntity *Instance( int eoffset) { return Instance( ENT( eoffset) ); }
++	static CBaseEntity *Instance( entvars_t *instpev ) { return Instance( ENT( instpev ) ); }
++	static CBaseEntity *Instance( int inst_eoffset) { return Instance( ENT( inst_eoffset) ); }
+ 
+ 	CBaseMonster *GetMonsterPointer( entvars_t *pevMonster ) 
+ 	{ 
+diff -u ./multiplayer/dlls/cdll_dll.h.orig ./multiplayer/dlls/cdll_dll.h
+--- ./multiplayer/dlls/cdll_dll.h.orig	Thu Oct  3 17:57:28 2002
++++ ./multiplayer/dlls/cdll_dll.h	Wed Nov 27 05:26:43 2002
+@@ -43,4 +43,4 @@
+ 
+ #define WEAPON_SUIT			31
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/crossbow.cpp.orig ./multiplayer/dlls/crossbow.cpp
+--- ./multiplayer/dlls/crossbow.cpp.orig	Thu Oct  3 17:57:28 2002
++++ ./multiplayer/dlls/crossbow.cpp	Wed Nov 27 05:26:43 2002
+@@ -545,4 +545,4 @@
+ 
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/doors.cpp.orig ./multiplayer/dlls/doors.cpp
+--- ./multiplayer/dlls/doors.cpp.orig	Thu Oct  3 17:57:28 2002
++++ ./multiplayer/dlls/doors.cpp	Wed Nov 27 05:26:43 2002
+@@ -1023,4 +1023,4 @@
+ 		LinearMove( move, speed );
+ 	}
+ 
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dlls/effects.cpp.orig ./multiplayer/dlls/effects.cpp
+--- ./multiplayer/dlls/effects.cpp.orig	Thu Oct  3 17:57:28 2002
++++ ./multiplayer/dlls/effects.cpp	Wed Nov 27 05:26:43 2002
+@@ -2265,4 +2265,4 @@
+ 	SetTouch ( NULL );
+ 	SetThink ( SUB_Remove );
+ 	pev->nextthink = gpGlobals->time;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dlls/egon.cpp.orig ./multiplayer/dlls/egon.cpp
+--- ./multiplayer/dlls/egon.cpp.orig	Thu Oct  3 17:57:28 2002
++++ ./multiplayer/dlls/egon.cpp	Wed Nov 27 05:26:43 2002
+@@ -565,4 +565,4 @@
+ };
+ LINK_ENTITY_TO_CLASS( ammo_egonclip, CEgonAmmo );
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/enginecallback.h.orig ./multiplayer/dlls/enginecallback.h
+--- ./multiplayer/dlls/enginecallback.h.orig	Thu Oct  3 17:57:28 2002
++++ ./multiplayer/dlls/enginecallback.h	Wed Nov 27 05:26:43 2002
+@@ -14,7 +14,11 @@
+ ****/
+ #ifndef ENGINECALLBACK_H
+ #define ENGINECALLBACK_H
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ #include "event_flags.h"
+ 
+@@ -155,4 +159,4 @@
+ 
+ #define PLAYER_CNX_STATS		( *g_engfuncs.pfnGetPlayerStats )
+ 
+-#endif		//ENGINECALLBACK_H
+\ No newline at end of file
++#endif		//ENGINECALLBACK_H
+diff -u ./multiplayer/dlls/h_battery.cpp.orig ./multiplayer/dlls/h_battery.cpp
+--- ./multiplayer/dlls/h_battery.cpp.orig	Thu Oct  3 17:57:28 2002
++++ ./multiplayer/dlls/h_battery.cpp	Wed Nov 27 05:26:51 2002
+@@ -197,4 +197,4 @@
+ 	}
+ 	else
+ 		SetThink( SUB_DoNothing );
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dlls/healthkit.cpp.orig ./multiplayer/dlls/healthkit.cpp
+--- ./multiplayer/dlls/healthkit.cpp.orig	Thu Oct  3 17:57:30 2002
++++ ./multiplayer/dlls/healthkit.cpp	Wed Nov 27 05:26:56 2002
+@@ -261,4 +261,4 @@
+ 	}
+ 	else
+ 		SetThink( SUB_DoNothing );
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dlls/hornetgun.cpp.orig ./multiplayer/dlls/hornetgun.cpp
+--- ./multiplayer/dlls/hornetgun.cpp.orig	Thu Oct  3 19:17:24 2002
++++ ./multiplayer/dlls/hornetgun.cpp	Wed Nov 27 05:26:56 2002
+@@ -302,4 +302,4 @@
+ 	SendWeaponAnim( iAnim );
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/mortar.cpp.orig ./multiplayer/dlls/mortar.cpp
+--- ./multiplayer/dlls/mortar.cpp.orig	Thu Oct  3 17:57:30 2002
++++ ./multiplayer/dlls/mortar.cpp	Wed Nov 27 05:27:03 2002
+@@ -320,4 +320,4 @@
+ 
+ 	UTIL_SetOrigin( pMortar->pev, tr.vecEndPos );
+ }
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/python.cpp.orig ./multiplayer/dlls/python.cpp
+--- ./multiplayer/dlls/python.cpp.orig	Thu Oct  3 17:57:30 2002
++++ ./multiplayer/dlls/python.cpp	Wed Nov 27 05:27:09 2002
+@@ -317,4 +317,4 @@
+ LINK_ENTITY_TO_CLASS( ammo_357, CPythonAmmo );
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/rpg.cpp.orig ./multiplayer/dlls/rpg.cpp
+--- ./multiplayer/dlls/rpg.cpp.orig	Thu Oct  3 17:57:30 2002
++++ ./multiplayer/dlls/rpg.cpp	Wed Nov 27 05:27:09 2002
+@@ -614,4 +614,4 @@
+ };
+ LINK_ENTITY_TO_CLASS( ammo_rpgclip, CRpgAmmo );
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/satchel.cpp.orig ./multiplayer/dlls/satchel.cpp
+--- ./multiplayer/dlls/satchel.cpp.orig	Thu Oct  3 17:57:30 2002
++++ ./multiplayer/dlls/satchel.cpp	Wed Nov 27 05:27:09 2002
+@@ -491,4 +491,4 @@
+ 	}
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/saverestore.h.orig ./multiplayer/dlls/saverestore.h
+--- ./multiplayer/dlls/saverestore.h.orig	Thu Oct  3 17:57:32 2002
++++ ./multiplayer/dlls/saverestore.h	Wed Nov 27 05:27:09 2002
+@@ -23,7 +23,7 @@
+ public:
+ 	CSaveRestoreBuffer( void );
+ 	CSaveRestoreBuffer( SAVERESTOREDATA *pdata );
+-	~CSaveRestoreBuffer( void );
++	virtual ~CSaveRestoreBuffer( void );
+ 
+ 	int			EntityIndex( entvars_t *pevLookup );
+ 	int			EntityIndex( edict_t *pentLookup );
+@@ -41,6 +41,10 @@
+ 	SAVERESTOREDATA		*m_pdata;
+ 	void		BufferRewind( int size );
+ 	unsigned int	HashString( const char *pszToken );
++private:
++	// effc++ rule 11
++	void		operator=(CSaveRestoreBuffer&);
++	CSaveRestoreBuffer(const CSaveRestoreBuffer&);
+ };
+ 
+ 
+@@ -82,7 +86,7 @@
+ class CRestore : public CSaveRestoreBuffer
+ {
+ public:
+-	CRestore( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ) { m_global = 0; m_precache = TRUE; }
++	CRestore( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ), m_global(0), m_precache(TRUE) { }
+ 	int		ReadEntVars( const char *pname, entvars_t *pev );		// entvars_t
+ 	int		ReadFields( const char *pname, void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount );
+ 	int		ReadField( void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount, int startField, int size, char *pName, void *pData );
+@@ -162,6 +166,9 @@
+ 	globalentity_t	*Find( string_t globalname );
+ 	globalentity_t	*m_pList;
+ 	int				m_listCount;
++	// effc++ rule 11
++	void		operator=(CGlobalState&);
++	CGlobalState(const CGlobalState&);
+ };
+ 
+ extern CGlobalState gGlobalState;
+diff -u ./multiplayer/dlls/sound.cpp.orig ./multiplayer/dlls/sound.cpp
+--- ./multiplayer/dlls/sound.cpp.orig	Thu Oct  3 17:57:32 2002
++++ ./multiplayer/dlls/sound.cpp	Wed Nov 27 05:27:09 2002
+@@ -1975,4 +1975,4 @@
+ 	}
+ 	else
+ 		CBaseEntity::KeyValue( pkvd );
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dlls/soundent.cpp.orig ./multiplayer/dlls/soundent.cpp
+--- ./multiplayer/dlls/soundent.cpp.orig	Thu Oct  3 17:57:32 2002
++++ ./multiplayer/dlls/soundent.cpp	Wed Nov 27 05:27:09 2002
+@@ -376,4 +376,4 @@
+ #endif // _DEBUG
+ 
+ 	return iReturn;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dlls/spectator.h.orig ./multiplayer/dlls/spectator.h
+--- ./multiplayer/dlls/spectator.h.orig	Thu Oct  3 17:57:32 2002
++++ ./multiplayer/dlls/spectator.h	Wed Nov 27 05:27:09 2002
+@@ -24,4 +24,4 @@
+ 
+ private:
+ 	void SpectatorImpulseCommand(void);
+-};
+\ No newline at end of file
++};
+diff -u ./multiplayer/dlls/squeakgrenade.cpp.orig ./multiplayer/dlls/squeakgrenade.cpp
+--- ./multiplayer/dlls/squeakgrenade.cpp.orig	Thu Oct  3 17:57:32 2002
++++ ./multiplayer/dlls/squeakgrenade.cpp	Wed Nov 27 05:27:16 2002
+@@ -598,4 +598,4 @@
+ 	SendWeaponAnim( iAnim );
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/util.h.orig ./multiplayer/dlls/util.h
+--- ./multiplayer/dlls/util.h.orig	Thu Oct  3 17:57:32 2002
++++ ./multiplayer/dlls/util.h	Wed Nov 27 06:04:03 2002
+@@ -15,6 +15,7 @@
+ //
+ // Misc utility code
+ //
++#include <string.h>
+ #ifndef ACTIVITY_H
+ #include "activity.h"
+ #endif
+@@ -107,7 +108,7 @@
+ inline EOFFSET OFFSET(EOFFSET eoffset)			{ return eoffset; }
+ inline EOFFSET OFFSET(const edict_t *pent)	
+ { 
+-#if _DEBUG
++#ifdef _DEBUG
+ 	if ( !pent )
+ 		ALERT( at_error, "Bad ent in OFFSET()\n" );
+ #endif
+@@ -115,7 +116,7 @@
+ }
+ inline EOFFSET OFFSET(entvars_t *pev)				
+ { 
+-#if _DEBUG
++#ifdef _DEBUG
+ 	if ( !pev )
+ 		ALERT( at_error, "Bad pev in OFFSET()\n" );
+ #endif
+diff -u ./multiplayer/dlls/vector.h.orig ./multiplayer/dlls/vector.h
+--- ./multiplayer/dlls/vector.h.orig	Thu Oct  3 17:57:32 2002
++++ ./multiplayer/dlls/vector.h	Wed Nov 27 05:27:25 2002
+@@ -22,8 +22,8 @@
+ class Vector2D
+ {
+ public:
+-	inline Vector2D(void)									{ }
+-	inline Vector2D(float X, float Y)						{ x = X; y = Y; }
++	inline Vector2D(void): x(0.0), y(0.0)							{ }
++	inline Vector2D(float X, float Y): x(0.0), y(0.0)				{ x = X; y = Y; }
+ 	inline Vector2D operator+(const Vector2D& v)	const	{ return Vector2D(x+v.x, y+v.y);	}
+ 	inline Vector2D operator-(const Vector2D& v)	const	{ return Vector2D(x-v.x, y-v.y);	}
+ 	inline Vector2D operator*(float fl)				const	{ return Vector2D(x*fl, y*fl);	}
+@@ -33,7 +33,7 @@
+ 
+ 	inline Vector2D Normalize ( void ) const
+ 	{
+-		Vector2D vec2;
++		// Vector2D vec2;
+ 
+ 		float flLen = Length();
+ 		if ( flLen == 0 )
+@@ -60,12 +60,12 @@
+ {								//		which is a vec_t[3]
+ public:
+ 	// Construction/destruction
+-	inline Vector(void)								{ }
+-	inline Vector(float X, float Y, float Z)		{ x = X; y = Y; z = Z;						}
++	inline Vector(void): x(0.0), y(0.0), z(0.0)					{ }
++	inline Vector(float X, float Y, float Z): x(0.0), y(0.0), z(0.0)	{ x = X; y = Y; z = Z;				}
+ 	//inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
+ 	//inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
+-	inline Vector(const Vector& v)					{ x = v.x; y = v.y; z = v.z;				} 
+-	inline Vector(float rgfl[3])					{ x = rgfl[0]; y = rgfl[1]; z = rgfl[2];	}
++	inline Vector(const Vector& v): x(0.0), y(0.0), z(0.0)		{ x = v.x; y = v.y; z = v.z;				} 
++	inline Vector(float rgfl[3]): x(0.0), y(0.0), z(0.0)		{ x = rgfl[0]; y = rgfl[1]; z = rgfl[2];	}
+ 
+ 	// Operators
+ 	inline Vector operator-(void) const				{ return Vector(-x,-y,-z);				}
+@@ -109,4 +109,4 @@
+ 
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dlls/weapons.h.orig ./multiplayer/dlls/weapons.h
+--- ./multiplayer/dlls/weapons.h.orig	Thu Oct  3 17:57:34 2002
++++ ./multiplayer/dlls/weapons.h	Wed Nov 27 05:27:25 2002
+@@ -445,7 +445,7 @@
+ 	int		Restore( CRestore &restore );
+ 	static	TYPEDESCRIPTION m_SaveData[];
+ 
+-	HasWeapon( CBasePlayerItem *pCheckItem );
++	BOOL HasWeapon( CBasePlayerItem *pCheckItem );
+ 	BOOL PackWeapon( CBasePlayerItem *pWeapon );
+ 	BOOL PackAmmo( int iszName, int iCount );
+ 	
+diff -u ./multiplayer/dmc/cl_dll/quake/quake_baseentity.cpp.orig ./multiplayer/dmc/cl_dll/quake/quake_baseentity.cpp
+--- ./multiplayer/dmc/cl_dll/quake/quake_baseentity.cpp.orig	Thu Oct  3 17:57:38 2002
++++ ./multiplayer/dmc/cl_dll/quake/quake_baseentity.cpp	Wed Nov 27 05:27:30 2002
+@@ -327,4 +327,4 @@
+ void CBasePlayerAmmo :: DefaultTouch( CBaseEntity *pOther ) { }
+ int CBasePlayerWeapon::ExtractAmmo( CBasePlayerWeapon *pWeapon ) { return 0; }
+ int CBasePlayerWeapon::ExtractClipAmmo( CBasePlayerWeapon *pWeapon ) { return 0; }	
+-void CBasePlayerWeapon::RetireWeapon( void ) { }
+\ No newline at end of file
++void CBasePlayerWeapon::RetireWeapon( void ) { }
+diff -u ./multiplayer/dmc/cl_dll/quake/quake_objects.cpp.orig ./multiplayer/dmc/cl_dll/quake/quake_objects.cpp
+--- ./multiplayer/dmc/cl_dll/quake/quake_objects.cpp.orig	Thu Oct  3 17:57:38 2002
++++ ./multiplayer/dmc/cl_dll/quake/quake_objects.cpp	Wed Nov 27 05:27:30 2002
+@@ -78,4 +78,4 @@
+ {
+ 	if ( pBeam )
+ 		UpdateBeams();
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dmc/dlls/animation.cpp.orig ./multiplayer/dmc/dlls/animation.cpp
+--- ./multiplayer/dmc/dlls/animation.cpp.orig	Thu Oct  3 17:57:38 2002
++++ ./multiplayer/dmc/dlls/animation.cpp	Wed Nov 27 05:27:41 2002
+@@ -523,4 +523,4 @@
+ 	int iCurrent = (pev->body / pbodypart->base) % pbodypart->nummodels;
+ 
+ 	return iCurrent;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dmc/dlls/cbase.h.orig ./multiplayer/dmc/dlls/cbase.h
+--- ./multiplayer/dmc/dlls/cbase.h.orig	Thu Oct  3 17:57:40 2002
++++ ./multiplayer/dmc/dlls/cbase.h	Wed Nov 27 05:27:41 2002
+@@ -186,7 +186,7 @@
+ 	virtual void	SetToggleState( int state ) {}
+ 	virtual void    StartSneaking( void ) {}
+ 	virtual void    StopSneaking( void ) {}
+-	virtual BOOL	OnControls( entvars_t *pev ) { return FALSE; }
++	virtual BOOL	OnControls( entvars_t *onpev ) { return FALSE; }
+ 	virtual BOOL    IsSneaking( void ) { return FALSE; }
+ 	virtual BOOL	IsAlive( void ) { return (pev->deadflag == DEAD_NO) && pev->health > 0; }
+ 	virtual BOOL	IsBSPModel( void ) { return pev->solid == SOLID_BSP || pev->movetype == MOVETYPE_PUSHSTEP; }
+@@ -217,13 +217,13 @@
+ 	virtual void Blocked( CBaseEntity *pOther ) { if (m_pfnBlocked) (this->*m_pfnBlocked)( pOther ); };
+ 
+ 	// allow engine to allocate instance data
+-    void *operator new( size_t stAllocateBlock, entvars_t *pev )
++    void *operator new( size_t stAllocateBlock, entvars_t *newpev )
+ 	{
+-		return (void *)ALLOC_PRIVATE(ENT(pev), stAllocateBlock);
++		return (void *)ALLOC_PRIVATE(ENT(newpev), stAllocateBlock);
+ 	};
+ 
+ 	// don't use this.
+-#if _MSC_VER >= 1200 // only build this code if MSVC++ 6.0 or higher
++#if defined(_MSC_VER) && _MSC_VER >= 1200 // only build this code if MSVC++ 6.0 or higher
+ 	void operator delete(void *pMem, entvars_t *pev)
+ 	{
+ 		pev->flags |= FL_KILLME;
+@@ -258,8 +258,8 @@
+ 		return pEnt; 
+ 	}
+ 
+-	static CBaseEntity *Instance( entvars_t *pev ) { return Instance( ENT( pev ) ); }
+-	static CBaseEntity *Instance( int eoffset) { return Instance( ENT( eoffset) ); }
++	static CBaseEntity *Instance( entvars_t *instpev ) { return Instance( ENT( instpev ) ); }
++	static CBaseEntity *Instance( int inst_eoffset) { return Instance( ENT( inst_eoffset) ); }
+ 
+ 	CBaseMonster *GetMonsterPointer( entvars_t *pevMonster ) 
+ 	{ 
+@@ -798,4 +798,4 @@
+ };
+ 
+ // QUAKECLASSIC
+-extern char *g_szDeathType;
+\ No newline at end of file
++extern char *g_szDeathType;
+diff -u ./multiplayer/dmc/dlls/cdll_dll.h.orig ./multiplayer/dmc/dlls/cdll_dll.h
+--- ./multiplayer/dmc/dlls/cdll_dll.h.orig	Thu Oct  3 17:57:40 2002
++++ ./multiplayer/dmc/dlls/cdll_dll.h	Wed Nov 27 05:27:41 2002
+@@ -43,4 +43,4 @@
+ 
+ #define WEAPON_SUIT			31
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dmc/dlls/effects.cpp.orig ./multiplayer/dmc/dlls/effects.cpp
+--- ./multiplayer/dmc/dlls/effects.cpp.orig	Thu Oct  3 17:57:40 2002
++++ ./multiplayer/dmc/dlls/effects.cpp	Wed Nov 27 05:27:41 2002
+@@ -2265,4 +2265,4 @@
+ 	SetTouch ( NULL );
+ 	SetThink ( SUB_Remove );
+ 	pev->nextthink = gpGlobals->time;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dmc/dlls/enginecallback.h.orig ./multiplayer/dmc/dlls/enginecallback.h
+--- ./multiplayer/dmc/dlls/enginecallback.h.orig	Thu Oct  3 17:57:40 2002
++++ ./multiplayer/dmc/dlls/enginecallback.h	Wed Nov 27 05:27:41 2002
+@@ -14,7 +14,11 @@
+ ****/
+ #ifndef ENGINECALLBACK_H
+ #define ENGINECALLBACK_H
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ #include "event_flags.h"
+ 
+@@ -156,4 +160,4 @@
+ 
+ #define PLAYER_CNX_STATS		( *g_engfuncs.pfnGetPlayerStats )
+ 
+-#endif		//ENGINECALLBACK_H
+\ No newline at end of file
++#endif		//ENGINECALLBACK_H
+diff -u ./multiplayer/dmc/dlls/observer.cpp.orig ./multiplayer/dmc/dlls/observer.cpp
+--- ./multiplayer/dmc/dlls/observer.cpp.orig	Thu Oct  3 17:57:42 2002
++++ ./multiplayer/dmc/dlls/observer.cpp	Wed Nov 27 05:32:00 2002
+@@ -139,4 +139,4 @@
+ 	char modemsg[16];
+ 	sprintf(modemsg,"#Spec_Mode%i", iMode);
+ 	ClientPrint( pev, HUD_PRINTCENTER, modemsg );
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dmc/dlls/quake_rocket.cpp.orig ./multiplayer/dmc/dlls/quake_rocket.cpp
+--- ./multiplayer/dmc/dlls/quake_rocket.cpp.orig	Thu Oct  3 17:57:42 2002
++++ ./multiplayer/dmc/dlls/quake_rocket.cpp	Wed Nov 27 05:27:41 2002
+@@ -188,4 +188,4 @@
+ 	PLAYBACK_EVENT_FULL( FEV_GLOBAL, edict(), g_sExplosion, 0.0, (float *)&pev->origin, (float *)&pev->velocity, 0.0, 0.0, 0, 0, 0, 0 );
+ 
+ 	UTIL_Remove( this );
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dmc/dlls/saverestore.h.orig ./multiplayer/dmc/dlls/saverestore.h
+--- ./multiplayer/dmc/dlls/saverestore.h.orig	Thu Oct  3 17:57:42 2002
++++ ./multiplayer/dmc/dlls/saverestore.h	Wed Nov 27 05:27:41 2002
+@@ -23,7 +23,7 @@
+ public:
+ 	CSaveRestoreBuffer( void );
+ 	CSaveRestoreBuffer( SAVERESTOREDATA *pdata );
+-	~CSaveRestoreBuffer( void );
++	virtual ~CSaveRestoreBuffer( void );
+ 
+ 	int			EntityIndex( entvars_t *pevLookup );
+ 	int			EntityIndex( edict_t *pentLookup );
+@@ -41,6 +41,10 @@
+ 	SAVERESTOREDATA		*m_pdata;
+ 	void		BufferRewind( int size );
+ 	unsigned int	HashString( const char *pszToken );
++private:
++	// effc++ rule 11
++	void		operator=(CSaveRestoreBuffer&);
++	CSaveRestoreBuffer(const CSaveRestoreBuffer&);
+ };
+ 
+ 
+@@ -82,7 +86,7 @@
+ class CRestore : public CSaveRestoreBuffer
+ {
+ public:
+-	CRestore( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ) { m_global = 0; m_precache = TRUE; }
++	CRestore( SAVERESTOREDATA *pdata ) : CSaveRestoreBuffer( pdata ), m_global(0), m_precache(TRUE) { }
+ 
+ 	int		ReadEntVars( const char *pname, entvars_t *pev );		// entvars_t
+ 	int		ReadFields( const char *pname, void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount );
+@@ -163,6 +167,9 @@
+ 	globalentity_t	*Find( string_t globalname );
+ 	globalentity_t	*m_pList;
+ 	int				m_listCount;
++	// effc++ rule 11               
++	void		operator=(CGlobalState&);
++	CGlobalState(const CGlobalState&);
+ };
+ 
+ extern CGlobalState gGlobalState;
+diff -u ./multiplayer/dmc/dlls/sound.cpp.orig ./multiplayer/dmc/dlls/sound.cpp
+--- ./multiplayer/dmc/dlls/sound.cpp.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/dlls/sound.cpp	Wed Nov 27 05:27:41 2002
+@@ -1964,4 +1964,4 @@
+ 	}
+ 	else
+ 		CBaseEntity::KeyValue( pkvd );
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dmc/dlls/soundent.cpp.orig ./multiplayer/dmc/dlls/soundent.cpp
+--- ./multiplayer/dmc/dlls/soundent.cpp.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/dlls/soundent.cpp	Wed Nov 27 05:27:41 2002
+@@ -376,4 +376,4 @@
+ #endif // _DEBUG
+ 
+ 	return iReturn;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/dmc/dlls/spectator.h.orig ./multiplayer/dmc/dlls/spectator.h
+--- ./multiplayer/dmc/dlls/spectator.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/dlls/spectator.h	Wed Nov 27 05:27:41 2002
+@@ -24,4 +24,4 @@
+ 
+ private:
+ 	void SpectatorImpulseCommand(void);
+-};
+\ No newline at end of file
++};
+diff -u ./multiplayer/dmc/dlls/triggers.cpp.orig ./multiplayer/dmc/dlls/triggers.cpp
+--- ./multiplayer/dmc/dlls/triggers.cpp.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/dlls/triggers.cpp	Wed Nov 27 05:27:41 2002
+@@ -2713,4 +2713,4 @@
+ 	pev->rendermode = kRenderTransTexture;
+ }
+ 
+-LINK_ENTITY_TO_CLASS( env_fog, CClientFog );
+\ No newline at end of file
++LINK_ENTITY_TO_CLASS( env_fog, CClientFog );
+diff -u ./multiplayer/dmc/dlls/vector.h.orig ./multiplayer/dmc/dlls/vector.h
+--- ./multiplayer/dmc/dlls/vector.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/dlls/vector.h	Wed Nov 27 05:27:41 2002
+@@ -22,8 +22,8 @@
+ class Vector2D
+ {
+ public:
+-	inline Vector2D(void)									{ }
+-	inline Vector2D(float X, float Y)						{ x = X; y = Y; }
++	inline Vector2D(void): x(0.0), y(0.0)(void)						{ }
++	inline Vector2D(float X, float Y): x(0.0), y(0.0)				{ x = X; y = Y; }
+ 	inline Vector2D operator+(const Vector2D& v)	const	{ return Vector2D(x+v.x, y+v.y);	}
+ 	inline Vector2D operator-(const Vector2D& v)	const	{ return Vector2D(x-v.x, y-v.y);	}
+ 	inline Vector2D operator*(float fl)				const	{ return Vector2D(x*fl, y*fl);	}
+@@ -33,7 +33,7 @@
+ 
+ 	inline Vector2D Normalize ( void ) const
+ 	{
+-		Vector2D vec2;
++		// Vector2D vec2;
+ 
+ 		float flLen = Length();
+ 		if ( flLen == 0 )
+@@ -60,12 +60,12 @@
+ {								//		which is a vec_t[3]
+ public:
+ 	// Construction/destruction
+-	inline Vector(void)								{ }
+-	inline Vector(float X, float Y, float Z)		{ x = X; y = Y; z = Z;						}
++	inline Vector(void): x(0.0), y(0.0), z(0.0)					{ }
++	inline Vector(float X, float Y, float Z): x(0.0), y(0.0), z(0.0)		{ x = X; y = Y; z = Z;						}
+ 	//inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
+ 	//inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
+-	inline Vector(const Vector& v)					{ x = v.x; y = v.y; z = v.z;				} 
+-	inline Vector(float rgfl[3])					{ x = rgfl[0]; y = rgfl[1]; z = rgfl[2];	}
++	inline Vector(const Vector& v): x(0.0), y(0.0), z(0.0)		{ x = v.x; y = v.y; z = v.z;				} 
++	inline Vector(float rgfl[3]): x(0.0), y(0.0), z(0.0)		{ x = rgfl[0]; y = rgfl[1]; z = rgfl[2];	}
+ 
+ 	// Operators
+ 	inline Vector operator-(void) const				{ return Vector(-x,-y,-z);				}
+@@ -109,4 +109,4 @@
+ 
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dmc/dlls/weapons.h.orig ./multiplayer/dmc/dlls/weapons.h
+--- ./multiplayer/dmc/dlls/weapons.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/dlls/weapons.h	Wed Nov 27 05:27:41 2002
+@@ -441,7 +441,7 @@
+ 	int		Restore( CRestore &restore );
+ 	static	TYPEDESCRIPTION m_SaveData[];
+ 
+-	HasWeapon( CBasePlayerItem *pCheckItem );
++	BOOL HasWeapon( CBasePlayerItem *pCheckItem );
+ 	BOOL PackWeapon( CBasePlayerItem *pWeapon );
+ 	BOOL PackAmmo( int iszName, int iCount );
+ 	
+diff -u ./multiplayer/dmc/pm_shared/pm_debug.c.orig ./multiplayer/dmc/pm_shared/pm_debug.c
+--- ./multiplayer/dmc/pm_shared/pm_debug.c.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/pm_shared/pm_debug.c	Wed Nov 27 05:27:41 2002
+@@ -293,4 +293,4 @@
+ 	}
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dmc/pm_shared/pm_debug.h.orig ./multiplayer/dmc/pm_shared/pm_debug.h
+--- ./multiplayer/dmc/pm_shared/pm_debug.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/pm_shared/pm_debug.h	Wed Nov 27 05:27:41 2002
+@@ -7,11 +7,15 @@
+ 
+ #ifndef PM_DEBUG_H
+ #define PM_DEBUG_H
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ void PM_ViewEntity( void );
+ void PM_DrawBBox(vec3_t mins, vec3_t maxs, vec3_t origin, int pcolor, float life);
+ void PM_ParticleLine(vec3_t start, vec3_t end, int pcolor, float life, float vert);
+ void PM_ShowClipBox( void );
+ 
+-#endif // PMOVEDBG_H
+\ No newline at end of file
++#endif // PMOVEDBG_H
+diff -u ./multiplayer/dmc/pm_shared/pm_defs.h.orig ./multiplayer/dmc/pm_shared/pm_defs.h
+--- ./multiplayer/dmc/pm_shared/pm_defs.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/pm_shared/pm_defs.h	Wed Nov 27 05:27:41 2002
+@@ -8,7 +8,11 @@
+ // pm_defs.h
+ #if !defined( PM_DEFSH )
+ #define PM_DEFSH
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ #define	MAX_PHYSENTS 600 		  // Must have room for all entities in the world.
+ #define MAX_MOVEENTS 64
+diff -u ./multiplayer/dmc/pm_shared/pm_info.h.orig ./multiplayer/dmc/pm_shared/pm_info.h
+--- ./multiplayer/dmc/pm_shared/pm_info.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/pm_shared/pm_info.h	Wed Nov 27 05:27:41 2002
+@@ -8,8 +8,12 @@
+ // Physics info string definition
+ #if !defined( PM_INFOH )
+ #define PM_INFOH
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ #define MAX_PHYSINFO_STRING 256
+ 
+-#endif // PM_INFOH
+\ No newline at end of file
++#endif // PM_INFOH
+diff -u ./multiplayer/dmc/pm_shared/pm_materials.h.orig ./multiplayer/dmc/pm_shared/pm_materials.h
+--- ./multiplayer/dmc/pm_shared/pm_materials.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/pm_shared/pm_materials.h	Wed Nov 27 05:27:41 2002
+@@ -7,7 +7,11 @@
+ 
+ #if !defined( PM_MATERIALSH )
+ #define PM_MATERIALSH
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ #define CBTEXTURENAMEMAX	13			// only load first n chars of name
+ 
+@@ -23,4 +27,4 @@
+ #define CHAR_TEX_GLASS		'Y'
+ #define CHAR_TEX_FLESH		'F'
+ 
+-#endif // !PM_MATERIALSH
+\ No newline at end of file
++#endif // !PM_MATERIALSH
+diff -u ./multiplayer/dmc/pm_shared/pm_movevars.h.orig ./multiplayer/dmc/pm_shared/pm_movevars.h
+--- ./multiplayer/dmc/pm_shared/pm_movevars.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/pm_shared/pm_movevars.h	Wed Nov 27 05:27:41 2002
+@@ -44,4 +44,4 @@
+ 
+ extern movevars_t movevars;
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/dmc/pm_shared/pm_shared.h.orig ./multiplayer/dmc/pm_shared/pm_shared.h
+--- ./multiplayer/dmc/pm_shared/pm_shared.h.orig	Thu Oct  3 17:57:44 2002
++++ ./multiplayer/dmc/pm_shared/pm_shared.h	Wed Nov 27 05:27:41 2002
+@@ -18,7 +18,11 @@
+ //
+ #if !defined( PM_SHAREDH )
+ #define PM_SHAREDH
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ void PM_Init( struct playermove_s *ppmove );
+ void PM_Move ( struct playermove_s *ppmove, int server );
+diff -u ./multiplayer/engine/custom.h.orig ./multiplayer/engine/custom.h
+--- ./multiplayer/engine/custom.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/engine/custom.h	Wed Nov 27 05:27:41 2002
+@@ -17,7 +17,9 @@
+ #ifndef CUSTOM_H
+ #define CUSTOM_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #include "const.h"
+diff -u ./multiplayer/engine/edict.h.orig ./multiplayer/engine/edict.h
+--- ./multiplayer/engine/edict.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/engine/edict.h	Wed Nov 27 05:27:42 2002
+@@ -8,7 +8,9 @@
+ #if !defined EDICT_H
+ #define EDICT_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ #define	MAX_ENT_LEAFS	48
+ 
+diff -u ./multiplayer/engine/keydefs.h.orig ./multiplayer/engine/keydefs.h
+--- ./multiplayer/engine/keydefs.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/engine/keydefs.h	Wed Nov 27 05:28:07 2002
+@@ -9,7 +9,9 @@
+ #ifndef KEYDEFS_H
+ #define KEYDEFS_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ //
+diff -u ./multiplayer/engine/progdefs.h.orig ./multiplayer/engine/progdefs.h
+--- ./multiplayer/engine/progdefs.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/engine/progdefs.h	Wed Nov 27 05:28:07 2002
+@@ -15,7 +15,9 @@
+ #ifndef PROGDEFS_H
+ #define PROGDEFS_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ typedef struct
+@@ -221,4 +223,4 @@
+ } entvars_t;
+ 
+ 
+-#endif // PROGDEFS_H
+\ No newline at end of file
++#endif // PROGDEFS_H
+diff -u ./multiplayer/engine/progs.h.orig ./multiplayer/engine/progs.h
+--- ./multiplayer/engine/progs.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/engine/progs.h	Wed Nov 27 05:28:07 2002
+@@ -79,4 +79,4 @@
+ 
+ #define PROG_TO_EDICT(e) ((edict_t *)((byte *)sv.edicts + e))
+ 
+-#endif // PROGS_H
+\ No newline at end of file
++#endif // PROGS_H
+diff -u ./multiplayer/engine/eiface.h.orig ./multiplayer/engine/eiface.h
+--- ./multiplayer/engine/eiface.h.orig	Fri May  7 21:17:06 2004
++++ ./multiplayer/engine/eiface.h	Fri May  7 21:47:31 2004
+@@ -166,8 +166,13 @@
+ 	void		(*pfnCVarSetFloat)			(const char *szVarName, float flValue);
+ 	void		(*pfnCVarSetString)			(const char *szVarName, const char *szValue);
+ 	void		(*pfnAlertMessage)			(ALERT_TYPE atype, char *szFmt, ...);
++#ifdef HLSDK_3_2_OLD_EIFACE
++	void		(*pfnEngineFprintf)			(FILE *pfile, char *szFmt, ...);
++	void*		(*pfnPvAllocEntPrivateData)	(edict_t *pEdict, long cb);
++#else
+ 	void		(*pfnEngineFprintf)			(void *pfile, char *szFmt, ...);
+ 	void*		(*pfnPvAllocEntPrivateData)	(edict_t *pEdict, int32 cb);
++#endif
+ 	void*		(*pfnPvEntPrivateData)		(edict_t *pEdict);
+ 	void		(*pfnFreeEntPrivateData)	(edict_t *pEdict);
+ 	const char*	(*pfnSzFromIndex)			(int iString);
+@@ -182,8 +187,13 @@
+ 	int			(*pfnRegUserMsg)			(const char *pszName, int iSize);
+ 	void		(*pfnAnimationAutomove)		(const edict_t* pEdict, float flTime);
+ 	void		(*pfnGetBonePosition)		(const edict_t* pEdict, int iBone, float *rgflOrigin, float *rgflAngles );
++#ifdef HLSDK_3_2_OLD_EIFACE
++	unsigned long (*pfnFunctionFromName)	( const char *pName );
++	const char *(*pfnNameForFunction)		( unsigned long function );
++#else
+ 	uint32 (*pfnFunctionFromName)	( const char *pName );
+ 	const char *(*pfnNameForFunction)		( uint32 function );
++#endif
+ 	void		(*pfnClientPrintf)			( edict_t* pEdict, PRINT_TYPE ptype, const char *szMsg ); // JOHN: engine callbacks so game DLL can print messages to individual clients
+ 	void		(*pfnServerPrint)			( const char *szMsg );
+ 	const char *(*pfnCmd_Args)				( void );		// these 3 added 
+@@ -194,7 +204,11 @@
+ 	void        (*pfnCRC32_ProcessBuffer)   (CRC32_t *pulCRC, void *p, int len);
+ 	void		(*pfnCRC32_ProcessByte)     (CRC32_t *pulCRC, unsigned char ch);
+ 	CRC32_t		(*pfnCRC32_Final)			(CRC32_t pulCRC);
++#ifdef HLSDK_3_2_OLD_EIFACE
++	long		(*pfnRandomLong)			(long  lLow,  long  lHigh);
++#else
+ 	int32		(*pfnRandomLong)			(int32  lLow,  int32  lHigh);
++#endif
+ 	float		(*pfnRandomFloat)			(float flLow, float flHigh);
+ 	void		(*pfnSetView)				(const edict_t *pClient, const edict_t *pViewent );
+ 	float		(*pfnTime)					( void );
+@@ -301,7 +315,11 @@
+ 	char	*szClassName;	// in: entity classname
+ 	char	*szKeyName;		// in: name of key
+ 	char	*szValue;		// in: value of key
++#ifdef HLSDK_3_2_OLD_EIFACE
++	long	fHandled;		// out: DLL sets to true if key-value pair was understood
++#else
+ 	int32	fHandled;		// out: DLL sets to true if key-value pair was understood
++#endif
+ } KeyValueData;
+ 
+ 
+@@ -521,4 +539,4 @@
+ typedef int	(*APIFUNCTION)( DLL_FUNCTIONS *pFunctionTable, int interfaceVersion );
+ typedef int	(*APIFUNCTION2)( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion );
+ 
+-#endif EIFACE_H
++#endif /* EIFACE_H */
+diff -u ./multiplayer/engine/Sequence.h.orig ./multiplayer/engine/Sequence.h
+--- ./multiplayer/engine/Sequence.h.orig	Fri May  7 21:17:14 2004
++++ ./multiplayer/engine/Sequence.h	Fri May  7 21:17:14 2004
+@@ -198,4 +198,4 @@
+ void Sequence_OnLevelLoad( const char* mapName );
+ sentenceEntry_s* SequencePickSentence( const char *groupName, int pickMethod, int *picked );
+ 
+-#endif // _INCLUDE_SEQUENCE_H_
++#endif /* _INCLUDE_SEQUENCE_H_ */
+diff -u ./multiplayer/engine/archtypes.h.orig ./multiplayer/engine/archtypes.h
+--- ./multiplayer/engine/archtypes.h.orig	Fri May  7 21:17:22 2004
++++ ./multiplayer/engine/archtypes.h	Fri May  7 21:17:22 2004
+@@ -9,7 +9,7 @@
+ #define X64BITS
+ #endif
+ 
+-#if defined( _WIN32 )
++#if defined( _WIN32 ) && (! defined( __MINGW32__ ))
+ 
+ typedef __int16 int16;
+ typedef unsigned __int16 uint16;
+@@ -20,7 +20,7 @@
+ typedef __int32 intp;				// intp is an integer that can accomodate a pointer
+ typedef unsigned __int32 uintp;		// (ie, sizeof(intp) >= sizeof(int) && sizeof(intp) >= sizeof(void *)
+ 
+-#else // _WIN32
++#else /* _WIN32 */
+ 
+ typedef short int16;
+ typedef unsigned short uint16;
+@@ -36,6 +36,6 @@
+ typedef unsigned int uintp;
+ #endif
+ 
+-#endif // else _WIN32
++#endif /* else _WIN32 */
+ 
+-#endif // ARCHTYPES_H
++#endif /* ARCHTYPES_H */
+diff -u ./multiplayer/game_shared/bitvec.h.orig ./multiplayer/game_shared/bitvec.h
+--- ./multiplayer/game_shared/bitvec.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/bitvec.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef BITVEC_H
+ #define BITVEC_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/vgui_checkbutton2.h.orig ./multiplayer/game_shared/vgui_checkbutton2.h
+--- ./multiplayer/game_shared/vgui_checkbutton2.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_checkbutton2.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VGUI_CHECKBUTTON2_H
+ #define VGUI_CHECKBUTTON2_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/vgui_defaultinputsignal.h.orig ./multiplayer/game_shared/vgui_defaultinputsignal.h
+--- ./multiplayer/game_shared/vgui_defaultinputsignal.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_defaultinputsignal.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VGUI_DEFAULTINPUTSIGNAL_H
+ #define VGUI_DEFAULTINPUTSIGNAL_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/vgui_grid.h.orig ./multiplayer/game_shared/vgui_grid.h
+--- ./multiplayer/game_shared/vgui_grid.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_grid.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VGUI_GRID_H
+ #define VGUI_GRID_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/vgui_helpers.h.orig ./multiplayer/game_shared/vgui_helpers.h
+--- ./multiplayer/game_shared/vgui_helpers.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_helpers.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VGUI_HELPERS_H
+ #define VGUI_HELPERS_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/vgui_listbox.h.orig ./multiplayer/game_shared/vgui_listbox.h
+--- ./multiplayer/game_shared/vgui_listbox.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_listbox.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VOICE_LISTBOX_H
+ #define VOICE_LISTBOX_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/vgui_loadtga.h.orig ./multiplayer/game_shared/vgui_loadtga.h
+--- ./multiplayer/game_shared/vgui_loadtga.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_loadtga.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VGUI_LOADTGA_H
+ #define VGUI_LOADTGA_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/vgui_scrollbar2.h.orig ./multiplayer/game_shared/vgui_scrollbar2.h
+--- ./multiplayer/game_shared/vgui_scrollbar2.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_scrollbar2.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VGUI_SCROLLBAR2_H
+ #define VGUI_SCROLLBAR2_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #include<VGUI.h>
+diff -u ./multiplayer/game_shared/vgui_slider2.cpp.orig ./multiplayer/game_shared/vgui_slider2.cpp
+--- ./multiplayer/game_shared/vgui_slider2.cpp.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_slider2.cpp	Wed Nov 27 05:28:07 2002
+@@ -433,4 +433,4 @@
+ void Slider2::setButtonOffset(int buttonOffset)
+ {
+ 	_buttonOffset=buttonOffset;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/game_shared/vgui_slider2.h.orig ./multiplayer/game_shared/vgui_slider2.h
+--- ./multiplayer/game_shared/vgui_slider2.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/vgui_slider2.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VGUI_SLIDER2_H
+ #define VGUI_SLIDER2_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #include<VGUI.h>
+diff -u ./multiplayer/game_shared/voice_banmgr.h.orig ./multiplayer/game_shared/voice_banmgr.h
+--- ./multiplayer/game_shared/voice_banmgr.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/voice_banmgr.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VOICE_BANMGR_H
+ #define VOICE_BANMGR_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/voice_common.h.orig ./multiplayer/game_shared/voice_common.h
+--- ./multiplayer/game_shared/voice_common.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/voice_common.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VOICE_COMMON_H
+ #define VOICE_COMMON_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/game_shared/voice_gamemgr.h.orig ./multiplayer/game_shared/voice_gamemgr.h
+--- ./multiplayer/game_shared/voice_gamemgr.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/voice_gamemgr.h	Wed Nov 27 05:28:07 2002
+@@ -7,7 +7,11 @@
+ 
+ #ifndef VOICE_GAMEMGR_H
+ #define VOICE_GAMEMGR_H
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ 
+ #include "voice_common.h"
+diff -u ./multiplayer/game_shared/voice_status.h.orig ./multiplayer/game_shared/voice_status.h
+--- ./multiplayer/game_shared/voice_status.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/voice_status.h	Wed Nov 27 05:28:07 2002
+@@ -7,7 +7,11 @@
+ 
+ #ifndef VOICE_STATUS_H
+ #define VOICE_STATUS_H
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ 
+ #include "VGUI_Label.h"
+diff -u ./multiplayer/game_shared/voice_vgui_tweakdlg.h.orig ./multiplayer/game_shared/voice_vgui_tweakdlg.h
+--- ./multiplayer/game_shared/voice_vgui_tweakdlg.h.orig	Thu Oct  3 17:57:46 2002
++++ ./multiplayer/game_shared/voice_vgui_tweakdlg.h	Wed Nov 27 05:28:07 2002
+@@ -8,7 +8,9 @@
+ #ifndef VOICE_VGUI_TWEAKDLG_H
+ #define VOICE_VGUI_TWEAKDLG_H
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ 
+diff -u ./multiplayer/pm_shared/pm_debug.h.orig ./multiplayer/pm_shared/pm_debug.h
+--- ./multiplayer/pm_shared/pm_debug.h.orig	Thu Oct  3 17:57:48 2002
++++ ./multiplayer/pm_shared/pm_debug.h	Wed Nov 27 05:28:07 2002
+@@ -14,7 +14,11 @@
+ ****/
+ #ifndef PM_DEBUG_H
+ #define PM_DEBUG_H
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ void PM_ViewEntity( void );
+ void PM_DrawBBox(vec3_t mins, vec3_t maxs, vec3_t origin, int pcolor, float life);
+diff -u ./multiplayer/pm_shared/pm_defs.h.orig ./multiplayer/pm_shared/pm_defs.h
+--- ./multiplayer/pm_shared/pm_defs.h.orig	Thu Oct  3 17:57:48 2002
++++ ./multiplayer/pm_shared/pm_defs.h	Wed Nov 27 05:28:07 2002
+@@ -15,7 +15,11 @@
+ // pm_defs.h
+ #if !defined( PM_DEFSH )
+ #define PM_DEFSH
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ #define	MAX_PHYSENTS 600 		  // Must have room for all entities in the world.
+ #define MAX_MOVEENTS 64
+diff -u ./multiplayer/pm_shared/pm_info.h.orig ./multiplayer/pm_shared/pm_info.h
+--- ./multiplayer/pm_shared/pm_info.h.orig	Thu Oct  3 17:57:48 2002
++++ ./multiplayer/pm_shared/pm_info.h	Wed Nov 27 05:32:58 2002
+@@ -16,7 +16,9 @@
+ #if !defined( PM_INFOH )
+ #define PM_INFOH
+ #ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
+ #endif
+ 
+ #define MAX_PHYSINFO_STRING 256
+diff -u ./multiplayer/pm_shared/pm_materials.h.orig ./multiplayer/pm_shared/pm_materials.h
+--- ./multiplayer/pm_shared/pm_materials.h.orig	Thu Oct  3 17:57:48 2002
++++ ./multiplayer/pm_shared/pm_materials.h	Wed Nov 27 05:28:07 2002
+@@ -14,7 +14,11 @@
+ ****/
+ #if !defined( PM_MATERIALSH )
+ #define PM_MATERIALSH
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ #define CBTEXTURENAMEMAX	13			// only load first n chars of name
+ 
+diff -u ./multiplayer/pm_shared/pm_movevars.h.orig ./multiplayer/pm_shared/pm_movevars.h
+--- ./multiplayer/pm_shared/pm_movevars.h.orig	Thu Oct  3 17:57:48 2002
++++ ./multiplayer/pm_shared/pm_movevars.h	Wed Nov 27 05:28:07 2002
+@@ -44,4 +44,4 @@
+ 
+ extern movevars_t movevars;
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/pm_shared/pm_shared.h.orig ./multiplayer/pm_shared/pm_shared.h
+--- ./multiplayer/pm_shared/pm_shared.h.orig	Thu Oct  3 17:57:48 2002
++++ ./multiplayer/pm_shared/pm_shared.h	Wed Nov 27 05:28:07 2002
+@@ -18,7 +18,11 @@
+ //
+ #if !defined( PM_SHAREDH )
+ #define PM_SHAREDH
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ void PM_Init( struct playermove_s *ppmove );
+ void PM_Move ( struct playermove_s *ppmove, int server );
+@@ -33,4 +37,4 @@
+ #define OBS_MAP_FREE			5
+ #define OBS_MAP_CHASE			6
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/common/movie.h.orig ./multiplayer/utils/common/movie.h
+--- ./multiplayer/utils/common/movie.h.orig	Thu Oct  3 17:58:00 2002
++++ ./multiplayer/utils/common/movie.h	Wed Nov 27 05:28:07 2002
+@@ -33,4 +33,4 @@
+ 
+ 
+ 
+-#endif _MOVIE_H_
+\ No newline at end of file
++#endif _MOVIE_H_
+diff -u ./multiplayer/utils/common/polylib.h.orig ./multiplayer/utils/common/polylib.h
+--- ./multiplayer/utils/common/polylib.h.orig	Thu Oct  3 17:58:00 2002
++++ ./multiplayer/utils/common/polylib.h	Wed Nov 27 05:28:07 2002
+@@ -33,4 +33,4 @@
+ void	RemoveColinearPoints (winding_t *w);
+ int		WindingOnPlaneSide (winding_t *w, vec3_t normal, vec_t dist);
+ void	FreeWinding (winding_t *w);
+-void	WindingBounds (winding_t *w, vec3_t mins, vec3_t maxs);
+\ No newline at end of file
++void	WindingBounds (winding_t *w, vec3_t mins, vec3_t maxs);
+diff -u ./multiplayer/utils/makels/makels.cpp.orig ./multiplayer/utils/makels/makels.cpp
+--- ./multiplayer/utils/makels/makels.cpp.orig	Thu Oct  3 17:58:00 2002
++++ ./multiplayer/utils/makels/makels.cpp	Wed Nov 27 05:28:07 2002
+@@ -170,4 +170,4 @@
+ 	free(pszdir);
+ 	exit(0);
+ 	return 0;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/utils/procinfo/procinfo.h.orig ./multiplayer/utils/procinfo/procinfo.h
+--- ./multiplayer/utils/procinfo/procinfo.h.orig	Thu Oct  3 17:58:02 2002
++++ ./multiplayer/utils/procinfo/procinfo.h	Wed Nov 27 05:28:07 2002
+@@ -7,7 +7,11 @@
+ 
+ #if !defined ( PROCINFOH )
+ #define PROCINFOH
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ 
+ int		PROC_GetSpeed( void );
+ int		PROC_IsMMX( void );
+diff -u ./multiplayer/utils/qcsg/hullfile.c.orig ./multiplayer/utils/qcsg/hullfile.c
+--- ./multiplayer/utils/qcsg/hullfile.c.orig	Thu Oct  3 17:58:02 2002
++++ ./multiplayer/utils/qcsg/hullfile.c	Wed Nov 27 05:28:07 2002
+@@ -84,4 +84,4 @@
+ 	}
+ 
+ 	fclose( f );
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/utils/qlumpy/qlumpy.c.orig ./multiplayer/utils/qlumpy/qlumpy.c
+--- ./multiplayer/utils/qlumpy/qlumpy.c.orig	Thu Oct  3 17:58:04 2002
++++ ./multiplayer/utils/qlumpy/qlumpy.c	Wed Nov 27 05:28:07 2002
+@@ -427,4 +427,4 @@
+ 	}
+ 		
+ 	return 0;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/utils/serverctrl/ServerCtrl.h.orig ./multiplayer/utils/serverctrl/ServerCtrl.h
+--- ./multiplayer/utils/serverctrl/ServerCtrl.h.orig	Thu Oct  3 17:58:04 2002
++++ ./multiplayer/utils/serverctrl/ServerCtrl.h	Wed Nov 27 05:28:07 2002
+@@ -5,7 +5,11 @@
+ #define AFX_ServerCtrl_H__E2974CA6_EF9F_11D3_A4D9_00105A1727F3__INCLUDED_
+ 
+ #if _MSC_VER > 1000
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ #endif // _MSC_VER > 1000
+ 
+ #ifndef __AFXWIN_H__
+diff -u ./multiplayer/utils/serverctrl/ServerCtrlDlg.cpp.orig ./multiplayer/utils/serverctrl/ServerCtrlDlg.cpp
+--- ./multiplayer/utils/serverctrl/ServerCtrlDlg.cpp.orig	Thu Oct  3 17:58:04 2002
++++ ./multiplayer/utils/serverctrl/ServerCtrlDlg.cpp	Wed Nov 27 05:28:07 2002
+@@ -655,4 +655,4 @@
+ 	}
+ 
+ 	return 0;
+-}
+\ No newline at end of file
++}
+diff -u ./multiplayer/utils/serverctrl/ServerCtrlDlg.h.orig ./multiplayer/utils/serverctrl/ServerCtrlDlg.h
+--- ./multiplayer/utils/serverctrl/ServerCtrlDlg.h.orig	Thu Oct  3 17:58:04 2002
++++ ./multiplayer/utils/serverctrl/ServerCtrlDlg.h	Wed Nov 27 05:28:07 2002
+@@ -5,7 +5,11 @@
+ #define AFX_ServerCtrlDLG_H__E2974CA8_EF9F_11D3_A4D9_00105A1727F3__INCLUDED_
+ 
+ #if _MSC_VER > 1000
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ #endif // _MSC_VER > 1000
+ 
+ /////////////////////////////////////////////////////////////////////////////
+diff -u ./multiplayer/utils/serverctrl/StdAfx.h.orig ./multiplayer/utils/serverctrl/StdAfx.h
+--- ./multiplayer/utils/serverctrl/StdAfx.h.orig	Thu Oct  3 17:58:04 2002
++++ ./multiplayer/utils/serverctrl/StdAfx.h	Wed Nov 27 05:28:07 2002
+@@ -7,7 +7,11 @@
+ #define AFX_STDAFX_H__E2974CAA_EF9F_11D3_A4D9_00105A1727F3__INCLUDED_
+ 
+ #if _MSC_VER > 1000
++#ifdef _WIN32
++#ifndef __MINGW32__
+ #pragma once
++#endif /* not __MINGW32__ */
++#endif
+ #endif // _MSC_VER > 1000
+ 
+ #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
+diff -u ./multiplayer/utils/vgui/include/VGUI_Bitmap.h.orig ./multiplayer/utils/vgui/include/VGUI_Bitmap.h
+--- ./multiplayer/utils/vgui/include/VGUI_Bitmap.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Bitmap.h	Wed Nov 27 05:28:07 2002
+@@ -34,4 +34,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_BitmapTGA.h.orig ./multiplayer/utils/vgui/include/VGUI_BitmapTGA.h
+--- ./multiplayer/utils/vgui/include/VGUI_BitmapTGA.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_BitmapTGA.h	Wed Nov 27 05:28:07 2002
+@@ -26,4 +26,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Border.h.orig ./multiplayer/utils/vgui/include/VGUI_Border.h
+--- ./multiplayer/utils/vgui/include/VGUI_Border.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Border.h	Wed Nov 27 05:28:07 2002
+@@ -42,4 +42,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_BorderPair.h.orig ./multiplayer/utils/vgui/include/VGUI_BorderPair.h
+--- ./multiplayer/utils/vgui/include/VGUI_BorderPair.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_BorderPair.h	Wed Nov 27 05:28:07 2002
+@@ -30,4 +30,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_BuildGroup.h.orig ./multiplayer/utils/vgui/include/VGUI_BuildGroup.h
+--- ./multiplayer/utils/vgui/include/VGUI_BuildGroup.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_BuildGroup.h	Wed Nov 27 05:28:07 2002
+@@ -64,4 +64,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Button.h.orig ./multiplayer/utils/vgui/include/VGUI_Button.h
+--- ./multiplayer/utils/vgui/include/VGUI_Button.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Button.h	Wed Nov 27 05:28:07 2002
+@@ -58,4 +58,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ButtonGroup.h.orig ./multiplayer/utils/vgui/include/VGUI_ButtonGroup.h
+--- ./multiplayer/utils/vgui/include/VGUI_ButtonGroup.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ButtonGroup.h	Wed Nov 27 05:28:07 2002
+@@ -27,4 +27,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ChangeSignal.h.orig ./multiplayer/utils/vgui/include/VGUI_ChangeSignal.h
+--- ./multiplayer/utils/vgui/include/VGUI_ChangeSignal.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ChangeSignal.h	Wed Nov 27 05:28:07 2002
+@@ -23,4 +23,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_CheckButton.h.orig ./multiplayer/utils/vgui/include/VGUI_CheckButton.h
+--- ./multiplayer/utils/vgui/include/VGUI_CheckButton.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_CheckButton.h	Wed Nov 27 05:28:07 2002
+@@ -25,4 +25,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ComboKey.h.orig ./multiplayer/utils/vgui/include/VGUI_ComboKey.h
+--- ./multiplayer/utils/vgui/include/VGUI_ComboKey.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ComboKey.h	Wed Nov 27 05:28:07 2002
+@@ -31,4 +31,4 @@
+ }
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ConfigWizard.h.orig ./multiplayer/utils/vgui/include/VGUI_ConfigWizard.h
+--- ./multiplayer/utils/vgui/include/VGUI_ConfigWizard.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ConfigWizard.h	Wed Nov 27 05:28:07 2002
+@@ -37,4 +37,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Cursor.h.orig ./multiplayer/utils/vgui/include/VGUI_Cursor.h
+--- ./multiplayer/utils/vgui/include/VGUI_Cursor.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Cursor.h	Wed Nov 27 05:28:07 2002
+@@ -54,4 +54,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Dar.h.orig ./multiplayer/utils/vgui/include/VGUI_Dar.h
+--- ./multiplayer/utils/vgui/include/VGUI_Dar.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Dar.h	Wed Nov 27 05:28:07 2002
+@@ -190,4 +190,4 @@
+ }
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_DataInputStream.h.orig ./multiplayer/utils/vgui/include/VGUI_DataInputStream.h
+--- ./multiplayer/utils/vgui/include/VGUI_DataInputStream.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_DataInputStream.h	Wed Nov 27 05:28:07 2002
+@@ -46,4 +46,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Desktop.h.orig ./multiplayer/utils/vgui/include/VGUI_Desktop.h
+--- ./multiplayer/utils/vgui/include/VGUI_Desktop.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Desktop.h	Wed Nov 27 05:28:07 2002
+@@ -39,4 +39,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_DesktopIcon.h.orig ./multiplayer/utils/vgui/include/VGUI_DesktopIcon.h
+--- ./multiplayer/utils/vgui/include/VGUI_DesktopIcon.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_DesktopIcon.h	Wed Nov 27 05:28:07 2002
+@@ -38,4 +38,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_EditPanel.h.orig ./multiplayer/utils/vgui/include/VGUI_EditPanel.h
+--- ./multiplayer/utils/vgui/include/VGUI_EditPanel.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_EditPanel.h	Wed Nov 27 05:28:08 2002
+@@ -62,4 +62,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_EtchedBorder.h.orig ./multiplayer/utils/vgui/include/VGUI_EtchedBorder.h
+--- ./multiplayer/utils/vgui/include/VGUI_EtchedBorder.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_EtchedBorder.h	Wed Nov 27 05:28:08 2002
+@@ -26,4 +26,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_FlowLayout.h.orig ./multiplayer/utils/vgui/include/VGUI_FlowLayout.h
+--- ./multiplayer/utils/vgui/include/VGUI_FlowLayout.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_FlowLayout.h	Wed Nov 27 05:28:08 2002
+@@ -26,4 +26,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_FocusChangeSignal.h.orig ./multiplayer/utils/vgui/include/VGUI_FocusChangeSignal.h
+--- ./multiplayer/utils/vgui/include/VGUI_FocusChangeSignal.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_FocusChangeSignal.h	Wed Nov 27 05:28:08 2002
+@@ -23,4 +23,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_FocusNavGroup.h.orig ./multiplayer/utils/vgui/include/VGUI_FocusNavGroup.h
+--- ./multiplayer/utils/vgui/include/VGUI_FocusNavGroup.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_FocusNavGroup.h	Wed Nov 27 05:28:08 2002
+@@ -32,4 +32,4 @@
+ };
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Font.h.orig ./multiplayer/utils/vgui/include/VGUI_Font.h
+--- ./multiplayer/utils/vgui/include/VGUI_Font.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Font.h	Wed Nov 27 05:28:08 2002
+@@ -45,4 +45,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_FrameSignal.h.orig ./multiplayer/utils/vgui/include/VGUI_FrameSignal.h
+--- ./multiplayer/utils/vgui/include/VGUI_FrameSignal.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_FrameSignal.h	Wed Nov 27 05:28:08 2002
+@@ -24,4 +24,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_GridLayout.h.orig ./multiplayer/utils/vgui/include/VGUI_GridLayout.h
+--- ./multiplayer/utils/vgui/include/VGUI_GridLayout.h.orig	Thu Oct  3 17:58:06 2002
++++ ./multiplayer/utils/vgui/include/VGUI_GridLayout.h	Wed Nov 27 05:28:08 2002
+@@ -27,4 +27,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Image.h.orig ./multiplayer/utils/vgui/include/VGUI_Image.h
+--- ./multiplayer/utils/vgui/include/VGUI_Image.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Image.h	Wed Nov 27 05:28:08 2002
+@@ -59,4 +59,4 @@
+ };
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ImagePanel.h.orig ./multiplayer/utils/vgui/include/VGUI_ImagePanel.h
+--- ./multiplayer/utils/vgui/include/VGUI_ImagePanel.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ImagePanel.h	Wed Nov 27 05:28:08 2002
+@@ -35,4 +35,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_InputSignal.h.orig ./multiplayer/utils/vgui/include/VGUI_InputSignal.h
+--- ./multiplayer/utils/vgui/include/VGUI_InputSignal.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_InputSignal.h	Wed Nov 27 05:28:08 2002
+@@ -36,4 +36,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_InputStream.h.orig ./multiplayer/utils/vgui/include/VGUI_InputStream.h
+--- ./multiplayer/utils/vgui/include/VGUI_InputStream.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_InputStream.h	Wed Nov 27 05:28:08 2002
+@@ -27,4 +27,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_IntChangeSignal.h.orig ./multiplayer/utils/vgui/include/VGUI_IntChangeSignal.h
+--- ./multiplayer/utils/vgui/include/VGUI_IntChangeSignal.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_IntChangeSignal.h	Wed Nov 27 05:28:08 2002
+@@ -23,4 +23,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Label.h.orig ./multiplayer/utils/vgui/include/VGUI_Label.h
+--- ./multiplayer/utils/vgui/include/VGUI_Label.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Label.h	Wed Nov 27 05:28:08 2002
+@@ -77,4 +77,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Layout.h.orig ./multiplayer/utils/vgui/include/VGUI_Layout.h
+--- ./multiplayer/utils/vgui/include/VGUI_Layout.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Layout.h	Wed Nov 27 05:28:08 2002
+@@ -28,4 +28,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_LayoutInfo.h.orig ./multiplayer/utils/vgui/include/VGUI_LayoutInfo.h
+--- ./multiplayer/utils/vgui/include/VGUI_LayoutInfo.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_LayoutInfo.h	Wed Nov 27 05:28:08 2002
+@@ -18,4 +18,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_LineBorder.h.orig ./multiplayer/utils/vgui/include/VGUI_LineBorder.h
+--- ./multiplayer/utils/vgui/include/VGUI_LineBorder.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_LineBorder.h	Wed Nov 27 05:28:08 2002
+@@ -36,4 +36,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ListPanel.h.orig ./multiplayer/utils/vgui/include/VGUI_ListPanel.h
+--- ./multiplayer/utils/vgui/include/VGUI_ListPanel.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ListPanel.h	Wed Nov 27 05:28:08 2002
+@@ -37,4 +37,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_LoweredBorder.h.orig ./multiplayer/utils/vgui/include/VGUI_LoweredBorder.h
+--- ./multiplayer/utils/vgui/include/VGUI_LoweredBorder.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_LoweredBorder.h	Wed Nov 27 05:28:08 2002
+@@ -26,4 +26,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Menu.h.orig ./multiplayer/utils/vgui/include/VGUI_Menu.h
+--- ./multiplayer/utils/vgui/include/VGUI_Menu.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Menu.h	Wed Nov 27 05:28:08 2002
+@@ -27,4 +27,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_MenuItem.h.orig ./multiplayer/utils/vgui/include/VGUI_MenuItem.h
+--- ./multiplayer/utils/vgui/include/VGUI_MenuItem.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_MenuItem.h	Wed Nov 27 05:28:08 2002
+@@ -27,4 +27,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_MenuSeparator.h.orig ./multiplayer/utils/vgui/include/VGUI_MenuSeparator.h
+--- ./multiplayer/utils/vgui/include/VGUI_MenuSeparator.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_MenuSeparator.h	Wed Nov 27 05:28:08 2002
+@@ -24,4 +24,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_MessageBox.h.orig ./multiplayer/utils/vgui/include/VGUI_MessageBox.h
+--- ./multiplayer/utils/vgui/include/VGUI_MessageBox.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_MessageBox.h	Wed Nov 27 05:28:08 2002
+@@ -50,4 +50,4 @@
+ 
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_MiniApp.h.orig ./multiplayer/utils/vgui/include/VGUI_MiniApp.h
+--- ./multiplayer/utils/vgui/include/VGUI_MiniApp.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_MiniApp.h	Wed Nov 27 05:28:08 2002
+@@ -30,4 +30,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_MouseCode.h.orig ./multiplayer/utils/vgui/include/VGUI_MouseCode.h
+--- ./multiplayer/utils/vgui/include/VGUI_MouseCode.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_MouseCode.h	Wed Nov 27 05:28:08 2002
+@@ -21,4 +21,4 @@
+ };
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_PopupMenu.h.orig ./multiplayer/utils/vgui/include/VGUI_PopupMenu.h
+--- ./multiplayer/utils/vgui/include/VGUI_PopupMenu.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_PopupMenu.h	Wed Nov 27 05:28:08 2002
+@@ -27,4 +27,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ProgressBar.h.orig ./multiplayer/utils/vgui/include/VGUI_ProgressBar.h
+--- ./multiplayer/utils/vgui/include/VGUI_ProgressBar.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ProgressBar.h	Wed Nov 27 05:28:08 2002
+@@ -30,4 +30,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_RaisedBorder.h.orig ./multiplayer/utils/vgui/include/VGUI_RaisedBorder.h
+--- ./multiplayer/utils/vgui/include/VGUI_RaisedBorder.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_RaisedBorder.h	Wed Nov 27 05:28:08 2002
+@@ -26,4 +26,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_RepaintSignal.h.orig ./multiplayer/utils/vgui/include/VGUI_RepaintSignal.h
+--- ./multiplayer/utils/vgui/include/VGUI_RepaintSignal.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_RepaintSignal.h	Wed Nov 27 05:28:08 2002
+@@ -22,4 +22,4 @@
+ }
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_Scheme.h.orig ./multiplayer/utils/vgui/include/VGUI_Scheme.h
+--- ./multiplayer/utils/vgui/include/VGUI_Scheme.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_Scheme.h	Wed Nov 27 05:28:08 2002
+@@ -79,4 +79,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ScrollBar.h.orig ./multiplayer/utils/vgui/include/VGUI_ScrollBar.h
+--- ./multiplayer/utils/vgui/include/VGUI_ScrollBar.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ScrollBar.h	Wed Nov 27 05:28:08 2002
+@@ -53,4 +53,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_StackLayout.h.orig ./multiplayer/utils/vgui/include/VGUI_StackLayout.h
+--- ./multiplayer/utils/vgui/include/VGUI_StackLayout.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_StackLayout.h	Wed Nov 27 05:28:08 2002
+@@ -27,4 +27,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_TabPanel.h.orig ./multiplayer/utils/vgui/include/VGUI_TabPanel.h
+--- ./multiplayer/utils/vgui/include/VGUI_TabPanel.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_TabPanel.h	Wed Nov 27 05:28:08 2002
+@@ -46,4 +46,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_TablePanel.h.orig ./multiplayer/utils/vgui/include/VGUI_TablePanel.h
+--- ./multiplayer/utils/vgui/include/VGUI_TablePanel.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_TablePanel.h	Wed Nov 27 05:28:08 2002
+@@ -68,4 +68,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_TaskBar.h.orig ./multiplayer/utils/vgui/include/VGUI_TaskBar.h
+--- ./multiplayer/utils/vgui/include/VGUI_TaskBar.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_TaskBar.h	Wed Nov 27 05:28:08 2002
+@@ -34,4 +34,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_TextEntry.h.orig ./multiplayer/utils/vgui/include/VGUI_TextEntry.h
+--- ./multiplayer/utils/vgui/include/VGUI_TextEntry.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_TextEntry.h	Wed Nov 27 05:28:08 2002
+@@ -77,4 +77,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_TextGrid.h.orig ./multiplayer/utils/vgui/include/VGUI_TextGrid.h
+--- ./multiplayer/utils/vgui/include/VGUI_TextGrid.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_TextGrid.h	Wed Nov 27 05:28:08 2002
+@@ -39,4 +39,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_TickSignal.h.orig ./multiplayer/utils/vgui/include/VGUI_TickSignal.h
+--- ./multiplayer/utils/vgui/include/VGUI_TickSignal.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_TickSignal.h	Wed Nov 27 05:28:08 2002
+@@ -19,4 +19,4 @@
+  };
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_ToggleButton.h.orig ./multiplayer/utils/vgui/include/VGUI_ToggleButton.h
+--- ./multiplayer/utils/vgui/include/VGUI_ToggleButton.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_ToggleButton.h	Wed Nov 27 05:28:08 2002
+@@ -23,4 +23,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/vgui/include/VGUI_TreeFolder.h.orig ./multiplayer/utils/vgui/include/VGUI_TreeFolder.h
+--- ./multiplayer/utils/vgui/include/VGUI_TreeFolder.h.orig	Thu Oct  3 17:58:08 2002
++++ ./multiplayer/utils/vgui/include/VGUI_TreeFolder.h	Wed Nov 27 05:28:09 2002
+@@ -33,4 +33,4 @@
+ 
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -u ./multiplayer/utils/xwad/xwad.c.orig ./multiplayer/utils/xwad/xwad.c
+--- ./multiplayer/utils/xwad/xwad.c.orig	Thu Oct  3 17:58:10 2002
++++ ./multiplayer/utils/xwad/xwad.c	Wed Nov 27 05:28:09 2002
+@@ -154,4 +154,4 @@
+ 
+ 	if( do16bit )
+ 		GrabPalette16();
+-*/
+\ No newline at end of file
++*/

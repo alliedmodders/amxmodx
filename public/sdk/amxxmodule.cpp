@@ -2427,6 +2427,9 @@ PFN_AMX_REREGISTER			g_fn_AmxReRegister;
 PFN_REGISTERFUNCTIONEX		g_fn_RegisterFunctionEx;
 PFN_MESSAGE_BLOCK			g_fn_MessageBlock;
 PFN_GET_CONFIG_MANAGER		g_fn_GetConfigManager;
+PFN_GET_AMXSCRIPTINFO		g_fn_GetAmxScriptInfo;
+PFN_GET_AMX_VERSION			g_fn_GetAmxVersion;
+PFN_SET_FAILSTATE			g_fn_SetPluginFailState;
 
 // *** Exports ***
 C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo)
@@ -2566,6 +2569,11 @@ C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 	REQFUNC("AmxReregister", g_fn_AmxReRegister, PFN_AMX_REREGISTER);
 
 	REQFUNC("MessageBlock", g_fn_MessageBlock, PFN_MESSAGE_BLOCK);
+
+	//Newly added
+	REQFUNC("GetAmxVersion", g_fn_GetAmxVersion, PFN_GET_AMX_VERSION);
+	REQFUNC("GetAmxScriptInfo", g_fn_GetAmxScriptInfo, PFN_GET_AMXSCRIPTINFO);
+	REQFUNC("SetPluginFailState", g_fn_SetPluginFailState, PFN_SET_FAILSTATE);
 
 #ifdef MEMORY_TEST
 	// Memory
@@ -2717,6 +2725,9 @@ void ValidateMacros_DontCallThis_Smiley()
 	MF_OverrideNatives(NULL, NULL);
 	MF_MessageBlock(0, 0, NULL);
 	MF_GetConfigManager();
+	MF_GetScriptInfo(0, nullptr, nullptr, nullptr);
+	MF_GetAmxVersion();
+	MF_SetFailState(0, NULL);
 }
 #endif
 

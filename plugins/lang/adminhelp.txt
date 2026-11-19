@@ -239,3 +239,15 @@ TIME_INFO_2 = Sem Limite de Tempo. Próximo Mapa: %s
 HELP_CMD_INFO = <entrada no.> [no. de entradas para mostrar (do servidor)] - mostra informação acerca de comandos disponíveis
 SEARCH_CMD_INFO = <correspondência> <entrada no.> [no. de entradas para mostrar (do servidor)] - mostra informações acerca de comandos correspondentes á pesquisa
 NO_MATCHING_RESULTS = ^nSem resultados correspondentes^n
+
+[tc]
+HELP_COMS = AMX Mod X 説明: 命令
+HELP_ENTRIES = 目前第 %d 條 - %d 條,共 %d 條
+HELP_USE_MORE = 使用 '%s %d' 獲得更多
+HELP_USE_BEGIN = 使用 '%s 1' 回到首頁
+TYPE_HELP = 在控制台輸入 '%s' '%s' 查看有效的指令
+TIME_INFO_1 = 剩餘時間: %d:%02d 分鐘，下一張地圖為: %s
+TIME_INFO_2 = 無時間限制，下一張地圖為: %s
+HELP_CMD_INFO = <項目編號> [要顯示的項目數（僅限伺服器）] - 顯示可用指令的資訊
+SEARCH_CMD_INFO = <關鍵字> <項目編號> [要顯示的項目數（僅限伺服器）] - 顯示符合條件的指令資訊
+NO_MATCHING_RESULTS = ^n找不到符合的結果^n

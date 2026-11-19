@@ -97,3 +97,7 @@ LANG_NAME_NATIVE = Shqipë
 [pt]
 LANG_NAME = European Portuguese
 LANG_NAME_NATIVE = Português de Portugal
+
+[tc]
+LANG_NAME = Traditional Chinese
+LANG_NAME_NATIVE = 正體中文

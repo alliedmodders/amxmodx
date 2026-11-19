@@ -72,3 +72,6 @@ STOP_FLOOD = Ndalo përmbytjen(flood) në këtë server, sepse do të ndëshkohe
 
 [pt]
 STOP_FLOOD = Para com o flood no servidor!
+
+[tc]
+STOP_FLOOD = 停止對伺服器進行封包洪水攻擊！

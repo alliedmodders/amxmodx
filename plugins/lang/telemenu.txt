@@ -172,3 +172,10 @@ ADMIN_TELEPORT_2 = ADMIN %s: teleportou %s
 TELE_MENU = Menu de Teleporte
 CUR_LOC = Localização Atual
 SAVE_LOC = Guardar Localização
+
+[tc]
+ADMIN_TELEPORT_1 = 管理員: 傳送 %s
+ADMIN_TELEPORT_2 = 管理員 %s: 傳送 %s
+TELE_MENU = 傳送選單
+CUR_LOC = 目前位置
+SAVE_LOC = 儲存位置

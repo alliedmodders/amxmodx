@@ -547,3 +547,25 @@ CANT_PERF_DEAD = Essa ação não pode ser executada no cliente morto "%s"
 CANT_PERF_BOT = Essa ação não pode ser executada no bot "%s"
 ON = Ativado
 OFF = Desativado
+
+[tc]
+BACK = 返回
+EXIT = 退出
+MORE = 更多
+NONE = 無
+ADMIN = 管理員
+PLAYER = 玩家
+ERROR = 錯誤
+YES = 是
+NO = 否
+BAN = 封鎖
+KICK = 踢除
+NO_ACC_COM = 你無權執行該指令
+USAGE = 用法
+MORE_CL_MATCHT = 有一個以上的玩家符合你這個參數
+CL_NOT_FOUND = 未找到使用該名字或用戶ID的玩家
+CLIENT_IMM = 用戶端 "%s" 已經免疫
+CANT_PERF_DEAD = 玩家 "%s" 已經死亡，無法執行該命令
+CANT_PERF_BOT = 機器人 "%s" 無法執行該命令
+ON = 開啟
+OFF = 關閉

@@ -114,6 +114,10 @@ public client_connect(id)
  */
 stock DisplayPluginMenu(id,const MenuText[], const Handler[], const Command[], const Callback[])
 {
+	// Fix
+	if(!is_user_connected(id))
+		return;
+	
 	new Menu=menu_create(MenuText,Handler);
 	
 	

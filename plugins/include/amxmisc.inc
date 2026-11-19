@@ -167,7 +167,7 @@ stock cmd_target(id, const arg[], flags = CMDTARGET_OBEY_IMMUNITY)
 	}
 	if (flags & CMDTARGET_OBEY_IMMUNITY)
 	{
-		if ((get_user_flags(player) & ADMIN_IMMUNITY) && ((flags & CMDTARGET_ALLOW_SELF) ? (id != player) : true))
+		if ((get_user_flags(player) & ADMIN_IMMUNITY) && !(get_user_flags(id) & ADMIN_SUPER) && ((flags & CMDTARGET_ALLOW_SELF) ? (id != player) : true))
 		{
 			new imname[MAX_NAME_LENGTH];
 			get_user_name(player, imname, charsmax(imname));

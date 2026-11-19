@@ -286,7 +286,7 @@ public:
 	void SetAuthID(const cell *Input)
 	{
 		unsigned int i=0;
-		while (i<sizeof(m_AuthData)-1)
+		while (i<arraysize(m_AuthData)-1)
 		{
 			if ((m_AuthData[i++]=*Input++)==0)
 			{
@@ -305,7 +305,7 @@ public:
 	void SetPass(const cell *Input)
 	{
 		unsigned int i=0;
-		while (i<sizeof(m_Password)-1)
+		while (i<arraysize(m_Password)-1)
 		{
 			if ((m_Password[i++]=*Input++)==0)
 			{

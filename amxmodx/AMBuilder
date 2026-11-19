@@ -22,6 +22,11 @@ if builder.target_platform == 'mac':
   binary.compiler.postlink += [
     '-Wl,-read_only_relocs,suppress'
   ]
+elif builder.target_platform == 'linux':
+  # Assembly objects built without -fPIC; binutils >= 2.40 errors on text relocations
+  binary.compiler.postlink += [
+    '-Wl,-z,notext'
+  ]
 elif builder.target_platform == 'windows':
   binary.compiler.linkflags += [
     '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',

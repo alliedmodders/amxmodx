@@ -172,7 +172,7 @@ extern "C" size_t get_amxstring_r(AMX *amx, cell amx_addr, char *destination, in
 
 char *get_amxbuffer(int id)
 {
-	static char buffer[4][MAX_BUFFER_LENGTH];
+	static char buffer[8][MAX_BUFFER_LENGTH];
 	return buffer[id];
 }
 

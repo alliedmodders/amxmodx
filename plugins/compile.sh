@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/bash -e
+cd "$(dirname "$0")"
 
 # AMX Mod X
 #
@@ -11,14 +12,23 @@
 
 test -e compiled || mkdir compiled
 rm -f temp.txt
-
-for sourcefile in *.sma
-do
+if [[ $# -ne 0 ]]; then
+	for sourcefile in "$@"
+	do
         amxxfile="`echo $sourcefile | sed -e 's/\.sma$/.amxx/'`"
         echo -n "Compiling $sourcefile ..."
         ./amxxpc $sourcefile -ocompiled/$amxxfile >> temp.txt
         echo "done"
-done
+	done
+else
+    for sourcefile in *.sma
+    do
+        amxxfile="`echo $sourcefile | sed -e 's/\.sma$/.amxx/'`"
+        echo -n "Compiling $sourcefile ..."
+        ./amxxpc $sourcefile -ocompiled/$amxxfile >> temp.txt
+        echo "done"
+        done
+fi
 
 less temp.txt
 rm temp.txt

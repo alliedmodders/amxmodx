@@ -34,7 +34,7 @@
 				{
 					"m_hPlatform"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "324"
 						"linux" "340"
 					}

@@ -34,14 +34,14 @@
 				{
 					"m_hSquadLeader"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1544"
 						"linux" "1564"
 					}
 
 					"m_hSquadNext"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1552"
 						"linux" "1572"
 					}

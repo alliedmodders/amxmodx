@@ -34,7 +34,7 @@
 				{
 					"m_hPlayer"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "360"
 						"linux" "376"
 					}

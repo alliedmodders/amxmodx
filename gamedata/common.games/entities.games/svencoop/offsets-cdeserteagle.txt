@@ -48,7 +48,7 @@
 
 					"m_hSpot"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "560"
 						"linux" "572"
 					}

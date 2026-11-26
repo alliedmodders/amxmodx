@@ -34,14 +34,14 @@
 				{
 					"m_hOwner"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "324"
 						"linux" "340"
 					}
 
 					"m_hTarg"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "332"
 						"linux" "348"
 					}
@@ -55,7 +55,7 @@
 
 					"m_hOldTargs"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "3"
 						"windows" "352"
 						"linux" "368"

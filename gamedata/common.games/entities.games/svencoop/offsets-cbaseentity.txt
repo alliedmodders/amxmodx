@@ -56,28 +56,28 @@
 
 					"m_hGoalEnt"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "16"
 						"linux" "16"
 					}
 
 					"m_hLink"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "24"
 						"linux" "24"
 					}
 
 					"m_hLinkAll"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "32"
 						"linux" "32"
 					}
 
 					"m_hMyMedic"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "40"
 						"linux" "40"
 					}

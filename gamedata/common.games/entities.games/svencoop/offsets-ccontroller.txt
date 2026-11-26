@@ -55,7 +55,7 @@
 
 					"m_hBall"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "2"
 						"windows" "1624"
 						"linux" "1644"

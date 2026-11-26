@@ -34,7 +34,7 @@
 				{
 					"m_hSprite"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "536"
 						"linux" "556"
 					}

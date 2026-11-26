@@ -73,7 +73,7 @@
 
 					"m_hTeleportCheck"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1572"
 						"linux" "1592"
 					}
@@ -110,14 +110,14 @@
 
 					"m_hDeflect"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1596"
 						"linux" "1616"
 					}
 
 					"m_hDeflectBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1604"
 						"linux" "1624"
 					}
@@ -166,7 +166,7 @@
 
 					"m_hEye"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "4"
 						"windows" "1660"
 						"linux" "1680"

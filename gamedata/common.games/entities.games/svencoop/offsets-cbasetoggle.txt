@@ -126,7 +126,7 @@
 
 					"m_hActivator"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "444"
 						"linux" "460"
 					}

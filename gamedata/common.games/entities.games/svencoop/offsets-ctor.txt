@@ -108,7 +108,7 @@
 
 					"m_hFriend"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "3"
 						"windows" "1660"
 						"linux" "1680"
@@ -123,7 +123,7 @@
 
 					"m_hBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "4"
 						"windows" "1688"
 						"linux" "1708"

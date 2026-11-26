@@ -41,7 +41,7 @@
 
 					"m_hOwner"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1548"
 						"linux" "1568"
 					}

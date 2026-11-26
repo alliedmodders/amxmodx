@@ -34,7 +34,7 @@
 				{
 					"m_hHolder"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "324"
 						"linux" "340"
 					}

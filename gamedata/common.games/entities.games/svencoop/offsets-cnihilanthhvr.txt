@@ -48,14 +48,14 @@
 
 					"m_hNihilanth"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1560"
 						"linux" "1580"
 					}
 
 					"m_hTouch"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1568"
 						"linux" "1588"
 					}

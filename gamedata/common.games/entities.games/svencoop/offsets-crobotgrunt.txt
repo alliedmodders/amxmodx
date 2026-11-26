@@ -203,7 +203,7 @@
 
 					"m_hSpot"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1704"
 						"linux" "1724"
 					}

@@ -129,7 +129,7 @@
 
 					"m_hSpawnPoint"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1596"
 						"linux" "1612"
 					}
@@ -150,7 +150,7 @@
 
 					"m_hLastChumtoad"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1608"
 						"linux" "1624"
 					}
@@ -265,7 +265,7 @@
 
 					"m_hSndLast"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1672"
 						"linux" "1688"
 					}
@@ -543,7 +543,7 @@
 
 					"m_hVehicle"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "2112"
 						"linux" "2128"
 					}
@@ -557,7 +557,7 @@
 
 					"m_hTank"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "2124"
 						"linux" "2140"
 					}
@@ -702,21 +702,21 @@
 
 					"m_hActiveItem"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "2304"
 						"linux" "2316"
 					}
 
 					"m_hClientActiveItem"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "2312"
 						"linux" "2324"
 					}
 
 					"m_hLastItem"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "2320"
 						"linux" "2332"
 					}
@@ -847,7 +847,7 @@
 
 					"m_hBarnacle"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "3216"
 						"linux" "3228"
 					}
@@ -897,7 +897,7 @@
 
 					"m_hRepelBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "3308"
 						"linux" "3320"
 					}
@@ -1121,7 +1121,7 @@
 
 					"m_hCamera"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "5200"
 						"linux" "5200"
 					}

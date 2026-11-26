@@ -101,7 +101,7 @@
 
 					"m_hTalkTarget"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1648"
 						"linux" "1668"
 					}

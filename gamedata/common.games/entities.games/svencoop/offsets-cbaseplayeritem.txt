@@ -34,14 +34,14 @@
 				{
 					"m_hPlayer"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "420"
 						"linux" "436"
 					}
 
 					"m_hNextItem"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "428"
 						"linux" "444"
 					}

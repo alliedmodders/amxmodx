@@ -34,7 +34,7 @@
 				{
 					"m_hGlow"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "364"
 						"linux" "380"
 					}

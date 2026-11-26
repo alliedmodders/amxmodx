@@ -34,14 +34,14 @@
 				{
 					"m_hPlayer"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1544"
 						"linux" "1564"
 					}
 
 					"m_hTalkTarget"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1552"
 						"linux" "1572"
 					}

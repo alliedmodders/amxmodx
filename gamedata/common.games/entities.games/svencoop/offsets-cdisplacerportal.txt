@@ -42,7 +42,7 @@
 
 					"m_hBeams"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "8"
 						"windows" "328"
 						"linux" "344"
@@ -50,7 +50,7 @@
 
 					"m_hTouchedEnt"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "392"
 						"linux" "408"
 					}

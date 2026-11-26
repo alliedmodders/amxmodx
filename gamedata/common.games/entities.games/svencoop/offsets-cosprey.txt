@@ -34,7 +34,7 @@
 				{
 					"m_hGoalEnt"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1544"
 						"linux" "1564"
 					}
@@ -140,7 +140,7 @@
 
 					"m_hRepel"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "4"
 						"windows" "1948"
 						"linux" "1968"

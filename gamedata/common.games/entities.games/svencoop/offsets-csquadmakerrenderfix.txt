@@ -34,7 +34,7 @@
 				{
 					"m_hTargetMonster"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "324"
 						"linux" "340"
 					}

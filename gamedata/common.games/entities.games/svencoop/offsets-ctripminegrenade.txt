@@ -62,14 +62,14 @@
 
 					"m_hOwner"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1608"
 						"linux" "1628"
 					}
 
 					"m_hBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1616"
 						"linux" "1636"
 					}
@@ -90,7 +90,7 @@
 
 					"m_hRealOwner"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1648"
 						"linux" "1668"
 					}

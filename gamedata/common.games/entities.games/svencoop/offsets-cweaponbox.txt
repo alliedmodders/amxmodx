@@ -42,7 +42,7 @@
 
 					"m_hPrimaryWeapon"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "500"
 						"linux" "516"
 					}

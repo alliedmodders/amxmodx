@@ -34,7 +34,7 @@
 				{
 					"m_hTarget"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "324"
 						"linux" "340"
 					}
@@ -48,7 +48,7 @@
 
 					"m_hMonsterUser"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "336"
 						"linux" "352"
 					}
@@ -62,7 +62,7 @@
 
 					"m_hController"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "348"
 						"linux" "364"
 					}
@@ -97,7 +97,7 @@
 
 					"m_hVehicle"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "372"
 						"linux" "388"
 					}

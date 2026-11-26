@@ -55,7 +55,7 @@
 
 					"m_hSourceEnt"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "364"
 						"linux" "376"
 					}
@@ -216,7 +216,7 @@
 
 					"m_hWasSourceEnt"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "488"
 						"linux" "496"
 					}

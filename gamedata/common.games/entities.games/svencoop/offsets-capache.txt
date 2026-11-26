@@ -159,7 +159,7 @@
 
 					"m_hBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1660"
 						"linux" "1680"
 					}

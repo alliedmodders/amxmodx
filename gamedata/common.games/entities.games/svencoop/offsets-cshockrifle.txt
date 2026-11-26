@@ -71,7 +71,7 @@
 
 					"m_hSprites"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "4"
 						"windows" "568"
 						"linux" "580"

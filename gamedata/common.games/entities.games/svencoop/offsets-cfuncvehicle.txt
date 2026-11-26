@@ -255,7 +255,7 @@
 
 					"m_hDriver"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "528"
 						"linux" "544"
 					}

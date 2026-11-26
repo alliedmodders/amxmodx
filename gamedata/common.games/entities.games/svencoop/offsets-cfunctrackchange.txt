@@ -34,21 +34,21 @@
 				{
 					"m_hTrackTop"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "588"
 						"linux" "608"
 					}
 
 					"m_hTrackBottom"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "596"
 						"linux" "616"
 					}
 
 					"m_hTrain"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "604"
 						"linux" "624"
 					}

@@ -164,14 +164,14 @@
 
 					"m_hRecharger"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1672"
 						"linux" "1692"
 					}
 
 					"m_hSphere"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "20"
 						"windows" "1680"
 						"linux" "1700"
@@ -194,7 +194,7 @@
 
 					"m_hBall"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1848"
 						"linux" "1868"
 					}
@@ -263,7 +263,7 @@
 
 					"m_hFriend"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "3"
 						"windows" "2248"
 						"linux" "2268"

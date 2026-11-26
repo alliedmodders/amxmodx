@@ -137,7 +137,7 @@
 
 					"m_hBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1784"
 						"linux" "1804"
 					}

@@ -76,7 +76,7 @@
 
 					"m_hOwner"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1616"
 						"linux" "1636"
 					}

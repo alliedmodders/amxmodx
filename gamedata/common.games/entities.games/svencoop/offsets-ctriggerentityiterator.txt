@@ -112,14 +112,14 @@
 
 					"m_hCarrier"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "368"
 						"linux" "384"
 					}
 
 					"m_hActivator"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "376"
 						"linux" "392"
 					}

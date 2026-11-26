@@ -34,21 +34,21 @@
 				{
 					"m_hBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "324"
 						"linux" "340"
 					}
 
 					"m_hOwner"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "332"
 						"linux" "348"
 					}
 
 					"m_hEnemy"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "340"
 						"linux" "356"
 					}

@@ -34,7 +34,7 @@
 				{
 					"m_hTrigger"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "364"
 						"linux" "380"
 					}

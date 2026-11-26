@@ -50,7 +50,7 @@
 
 					"m_hBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "24"
 						"windows" "348"
 						"linux" "364"

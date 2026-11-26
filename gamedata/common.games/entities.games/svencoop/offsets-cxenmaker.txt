@@ -34,21 +34,21 @@
 				{
 					"m_hLightning"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "324"
 						"linux" "340"
 					}
 
 					"m_hInSprite"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "332"
 						"linux" "348"
 					}
 
 					"m_hOutSprite"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "340"
 						"linux" "356"
 					}

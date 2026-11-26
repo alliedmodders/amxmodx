@@ -42,7 +42,7 @@
 
 					"m_hBeam"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "8"
 						"windows" "1616"
 						"linux" "1636"
@@ -73,7 +73,7 @@
 
 					"m_hDead"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1692"
 						"linux" "1712"
 					}

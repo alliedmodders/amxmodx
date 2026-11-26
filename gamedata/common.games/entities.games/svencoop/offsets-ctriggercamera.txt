@@ -152,7 +152,7 @@
 
 					"m_hLastDragEntity"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "448"
 						"linux" "464"
 					}
@@ -215,14 +215,14 @@
 
 					"m_hTarget"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "496"
 						"linux" "512"
 					}
 
 					"m_hPath"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "504"
 						"linux" "520"
 					}

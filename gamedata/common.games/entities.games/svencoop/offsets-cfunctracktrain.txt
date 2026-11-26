@@ -41,21 +41,21 @@
 
 					"m_hPath"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "328"
 						"linux" "344"
 					}
 
 					"m_hPathgoal"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "336"
 						"linux" "352"
 					}
 
 					"m_hPathDeadEnd"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "344"
 						"linux" "360"
 					}

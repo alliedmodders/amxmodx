@@ -57,7 +57,7 @@
 
 					"m_hChildOwner"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1564"
 						"linux" "1584"
 					}

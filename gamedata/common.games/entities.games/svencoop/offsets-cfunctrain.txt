@@ -34,7 +34,7 @@
 				{
 					"m_hCurrentTarget"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "516"
 						"linux" "536"
 					}

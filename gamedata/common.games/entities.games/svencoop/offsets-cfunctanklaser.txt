@@ -34,7 +34,7 @@
 				{
 					"m_hLaser"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "544"
 						"linux" "560"
 					}

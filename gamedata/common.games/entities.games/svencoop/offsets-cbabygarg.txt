@@ -34,7 +34,7 @@
 				{
 					"m_hEyeGlow"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1612"
 						"linux" "1632"
 					}
@@ -48,7 +48,7 @@
 
 					"m_hFlame"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "4"
 						"windows" "1624"
 						"linux" "1644"

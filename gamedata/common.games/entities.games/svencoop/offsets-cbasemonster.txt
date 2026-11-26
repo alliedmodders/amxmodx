@@ -42,35 +42,35 @@
 
 					"m_hEnemy"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "496"
 						"linux" "516"
 					}
 
 					"m_hTargetEnt"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "504"
 						"linux" "524"
 					}
 
 					"m_hHealTarget"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "512"
 						"linux" "532"
 					}
 
 					"m_hTargetTank"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "520"
 						"linux" "540"
 					}
 
 					"m_hOldEnemy"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"size" "4"
 						"windows" "528"
 						"linux" "548"
@@ -436,14 +436,14 @@
 
 					"m_hCine"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1244"
 						"linux" "1264"
 					}
 
 					"m_hCineBlocker"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1252"
 						"linux" "1272"
 					}
@@ -651,7 +651,7 @@
 
 					"m_hGuardEnt"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1388"
 						"linux" "1408"
 					}
@@ -665,21 +665,21 @@
 
 					"m_hPathConditionController"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1400"
 						"linux" "1420"
 					}
 
 					"m_hPathCondition"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1408"
 						"linux" "1428"
 					}
 
 					"m_hPathWaypoint"
 					{
-						"type" "structure"
+						"type" "ehandle"
 						"windows" "1416"
 						"linux" "1436"
 					}
